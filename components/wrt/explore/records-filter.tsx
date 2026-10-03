@@ -35,6 +35,8 @@ export function RecordsFilter({
   const f = view.filter;
   const sites = places.map((p) => p.item).sort((a, b) => a.name.localeCompare(b.name));
 
+  const selectedPlace = sites.find((p) => p.slug === f.place);
+
   // Two species can share a display name (contested pairs): add the botanical name to tell them apart.
   const nameCount = new Map<string, number>();
   for (const s of lookups.species) nameCount.set(s.displayName, (nameCount.get(s.displayName) ?? 0) + 1);
@@ -49,6 +51,13 @@ export function RecordsFilter({
             {sites.map((p) => (
               <option key={p.slug} value={p.slug}>{p.isScheme ? `${p.name} (order scheme)` : p.name}</option>
             ))}
+          </select>
+        </div>
+        <div className="cn-field">
+          <label className="cn-field__label" htmlFor="exp-parcel">Part of site</label>
+          <select id="exp-parcel" name="parcel" className="wrt-select" defaultValue={f.parcel ?? ""} disabled={!selectedPlace}>
+            <option value="">{selectedPlace ? "All parts of this site" : "Choose a site first"}</option>
+            {selectedPlace?.parcels.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </div>
         <div className="cn-field">

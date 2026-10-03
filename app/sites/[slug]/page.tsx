@@ -167,7 +167,7 @@ export default async function SitePage({ params, searchParams }: Props) {
       {d.parcels.length > 1 && (
         <Card
           title="Parts of this site"
-          foot="Parcels are WRT’s registered sub-sites. Recorded plants are kept against each parcel and added up to the site."
+          foot="Select a part to see its species and records. Parcels are WRT’s registered sub-sites; their recorded plants add up to the site."
         >
           <RankedBars
             items={d.parcels.map((p) => ({
@@ -183,6 +183,7 @@ export default async function SitePage({ params, searchParams }: Props) {
                 </span>
               ),
               split: p.split,
+              href: recordsFor({ parcel: p.item.id }),
             }))}
           />
         </Card>

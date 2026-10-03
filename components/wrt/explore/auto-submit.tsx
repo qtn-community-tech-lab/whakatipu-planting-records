@@ -12,6 +12,10 @@ export function AutoSubmit() {
     if (!form) return;
     const onChange = (e: Event) => {
       const t = e.target as HTMLElement;
+      if (t instanceof HTMLSelectElement && t.name === "place") {
+        const parcel = form.elements.namedItem("parcel");
+        if (parcel instanceof HTMLSelectElement) parcel.value = "";
+      }
       if (t instanceof HTMLSelectElement || (t instanceof HTMLInputElement && t.type === "radio")) form.requestSubmit();
     };
     form.addEventListener("change", onChange);

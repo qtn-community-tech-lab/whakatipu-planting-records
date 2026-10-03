@@ -36,7 +36,7 @@ export interface RecordsView {
 export type RawParams = Record<string, string | string[] | undefined>;
 
 /** Param names that the form owns. Empty values for these are redirected away. */
-export const PARAM_KEYS = ["place", "species", "year", "season", "review", "theme", "q", "page", "sort"] as const;
+export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "review", "theme", "q", "page", "sort"] as const;
 export type ParamKey = (typeof PARAM_KEYS)[number];
 
 const REVIEW_VALUES: ReviewFilter[] = ["all", "needs-review", "resolved"];
@@ -57,6 +57,11 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
   const place = first(raw.place)?.trim();
   if (place && lookups.places.some((p) => p.slug === place)) filter.place = place;
   else reject("site", place);
+
+  const parcel = first(raw.parcel)?.trim();
+  const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
+  if (parcel && selectedPlace?.parcels.some((p) => p.id === parcel)) filter.parcel = parcel;
+  else reject("part of site", parcel);
 
   const species = first(raw.species)?.trim();
   if (species && lookups.species.some((s) => s.slug === species)) filter.species = species;
@@ -91,7 +96,7 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
 
 /** True when any filter (not sort or page) is set. */
 export function hasFilters(f: RecordFilter): boolean {
-  return Boolean(f.place || f.species || f.year || f.season || f.review || f.theme || f.q);
+  return Boolean(f.place || f.parcel || f.species || f.year || f.season || f.review || f.theme || f.q);
 }
 
 /** Query params for a view. Defaults are left out so URLs stay short. */
@@ -99,6 +104,7 @@ export function viewParams(view: RecordsView, over: Partial<Record<ParamKey, str
   const f = view.filter;
   const base: Record<string, string | number | undefined> = {
     place: f.place,
+    parcel: f.parcel,
     species: f.species,
     year: f.year,
     season: f.season,
@@ -108,7 +114,10 @@ export function viewParams(view: RecordsView, over: Partial<Record<ParamKey, str
     sort: view.sort === "season" ? undefined : view.sort,
     page: view.page > 1 ? view.page : undefined,
   };
-  return { ...base, ...over };
+  // Changing/removing the parent site clears its dependent sublocation.
+  const result = { ...base, ...over };
+  if ("place" in over && over.place !== f.place && !("parcel" in over)) result.parcel = undefined;
+  return result;
 }
 
 /** `/records?…` for a view, with optional overrides. Changing any filter resets the page. */

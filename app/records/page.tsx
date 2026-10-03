@@ -25,6 +25,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const f = view.filter;
   const bits: string[] = [];
   if (f.place) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.name ?? "");
+  if (f.parcel) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.parcels.find((p) => p.id === f.parcel)?.name ?? "");
   if (f.year) bits.push(String(f.year));
   return { title: bits.filter(Boolean).length ? `Records · ${bits.filter(Boolean).join(" · ")}` : "Records" };
 }
@@ -79,7 +80,9 @@ export default async function RecordsPage({ searchParams }: Props) {
   const siteCount = new Set(result.rows.filter((v) => !v.place.isScheme).map((v) => v.place.slug)).size;
   const schemeCount = new Set(result.rows.filter((v) => v.place.isScheme).map((v) => v.place.slug)).size;
   const seasons = seasonsIn(result.rows);
-  const showSummary = total > 0 && seasons.length <= 2 && speciesCount > 1;
+  const showSummary = total > 0 && (seasons.length <= 2 || !!filter.parcel) && speciesCount > 1;
+  const summarySeasons = seasons.length <= 2 ? seasons : [];
+  const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
 
   const hide: ("season" | "site" | "species")[] = [];
   if (filter.place) hide.push("site");
@@ -91,6 +94,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   return (
     <>
       <PageHead
+        back={selectedPlace ? { href: `/sites/${selectedPlace.slug}`, label: selectedPlace.name } : undefined}
         eyebrow="Records"
         title={recordsHeadline(filter, split, lookups)}
       />
@@ -144,7 +148,7 @@ export default async function RecordsPage({ searchParams }: Props) {
                   : "Totals include records still needing review; the amber figure is that part."
               }
             >
-              <SpeciesSummary rows={result.rows} seasons={seasons} />
+              <SpeciesSummary rows={result.rows} seasons={summarySeasons} />
             </Card>
           )}
 

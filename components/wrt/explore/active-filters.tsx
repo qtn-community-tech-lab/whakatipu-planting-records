@@ -9,8 +9,10 @@ export function ActiveFilters({ view, lookups }: { view: RecordsView; lookups: L
   const f = view.filter;
   const chips: { key: ParamKey; kind: string; label: string }[] = [];
   const place = f.place ? lookups.places.find((p) => p.slug === f.place) : undefined;
+  const parcel = place?.parcels.find((p) => p.id === f.parcel);
   const species = f.species ? lookups.species.find((s) => s.slug === f.species) : undefined;
   if (place) chips.push({ key: "place", kind: "site", label: place.name });
+  if (parcel) chips.push({ key: "parcel", kind: "part of site", label: parcel.name });
   if (species) chips.push({ key: "species", kind: "species", label: species.displayName });
   if (f.year) chips.push({ key: "year", kind: "year", label: String(f.year) });
   if (f.season) chips.push({ key: "season", kind: "season", label: f.season });

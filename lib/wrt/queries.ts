@@ -165,6 +165,8 @@ export type ReviewFilter = "all" | "needs-review" | "resolved";
 
 export interface RecordFilter {
   place?: string;
+  /** Exact parcel ID, always scoped to the selected place. */
+  parcel?: string;
   species?: string;
   year?: number;
   season?: SeasonName;
@@ -425,6 +427,7 @@ export function createQueries(repo: WrtRepository) {
       const q = filter.q?.trim();
       const rows = c.records
         .filter((r) => !filter.place || r.placeSlug === filter.place)
+        .filter((r) => !filter.parcel || (!!filter.place && r.parcelId === filter.parcel))
         .filter((r) => !filter.species || r.speciesId === species?.id)
         .filter((r) => !filter.year || r.year === filter.year)
         .filter((r) => !filter.season || r.seasonName === filter.season)

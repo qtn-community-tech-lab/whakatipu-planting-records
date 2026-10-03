@@ -15,8 +15,9 @@ export function seasonsIn(rows: RecordView[]): Season[] {
 
 /**
  * "By species": the direct answer to "What did we plant at Whitechapel in 2019?".
- * One row per species, one column per season in the result, then the total
- * with its needs-review part beside it.
+ * One row per species, optionally broken down by the supplied seasons, then
+ * the total with its needs-review part beside it. An empty season list gives
+ * compact totals across all matching seasons for a sublocation.
  */
 export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons: Season[] }) {
   type Row = { species: RecordView["species"]; bySeason: Map<string, QuantitySplit>; total: QuantitySplit };
@@ -30,7 +31,8 @@ export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons:
     if (!cell) row.bySeason.set(v.season.slug, (cell = emptySplit()));
     addToSplit(cell, v.record);
     addToSplit(row.total, v.record);
-    addToSplit(totals.get(v.season.slug)!, v.record);
+    const seasonTotal = totals.get(v.season.slug);
+    if (seasonTotal) addToSplit(seasonTotal, v.record);
     addToSplit(grand, v.record);
   }
   const list = [...byId.values()].sort(
@@ -42,7 +44,7 @@ export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons:
   return (
     <div className={scroll ? "wrt-table-wrap exp-scroll" : "wrt-table-wrap"}>
       <table className="wrt-table exp-sum">
-        <caption className="sr-only">Recorded plants by species and season</caption>
+        <caption className="sr-only">{seasons.length ? "Recorded plants by species and season" : "Recorded plants by species"}</caption>
         <thead>
           <tr>
             <th>Species</th>

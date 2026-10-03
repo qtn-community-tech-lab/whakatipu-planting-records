@@ -14,6 +14,7 @@ export function recordsHeadline(
   if (split.records === 0) return "No records match these filters";
 
   const place = f.place ? lookups.places.find((p) => p.slug === f.place) : undefined;
+  const parcel = place?.parcels.find((p) => p.id === f.parcel);
   const species = f.species ? lookups.species.find((s) => s.slug === f.species) : undefined;
   const n = split.total;
   const noun = `recorded plant${n === 1 ? "" : "s"}`;
@@ -36,7 +37,7 @@ export function recordsHeadline(
     <>
       {formatNumber(n)} {noun}
       {speciesText && <> of {speciesText}</>}
-      {place && <> at {place.name}</>}
+      {place && <> at {parcel ? <>{parcel.name} ({place.name})</> : place.name}</>}
       {when && <> in {when}</>}
       {review && <> {review}</>}
       {f.q && <> matching “{f.q}”</>}
