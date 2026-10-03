@@ -18,6 +18,7 @@ export interface SpeciesPhoto {
   licenseUrl: string;
   sourceUrl: string;
   articleUrl: string;
+  articleLabel?: string;
   retrievedAt: string;
 }
 

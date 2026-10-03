@@ -3,10 +3,10 @@ import { getSpeciesPhoto, getSpeciesPhotos, speciesPhotos, topPlantedSpecies } f
 import { q } from "./helpers";
 
 describe("reviewed Wiki photo catalogue", () => {
-  it("covers precisely the thirty-five species with the most recorded plants", async () => {
+  it("covers precisely the fifty species with the most recorded plants", async () => {
     const rows = topPlantedSpecies(await q.speciesList());
-    expect(rows).toHaveLength(35);
-    expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(125077);
+    expect(rows).toHaveLength(50);
+    expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(134846);
     expect(new Set(speciesPhotos.map((p) => p.speciesId))).toEqual(new Set(rows.map((r) => r.item.id)));
     for (const row of rows) {
       const photos = getSpeciesPhotos(row.item.id);
@@ -21,8 +21,8 @@ describe("reviewed Wiki photo catalogue", () => {
   });
 
   it("keeps hosted image URLs, author credits and source licences for future offline use", () => {
-    expect(speciesPhotos).toHaveLength(105);
-    expect(new Set(speciesPhotos.map((p) => p.src)).size).toBe(105);
+    expect(speciesPhotos).toHaveLength(150);
+    expect(new Set(speciesPhotos.map((p) => p.src)).size).toBe(150);
     for (const photo of speciesPhotos) {
       const url = new URL(photo.src);
       expect(url.protocol).toBe("https:");
@@ -41,7 +41,12 @@ describe("reviewed Wiki photo catalogue", () => {
         expect(photo.author).toBe("John Barkla");
         expect(photo.license).toBe("CC BY 4.0");
       }
-      expect(new URL(photo.articleUrl).hostname).toBe("en.wikipedia.org");
+      if (photo.scientificName === "Veronica cupressoides") {
+        expect(photo.articleUrl).toBe("https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/");
+        expect(photo.articleLabel).toBe("NZPCN species page");
+      } else {
+        expect(new URL(photo.articleUrl).hostname).toBe("en.wikipedia.org");
+      }
       expect(new URL(photo.licenseUrl).protocol).toBe("https:");
       expect(["CC BY 4.0", "CC BY-SA 4.0", "CC BY-SA 3.0", "CC BY-SA 2.0", "CC0", "Public domain"]).toContain(photo.license);
     }

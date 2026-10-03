@@ -16,7 +16,7 @@ export function SpeciesPhotoFigure({ photo }: { photo: SpeciesPhoto }) {
       <figcaption className="wrt-photo__caption">
         <p>{photo.caption}</p>
         <p>Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a></p>
-        <p><a href={photo.src} target="_blank" rel="noreferrer">Full image</a> · <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist photo source" : "Wiki image source"}</a> · <a href={photo.articleUrl}>Wikipedia species page</a></p>
+        <p><a href={photo.src} target="_blank" rel="noreferrer">Full image</a> · <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist photo source" : "Wiki image source"}</a> · <a href={photo.articleUrl}>{photo.articleLabel ?? "Wikipedia species page"}</a></p>
       </figcaption>
     </figure>
   );

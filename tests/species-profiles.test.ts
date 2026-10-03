@@ -4,12 +4,12 @@ import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import { q } from "./helpers";
 
 describe("reviewed species profiles", () => {
-  it("covers the current top thirty-five without attaching information to other taxa", async () => {
+  it("covers the current top fifty without attaching information to other taxa", async () => {
     const all = await q.speciesList();
     const top = topPlantedSpecies(all, SPECIES_PROFILE_LIMIT);
-    expect(top).toHaveLength(35);
-    expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(125077);
-    expect(speciesProfiles).toHaveLength(35);
+    expect(top).toHaveLength(50);
+    expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(134846);
+    expect(speciesProfiles).toHaveLength(50);
     expect(new Set(speciesProfiles.map((p) => p.speciesId))).toEqual(new Set(top.map((r) => r.item.id)));
     for (const row of top) {
       expect(getSpeciesProfile(row.item.id)?.scientificName).toBe(row.item.scientificName);
@@ -37,5 +37,8 @@ describe("reviewed species profiles", () => {
     expect(getSpeciesProfile("SP-136")?.nameNote).toContain("possible name in southern districts");
     expect(getSpeciesProfile("SP-079")?.nameNote).toContain("Whauwhau, which was not confirmed");
     expect(getSpeciesProfile("SP-046")?.commonName).toBeNull();
+    expect(getSpeciesProfile("SP-109")?.nameNote).toContain("Shawia avicenniifolia");
+    expect(getSpeciesProfile("SP-113")?.nameNote).toContain("Shawia fragrantissima");
+    expect(getSpeciesProfile("SP-155")?.maoriNames).toEqual([]);
   });
 });

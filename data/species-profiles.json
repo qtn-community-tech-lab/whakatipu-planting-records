@@ -676,5 +676,294 @@
       }
     ],
     "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-147",
+    "scientificName": "Pseudopanax ferox",
+    "commonName": "Toothed lancewood",
+    "maoriNames": [
+      "Horoeka"
+    ],
+    "summary": "A small New Zealand tree whose appearance changes markedly as it matures. Young plants have a single stem and striking, jagged leaves; adults develop a branching crown and shorter leaves.",
+    "lookFor": "Stiff, narrow juvenile leaves hanging downward, with large, irregular teeth along the edges. Compare these with the less strongly toothed leaves of Pseudopanax crassifolius.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pseudopanax_ferox"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Also called fierce lancewood. Horoeka is shared with Pseudopanax crassifolius; the two species remain separate in the database."
+  },
+  {
+    "speciesId": "SP-006",
+    "scientificName": "Aristotelia serrata",
+    "commonName": "Wineberry",
+    "maoriNames": [
+      "Makomako"
+    ],
+    "summary": "A fast-growing native tree that readily establishes on disturbed ground and at forest edges. It may lose some leaves in winter, and its berries provide food for birds.",
+    "lookFor": "Broad, thin leaves with sharp serrations, often on reddish young branches. Small pink-to-red flowers are followed by berries that darken from red to black.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Aristotelia_serrata"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-035",
+    "scientificName": "Chionochloa rubra",
+    "commonName": "Red tussock",
+    "maoriNames": [
+      "Haumata"
+    ],
+    "summary": "A long-lived native tussock grass with fine, arching leaves. Its foliage can range from greenish brown to copper or red, and it forms conspicuous clumps in grassland.",
+    "lookFor": "Tall tufts of very slender leaves, commonly with reddish or bronze colouring. Flowering stems rise within or just above the foliage.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Chionochloa_rubra"
+      },
+      {
+        "label": "Manaaki Whenua — Haumata",
+        "url": "https://www.landcareresearch.co.nz/about-us/our-locations/te-rauhitanga/the-names-of-our-meeting-rooms/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Haumata is recorded for this species by Manaaki Whenua. The database does not identify a subspecies."
+  },
+  {
+    "speciesId": "SP-132",
+    "scientificName": "Pittosporum eugenioides",
+    "commonName": "Lemonwood",
+    "maoriNames": [
+      "Tarata"
+    ],
+    "summary": "An evergreen native tree found at forest margins and beside streams. Young trees have a compact, conical shape, becoming broader and more rounded as they mature.",
+    "lookFor": "Yellow-green leaves with wavy edges and a conspicuous pale midrib. Fragrant cream-to-yellow flower clusters appear in spring; the foliage is known for its lemon scent.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pittosporum_eugenioides"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-123",
+    "scientificName": "Ozothamnus vauvilliersii",
+    "commonName": "Mountain cottonwood",
+    "maoriNames": [
+      "Tauhinu"
+    ],
+    "summary": "A bushy native shrub of open grassland, shrubland and disturbed sites. It has small leaves and dense clusters of white flowers, followed by fluffy seeds.",
+    "lookFor": "Short, narrow-to-oval leaves, yellow-green above and hairy beneath, with white flower heads clustered at the ends of branches.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Ozothamnus_vauvilliersii"
+      },
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/ozothamnus-vauvilliersii/"
+      },
+      {
+        "label": "Kew — vernacular names",
+        "url": "https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:236324-1/general-information"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN calls this mountain tauhinu; Kew also records mountain cottonwood. Tauhinu is shared with other shrubs. NZPCN discusses its relationship to Ozothamnus leptophyllus; WRT’s contested names remain separate."
+  },
+  {
+    "speciesId": "SP-063",
+    "scientificName": "Discaria toumatou",
+    "commonName": "Matagouri",
+    "maoriNames": [
+      "Tūmatakuru"
+    ],
+    "summary": "A slow-growing, thorny native shrub common in the eastern South Island. It grows in tussock grassland and stony river beds, and bacteria in its roots help it obtain nitrogen.",
+    "lookFor": "A tangled network of stout spines, with tiny green leaves appearing near their bases in spring and early summer. Small, scented white flowers have no true petals.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Discaria_toumatou"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-137",
+    "scientificName": "Poa colensoi",
+    "commonName": "Blue tussock",
+    "maoriNames": [],
+    "summary": "A native grass that forms small, closely packed tussocks. Its foliage varies from blue-green to light green, and it is a familiar component of New Zealand high-country grassland.",
+    "lookFor": "Dense clumps of narrow, stiff leaves. Slender flowering stems often extend above the foliage; use the linked botanical description to distinguish it from similar grasses.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Poa_colensoi"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Poa-colensoi.html"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-155",
+    "scientificName": "Veronica cupressoides",
+    "commonName": "Cypress hebe",
+    "maoriNames": [],
+    "summary": "An aromatic, bushy native shrub of eastern South Island grey scrub. Its fine branchlets and tiny scale leaves give it a cypress-like appearance, despite being a flowering shrub.",
+    "lookFor": "Slender blue-green branchlets with widely spaced, triangular scale leaves. Small pale pink, mauve or blue flowers occur near the shoot tips.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Older sources and some image files use Hebe cupressoides. This profile applies only to Veronica cupressoides and does not merge WRT’s disputed names."
+  },
+  {
+    "speciesId": "SP-109",
+    "scientificName": "Olearia avicenniifolia",
+    "commonName": "Mountain akeake",
+    "maoriNames": [
+      "Akeake"
+    ],
+    "summary": "A bushy New Zealand shrub or small tree with leathery leaves and clusters of white daisy-like flowers. Pale hairs on the leaf undersides and young shoots give it a distinctive appearance.",
+    "lookFor": "Narrow, pointed, dark-green leaves with white, felted undersides. The white flower clusters develop into fluffy seeds.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Olearia_avicenniifolia"
+      },
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-avicenniifolia/"
+      },
+      {
+        "label": "NZOR — Akeake",
+        "url": "https://www.nzor.org.nz/names/47ccb479-4148-4a6c-82c5-32c50bea750f"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN and Wikipedia now use Shawia avicenniifolia; the database retains Olearia avicenniifolia. Akeake is a shared Māori name used for several trees, including Dodonaea viscosa."
+  },
+  {
+    "speciesId": "SP-104",
+    "scientificName": "Myrsine australis",
+    "commonName": "Red matipo",
+    "maoriNames": [
+      "Māpou",
+      "Tīpau",
+      "Mataira"
+    ],
+    "summary": "A native shrub or small tree with a compact crown. It occurs across New Zealand in scrub and forest margins and often establishes during natural regeneration.",
+    "lookFor": "Reddish young stems and leaf stalks, with pale yellow-green, leathery leaves that usually have wavy edges. Small translucent dots may be visible in the leaves.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Myrsine_australis"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-012",
+    "scientificName": "Carex buchananii",
+    "commonName": "Buchanan’s sedge",
+    "maoriNames": [],
+    "summary": "A densely tufted native sedge known for its reddish-brown foliage. It occurs beside lakes and streams and in other open habitats from coastal areas into the mountains.",
+    "lookFor": "A close-packed tuft of narrow reddish-brown leaves. Its colour alone is not enough to separate it from other brown sedges; check the linked species description.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Carex_buchananii"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-029",
+    "scientificName": "Carpodetus serratus",
+    "commonName": "Marbleleaf",
+    "maoriNames": [
+      "Putaputawētā"
+    ],
+    "summary": "A native tree found at forest margins and along river banks. Young plants have tangled, zig-zagging branches, while mature trees develop a more open tree form.",
+    "lookFor": "Finely toothed leaves with a marbled pattern of green shades. Small white flowers occur in clusters, and the grey bark can be knobbly or marked by insect tunnels.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Carpodetus_serratus"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-113",
+    "scientificName": "Olearia fragrantissima",
+    "commonName": "Fragrant tree daisy",
+    "maoriNames": [],
+    "summary": "A native shrub or small tree of the eastern and southern South Island. Its small flower clusters have a strong, sweet fragrance, particularly at night, and it can lose some or all of its leaves seasonally.",
+    "lookFor": "Reddish-brown, zig-zagging twigs; small leaves that are hairy underneath; and tight clusters of pale yellow flowers. Older bark peels in long strips.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Olearia_fragrantissima"
+      },
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-fragrantissima/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN now uses Shawia fragrantissima. The profile keeps Olearia fragrantissima to match WRT’s historical species ID."
+  },
+  {
+    "speciesId": "SP-146",
+    "scientificName": "Pseudopanax crassifolius",
+    "commonName": "Lancewood",
+    "maoriNames": [
+      "Horoeka"
+    ],
+    "summary": "A native tree with dramatically different juvenile and adult forms. Young plants carry long, downward-pointing leaves on one slender stem; mature trees branch and develop a rounded crown.",
+    "lookFor": "Long, stiff juvenile leaves with a prominent midrib and toothed edges. Adult leaves are much shorter and broader. Pseudopanax ferox has more strongly jagged juvenile leaves.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pseudopanax_crassifolius"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Horoeka is also used for toothed lancewood, Pseudopanax ferox. Their profiles and planting records remain separate."
+  },
+  {
+    "speciesId": "SP-047",
+    "scientificName": "Coprosma linariifolia",
+    "commonName": "Yellow wood",
+    "maoriNames": [
+      "Mikimiki"
+    ],
+    "summary": "A native shrub or small tree found in forest and scrub from the central North Island southward. Its inner wood is yellow, giving rise to its English common name.",
+    "lookFor": "Pairs of narrow leaves on dark, fuzzy twigs. The leaves are paler underneath, and ripe fruit is white with blue flecks.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_linariifolia"
+      },
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-linariifolia/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Mikimiki is a shared name for several small-leaved shrubs; it does not uniquely identify this species."
   }
 ]

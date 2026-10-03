@@ -7,6 +7,8 @@ import { splitOf } from "@/lib/wrt/queries";
 import { Card, CardLink, EmptyState, PageHead, Rule } from "@/components/wrt/page";
 import { SplitLine } from "@/components/wrt/quantity";
 import { SpeciesRow } from "@/components/wrt/species/species-row";
+import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
+import { getSpeciesProfile, SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
@@ -58,6 +60,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   const show = pick(SHOWS, one(sp.show), "all") as ShowKey;
 
   const all = await getWrt().speciesList();
+  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.speciesId) && getSpeciesProfile(r.item.speciesId)).length;
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
@@ -73,12 +76,12 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHead
-        aside={<CardLink href="/species/photos">Top 35 species guide</CardLink>}
+        aside={<CardLink href="/species/photos">Top {SPECIES_PROFILE_LIMIT} species guide</CardLink>}
         eyebrow="Species"
         title={`${formatNumber(all.length)} species, ${formatNumber(allSplit.total)} recorded plants`}
         lead={
           <>
-            Every species with at least one record since Autumn 2015, with where and when it went in. Reference photos are available for the 20 most planted species.
+            Every species with at least one record since Autumn 2015, with where and when it went in. Reference photos and identification notes are available for {guideCount} species.
             {contested > 0 && (
               <> {formatNumber(contested)} {contested === 1 ? "name needs" : "names need"} a WRT ruling before the records can be merged.</>
             )}
