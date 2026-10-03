@@ -4,6 +4,90 @@ The app’s **Species → Top 50 species guide** page (`/species/photos`) shows 
 
 The main Species page shows a thumbnail beside each covered name, with its credit, licence and source link. Each covered species detail page also displays its reference photo. Each of the fifty species now has **three distinct reference images**, 150 in total (148 Wikimedia Commons and two iNaturalist). Whole plants, foliage, flowers, fruit or bark are included where sources allow; the Austroderia richardii, Coprosma dumosa and Coprosma linariifolia sets each include one explicitly labelled museum herbarium specimen. The shared catalogue is keyed to WRT’s species IDs. Contested names remain separate; choosing an image does not make a taxonomic ruling or alter planting data.
 
+## Coverage audit and remaining work
+
+Snapshot checked **4 October 2026** against the current transformed planting history, species register and shared reference catalogues. These are species-register entries, not a count of independently verified taxa or plants currently surviving at sites.
+
+| Coverage | Species entries | Recorded plants | Share of recorded quantity |
+|---|---:|---:|---:|
+| Profiles and three reference images each | 50 | 134,846 | 96.3% |
+| Outside the reference guide | 45 | 5,222 | 3.7% |
+| Species with planting-history rows | 95 | 140,068 | 100% |
+
+No entry within the top 50 was missed. The 45 entries below currently lack both a reviewed profile and a photo set. Eight require a WRT ruling on their names; two are marked threatened in the existing register. Threatened flags here reproduce the register and are not a fresh assessment of conservation status. Quantities include records needing review. Leptecophylla juniperina has a planting-history row with zero quantity and remains in the listing.
+
+### Remaining entries, ranked by recorded quantity
+
+| Rank | Species ID | Database botanical name | Recorded plants | Threatened in register | Name needs a ruling |
+|---:|---|---|---:|---|---|
+| 51 | SP-018 | Carex virgata | 391 | No | No |
+| 52 | SP-068 | Fuchsia excorticata | 359 | No | No |
+| 53 | SP-061 | Dacrycarpus dacrydioides | 341 | No | No |
+| 54 | SP-092 | Lophozonia menziesii | 280 | No | No |
+| 55 | SP-142 | Prumnopitys taxifolius | 255 | No | No |
+| 56 | SP-081 | Hoheria sexstylosa | 254 | No | No |
+| 57 | SP-145 | Pseudopanax colensoi | 230 | No | No |
+| 58 | SP-052 | Coprosma rhamnoides | 208 | No | No |
+| 59 | SP-098 | Metrosideros umbellata | 192 | No | No |
+| 60 | SP-086 | Leonohebe cupressoides | 181 | No | Yes |
+| 61 | SP-139 | Podocarpus nivalis | 178 | No | No |
+| 62 | SP-091 | Lophomyrtus obcordata | 173 | Yes | No |
+| 63 | SP-074 | Halocarpus bidwillii | 150 | No | No |
+| 64 | SP-095 | Melicytus ramiflorus | 150 | No | No |
+| 65 | SP-038 | Coprosma acerosa | 145 | No | No |
+| 66 | SP-077 | Helichrysum lanceolatum | 140 | No | No |
+| 67 | SP-125 | Pennantia corymbosa | 139 | No | No |
+| 68 | SP-066 | Elaeocarpus hookerianus | 137 | No | No |
+| 69 | SP-108 | Olearia arborescens | 131 | No | No |
+| 70 | SP-034 | Chionochloa rigida | 97 | No | No |
+| 71 | SP-117 | Olearia nummularifolia | 89 | No | Yes |
+| 72 | SP-122 | Ozothamnus leptophyllus | 84 | No | Yes |
+| 73 | SP-143 | Pseudopanax arboreus | 75 | No | No |
+| 74 | SP-156 | Veronica hectorii | 75 | No | Yes |
+| 75 | SP-103 | Muehlenbeckia complexa | 74 | No | No |
+| 76 | SP-128 | Phyllocladus alpinus | 74 | No | No |
+| 77 | SP-054 | Coprosma rotundifolia | 70 | No | No |
+| 78 | SP-082 | Juncus edgariae | 60 | No | No |
+| 79 | SP-164 | Weinmania racemosa | 58 | No | No |
+| 80 | SP-162 | Veronica rakaiensis | 57 | No | No |
+| 81 | SP-015 | Carex maorica | 56 | No | Yes |
+| 82 | SP-153 | Streblus heterophyllus | 53 | No | No |
+| 83 | SP-041 | Coprosma cheesemanii | 41 | No | No |
+| 84 | SP-100 | Muehlenbeckia axillaris | 35 | No | No |
+| 85 | SP-161 | Veronica propinqua | 34 | No | No |
+| 86 | SP-093 | Melicope simplex | 32 | No | No |
+| 87 | SP-022 | Carmichaelia crassicaulis | 25 | Yes | Yes |
+| 88 | SP-148 | Pseudowintera colorata | 23 | No | No |
+| 89 | SP-140 | Podocarpus totara | 20 | No | No |
+| 90 | SP-060 | Cyathoides juniperina | 19 | Not recorded | Yes |
+| 91 | SP-154 | Veronica biggarii | 17 | No | No |
+| 92 | SP-065 | Dracophyllum rosmarinifolium | 10 | No | No |
+| 93 | SP-150 | Scheflera digitata | 8 | No | No |
+| 94 | SP-124 | Parsonia heterophylla | 2 | No | No |
+| 95 | SP-087 | Leptecophylla juniperina | 0 | No | Yes |
+
+The next five by quantity are Carex virgata, Fuchsia excorticata, Dacrycarpus dacrydioides, Lophozonia menziesii and Prumnopitys taxifolius. A conservation-focused extension should also review Lophomyrtus obcordata (173 recorded plants) and Carmichaelia crassicaulis (25); the latter has a disputed name in the register. Keep disputed IDs separate until WRT rules, including Leonohebe cupressoides versus the already-covered Veronica cupressoides. Adding references must not silently merge their planting quantities.
+
+### Name gaps within the covered 50
+
+Fifteen profiles have no verified Māori name in the sources checked. An empty list means research remains open; it does not establish that no Māori name exists:
+
+Olearia odorata, Olearia lineata, Olearia fimbriata, Coprosma rugosa, Olearia hectorii, Olearia bullata, Coprosma rigida, Aristotelia fruticosa, Veronica odora, Coprosma intertexta, Melicytus alpinus, Poa colensoi, Veronica cupressoides, Carex buchananii, Olearia fragrantissima.
+
+Two profiles also lack a verified common name: Coprosma rigida, Coprosma intertexta. Preserve the explicit fallback rather than inventing a name. Names from the historical register and shared names are not automatically species-specific confirmations.
+
+### Register entries outside the planting-history listing
+
+The full transformed register contains **164 entries**, including **69 without any planting-history rows**. Those 69 are outside the current 95-entry species listing and the planting-quantity ranking. They are a separate backlog if the guide is expanded to cover the entire register; absence from this transformed history does not prove a species was never planted. Some entries may represent alternate names or spelling variants, so review identity before creating new profiles.
+
+### Evidence and update procedure
+
+- Rank and quantities: [planting_history.csv](planning/prototype/planting_history.csv), grouped by `species_id_proposed` and sorted by descending total quantity, then database botanical name for ties.
+- Names, flags and register-only entries: [species_master_proposed.csv](planning/prototype/species_master_proposed.csv). An entry is included in the 95 if it has a history row, even when its quantity is zero.
+- Reference coverage and name gaps: [species-profiles.json](../data/species-profiles.json) and [species-photos.json](../data/species-photos.json), joined by species ID.
+- Automated coverage checks: [species-profiles.test.ts](../tests/species-profiles.test.ts) and [species-photos.test.ts](../tests/species-photos.test.ts). They check exact top-50 membership, botanical-name matching and three distinct photo sources per covered species.
+- After changes to history, identities or references, recompute this dated audit and update the table and totals. Keep source links, licence metadata and the check date; flag unresolved identity questions before attaching references.
+
 ## Species names and identification profiles
 
 All fifty species have a reference profile in `data/species-profiles.json`, shown in the photo guide and on each species detail page. The main `/species` listing also displays the reviewed common and Māori names and a short description directly in each covered card. “Identification & sources” expands the identification features, name notes and source links without leaving the listing. Each includes a botanical name, common name, documented Māori names, a short description, identification features, source links and a check date. These are manually reviewed summaries, primarily from Wikipedia, with New Zealand botanical references for gaps. No Wiki MCP was available. Olearia lineata uses NZPCN and the Flora of New Zealand; Olearia fimbriata uses a DOC factsheet. WRT’s own planting guide supports the narrow-leaved tree daisy common name.

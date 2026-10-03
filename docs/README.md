@@ -13,6 +13,11 @@ Documentation for the Wakatipu Reforestation Trust (WRT) nursery and planting so
 2. Then read [`planning/PRACTICAL_PLAN.md`](planning/PRACTICAL_PLAN.md).
 3. Dip into the numbered reports below for evidence behind any claim.
 
+## Application reference guides
+
+- [Species photo guide](species-photo-guide.md): shared names, identification profiles, photo sources, attribution and future offline use.
+- [Species coverage audit and remaining work](species-photo-guide.md#coverage-audit-and-remaining-work): the dated top-50 coverage snapshot, all 45 remaining planting-history entries, unverified name gaps and the 69 register entries outside the planting-history listing.
+
 ## Sensitivity rule
 
 These docs hold no seed-source locations and no personal data. Coordinates, emails and the one surname found in file paths were scrubbed (surname shown as `[name]`). The source spreadsheet folder must never be committed to this repo.
