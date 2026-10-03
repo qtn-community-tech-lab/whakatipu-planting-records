@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
@@ -126,6 +127,8 @@ export default async function SpeciesDetailPage({ params }: Props) {
           <div className="wrt-species-photo-set">{photos.map((photo) => <SpeciesPhotoFigure key={photo.src} photo={photo} />)}</div>
         </Card>
       )}
+
+      <SpeciesProfilePanel speciesId={sp.id} />
 
       <Card
         title="Recorded plants by season"

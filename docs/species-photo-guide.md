@@ -4,7 +4,15 @@ The app’s **Species → Top 20 photo guide** page (`/species/photos`) shows th
 
 The main Species page shows a thumbnail beside each covered name, with its credit, licence and source link. Each covered species detail page also displays its reference photo. Each of the twenty species now has **three distinct reference images**, sixty in total (58 Wikimedia Commons and two iNaturalist). Whole plants, foliage, flowers, fruit or bark are included where sources allow; the third Austroderia richardii image is an explicitly labelled museum herbarium specimen. The shared catalogue is keyed to WRT’s species IDs. Contested names remain separate; choosing an image does not make a taxonomic ruling or alter planting data.
 
-## Sources and reuse
+## Species names and identification profiles
+
+The same twenty species have a reference profile in `data/species-profiles.json`, shown in the photo guide and on each species detail page. Each includes a botanical name, common name, documented Māori names, a short description, identification features, source links and a check date. These are manually reviewed summaries, primarily from Wikipedia, with New Zealand botanical references for gaps. No Wiki MCP was available. Olearia lineata uses NZPCN and the Flora of New Zealand; Olearia fimbriata uses a DOC factsheet. WRT’s own planting guide supports the narrow-leaved tree daisy common name.
+
+An empty Māori-name list displays “Not recorded in the sources checked.” It does not mean no Māori name exists. Shared names are explained, including kōwhai, toetoe and mingimingi/mikimiki. Carmichaelia petriei’s WRT name Mākaka is explicitly marked as a shared broom name without species-specific confirmation. Macrons are retained in display text. Profiles remain separate from WRT’s historical species register and do not change names, quantities or disputed taxa. The Olearia lineata profile notes NZPCN’s newer Shawia lineata name while retaining the database name.
+
+Profile text is bundled with the app; it makes no live Wikipedia request. The source URLs remain available for review and future updates. Hosted reference images still need internet access. To extend coverage, review names and identification details against the species-specific sources, add a profile keyed to the correct species ID and run the coverage tests.
+
+## Photo sources and reuse
 
 `data/species-photos.json` holds the reviewed species mapping, caption, photographer, licence and licence link, Wikimedia Commons file page, Wikipedia article, hosted image URL and source-check date. The browser loads the source-hosted thumbnails directly using `next/image` with `unoptimized`; the app does not download, cache or resize them on its server. No image binaries are committed. Image viewing needs internet access and depends on source availability; planting data stays local. Credits, licence links and source links appear with every photo.
 

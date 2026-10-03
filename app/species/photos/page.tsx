@@ -8,10 +8,12 @@ import { SpeciesName } from "@/components/wrt/names";
 import { SplitLine } from "@/components/wrt/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { SpeciesPhotoFigure } from "@/components/wrt/species/species-photo";
+import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
+import { SpeciesProfileContent } from "@/components/wrt/species/species-profile";
 
 export const metadata: Metadata = {
   title: "Top 20 species · Photo guide",
-  description: "Wiki reference photos for the 20 species with the most recorded plants in WRT’s planting history.",
+  description: "Names, Māori names, identification notes and reference photos for WRT’s 20 most recorded species.",
 };
 
 export default async function SpeciesPhotosPage() {
@@ -39,6 +41,7 @@ export default async function SpeciesPhotosPage() {
       <div className="wrt-photo-grid">
         {rows.map((row, index) => {
           const photos = getSpeciesPhotos(row.item.id);
+          const profile = getSpeciesProfile(row.item.id);
           const photo = photos[0];
           return (
             <Card key={row.item.id} className="wrt-photo-card">
@@ -48,6 +51,7 @@ export default async function SpeciesPhotosPage() {
               </div>
               <p className="wrt-photo-count"><b>{formatNumber(row.split.total)}</b> recorded plants · {row.placeCount} sites</p>
               <SpeciesMarkers species={row.item} />
+              {profile && <SpeciesProfileContent profile={profile} />}
               {photo ? <>
                 <SpeciesPhotoFigure photo={photo} />
                 {photos.length > 1 && <details className="wrt-photo-more"><summary>View {photos.length - 1} more photos</summary>

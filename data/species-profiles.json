@@ -1,0 +1,378 @@
+[
+  {
+    "speciesId": "SP-050",
+    "scientificName": "Coprosma propinqua",
+    "commonName": "Black scrub",
+    "maoriNames": [
+      "Mingimingi",
+      "Mikimiki"
+    ],
+    "nameNote": "Mikimiki is a Kāi Tahu form. These names are shared with several other small-leaved shrubs.",
+    "summary": "A native shrub or small tree with a dense network of spreading branches. It grows in forest, scrub, wetlands and beside streams throughout much of New Zealand.",
+    "lookFor": "Tiny, narrow dark-green leaves on tangled twigs. Ripe berries are often blue or blue-flecked, although their colour varies.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_propinqua"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-134",
+    "scientificName": "Pittosporum tenuifolium",
+    "commonName": "Black matipo",
+    "maoriNames": [
+      "Kōhūhū",
+      "Kohukohu",
+      "Tawhiwhi"
+    ],
+    "summary": "An evergreen New Zealand tree that often colonises forest edges and disturbed ground. Its small, dark flowers release their scent in the evening.",
+    "lookFor": "Glossy oval leaves with wavy edges against dark, almost black young stems. Seed capsules split open to reveal sticky black seeds.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Pittosporum_tenuifolium"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-058",
+    "scientificName": "Cordyline australis",
+    "commonName": "Cabbage tree",
+    "maoriNames": [
+      "Tī kōuka"
+    ],
+    "summary": "A distinctive native tree found across much of New Zealand. Mature trees develop a stout trunk and branching crowns, and can reach about 20 metres.",
+    "lookFor": "Long, sword-shaped leaves gathered into dense tufts at the ends of branches. Young plants often have one upright stem before branching.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Cordyline_australis"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-152",
+    "scientificName": "Sophora microphylla",
+    "commonName": "Small-leaved kōwhai",
+    "maoriNames": [
+      "Kōwhai"
+    ],
+    "nameNote": "Kōwhai is shared by several Sophora species; the botanical name identifies this one.",
+    "summary": "A native flowering tree known for its hanging yellow flowers. Nectar-feeding birds, including tūī, help pollinate it.",
+    "lookFor": "Feathery leaves made up of many small leaflets, drooping branches and clusters of yellow flowers. Flowering makes it particularly easy to spot.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Sophora_microphylla"
+      },
+      {
+        "label": "Native Plant Monitoring · names",
+        "url": "https://monitoring.tanestrees.org.nz/species-information/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-135",
+    "scientificName": "Plagianthus regius",
+    "commonName": "Lowland ribbonwood",
+    "maoriNames": [
+      "Mānatu"
+    ],
+    "summary": "One of New Zealand’s largest deciduous native trees. It changes markedly with age: a young plant’s tangled growth develops into a taller tree with larger leaves.",
+    "lookFor": "Small leaves among interlacing juvenile branches, then larger leaves on older growth. Dense clusters of tiny pale flowers appear in spring.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Plagianthus_regius"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-069",
+    "scientificName": "Fuscospora cliffortioides",
+    "commonName": "Mountain beech",
+    "maoriNames": [
+      "Tawhai rauriki"
+    ],
+    "nameNote": "WRT records the name Tawairauriki. Wikipedia also uses the botanical name Nothofagus cliffortioides.",
+    "summary": "A native beech associated with mountain forests. It can form tall forest, but becomes much shorter and more twisted near the treeline.",
+    "lookFor": "Small, elongated leaves with pointed tips. Compare the overall tree shape too: exposed mountain trees can look very different from sheltered ones.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Nothofagus_cliffortioides"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-119",
+    "scientificName": "Olearia odorata",
+    "commonName": "Scented tree daisy",
+    "maoriNames": [],
+    "summary": "A South Island shrub, usually around 2–4 metres tall, with densely interwoven branches. Its small flowers and foliage support native moths and other insects.",
+    "lookFor": "A twiggy, tangled outline with small pale-green leaves and many small white flowers in spring.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Olearia_odorata"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-116",
+    "scientificName": "Olearia lineata",
+    "commonName": "Narrow-leaved tree daisy",
+    "maoriNames": [],
+    "nameNote": "NZPCN now lists this plant as Shawia lineata. WRT’s recorded botanical name is retained here.",
+    "summary": "A fine-leaved native shrub or small tree of southern grey scrub, grassland and forest margins. It often grows around river terraces, seepages and wetland edges.",
+    "lookFor": "Very narrow leaves with pale, felted undersides and slender drooping branchlets. Small flowers sit on fine stalks.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-lineata/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Olearia-lineata.html"
+      },
+      {
+        "label": "WRT planting guide · common name · PDF",
+        "url": "https://landcare.org.nz/wp-content/uploads/2024/11/WRT-Planting-Guide-Web.pdf#page=31"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-112",
+    "scientificName": "Olearia fimbriata",
+    "commonName": "Small-leaved tree daisy",
+    "maoriNames": [],
+    "summary": "A tree daisy of the eastern South Island, including Otago and northern Southland. It grows in grey scrub and open rocky country and supports specialist native moths.",
+    "lookFor": "Opposite pairs of small, dull grey-green leaves, hairy underneath. Fine outer branchlets hang down, and clusters of cream flowers appear in summer.",
+    "sources": [
+      {
+        "label": "DOC species factsheet · PDF",
+        "url": "https://www.nzpcn.org.nz/site/assets/files/0/13/485/olearia_fimbriata.pdf"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-127",
+    "scientificName": "Phormium tenax",
+    "commonName": "New Zealand flax",
+    "maoriNames": [
+      "Harakeke"
+    ],
+    "summary": "An evergreen plant that grows in large clumps. Harakeke is an important fibre plant, with a long history of use in Māori weaving.",
+    "lookFor": "Long, upright strap-like leaves emerging from the base. Tall flowering stalks rise above the foliage with red or yellow flowers.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Phormium_tenax"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-055",
+    "scientificName": "Coprosma rugosa",
+    "commonName": "Needle-leaved mountain coprosma",
+    "maoriNames": [],
+    "summary": "A hardy native shrub of grassland and forest edges, extending into subalpine areas. Birds disperse the seeds from its small berries.",
+    "lookFor": "Very reduced, narrow leaves that give the plant a needle-leaved appearance. Purple-white berries can appear in autumn.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_rugosa"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-008",
+    "scientificName": "Austroderia richardii",
+    "commonName": "South Island toetoe",
+    "maoriNames": [
+      "Toetoe"
+    ],
+    "nameNote": "Toetoe is shared by several native Austroderia species.",
+    "summary": "A large native tussock grass with flowering stems rising above its leaves. It is one of New Zealand’s toetoe species and is often confused with introduced pampas grasses.",
+    "lookFor": "Arching, cream to yellowish flower plumes, often drooping to one side. The long leaves have several strong veins as well as a central rib.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Austroderia_richardii"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-016",
+    "scientificName": "Carex secta",
+    "commonName": "Tussock sedge",
+    "maoriNames": [
+      "Pūrei",
+      "Pukio"
+    ],
+    "summary": "A native wetland sedge that thrives with wet roots. Older plants build a raised, trunk-like base from roots and old stems.",
+    "lookFor": "A fountain of long, narrow, drooping green leaves above a chunky tussock base. Its flower and seed stalks also droop.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Carex_secta"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-043",
+    "scientificName": "Coprosma crassifolia",
+    "commonName": "Thick-leaved coprosma",
+    "maoriNames": [
+      "Mingimingi"
+    ],
+    "nameNote": "Mingimingi is shared with other small-leaved shrubs, so it does not uniquely identify this species.",
+    "summary": "A much-branched native shrub found in scrub, forest and coastal country. Its translucent berries attract birds and skinks.",
+    "lookFor": "Small, stiff, rounded leaves in opposite pairs, spaced along the branches. They are glossy dark green above and pale underneath.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_crassifolia"
+      },
+      {
+        "label": "Wikipedia · shared Māori names",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_propinqua"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-059",
+    "scientificName": "Corokia cotoneaster",
+    "commonName": "Wire-netting bush",
+    "maoriNames": [
+      "Korokio"
+    ],
+    "summary": "A native shrub whose many crossing branches create its distinctive wire-netting shape. Yellow flowers are followed by colourful fruit.",
+    "lookFor": "Grey zigzag twigs, tiny leaves with pale undersides, and small yellow star-shaped flowers when in bloom.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Corokia_cotoneaster"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-073",
+    "scientificName": "Griselinia littoralis",
+    "commonName": "New Zealand broadleaf",
+    "maoriNames": [
+      "Kāpuka",
+      "Pāpāuma"
+    ],
+    "summary": "A hardy evergreen native tree with dense foliage. Its small flowers are less conspicuous than its thick, glossy leaves.",
+    "lookFor": "Broad, leathery yellow-green leaves with smooth edges. The leaf base is often slightly uneven on either side of the stalk.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Griselinia_littoralis"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-026",
+    "scientificName": "Carmichaelia petriei",
+    "commonName": "Desert broom",
+    "maoriNames": [
+      "Mākaka"
+    ],
+    "nameNote": "WRT records Mākaka for this plant. It is a shared name for native brooms; a species-specific Māori name has not been confirmed in the sources checked.",
+    "summary": "An upright native broom with green, largely leafless branchlets. Its small pea-like flowers can be purple, violet and white.",
+    "lookFor": "An open, stout shrub with green to bronze-green stems. Ripe seed pods droop, a useful feature for distinguishing it from other native brooms.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Carmichaelia_petriei"
+      },
+      {
+        "label": "NZ Rhizobia · broom names",
+        "url": "https://rhizobia.nz/taxonomy/legume"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-138",
+    "scientificName": "Podocarpus laetus",
+    "commonName": "Hall’s tōtara",
+    "maoriNames": [
+      "Tōtara kōtukutuku",
+      "Tōtara-kiri-kōtukutuku"
+    ],
+    "summary": "A native conifer especially associated with mountain forests. Older references may call it Podocarpus hallii or Podocarpus cunninghamii.",
+    "lookFor": "Narrow, pointed leaves and thin, papery bark that flakes away. Its bark is thinner than that of lowland tōtara, and juvenile leaves are longer.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Podocarpus_laetus"
+      },
+      {
+        "label": "Ngā Rauropi Whakaoranga · Māori name",
+        "url": "https://rauropiwhakaoranga.landcareresearch.co.nz/names/82477563-d51d-4ff7-8b46-2e044c220537"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/podocarpus-laetus/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-056",
+    "scientificName": "Coprosma virescens",
+    "commonName": "Green-fruited coprosma",
+    "maoriNames": [
+      "Mikimiki"
+    ],
+    "nameNote": "Mikimiki is a shared name used for several small-leaved Coprosma species.",
+    "summary": "A small-leaved native shrub or tree with tangled, slender branches. It occurs in eastern and southern parts of New Zealand.",
+    "lookFor": "Tiny leaves with wavy edges or blunt teeth. The pale, translucent ripe berries can look green because the seeds show through.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_virescens"
+      },
+      {
+        "label": "Nelson Natives · common name",
+        "url": "https://www.nelsonnatives.co.nz/coprosma-virescens"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-114",
+    "scientificName": "Olearia hectorii",
+    "commonName": "Hector’s tree daisy",
+    "maoriNames": [],
+    "summary": "A deciduous native tree daisy with reddish young stems and furrowed bark. It supports many native moth species and needs open ground for seedlings to establish.",
+    "lookFor": "Clusters of grey-green leaves arranged opposite one another, with silvery undersides. Its small flower heads contain pale-yellow florets.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Olearia_hectorii"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  }
+]

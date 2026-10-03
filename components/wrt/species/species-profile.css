@@ -1,0 +1,16 @@
+.wrt-profile { display: flex; flex-direction: column; gap: 12px; color: var(--text-body); font: var(--type-body); }
+#about-species { scroll-margin-top: 90px; }
+.wrt-profile p { margin: 0; max-width: 78ch; }
+.wrt-profile strong { color: var(--text-strong); }
+.wrt-profile__names { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-row); }
+.wrt-profile__names dt { margin-bottom: 5px; color: var(--text-muted); font: 500 12px/1.45 var(--font-sans); }
+.wrt-profile__names dd { margin: 0; color: var(--text-strong); font: 600 14px/1.5 var(--font-sans); overflow-wrap: anywhere; }
+.wrt-profile__unknown { color: var(--text-muted); font-weight: 500; }
+.wrt-profile .wrt-profile__note, .wrt-profile .wrt-profile__sources { font: 500 12px/1.6 var(--font-sans); color: var(--text-muted); }
+.wrt-profile__sources a { color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; }
+.wrt-photo-card .wrt-profile { font: 500 13px/1.65 var(--font-sans); }
+.wrt-photo-card .wrt-profile__names { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+.wrt-photo-card .wrt-profile__names > div { display: grid; grid-template-columns: 105px minmax(0, 1fr); gap: 10px; }
+.wrt-photo-card .wrt-profile__names dt { margin: 0; }
+.wrt-photo-card .wrt-profile__names dd { font-size: 13px; }
+@media (max-width: 600px) { .wrt-profile__names { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
