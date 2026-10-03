@@ -13,7 +13,7 @@ import { SpeciesProfileContent } from "@/components/wrt/species/species-profile"
 
 export const metadata: Metadata = {
   title: `Top ${SPECIES_PROFILE_LIMIT} species · Species guide`,
-  description: `Names, Māori names and identification notes for WRT’s ${SPECIES_PROFILE_LIMIT} most recorded species, with reference photos for the top 20.`,
+  description: `Names, Māori names, identification notes and reference photos for WRT’s ${SPECIES_PROFILE_LIMIT} most recorded species.`,
 };
 
 export default async function SpeciesPhotosPage() {
@@ -34,7 +34,7 @@ export default async function SpeciesPhotosPage() {
           These {rows.length} species account for {formatNumber(split.total)} plants—{Math.round(split.total / total * 100)}% of the recorded total.</>}
       />
       <Card title="Before you head out" action={<SplitLine split={split} />}>
-        <p className="wrt-prose m-0">All {rows.length} species have names, identification notes and source links. The top 20 also have three reference images each from Wiki, with two openly licensed iNaturalist photos for Olearia hectorii. They were taken at other locations.
+        <p className="wrt-prose m-0">All {rows.length} species have names, identification notes, source links and three reference images each from Wiki, with two openly licensed iNaturalist photos for Olearia hectorii. The Austroderia richardii and Coprosma dumosa sets each include one labelled herbarium specimen. Photos were taken at other locations.
           They show what a species can look like, and do not confirm what is growing at a WRT site today.
           Young plants may look different. Previews are cropped to fit; open Full image for the entire frame. Select a species name to see its planting history and review notes.</p>
       </Card>

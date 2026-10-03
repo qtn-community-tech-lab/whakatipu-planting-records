@@ -3,10 +3,10 @@ import { getSpeciesPhoto, getSpeciesPhotos, speciesPhotos, topPlantedSpecies } f
 import { q } from "./helpers";
 
 describe("reviewed Wiki photo catalogue", () => {
-  it("covers precisely the twenty species with the most recorded plants", async () => {
+  it("covers precisely the thirty-five species with the most recorded plants", async () => {
     const rows = topPlantedSpecies(await q.speciesList());
-    expect(rows).toHaveLength(20);
-    expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(105783);
+    expect(rows).toHaveLength(35);
+    expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(125077);
     expect(new Set(speciesPhotos.map((p) => p.speciesId))).toEqual(new Set(rows.map((r) => r.item.id)));
     for (const row of rows) {
       const photos = getSpeciesPhotos(row.item.id);
@@ -21,8 +21,8 @@ describe("reviewed Wiki photo catalogue", () => {
   });
 
   it("keeps hosted image URLs, author credits and source licences for future offline use", () => {
-    expect(speciesPhotos).toHaveLength(60);
-    expect(new Set(speciesPhotos.map((p) => p.src)).size).toBe(60);
+    expect(speciesPhotos).toHaveLength(105);
+    expect(new Set(speciesPhotos.map((p) => p.src)).size).toBe(105);
     for (const photo of speciesPhotos) {
       const url = new URL(photo.src);
       expect(url.protocol).toBe("https:");

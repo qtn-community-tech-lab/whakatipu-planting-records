@@ -6,6 +6,7 @@ import { SplitBar } from "@/components/wrt/quantity";
 import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
 import { SpeciesPhotoThumbnail, SpeciesPhotoCredit } from "./species-photo";
 import { SpeciesMarkers } from "./species-meta";
+import { SpeciesProfilePreview } from "./species-profile-preview";
 
 /** One species in the field guide: name and markers, recorded plants, sites, seasons. */
 export function SpeciesRow({ row, max }: { row: SpeciesSummary; max: number }) {
@@ -20,6 +21,7 @@ export function SpeciesRow({ row, max }: { row: SpeciesSummary; max: number }) {
         <div className="flex min-w-0 flex-col gap-2">
           <SpeciesName species={sp} link />
           <SpeciesMarkers species={sp} />
+          <SpeciesProfilePreview speciesId={sp.id} slug={sp.slug} />
           {photo && <><Link href={photoHref} className="cn-link text-[12px]">View {photos.length} photos →</Link><SpeciesPhotoCredit photo={photo} /></>}
         </div>
       </div>

@@ -1,6 +1,7 @@
 /** Reviewed Wiki references, keyed to WRT names without merging contested taxa. */
 import catalogue from "@/data/species-photos.json";
 import type { SpeciesSummary } from "./queries";
+import { SPECIES_PROFILE_LIMIT } from "./species-profiles";
 
 export interface SpeciesPhoto {
   speciesId: string;
@@ -31,7 +32,7 @@ export const getSpeciesPhotos = (speciesId: string): readonly SpeciesPhoto[] => 
 export const getSpeciesPhoto = (speciesId: string) => getSpeciesPhotos(speciesId)[0];
 
 /** Rank recorded quantities, including those needing review; ties use botanical names. */
-export function topPlantedSpecies(rows: readonly SpeciesSummary[], limit = 20) {
+export function topPlantedSpecies(rows: readonly SpeciesSummary[], limit = SPECIES_PROFILE_LIMIT) {
   return [...rows].sort((a, b) => b.split.total - a.split.total ||
     a.item.scientificName.localeCompare(b.item.scientificName)).slice(0, limit);
 }
