@@ -374,5 +374,307 @@
       }
     ],
     "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-088",
+    "scientificName": "Leptospermum scoparium",
+    "commonName": "New Zealand tea tree",
+    "maoriNames": [
+      "Mānuka",
+      "Kāhikatoa"
+    ],
+    "summary": "A densely branching native shrub or small tree that is often among the first plants to establish on cleared ground. Its flowers provide nectar for bees and other insects.",
+    "lookFor": "Small, pointed, prickly leaves and white, sometimes pink, five-petalled flowers. Woody seed capsules often stay on the branches after flowering.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Leptospermum_scoparium"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-136",
+    "scientificName": "Poa cita",
+    "commonName": "Silver tussock",
+    "maoriNames": [
+      "Wī",
+      "Pātītī"
+    ],
+    "summary": "A native tussock grass found across much of New Zealand. Its fine leaves form clumps usually around 30 centimetres to one metre tall, and can hang farther down steep banks.",
+    "lookFor": "A dense tussock of very fine, narrow leaves. Leaf width varies between populations, so compare the whole clump as well as individual blades.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Poa_cita"
+      },
+      {
+        "label": "Ngā Rauropi Whakaoranga · Māori names",
+        "url": "https://rauropiwhakaoranga.landcareresearch.co.nz/names/b515e066-24a1-4069-9be7-73a0c12a6cdf"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Wī is documented for this species. Ngā Rauropi Whakaoranga records Pātītī as a possible name in southern districts."
+  },
+  {
+    "speciesId": "SP-163",
+    "scientificName": "Veronica salicifolia",
+    "commonName": "Willow-leaf hebe",
+    "maoriNames": [
+      "Koromiko"
+    ],
+    "summary": "An evergreen shrub with a spreading, willow-like appearance. Its long flower spikes provide nectar and pollen for a range of insects.",
+    "lookFor": "Long, narrow leaves in opposite pairs, with drooping spikes of white or pale lilac flowers. Seed capsules also hang down rather than standing upright.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Veronica_salicifolia"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Older references use Hebe salicifolia. Koromiko is shared by several native hebe species."
+  },
+  {
+    "speciesId": "SP-110",
+    "scientificName": "Olearia bullata",
+    "commonName": "Tree daisy",
+    "maoriNames": [],
+    "summary": "A bushy native shrub with many interlacing reddish twigs. It is associated with wet places in the eastern South Island and can reach around three metres.",
+    "lookFor": "Tiny, wrinkled leaves with rolled edges and white undersides. The brownish-green foliage and dense tangle of twigs give the bush a greyish appearance.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Olearia_bullata"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-bullata/"
+      },
+      {
+        "label": "Ashburton District Council · common name",
+        "url": "https://www.ashburtondc.govt.nz/community-facilities/ashburton-district/native-plants-in-our-district"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Tree daisy is a group name used for several species. NZPCN now lists this plant as Shawia bullata; WRT’s recorded name is retained here."
+  },
+  {
+    "speciesId": "SP-126",
+    "scientificName": "Phormium cookianum",
+    "commonName": "Mountain flax",
+    "maoriNames": [
+      "Wharariki"
+    ],
+    "summary": "A clump-forming native flax with long leaves growing from fan-shaped bases. It generally has shorter leaves and flowering stalks than harakeke, Phormium tenax.",
+    "lookFor": "Greenish, yellow or orange flowers followed by long, twisted seed capsules that hang down. The drooping capsules are a useful distinction from harakeke.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Phormium_colensoi"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/phormium-cookianum-subsp-cookianum/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Wikipedia uses Phormium colensoi and explains the alternative name Phormium cookianum. The database does not specify a subspecies."
+  },
+  {
+    "speciesId": "SP-053",
+    "scientificName": "Coprosma rigida",
+    "commonName": null,
+    "maoriNames": [],
+    "summary": "A bushy native coprosma with widely spreading branches. Its small paired leaves grow in clusters, while older twigs develop a conspicuous orange or reddish colour.",
+    "lookFor": "Tiny oval leaves, often widest near a slightly dented tip, with reddish margins. Young twigs are fuzzy; older ones are shiny orange or red. Fruit is yellow.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rigida/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-044",
+    "scientificName": "Coprosma dumosa",
+    "commonName": "Mingimingi",
+    "maoriNames": [
+      "Mingimingi"
+    ],
+    "summary": "A bushy native shrub with a layered branching pattern. It is common in montane forest and shrubland, including wetter regions and parts of the drier South Island.",
+    "lookFor": "Small, thick oval leaves clustered in opposite pairs along short branchlets. Tiny pits occur underneath the leaves. Ripe fruit can be orange, red or translucent white.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-dumosa/"
+      },
+      {
+        "label": "Wikipedia · shared Māori name",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_propinqua"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Mingimingi is shared with several other small-leaved shrubs and does not uniquely identify this species."
+  },
+  {
+    "speciesId": "SP-005",
+    "scientificName": "Aristotelia fruticosa",
+    "commonName": "Mountain wineberry",
+    "maoriNames": [],
+    "summary": "A densely branching native shrub, usually no more than about two metres tall. Its leaf shape changes with age, so young and mature growth can look quite different.",
+    "lookFor": "Small leaves on reddish-brown branchlets, with prominent veins underneath. Juvenile leaves can be larger and irregularly lobed; small flowers range from white to pink or red.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Aristotelia_fruticosa"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/aristotelia-fruticosa/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-070",
+    "scientificName": "Fuscospora fusca",
+    "commonName": "Red beech",
+    "maoriNames": [
+      "Tawhai raunui"
+    ],
+    "summary": "A large evergreen native forest tree found in both main islands. It is associated with fertile, well-drained ground on lower hills and inland valley floors.",
+    "lookFor": "Broad oval leaves with conspicuously toothed edges, unlike the small pointed leaves of mountain beech. Mature trees can grow to around 35 metres.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Nothofagus_fusca"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "WRT records Tawhairaunui. Wikipedia’s article uses Nothofagus fusca and notes the New Zealand name Fuscospora fusca."
+  },
+  {
+    "speciesId": "SP-158",
+    "scientificName": "Veronica odora",
+    "commonName": "Boxwood hebe",
+    "maoriNames": [],
+    "summary": "A compact evergreen native shrub of mountain and subalpine scrub and grassland. Its dense, box-like foliage gives it the common name boxwood hebe.",
+    "lookFor": "Short oval leaves, glossy dark green above and paler below, packed closely on the branches. White flowers cluster near the branch tips.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Veronica_odora"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Older references may use Hebe odora or Hebe buxifolia. A species-specific Māori name was not verified in the sources checked."
+  },
+  {
+    "speciesId": "SP-079",
+    "scientificName": "Hoheria glabrata",
+    "commonName": "Mountain lacebark",
+    "maoriNames": [
+      "Houhere",
+      "Houhi",
+      "Houi"
+    ],
+    "summary": "A deciduous native tree of wetter mountain regions. Its green leaves turn yellow before falling in autumn, and white flowers appear in summer.",
+    "lookFor": "Thin leaves with broad bases, pointed tips and irregularly toothed edges. Look for a spreading form, often with several stems arising near the base.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Hoheria_glabrata"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/hoheria-glabrata/"
+      },
+      {
+        "label": "Te Papa · shared Māori names",
+        "url": "https://collections.tepapa.govt.nz/category/1807"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Houhere and Houhi are shared lacebark names; Houi is documented for the mountain lacebarks. WRT records Whauwhau, which was not confirmed for this species in the references checked."
+  },
+  {
+    "speciesId": "SP-105",
+    "scientificName": "Myrsine divaricata",
+    "commonName": "Weeping matipo",
+    "maoriNames": [
+      "Māpou"
+    ],
+    "summary": "A native shrub or small tree with stiff, interlacing branches that curve downwards. It occurs in forest, scrub and forest margins from lowland to mountain areas.",
+    "lookFor": "Small, leathery, often heart-shaped leaves with tiny dots and sometimes a dark blotch near their base. The fine branchlets droop; ripe berries are usually purple.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Myrsine_divaricata"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/myrsine-divaricata/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The references call this plant weeping māpou. Māpou is also used for other Myrsine species; the botanical name distinguishes this one."
+  },
+  {
+    "speciesId": "SP-048",
+    "scientificName": "Coprosma lucida",
+    "commonName": "Shining karamū",
+    "maoriNames": [
+      "Karamū",
+      "Kāramuramu"
+    ],
+    "summary": "A native shrub or small tree with much larger leaves than the twiggy coprosmas. Its bright, glossy foliage can make it look similar to other broad-leaved shrubs.",
+    "lookFor": "Opposite pairs of glossy oval leaves, dark green above and paler below. The central leaf vein is raised on the upper surface, unlike the indented vein of Coprosma robusta.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_lucida"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Karamū is shared by several Coprosma species. Shining karamū and the botanical name help distinguish this one."
+  },
+  {
+    "speciesId": "SP-046",
+    "scientificName": "Coprosma intertexta",
+    "commonName": null,
+    "maoriNames": [],
+    "summary": "A twiggy native shrub of the eastern South Island, often found in dry scrub and rocky places. It can spread by suckering to form thickets.",
+    "lookFor": "Very narrow, needle-like leaves, sometimes curved sideways, among reddish, widely branching twigs. Ripe fruit is small and white or pale blue.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_intertexta"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-intertexta/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-094",
+    "scientificName": "Melicytus alpinus",
+    "commonName": "Porcupine shrub",
+    "maoriNames": [],
+    "summary": "A dense, rigid native shrub adapted to dry, exposed country. Its tangled branches shelter native lizards, which also eat the fruit and disperse its seeds.",
+    "lookFor": "Stout, tapering grey-speckled branches with sparse clusters of small oval leaves. Inconspicuous flowers sit beneath branches; white berries often have purple patches.",
+    "sources": [
+      {
+        "label": "Wikipedia",
+        "url": "https://en.wikipedia.org/wiki/Melicytus_alpinus"
+      },
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/melicytus-alpinus/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
   }
 ]

@@ -7,7 +7,7 @@ export function SpeciesProfileContent({ profile }: { profile: SpeciesProfile }) 
   return (
     <div className="wrt-profile">
       <dl className="wrt-profile__names">
-        <div><dt>Common name</dt><dd>{profile.commonName}</dd></div>
+        <div><dt>Common name</dt><dd>{profile.commonName ?? <span className="wrt-profile__unknown">Not recorded in the sources checked.</span>}</dd></div>
         <div><dt>Botanical name</dt><dd><i>{profile.scientificName}</i></dd></div>
         <div><dt>Māori {profile.maoriNames.length > 1 ? "names" : "name"}</dt>
           <dd>{profile.maoriNames.length ? profile.maoriNames.join(" · ") : <span className="wrt-profile__unknown">Not recorded in the sources checked.</span>}</dd>
@@ -27,7 +27,7 @@ export function SpeciesProfilePanel({ speciesId }: { speciesId: string }) {
   const profile = getSpeciesProfile(speciesId);
   if (!profile) return null;
   return (
-    <Card id="about-species" title={`About ${profile.commonName}`}>
+    <Card id="about-species" title={`About ${profile.commonName ?? profile.scientificName}`}>
       <SpeciesProfileContent profile={profile} />
     </Card>
   );

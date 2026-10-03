@@ -73,7 +73,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHead
-        aside={<CardLink href="/species/photos">Top 20 photo guide</CardLink>}
+        aside={<CardLink href="/species/photos">Top 35 species guide</CardLink>}
         eyebrow="Species"
         title={`${formatNumber(all.length)} species, ${formatNumber(allSplit.total)} recorded plants`}
         lead={

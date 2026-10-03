@@ -1,5 +1,6 @@
 .wrt-profile { display: flex; flex-direction: column; gap: 12px; color: var(--text-body); font: var(--type-body); }
 #about-species { scroll-margin-top: 90px; }
+.wrt-photo-card[id] { scroll-margin-top: 90px; }
 .wrt-profile p { margin: 0; max-width: 78ch; }
 .wrt-profile strong { color: var(--text-strong); }
 .wrt-profile__names { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border-row); }
