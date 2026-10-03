@@ -60,7 +60,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   const show = pick(SHOWS, one(sp.show), "all") as ShowKey;
 
   const all = await getWrt().speciesList();
-  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.speciesId) && getSpeciesProfile(r.item.speciesId)).length;
+  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
