@@ -1,0 +1,23 @@
+{
+  "retrievedAt": "2026-10-03",
+  "apiUrl": "https://api.inaturalist.org/v1/observations/60402502",
+  "taxonId": 404278,
+  "scientificName": "Olearia hectorii",
+  "qualityGrade": "research",
+  "observationId": 60402502,
+  "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+  "photos": [
+    {
+      "id": 96583759,
+      "licenseCode": "cc-by",
+      "attribution": "(c) John Barkla, some rights reserved (CC BY)",
+      "downloadUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/96583759/large.jpeg"
+    },
+    {
+      "id": 96583766,
+      "licenseCode": "cc-by",
+      "attribution": "(c) John Barkla, some rights reserved (CC BY)",
+      "downloadUrl": "https://inaturalist-open-data.s3.amazonaws.com/photos/96583766/large.jpeg"
+    }
+  ]
+}

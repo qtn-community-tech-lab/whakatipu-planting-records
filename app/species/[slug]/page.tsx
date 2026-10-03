@@ -11,6 +11,9 @@ import { PlaceName, hrefs } from "@/components/wrt/names";
 import { Badge } from "@/components/ui/badge";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
+import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
+import { SpeciesPhotoFigure } from "@/components/wrt/species/species-photo";
+
 type Props = { params: Promise<{ slug: string }> };
 
 const PLACES_SHOWN = 15;
@@ -46,6 +49,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
   if (!d || !d.span) notFound();
   const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
 
+  const photos = getSpeciesPhotos(sp.id);
   const otherNames = [sp.maoriName, sp.commonName]
     .filter((n): n is string => !!n && n !== sp.displayName);
   const aliases = [...new Set(sp.aliases)].filter(Boolean);
@@ -114,6 +118,13 @@ export default async function SpeciesDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
+      )}
+
+      {photos.length > 0 && (
+        <Card id="photos" title={`${photos.length} reference photos`} action={<CardLink href="/species/photos">Top 20 photo guide</CardLink>}
+          foot="Reference photos from other locations. Previews are cropped to fit; open Full image for the entire frame. These do not confirm plants currently growing at a WRT site; young plants may look different.">
+          <div className="wrt-species-photo-set">{photos.map((photo) => <SpeciesPhotoFigure key={photo.src} photo={photo} />)}</div>
+        </Card>
       )}
 
       <Card

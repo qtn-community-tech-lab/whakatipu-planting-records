@@ -4,7 +4,7 @@ import { getWrt } from "@/lib/wrt/server";
 import { formatNumber, foldMacrons } from "@/lib/wrt/text";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { splitOf } from "@/lib/wrt/queries";
-import { Card, EmptyState, PageHead, Rule } from "@/components/wrt/page";
+import { Card, CardLink, EmptyState, PageHead, Rule } from "@/components/wrt/page";
 import { SplitLine } from "@/components/wrt/quantity";
 import { SpeciesRow } from "@/components/wrt/species/species-row";
 import {
@@ -73,11 +73,12 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHead
+        aside={<CardLink href="/species/photos">Top 20 photo guide</CardLink>}
         eyebrow="Species"
         title={`${formatNumber(all.length)} species, ${formatNumber(allSplit.total)} recorded plants`}
         lead={
           <>
-            Every species with at least one record since Autumn 2015, with where and when it went in.
+            Every species with at least one record since Autumn 2015, with where and when it went in. Reference photos are available for the 20 most planted species.
             {contested > 0 && (
               <> {formatNumber(contested)} {contested === 1 ? "name needs" : "names need"} a WRT ruling before the records can be merged.</>
             )}
@@ -94,7 +95,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
         action={
           filtered ? <span className="wrt-split-line"><SplitLine split={shownSplit} /></span> : <SplitLine split={allSplit} />
         }
-        foot="Bars show recorded plants for each species, relative to the largest in this list. Amber is the part on records that still need a WRT ruling or confirmation."
+        foot="Bars show recorded plants for each species, relative to the largest in this list. Amber is the part on records that still need a WRT ruling or confirmation. Photos are Wiki references from other locations; they do not confirm plants growing at a WRT site."
       >
         <div className="mb-2 flex flex-col gap-3">
           <nav aria-label="Show" className="flex flex-wrap items-center gap-2">

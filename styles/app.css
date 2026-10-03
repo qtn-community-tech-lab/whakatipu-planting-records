@@ -161,3 +161,27 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+/* Wiki references use Canopy frames; full images remain available at the source. */
+.wrt-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.wrt-photo-card { min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.wrt-photo-count { margin: 0; font: 500 13px/1.5 var(--font-sans); color: var(--text-body); }
+.wrt-photo { margin: 0; min-width: 0; }
+.wrt-photo > a { display: block; background: var(--surface-soft); border: 1px solid var(--border-card); border-radius: var(--radius-tile); overflow: hidden; }
+.wrt-photo__image { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.wrt-photo__caption { font: 500 12px/1.5 var(--font-sans); color: var(--text-muted); overflow-wrap: anywhere; }
+.wrt-photo__caption p { margin: 8px 0 0; }
+.wrt-photo__caption a { text-decoration: underline; text-underline-offset: 2px; }
+@media (max-width: 1100px) { .wrt-photo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .wrt-photo-grid { grid-template-columns: minmax(0, 1fr); } }
+.wrt-photo-thumb { display: block; flex: 0 0 96px; background: var(--surface-soft); border: 1px solid var(--border-card); border-radius: var(--radius-tile); overflow: hidden; }
+.wrt-photo-thumb__image { display: block; width: 96px; height: 96px; object-fit: cover; }
+.wrt-photo-thumb__credit { margin: 0; color: var(--text-muted); font: 500 11px/1.5 var(--font-sans); overflow-wrap: anywhere; }
+.wrt-photo-thumb__credit a { text-decoration: underline; text-underline-offset: 2px; }
+
+.wrt-photo-more summary { cursor: pointer; color: var(--text-brand); font: 600 13px/1.5 var(--font-sans); }
+.wrt-photo-more[open] summary { margin-bottom: 12px; }
+.wrt-photo-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.wrt-species-photo-set { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+#photos { scroll-margin-top: 88px; }
+@media (max-width: 700px) { .wrt-species-photo-set { grid-template-columns: minmax(0, 1fr); } }

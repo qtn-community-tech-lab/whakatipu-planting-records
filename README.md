@@ -14,7 +14,7 @@ npm test           # vitest: parser, validation, repository and query invariants
 npm run build && npm start
 ```
 
-Node 20.9+ (tested on 22). No database, no accounts, no network access needed at runtime.
+Node 20.9+ (tested on 22). No database or accounts. Planting data loads from local CSVs; reference photos require internet access.
 
 ## Pages
 
@@ -74,3 +74,7 @@ display only. Delete it once the species register has its own display-name colum
 - Numbers will move when WRT rules on the open questions (Slope Hill 2024, contested species pairs, Paper4Trees, site numbers).
 - History only: no current stock, seed lots, potting or allocations.
 - Spring 2026 is not in the MASTER workbook yet.
+
+## Species photo guide
+
+Open **Species → Top 20 photo guide** for hosted reference photos of the twenty most planted species. Each species has three photos; thumbnails appear in the main Species list, and the full set appears on its detail page, with photographer credits, licences and source links. See [the source and maintenance notes](docs/species-photo-guide.md).
