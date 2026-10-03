@@ -1,0 +1,15 @@
+lists                                   40
+records                                589
+plants parsed                       15,382
+parsed == printed                       40
+planting date typed                     17
+site matched to Plants Out              15
+total equals Plants Out column           6
+not a per-site list                      5
+multi-site collation (needs page split)       1
+
+season         lists records  plants dated matched equal
+Spring 2022       13     197   5,481     5       7     3
+Autumn 2023       12     164   4,551     7       8     3
+Spring 2024       12     181   4,890     2       0     0
+Autumn 2025        3      47     460     3       0     0

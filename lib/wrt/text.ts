@@ -1,0 +1,112 @@
+/**
+ * Text helpers shared by the data layer and search.
+ * Search ignores macrons and case; display never drops macrons.
+ */
+
+const MACRON_MAP: Record<string, string> = {
+  ā: "a", ē: "e", ī: "i", ō: "o", ū: "u",
+  Ā: "A", Ē: "E", Ī: "I", Ō: "O", Ū: "U",
+};
+
+/** "Mānuka" → "Manuka". */
+export function foldMacrons(s: string): string {
+  return s.replace(/[āēīōūĀĒĪŌŪ]/g, (c) => MACRON_MAP[c] ?? c);
+}
+
+/** Lower-case, macron-free, punctuation collapsed to single spaces. */
+export function searchKey(s: string): string {
+  return foldMacrons(s)
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/\\n/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+/** URL slug: "Lake Hayes Pavilion" → "lake-hayes-pavilion". */
+export function slugify(s: string): string {
+  return searchKey(s).replace(/\s+/g, "-");
+}
+
+/** Source headers sometimes carry a literal "\n"; show them as one line. */
+export function cleanLabel(s: string): string {
+  return s.replace(/\\n/g, " ").replace(/\s+/g, " ").trim();
+}
+
+/**
+ * Bounded optimal-string-alignment distance (Levenshtein + adjacent
+ * transposition, so "kowhia" is 1 from "kowhai"). Returns max+1 once exceeded.
+ */
+export function editDistance(a: string, b: string, max = 2): number {
+  if (a === b) return 0;
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  const d: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i]);
+  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  for (let i = 1; i <= a.length; i++) {
+    let rowMin = Infinity;
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      let v = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, d[i - 2][j - 2] + 1);
+      d[i][j] = v;
+      if (v < rowMin) rowMin = v;
+    }
+    if (rowMin > max) return max + 1;
+  }
+  return d[a.length][b.length];
+}
+
+function typoTolerance(len: number): number {
+  return len >= 8 ? 2 : len >= 4 ? 1 : 0;
+}
+
+function wordMatches(qw: string, kw: string): boolean {
+  if (kw.startsWith(qw)) return true;
+  const tol = typoTolerance(qw.length);
+  if (!tol) return false;
+  return editDistance(qw, kw, tol) <= tol || editDistance(qw, kw.slice(0, qw.length), tol) <= tol;
+}
+
+/**
+ * Score how well a query matches a set of search keys. 0 = no match.
+ * Exact > prefix > word prefix > substring > typo-tolerant match.
+ * Spaces are ignored as a fallback, so "white chapel" finds "whitechapel".
+ */
+export function matchScore(query: string, keys: string[]): number {
+  const q = searchKey(query);
+  if (!q) return 0;
+  const qc = q.replace(/ /g, "");
+  const qWords = q.split(" ");
+  let best = 0;
+  for (const key of keys) {
+    if (!key) continue;
+    const kc = key.replace(/ /g, "");
+    if (key === q || kc === qc) return 100;
+    if (key.startsWith(q) || kc.startsWith(qc)) best = Math.max(best, 80);
+    else if (key.split(" ").some((w) => w.startsWith(q))) best = Math.max(best, 70);
+    else if (key.includes(q) || (qc.length >= 3 && kc.includes(qc))) best = Math.max(best, 55);
+    else {
+      const kWords = key.split(" ");
+      if (qWords.every((qw) => kWords.some((kw) => wordMatches(qw, kw)))) best = Math.max(best, 35);
+      else {
+        const tol = typoTolerance(qc.length);
+        if (tol && editDistance(qc, kc.slice(0, qc.length + 1), tol) <= tol) best = Math.max(best, 30);
+      }
+    }
+  }
+  return best;
+}
+
+/** en-NZ number formatting: 7,020. */
+export function formatNumber(n: number): string {
+  return new Intl.NumberFormat("en-NZ").format(n);
+}
+
+/** "12%" style share, never "NaN%". */
+export function formatShare(part: number, whole: number): string {
+  if (!whole) return "0%";
+  const pct = (part / whole) * 100;
+  if (pct > 0 && pct < 1) return "<1%";
+  return `${Math.round(pct)}%`;
+}

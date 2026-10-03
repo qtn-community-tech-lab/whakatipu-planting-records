@@ -1,0 +1,1520 @@
+{
+ "batch_id": "B18_stocktake_old",
+ "files": [
+  {
+   "path": "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023.xlsx",
+   "purpose_guess": "Whole-nursery stocktake of October 2023 with one count per species per container (T28, small PB3, PB3), split under North (Old) and South (New) nursery headers; V150 not counted.",
+   "workflow_stage": "stocktake",
+   "years_covered": "October 2023",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-105",
+     "grain": "One species at one stocktake, with a count per container column (the number of plants, not trays) and a row total; the nursery-location split is carried only by merged row-1 headers",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(blank; row 1-2 merged 'PLANT NAME' spans A:B)",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 94,
+       "distinct": 95,
+       "examples": [
+        "1",
+        "2",
+        "3",
+        "11",
+        "97"
+       ],
+       "notes": "Running species number; not sequential (jumps at rows 12, 15, 18, 38, 88) and blank for A40, A43, A78 and the PLUS block rows"
+      },
+      {
+       "letter": "B",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 101,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta",
+        "Chionochloa rigida",
+        "Veronica salicifolia",
+        "Weinmania racemosa"
+       ],
+       "notes": "Latin binomials only; 4 names carry a trailing space (B37, B62, B77, B92); includes 'Total' (B99) and 'PLUS' (B101) as non-species labels"
+      },
+      {
+       "letter": "C",
+       "header": "Comments (North Nursery (Old), merged C1:E1)",
+       "concept": "notes",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Empty in data rows; only the totals cell C99 =SUM(C3:C98) is populated"
+      },
+      {
+       "letter": "D",
+       "header": "V150/35F (North)",
+       "concept": "container",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "No counts entered for V150 at this stocktake; only the total cell D99"
+      },
+      {
+       "letter": "E",
+       "header": "T28 (North)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 8,
+       "distinct": 8,
+       "examples": [
+        "28",
+        "56",
+        "84",
+        "140",
+        "1016"
+       ],
+       "notes": "Only 8 species have T28 counts, in multiples of 28 (tray count x 28)"
+      },
+      {
+       "letter": "F",
+       "header": "Small PB3 (South Nursery (New), merged F1:H1)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 31,
+       "distinct": 28,
+       "examples": [
+        "18",
+        "42",
+        "186",
+        "221"
+       ],
+       "notes": "Small PB3 is a new category not present in 2022 or 2020; likely a size/readiness split of PB3 (inferred, medium)"
+      },
+      {
+       "letter": "G",
+       "header": "PB3 (South)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 45,
+       "distinct": 37,
+       "examples": [
+        "9",
+        "10",
+        "50",
+        "61",
+        "222"
+       ],
+       "notes": "Whether the PB3 count is growing or ready is not recorded"
+      },
+      {
+       "letter": "H",
+       "header": "Comments (South)",
+       "concept": "notes",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Empty in data rows"
+      },
+      {
+       "letter": "I",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 95,
+       "distinct": 56,
+       "examples": [
+        "0",
+        "42",
+        "362"
+       ],
+       "notes": "=SUM(D3:H3) per species; excludes C and does not mean the same as a ready-stock figure"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "I3:I97, I103:I105",
+       "pattern": "=SUM(D#:H#)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "C99:I99",
+       "pattern": "=SUM(C3:C98) etc.",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Totals row range stops at row 98, so the PLUS block (rows 102-105) is excluded from the column totals; Carex maorica carries 45 PB3 but has no row-total formula (I102 empty)",
+       "evidence": "Stocktake Spreadsheet October 2023.xlsx › Sheet1 › G99, I99, I102",
+       "severity": "high"
+      },
+      {
+       "issue": "Species list is split into a numbered block (rows 3-97) and an unnumbered 'PLUS' block (B101:B105); blank-count unnumbered rows (Hoheria sexstylosa, Leonohebe cupressoides, Podocarpus totara) were inserted at B40, B43, B78",
+       "evidence": "Sheet1 › A40, A43, A78, B101:B105",
+       "severity": "med"
+      },
+      {
+       "issue": "Numbering gaps (10, 14, 18, 39, 87 missing from the sequence) suggest species were removed from the list or moved to PLUS; no note says why",
+       "evidence": "Sheet1 › A12, A15, A18, A38, A88",
+       "severity": "med"
+      },
+      {
+       "issue": "Trailing spaces in species names would break exact matching",
+       "evidence": "Sheet1 › B37, B62, B77, B92",
+       "severity": "low"
+      },
+      {
+       "issue": "Spelling variant of an established name: 'Weinmania racemosa' (current spelling Weinmannia)",
+       "evidence": "Sheet1 › B97",
+       "severity": "low"
+      },
+      {
+       "issue": "Every Comments column and the V150/35F column is empty; their totals cells still show SUM formulas returning 0",
+       "evidence": "Sheet1 › C99, D99, H99",
+       "severity": "low"
+      },
+      {
+       "issue": "Sheet dimension is A1:I980 with blank padding rows 106-980",
+       "evidence": "Sheet1 › A106:I980",
+       "severity": "low"
+      },
+      {
+       "issue": "Nursery location (North/South) is a merged group header only, so unmerging loses the location for each container column",
+       "evidence": "Sheet1 › C1:E1, F1:H1",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023(1).xlsx",
+   "purpose_guess": "Second, differently edited copy of the October 2023 stocktake: same counts and layout, but with a clean 1-97 species sequence, Carex maorica folded into the main list and no PLUS block (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "October 2023",
+   "is_version_of": "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "One species at one stocktake with a count per container column; same grain as the October 2023 file",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 99,
+       "examples": [
+        "Carex maorica",
+        "Chionochloa conspicua",
+        "Coproma brunnea"
+       ],
+       "notes": "Includes 'Coproma brunnea' (B17, typo of Coprosma) and 'Chionochloa conspicua' (B13) which the other copy lacks"
+      },
+      {
+       "letter": "G",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 46,
+       "distinct": 37,
+       "examples": [
+        "9",
+        "10",
+        "61"
+       ],
+       "notes": "Column total 3356 (includes Carex maorica 45) versus 3311 in the other copy's G99"
+      },
+      {
+       "letter": "I",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 99,
+       "distinct": 56,
+       "examples": [
+        "0",
+        "42"
+       ],
+       "notes": "Grand total 7102 in both copies; totals ranges here run to row 101 so all rows are summed"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "I3:I100",
+       "pattern": "=SUM(D#:H#)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "C102:I102",
+       "pattern": "=SUM(C3:C101) etc.",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Not an exact duplicate: it differs from 'Stocktake Spreadsheet October 2023.xlsx' by 5 names (Chionochloa conspicua and Coproma brunnea only here; Hoheria sexstylosa, Leonohebe cupressoides and Podocarpus totara only in the other); count values for shared species match",
+       "evidence": "Stocktake Spreadsheet October 2023(1).xlsx › Sheet1 › B13, B17 vs the other file's B40, B43, B78",
+       "severity": "med"
+      },
+      {
+       "issue": "Which copy is the later or authoritative one is not stated; the sequential numbering and widened totals ranges here suggest it is a tidied copy, but the typo 'Coproma' suggests re-keying",
+       "evidence": "both October 2023 files › Sheet1",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2022.xlsx",
+   "purpose_guess": "October 2022 stocktake in the same grid as 2023, but with V150/35F and T28 counted and a single PB3 column (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "October 2022",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-99",
+     "grain": "One species at one stocktake with a count per container column",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta",
+        "Veronica salicifolia"
+       ],
+       "notes": "97 numbered species 1-97, sequential; the benchmark list the later files depart from"
+      },
+      {
+       "letter": "D",
+       "header": "V150/35F (North Nursery (Old))",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 49,
+       "distinct": 20,
+       "examples": [
+        "24",
+        "48",
+        "120",
+        "144",
+        "432"
+       ],
+       "notes": "V150 counts are in multiples of 24/48, tray-based; column total 6532"
+      },
+      {
+       "letter": "E",
+       "header": "T28",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 6,
+       "distinct": 5,
+       "examples": [
+        "56",
+        "140",
+        "280",
+        "1064"
+       ],
+       "notes": "Column total 1064"
+      },
+      {
+       "letter": "F",
+       "header": "PB3 (South Nursery (New))",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 62,
+       "distinct": 49,
+       "examples": [
+        "6",
+        "24",
+        "38",
+        "290"
+       ],
+       "notes": "Single PB3 column (no Small PB3 split); total 5161. Grand total 12757"
+      },
+      {
+       "letter": "H",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 57,
+       "examples": [
+        "0",
+        "48",
+        "325"
+       ],
+       "notes": "=SUM(D3:G3)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "H3:H99",
+       "pattern": "=SUM(D#:G#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Two header cells named 'Comments' (C, G) are completely empty; all comments appear to have been dropped by this stage",
+       "evidence": "Stocktake Spreadsheet October 2022.xlsx › Sheet1 › C3:C99, G3:G99",
+       "severity": "low"
+      },
+      {
+       "issue": "V150 was counted in October 2022 (6532) but not in October 2023 (blank); the October 2023 totals are therefore not like-for-like",
+       "evidence": "October 2022 › D101 vs October 2023 › D99",
+       "severity": "high"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet  May 2020.xlsx",
+   "purpose_guess": "May 2020 stocktake in the North (Old)/South (New) nursery grid, with two PB3 columns (one per nursery), a few V150 entries and a populated comments column; the earliest file of this layout.",
+   "workflow_stage": "stocktake",
+   "years_covered": "May 2020",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-118 (data to row 110; rows 111-118 are blank formula-filled padding)",
+     "grain": "One species (or one 'other species' line) at one stocktake with a count per nursery and container column",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(blank; merged 'PLANT NAME' A1:B2)",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 86,
+       "distinct": 99,
+       "examples": [
+        "1",
+        "2",
+        "50",
+        "99"
+       ],
+       "notes": "Species number 1-99; blank for the 'Other Species' lines at rows 104-110"
+      },
+      {
+       "letter": "B",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 92,
+       "distinct": 105,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex virgata",
+        "Hoheria angustifolia",
+        "Weinmania racemosa",
+        "Total"
+       ],
+       "notes": "Latin binomials; 'Hoheria angustifolia' appears twice (B40 and B107); 'Podocarpus nivalis ' has a trailing space (B80)"
+      },
+      {
+       "letter": "C",
+       "header": "Comments (North Nursery (Old), merged C1:E1)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 15,
+       "distinct": 17,
+       "examples": [
+        "subspecies racemosa",
+        "Cabbage trees",
+        "Rata",
+        "Kowhai",
+        "Rimu"
+       ],
+       "notes": "16 free-text notes giving common names, identification doubts ('Uncertain of species', 'Check species again') and bed references (e.g. 'Rows E6 plus H8', 'G8') "
+      },
+      {
+       "letter": "D",
+       "header": "V150/35F (North)",
+       "concept": "container",
+       "type": "formula",
+       "non_null_pct": 2,
+       "distinct": 2,
+       "examples": [
+        "3"
+       ],
+       "notes": "Only 3 plants recorded (one cell, D105)"
+      },
+      {
+       "letter": "E",
+       "header": "PB3 (North)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 29,
+       "distinct": 30,
+       "examples": [
+        "24",
+        "48",
+        "70",
+        "75"
+       ],
+       "notes": "North Nursery PB3; total 2643; the header text 'PB3' is identical to column F"
+      },
+      {
+       "letter": "F",
+       "header": "PB3 (South Nursery (New), merged F1:G1)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 89,
+       "distinct": 58,
+       "examples": [
+        "0",
+        "2",
+        "17",
+        "128"
+       ],
+       "notes": "South Nursery PB3, total 7870; contains 34 explicit zeros"
+      },
+      {
+       "letter": "G",
+       "header": "Comments (South)",
+       "concept": "notes",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Empty in data rows"
+      },
+      {
+       "letter": "H",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 61,
+       "examples": [
+        "0",
+        "77",
+        "292"
+       ],
+       "notes": "=SUM(C3:G3) which includes the comment column C; row total is 10516"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "H3:H118",
+       "pattern": "=SUM(C#:G#)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "C119:H119",
+       "pattern": "=SUM(C3:C118) etc.",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 103,
+     "quality_issues": [
+      {
+       "issue": "Duplicate species: Hoheria angustifolia in the main list and again under 'Other Species'; Carex virgata is only in the 'Other Species' block (40 PB3 in E108) so a main-list species is missing from the numbered list",
+       "evidence": "Stocktake Spreadsheet  May 2020.xlsx › Sheet1 › B40, B107, B108",
+       "severity": "med"
+      },
+      {
+       "issue": "Both PB3 columns are headed 'PB3'; North or South is only identified by merged row-1 headers",
+       "evidence": "Sheet1 › E2, F2, C1:E1, F1:G1",
+       "severity": "med"
+      },
+      {
+       "issue": "A row label in B110 refers to a named individual's plants (name withheld) with a bed-style reference in C110; it has no counts, so it is unclear whether it is a donor or bought-in line",
+       "evidence": "Sheet1 › B110:C110",
+       "severity": "low"
+      },
+      {
+       "issue": "'Other Species' block (rows 104-110) holds species not on the master 1-99 list, e.g. one with the comment 'Found in the NI' and one 'Rimu'; no consistent species numbering",
+       "evidence": "Sheet1 › B104:C110",
+       "severity": "med"
+      },
+      {
+       "issue": "Row-total formula includes the Comments column (C), so any number typed there would be added to the total",
+       "evidence": "Sheet1 › H3:H118",
+       "severity": "low"
+      },
+      {
+       "issue": "Blank padding rows 111-118 contain =SUM formulas returning 0, and the sheet extends to row 1000",
+       "evidence": "Sheet1 › H111:H118",
+       "severity": "low"
+      },
+      {
+       "issue": "Uncertain species identifications are recorded as free text",
+       "evidence": "Sheet1 › C39 (uncertain species), C86 (check species again)",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/oldJMN PB3 Stocktake 27 May 2020.xlsx",
+   "purpose_guess": "Blank template (updated 27/05/2020) in the 2018-2020 'Jean Malpas Nursery Stock' layout with V150/35F and PB3 columns but no counts entered (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "May 2020",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "form",
+     "header_row": 5,
+     "data_rows": "7-104",
+     "grain": "One species per row with empty V150/35F and PB3 columns",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual content: PLANT NAME / species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta",
+        "Weinmania racemosa"
+       ],
+       "notes": "Header says 'Size' but the column holds plant names; 'PLANT NAME' label is on row 6"
+      },
+      {
+       "letter": "B",
+       "header": "V150/35F",
+       "concept": "container",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "No counts"
+      },
+      {
+       "letter": "C",
+       "header": "PB3",
+       "concept": "container",
+       "type": "formula",
+       "non_null_pct": 1,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "No counts"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "D7:D104",
+       "pattern": "=SUM(B#:C#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "The sheet has no counts at all (every V150/35F and PB3 cell is blank); the real May 2020 data is in 'Stocktake Spreadsheet  May 2020.xlsx'",
+       "evidence": "oldJMN PB3 Stocktake 27 May 2020.xlsx › STOCKTAKE › B7:C104",
+       "severity": "high"
+      },
+      {
+       "issue": "Title 'Jean Malpas Nursery Stock' and date text 'UPDATED dd/mm/yyyy' sit in A1:A2 as free text, not as a date value",
+       "evidence": "STOCKTAKE › A1:A2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/JMN PB3 Stocktake 29 Jan 2020.xlsx",
+   "purpose_guess": "29 January 2020 PB3 stocktake in the 'Jean Malpas Nursery Stock' layout, with V150/35F column empty and PB3 counts plus spring-planting notes (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "January 2020",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "data",
+     "header_row": 5,
+     "data_rows": "7-104",
+     "grain": "One species at one stocktake with a PB3 count and a row total",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual: species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta",
+        "Veronica salicifolia"
+       ],
+       "notes": "Species names, 98 distinct"
+      },
+      {
+       "letter": "C",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 60,
+       "distinct": 55,
+       "examples": [
+        "131",
+        "300",
+        "512"
+       ],
+       "notes": "Total 9946"
+      },
+      {
+       "letter": "E",
+       "header": "Notes",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 4,
+       "distinct": 4,
+       "examples": [
+        "28 for spring",
+        "53 for spring",
+        "Spring planting"
+       ],
+       "notes": "4 notes about plants earmarked for spring planting (E74, E77, E83, E95)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "D7:D104",
+       "pattern": "=SUM(B#:C#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "V150/35F column is blank; only PB3 was counted in this PB3-specific stocktake",
+       "evidence": "JMN PB3 Stocktake 29 Jan 2020.xlsx › STOCKTAKE › B7:B104",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/JMN Stocktake 26 Oct 2019.xlsx",
+   "purpose_guess": "26 October 2019 stocktake in the 'Jean Malpas Nursery Stock' layout with V150/35F, 1L Pot and PB3 columns (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "October 2019",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "data",
+     "header_row": 5,
+     "data_rows": "7-105",
+     "grain": "One species at one stocktake with counts by container size",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual: species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 101,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta",
+        "Gaultheria"
+       ],
+       "notes": "Contains 'Gaultheria' at genus level only"
+      },
+      {
+       "letter": "B",
+       "header": "V150/35F",
+       "concept": "container",
+       "type": "int",
+       "non_null_pct": 54,
+       "distinct": 40,
+       "examples": [
+        "48",
+        "96",
+        "235"
+       ],
+       "notes": "V150 and 35F now merged into one column; total 7424"
+      },
+      {
+       "letter": "C",
+       "header": "1L Pot",
+       "concept": "container",
+       "type": "formula",
+       "non_null_pct": 2,
+       "distinct": 1,
+       "examples": [
+        "15"
+       ],
+       "notes": "Only 2 cells (1L Pot, total 15)"
+      },
+      {
+       "letter": "D",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 65,
+       "distinct": 55,
+       "examples": [
+        "49",
+        "141",
+        "308"
+       ],
+       "notes": "Total 6758; grand total 14180"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "E7:E105",
+       "pattern": "=SUM(B#:D#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Pot sizes 5, 7 and 9 and the separate V150 and 35F columns of 2018-May 2019 are dropped in this version",
+       "evidence": "JMN Stocktake 26 Oct 2019.xlsx › STOCKTAKE › B5:D5 vs JMN Stocktake 12 May 2019.xlsx › STOCKTAKE › B5:H5",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/JMN Stocktake 12 May 2019.xlsx",
+   "purpose_guess": "12 May 2019 stocktake with PB3, Pot, 5, 7, 1L, V150, 35F columns plus a PROJECTED sheet comparing stock with target numbers and a split print-style copy (Sheet1) (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "May 2019",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "data",
+     "header_row": 5,
+     "data_rows": "7-105",
+     "grain": "One species at one stocktake with counts by container (PB3, pot sizes, V150, 35F)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual: species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 101,
+       "examples": [
+        "Aciphylla aurea",
+        "Aristotelia fruticosa",
+        "Weinmania racemosa"
+       ],
+       "notes": "Species names"
+      },
+      {
+       "letter": "B",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 61,
+       "distinct": 58,
+       "examples": [
+        "6",
+        "10",
+        "79"
+       ],
+       "notes": "Total 6348"
+      },
+      {
+       "letter": "G",
+       "header": "V150",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 44,
+       "distinct": 37,
+       "examples": [
+        "24",
+        "48",
+        "227",
+        "432"
+       ],
+       "notes": "Total 7877; 35F column H holds 4 values (35, 120, 700, 855)"
+      },
+      {
+       "letter": "I",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 70,
+       "examples": [
+        "0",
+        "237",
+        "91"
+       ],
+       "notes": "=SUM(B6:H6) starting on header row 6; grand total 16506"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "I6:I106",
+       "pattern": "=SUM(B#:H#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Row-total formulas start at the header row (I6 =SUM(B6:H6), the 'PLANT NAME' row) so they are offset by one row from earlier files",
+       "evidence": "JMN Stocktake 12 May 2019.xlsx › STOCKTAKE › I6",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "PROJECTED",
+     "role": "summary",
+     "header_row": 1,
+     "data_rows": "2-91",
+     "grain": "One species with PB3 stock, root stock (V150) and a projected target; coloured cells signal match",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 95,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta"
+       ],
+       "notes": "Latin names; 95 distinct"
+      },
+      {
+       "letter": "B",
+       "header": "PB3 Stock (Oct 2018)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 95,
+       "distinct": 59,
+       "examples": [
+        "10",
+        "62",
+        "79"
+       ],
+       "notes": "Header text says Oct 2018 but the values equal May 2019 PB3 stock (e.g. 10 for Aristotelia fruticosa matches STOCKTAKE B8); label was not updated"
+      },
+      {
+       "letter": "C",
+       "header": "Root stock",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 95,
+       "distinct": 44,
+       "examples": [
+        "227",
+        "288",
+        "515"
+       ],
+       "notes": "Equals the V150 count on STOCKTAKE (e.g. 227 = STOCKTAKE G8) (inferred, medium)"
+      },
+      {
+       "letter": "D",
+       "header": "Projected",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 61,
+       "distinct": 20,
+       "examples": [
+        "24",
+        "48",
+        "96",
+        "315",
+        "490"
+       ],
+       "notes": "Projected plants for the next cycle; fills encode the status in F2:F6 legend (Numbers/Good/Missing/Neutral/Excess stock)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B92:D92",
+       "pattern": "=SUM(B2:B91)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 95,
+     "quality_issues": [
+      {
+       "issue": "Header 'PB3 Stock (Oct 2018)' is stale in a May 2019 file",
+       "evidence": "JMN Stocktake 12 May 2019.xlsx › PROJECTED › B1",
+       "severity": "med"
+      },
+      {
+       "issue": "Colour fills (green/yellow/orange/red) carry meaning via a legend in F2:F6 but the rule for assigning them is not stated",
+       "evidence": "PROJECTED › D2:D91, F2:F6",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet1",
+     "role": "summary",
+     "header_row": 1,
+     "data_rows": "2-47",
+     "grain": "Same PROJECTED data split into two side-by-side blocks (A-D and F-I) for printing; one species per row in each block",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98,
+       "distinct": 45,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Left block, 45 species"
+      },
+      {
+       "letter": "F",
+       "header": "(Name, right block)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98,
+       "distinct": 45,
+       "examples": [
+        "Myrsine divaricata",
+        "Olearia bullata"
+       ],
+       "notes": "Right block, 45 species with headers repeated in G:I"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "G47:I47",
+       "pattern": "=SUM(B2:B91) etc.",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 90,
+     "quality_issues": [
+      {
+       "issue": "Right-block totals G47:I47 sum the left-block columns B:D (formula copied unchanged), so the right-block totals are wrong: G47 shows 4312, but the sum of G2:G46 is 2833",
+       "evidence": "JMN Stocktake 12 May 2019.xlsx › Sheet1 › G47:I47",
+       "severity": "high"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/JMN Stocktake 21 October 2018.xlsx",
+   "purpose_guess": "21 October 2018 stocktake in the 'Jean Malpas Nursery Stock' layout with free-text notes, red-flagged discontinued species, a PROJECTED target sheet and a pasted-values helper sheet (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "October 2018",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "data",
+     "header_row": 5,
+     "data_rows": "7-104 (plus a stray row 108)",
+     "grain": "One species at one stocktake with counts by container (PB3, Pot, 5, 7, 1L, V150, 35F) and notes",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual: species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 101,
+       "examples": [
+        "Aciphylla aurea",
+        "Aristotelia fruticosa",
+        "Weinmania racemosa"
+       ],
+       "notes": "Red font marks species 'not to be stocked in future' (note in B2); 8 species are red-flagged"
+      },
+      {
+       "letter": "B",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 69,
+       "distinct": 52,
+       "examples": [
+        "14",
+        "62",
+        "94"
+       ],
+       "notes": "Total 6054"
+      },
+      {
+       "letter": "G",
+       "header": "V150",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 16,
+       "examples": [
+        "24",
+        "48",
+        "72",
+        "528"
+       ],
+       "notes": "Total 3293; 35F in H has 4 values"
+      },
+      {
+       "letter": "J",
+       "header": "Notes",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 20,
+       "distinct": 20,
+       "examples": [
+        "seed germinated Oct 18"
+       ],
+       "notes": "20 free-text notes on cuttings, germination and plants ready to prick out; may name people or sources, not copied"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "I7:I104",
+       "pattern": "=SUM(B#:H#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Species below the totals row: 'Metrosideros excelsa' with 30 in the Pot column sits at row 108, outside the summed range",
+       "evidence": "JMN Stocktake 21 October 2018.xlsx › STOCKTAKE › A108:C108",
+       "severity": "med"
+      },
+      {
+       "issue": "Meaning is carried by red font (species to be dropped); not in a data column",
+       "evidence": "STOCKTAKE › A31, A46, A49, A58, A71, A78, A85, A96 (red font)",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "PROJECTED",
+     "role": "summary",
+     "header_row": 1,
+     "data_rows": "2-99",
+     "grain": "One species with PB3 stock, root stock and projected number, status via fill colour",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 98,
+       "examples": [
+        "Aciphylla aurea",
+        "Carex secta"
+       ],
+       "notes": "Names"
+      },
+      {
+       "letter": "B",
+       "header": "PB3 Stock (Oct 2018)",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 56,
+       "examples": [
+        "0",
+        "62",
+        "80"
+       ],
+       "notes": "=SUM(Sheet2!F#:G#), PB3 + Pot from Sheet2"
+      },
+      {
+       "letter": "C",
+       "header": "Root stock",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 29,
+       "examples": [
+        "0",
+        "635",
+        "144"
+       ],
+       "notes": "=SUM(Sheet2!A#:C#), 1L + V150 + 35F from Sheet2"
+      },
+      {
+       "letter": "D",
+       "header": "Projected",
+       "concept": "target",
+       "type": "mixed",
+       "non_null_pct": 82,
+       "distinct": 16,
+       "examples": [
+        "25",
+        "50",
+        "100",
+        "600",
+        "Bonus"
+       ],
+       "notes": "Numeric targets in steps (25, 50, 100, 200...) summing to 10000; text 'Bonus' in 5 cells; note 'Fast growing from 7s' in E"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B2:B99",
+       "pattern": "=SUM(Sheet2!F1:G1)",
+       "refs_other_sheets": [
+        "Sheet2!F:G"
+       ]
+      },
+      {
+       "range": "C2:C99",
+       "pattern": "=SUM(Sheet2!A1:C1)",
+       "refs_other_sheets": [
+        "Sheet2!A:C"
+       ]
+      },
+      {
+       "range": "D100",
+       "pattern": "=SUM(D3:D99)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "PROJECTED row N reads Sheet2 row N-1 (B2 =SUM(Sheet2!F1:G1)); this works only because Sheet2 has no header row and its row 1 holds the first species' values; any insertion or sort breaks the link with no species key",
+       "evidence": "JMN Stocktake 21 October 2018.xlsx › PROJECTED › B2:C99",
+       "severity": "med"
+      },
+      {
+       "issue": "Projected column mixes numbers and the text 'Bonus'",
+       "evidence": "PROJECTED › D2:D99",
+       "severity": "low"
+      },
+      {
+       "issue": "Projected total is exactly 10000, suggesting a fixed budget rather than species-by-species demand",
+       "evidence": "PROJECTED › D100",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet2",
+     "role": "lookup",
+     "header_row": 1,
+     "data_rows": "2-79",
+     "grain": "Row of pasted stock counts with no species names; columns A-C, F-G mirror the 1L, V150, 35F, PB3 and Pot columns of STOCKTAKE",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "4",
+       "concept": "container",
+       "type": "int",
+       "non_null_pct": 15,
+       "distinct": 11,
+       "examples": [
+        "2",
+        "18",
+        "19"
+       ],
+       "notes": "A1 holds a data value (4), not a header: the sheet has no header row, and row 1 belongs to the first species (Aciphylla aurea)"
+      },
+      {
+       "letter": "F",
+       "header": "(none)",
+       "concept": "container",
+       "type": "int",
+       "non_null_pct": 89,
+       "distinct": 51,
+       "examples": [
+        "14",
+        "62",
+        "94"
+       ],
+       "notes": "PB3 values pasted from STOCKTAKE (values match)"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Headerless pasted-value helper sheet that feeds PROJECTED; has no species key, so alignment relies on row order",
+       "evidence": "JMN Stocktake 21 October 2018.xlsx › Sheet2 › A1:G79",
+       "severity": "high"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "low"
+    }
+   ]
+  },
+  {
+   "path": "4. Stocktakes/Old Stocktakes/JMN Stocktake 5 June 2018.xlsx",
+   "purpose_guess": "5 June 2018 stocktake, the earliest in the batch: mainly PB3 counts (plus a few root counts), with a PROJECTED target sheet (sampled).",
+   "workflow_stage": "stocktake",
+   "years_covered": "June 2018",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "STOCKTAKE",
+     "role": "data",
+     "header_row": 5,
+     "data_rows": "7-97 (A99 total row)",
+     "grain": "One species at one stocktake with counts by container (PB3, Pot, 5, 7, 9, Root)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Size (actual: species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 93,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Carex secta"
+       ],
+       "notes": "Only about 91 species; 12 species names filled yellow (meaning not stated)"
+      },
+      {
+       "letter": "B",
+       "header": "PB3",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 65,
+       "distinct": 50,
+       "examples": [
+        "14",
+        "54",
+        "76"
+       ],
+       "notes": "Total 6863"
+      },
+      {
+       "letter": "G",
+       "header": "Root",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 3,
+       "examples": [
+        "216",
+        "288",
+        "504"
+       ],
+       "notes": "Only 3 values; 'Root' is the precursor of the V150 column"
+      },
+      {
+       "letter": "I",
+       "header": "(unlabelled)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 2,
+       "distinct": 2,
+       "examples": [
+        "30 Hybrid",
+        "130 BLP"
+       ],
+       "notes": "Two free-text counts with abbreviations"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "H7:H97",
+       "pattern": "=SUM(B#:G#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 91,
+     "quality_issues": [
+      {
+       "issue": "Yellow fills on 12 species names have no legend",
+       "evidence": "JMN Stocktake 5 June 2018.xlsx › STOCKTAKE › A10, A12, A18",
+       "severity": "low"
+      },
+      {
+       "issue": "Pot, 5, 7, 9 columns contain no data",
+       "evidence": "STOCKTAKE › C7:F97",
+       "severity": "low"
+      },
+      {
+       "issue": "Species spelling variant 'Carmichaelia crassicaule'",
+       "evidence": "STOCKTAKE and PROJECTED › A7",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "PROJECTED",
+     "role": "summary",
+     "header_row": 1,
+     "data_rows": "2-90",
+     "grain": "One species with June 2018 PB3 stock and a projected number, status via fill",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 89,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Whole column filled red or green"
+      },
+      {
+       "letter": "B",
+       "header": "PB3 Stock (June 2018)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 67,
+       "distinct": 50,
+       "examples": [
+        "34",
+        "76"
+       ],
+       "notes": "Equals STOCKTAKE PB3"
+      },
+      {
+       "letter": "C",
+       "header": "Projected",
+       "concept": "target",
+       "type": "mixed",
+       "non_null_pct": 91,
+       "distinct": 17,
+       "examples": [
+        "25",
+        "100",
+        "600",
+        "Bonus"
+       ],
+       "notes": "Sums to 10000; 5 text 'Bonus' cells"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B91:C91",
+       "pattern": "=SUM(B2:B90)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 89,
+     "quality_issues": [
+      {
+       "issue": "Projected total is 10000 here as in Oct 2018, so the target looks like a fixed budget",
+       "evidence": "JMN Stocktake 5 June 2018.xlsx › PROJECTED › C91",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  }
+ ],
+ "structure_over_time": [
+  "Jun 2018: PB3, Pot, 5, 7, 9, Root; about 91 species; PROJECTED target sheet (10000 plants).",
+  "Oct 2018: adds 1L, V150 and 35F; Notes column used; red font marks species to be discontinued; PROJECTED fed from a helper sheet (Sheet2); about 99 species.",
+  "May 2019: same columns; PROJECTED relabelled by hand; Sheet1 print copy introduced.",
+  "Oct 2019: collapses to V150/35F, 1L Pot, PB3.",
+  "Jan 2020 and the May 2020 template: only V150/35F and PB3 (PB3-only stocktake).",
+  "May 2020 (new file type): species-column-first layout with 'North Nursery (Old)' and 'South Nursery (New)' grouping, two PB3 columns, comments column used.",
+  "Oct 2022: adds T28, single PB3, V150 fully counted (12757 in total).",
+  "Oct 2023: adds Small PB3; V150 not counted; PLUS block; two non-identical copies."
+ ],
+ "open_questions_for_wrt": [
+  "What do 'North Nursery (Old)' and 'South Nursery (New)' refer to, and did the nursery location change between May 2020 and October 2022?",
+  "What does 'Small PB3' mean in October 2023 (e.g. not yet ready, or a smaller pot) and what is the readiness rule for PB3?",
+  "Why was V150 not counted in October 2023, and does 'V150/35F' mean V150 and 35-cell trays combined?",
+  "Which of the two October 2023 files is the final one?",
+  "Do pot sizes '5', '7', '9', '1L' in 2018-2019 mean pot diameters in cm, and where did those plants go afterwards?",
+  "What do the PROJECTED 'Projected' numbers represent (a sowing target, a sales order?) and why do they total exactly 10000?",
+  "What do the colour fills mean in PROJECTED (Good, Missing, Neutral, Excess stock) and the yellow fills in the June 2018 sheet?",
+  "In the May 2020 file, what are 'Other Species' and the row referring to a named person's plants (donated, bought-in or held for someone)?",
+  "Are the missing stocktakes (between Oct 2019 and Jan 2020 and between May 2020 and Oct 2022) lost, or stored elsewhere?"
+ ]
+}

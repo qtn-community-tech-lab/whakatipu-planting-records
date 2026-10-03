@@ -1,0 +1,199 @@
+{
+"batch_id":"B08_seed_cutting_masters",
+"files":[
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/2. Seed records MASTER.xlsx",
+"purpose_guess":"Chronological log of seed lots collected, stratified, sown and pricked out (one row per seed lot/tag), from 2016 to mid-2026, with the collection site recorded per lot.",
+"workflow_stage":"seed_provenance",
+"years_covered":"2016–2026",
+"is_version_of":null,
+"sheets":[
+{"name":"Sheet1","role":"data","header_row":3,"data_rows":"4-956",
+"grain":"One seed lot (tag) per row: species, collection site, collection date, stratification, amount, sown date, pricked-out date, number pricked and container. Two stacked tables: rows 4-571 (2016–2021) and rows 573-956 (restarts at S1 in 2022), each with its own header row (3 and 572).",
+"columns":[
+{"letter":"A","header":"Tag No.","concept":"seed_source_code","type":"text","non_null_pct":84,"distinct":479,"examples":["S1","S155","S275","S319"],"notes":"Tags are S+number and restart at S1 on row 573, so a tag is only unique within a table. Duplicates are common (S155, S156, S275 and S319 appear 3 times). A tag links to the results MASTER. Header cell A572 is '#', which the script flagged as an error."},
+{"letter":"B","header":"Species","concept":"species_name","type":"text","non_null_pct":85,"distinct":202,"examples":["Sophora microphylla","Corokia cotoneaster","Olearia odorata","Olearia lineata"],"notes":"Free text with typos, trailing spaces, truncations, common names, and annotations. Red font on 578 cells, apparently the whole column; meaning unknown."},
+{"letter":"C","header":"Site","concept":"seed_location","type":"text","non_null_pct":84,"distinct":206,"examples":[],"notes":"SENSITIVE: values withheld. Free-text place descriptions, some possibly property or landowner references."},
+{"letter":"D","header":"Collected","concept":"date","type":"mixed","non_null_pct":81,"distinct":465,"examples":["2018-03-04","2017-03-14","2025-02-03","seedlings","?"],"notes":"Mostly dates (727), with 41 text entries such as 'seedlings' and '?', plus a few stray numbers. Range 2016-05-01 to 2026-06-20."},
+{"letter":"E","header":"Stratified?","concept":"notes","type":"text","non_null_pct":78,"distinct":79,"examples":["fresh","3 weeks","fridge","4 weeks","stratified"],"notes":"Treatment description, not yes/no. 5 cells hold dates (2016) instead of text."},
+{"letter":"F","header":"Amount","concept":"quantity","type":"text","non_null_pct":73,"distinct":159,"examples":["1 tsp","1 Tbsp","2 Tbsp","1 cup fluff","10gm"],"notes":"Seed quantity as volume, weight or count in free text; 41 plain integers (1-2500) with no unit. Not comparable across rows."},
+{"letter":"G","header":"Date sown","concept":"date","type":"date","non_null_pct":81,"distinct":210,"examples":["2025-08-13","2024-08-14","2022-10-10"],"notes":"763 dates, 4 text. Min 2003-02-18 looks like a typo."},
+{"letter":"H","header":"Date pricked","concept":"date","type":"mixed","non_null_pct":72.5,"distinct":238,"examples":["2021-10-20","2022-11-23","2024-12-18"],"notes":"669 dates, 18 text. Min 2014-11-13 predates the earliest collection (2016)."},
+{"letter":"I","header":"#","concept":"quantity","type":"mixed","non_null_pct":74,"distinct":182,"examples":["24","48","72","144","discarded"],"notes":"Number pricked out into the container in J (trays of 24 are common). 45 text values such as 'discarded' or '560/'. Max 1510."},
+{"letter":"J","header":"Pot size","concept":"container","type":"mixed","non_null_pct":63,"distinct":36,"examples":["V150","35F","T28","7","T28, 35F"],"notes":"Container codes mixed with older tray/pot numbers (7, 5, 90, 35F, 63F) and compound values."},
+{"letter":"K","header":"Notes","concept":"notes","type":"text","non_null_pct":60,"distinct":448,"examples":["Discarded","1 tray","tray finished","1/2 tray"],"notes":"Free text with germination dates ('Germ 3/11/17'), tray counts, fate of seedlings, and some mentions of surplus given to other groups. May contain place or personal references, so not quoted."}
+],
+"formulas":[],
+"species_name_column":"B",
+"species_distinct_count":202,
+"quality_issues":[
+{"issue":"Two tables stacked on one sheet with a repeated header; tag numbering restarts, so tags are not unique","evidence":"2. Seed records MASTER.xlsx › Sheet1 › A3:K3 and A572:K572; S1 at A4 and A573","severity":"high"},
+{"issue":"Species typos and variants (about 32 near-duplicate pairs after trimming; 9 names with stray spaces; 202 raw vs 197 trimmed). Examples: Aristoderia / Astroderia / Austroderia richardii; Aristolia vs Aristotelia; Carpodetus serrata vs serratus","evidence":"2. Seed records MASTER.xlsx › Sheet1 › B4:B956","severity":"high"},
+{"issue":"Truncated, genus-only or non-species entries in species column (e.g. 'Carmichaelia pet', 'Olearia', 'Rata', 'Toetoe', 'surplus', 'Species'); some with annotations or question marks","evidence":"2. Seed records MASTER.xlsx › Sheet1 › B4:B956","severity":"med"},
+{"issue":"Continuation rows have a blank tag and species, with only a later pricking date or note (e.g. second pricking of a lot), so a lot can span several rows","evidence":"2. Seed records MASTER.xlsx › Sheet1 › A7:K7, A9:K9","severity":"med"},
+{"issue":"Merged cells (94 ranges across columns A-H, J, K) break row-per-record structure","evidence":"2. Seed records MASTER.xlsx › Sheet1 › e.g. D75:D77, E88:E89, K88:K89","severity":"med"},
+{"issue":"Mixed types in numeric and date columns (text such as 'seedlings', '?', 'discarded' in D, H, I; dates in the Stratified column)","evidence":"2. Seed records MASTER.xlsx › Sheet1 › D, E, H, I","severity":"med"},
+{"issue":"Amount has no consistent unit (tsp, Tbsp, cups, grams, counts)","evidence":"2. Seed records MASTER.xlsx › Sheet1 › F4:F956","severity":"med"},
+{"issue":"Implausible dates: sown 2003 and pricked 2014 predate the 2016 start","evidence":"2. Seed records MASTER.xlsx › Sheet1 › G and H (min 2003-02-18, 2014-11-13)","severity":"low"},
+{"issue":"Pot size mixes current codes (V150, T28) with legacy numeric codes and compound values","evidence":"2. Seed records MASTER.xlsx › Sheet1 › J4:J956","severity":"low"},
+{"issue":"Red font used across A and B (about 575 cells each) with no key; meaning unclear","evidence":"2. Seed records MASTER.xlsx › Sheet1 › A:B","severity":"low"}
+],
+"sensitive_columns":["C Site: 799 populated cells, free-text collection place descriptions, values withheld","K Notes: free text that may include place or personal references, values withheld"],
+"confidence":"high"},
+{"name":"Sheet2","role":"empty","header_row":0,"data_rows":"none","grain":"Empty sheet (dimensions A1:A1, no values).","columns":[],"formulas":[],"species_name_column":null,"species_distinct_count":0,"quality_issues":[],"sensitive_columns":[],"confidence":"high"}
+]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/1. Cuttings records MASTER.xlsx",
+"purpose_guess":"Chronological log of cutting batches (C-numbered) with source site, number set, date propagated, date pricked out, number surviving, container and a survival fraction, 2016 to March 2026.",
+"workflow_stage":"seed_provenance",
+"years_covered":"2016–2026 (one propagation date 2010 and one 2027 look like typos)",
+"is_version_of":null,
+"sheets":[
+{"name":"Sheet1","role":"data","header_row":2,"data_rows":"3-538","grain":"One cutting batch (tag) per row: species, source site, number of cuttings set, date set, date pricked out, number pricked out, container, comments, and an unlabelled survival fraction. Row 1 is a title with the as-at date (31.3.26). Numbering restarts (C1 at rows 3 and 470).",
+"columns":[
+{"letter":"A","header":"No.","concept":"seed_source_code","type":"text","non_null_pct":98,"distinct":458,"examples":["C1","C42","C279"],"notes":"C+number tag; restarts at row 470, so not unique (C42 appears 3 times). Links to the results MASTER."},
+{"letter":"B","header":"Species","concept":"species_name","type":"text","non_null_pct":98,"distinct":155,"examples":["Carmichaelia petriei","Veronica salicifolia","Veronica odora","Olearia odorata"],"notes":"Free text with typos, queries and annotations. Red font throughout."},
+{"letter":"C","header":"Site","concept":"seed_location","type":"text","non_null_pct":98,"distinct":123,"examples":[],"notes":"SENSITIVE: values withheld. Source place of cutting material."},
+{"letter":"D","header":"#","concept":"quantity","type":"mixed","non_null_pct":97,"distinct":135,"examples":["30","60","50","14","~30"],"notes":"Number of cuttings set. 478 integers, 40 text values such as '~30'. Max 405. Header cell D2 flagged as an error by the script."},
+{"letter":"E","header":"Date prop","concept":"date","type":"date","non_null_pct":98,"distinct":235,"examples":["2018-01-07","2020-10-29","2017-05-03"],"notes":"All 524 are dates. Range 2010-11-02 to 2027-08-21; both extremes look like typos."},
+{"letter":"F","header":"Pricked out","concept":"date","type":"mixed","non_null_pct":80,"distinct":155,"examples":["2018-05-16","2022-12-28","dead"],"notes":"410 dates, 19 text (e.g. 'dead'). Min 2010-01-29 predates the propagation date."},
+{"letter":"G","header":"#","concept":"quantity","type":"mixed","non_null_pct":82,"distinct":103,"examples":["24","0","4","-"],"notes":"Number pricked out or surviving. 400 integers, 39 text ('-', 'dead'). Max 216. Header cell G2 flagged as an error."},
+{"letter":"H","header":"Pot size","concept":"container","type":"mixed","non_null_pct":75.5,"distinct":81,"examples":["V150","7","PB3","90","RX90"],"notes":"Mix of current codes and legacy numeric pot codes; 102 values stored as floats."},
+{"letter":"I","header":"Comments","concept":"notes","type":"text","non_null_pct":76,"distinct":240,"examples":[],"notes":"Mostly initials or first names of staff or volunteers (HM, Jen, Helen, Yvonne, Pauline, MT) mixed with place names and notes. Personal-name column present; values withheld."},
+{"letter":"J","header":"(no header)","concept":"unknown","type":"float","non_null_pct":42,"distinct":79,"examples":["1.0","0.5","0.9","0.25"],"notes":"Unlabelled value between 0 and 1, probably survival rate (pricked out divided by set). Inferred; confidence low. No formulas, so values are typed in."},
+{"letter":"K","header":"(no header)","concept":"notes","type":"text","non_null_pct":2,"distinct":10,"examples":["more to do","overall","excellent roots"],"notes":"10 stray notes."},
+{"letter":"L–Z","header":"(no header)","concept":"unknown","type":"text","non_null_pct":0,"distinct":0,"examples":[],"notes":"Used range extends to Z1000 but these cells are empty (blank padding)."}
+],
+"formulas":[],
+"species_name_column":"B",
+"species_distinct_count":155,
+"quality_issues":[
+{"issue":"Species typos and variants (about 28 near-duplicate pairs; 13 with stray spaces). Examples: Brachglottis / Brachyglottis cassinoides / cassinoidies; Carmichaelia / Charmichaelia; Griselina vs Griselinia","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › B3:B538","severity":"high"},
+{"issue":"Entries that are not species: genus only, queries and mixed batches (e.g. 'Mix up Ole odo, Ari fru', 'Rata row 1&2', 'Hebe ?')","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › B3:B538","severity":"med"},
+{"issue":"Cutting tags restart (C1 at A3 and A470) so the tag is not a unique key","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › A3, A470","severity":"high"},
+{"issue":"Implausible dates: 2027-08-21 propagation date and a pricked-out date in 2010 that precedes propagation","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › E145; min of F","severity":"med"},
+{"issue":"Mixed types and placeholders in count and container columns ('~30', 'dead', '-', numeric pot codes)","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › D, F, G, H","severity":"med"},
+{"issue":"Unlabelled survival-fraction column hard-coded rather than calculated","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › J3:J538","severity":"low"},
+{"issue":"Merged cells (31 ranges) and empty padding to row 1000 and column Z","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › A1:Z1000","severity":"low"},
+{"issue":"Red font across the data (about 1000 cells) and a few cyan cells with no key","evidence":"1. Cuttings records MASTER.xlsx › Sheet1 › font colours FFFF0000, FF00CCFF","severity":"low"}
+],
+"sensitive_columns":["C Site: 522 populated cells, free-text source places, values withheld","I Comments: contains personal first names or initials, values withheld"],
+"confidence":"high"},
+{"name":"Sheet2","role":"empty","header_row":0,"data_rows":"none","grain":"Empty sheet (A1:A1).","columns":[],"formulas":[],"species_name_column":null,"species_distinct_count":0,"quality_issues":[],"sensitive_columns":[],"confidence":"high"},
+{"name":"Sheet3","role":"empty","header_row":0,"data_rows":"none","grain":"Empty sheet (A1:A1).","columns":[],"formulas":[],"species_name_column":null,"species_distinct_count":0,"quality_issues":[],"sensitive_columns":[],"confidence":"high"}
+]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/3. Seed & Cutting results MASTER.xlsx",
+"purpose_guess":"Tray-level results of seed sowings and cuttings, grouped under species heading rows, giving quantity sown, dates, number surviving and survival; the most complete version of the batch's results file, running to 2026.",
+"workflow_stage":"seed_provenance",
+"years_covered":"2016–2026",
+"is_version_of":null,
+"sheets":[
+{"name":"Sheet1","role":"data","header_row":1,"data_rows":"2-1520","grain":"One seed or cutting tray (tag) per row, grouped beneath species heading rows (species name alone in column A, other cells blank). Species is therefore a row-group label, not a column. Title in A1 is 'SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021'.",
+"columns":[
+{"letter":"A","header":"SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021","concept":"species_name","type":"mixed","non_null_pct":92,"distinct":1094,"examples":["Acaena","Aciphylla aurea","S127","S210301 caesiiglauca","C220609"],"notes":"Dual use: species heading rows (129 found) and tag rows (S or C numbers, including 6-digit date-style tags such as S210301 and C220609). Species must be carried down from the heading above. 121 data rows have a blank tag."},
+{"letter":"B","header":"Source","concept":"seed_location","type":"text","non_null_pct":83.5,"distinct":213,"examples":[],"notes":"SENSITIVE: values withheld. Collection source place per tray (1267 populated cells)."},
+{"letter":"C","header":"#/quantities sown","concept":"quantity","type":"mixed","non_null_pct":79,"distinct":256,"examples":["1 tsp","1 Tbsp","2 tsp","1/2 cup fluff","4 heads"],"notes":"Volume, count or unit-less number mixed. 649 text, 543 integers. Max 2500."},
+{"letter":"D","header":"Date sown/Cuttings set","concept":"date","type":"date","non_null_pct":81,"distinct":395,"examples":["2025-08-13","2024-08-14","2022-08-10"],"notes":"1234 dates plus 1 text ('?   2016'). Range 2016-06-16 to 2026-12-26; the latest values look like typos for 2025/26."},
+{"letter":"E","header":"Date Pricked out","concept":"date","type":"mixed","non_null_pct":70,"distinct":304,"examples":["2021-03-17","2023-09-13","2022-11-23"],"notes":"1041 dates, 22 text (e.g. '?', '3/11/16  & 1', '22/08/2018  ')."},
+{"letter":"F","header":"# survived","concept":"quantity","type":"mixed","non_null_pct":70,"distinct":206,"examples":["0","24","48","72","120"],"notes":"Number pricked out or surviving. Max 1554. 21 text values such as 'lots', 'some', '?', '245 /+84', '~1200'."},
+{"letter":"G","header":"%survival","concept":"container","type":"mixed","non_null_pct":32,"distinct":109,"examples":["1","0.5","V150","T28","35F"],"notes":"Header says %survival but the column holds a mixture of fractions (0-1; a few values up to 77) and container codes (V150, T28, 35F, 91 text cells). Never a formula. Header and content have drifted apart."},
+{"letter":"H","header":"(no header)","concept":"notes","type":"text","non_null_pct":42,"distinct":449,"examples":["HM","Discarded","tray finished","into V150 trays","sown fresh"],"notes":"Unlabelled notes column: staff initials, fates ('Discarded', 'given away'), sown fresh etc. Contains first names or initials; values not quoted. One formula (=+ 24.8/25 at H23) and =E429 at H429."},
+{"letter":"I–Q","header":"(no header)","concept":"unknown","type":"mixed","non_null_pct":0.1,"distinct":1,"examples":["to fill a tray. Lots more"],"notes":"Single stray cells (I?, K328, P328 date, Q328 41). Beyond column J, 24 stray cells sit in FB–FI, DF–DG and IV (e.g. FD1028:FH1028, DF1037:FI1037) that look like pasted blocks of cutting data (tag, source place, count, date). Used range runs to IV1557."}
+],
+"formulas":[
+{"range":"A36:C36","pattern":"=[1]Sheet1!$A$333 / $C$333 / $F$333","refs_other_sheets":["[1]Sheet1 (external workbook, link target not resolvable in the file)"]},
+{"range":"H23","pattern":"=+ 24.8/25","refs_other_sheets":[]},
+{"range":"H429","pattern":"=E429","refs_other_sheets":[]}
+],
+"species_name_column":"A",
+"species_distinct_count":129,
+"quality_issues":[
+{"issue":"Species held as heading rows in the tag column instead of a column of its own; tray rows need the heading carried down. 129 heading rows, 1388 tag-or-data rows","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A2:A1520 (e.g. A2 'Acaena', A6 'Aciphylla aurea')","severity":"high"},
+{"issue":"Species headings include typos and non-species: 'Weinmania racemosa', 'Veronica pimeliodesv faucola', genus-only 'Acaena', 'Dracophyllum', 'Pimelea'","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A rows 2, 1517 and others","severity":"med"},
+{"issue":"Broken external link: row 36 pulls tag, source and quantity from another workbook that is not present and shows #ERROR! in the cache","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A36:C36","severity":"high"},
+{"issue":"Header '%survival' sits over a column that mostly holds container codes and fractions of mixed scale","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › G2:G1520","severity":"high"},
+{"issue":"Mixed types in counts and dates ('lots', 'some', '~1200', '245 /+84', '!9/2/24')","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › F59, F118, F375, E292","severity":"med"},
+{"issue":"Rows with a blank tag but data (121), probably continuation pricking rows","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › e.g. A34, A196","severity":"med"},
+{"issue":"Tag formats vary and include trailing spaces or commas ('S50, ', 'S92 '), plus both S/C short numbers and 6-digit date-style tags","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A column","severity":"med"},
+{"issue":"Stray pasted cells far to the right (columns DF–FI, IV)","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › FD1028:FH1028, FD1030:FH1030, DF1037:FI1037, IV1504","severity":"low"},
+{"issue":"Title date (17/11/2021) is stale; data runs to 2026","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A1","severity":"low"},
+{"issue":"Tag overlap with source logs is high but not complete: 450 of 474 seed-record tags and 417 of 452 cutting tags appear here; because tags restart, matching on tag alone is ambiguous","evidence":"compared across 2. Seed records MASTER, 1. Cuttings records MASTER and this sheet › column A","severity":"med"},
+{"issue":"Species heading coverage differs from the logs: 75 of this file's 129 headings match seed-log species names exactly and 60 match cutting-log names exactly","evidence":"3. Seed & Cutting results MASTER.xlsx › Sheet1 › A headings vs the species columns of the two logs","severity":"med"}
+],
+"sensitive_columns":["B Source: 1267 populated cells, free-text collection place, values withheld","H notes: staff initials or first names, values withheld"],
+"confidence":"medium"}
+]
+},
+{
+"path":"_MASTER Nursery records and templates/_Seed & Cutting results MASTER.xlsx",
+"purpose_guess":"Older snapshot of the seed and cutting tray results file (same layout, data to Feb 2025), kept in the master templates folder.",
+"workflow_stage":"seed_provenance",
+"years_covered":"2016–2025",
+"is_version_of":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/3. Seed & Cutting results MASTER.xlsx",
+"sheets":[
+{"name":"Sheet1","role":"data","header_row":1,"data_rows":"2-1414","grain":"Same as the newer version: one tray per row under species heading rows (128 headings vs 129 in the newer file).",
+"columns":[
+{"letter":"A","header":"SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021","concept":"species_name","type":"mixed","non_null_pct":93,"distinct":1075,"examples":["Acaena","S231","C39"],"notes":"Species headings and tags in one column, as in the newer version."},
+{"letter":"B","header":"Source","concept":"seed_location","type":"text","non_null_pct":84,"distinct":203,"examples":[],"notes":"SENSITIVE: values withheld."},
+{"letter":"C","header":"#/quantities sown","concept":"quantity","type":"mixed","non_null_pct":79,"distinct":241,"examples":["1 tsp","1 Tbsp","2 tsp"],"notes":"Same mix of units."},
+{"letter":"D","header":"Date sown/Cuttings set","concept":"date","type":"date","non_null_pct":82,"distinct":370,"examples":["2024-08-14","2022-08-10"],"notes":"Max 2025-02-27, so the file stops about 18 months before the newer one."},
+{"letter":"E","header":"Date Pricked out","concept":"date","type":"mixed","non_null_pct":68.5,"distinct":275,"examples":["2021-03-17","2023-09-13"],"notes":"Contains a date of 2424-12-18, a typo that is corrected or absent in the newer version (newer max 2026-09-02)."},
+{"letter":"F","header":"# survived","concept":"quantity","type":"mixed","non_null_pct":68,"distinct":191,"examples":["0","24","48"],"notes":"Same."},
+{"letter":"G","header":"%survival","concept":"container","type":"mixed","non_null_pct":32,"distinct":107,"examples":["1","V150","T28"],"notes":"Same header/content mismatch."}
+],
+"formulas":[
+{"range":"A34:C34","pattern":"=[1]Sheet1!$A$# / $C$# / $F$# (external)","refs_other_sheets":["[1]Sheet1 (external workbook)"]}
+],
+"species_name_column":"A",
+"species_distinct_count":128,
+"quality_issues":[
+{"issue":"Same structural problems as the newer version; this one has an external-link formula at A34:C34 but no cached error","evidence":"_Seed & Cutting results MASTER.xlsx › Sheet1 › A34:C34","severity":"med"},
+{"issue":"Pricked-out date 2424-12-18 (year typo)","evidence":"_Seed & Cutting results MASTER.xlsx › Sheet1 › column E (max)","severity":"low"},
+{"issue":"Older and shorter than the newer version (1283 vs 1388 records; 98 vs 121 blank-tag rows); not an exact duplicate (different checksum)","evidence":"both files › Sheet1 › column A","severity":"med"}
+],
+"sensitive_columns":["B Source: 1185 populated cells, values withheld"],
+"confidence":"medium"}
+]
+},
+{
+"path":"_MASTER Nursery records and templates/_Seed records-Helen-[name].xlsx",
+"purpose_guess":"Older snapshot of the seed records log (same layout, data to Feb 2025), apparently a copy supplied by the person named in the file name.",
+"workflow_stage":"seed_provenance",
+"years_covered":"2016–2025",
+"is_version_of":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/2. Seed records MASTER.xlsx",
+"sheets":[
+{"name":"Sheet1","role":"data","header_row":3,"data_rows":"4-856","grain":"Same as the newer seed records: one seed lot per row, with a second table from row 572 where tags restart at S1. 848 rows vs 947 in the newer file.",
+"columns":[
+{"letter":"A","header":"Tag No.","concept":"seed_source_code","type":"text","non_null_pct":85,"distinct":479,"examples":["S1","S155","S156"],"notes":"Same restart at A572 and duplicated tags."},
+{"letter":"B","header":"Species","concept":"species_name","type":"text","non_null_pct":87,"distinct":193,"examples":["Sophora microphylla","Corokia cotoneaster","Olearia bullata"],"notes":"Fewer distinct names than the newer file (193 vs 202); same typo patterns."},
+{"letter":"C","header":"Site","concept":"seed_location","type":"text","non_null_pct":86,"distinct":189,"examples":[],"notes":"SENSITIVE: values withheld."},
+{"letter":"D","header":"Collected","concept":"date","type":"mixed","non_null_pct":83.5,"distinct":427,"examples":["2018-03-04","seedlings"],"notes":"Max 2025-12-30 (a likely typo, since sown dates stop at 2025-02-05)."},
+{"letter":"G","header":"Date sown","concept":"date","type":"date","non_null_pct":82.5,"distinct":191,"examples":["2024-08-14","2022-10-10"],"notes":"Max 2025-02-05, so stops before the 2025 August sowing in the newer file."},
+{"letter":"J","header":"Pot size","concept":"container","type":"mixed","non_null_pct":61,"distinct":36,"examples":["V150","35F","T28"],"notes":"Same mix of codes."}
+],
+"formulas":[],
+"species_name_column":"B",
+"species_distinct_count":193,
+"quality_issues":[
+{"issue":"Superseded copy: lacks roughly the last 100 rows (2025–26 sowings) of the newer file; the rest is likely identical, but I did not diff row by row","evidence":"_Seed records-Helen-[name].xlsx › Sheet1 › A4:K856 vs 2. Seed records MASTER.xlsx › Sheet1 › A4:K956","severity":"med"},
+{"issue":"Same repeated header (A572), merged cells (94) and error-flagged header cell as the newer version","evidence":"_Seed records-Helen-[name].xlsx › Sheet1 › A3, A572","severity":"low"}
+],
+"sensitive_columns":["C Site: 729 populated cells, values withheld","K Notes: free text, values withheld"],
+"confidence":"medium"}
+]
+}
+],
+"open_questions_for_wrt":[
+"Do tag numbers (S1, C1) restart every year or at some other point? Is the tag meant to be unique, and what is the rule behind the 6-digit tags such as S210301 and C220609 (date-based)?",
+"Which is the live record: the files in _Seed and Cutting Records, or the older copies in _MASTER Nursery records and templates (including the one named for Helen [name])? Can the older copies be retired?",
+"What does the unlabelled column J in the Cuttings records show (survival fraction?), and why does '%survival' in the results file hold container codes?",
+"Does the red font in the seed and cutting logs mean anything (such as seed still to process)?",
+"Several rows have a blank tag and only a later pricking date. Are these second or later pricking-out events for the lot above?",
+"The results file takes some rows from another workbook (an external link). Which workbook was it, and should it be treated as part of the same record?",
+"Several species names look like typos or older names (for example Aristoderia, Weinmania, Pseudopanax crass). Who should decide the official name for each?",
+"The seed 'Site' and 'Source' columns hold collection places. Who may see these, and is a coarser level (district, or a coded source) acceptable for reporting to Trees That Count?"
+]
+}

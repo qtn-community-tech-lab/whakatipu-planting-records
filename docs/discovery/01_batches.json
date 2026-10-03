@@ -1,0 +1,985 @@
+[
+ {
+  "batch_id": "B01_forecast_current",
+  "files": [
+   "1. Forecasting/_JMN PLANT Forecasting 2026_2027.xlsx"
+  ],
+  "sheets": {
+   "1. Forecasting/_JMN PLANT Forecasting 2026_2027.xlsx": [
+    "3 Year Plant Look Ahead (Keysto",
+    "DR-3 Year Plant Look Ahead (ALL",
+    "SUMMARY",
+    "KEYSTONE SITES",
+    "COMMUNITY GROUPS",
+    "Whitechapel (15)",
+    "Lake Hayes Pavilion (9G)",
+    "Slope Hill Rd (11)",
+    "JARDINE PK",
+    "Ref Gardens",
+    "Bush Creek (13C)",
+    "Peace Park (21)",
+    "Feehly Hill (12A)",
+    "Lake Hayes South (9A)",
+    "Earnslaw Slipway (22A)",
+    "Template"
+   ]
+  },
+  "sheet_total": 16,
+  "size_kb": 236,
+  "hint": "forecasting/production plan",
+  "notes": "Current 3-year forecasting workbook (new). Core."
+ },
+ {
+  "batch_id": "B02_forecast_keystone_versions",
+  "files": [
+   "1. Forecasting/Archive to sort through/01 Keystone Sites Plants Summary.xlsx",
+   "1. Forecasting/Archive to sort through/Aug 2025 Keystone Sites Plants Summary.xlsx"
+  ],
+  "sheets": {
+   "1. Forecasting/Archive to sort through/01 Keystone Sites Plants Summary.xlsx": [
+    "DR-3 Year Plant Look Ahead (ALL",
+    "SUMMARY",
+    "KEYSTONE SITES",
+    "COMMUNITY GROUPS",
+    "3 Year Plant Look Ahead (Keysto",
+    "Whitechapel (15)",
+    "Lake Hayes Pavilion (9G)",
+    "Slope Hill Rd (11)",
+    "JARDINE PK",
+    "Ref Gardens",
+    "Bush Creek (13C)",
+    "Peace Park (21)",
+    "Feehly Hill (12A)",
+    "Lake Hayes South (9A)",
+    "Earnslaw Slipway (22A)",
+    "Template"
+   ],
+   "1. Forecasting/Archive to sort through/Aug 2025 Keystone Sites Plants Summary.xlsx": [
+    "SUMMARY",
+    "KEYSTONE SITES",
+    "COMMUNITY GROUPS",
+    "3 Year Plant Look Ahead (Keysto",
+    "Whitechapel (15)",
+    "Lake Hayes Pavilion (9G)",
+    "Slope Hill Rd (11)",
+    "JARDINE PK",
+    "Ref Gardens",
+    "Bush Creek (13C)",
+    "Peace Park (21)",
+    "Feehly Hill (12A)",
+    "Lake Hayes South (9A)",
+    "Earnslaw Slipway (22A)",
+    "DR-3 Year Plant Look Ahead (ALL",
+    "Template"
+   ]
+  },
+  "sheet_total": 32,
+  "size_kb": 493,
+  "hint": "forecasting/production plan",
+  "notes": "Two versions of the Keystone Sites summary; profile the newer (Aug 2025) fully, sample the other and note differences."
+ },
+ {
+  "batch_id": "B03_species_master_lists",
+  "files": [
+   "1. Forecasting/Archive to sort through/Master plant list 2024.xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Master plant list 2024 (4).xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Suggested Nursery Masterlist sites 2024.xlsx",
+   "_MASTER Nursery records and templates/Standard Annual Plant List for JMN (Neill) MASTER.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Nursery plant names list.docx",
+   "2. Propagation (cuttings and seeds)/Helen Resources/Te Kakano restoration plant species.docx"
+  ],
+  "sheets": {
+   "1. Forecasting/Archive to sort through/Master plant list 2024.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Master plant list 2024 (4).xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Suggested Nursery Masterlist sites 2024.xlsx": [
+    "Sheet1"
+   ],
+   "_MASTER Nursery records and templates/Standard Annual Plant List for JMN (Neill) MASTER.xlsx": [
+    "Sheet1"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Nursery plant names list.docx": [
+    "(document)"
+   ],
+   "2. Propagation (cuttings and seeds)/Helen Resources/Te Kakano restoration plant species.docx": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 6,
+  "size_kb": 126,
+  "hint": "species list",
+  "notes": "Candidate species master lists. The two docx files are plant-name lists: read them and report their species count and naming style."
+ },
+ {
+  "batch_id": "B04_site_plant_needs",
+  "files": [
+   "1. Forecasting/Archive to sort through/A. Suggested plant species and numbers each site per year. 2025 onwards.xlsx",
+   "1. Forecasting/Archive to sort through/Suggested plant speies and numbers each site per year. 2025 onwards.xlsx",
+   "2. Propagation (cuttings and seeds)/Suggested plant speies and numbers each site per year. 2025 onwards.xlsx",
+   "1. Forecasting/Archive to sort through/Plants for JP etc 2025.xlsx",
+   "1. Forecasting/Archive to sort through/Plants for JP etc 2025(1).xlsx",
+   "1. Forecasting/Blanks templates (active)/Nursery Stock and planting list TEMPLATE.xlsx",
+   "2. Propagation (cuttings and seeds)/Helen Resources/_ plantings at Flagship sites 2023.xlsx"
+  ],
+  "sheets": {
+   "1. Forecasting/Archive to sort through/A. Suggested plant species and numbers each site per year. 2025 onwards.xlsx": [
+    "Sheet1"
+   ],
+   "1. Forecasting/Archive to sort through/Suggested plant speies and numbers each site per year. 2025 onwards.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/Suggested plant speies and numbers each site per year. 2025 onwards.xlsx": [
+    "Sheet1"
+   ],
+   "1. Forecasting/Archive to sort through/Plants for JP etc 2025.xlsx": [
+    "Sheet1"
+   ],
+   "1. Forecasting/Archive to sort through/Plants for JP etc 2025(1).xlsx": [
+    "Sheet1"
+   ],
+   "1. Forecasting/Blanks templates (active)/Nursery Stock and planting list TEMPLATE.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/Helen Resources/_ plantings at Flagship sites 2023.xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 7,
+  "size_kb": 130,
+  "hint": "forecasting/production plan",
+  "notes": "Per-site plant need lists feeding the forecast. Exact duplicates of 'Suggested plant speies\u2026' exist in 1. Forecasting/Archive to sort through/\u2026(1).xlsx and Templates and Planning/; profile once, record is_version_of."
+ },
+ {
+  "batch_id": "B05_pricking_out_lists",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/_Pricking out 2026-27 for potting 27-28 .xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2025-2026 for potting 26-27.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2024-25 for potting 25-26.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2023 - 2024 for 2024-2025.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Pricking Out List for 2025_2026.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/3. Pricking out 2025-26 for potting 26-27.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/4. 22-23 plant projections Final.xlsx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/_Pricking out 2026-27 for potting 27-28 .xlsx": [
+    "Sheet1",
+    "Sheet2"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2025-2026 for potting 26-27.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2024-25 for potting 25-26.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Pricking out 2023 - 2024 for 2024-2025.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Pricking Out List for 2025_2026.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/3. Pricking out 2025-26 for potting 26-27.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/4. 22-23 plant projections Final.xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 8,
+  "size_kb": 90,
+  "hint": "pricking-out log",
+  "notes": "Pricking-out target lists by production year (HIGHLIGHTED core record). Archive/7. Pricking out 2025-26\u2026 is an exact duplicate of Archive/3.; skip it and record is_version_of."
+ },
+ {
+  "batch_id": "B06_propagation_tallies",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation numbers from July to December 2026.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation  Jan - April 25 Final.xlsx",
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Propagation numbers from July - Dec 2024.xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx",
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation numbers from July to December 2026.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation  Jan - April 25 Final.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Propagation numbers from July - Dec 2024.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx": [
+    "Sheet 1",
+    "Sheet 2",
+    "Sheet 3",
+    "Complete set"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx": [
+    "Sheet 1",
+    "Sheet 2",
+    "Sheet 3",
+    "Complete set"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx": [
+    "Sheet 1",
+    "Sheet 2",
+    "Sheet 3",
+    "Complete set"
+   ],
+   "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 16,
+  "size_kb": 364,
+  "hint": "pricking-out log",
+  "notes": "Weekly/seasonal propagation (pricking-out) tally sheets and their blank templates. Work out how weekly tallies roll up."
+ },
+ {
+  "batch_id": "B07_seed_sowing",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Seed Sowing 2026 .xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Archive seed Sowing Records annual/Seed sowing 2024.xlsx",
+   "2. Propagation (cuttings and seeds)/latest from Helen/Seed Sowing 2025.xlsx",
+   "2. Propagation (cuttings and seeds)/latest from Helen/Seed record 2026.xlsx",
+   "2. Propagation (cuttings and seeds)/At 27 February 2025  Seed and Cutting trays active.docx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Seed Sowing 2026 .xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Archive seed Sowing Records annual/Seed sowing 2024.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/latest from Helen/Seed Sowing 2025.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/latest from Helen/Seed record 2026.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/At 27 February 2025  Seed and Cutting trays active.docx": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 6,
+  "size_kb": 91,
+  "hint": "seed/provenance",
+  "notes": "Seasonal seed sowing lists (HIGHLIGHTED core record). Exact duplicates of 1. Seed Sowing 2025 exist in Archive seed Sowing Records annual/ (Seed Sowing 2025.xlsx, Seed Sowing 2026 To be updated.xlsx); record is_version_of only. Seed-source locations are SENSITIVE."
+ },
+ {
+  "batch_id": "B08_seed_cutting_masters",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/2. Seed records MASTER.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/1. Cuttings records MASTER.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/3. Seed & Cutting results MASTER.xlsx",
+   "_MASTER Nursery records and templates/_Seed & Cutting results MASTER.xlsx",
+   "_MASTER Nursery records and templates/_Seed records-Helen-[name].xlsx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/2. Seed records MASTER.xlsx": [
+    "Sheet1",
+    "Sheet2"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/1. Cuttings records MASTER.xlsx": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/3. Seed & Cutting results MASTER.xlsx": [
+    "Sheet1"
+   ],
+   "_MASTER Nursery records and templates/_Seed & Cutting results MASTER.xlsx": [
+    "Sheet1"
+   ],
+   "_MASTER Nursery records and templates/_Seed records-Helen-[name].xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 8,
+  "size_kb": 1128,
+  "hint": "seed/provenance",
+  "notes": "Living master records for seed, cuttings and results. 3. Seed & Cutting results MASTER is 800 KB with one sheet \u2014 profile with the script, do not read it whole. Seed collection locations and landowner names are SENSITIVE."
+ },
+ {
+  "batch_id": "B09_seed_collecting_dates",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Collecting/4. Seed collecting record 2026 updated May 15 26 AA.xlsx",
+   "2. Propagation (cuttings and seeds)/WRT Seed Collection Dates.xlsx",
+   "2. Propagation (cuttings and seeds)/Remnant_kowhai_2019.gpx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Collecting/4. Seed collecting record 2026 updated May 15 26 AA.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/WRT Seed Collection Dates.xlsx": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "2. Propagation (cuttings and seeds)/Remnant_kowhai_2019.gpx": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 5,
+  "size_kb": 49,
+  "hint": "seed/provenance",
+  "notes": "Seed collecting records and a GPX track. For the GPX only report: file type, number of waypoints/track points and whether names/coordinates are present. NEVER copy coordinates or place descriptions. SENSITIVE."
+ },
+ {
+  "batch_id": "B10_seed_records_archive",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records_August 2022.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2 Seed records_May 2022.xls",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records.xls",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records(1).xls",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/_Seed records-Helen-[name].xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/WRT 2016-17 seed.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/Seed records 2017.doc"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records_August 2022.xlsx": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2 Seed records_May 2022.xls": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records.xls": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/2. Seed records(1).xls": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/_Seed records-Helen-[name].xlsx": [
+    "Sheet1",
+    "Sheet2"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/WRT 2016-17 seed.xlsx": [
+    "Seed",
+    "Cutting",
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Archive Seed Records/Seed records 2017.doc": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 15,
+  "size_kb": 965,
+  "hint": "seed/provenance",
+  "notes": "Archived versions of the seed records (2016\u20132022). Profile 2. Seed records_August 2022.xlsx and WRT 2016-17 seed.xlsx fully; SAMPLE the rest (header + 15 rows) and record how each differs. 2. Seed records-Helen-[name] MASTER.xlsx here is an exact duplicate of the _MASTER folder copy (B08); skip it. The .doc has a converted .docx copy. SENSITIVE locations."
+ },
+ {
+  "batch_id": "B11_seed_cutting_results_archive",
+  "files": [
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(3).xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Seed & Cutting results_August 2022.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results_Nov 2021.xls",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xls",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(2).xlsx"
+  ],
+  "sheets": {
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(3).xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Seed & Cutting results_August 2022.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results_Nov 2021.xls": [
+    "Sheet1",
+    "Sheet3",
+    "Sheet4"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xls": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx": [
+    "Sheet1"
+   ],
+   "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(2).xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 8,
+  "size_kb": 1801,
+  "hint": "seed/provenance",
+  "notes": "Archived versions of Seed & Cutting results. Profile (3).xlsx fully, SAMPLE the others and record differences. 3. Seed & Cutting results(1).xlsx is an exact duplicate of 3. Seed & Cutting results.xlsx; skip it."
+ },
+ {
+  "batch_id": "B12_cuttings_archive",
+  "files": [
+   "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "Archive/Archive/1. Cuttings records.xlsx",
+   "Archive/Archive/1. Cuttings records.xls",
+   "Archive/Archive/1. Cuttings records(1).xls",
+   "Archive/Archive/1. Cuttings records_May 2022.xls",
+   "Archive/Archive/Cuttings record 2017.doc"
+  ],
+  "sheets": {
+   "Archive/Archive/1. Cuttings records_August 2022.xlsx": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "Archive/Archive/1. Cuttings records.xlsx": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "Archive/Archive/1. Cuttings records.xls": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "Archive/Archive/1. Cuttings records(1).xls": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "Archive/Archive/1. Cuttings records_May 2022.xls": [
+    "Sheet1",
+    "Sheet2",
+    "Sheet3"
+   ],
+   "Archive/Archive/Cuttings record 2017.doc": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 16,
+  "size_kb": 629,
+  "hint": "seed/provenance",
+  "notes": "Archived cuttings records versions. Profile _August 2022 fully, SAMPLE others. .xls files have converted copies. Cutting source locations SENSITIVE."
+ },
+ {
+  "batch_id": "B13_potting_on_current",
+  "files": [
+   "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx"
+  ],
+  "sheets": {
+   "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx": [
+    "Summary",
+    "Aug 2026",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+    "Jan 2027",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "Annual",
+    "Weekly recording print",
+    "Helen Master"
+   ]
+  },
+  "sheet_total": 15,
+  "size_kb": 151,
+  "hint": "potting-up log",
+  "notes": "Current potting-on workbook (HIGHLIGHTED core record), 15 sheets, heavy formulas. Trace how the pricking-out list and stocktake feed it."
+ },
+ {
+  "batch_id": "B14_potting_on_2022_2024",
+  "files": [
+   "3. Potting On/Archive/2022-23 JMN Potting On - August 2022 - July 2023.xlsx",
+   "3. Potting On/Archive/2023-24 JMN Potting On - August 2023 - July 2024.xlsx"
+  ],
+  "sheets": {
+   "3. Potting On/Archive/2022-23 JMN Potting On - August 2022 - July 2023.xlsx": [
+    "Summary",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Annual"
+   ],
+   "3. Potting On/Archive/2023-24 JMN Potting On - August 2023 - July 2024.xlsx": [
+    "Summary",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Annual"
+   ]
+  },
+  "sheet_total": 21,
+  "size_kb": 135,
+  "hint": "potting-up log",
+  "notes": "Older potting-on workbooks. Note structural changes year to year."
+ },
+ {
+  "batch_id": "B15_potting_on_2024_2026",
+  "files": [
+   "3. Potting On/Archive/2024-25 JMN Potting On - August 2024 - July 2025.xlsx",
+   "3. Potting On/Archive/2025-26 JMN Potting On - August 2025 - July 26.xlsx"
+  ],
+  "sheets": {
+   "3. Potting On/Archive/2024-25 JMN Potting On - August 2024 - July 2025.xlsx": [
+    "Summary",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "Annual",
+    "Weekly recording print",
+    "Helen Master"
+   ],
+   "3. Potting On/Archive/2025-26 JMN Potting On - August 2025 - July 26.xlsx": [
+    "Summary",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "June",
+    "Annual",
+    "Weekly recording print",
+    "Helen Master"
+   ]
+  },
+  "sheet_total": 28,
+  "size_kb": 295,
+  "hint": "potting-up log",
+  "notes": "Recent potting-on workbooks. 'Copy of 2025-26\u2026' is an exact duplicate; skip it and record is_version_of."
+ },
+ {
+  "batch_id": "B16_stocktake_current",
+  "files": [
+   "4. Stocktakes/_Stocktake Master CURRENT.xlsx",
+   "4. Stocktakes/2025/20 May 2025 JMN Stocktake.xlsx",
+   "4. Stocktakes/2025/19 Feb 2025 JMN Stocktake.xlsx",
+   "4. Stocktakes/2025/18 October 24 JMN Stocktake.xlsx",
+   "4. Stocktakes/2025/Rolling Stocktakes Feb 2024.xlsx",
+   "4. Stocktakes/2026/Nursery Stock and planting list Feb 2026 for autumn(Sheet1).csv",
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Nursery Stock and planting list Feb 2026 for autumn(Sheet1).xlsx"
+  ],
+  "sheets": {
+   "4. Stocktakes/_Stocktake Master CURRENT.xlsx": [
+    "Autumn 2026 Master Stocktake",
+    "Stage 4 Stocktake Sheet"
+   ],
+   "4. Stocktakes/2025/20 May 2025 JMN Stocktake.xlsx": [
+    "Oct 24",
+    "Copy of Oct 24"
+   ],
+   "4. Stocktakes/2025/19 Feb 2025 JMN Stocktake.xlsx": [
+    "Oct 24"
+   ],
+   "4. Stocktakes/2025/18 October 24 JMN Stocktake.xlsx": [
+    "Oct 24"
+   ],
+   "4. Stocktakes/2025/Rolling Stocktakes Feb 2024.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/2026/Nursery Stock and planting list Feb 2026 for autumn(Sheet1).csv": [
+    "(csv)"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Nursery Stock and planting list Feb 2026 for autumn(Sheet1).xlsx": [
+    "Nursery Stock and planting list"
+   ]
+  },
+  "sheet_total": 9,
+  "size_kb": 150,
+  "hint": "stocktake",
+  "notes": "Current and recent PB3/T28 stocktakes. The csv and xlsx 'Nursery Stock and planting list Feb 2026' are likely the same export; compare."
+ },
+ {
+  "batch_id": "B17_stocktake_v150_prop",
+  "files": [
+   "4. Stocktakes/Old propagation stocktakes/V150 stocktake 31 March 2026.xlsx",
+   "4. Stocktakes/2025/V150 stocktake 31.3.25.xlsx",
+   "4. Stocktakes/Old propagation stocktakes/2024 prop stocktake 27 March24.xlsx",
+   "4. Stocktakes/Old propagation stocktakes/2022 Prop Stocktake 23 Feb 2022.xlsx",
+   "4. Stocktakes/Stocktake templates/AA Stocktake Form Master June 2024.xlsx",
+   "4. Stocktakes/Stocktake templates/JMN Stocktake  18 October 24.xlsx",
+   "4. Stocktakes/Old Stocktakes/PB Stocktake  18 October 24.xlsx"
+  ],
+  "sheets": {
+   "4. Stocktakes/Old propagation stocktakes/V150 stocktake 31 March 2026.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/2025/V150 stocktake 31.3.25.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old propagation stocktakes/2024 prop stocktake 27 March24.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old propagation stocktakes/2022 Prop Stocktake 23 Feb 2022.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Stocktake templates/AA Stocktake Form Master June 2024.xlsx": [
+    "Stocktake"
+   ],
+   "4. Stocktakes/Stocktake templates/JMN Stocktake  18 October 24.xlsx": [
+    "Oct 24"
+   ],
+   "4. Stocktakes/Old Stocktakes/PB Stocktake  18 October 24.xlsx": [
+    "Sheet1"
+   ]
+  },
+  "sheet_total": 7,
+  "size_kb": 5431,
+  "hint": "stocktake",
+  "notes": "V150 (propagation / Stage 2) stocktakes and stocktake form templates. The two V150 files are 2.6 MB each with one sheet \u2014 use the profiler, never read whole."
+ },
+ {
+  "batch_id": "B18_stocktake_old",
+  "files": [
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023.xlsx",
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023(1).xlsx",
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2022.xlsx",
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet  May 2020.xlsx",
+   "4. Stocktakes/Old Stocktakes/oldJMN PB3 Stocktake 27 May 2020.xlsx",
+   "4. Stocktakes/Old Stocktakes/JMN PB3 Stocktake 29 Jan 2020.xlsx",
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 26 Oct 2019.xlsx",
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 12 May 2019.xlsx",
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 21 October 2018.xlsx",
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 5 June 2018.xlsx"
+  ],
+  "sheets": {
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2023(1).xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet October 2022.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old Stocktakes/Stocktake Spreadsheet  May 2020.xlsx": [
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old Stocktakes/oldJMN PB3 Stocktake 27 May 2020.xlsx": [
+    "STOCKTAKE"
+   ],
+   "4. Stocktakes/Old Stocktakes/JMN PB3 Stocktake 29 Jan 2020.xlsx": [
+    "STOCKTAKE"
+   ],
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 26 Oct 2019.xlsx": [
+    "STOCKTAKE"
+   ],
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 12 May 2019.xlsx": [
+    "STOCKTAKE",
+    "PROJECTED",
+    "Sheet1"
+   ],
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 21 October 2018.xlsx": [
+    "STOCKTAKE",
+    "PROJECTED",
+    "Sheet2"
+   ],
+   "4. Stocktakes/Old Stocktakes/JMN Stocktake 5 June 2018.xlsx": [
+    "STOCKTAKE",
+    "PROJECTED"
+   ]
+  },
+  "sheet_total": 15,
+  "size_kb": 277,
+  "hint": "stocktake",
+  "notes": "Historic stocktakes 2018\u20132023. Profile October 2023 and May 2020 fully; SAMPLE the rest and record how the structure changed over time."
+ },
+ {
+  "batch_id": "B19_allocation_autumn_2026",
+  "files": [
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx"
+  ],
+  "sheets": {
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx": [
+    "Stocktake",
+    "Autumn 2026",
+    "Nursery Collection Schedule",
+    "Plant Protection",
+    "Slope Hill",
+    "Quail Rise",
+    "Jardine Park",
+    "Whitechapel South Block",
+    "Whitechapel Infill Northern Blo",
+    "Sheet15",
+    "Sheet16",
+    "Rowing Club",
+    "LakeHayesPav",
+    "Shotover Wetlands",
+    "Matakauri Wetland",
+    "Little Difference",
+    "Notes",
+    "Feehly Hill",
+    "Incl Jardine",
+    "Peace Park",
+    "Lake Hayes South",
+    "Reference Gardens",
+    "Morning Star",
+    "Boyes",
+    "QEII",
+    "Gibbston",
+    "Paper for Trees",
+    "KiwiPark",
+    "Paper4Trees2"
+   ]
+  },
+  "sheet_total": 29,
+  "size_kb": 1181,
+  "hint": "allocation",
+  "notes": "Current autumn allocation master, 29 sheets, 1.2 MB. One sheet per site plus a collection schedule, most likely."
+ },
+ {
+  "batch_id": "B20_allocation_spring_2026",
+  "files": [
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Spring planting/_JMN Plant Allocations Spring 2026.xlsx"
+  ],
+  "sheets": {
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Spring planting/_JMN Plant Allocations Spring 2026.xlsx": [
+    "Plant Allocations ",
+    "Nursery Collection Schedule",
+    "Whitechapel",
+    "Slopehill",
+    "Jardine Park",
+    "Industry Planting",
+    "Lake Hayes",
+    "Peace Park",
+    "JP Reference garden",
+    "Neill",
+    "Pigeon Island",
+    "Hans Block",
+    "QLDC Yvette",
+    "Quail Rise",
+    "KPCA",
+    "Morning Star",
+    "Little Difference",
+    "WHS in school",
+    "Paper4Trees2",
+    "Paper for Trees",
+    "SITE TEMPLATE",
+    "Plant Protection",
+    "Neill template for plant alloca",
+    "Sheet18"
+   ]
+  },
+  "sheet_total": 24,
+  "size_kb": 406,
+  "hint": "allocation",
+  "notes": "Current spring allocation master, 24 sheets."
+ },
+ {
+  "batch_id": "B21_allocation_spring_2025",
+  "files": [
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/JMN Plant Allocation Master SPRING 2025.xlsx"
+  ],
+  "sheets": {
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/JMN Plant Allocation Master SPRING 2025.xlsx": [
+    "Stocktake",
+    "Spring 2025",
+    "Jardine Park",
+    "Incl schools",
+    "Nursery Collection Schedule",
+    "Plant Protection",
+    "Notes",
+    "Whitechapel",
+    "LakeHayesPav",
+    "Slope Hill",
+    "Feehly Hill",
+    "Incl Jardine",
+    "Peace Park",
+    "Lake Hayes South",
+    "Reference Gardens",
+    "Quail Rise",
+    "Morning Star",
+    "Boyes",
+    "QEII",
+    "Gibbston",
+    "Paper for Trees",
+    "KiwiPark",
+    "Shotover Wetlands",
+    "Paper4Trees2"
+   ]
+  },
+  "sheet_total": 24,
+  "size_kb": 966,
+  "hint": "allocation",
+  "notes": "Previous spring allocation master, 24 sheets. Compare structure with current ones."
+ },
+ {
+  "batch_id": "B22_allocation_small_and_templates",
+  "files": [
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/4. Autumn Planting/JMN Plant Allocations Autumn 2027.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Autumn 2026 wish list.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2022 Autumn Plant Allocations.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2023 Autumn Plant Allocation Sheets/Peace Park Autumn 2023.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park plant list 2025.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park Plant List - Home Creek.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park Plant List - Home Creek(1).xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Untitled document.docx",
+   "_MASTER Nursery records and templates/JMN Plant Allocation MASTER TEMPLATE.xlsx"
+  ],
+  "sheets": {
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/4. Autumn Planting/JMN Plant Allocations Autumn 2027.xlsx": [
+    "Plant Allocations ",
+    "Neill template for plant alloca",
+    "Stage 4 Stocktake Sheet"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/Autumn 2026 wish list.xlsx": [
+    "Sheet1"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2022 Autumn Plant Allocations.xlsx": [
+    "Template",
+    "Whitechapel",
+    "Bush Creek",
+    "Lake Hayes South",
+    "Feehly Hill",
+    "Slope Hill",
+    "Stock Required"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2023 Autumn Plant Allocation Sheets/Peace Park Autumn 2023.xlsx": [
+    "Copy of Peace Park"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park plant list 2025.xlsx": [
+    "Sheet1",
+    "Springburn Order",
+    "Home Creek Order",
+    "QT Nursery order"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park Plant List - Home Creek.xlsx": [
+    "Table 1"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Jardine Park Plant List - Home Creek(1).xlsx": [
+    "Copy of Sheet1"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Spring Planting Lists/Untitled document.docx": [
+    "(document)"
+   ],
+   "_MASTER Nursery records and templates/JMN Plant Allocation MASTER TEMPLATE.xlsx": [
+    "Plant Allocations ",
+    "Neill template for plant alloca",
+    "Stage 4 Stocktake Sheet"
+   ]
+  },
+  "sheet_total": 22,
+  "size_kb": 6315,
+  "hint": "allocation",
+  "notes": "Smaller allocation files, site lists, wish list and the blank allocation template. Many PDFs in the same Archive folders are printed allocation sheets: list only."
+ },
+ {
+  "batch_id": "B23_plants_out_master",
+  "files": [
+   "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+   "_MASTER Nursery records and templates/archive/_JMN Plants Out Master.xlsx"
+  ],
+  "sheets": {
+   "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx": [
+    "Notes",
+    "Master Plant List",
+    "MASTER",
+    "SUMMARY SITES",
+    "SUMMARY PLANTS",
+    "HISTORIC SUMMARY SITES",
+    "plants removed from list",
+    "CHART DATA",
+    "CHARTS",
+    "Trees that Count",
+    "Trees that Count Audit 2025",
+    "Trees that Count Audit 2025 Sit"
+   ],
+   "_MASTER Nursery records and templates/archive/_JMN Plants Out Master.xlsx": [
+    "Notes",
+    "Master Plant List",
+    "MASTER",
+    "SUMMARY SITES",
+    "SUMMARY PLANTS",
+    "HISTORIC SUMMARY SITES",
+    "plants removed from list",
+    "CHART DATA",
+    "CHARTS",
+    "Trees that Count",
+    "Trees that Count Audit 2025",
+    "Copy of Trees that Count Audit ",
+    "Trees that Count Audit 2025 Sit"
+   ]
+  },
+  "sheet_total": 25,
+  "size_kb": 933,
+  "hint": "planting history",
+  "notes": "Historical record of everything planted by site (running tally). Two versions; profile the non-archive one fully and diff against the archive copy."
+ },
+ {
+  "batch_id": "B24_funders_orders_docs",
+  "files": [
+   "Paper 4 Trees/Whakatipu Reforestation Trust 2026.xlsx",
+   "Paper 4 Trees/Whakatipu Reforestation Trust 2025.xlsx",
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Autumn Plant Lists/Whakatipu Reforestation Trust 2025.xlsx",
+   "Plant Orders/JMN Plant Orders for Spring 2024.xlsx",
+   "Paper 4 Trees/Paper4Trees Order 2019.docx",
+   "_Summary of Records JM Nursery.docx",
+   "2. Propagation (cuttings and seeds)/Questions for Helen, SR and Anna to work through.docx",
+   "2. Propagation (cuttings and seeds)/Annual propagation reports/Propagation Report for the year ended December 2024.docx",
+   "2. Propagation (cuttings and seeds)/Annual propagation reports/Annual Propagation summary April 2021.docx"
+  ],
+  "sheets": {
+   "Paper 4 Trees/Whakatipu Reforestation Trust 2026.xlsx": [
+    "Sheet1"
+   ],
+   "Paper 4 Trees/Whakatipu Reforestation Trust 2025.xlsx": [
+    "Sheet1"
+   ],
+   "5. Seasonal Planting Lists & Collection Schedule/Archive/2025 Autumn Plant Lists/Whakatipu Reforestation Trust 2025.xlsx": [
+    "Sheet1"
+   ],
+   "Plant Orders/JMN Plant Orders for Spring 2024.xlsx": [
+    "Sheet1"
+   ],
+   "Paper 4 Trees/Paper4Trees Order 2019.docx": [
+    "(document)"
+   ],
+   "_Summary of Records JM Nursery.docx": [
+    "(document)"
+   ],
+   "2. Propagation (cuttings and seeds)/Questions for Helen, SR and Anna to work through.docx": [
+    "(document)"
+   ],
+   "2. Propagation (cuttings and seeds)/Annual propagation reports/Propagation Report for the year ended December 2024.docx": [
+    "(document)"
+   ],
+   "2. Propagation (cuttings and seeds)/Annual propagation reports/Annual Propagation summary April 2021.docx": [
+    "(document)"
+   ]
+  },
+  "sheet_total": 9,
+  "size_kb": 95,
+  "hint": "TTC reporting",
+  "notes": "Funder/order files (Paper4Trees, bought-in plant orders) and process documents. For docx: summarise what records/processes they define and which figures they report; do not transcribe. Other propagation reports (2022) are versions: list only."
+ }
+]

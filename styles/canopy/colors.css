@@ -1,0 +1,73 @@
+:root{
+  /* Brand greens */
+  --cn-green-900:#15261c;   /* ink, deepest */
+  --cn-green-800:#1f4d34;   /* primary — buttons, active nav, hero cards, H1 */
+  --cn-green-600:#3f7a52;   /* eyebrows, container labels, secondary bars */
+  --cn-green-500:#6d9c79;   /* tertiary bar segment */
+  --cn-green-400:#9cc58a;   /* "added" bar segment, map fill */
+  --cn-green-300:#9cb8a2;   /* past/forecast bars */
+  --cn-lime-300:#d6ea8c;    /* Stage 4 / ready-to-plant highlight on dark green */
+  /* Sage tints */
+  --cn-sage-200:#cfd8cd;    /* strong border: outline buttons, inputs, dashed links */
+  --cn-sage-150:#e3e9e1;    /* divider inside soft panels, stepper track */
+  --cn-sage-100:#e7eee5;    /* tint: info callouts, progress track, date pill, ok badge */
+  --cn-sage-75:#eef2eb;     /* map / media placeholder */
+  --cn-sage-50:#f2f5f0;     /* soft fill: tiles, selected rows, nav hover, chips */
+  /* Warm neutrals */
+  --cn-stone-50:#f3f1ea;    /* app background */
+  --cn-stone-100:#efece5;   /* row dividers */
+  --cn-stone-150:#ebe8e0;   /* sidebar edge, sidebar section rule */
+  --cn-stone-200:#e7e4dc;   /* card / topbar border */
+  --cn-stone-300:#ddd9cf;   /* paper border */
+  --cn-paper:#fdfcf9;       /* printable sheet */
+  --cn-white:#fff;
+  /* Text greys (green-tinted) */
+  --cn-grey-700:#4a574d;    /* secondary text, inactive nav */
+  --cn-grey-500:#7d877f;    /* muted / meta / table headers / latin names */
+  --cn-grey-450:#8a938b;    /* placeholder */
+  --cn-grey-400:#9aa39b;    /* flow arrows */
+  --cn-grey-300:#a3aaa4;    /* disabled text */
+  --cn-grey-200:#c4c9c3;    /* empty-cell dash */
+  --cn-annotation:#6b675e;  /* presentation captions (mono) */
+  /* Status */
+  --cn-ok-bg:#e7eee5;      --cn-ok-fg:#1f4d34;
+  --cn-behind-bg:#f6ecd7;  --cn-behind-fg:#8a560c;  --cn-behind-bar:#c58a2a; --cn-note-fg:#7a4e0c;
+  --cn-risk-bg:#f8e5df;    --cn-risk-fg:#a63e28;    --cn-risk-strong:#b5472f;
+  --cn-late-bg:#b5472f;    --cn-late-fg:#fff;
+  --cn-prod-bg:#eef0ff;    --cn-prod-fg:#3a4a8c;
+  --cn-restricted-bg:#2b2b2b; --cn-restricted-fg:#fff;
+  --cn-risk-on-dark:#f4b8a6;
+  /* Overlays */
+  --cn-scrim:rgba(21,38,28,.22);
+  --cn-on-dark-fill:rgba(255,255,255,.1);
+  --cn-on-dark-fill-2:rgba(255,255,255,.12);
+  --cn-on-dark-track:rgba(255,255,255,.18);
+  --cn-presentation-bg:#b9c2b5;
+
+  /* Semantic aliases — use these in product code */
+  --surface-app:var(--cn-stone-50);
+  --surface-card:var(--cn-white);
+  --surface-soft:var(--cn-sage-50);
+  --surface-tint:var(--cn-sage-100);
+  --surface-hero:var(--cn-green-800);
+  --surface-media:var(--cn-sage-75);
+  --border-card:var(--cn-stone-200);
+  --border-row:var(--cn-stone-100);
+  --border-strong:var(--cn-sage-200);
+  --border-focus:var(--cn-green-800);
+  --text-strong:var(--cn-green-900);
+  --text-brand:var(--cn-green-800);
+  --text-eyebrow:var(--cn-green-600);
+  --text-body:var(--cn-grey-700);
+  --text-muted:var(--cn-grey-500);
+  --text-placeholder:var(--cn-grey-450);
+  --text-disabled:var(--cn-grey-300);
+  --text-on-hero:var(--cn-white);
+  --text-highlight-on-hero:var(--cn-lime-300);
+  --action-primary:var(--cn-green-800);
+  --action-primary-hover:var(--cn-green-900);
+  --action-secondary-border:var(--cn-sage-200);
+  --action-soft:var(--cn-sage-50);
+  --link:var(--cn-green-800);
+  --link-hover:var(--cn-green-900);
+}

@@ -1,0 +1,3589 @@
+{
+ "batch_id": "B19_allocation_autumn_2026",
+ "files": [
+  {
+   "path": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx",
+   "purpose_guess": "Current autumn 2026 plant allocation master: one species x site allocation matrix (Autumn 2026) that drives one linked sheet per planting site, plus a stocktake template, collection schedule, plant-protection summary and stale carry-over sheets.",
+   "workflow_stage": "allocation",
+   "years_covered": "2026 (Autumn); leftover sheets from Spring 2024, Autumn 2025 and Spring 2025",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Stocktake",
+     "role": "form",
+     "header_row": 4,
+     "data_rows": "5-38",
+     "grain": "One species per row in three side-by-side blocks (A:C, D:F, G:I). Intended as species x count at the Feb 2026 nursery stocktake, but the count and location columns are blank",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 97.4,
+       "distinct": 37,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Austroderia richardii",
+        "Carex secta"
+       ],
+       "notes": "Linked, not typed: ='Autumn 2026'!C6 pattern (34 formulas in A5:A38). A20 is #REF!"
+      },
+      {
+       "letter": "B",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 7.9,
+       "distinct": 3,
+       "examples": [
+        "0"
+       ],
+       "notes": "Empty for every species. B39 =sum(B5:B38). B40:B42 hold a note and a date from a 2024 stocktake that names the stockers (values withheld)"
+      },
+      {
+       "letter": "C",
+       "header": "Location",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Entirely empty"
+      },
+      {
+       "letter": "D",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 92.1,
+       "distinct": 35,
+       "examples": [
+        "Fuscospora fusca",
+        "Griselinia littoralis"
+       ],
+       "notes": "='Autumn 2026'!C40 onwards"
+      },
+      {
+       "letter": "E",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 2.6,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Only subtotal E39 present"
+      },
+      {
+       "letter": "F",
+       "header": "Location",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty"
+      },
+      {
+       "letter": "G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 84.2,
+       "distinct": 32,
+       "examples": [
+        "Phormium tenax",
+        "Pittosporum tenuifolium"
+       ],
+       "notes": "='Autumn 2026'!C74 onwards"
+      },
+      {
+       "letter": "H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 5.3,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "H39 subtotal; H40 =B39+E39+H39 grand total"
+      },
+      {
+       "letter": "I",
+       "header": "Location",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty"
+      },
+      {
+       "letter": "K-O",
+       "header": "(unlabelled side note)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [
+        "Shotover Primary",
+        "352",
+        "700(1000) per year"
+       ],
+       "notes": "Small school-stock note beside the table; school stock is also held in Autumn 2026 E:G"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A5:A38, D5:D38, G5:G38",
+       "pattern": "'Autumn 2026'!C#",
+       "refs_other_sheets": [
+        "Autumn 2026!C6:C105"
+       ]
+      },
+      {
+       "range": "B39, E39, H39",
+       "pattern": "=sum(B5:B38)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "H40",
+       "pattern": "=B39+E39+H39",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Template is blank: header reads \"DATE: Feb 2026\" and \"INCLUDE PLANTS READY FOR NEXT SEASON PLANTING ONLY\" but no per-species counts are entered. The stocktake figures appear to live in Autumn 2026 column H instead",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Stocktake › B5:B38, E5:E38, H5:H38",
+       "severity": "high"
+      },
+      {
+       "issue": "#REF! in a species name cell: one species lost from the sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Stocktake › A20",
+       "severity": "med"
+      },
+      {
+       "issue": "Species list covers only master rows C6:C105; species appended at C106:C119 are absent",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Stocktake › A5:G38 vs Autumn 2026 › C106:C119",
+       "severity": "med"
+      },
+      {
+       "issue": "Non-breaking space inside Plagianthus regius would fail exact matching",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C79 (flows to Stocktake)",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B40:B42 free text naming past stocktake staff (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Autumn 2026",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "6-119 species; 122 totals; 124 trees > 5 m; 130-142 school stock notes",
+     "grain": "One species per row: nursery availability (stocktake plus bought-in) and a wide block of allocated quantities with one column per planting site or group (a species x site allocation matrix for Autumn 2026)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": ">5m",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 38.8,
+       "distinct": 1,
+       "examples": [
+        "Y"
+       ],
+       "notes": "Flag \"Y\" on 50 rows; apparently marks species that grow to trees over 5 m (row 124 label TREES > 5M)"
+      },
+      {
+       "letter": "B",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 77.5,
+       "distinct": 100,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "Running row number =B6+1 (99 formulas)"
+      },
+      {
+       "letter": "C",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 89.9,
+       "distinct": 116,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Austroderia richardii",
+        "Carex secta"
+       ],
+       "notes": "Master species list C6:C119 (113 distinct binomials); every other sheet links here via ='Autumn 2026'!C#. Rows 114-119 carry a dash and common name in the cell"
+      },
+      {
+       "letter": "D",
+       "header": "Comments",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 29.5,
+       "distinct": 37,
+       "examples": [
+        "Wineberry",
+        "Toe toe",
+        "Leatherleaf Sedge"
+       ],
+       "notes": "Used for the common name rather than comments; D1-area SUM() of text gives 0"
+      },
+      {
+       "letter": "E",
+       "header": "South nursery large",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 6.2,
+       "distinct": 8,
+       "examples": [
+        "255",
+        "100",
+        "QPS"
+       ],
+       "notes": "Numbers mixed with school codes (QPS, RPS, SPS): stock held for schools. Free-text school stock lists at E130:G142"
+      },
+      {
+       "letter": "F",
+       "header": "North nursery large",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 6.2,
+       "distinct": 8,
+       "examples": [
+        "150",
+        "5",
+        "20 carex"
+       ],
+       "notes": "Numbers mixed with text such as \"20 carex\", \"10 tenax\""
+      },
+      {
+       "letter": "G",
+       "header": "V150 / T28",
+       "concept": "container",
+       "type": "text",
+       "non_null_pct": 3.1,
+       "distinct": 4,
+       "examples": [
+        "carex",
+        "tenax",
+        "Hebe salicifolia"
+       ],
+       "notes": "Header suggests container type; contents are species labels, not counts"
+      },
+      {
+       "letter": "H",
+       "header": "StockTake",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 51.2,
+       "distinct": 53,
+       "examples": [
+        "15",
+        "108",
+        "530"
+       ],
+       "notes": "Per-species count of ready plants, typed (not formula). H122 =SUM(H6:H105) = 9489. Header has trailing space"
+      },
+      {
+       "letter": "I",
+       "header": "From QLDC",
+       "concept": "supplier/bought_in",
+       "type": "int",
+       "non_null_pct": 4.7,
+       "distinct": 6,
+       "examples": [
+        "40",
+        "143",
+        "413"
+       ],
+       "notes": "Council-supplied plants; some cells are arithmetic such as =83+60"
+      },
+      {
+       "letter": "J",
+       "header": "From QT Nursery (Paererewa)",
+       "concept": "supplier/bought_in",
+       "type": "int",
+       "non_null_pct": 5.4,
+       "distinct": 7,
+       "examples": [
+        "10",
+        "30",
+        "80"
+       ],
+       "notes": "Plants from another nursery"
+      },
+      {
+       "letter": "K",
+       "header": "Buy IN",
+       "concept": "supplier/bought_in",
+       "type": "int",
+       "non_null_pct": 12.4,
+       "distinct": 5,
+       "examples": [
+        "1",
+        "2",
+        "6"
+       ],
+       "notes": "Bought-in quantity; K122 =SUM(K6:K107)"
+      },
+      {
+       "letter": "L",
+       "header": "Total Available",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 89.1,
+       "distinct": 58,
+       "examples": [
+        "0",
+        "15",
+        "63"
+       ],
+       "notes": "=SUM(H6:K6) (115 formulas); excludes E:G school stock"
+      },
+      {
+       "letter": "M",
+       "header": "Total Allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 89.9,
+       "distinct": 49,
+       "examples": [
+        "0",
+        "10",
+        "30"
+       ],
+       "notes": "=sum(O6:AO6) (116 formulas); AQ uses a different range"
+      },
+      {
+       "letter": "N",
+       "header": "Over / Under",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 88.4,
+       "distinct": 56,
+       "examples": [
+        "0",
+        "12",
+        "-50"
+       ],
+       "notes": "=L6-M6; green fill; negative means over-allocated (min -50)"
+      },
+      {
+       "letter": "O",
+       "header": "WC south bank and mound",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 19.4,
+       "distinct": 11,
+       "examples": [
+        "30",
+        "10",
+        "50"
+       ],
+       "notes": "Whitechapel South Block allocation; 25 species; O122 = 720 (matches site sheet)"
+      },
+      {
+       "letter": "P",
+       "header": "WC Back block",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 14.7,
+       "distinct": 10,
+       "examples": [
+        "20",
+        "10",
+        "5"
+       ],
+       "notes": "Whitechapel infill/northern block allocation; 19 species"
+      },
+      {
+       "letter": "Q",
+       "header": "WC Steep Bank (landowner/contact name in brackets, withheld)",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 7.0,
+       "distinct": 6,
+       "examples": [
+        "10",
+        "25",
+        "15"
+       ],
+       "notes": "Whitechapel steep bank; no matching site sheet"
+      },
+      {
+       "letter": "R",
+       "header": "Lake Hayes Pavilion Sth block infill (Novotel)",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 12.4,
+       "distinct": 8,
+       "examples": [
+        "10",
+        "35",
+        "20"
+       ],
+       "notes": "Feeds LakeHayesPav sheet"
+      },
+      {
+       "letter": "S",
+       "header": "Lake Hayes Rowing Club",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 36.4,
+       "distinct": 18,
+       "examples": [
+        "10",
+        "20",
+        "30"
+       ],
+       "notes": "Largest column; feeds Rowing Club sheet (1130)"
+      },
+      {
+       "letter": "T",
+       "header": "Slope Hill",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 10.9,
+       "distinct": 13,
+       "examples": [
+        "10",
+        "110",
+        "92"
+       ],
+       "notes": "Six cells are arithmetic such as =275-63; feeds Slope Hill sheet (907)"
+      },
+      {
+       "letter": "U",
+       "header": "Jardine Pk Roadside",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 20.9,
+       "distinct": 9,
+       "examples": [
+        "5",
+        "10",
+        "15"
+       ],
+       "notes": "Feeds Jardine Park sheet (255)"
+      },
+      {
+       "letter": "V",
+       "header": "Lake Hayes South",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Total only (no allocations)"
+      },
+      {
+       "letter": "W",
+       "header": "Feehly Hill",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 1.6,
+       "distinct": 2,
+       "examples": [
+        "0",
+        "#REF!"
+       ],
+       "notes": "Total only; W129 is #REF!. Feehly Hill sheet actually pulls column AH"
+      },
+      {
+       "letter": "X",
+       "header": "Peace Park",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Total only"
+      },
+      {
+       "letter": "Y",
+       "header": "JP Reference Gardens",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 12.4,
+       "distinct": 5,
+       "examples": [
+        "1",
+        "2",
+        "4"
+       ],
+       "notes": "Feeds Reference Gardens sheet (19). Value pattern matches column K exactly (11 ones, 2 twos, a four, a six)"
+      },
+      {
+       "letter": "Z-AC",
+       "header": "JP shelter belt / (personal-name column) / Pigeon Island / (personal-name column)",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Four site columns holding only a zero total"
+      },
+      {
+       "letter": "AD",
+       "header": "Quail Rise",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 11.6,
+       "distinct": 5,
+       "examples": [
+        "3",
+        "5",
+        "50"
+       ],
+       "notes": "Feeds Quail Rise sheet (50)"
+      },
+      {
+       "letter": "AE",
+       "header": "Morning Star",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Total only"
+      },
+      {
+       "letter": "AF",
+       "header": "LHE Trail",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 4.7,
+       "distinct": 2,
+       "examples": [
+        "5",
+        "25"
+       ],
+       "notes": "Lake Hayes Estate trail; 6 values"
+      },
+      {
+       "letter": "AG",
+       "header": "QLDC Tohu",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 1.6,
+       "distinct": 2,
+       "examples": [
+        "4"
+       ],
+       "notes": "4 plants"
+      },
+      {
+       "letter": "AH",
+       "header": "Paererewa",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 14.0,
+       "distinct": 10,
+       "examples": [
+        "5",
+        "15",
+        "3"
+       ],
+       "notes": "Feeds the Feehly Hill and Boyes sheets, both of which are titled Paererewa"
+      },
+      {
+       "letter": "AI",
+       "header": "Rowing Club (LINZ)",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Feeds the Gibbston sheet (titled Rowing Club (LINZ))"
+      },
+      {
+       "letter": "AJ",
+       "header": "Little Difference",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 76.7,
+       "distinct": 10,
+       "examples": [
+        "0",
+        "5",
+        "10"
+       ],
+       "notes": "99 numeric cells, 76 of them zero; total 200, but the Little Difference sheet has lost its links"
+      },
+      {
+       "letter": "AK",
+       "header": "Matakauri Wetlands",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 7.0,
+       "distinct": 4,
+       "examples": [
+        "5",
+        "20",
+        "80"
+       ],
+       "notes": "Feeds both the Matakauri Wetland and KiwiPark sheets"
+      },
+      {
+       "letter": "AL",
+       "header": "Shotover Wetland",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 12.4,
+       "distinct": 12,
+       "examples": [
+        "10",
+        "20",
+        "56"
+       ],
+       "notes": "Feeds Shotover Wetlands sheet (307)"
+      },
+      {
+       "letter": "AM",
+       "header": "Remarks Primary",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "School column, total only"
+      },
+      {
+       "letter": "AN",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Unlabelled column with a zero total"
+      },
+      {
+       "letter": "AO",
+       "header": "Paper 4 Trees",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 0.8,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Paper4Trees allocation, zero. AO5 has a cell comment (author name withheld)"
+      },
+      {
+       "letter": "AQ",
+       "header": "Total Allocated (second)",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 90.7,
+       "distinct": 49,
+       "examples": [
+        "0",
+        "10",
+        "30"
+       ],
+       "notes": "=SUM(O6:AP6); AQ124 = 5629 against M122 = 4562"
+      },
+      {
+       "letter": "AS",
+       "header": "WC combined numbers",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 79.8,
+       "distinct": 15,
+       "examples": [
+        "0",
+        "20",
+        "30"
+       ],
+       "notes": "=O6+P6+Q6 (103 formulas): the three Whitechapel columns added"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "L6:L119",
+       "pattern": "=SUM(H6:K6)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "M6:M119",
+       "pattern": "=sum(O6:AO6)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "N6:N119",
+       "pattern": "=L6-M6",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AQ6:AQ119",
+       "pattern": "=SUM(O6:AP6)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AS6:AS119",
+       "pattern": "=O6+P6+Q6",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "row 122 totals",
+       "pattern": "=SUM(H6:H105), =SUM(K6:K107), =SUM(Y6:Y113): end row differs by column",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "C",
+     "species_distinct_count": 113,
+     "quality_issues": [
+      {
+       "issue": "Totals use inconsistent end rows (H to 105, K to 107, Y to 113, most site columns to 103), so species at C104:C119 can fall outside totals",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › H122, K122, Y122, O122",
+       "severity": "high"
+      },
+      {
+       "issue": "Four competing \"total allocated\" figures: M122 = 4562, AQ124 = 5629, the top-row 4593 and a typed 3234. M sums O:AO, AQ sums O:AP",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › M122, AQ124, rows 1-2",
+       "severity": "high"
+      },
+      {
+       "issue": "Master has 113 species rows but the site sheets only link to about 100 (C6:C105); the rows appended at C106:C119 never reach a site sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C106:C119",
+       "severity": "med"
+      },
+      {
+       "issue": "Probable misspellings or variants in species names (recorded, not corrected): Cyathoides juniperina, Weinmania racemosa, Eleocarpus dentatus, Carmichaelia glabrescsens, Carex flagillera, Carex comans red",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C104, C103, C113, C114, C107, C106",
+       "severity": "med"
+      },
+      {
+       "issue": "Species cells carry common names after a dash, one with a dangling dash (\"Agathis australis -\")",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C114, C116:C119",
+       "severity": "low"
+      },
+      {
+       "issue": "Non-breaking space in Plagianthus regius",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C79",
+       "severity": "low"
+      },
+      {
+       "issue": "Arithmetic typed inside cells hides where figures came from (e.g. =83+60, =275-63)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › column I and column T formula cells",
+       "severity": "low"
+      },
+      {
+       "issue": "Mixed text and numbers in school stock columns; free-text school stock lists are not machine-readable",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › E5:G105, E130:G142",
+       "severity": "med"
+      },
+      {
+       "issue": "Columns Y (JP Reference Gardens) and K (Buy IN) hold the same value pattern: possible paste artefact",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › K6:K105 vs Y6:Y105",
+       "severity": "med"
+      },
+      {
+       "issue": "Unlabelled columns B and AN; \"Comments\" header holds common names; stray #REF!",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › B4, AN4, D4, W129",
+       "severity": "low"
+      },
+      {
+       "issue": "\"Last updated 2 Dec\" with a staff first name (withheld) is not an Autumn 2026 date",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › C3:D3",
+       "severity": "low"
+      },
+      {
+       "issue": "Colour carries meaning: red font on L:N formula cells (115), cyan band L1:L3, green column N, merged group headers over site columns (Keystone, Community, School)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › L1:L3, N4:N119, O3:AO3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "AO5: cell comment with author name and timestamp (withheld)",
+      "C3:D3: staff first name in \"Last updated\" note (withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Nursery Collection Schedule",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-9 keystone sites; 13-19 community groups and schools; total row 20",
+     "grain": "One planting site per row: nursery out date, planting date, plant count and protection quantities (bamboo sticks, spray guards, mats)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Nursery OUT date",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 73.3,
+       "distinct": 10,
+       "examples": [
+        "TBC",
+        "Collection Date"
+       ],
+       "notes": "Mostly blank or TBC; A12 repeats the header for the second block"
+      },
+      {
+       "letter": "B",
+       "header": "Site",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 86.7,
+       "distinct": 13,
+       "examples": [
+        "Whitechapel Reserve",
+        "Slope Hill",
+        "Lake Hayes Pavilion",
+        "Morningstar"
+       ],
+       "notes": "Informal site names"
+      },
+      {
+       "letter": "C",
+       "header": "Planting Date",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 66.7,
+       "distinct": 9,
+       "examples": [
+        "2025-04-05",
+        "2025-04-12",
+        "2025-05-03",
+        "NA"
+       ],
+       "notes": "Real dates mixed with NA/TBC; dates are all 2025"
+      },
+      {
+       "letter": "D",
+       "header": "# Plants",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 53.3,
+       "distinct": 7,
+       "examples": [
+        "1500",
+        "1000",
+        "250",
+        "120"
+       ],
+       "notes": "D20 =sum(D5:D19) spans the repeated header row"
+      },
+      {
+       "letter": "E",
+       "header": "# Bamboo Sticks",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 26.7,
+       "distinct": 3,
+       "examples": [
+        "3000",
+        "1500"
+       ],
+       "notes": "Protection stock, not plants"
+      },
+      {
+       "letter": "F",
+       "header": "# Spray Guards",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 26.7,
+       "distinct": 4,
+       "examples": [
+        "0",
+        "1000",
+        "1500"
+       ],
+       "notes": "Protection stock"
+      },
+      {
+       "letter": "G",
+       "header": "# Mats",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 33.3,
+       "distinct": 4,
+       "examples": [
+        "1500",
+        "1000",
+        "2500"
+       ],
+       "notes": "G20 =SUM(G6:G17)"
+      },
+      {
+       "letter": "H",
+       "header": "Plant Protection",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 73.3,
+       "distinct": 8,
+       "examples": [
+        "Mats and sticks",
+        "plastic guards",
+        "Fibreguards"
+       ],
+       "notes": "Free text on protection type and supplier"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "D20",
+       "pattern": "=sum(D5:D19)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "G20",
+       "pattern": "=SUM(G6:G17)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Headed \"PLANT COLLECTION SCHEDULE FOR AUTUMN 2025\" with April-May 2025 dates: not rolled forward to Autumn 2026, whose collection dates sit on the site sheets",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Nursery Collection Schedule › A1, C5:C7",
+       "severity": "high"
+      },
+      {
+       "issue": "Repeated header text sits inside the totalled range; D20 and G20 cover different row ranges",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Nursery Collection Schedule › D12, G12, D20, G20",
+       "severity": "med"
+      },
+      {
+       "issue": "Dates and placeholders (NA, TBC) share the same columns",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Nursery Collection Schedule › A5:A19, C5:C19",
+       "severity": "med"
+      },
+      {
+       "issue": "Site naming differs from other sheets (Whitechapel Reserve; Morningstar)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Nursery Collection Schedule › B5, B13",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Plant Protection",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "4-17; totals row 18; scratch sums L20:M20",
+     "grain": "One site (or part of a site) per row: plant count and the quantity of each protection product needed (guards, mats, pins, stakes)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Site",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 88.9,
+       "distinct": 16,
+       "examples": [
+        "Whitechapel Reserve",
+        "Lake Hayes Pavilion INfill",
+        "Lake Hayes Rowing Club",
+        "Slope Hill",
+        "Jardine Park"
+       ],
+       "notes": "Some continuation rows have a blank site (e.g. row 9)"
+      },
+      {
+       "letter": "B",
+       "header": "# Plants",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 61.1,
+       "distinct": 8,
+       "examples": [
+        "100",
+        "1200",
+        "300",
+        "1000"
+       ],
+       "notes": "B18 =SUM(B4:B14)"
+      },
+      {
+       "letter": "C-K",
+       "header": "Fibreguard combo 450 and 300, plastic spray guard, large wool mats, combi-guard wool mats, net guards, eco pins, bamboo stakes 900 mm, hardwood stakes",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 20,
+       "distinct": 0,
+       "examples": [
+        "200",
+        "1200",
+        "4400",
+        "1000"
+       ],
+       "notes": "Nine product columns of protection quantities per site: not a plant concept. Row 18 sums them"
+      },
+      {
+       "letter": "L-M",
+       "header": "(no header)",
+       "concept": "notes",
+       "type": "formula",
+       "non_null_pct": 16,
+       "distinct": 3,
+       "examples": [
+        "OR NETS??",
+        "=9500/500",
+        "=11000/200"
+       ],
+       "notes": "Scratch arithmetic for pack sizes"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B18:K18",
+       "pattern": "=SUM(B4:B14)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "L20:M20",
+       "pattern": "=9500/500",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Column totals use different row ranges (F18 and I18 cover rows 4-6 only)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Plant Protection › F18, I18, B18",
+       "severity": "med"
+      },
+      {
+       "issue": "Unlabelled scratch calculations and a query note left beside the table",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Plant Protection › L4, L20:M20",
+       "severity": "low"
+      },
+      {
+       "issue": "Yellow, orange and cream fills carry unexplained meaning",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Plant Protection › A4:K7, A18:K18",
+       "severity": "low"
+      },
+      {
+       "issue": "Site names do not match the per-site sheets (e.g. Lake Hayes Pavilion INfill); Jardine Park spans several rows",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Plant Protection › A5, A8:A9",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Slope Hill",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 13 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 20.6,
+       "distinct": 13,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column T; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "907"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'SLOPE HILL RESERVE', label SPRING 2025, but collection 27 March and planting 28 March 2026; site type Keystone"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!T6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Slope Hill › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Season label says SPRING 2025 on an Autumn 2026 sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Slope Hill › B1",
+       "severity": "low"
+      },
+      {
+       "issue": "A further #REF! at G38",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Slope Hill › G38",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Quail Rise",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 14 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 14.7,
+       "distinct": 14,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AD; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "50"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Quail Rise', label AUTUMN 2026; site type Community; collection and planting dates TBC"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AD6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Dates still TBC",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Quail Rise › E2, H2",
+       "severity": "low"
+      },
+      {
+       "issue": "Master links mix absolute ($AD) and relative (AD) references",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Quail Rise › B5:H38",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Jardine Park",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 26 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 23.5,
+       "distinct": 26,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column U; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "255"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Jardine Park Roadside' with a contact first name (withheld), label AUTUMN 2025; Keystone; 'Delivery Date' TBC; planting date 'October 16th' as text"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!U6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Stale label (AUTUMN 2025) and last-updated 8 June 2025: looks carried over from an earlier season",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Jardine Park › B1, B42",
+       "severity": "med"
+      },
+      {
+       "issue": "Planting date typed as text with no year",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Jardine Park › H2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Whitechapel South Block",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 22 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 97.1,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 26.5,
+       "distinct": 22,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column O; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "720"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Whitechapel South Block/Bank', label AUTUMN 2026; Keystone; collection 1 May, planting 2 May 2026; notes give protection type and trailer packing"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!O6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Notes say plants are packed separately from the infill list; protection type recorded only as free text",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Whitechapel South Block › A44:B46",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Whitechapel Infill Northern Blo",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 17 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 97.1,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 14.7,
+       "distinct": 17,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column P; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "350"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Whitechapel Infill Northern Block', label AUTUMN 2026; Keystone; collection 1 May, planting 2 May 2026"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!P6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Sheet name truncated at 31 characters by Excel",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Whitechapel Infill Northern Blo › (sheet name)",
+       "severity": "low"
+      },
+      {
+       "issue": "Site total 350 against master column P total of 1280 at P124, which sums Whitechapel columns together",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Whitechapel Infill Northern Blo › C3; Autumn 2026 › P124",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet15",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "Empty sheet (no cells with values)",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Leftover blank sheet with default name",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Sheet15 › A1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet16",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "Empty sheet (no cells with values)",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Leftover blank sheet with default name",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Sheet16 › A1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Rowing Club",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 42 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 64.7,
+       "distinct": 42,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column S; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "1130"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Lake Hayes Rowing Club', label AUTUMN 2026; Keystone; collection 8 May, planting 9 May 2026"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!S6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Rowing Club › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Largest site list at 1130 plants; total differs in master only by formula range, not value",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Rowing Club › C3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "LakeHayesPav",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 12 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 8.8,
+       "distinct": 12,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column R; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "200"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Lake Hayes Pavilion Sth block infill (Novotel)', label SPRING 2025; Keystone; collection 29 April, planting 30 April 2026; notes mention a staff-led planting session with a corporate partner"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!R6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › LakeHayesPav › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Stale season label (SPRING 2025); first names in notes (withheld)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › LakeHayesPav › B1, A44:B46",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Shotover Wetlands",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 14 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 26.5,
+       "distinct": 14,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AL; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "307"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Shotover Wetlands', label AUTUMN 2025; site type School; collection 20 April 2026; planting '23 and 24 April' as text; notes record who collects"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AL6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Shotover Wetlands › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Stale label; planting date as text",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Shotover Wetlands › B1, H2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Matakauri Wetland",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 9 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 14.7,
+       "distinct": 9,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AK; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "80"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Matakaurir Wetlands' (typo), label AUTUMN 2025; School; collection 28 April 2026; planting '29 and 30 April' as text"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AK6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Matakauri Wetland › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Typo in title ('Matakaurir') and stale season label",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Matakauri Wetland › A1, B1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Little Difference",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "All =#REF!: link to master lost"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Little Difference - Wharehuanui', label Autumn 2026; Community Partnership; collection 8 April, planting 11 April 2026; only the dates and notes are intact"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "=#REF!",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "All quantity cells are =#REF! (103 formulas): the sheet holds no plant numbers; C3 typed 100 and totals show #REF!",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Little Difference › B5:H40",
+       "severity": "high"
+      },
+      {
+       "issue": "Master column AJ holds 99 values (total 200) but nothing links to this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Autumn 2026 › AJ6:AJ122",
+       "severity": "high"
+      },
+      {
+       "issue": "Typed 100 in C3 disagrees with master total of 200",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Little Difference › C3 vs Autumn 2026 › AJ122",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Notes",
+     "role": "notes",
+     "header_row": 6,
+     "data_rows": "7-19 groups; 21-32 running total",
+     "grain": "Two small tables: (rows 6-19) one community group per row for allocation status (contact, spring list received, 3-year forecast received); (rows 21-32) planned planting totals by site for Spring 2024 and a running total of plants",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Community Group",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 13,
+       "examples": [
+        "Morning Star",
+        "Quail Rise",
+        "Boyes Cres",
+        "Peace Park (Keystone)",
+        "Gibbston (Coal Pit Reserve)"
+       ],
+       "notes": "List of groups; rows 15-19 include Glenorchy Lagoon, QT Climbing Club, Darby St and Paper4Trees"
+      },
+      {
+       "letter": "B",
+       "header": "Status",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 8,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty except header"
+      },
+      {
+       "letter": "C",
+       "header": "Contact",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 8,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Contact column present; header only, no values below"
+      },
+      {
+       "letter": "D",
+       "header": "Date",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 8,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty"
+      },
+      {
+       "letter": "E-F",
+       "header": "Spring List Received / 3 Year Forecst Received",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 8,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Tracking columns for lists and the 3-year forecast; empty"
+      },
+      {
+       "letter": "G",
+       "header": "Notes",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 15,
+       "distinct": 1,
+       "examples": [
+        "Spring forecast updated to be predominantly beech"
+       ],
+       "notes": "One note only (row 7)"
+      },
+      {
+       "letter": "A21:B32",
+       "header": "Running total and Spring 2024 planned totals",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 100,
+       "distinct": 12,
+       "examples": [
+        "Whitechapel 2000",
+        "Slope Hill 1000",
+        "Lake Hayes Pav 1500",
+        "Spring Sub Total 6170"
+       ],
+       "notes": "Planned plant numbers by site; running total 94000 for Autumn 2024, grand total 100170; subtotals via =subtotal(9,B..)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B31, B32",
+       "pattern": "=subtotal(n,B#:B#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Sheet is headed \"Planting Season: Spring 2024\" and the running total is for Autumn 2024: two seasons stale in an Autumn 2026 workbook",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Notes › B1, A21:B21",
+       "severity": "high"
+      },
+      {
+       "issue": "Status tracker is almost entirely empty; only one note filled",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Notes › B7:F19",
+       "severity": "med"
+      },
+      {
+       "issue": "Spelling variants of site names (Refrence Gardens, Forecst) and different names from site sheets (Boyes Cres vs Boyes)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Notes › A26, F6, A9",
+       "severity": "low"
+      },
+      {
+       "issue": "Hard-typed running total 94000 with no link to the stock figures",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Notes › B21",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "C6:C19: contact column (header present, values empty)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Feehly Hill",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 17 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 23.5,
+       "distinct": 17,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AH; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Paererewa Jardine Park' (not Feehly Hill), label AUTUMN 2026; community group; dates TBC; last updated 26 Feb 2025"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AH6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Feehly Hill › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet name and title disagree; it links to master column AH (Paererewa) and not W (Feehly Hill); C3 total typed 0 while content totals 138",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Feehly Hill › A1, C3, I40",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Incl Jardine",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "6-105 species; total 106; trees > 5 m 108",
+     "grain": "One species per row with nursery stock and an allocation column per site: an earlier version of the Autumn master layout (fewer species, 22 site columns, a Whitechapel column driven from an absent \"Incl schools\" sheet)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": ">5m",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 38,
+       "distinct": 1,
+       "examples": [
+        "Y"
+       ],
+       "notes": "Tree flag, as in master"
+      },
+      {
+       "letter": "B",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 77,
+       "distinct": 100,
+       "examples": [
+        "1",
+        "2"
+       ],
+       "notes": "Row counter =B6+1"
+      },
+      {
+       "letter": "C",
+       "header": "PLANT NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 90,
+       "distinct": 99,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Austroderia richardii"
+       ],
+       "notes": "Species list C6:C105, 99 binomials (14 fewer than the Autumn 2026 master); 99 distinct"
+      },
+      {
+       "letter": "D",
+       "header": "Comments",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 30,
+       "distinct": 37,
+       "examples": [
+        "Wineberry",
+        "Toe toe"
+       ],
+       "notes": "Common name"
+      },
+      {
+       "letter": "E-G",
+       "header": "South nursery large / North nursery large / V150 T28",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 40,
+       "distinct": 0,
+       "examples": [
+        "51",
+        "68",
+        "168"
+       ],
+       "notes": "Stock numbers, many as typed arithmetic (e.g. =48+18-15)"
+      },
+      {
+       "letter": "H",
+       "header": "To buy in",
+       "concept": "supplier/bought_in",
+       "type": "int",
+       "non_null_pct": 10,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Planned buy-in"
+      },
+      {
+       "letter": "I-L",
+       "header": "StockTake TBA / Total Available / Total Allocated / Over-Under",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 90,
+       "distinct": 0,
+       "examples": [
+        "51",
+        "186"
+       ],
+       "notes": "=SUM(E6:G6), =I6, =sum(M6:AH6), =J6-K6. K6 and L6 show #REF! where Whitechapel link is broken"
+      },
+      {
+       "letter": "M-AH",
+       "header": "Whitechapel, Lake Hayes Pav, Slope Hill, Jardine Park, Lake Hayes South, Feehly Hill, Peace Park, JP Reference Gardens, JP shelter belt, (personal-name column), Pigeon Island, Quail Rise, Morning Star, The Rees, Boyes Cres, Gibbston, LHE Trail, Kiwi Park, Kingsview, QPS Internal, Shotover Wetlands, Paper 4 Trees",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 15,
+       "distinct": 22,
+       "examples": [
+        "20",
+        "10",
+        "5"
+       ],
+       "notes": "One column per planting site; M is =SUM('Incl schools'!O#)*1.5 (9 formulas) pointing at a sheet that does not exist in this workbook"
+      },
+      {
+       "letter": "AJ",
+       "header": "Total Allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 90,
+       "distinct": 0,
+       "examples": [],
+       "notes": "=SUM(M6:AI6)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "M6:M9",
+       "pattern": "=SUM('Incl schools'!O6)*1.5",
+       "refs_other_sheets": [
+        "'Incl schools'!O (sheet not in workbook)"
+       ]
+      },
+      {
+       "range": "I6:I105",
+       "pattern": "=SUM(E6:G6)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "K6:K105",
+       "pattern": "=sum(M6:AH6)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AJ6:AJ105",
+       "pattern": "=SUM(M6:AI6)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "C",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Nine Whitechapel cells reference a sheet 'Incl schools' that does not exist in this workbook (dead external-style link), giving #REF! in Total Allocated for those species",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Incl Jardine › M6:M9, K6, L6",
+       "severity": "high"
+      },
+      {
+       "issue": "Appears to be a superseded copy of the master (labelled \"Total Plants To be Supplied\", site list from Spring 2024/25): same C3:D3 \"Last updated 2 Dec\" stamp as Autumn 2026",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Incl Jardine › C1:D3",
+       "severity": "med"
+      },
+      {
+       "issue": "Header row and site columns differ from the Autumn 2026 master (Whitechapel is one column, not three; names such as Kiwi Park, Kingsview, The Rees)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Incl Jardine › M4:AH4 vs Autumn 2026 › O4:AO4",
+       "severity": "med"
+      },
+      {
+       "issue": "Stock figures built as typed arithmetic",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Incl Jardine › E6:E33",
+       "severity": "low"
+      },
+      {
+       "issue": "Non-breaking space in Plagianthus regius, as in master",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Incl Jardine › C79",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "D3: staff first name in last-updated note (values withheld)"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Peace Park",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "All =#REF!: link to master lost"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Peace Park', label AUTUMN 2025; community group; dates TBC; last updated 26 Feb 2025"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "=#REF!",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "All quantity cells are =#REF! (103 formulas), so the sheet holds no numbers",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Peace Park › B5:H40",
+       "severity": "high"
+      },
+      {
+       "issue": "Stale label",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Peace Park › B1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Lake Hayes South",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 2.9,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column V; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Lake Hayes South', label SPRING 2024; Keystone; dates '25th Sept' and '26th Sept' as text with no year; last updated 27 Aug 2024"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!V6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Lake Hayes South › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Old Spring 2024 sheet; links to master column V which is all zero; further #REF! in B39 and I40",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Lake Hayes South › B1, B39, I40",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Reference Gardens",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 3 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 5.9,
+       "distinct": 3,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column Y; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "19"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'JP Reference Gardens', label SPRING 2024; Keystone; planting date 5 April 2025; collection date blank; last updated 31 May 2024"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!Y6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Reference Gardens › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Subtotal B39 and I40 are #REF!; header row detected by profiler at row 20 because row 20 holds the #REF! row, true header is row 4",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Reference Gardens › B39, I40, A4:I4",
+       "severity": "med"
+      },
+      {
+       "issue": "Stale label; collection date empty",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Reference Gardens › B1, E2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Morning Star",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 2.9,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AE; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Morning Star', label SPRING 2024; Keystone; dates TBC; last updated 31 May 2024"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AE6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Morning Star › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Old Spring 2024 sheet; master column AE is zero; further #REF! in B39 and I40",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Morning Star › B1, B39, I40",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Boyes",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 15 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 23.5,
+       "distinct": 15,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AH; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "118"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Paererewa' (not Boyes), label SPRING 2025; Keystone; dates TBC; last updated 8 March 2025"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AH6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Sheet name and title disagree: sheet links to master column AH (Paererewa), the same source as Feehly Hill",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Boyes › A1, B5",
+       "severity": "med"
+      },
+      {
+       "issue": "Stale label",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Boyes › B1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "QEII",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "All =#REF!: link to master lost"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title cell is =#REF!, label SPRING 2024; Keystone; dates TBC; last updated 31 May 2024"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "=#REF!",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Title and all quantity cells are #REF! (102 formulas): sheet is an empty shell",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › QEII › A1, B5:H40",
+       "severity": "high"
+      },
+      {
+       "issue": "Stale label",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › QEII › B1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Gibbston",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 2.9,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AI; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Rowing Club (LINZ)' (not Gibbston), label AUTUMN 2026; community group; dates empty; last updated 26 Feb 2025"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AI6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Gibbston › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet name and title disagree: links to master column AI (Rowing Club LINZ), which is zero; subtotal B39 and I40 #REF!",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Gibbston › A1, B39, I40",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Paper for Trees",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 0 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "All =#REF!: link to master lost"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title names an LHE Trail planting (with a personal name, withheld), not a Paper for Trees site, label AUTUMN 2025; Community; dates TBC; last updated 10 March 2025"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "=#REF!",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Sheet name and title disagree; all quantity cells are =#REF! (99 formulas)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Paper for Trees › A1, B5:H40",
+       "severity": "high"
+      },
+      {
+       "issue": "Title holds a personal name",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Paper for Trees › A1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "KiwiPark",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "5-38; subtotals row 39; total row 40; notes from row 44",
+     "grain": "One species per row in a three-block grid (A:C, D:F, G:I): species x quantity allocated to this one site for the season. Site level only; planting area not recorded. 8 non-zero species cells",
+     "columns": [
+      {
+       "letter": "A, D, G",
+       "header": "Plant name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100.0,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Griselinia littoralis",
+        "Phormium tenax"
+       ],
+       "notes": "Linked: ='Autumn 2026'!C# (three blocks of about 34 rows)"
+      },
+      {
+       "letter": "B, E, H",
+       "header": "No. of plants",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 14.7,
+       "distinct": 8,
+       "examples": [],
+       "notes": "Linked to Autumn 2026 column AK; blank where zero"
+      },
+      {
+       "letter": "C, F, I",
+       "header": "Location",
+       "concept": "planting_area",
+       "type": "text",
+       "non_null_pct": 0.0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Intended for planting area within the site; empty on every site sheet"
+      },
+      {
+       "letter": "C3",
+       "header": "Number of plants allocated",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "80"
+       ],
+       "notes": "Site total (=H40 or typed)"
+      },
+      {
+       "letter": "A1:I2",
+       "header": "Title, season label, site type, collection and planting dates",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Title 'Matakauri Wetlands' (not Kiwi Park), label SPRING 2024; Keystone; collection 10 Jan 2025; a personal name sits in the dates row (withheld)"
+      },
+      {
+       "letter": "B42",
+       "header": "Last updated",
+       "concept": "date",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Date, often with the initials of whoever updated it (initials withheld)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B5:B38, E5:E38, H5:H38",
+       "pattern": "='Autumn 2026'!AK6",
+       "refs_other_sheets": [
+        "Autumn 2026"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Row 20 species and quantity cells are #REF! (deleted master row): one species missing from this sheet",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › KiwiPark › A20:B20",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet name and title disagree: duplicates Matakauri Wetland data from master column AK (80 plants)",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › KiwiPark › A1, C3",
+       "severity": "med"
+      },
+      {
+       "issue": "Stale label and 2025 date",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › KiwiPark › B1, E2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B42 and notes block A44:B46: initials or first names of staff or contacts (values withheld)"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Paper4Trees2",
+     "role": "form",
+     "header_row": 2,
+     "data_rows": "5-102 species; total row 4",
+     "grain": "One species per row with a requested quantity per school (Paper4Trees order form): species x school request",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Plant Name",
+       "concept": "species_name",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Veronica rakaiensis",
+        "Weinmania racemosa"
+       ],
+       "notes": "='Autumn 2026'!C# link; list includes Weinmania racemosa as in master"
+      },
+      {
+       "letter": "B-J",
+       "header": "Arrowtown School, ACG (Remarkables), RPS, GY, SPS, QPS, AT Montessori, ACG Henry St, WHS",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "One column per school, empty: no requests entered. Row 3 reads \"Requested by School\", row 4 per-school totals (0)"
+      },
+      {
+       "letter": "K",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "=sum(B5:J5) on 99 rows; K4 =sum(B4:B? ) sum of totals; every total 0"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A5:A102",
+       "pattern": "'Autumn 2026'!C#",
+       "refs_other_sheets": [
+        "Autumn 2026!C6:C105"
+       ]
+      },
+      {
+       "range": "K5:K102",
+       "pattern": "=sum(B5:J5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Order form is empty: no school requests recorded, every total is 0",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Paper4Trees2 › B5:J102, K4:K102",
+       "severity": "high"
+      },
+      {
+       "issue": "Species linked from master; A20 is #REF! so one species is missing",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Paper4Trees2 › A20",
+       "severity": "med"
+      },
+      {
+       "issue": "School names abbreviated by initials (RPS, SPS, QPS, GY, WHS, ACG) without a key",
+       "evidence": "5. Seasonal Planting Lists & Collection Schedule/2026 Autumn Plant Lists/JMN Plant Allocation Master AUTUMN 2026.xlsx › Paper4Trees2 › D2:J2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Is column H (StockTake) on the Autumn 2026 sheet the real nursery stocktake, and is the blank Stocktake sheet just a template? Which stocktake date does H reflect?",
+  "Which total is authoritative: 4562 (M), 5629 (AQ), 4593 (top row) or 3234 (typed)? And why do the totals stop at different rows?",
+  "Rows 106-119 of the Autumn 2026 species list (14 species such as Carex comans red, Olearia polita, Agathis australis) are not linked to any site sheet. Are they deliberately excluded or just appended later?",
+  "Should the Little Difference, Peace Park, QEII and Paper for Trees sheets be rebuilt? All their quantity links are broken. Little Difference has 200 plants in the master but no site sheet numbers.",
+  "Sheet names and titles disagree (KiwiPark shows Matakauri Wetlands; Boyes and Feehly Hill both show Paererewa; Gibbston shows Rowing Club (LINZ); Paper for Trees shows a trail site). Which site is each sheet meant to be?",
+  "Are Reference Gardens, Gibbston, Lake Hayes South, Morning Star, QEII, KiwiPark and Peace Park leftover sheets from earlier seasons that can be treated as history rather than Autumn 2026 allocations?",
+  "Is the Autumn 2025 collection schedule the latest, or is there an Autumn 2026 version? The 2026 collection and planting dates sit on the site sheets instead.",
+  "What does \"Incl Jardine\" represent, and where is the \"Incl schools\" sheet it points at? Is it a superseded copy of the master?",
+  "What are the three Whitechapel columns (south bank and mound, back block, steep bank) in relation to the two Whitechapel sheets, and is Whitechapel treated as one site with areas?",
+  "The Location columns on every site sheet are empty. Are planting areas (e.g. WH-06) recorded anywhere for this season?",
+  "Paper4Trees: the order form (Paper4Trees2) has no requests and Master column AO is zero. Where are the Paper4Trees quantities for this season actually recorded?",
+  "What is the meaning of the \">5m\" Y flag and the \"TREES > 5M\" row, and of the Y column matching the Buy IN pattern?"
+ ]
+}

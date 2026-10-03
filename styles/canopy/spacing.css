@@ -1,0 +1,48 @@
+:root{
+  /* Spacing scale — exact values used in Canopy (not snapped to 4/8) */
+  --space-2:2px; --space-3:3px; --space-4:4px; --space-5:5px; --space-6:6px; --space-8:8px;
+  --space-10:10px; --space-12:12px; --space-14:14px; --space-16:16px; --space-18:18px;
+  --space-20:20px; --space-22:22px; --space-24:24px; --space-26:26px; --space-28:28px;
+  --space-32:32px; --space-40:40px; --space-72:72px;
+
+  /* Radii */
+  --radius-hairline:2px;   /* stepper bars */
+  --radius-tag:6px;        /* code tags, restricted tag, paper */
+  --radius-inset:10px;     /* rows inside hero card */
+  --radius-row:12px;       /* table rows, inputs, small tiles */
+  --radius-field:14px;     /* modal fields, callouts, selected rows */
+  --radius-tile:16px;      /* soft tiles, banners, popovers */
+  --radius-tile-lg:18px;   /* hero tile, toolbar strip */
+  --radius-stat:20px;      /* KPI tiles */
+  --radius-card:22px;      /* standard card */
+  --radius-banner:24px;    /* success banner */
+  --radius-sheet:26px;     /* side sheet, modal step card */
+  --radius-dialog:30px;    /* confirm dialog */
+  --radius-pill:999px;     /* buttons, nav, chips, badges, bars */
+
+  /* Layout */
+  --layout-sidebar:248px;
+  --layout-topbar:68px;
+  --layout-frame-w:1440px;
+  --layout-frame-h:1000px;
+  --layout-main-pad:32px 40px 40px;
+  --layout-main-gap:20px;
+  --layout-grid-gap:16px;
+  --layout-sheet-w:440px;
+  --layout-sheet-inset:16px;
+  --layout-rail:300px;     /* right rail / left list */
+
+  /* Card padding */
+  --pad-card:22px 24px;
+  --pad-card-compact:20px 22px;
+  --pad-card-table:8px 12px 12px;
+  --pad-stat:18px 20px;
+  --pad-tile:14px 16px;
+  --pad-sheet:26px;
+
+  /* Control heights */
+  --h-btn-sm:40px; --h-btn:42px; --h-btn-md:46px; --h-btn-lg:48px; --h-btn-xl:50px;
+  --h-nav:42px; --h-nav-sub:38px; --h-chip:38px; --h-tab:40px;
+  --h-input:42px; --h-input-cell:38px; --h-search:40px;
+  --h-close:38px;
+}

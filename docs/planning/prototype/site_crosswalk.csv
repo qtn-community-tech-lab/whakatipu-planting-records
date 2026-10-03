@@ -1,0 +1,135 @@
+site_original,site_id_as_typed,site_id_proposed,site_name_proposed,site_group,class,precision,confidence,needs_review,mapping_rule,columns,records,plants,seasons_with_records,note
+ARROW\n MORVEN,49,17,Arrow Morven,Arrow Morven,C,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,8,70,2015-2015,Autumn 2015 old site number 49 = 17 in the register
+ARROW\nAV,,14,Arrow River - AV,Arrow River,C,site,medium,N,auto-id-blank | header in 04d variants table,1,5,20,2015-2015,row-5 site ID blank in source; site mapped by header text
+Arrowtown Preschool,,NEW-ARROWTOWN-PRESCHOOL,Arrowtown Preschool,Arrowtown Preschool,S,site,medium,Y,uncertain-needs-new-site-id | header in 04d variants table,2,8,80,2025-2025,new or unclear site with no WRT site number: Assumed same place as Bush Creek 13A (Arrowtown Pre School); provisional ID: the Sites master will issue the real one
+BUSH CRK - AT P/S,13A,13A,Bush Creek - Arrowtown Preschool,Arrowtown and Bush Creek,S,subsite,high,N,auto-id-agrees | header in 04d variants table,7,62,520,2015-2021,
+ARROW PRIMARY,13B,13B,Arrowtown Primary,Arrowtown and Bush Creek,S,subsite,high,N,auto-id-agrees | header in 04d variants table,1,12,20,2015-2015,
+ARROWTOWN PRIMARY,13B,13B,Arrowtown Primary,Arrowtown and Bush Creek,S,subsite,high,N,auto-id-agrees | header in 04d variants table,2,36,200,2020-2021,
+BUSH CRK - KEYSTONE,13C,13C,Bush Creek Keystone,Arrowtown and Bush Creek,K,subsite,high,N,auto-id-agrees | header in 04d variants table,8,112,5272,2020-2023,
+Bush Creek,13C,13C,Bush Creek Keystone,Arrowtown and Bush Creek,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,7,40,2024-2024,
+DERBY ST RESERVE,13A,13D,Derby Street Reserve,Arrowtown and Bush Creek,C,subsite,medium,Y,rule-documented-id-fault | header in 04d variants table,1,7,73,2023-2023,row-5 ID 13A vs register 13D: Derby St typed 13A; the register gives 13A to Bush Creek Preschool
+AP - Atley Downs,6,6,Arthurs Point - Atley Downs,Arthurs Point,C,site,high,N,auto-id-agrees | header in 04d variants table,3,39,510,2018-2019,
+ATLEY,35,6,Arthurs Point - Atley Downs,Arthurs Point,C,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,6,82,2015-2015,Autumn 2015 old site number 35 = 6 in the register
+AP - DOC,6A,6A,Arthurs Point - DOC Office,Arthurs Point,C,subsite,high,N,auto-id-agrees | header in 04d variants table,2,18,115,2015-2016,
+AP - Morning Star,6B,6B,Arthurs Point - Morning Star Reserve,Arthurs Point,C,subsite,high,N,auto-id-agrees | header in 04d variants table,10,165,3199,2018-2023,
+Morning Star,,6B,Arthurs Point - Morning Star Reserve,Arthurs Point,C,subsite,medium,N,auto-id-blank | header in 04d variants table,1,0,0,none,row-5 site ID blank in source; site mapped by header text
+Morning Star,6B,6B,Arthurs Point - Morning Star Reserve,Arthurs Point,C,subsite,high,N,auto-id-agrees | header in 04d variants table,3,35,370,2024-2025,
+Morning Star Reserve,6B,6B,Arthurs Point - Morning Star Reserve,Arthurs Point,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,29,300,2024-2024,
+Bridesdale,,NEW-BRIDESDALE,Bridesdale,Bridesdale,C,site,medium,N,auto-id-blank | header in 04d variants table,2,6,80,2025-2025,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+FH MAG,12,12,Feehly Hill - Magazine,Feehly Hill,C,site,high,N,auto-id-agrees | header in 04d variants table,1,9,50,2015-2015,
+FH - CEM,12A,12A,Feehly Hill - Cemetery,Feehly Hill,K,subsite,high,N,auto-id-agrees | header in 04d variants table,10,187,4460,2016-2023,
+FH - CEM,3,12A,Feehly Hill - Cemetery,Feehly Hill,K,subsite,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,17,315,2015-2015,Autumn 2015 old site number 3 = 12A in the register
+Feehly Hill,,12A,Feehly Hill - Cemetery,Feehly Hill,K,subsite,medium,N,auto-id-blank | header in 04d variants table,3,9,100,2025-2025,row-5 site ID blank in source; site mapped by header text
+Feehly Hill,12A,12A,Feehly Hill - Cemetery,Feehly Hill,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,5,90,2024-2024,
+FH MANSE,12B,12B,Feehly Hill - Manse Rd,Feehly Hill,C,subsite,high,N,auto-id-agrees | header in 04d variants table,5,53,370,2015-2019,
+GIBBSTON,27,27,Gibbston Community / Reserve,Gibbston,C,site,high,N,auto-id-agrees | header in 04d variants table,1,12,150,2020-2020,
+GIBBSTON RESERVE (COAL PIT ROAD),27,27,Gibbston Community / Reserve,Gibbston,C,site,high,N,auto-id-agrees | header in 04d variants table,4,42,485,2021-2023,
+Gibbston,,27,Gibbston Community / Reserve,Gibbston,C,site,medium,N,auto-id-blank | header in 04d variants table,2,15,110,2024-2025,row-5 site ID blank in source; site mapped by header text
+GY LAG + WW,1,1,Glenorchy Lagoon & Walkway,Glenorchy,C,site,high,N,auto-id-agrees | header in 04d variants table,11,124,1944,2015-2023,
+GY SCHL,1A,1A,Glenorchy School,Glenorchy,S,subsite,high,N,auto-id-agrees | header in 04d variants table,1,1,10,2015-2015,
+GY ENTRANCE,1B,1B,Glenorchy Entrance,Glenorchy,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,14,105,2015-2015,
+GY LAKE FRONT,1C,1C,Glenorchy Lakefront,Glenorchy,C,subsite,high,N,auto-id-agrees | header in 04d variants table,7,82,1116,2016-2022,
+GY BIBLE TERRACE,1D,1D,Glenorchy Bible Terrace,Glenorchy,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,13,200,2022-2022,
+PIGEON ISLAND,,1E,Pigeon Island,Glenorchy,C,subsite,medium,N,auto-id-blank | header in 04d variants table,3,20,151,2016-2018,row-5 site ID blank in source; site mapped by header text
+PIGEON ISLAND,1E,1E,Pigeon Island,Glenorchy,C,subsite,high,N,auto-id-agrees | header in 04d variants table,2,16,185,2022-2023,
+Pigeon Island,,1E,Pigeon Island,Glenorchy,C,subsite,medium,N,auto-id-blank | header in 04d variants table,4,11,113,2024-2025,row-5 site ID blank in source; site mapped by header text
+GORGE\nQPS,5,5,Gorge Rd Wetlands,Gorge Road area,C,site,low,Y,review-uncertain | header in 04d variants table,1,4,35,2016-2016,site identity uncertain: Header carries ID 5 (Gorge Rd Wetlands) but names QPS; link inferred from the ID; line break inside source cell
+GORGE Harvest Garden,,5B,Gorge Rd Harvest Garden,Gorge Road area,C,subsite,medium,N,auto-id-blank | header in 04d variants table,4,35,385,2016-2020,row-5 site ID blank in source; site mapped by header text
+GORGE Harvest Garden,5B,5B,Gorge Rd Harvest Garden,Gorge Road area,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,19,300,2016-2016,
+1 MILE - QTMBC,,5C,1 Mile Creek,Gorge Road area,C,subsite,low,Y,review-uncertain | header in 04d variants table,2,16,165,2016-2018,site identity uncertain: MASTER header 1 MILE - QTMBC has no site ID; matched to SS 1 MILE CREEK (5C) by name
+ALPINE RETREAT,5D,5D,Alpine Retreat,Gorge Road area,C,subsite,high,N,auto-id-agrees | header in 04d variants table,13,175,2065,2016-2023,
+Ben Lomond Zip Trek,,5E,Ben Lomond / Zip Trek,Gorge Road area,C,subsite,medium,N,auto-id-blank | header in 04d variants table,6,44,1323,2017-2019,row-5 site ID blank in source; site mapped by header text
+Ben Lomond Zip Trek,5E,5E,Ben Lomond / Zip Trek,Gorge Road area,C,subsite,high,N,auto-id-agrees | header in 04d variants table,2,15,310,2016-2023,
+The Rees,,5F,The Rees,Gorge Road area,C,subsite,medium,N,auto-id-blank | header in 04d variants table,3,14,74,2023-2025,row-5 site ID blank in source; site mapped by header text
+QT Boat Club (Hidden Island),30,30,Hidden Island / Cecil Peak,Hidden Island and Cecil Peak,C,site,high,N,auto-id-agrees | header in 04d variants table,1,4,10,2022-2022,
+JARDINE BOULDERS,25,25,Jardine Boulders,Jardine Boulders,C,site,high,N,auto-id-agrees | header in 04d variants table,2,12,100,2022-2023,
+JARDINE PK - JMN,23,23,Jardine Park - JMN Reference Gardens,Jardine Park,K,subsite,high,N,auto-id-agrees | header in 04d variants table,5,87,508,2016-2023,
+JMN Reference Gardens,23,23,Jardine Park - JMN Reference Gardens,Jardine Park,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,27,113,2024-2024,
+JP Reference Gardens,,23,Jardine Park - JMN Reference Gardens,Jardine Park,K,subsite,medium,N,auto-id-blank | header in 04d variants table,1,0,0,none,row-5 site ID blank in source; site mapped by header text
+JP Reference Gardens,23,23,Jardine Park - JMN Reference Gardens,Jardine Park,K,subsite,high,N,auto-id-agrees | header in 04d variants table,3,49,488,2024-2024,
+JARDINE PK - TRACK,23A,23A,Jardine Park - Track Entrance,Jardine Park,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,18,101,2016-2016,
+JARDINE PARK - WELCOME FOREST,23B,23B,Jardine Park - Welcome Forest,Jardine Park,K,subsite,high,N,auto-id-agrees | header in 04d variants table,4,82,2165,2020-2023,
+JP Welcome Forest,,23B,Jardine Park - Welcome Forest,Jardine Park,K,subsite,medium,N,auto-id-blank | header in 04d variants table,1,26,255,2026-2026,row-5 site ID blank in source; site mapped by header text
+JP Welcome Forest,11,23B,Jardine Park - Welcome Forest,Jardine Park,K,subsite,medium,Y,rule-documented-id-fault | header in 04d variants table,3,90,4575,2024-2025,row-5 ID 11 vs register 23B: Welcome Forest carries Slope Hill's ID (11)
+KP - KPCA,22,22,Kelvin Peninsula - KPCA,Kelvin Peninsula,K,site,high,N,auto-id-agrees | header in 04d variants table,5,86,1002,2015-2023,
+KP - PC,22A,22A,Kelvin Peninsula - Slipway / Project Crimson,Kelvin Peninsula,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,39,346,2015-2015,
+KP - Project Crimson,22A,22A,Kelvin Peninsula - Slipway / Project Crimson,Kelvin Peninsula,K,subsite,high,N,auto-id-agrees | header in 04d variants table,3,51,309,2016-2019,
+KP - GOLF COURSE,22B,22B,Kelvin Peninsula - Golf Course,Kelvin Peninsula,K,subsite,high,N,auto-id-agrees | header in 04d variants table,4,53,497,2015-2018,
+Kelvin Heights Golf Course,22B,22B,Kelvin Peninsula - Golf Course,Kelvin Peninsula,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,1,100,2024-2024,
+KP - CORNER,22C,22C,Kelvin Peninsula - Corner,Kelvin Peninsula,K,subsite,high,N,auto-id-agrees | header in 04d variants table,5,74,559,2015-2022,
+KING,26,26,Kingston Community,Kingston,C,site,high,N,auto-id-agrees | header in 04d variants table,1,8,48,2020-2020,
+Kingsview,,NEW-KINGSVIEW,Kingsview,Kingsview,S,site,medium,N,auto-id-blank | header in 04d variants table,2,3,25,2024-2024,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+Kiwi Park,,NEW-KIWI-PARK,Kiwi Park,Kiwi Park,C,site,medium,N,auto-id-blank | header in 04d variants table,4,8,105,2024-2024,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+LH WEST,6,9,Lake Hayes West PG,Lake Hayes,K,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,11,245,2015-2015,Autumn 2015 old site number 6 = 9 in the register
+LH WEST,9,9,Lake Hayes West PG,Lake Hayes,K,site,high,N,auto-id-agrees | header in 04d variants table,3,58,729,2015-2016,
+LH WEST PG,9,9,Lake Hayes West PG,Lake Hayes,K,site,high,N,auto-id-agrees | header in 04d variants table,6,89,1285,2017-2019,
+LH ROAD,,9A,Lake Hayes South / Roadside,Lake Hayes,K,subsite,medium,N,auto-id-blank | header in 04d variants table,1,21,285,2015-2015,row-5 site ID blank in source; site mapped by header text
+LH ROAD,9A,9A,Lake Hayes South / Roadside,Lake Hayes,K,subsite,high,N,auto-id-agrees | header in 04d variants table,3,99,918,2015-2016,
+LH ROAD STH,9A,9A,Lake Hayes South / Roadside,Lake Hayes,K,subsite,high,N,auto-id-agrees | header in 04d variants table,12,312,5399,2017-2023,
+LH South Infill Planting,9A,9A,Lake Hayes South / Roadside,Lake Hayes,K,area,high,N,auto-id-agrees | header in 04d variants table,3,0,0,none,
+Lake Hayes South,9A,9A,Lake Hayes South / Roadside,Lake Hayes,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,33,480,2024-2024,
+LH RUTH,14,9D,Lake Hayes Rutherford Rd,Lake Hayes,C,subsite,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,5,55,2015-2015,Autumn 2015 old site number 14 = 9D in the register
+LH GREEN CABS,9E,9E,Lake Hayes Green Cabs,Lake Hayes,C,subsite,high,N,auto-id-agrees | header in 04d variants table,2,38,390,2016-2017,
+LH NORTH AKARUA CORNER,9E,9F,Lake Hayes North - Akarua Corner,Lake Hayes,C,subsite,medium,Y,rule-documented-id-fault | header in 04d variants table,2,17,135,2022-2023,row-5 ID 9E vs register 9F: Akarua Corner typed 9E; the register gives 9E to Green Cabs
+LH PAVILION,9G,9G,Lake Hayes Pavilion,Lake Hayes,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,19,659,2023-2023,
+Lake Hayes Pavilion,9G,9G,Lake Hayes Pavilion,Lake Hayes,K,subsite,high,N,auto-id-agrees | header in 04d variants table,4,134,4884,2024-2025,
+Lake Hayes Pavilion Infill,,9G,Lake Hayes Pavilion,Lake Hayes,K,area,medium,N,auto-id-blank | header in 04d variants table,1,12,200,2026-2026,row-5 site ID blank in source; site mapped by header text
+LH Rowing Club,,9H,Lake Hayes East - Rowing Club,Lake Hayes,K,subsite,medium,N,auto-id-blank | header in 04d variants table,1,42,1130,2026-2026,row-5 site ID blank in source; site mapped by header text
+LHE - WIDGEON,10,10,Lake Hayes Estate - Widgeon Place,Lake Hayes Estate,C,site,high,N,auto-id-agrees | header in 04d variants table,1,16,195,2016-2016,
+LHE Trail,,10A,Lake Hayes Estate Trail,Lake Hayes Estate,C,subsite,medium,N,auto-id-blank | header in 04d variants table,3,24,145,2025-2026,row-5 site ID blank in source; site mapped by header text
+Little Difference AP,,NEW-LITTLE-DIFFERENCE,Little Difference,Little Difference,C,site,medium,Y,uncertain-needs-new-site-id | header in 04d variants table,1,22,200,2026-2026,new or unclear site with no WRT site number: Community partner; Arthurs Point suggested by MASTER header suffix AP; sheet title adds Wharehuanui; provisional ID: the Sites master will issue the real one
+LSCA,47,8,Lower Shotover Conservation Area,Lower Shotover Conservation Area,C,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,9,45,2015-2015,Autumn 2015 old site number 47 = 8 in the register
+Matakauri Wetlands,,NEW-MATAKAURI-WETLANDS,Matakauri Wetlands,Matakauri Wetlands,S,site,medium,N,auto-id-blank | header in 04d variants table,1,8,80,2026-2026,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+ML CAMP,2,2,Moke Lake Camp,Moke Lake,C,site,high,N,auto-id-agrees | header in 04d variants table,1,11,80,2015-2015,
+Paererewa,,NEW-PAEREREWA,Paererewa,Paererewa,C,site,medium,Y,uncertain-needs-new-site-id | header in 04d variants table,1,15,118,2026-2026,"new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear; provisional ID: the Sites master will issue the real one"
+P4T,,,Paper4Trees (scheme),Paper4Trees (scheme),unknown,scheme,low,Y,scheme-not-a-place | header in 04d variants table,8,116,1030,2015-2023,"Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count"
+PAPER 4 TREES,,,Paper4Trees (scheme),Paper4Trees (scheme),unknown,scheme,low,Y,scheme-not-a-place | header in 04d variants table,1,15,129,2019-2019,"Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count"
+Paper 4 Trees,,,Paper4Trees (scheme),Paper4Trees (scheme),unknown,scheme,low,Y,scheme-not-a-place | header in 04d variants table,1,17,165,2024-2024,"Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count"
+Paper for Trees,,,Paper4Trees (scheme),Paper4Trees (scheme),unknown,scheme,low,Y,scheme-not-a-place | header in 04d variants table,2,12,133,2025-2025,"Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count"
+PEACE,21,21,Peace Park,Peace Park and Frankton,K,site,high,N,auto-id-agrees | header in 04d variants table,3,122,1143,2015-2016,
+PEACE PARK,21,21,Peace Park,Peace Park and Frankton,K,site,high,N,auto-id-agrees | header in 04d variants table,13,257,2847,2016-2023,
+Peace Park,,21,Peace Park,Peace Park and Frankton,K,site,medium,N,auto-id-blank | header in 04d variants table,1,0,0,none,row-5 site ID blank in source; site mapped by header text
+Peace Park,21,21,Peace Park,Peace Park and Frankton,K,site,high,N,auto-id-agrees | header in 04d variants table,4,44,159,2024-2025,
+FRANKTON BEACH - Remarkables Primary \nBEACH,21A,21A,Frankton Beach,Peace Park and Frankton,K,subsite,high,N,auto-id-agrees | header in 04d variants table,1,20,155,2017-2017,
+Boyes Cres,,21B,Boyes Cres,Peace Park and Frankton,C,subsite,medium,N,auto-id-blank | header in 04d variants table,1,13,75,2025-2025,row-5 site ID blank in source; site mapped by header text
+Boyes Cres,21B,21B,Boyes Cres,Peace Park and Frankton,C,subsite,high,N,auto-id-agrees | header in 04d variants table,5,46,333,2022-2024,
+Boyes Crescent,21B,21B,Boyes Cres,Peace Park and Frankton,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,17,100,2024-2024,
+QLDC Tohu,,NEW-QLDC-TOHU,QLDC Tohu,QLDC Tohu,C,site,medium,N,auto-id-blank | header in 04d variants table,1,1,4,2026-2026,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+Quail Rise,,29,Quail Rise,Quail Rise,C,site,medium,N,auto-id-blank | header in 04d variants table,1,14,50,2026-2026,row-5 site ID blank in source; site mapped by header text
+Quail Rise,29,29,Quail Rise,Quail Rise,C,site,high,N,auto-id-agrees | header in 04d variants table,4,98,963,2024-2025,
+Quail Rise Community,29,29,Quail Rise,Quail Rise,C,site,high,N,auto-id-agrees | header in 04d variants table,5,98,1155,2021-2023,
+QPS Internal,4,4,Queenstown Primary School,Queenstown Hill and Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,4,10,80,2024-2024,
+QT Hill (QCC),4A,4A,Queenstown Hill,Queenstown Hill and Primary,C,subsite,high,N,auto-id-agrees | header in 04d variants table,3,4,68,2021-2023,
+Queenstown Hill,,4A,Queenstown Hill,Queenstown Hill and Primary,C,subsite,medium,N,auto-id-blank | header in 04d variants table,1,1,30,2017-2017,row-5 site ID blank in source; site mapped by header text
+KERRY DRIVE RESERVE,4B,4B,Kerry Drive Reserve,Queenstown Hill and Primary,C,subsite,high,N,auto-id-agrees | header in 04d variants table,1,6,13,2023-2023,
+[name],10,16,Rapley Close,Rapley Close,C,unknown,low,Y,review-not-found | header not in 04d variants table (withheld as a possible personal name),1,6,40,2015-2015,"header not in the variants table (withheld, may carry a personal name); site proposed from the row-5 ID only"
+Shotover Primary (Wetland),20A,20A,Shotover Primary - Wetlands,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,3,42,896,2021-2023,
+Shotover Primary (Wetlands),20A,20A,Shotover Primary - Wetlands,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,1,22,380,2019-2019,
+Shotover Wetland,20A,20A,Shotover Primary - Wetlands,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,5,64,1664,2016-2019,
+Shotover Wetlands,,20A,Shotover Primary - Wetlands,Shotover Primary,S,subsite,medium,N,auto-id-blank | header in 04d variants table,1,14,307,2026-2026,row-5 site ID blank in source; site mapped by header text
+Shotover Wetlands,20A,20A,Shotover Primary - Wetlands,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,4,43,599,2024-2025,
+Shotover Primary (Internal),20B,20B,Shotover Primary - Internal planting,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,1,18,340,2020-2020,
+Shotover Prinary (Internal planting),20B,20B,Shotover Primary - Internal planting,Shotover Primary,S,subsite,high,N,auto-id-agrees | header in 04d variants table,2,24,360,2021-2022,
+SHOTOVER - ROTARY TRACK,,NEW-SHOTOVER-ROTARY-TRACK,Shotover Rotary Track,Shotover Rotary Track,C,site,medium,N,auto-id-blank | header in 04d variants table,4,38,400,2018-2019,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+SKIPPERS - DOC,,NEW-SKIPPERS-DOC,Skippers - DOC,Skippers - DOC,C,site,medium,N,auto-id-blank | header in 04d variants table,1,10,110,2017-2017,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+SLOPE,11,11,Slope Hill Road,Slope Hill,K,site,high,N,auto-id-agrees | header in 04d variants table,10,134,8289,2015-2023,
+SLOPE HILL Rd,11,11,Slope Hill Road,Slope Hill,K,site,high,N,auto-id-agrees | header in 04d variants table,1,3,150,2020-2020,
+Slope Hill,,11,Slope Hill Road,Slope Hill,K,site,medium,N,auto-id-blank | header in 04d variants table,1,13,907,2026-2026,row-5 site ID blank in source; site mapped by header text
+Slope Hill,11,11,Slope Hill Road,Slope Hill,K,site,high,N,auto-id-agrees | header in 04d variants table,1,7,1000,2024-2024,
+Slope Hill,13C,11,Slope Hill Road,Slope Hill,K,site,medium,Y,rule-documented-id-fault | header in 04d variants table,3,49,3132,2024-2025,row-5 ID 13C vs register 11: Slope Hill carries Bush Creek's ID (13C)
+Slope Hill Coronation,!!A,11A,Slope Hill Coronation,Slope Hill,K,subsite,medium,Y,rule-documented-id-fault | header in 04d variants table,1,16,7000,2024-2024,row-5 ID !!A vs register 11A: ID typed as an error text (!!A); decision 4 applies to this site's 2024 records
+Slope Hill HGF,,NEW-SLOPE-HILL-HGF,Slope Hill HGF,Slope Hill,K,subsite,medium,Y,auto-id-blank | header in 04d variants table,1,22,22000,2024-2024,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one; decision 4 applies to this site's 2024 records
+SWIFTBURN - QTT,18,18,Swiftburn,Swiftburn and Kawarau Bridge,C,site,high,N,auto-id-agrees | header in 04d variants table,1,12,200,2015-2015,
+KAWARAU BRIDGE AJ HACKET,,18A,Kawarau Bridge,Swiftburn and Kawarau Bridge,C,subsite,medium,N,auto-id-blank | header in 04d variants table,3,44,579,2016-2019,row-5 site ID blank in source; site mapped by header text
+SHOTOVER RIVER [name],,,Shotover River,Tucker Beach and Shotover River,C,site,medium,Y,rule-appended-text | rule: appended text withheld; stem matched,3,17,130,2016-2021,Shotover River has two parcels (28A and 28B); row-5 ID does not say which; header carried appended personal text; stripped to the site stem; parcel from the row-5 ID
+TUCKER BEACH,28,28,Tucker Beach,Tucker Beach and Shotover River,C,site,high,N,auto-id-agrees | header in 04d variants table,2,7,120,2020-2021,
+SHOTOVER RIVER [name],28A,28A,Shotover River,Tucker Beach and Shotover River,C,subsite,medium,Y,rule-appended-text | rule: appended text withheld; stem matched,5,27,232,2018-2023,header carried appended personal text; stripped to the site stem; parcel from the row-5 ID
+Shotover River [name],28A,28A,Shotover River,Tucker Beach and Shotover River,C,subsite,medium,Y,rule-appended-text | rule: appended text withheld; stem matched,1,5,15,2024-2024,header carried appended personal text; stripped to the site stem; parcel from the row-5 ID
+WALTER PEAK,,NEW-WALTER-PEAK-STATION,Walter Peak Station,Walter Peak Station,C,site,medium,N,auto-id-blank | header in 04d variants table,1,28,496,2017-2017,row-5 site ID blank in source; site mapped by header text; provisional ID: the Sites master will issue the real one
+WCR,4,15,Whitechapel Reserve,Whitechapel,K,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,17,235,2015-2015,Autumn 2015 old site number 4 = 15 in the register
+Whitechapel,,15,Whitechapel Reserve,Whitechapel,K,site,medium,N,auto-id-blank | header in 04d variants table,1,30,1280,2026-2026,row-5 site ID blank in source; site mapped by header text
+Whitechapel,15,15,Whitechapel Reserve,Whitechapel,K,site,high,N,auto-id-agrees | header in 04d variants table,3,98,4344,2024-2025,
+Whitechapel  ,15,15,Whitechapel Reserve,Whitechapel,K,site,high,N,auto-id-agrees | header in 04d variants table,17,439,21345,2016-2024,
+WYE QTCC,24,24,Wye Creek Climbing Area,Wye Creek,C,site,high,N,auto-id-agrees | header in 04d variants table,8,49,242,2016-2023,
+WYE QTT,12,24,Wye Creek Climbing Area,Wye Creek,C,site,medium,N,auto-old-numbering-2015 | header in 04d variants table,1,8,37,2015-2015,Autumn 2015 old site number 12 = 24 in the register
+WYE QTT,24,24,Wye Creek Climbing Area,Wye Creek,C,site,high,N,auto-id-agrees | header in 04d variants table,1,12,82,2015-2015,

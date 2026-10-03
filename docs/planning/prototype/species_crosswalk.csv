@@ -1,0 +1,729 @@
+species_id,raw_name,proposed_canonical_name,alias_type,confidence,needs_wrt_decision,occurrences,sources,note,match_key
+SP-001,Acaena caesiglauca,Acaena caesiglauca,exact,high,N,16,seedlog (6 files),,acaena caesiglauca
+SP-002,Aciphylla aurea,Aciphylla aurea,exact,high,N,20,seedlog|stocktake (16 files),,aciphylla aurea
+SP-003,Acrothamnus colensoi,Acrothamnus colensoi,exact,high,N,14,seedlog (12 files),,acrothamnus colensoi
+SP-004,Agathis australis -,Agathis australis,case_space,high,N,1,allocation (1 files),stray bracket or dash removed,agathis australis
+SP-005,Aristotelia fruticosa,Aristotelia fruticosa,exact,high,N,309,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (77 files),,aristotelia fruticosa
+SP-005,Aristolia fruiticosa,Aristotelia fruticosa,typo,medium,N,47,seedlog (6 files),,aristolia fruiticosa
+SP-005,Aristrotelia fruiticosa\t,Aristotelia fruticosa,typo,high,N,10,plan|stocktake (8 files),,aristrotelia fruiticosa
+SP-005,Aristotelia fruticosa ,Aristotelia fruticosa,case_space,high,N,8,seedlog (7 files),,aristotelia fruticosa
+SP-005,Aristotelia fruiticosa,Aristotelia fruticosa,typo,high,N,6,seedlog (5 files),,aristotelia fruiticosa
+SP-005,Aristotelis fruticosa,Aristotelia fruticosa,typo,high,N,2,seedlog (2 files),,aristotelis fruticosa
+SP-005,Aristotelia fruticosa\u00a0,Aristotelia fruticosa,case_space,high,N,1,allocation (1 files),,aristotelia fruticosa
+SP-006,Aristotelia serrata,Aristotelia serrata,exact,high,N,291,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (71 files),,aristotelia serrata
+SP-006,Aristolia serrata,Aristotelia serrata,typo,high,N,34,seedlog (6 files),,aristolia serrata
+SP-006,Aristrotelia serrata\t\t,Aristotelia serrata,typo,high,N,11,plan|stocktake (8 files),,aristrotelia serrata
+SP-006,Aristotelia serrata ,Aristotelia serrata,case_space,high,N,8,seedlog (7 files),,aristotelia serrata
+SP-006,Mountain wineberry (Arisotelia serrata),Aristotelia serrata,common_name,low,Y,2,reference (1 files),"Master Plant List gives ""Mountain wineberry"" to Aristotelia fruticosa and ""Wineberry"" to A. serrata; the bracket says serrata. Common name and Latin name disagree.",arisotelia serrata
+SP-007,Astelia fragrans,Astelia fragrans,exact,high,N,68,allocation|docxlist|plan|potting|seedlog|stocktake (32 files),,astelia fragrans
+SP-008,Austroderia richardii,Austroderia richardii,exact,high,N,266,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (72 files),,austroderia richardii
+SP-008,Astroderia richardii,Austroderia richardii,typo,high,N,90,seedlog (6 files),,astroderia richardii
+SP-008,Aristoderia richardii,Austroderia richardii,typo,medium,N,16,seedlog (6 files),,aristoderia richardii
+SP-008,Austroderia richardii\t\t,Austroderia richardii,case_space,high,N,10,plan (7 files),,austroderia richardii
+SP-008,Austroderia richardii ,Austroderia richardii,case_space,high,N,8,seedlog (7 files),,austroderia richardii
+SP-008,Toetoe,Austroderia richardii,maori_name,medium,N,8,seedlog (6 files),,toetoe
+SP-008,Toetoe (Austrodieria richardii,Austroderia richardii,maori_name,high,N,2,reference (1 files),Latin name in brackets decides the match,austrodieria richardii
+SP-008,Ari ric\t\t\t,Austroderia richardii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ari ric
+SP-008,Astroderia richardii\t\t,Austroderia richardii,typo,high,N,1,stocktake (1 files),,astroderia richardii
+SP-008,Aus ric    ,Austroderia richardii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",aus ric
+SP-008,Aus ric\t\t\t10\t\t150,Austroderia richardii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",aus ric
+SP-008,Aus ric\t\t\t10\t\t300,Austroderia richardii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",aus ric
+SP-008,Aust ric\t        \t950,Austroderia richardii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",aust ric
+SP-009,Brachyglottis cassinoides,Brachyglottis cassinioides,typo,high,N,14,seedlog (11 files),,brachyglottis cassinoides
+SP-009,Brachglottis cassinoides,Brachyglottis cassinioides,typo,high,N,12,seedlog (5 files),,brachglottis cassinoides
+SP-009,Brachyglottis cassinoides ,Brachyglottis cassinioides,typo,high,N,8,seedlog (7 files),,brachyglottis cassinoides
+SP-009,Brachyglottis cassinioides,Brachyglottis cassinioides,exact,high,N,4,seedlog|stocktake (3 files),,brachyglottis cassinioides
+SP-009,Brachyglottis cassinoidies,Brachyglottis cassinioides,typo,high,N,1,seedlog (1 files),,brachyglottis cassinoidies
+SP-010,Brachyglottis compacta,Brachyglottis compacta,exact,high,N,1,allocation (1 files),,brachyglottis compacta
+SP-011,Brachyglottis greyii,Brachyglottis greyii,exact,high,N,1,seedlog (1 files),,brachyglottis greyii
+SP-012,Carex buchananii,Carex buchananii,exact,high,N,267,allocation|forecast|history|masterlist|plan|potting|seedlog|stocktake (59 files),,carex buchananii
+SP-012,Carex buchananii\t\t\t,Carex buchananii,case_space,high,N,11,plan|stocktake (8 files),,carex buchananii
+SP-012,Carex buchananii ,Carex buchananii,case_space,high,N,8,seedlog (7 files),,carex buchananii
+SP-012,Carrex buchananii plants split,Carex buchananii,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",carrex buchananii
+SP-013,Carex comans red,Carex comans red,exact,high,Y,3,allocation|docxlist|stocktake (3 files),"Is ""red"" a cultivar or form, or part of the line name? Row is an appended (Autumn 2026, stocktake, docx) addition.",carex comans red
+SP-014,Carex flagillera,Carex flagillera,exact,high,N,3,allocation|docxlist|stocktake (3 files),,carex flagillera
+SP-015,Carex maorica,Carex maorica,exact,high,Y,119,allocation|forecast|history|masterlist|plan|seedlog|stocktake (43 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-016.",carex maorica
+SP-015,Carex Maorica,Carex maorica,case_space,high,Y,76,forecast|history|potting (7 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-016.",carex maorica
+SP-015,Carex maorica ([site tag withheld]),Carex maorica,site_tagged,medium,Y,19,potting (2 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-016.; tag belongs in a site or batch field, not in the species name; tag text withheld here; the full string is in 04a_species_variants.csv",carex maorica
+SP-015,Carex .maoriorca,Carex maorica,typo,medium,Y,6,stocktake (5 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-016.",carex maoriorca
+SP-015,Carex Maorica ([site tag withheld]),Carex maorica,site_tagged,medium,Y,1,history (1 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-016.; tag belongs in a site or batch field, not in the species name; tag text withheld here; the full string is in 04a_species_variants.csv",carex maorica
+SP-016,Carex secta,Carex secta,exact,high,Y,361,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (74 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.",carex secta
+SP-016,Carex secta\t\t\t,Carex secta,case_space,high,Y,11,plan|stocktake (8 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.",carex secta
+SP-016,Carex secta ,Carex secta,case_space,high,Y,8,seedlog (7 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.",carex secta
+SP-016,Carex sec      \t\t900,Carex secta,abbreviation,medium,Y,1,forecast (1 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.; unique prefix match; import-only, not offered in dropdowns",carex sec
+SP-016,Carex secta\t    ,Carex secta,case_space,high,Y,1,forecast (1 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.",carex secta
+SP-016,Carex secta\t\t,Carex secta,case_space,high,Y,1,forecast (1 files),"Contested C3: Separate stock lines, or one a local form of the other (nickname ""oio"")? Partner SP-015.",carex secta
+SP-017,Carex testacea,Carex testacea,exact,high,N,4,seedlog (3 files),,carex testacea
+SP-018,Carex virgata,Carex virgata,exact,high,N,212,allocation|forecast|history|masterlist|plan|potting|reference|seedlog|stocktake (53 files),,carex virgata
+SP-018,Carex vir,Carex virgata,abbreviation,medium,N,48,forecast (3 files),"unique prefix match; import-only, not offered in dropdowns",carex vir
+SP-018,Carex virgata\t\t\t\t\t,Carex virgata,case_space,high,N,11,plan|stocktake (8 files),,carex virgata
+SP-019,Carmichaelia australis,Carmichaelia australis,exact,high,N,1,reference (1 files),,carmichaelia australis
+SP-020,Carmichaelia compacta,Carmichaelia compacta,exact,high,N,26,plan|seedlog|stocktake (13 files),,carmichaelia compacta
+SP-020,Carmichaelia compacta\t\t,Carmichaelia compacta,case_space,high,N,10,plan (7 files),,carmichaelia compacta
+SP-020,Carmichaelia compacta ,Carmichaelia compacta,case_space,high,N,8,seedlog (7 files),,carmichaelia compacta
+SP-021,Carmichaelia corrugata,Carmichaelia corrugata,exact,high,N,14,seedlog (12 files),,carmichaelia corrugata
+SP-022,Carmichaelia crassicaulis,Carmichaelia crassicaulis,exact,high,Y,227,allocation|forecast|history|masterlist|plan|potting|stocktake (43 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-023, SP-027.",carmichaelia crassicaulis
+SP-022,Carmichaelia crassicauli,Carmichaelia crassicaulis,typo,medium,Y,6,seedlog (4 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-023, SP-027.",carmichaelia crassicauli
+SP-022,Carmichaelia crassicaule,Carmichaelia crassicaulis,typo,medium,Y,2,stocktake (1 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-023, SP-027.",carmichaelia crassicaule
+SP-022,Carmichaelia crass,Carmichaelia crassicaulis,abbreviation,low,Y,1,plan (1 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-023, SP-027.; prefix also fits SP-023",carmichaelia crass
+SP-022,Carmichaelia crassicaulls,Carmichaelia crassicaulis,typo,medium,Y,1,seedlog (1 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-023, SP-027.",carmichaelia crassicaulls
+SP-023,Coral broom Car cras v rac,Carmichaelia crassicule var racemosa,variety,medium,Y,30,seedlog (5 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-022, SP-027.; Latin name follows the common name; (first read as common_name)",coral broom
+SP-023,Carmichaelia crassicule var ra,Carmichaelia crassicule var racemosa,variety,medium,Y,19,seedlog (5 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-022, SP-027.; variety written in a short or different form",carmichaelia crassicule var racemosa
+SP-023,Carmichaelia crassicaulis v race,Carmichaelia crassicule var racemosa,variety,medium,Y,8,seedlog (7 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-022, SP-027.; variety written in a short or different form",carmichaelia crassicaulis var racemosa
+SP-023,Carmichaelia crassicule var ram,Carmichaelia crassicule var racemosa,variety,medium,Y,6,seedlog (5 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-022, SP-027.; variety written in a short or different form",carmichaelia crassicule var racemosa
+SP-024,Carmichaelia glabrescsens - Pink flowering Broom,Carmichaelia glabrescsens,common_name,high,N,1,allocation (1 files),common name written after the Latin name,carmichaelia glabrescsens
+SP-025,Carmichaelia kirkii,Carmichaelia kirkii,exact,high,N,22,seedlog|stocktake (13 files),,carmichaelia kirkii
+SP-026,Carmichaelia petriei,Carmichaelia petriei,exact,high,N,444,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (78 files),,carmichaelia petriei
+SP-026,Camichaelia petriei,Carmichaelia petriei,typo,high,N,18,seedlog (5 files),,camichaelia petriei
+SP-026,Carmichaelia pet,Carmichaelia petriei,abbreviation,medium,N,16,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",carmichaelia pet
+SP-026,Carmichaelia petriei\t\t,Carmichaelia petriei,case_space,high,N,11,plan|stocktake (8 files),,carmichaelia petriei
+SP-026,Carmichaelia petriei ,Carmichaelia petriei,case_space,high,N,8,seedlog (7 files),,carmichaelia petriei
+SP-026,#Desert broom (Carmichaelia petrieii),Carmichaelia petriei,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,carmichaelia petrieii
+SP-026,Car pet           \t\t100,Carmichaelia petriei,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",car pet
+SP-026,Car pet\t\t\t2\t\t30,Carmichaelia petriei,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",car pet
+SP-026,Car pet\t\t\t2\t\t60,Carmichaelia petriei,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",car pet
+SP-027,Carmichaelia racemosa,Carmichaelia racemosa,exact,high,Y,9,plan|potting|seedlog|stocktake (9 files),"Contested C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Partner SP-022, SP-023.",carmichaelia racemosa
+SP-028,Carmichaelia williamsii,Carmichaelia williamsii,exact,high,N,15,seedlog|stocktake (13 files),,carmichaelia williamsii
+SP-029,Carpodetus serratus,Carpodetus serratus,exact,high,N,279,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (72 files),,carpodetus serratus
+SP-029,Carpodetus serrata,Carpodetus serratus,typo,high,N,36,seedlog (11 files),,carpodetus serrata
+SP-029,Carpodetus serratus\t\t  ,Carpodetus serratus,case_space,high,N,11,plan|stocktake (8 files),,carpodetus serratus
+SP-029,Carpodetus serratus ,Carpodetus serratus,case_space,high,N,8,seedlog (7 files),,carpodetus serratus
+SP-029,Marbleleaf (Carpodetus serratus),Carpodetus serratus,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,carpodetus serratus
+SP-030,Celmesia lyallii,Celmesia lyallii,exact,high,N,15,seedlog (6 files),,celmesia lyallii
+SP-030,Celmisia lyallii ,Celmesia lyallii,typo,high,N,8,seedlog (7 files),this is the standard spelling; WRT's list uses the other form,celmisia lyallii
+SP-031,Celmisia ramulosa,Celmisia ramulosa,exact,high,N,14,seedlog (12 files),,celmisia ramulosa
+SP-031,Celmesia ramulosa,Celmisia ramulosa,typo,high,N,6,seedlog (4 files),,celmesia ramulosa
+SP-032,Chionochloa conspicua,Chionochloa conspicua,exact,high,N,237,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (41 files),,chionochloa conspicua
+SP-032,Chionochloa conspicua      ,Chionochloa conspicua,case_space,high,N,10,plan (7 files),,chionochloa conspicua
+SP-032,Chionochloa conspicua ,Chionochloa conspicua,case_space,high,N,8,seedlog (7 files),,chionochloa conspicua
+SP-032,Chionochloa conspic…\t\t\t\t\t\t       ,Chionochloa conspicua,abbreviation,medium,N,1,stocktake (1 files),"unique prefix match; import-only, not offered in dropdowns",chionochloa conspic
+SP-033,Chionochloa macra,Chionochloa macra,exact,high,N,8,seedlog (6 files),,chionochloa macra
+SP-033,Chionochloa macra ,Chionochloa macra,case_space,high,N,8,seedlog (7 files),,chionochloa macra
+SP-034,Chionochloa rigida,Chionochloa rigida,exact,high,N,313,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (64 files),,chionochloa rigida
+SP-034,Chionochloa rigida\t\t   \t\t\t               ,Chionochloa rigida,case_space,high,N,11,plan|stocktake (8 files),,chionochloa rigida
+SP-034,"Chionochloa rigida , ",Chionochloa rigida,case_space,high,N,8,seedlog (7 files),,chionochloa rigida
+SP-035,Chionochloa rubra,Chionochloa rubra,exact,high,N,318,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (66 files),,chionochloa rubra
+SP-035,Chionochloa rubra\t\t  \t\t\t\t\t        ,Chionochloa rubra,case_space,high,N,11,plan|stocktake (8 files),,chionochloa rubra
+SP-035,Chionochloa rubra ,Chionochloa rubra,case_space,high,N,8,seedlog (7 files),,chionochloa rubra
+SP-036,Clematis afoliata - Leafless Clematis,Clematis afoliata,common_name,high,N,1,allocation (1 files),common name written after the Latin name,clematis afoliata
+SP-037,Clematis morata,Clematis morata,exact,high,N,24,seedlog (13 files),,clematis morata
+SP-037,Clematis Marata,Clematis morata,typo,high,N,4,seedlog (3 files),,clematis marata
+SP-038,Coprosma acerosa,Coprosma acerosa,exact,high,N,285,allocation|forecast|history|masterlist|plan|potting|seedlog|stocktake (60 files),,coprosma acerosa
+SP-038,Coprosma acerosa ,Coprosma acerosa,case_space,high,N,8,seedlog (7 files),,coprosma acerosa
+SP-038,Coprosma acerosa                 \t\t\t\t\t        ,Coprosma acerosa,case_space,high,N,1,stocktake (1 files),,coprosma acerosa
+SP-039,Coprosma atropurpurea,Coprosma atropurpurea,exact,high,N,14,seedlog (11 files),,coprosma atropurpurea
+SP-040,Coprosma brunea,Coprosma brunea,exact,high,N,161,allocation|forecast|history|masterlist|plan|potting|stocktake (19 files),,coprosma brunea
+SP-040,Coprosma brunnea,Coprosma brunea,typo,high,N,22,seedlog (18 files),this is the standard spelling; WRT's list uses the other form,coprosma brunnea
+SP-040,Coprosma brunnea [redacted] bl,Coprosma brunea,site_tagged,medium,N,4,seedlog (3 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",coprosma brunnea
+SP-040,Coproma brunnea,Coprosma brunea,typo,high,N,3,stocktake (3 files),,coproma brunnea
+SP-041,Coprosma cheesemanii,Coprosma cheesemanii,exact,high,N,208,allocation|forecast|history|masterlist|plan|potting|seedlog|stocktake (50 files),,coprosma cheesemanii
+SP-041,Coprosma  cheesemanii,Coprosma cheesemanii,case_space,high,N,16,seedlog (6 files),,coprosma cheesemanii
+SP-041,Coprosma cheesema,Coprosma cheesemanii,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",coprosma cheesema
+SP-041,Coprosma cheesemanii ,Coprosma cheesemanii,case_space,high,N,8,seedlog (7 files),,coprosma cheesemanii
+SP-041,Coprosma cheesmanii,Coprosma cheesemanii,typo,high,N,2,allocation (2 files),,coprosma cheesmanii
+SP-041,Coprosma Cheesmanii,Coprosma cheesemanii,typo,high,N,1,history (1 files),,coprosma cheesmanii
+SP-042,Coprosma colensoi,Coprosma colensoi,exact,high,N,1,allocation (1 files),,coprosma colensoi
+SP-043,Coprosma crassifolia,Coprosma crassifolia,exact,high,N,353,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (87 files),,coprosma crassifolia
+SP-043,Coprosma crass,Coprosma crassifolia,abbreviation,medium,N,16,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",coprosma crass
+SP-043,Coprosma crassifolia\t\t,Coprosma crassifolia,case_space,high,N,11,plan|stocktake (8 files),,coprosma crassifolia
+SP-043,Coprosma cras,Coprosma crassifolia,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",coprosma cras
+SP-043,Cop crass\t        \t150,Coprosma crassifolia,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop crass
+SP-043,Coprosma\u00a0crassifolia,Coprosma crassifolia,case_space,high,N,1,allocation (1 files),,coprosma crassifolia
+SP-044,Coprosma dumosa,Coprosma dumosa,exact,high,N,340,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (80 files),,coprosma dumosa
+SP-044,Coprosma dumosa                               ,Coprosma dumosa,case_space,high,N,11,plan|stocktake (8 files),,coprosma dumosa
+SP-044,Cop dum \t        \t100,Coprosma dumosa,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop dum
+SP-044,Coprosma\u00a0dumosa,Coprosma dumosa,case_space,high,N,1,allocation (1 files),,coprosma dumosa
+SP-045,Coprosma fowerakii,Coprosma foweraki,typo,high,N,16,seedlog (13 files),,coprosma fowerakii
+SP-045,Coprosma foweraki,Coprosma foweraki,exact,high,N,3,stocktake (3 files),,coprosma foweraki
+SP-046,Coprosma intertexta,Coprosma intertexta,exact,high,N,345,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (76 files),,coprosma intertexta
+SP-046,Coprosma intertexta\t\t                                              ,Coprosma intertexta,case_space,high,N,11,plan|stocktake (8 files),,coprosma intertexta
+SP-046,Coprosma intertexta ,Coprosma intertexta,case_space,high,N,8,seedlog (7 files),,coprosma intertexta
+SP-046,#Coprosma intertexta,Coprosma intertexta,case_space,high,N,2,reference (1 files),"""#"" is the threatened-species marker in the Te Kakano list",coprosma intertexta
+SP-046,Cop int\t           \t120,Coprosma intertexta,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop int
+SP-047,Coprosma linariifolia,Coprosma linariifolia,exact,high,N,291,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (78 files),,coprosma linariifolia
+SP-047,Coprosma lineariifolia,Coprosma linariifolia,typo,high,N,59,seedlog (6 files),,coprosma lineariifolia
+SP-047,Cop linearifolia,Coprosma linariifolia,abbreviation,medium,N,12,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",cop linearifolia
+SP-047,Coprosma linariifolia\t       \t  ,Coprosma linariifolia,case_space,high,N,11,plan|stocktake (8 files),,coprosma linariifolia
+SP-047,Coprosma linearifolia,Coprosma linariifolia,typo,high,N,6,seedlog (5 files),,coprosma linearifolia
+SP-048,Coprosma lucida,Coprosma lucida,exact,high,N,354,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (77 files),,coprosma lucida
+SP-048,Coprosma lucida\t\t              ,Coprosma lucida,case_space,high,N,13,plan|stocktake (8 files),,coprosma lucida
+SP-048,Coprosma lucida ,Coprosma lucida,case_space,high,N,8,seedlog (7 files),,coprosma lucida
+SP-049,Coprosma petriei,Coprosma petriei,exact,high,N,23,seedlog (13 files),,coprosma petriei
+SP-049,Cop pet,Coprosma petriei,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",cop pet
+SP-050,Coprosma propinqua,Coprosma propinqua,exact,high,N,374,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (80 files),,coprosma propinqua
+SP-050,Coprosma prop,Coprosma propinqua,abbreviation,medium,N,32,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",coprosma prop
+SP-050,Coprosma propinqua\t\t,Coprosma propinqua,case_space,high,N,13,plan|stocktake (8 files),,coprosma propinqua
+SP-050,Coprosma propinqua ,Coprosma propinqua,case_space,high,N,8,seedlog (7 files),,coprosma propinqua
+SP-050,Coprosma prop ,Coprosma propinqua,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",coprosma prop
+SP-050,Mingimingi (Coprosma propinqua),Coprosma propinqua,maori_name,high,N,6,reference (1 files),Latin name in brackets decides the match,coprosma propinqua
+SP-050,Cop prop   \t\t,Coprosma propinqua,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop prop
+SP-050,Cop prop  ,Coprosma propinqua,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop prop
+SP-050,Cop prop            1200                  ,Coprosma propinqua,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop prop
+SP-050,Cop prop   \t,Coprosma propinqua,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop prop
+SP-050,Cop prop\t\t,Coprosma propinqua,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop prop
+SP-050,Coprosma\u00a0propinqua,Coprosma propinqua,case_space,high,N,1,allocation (1 files),,coprosma propinqua
+SP-051,Coprosma peseudociliata,Coprosma pseudociliata,typo,high,N,8,seedlog (6 files),,coprosma peseudociliata
+SP-051,Coprosma pseudociliata,Coprosma pseudociliata,exact,high,N,8,seedlog (7 files),,coprosma pseudociliata
+SP-052,Coprosma rhamnoides,Coprosma rhamnoides,exact,high,N,210,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (64 files),,coprosma rhamnoides
+SP-052,Coprosma rhammoides,Coprosma rhamnoides,typo,high,N,50,forecast|history|seedlog (5 files),,coprosma rhammoides
+SP-052,Coprosma rhaminoides,Coprosma rhamnoides,typo,high,N,12,plan (7 files),,coprosma rhaminoides
+SP-052,Coprosma rhamnoides ,Coprosma rhamnoides,case_space,high,N,8,seedlog (7 files),,coprosma rhamnoides
+SP-052,Coprosma rhamnoides ?,Coprosma rhamnoides,case_space,medium,N,6,seedlog (5 files),"trailing ""?"" = recorder unsure",coprosma rhamnoides
+SP-052,Cop rham,Coprosma rhamnoides,abbreviation,medium,N,4,seedlog (4 files),"unique prefix match; import-only, not offered in dropdowns",cop rham
+SP-053,Coprosma rigida,Coprosma rigida,exact,high,N,325,allocation|docxlist|forecast|history|masterlist|plan|potting|reference|seedlog|stocktake (84 files),,coprosma rigida
+SP-053,Coprosma rigida ,Coprosma rigida,case_space,high,N,20,seedlog (13 files),,coprosma rigida
+SP-053,Coprosma rigida seedlings,Coprosma rigida,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",coprosma rigida
+SP-053,Coprosma rigida\t\t\t\t\t\t\t       ,Coprosma rigida,case_space,high,N,1,stocktake (1 files),,coprosma rigida
+SP-054,Coprosma rotundifolia,Coprosma rotundifolia,exact,high,N,247,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (55 files),,coprosma rotundifolia
+SP-054,Coprosma rotundafolia,Coprosma rotundifolia,typo,high,N,19,plan|seedlog (12 files),,coprosma rotundafolia
+SP-054,Coprosma rotundaf,Coprosma rotundifolia,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",coprosma rotundaf
+SP-054,Coprosma rotundifolia ,Coprosma rotundifolia,case_space,high,N,8,seedlog (7 files),,coprosma rotundifolia
+SP-055,Coprosma rugosa,Coprosma rugosa,exact,high,N,359,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (79 files),,coprosma rugosa
+SP-055,Coprosma rugosa\t\t           ,Coprosma rugosa,case_space,high,N,13,plan|stocktake (8 files),,coprosma rugosa
+SP-055,Coprosma rugosa ,Coprosma rugosa,case_space,high,N,8,seedlog (7 files),,coprosma rugosa
+SP-055,Cop rug\t           \t140,Coprosma rugosa,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop rug
+SP-055,Cop rug\t\t,Coprosma rugosa,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop rug
+SP-055,Cop rug\t\t\t,Coprosma rugosa,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop rug
+SP-055,Coprosma regosa,Coprosma rugosa,typo,medium,N,1,seedlog (1 files),,coprosma regosa
+SP-055,Coprosma\u00a0rugosa,Coprosma rugosa,case_space,high,N,1,allocation (1 files),,coprosma rugosa
+SP-056,Coprosma virescens,Coprosma virescens,exact,high,N,342,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (77 files),,coprosma virescens
+SP-056,Coprosma virscens,Coprosma virescens,typo,high,N,18,seedlog (5 files),,coprosma virscens
+SP-056,Coprosma virescens\t\t           ,Coprosma virescens,case_space,high,N,12,plan (7 files),,coprosma virescens
+SP-056,Coprosma virescens ,Coprosma virescens,case_space,high,N,8,seedlog (7 files),,coprosma virescens
+SP-056,Coprosma virscens duff,Coprosma virescens,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",coprosma virscens
+SP-056,#Coprosma virescens,Coprosma virescens,case_space,high,N,2,reference (1 files),"""#"" is the threatened-species marker in the Te Kakano list",coprosma virescens
+SP-056,Cop vir               \t\t100,Coprosma virescens,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cop vir
+SP-056,Coprosma virscens\t\t           ,Coprosma virescens,typo,high,N,1,stocktake (1 files),,coprosma virscens
+SP-057,Coprosma wallii,Coprosma wallii,exact,high,N,33,allocation|docxlist|seedlog|stocktake (13 files),,coprosma wallii
+SP-058,Cordyline australis,Cordyline australis,exact,high,N,335,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (73 files),,cordyline australis
+SP-058,Cordyline australis\t\t           ,Cordyline australis,case_space,high,N,13,plan|stocktake (8 files),,cordyline australis
+SP-058,Cordyline australis ,Cordyline australis,case_space,high,N,8,seedlog (7 files),,cordyline australis
+SP-058,Cabbage tree (Cordyline australis),Cordyline australis,common_name,high,N,4,reference (1 files),Latin name in brackets decides the match,cordyline australis
+SP-058,Cor aus\t\t\t,Cordyline australis,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cor aus
+SP-058,Cor aus          \t\t550  ,Cordyline australis,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",cor aus
+SP-058,Cordyline\u00a0australis,Cordyline australis,case_space,high,N,1,allocation (1 files),,cordyline australis
+SP-059,Corokia cotoneaster,Corokia cotoneaster,exact,high,N,529,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (81 files),,corokia cotoneaster
+SP-059,Corokia cotoneaster ,Corokia cotoneaster,case_space,high,N,16,seedlog (13 files),,corokia cotoneaster
+SP-059,Corokia cotoneaster\t\t           ,Corokia cotoneaster,case_space,high,N,13,plan|stocktake (8 files),,corokia cotoneaster
+SP-059,Corokia cot,Corokia cotoneaster,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",corokia cot
+SP-059,Corokia cotoneaster seedlings,Corokia cotoneaster,site_tagged,medium,N,4,seedlog (3 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",corokia cotoneaster
+SP-059,Corokia (Corokia cotoneaster),Corokia cotoneaster,common_name,high,N,2,reference (1 files),"genus used as a common name, Latin name in brackets",corokia cotoneaster
+SP-059,Corokia Cotoneaster,Corokia cotoneaster,case_space,high,N,1,seedlog (1 files),,corokia cotoneaster
+SP-060,Cyathoides juniperina,Cyathoides juniperina,exact,high,Y,34,allocation|docxlist|history|stocktake (10 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-087.",cyathoides juniperina
+SP-060,Cyathodes juniperin,Cyathoides juniperina,typo,medium,Y,8,seedlog (6 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-087.",cyathodes juniperin
+SP-060,Cyathodes juniperina,Cyathoides juniperina,typo,medium,Y,8,seedlog (6 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-087.",cyathodes juniperina
+SP-060,Cyathodies jun,Cyathoides juniperina,abbreviation,medium,Y,1,plan (1 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-087.; unique prefix match; import-only, not offered in dropdowns",cyathodies jun
+SP-061,Dacrycarpus dacrydioides,Dacrycarpus dacrydioides,exact,high,N,257,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (65 files),,dacrycarpus dacrydioides
+SP-061,Dacrycarpus dacrydiodies,Dacrycarpus dacrydioides,typo,high,N,30,seedlog (6 files),,dacrycarpus dacrydiodies
+SP-061,Dacrycarpus dacryd seedlings,Dacrycarpus dacrydioides,abbreviation,medium,N,20,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",dacrycarpus dacryd
+SP-061,Dacrycarpus dacrydioides                  ,Dacrycarpus dacrydioides,case_space,high,N,13,plan|stocktake (8 files),,dacrycarpus dacrydioides
+SP-061,Dacrycarpus dacrydiodies duff,Dacrycarpus dacrydioides,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",dacrycarpus dacrydiodies
+SP-061,Dacrycarpus dacrydioides ,Dacrycarpus dacrydioides,case_space,high,N,8,seedlog (7 files),,dacrycarpus dacrydioides
+SP-061,Dacrycarpus dacrydoid,Dacrycarpus dacrydioides,typo,medium,N,6,seedlog (5 files),,dacrycarpus dacrydoid
+SP-062,Dacrydium cupressinum,Dacrydium cupressinum,exact,high,N,1,stocktake (1 files),,dacrydium cupressinum
+SP-063,Discaria toumatou,Discaria toumatou,exact,high,N,279,allocation|forecast|history|masterlist|plan|potting|seedlog|stocktake (62 files),,discaria toumatou
+SP-063,Discaria toumata,Discaria toumatou,typo,medium,N,111,seedlog (11 files),,discaria toumata
+SP-063,Discaria toumatou ,Discaria toumatou,case_space,high,N,20,seedlog (12 files),,discaria toumatou
+SP-063,Discaria toumatou\t\t           ,Discaria toumatou,case_space,high,N,13,plan|stocktake (8 files),,discaria toumatou
+SP-063,Matagouri,Discaria toumatou,maori_name,medium,N,2,seedlog (1 files),,matagouri
+SP-063,#Matagouri (Discaria toumatou),Discaria toumatou,maori_name,high,N,1,reference (1 files),Latin name in brackets decides the match,discaria toumatou
+SP-063,Matagouri (Discaria toumatou),Discaria toumatou,maori_name,high,N,1,reference (1 files),Latin name in brackets decides the match,discaria toumatou
+SP-064,Dracophyllum long,Dracophyllum longifolium,abbreviation,medium,N,24,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",dracophyllum long
+SP-064,Dracophyllum longifolium,Dracophyllum longifolium,exact,high,N,6,allocation|seedlog (2 files),,dracophyllum longifolium
+SP-065,Dracophyllum rosmarinifolium,Dracophyllum rosmarinifolium,exact,high,N,187,allocation|forecast|history|potting|stocktake (22 files),,dracophyllum rosmarinifolium
+SP-065,Dracophyllum rosemarinifolia,Dracophyllum rosmarinifolium,typo,medium,N,18,seedlog (5 files),,dracophyllum rosemarinifolia
+SP-065,Dracophyllum rosmarifolium,Dracophyllum rosmarinifolium,typo,high,N,3,masterlist|plan (2 files),,dracophyllum rosmarifolium
+SP-066,Elaeocarpus hookerianus,Elaeocarpus hookerianus,exact,high,N,257,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (62 files),,elaeocarpus hookerianus
+SP-066,Elaeocarpus hooker. seedlings,Elaeocarpus hookerianus,abbreviation,medium,N,16,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",elaeocarpus hooker
+SP-066,Elaeocarpus hooker seedlings,Elaeocarpus hookerianus,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",elaeocarpus hooker
+SP-066,Eleocarpus hookeranus,Elaeocarpus hookerianus,typo,high,N,4,seedlog (3 files),,eleocarpus hookeranus
+SP-066,Eleocarpus hookerianus,Elaeocarpus hookerianus,typo,high,N,2,plan (2 files),,eleocarpus hookerianus
+SP-066,Elaeocarpus hookerianus                    \t,Elaeocarpus hookerianus,case_space,high,N,1,stocktake (1 files),,elaeocarpus hookerianus
+SP-067,Eleocarpus dentatus,Eleocarpus dentatus,exact,high,N,1,allocation (1 files),,eleocarpus dentatus
+SP-068,Fuchsia excorticata,Fuchsia excorticata,exact,high,N,301,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (71 files),,fuchsia excorticata
+SP-068,Fuchsia excorticata\t\t  ,Fuchsia excorticata,case_space,high,N,13,plan|stocktake (8 files),,fuchsia excorticata
+SP-068,Fuchsia excorticata ,Fuchsia excorticata,case_space,high,N,8,seedlog (7 files),,fuchsia excorticata
+SP-068,Fuchsia escortia,Fuchsia excorticata,typo,medium,N,2,seedlog (2 files),,fuchsia escortia
+SP-069,Fuscospora cliffortioides,Fuscospora cliffortioides,exact,high,N,267,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (71 files),,fuscospora cliffortioides
+SP-069,Mt Beech seedlings,Fuscospora cliffortioides,common_name,medium,N,16,seedlog (6 files),qualifier word after the name (e.g. seedlings),mt beech
+SP-069,Mtn Beech seedliings,Fuscospora cliffortioides,common_name,medium,N,16,seedlog (6 files),qualifier word after the name (e.g. seedlings),mtn beech
+SP-069,Fuscospora cliffortiodes\t  ,Fuscospora cliffortioides,typo,high,N,11,plan|stocktake (8 files),,fuscospora cliffortiodes
+SP-069,Nothofagus Mtn Beech,Fuscospora cliffortioides,common_name,medium,N,9,seedlog (7 files),common name written after the Latin name,nothofagus mtn beech
+SP-069,Fuscospora cliff,Fuscospora cliffortioides,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",fuscospora cliff
+SP-069,Fuscospora cliffortioides ,Fuscospora cliffortioides,case_space,high,N,8,seedlog (7 files),,fuscospora cliffortioides
+SP-069,Fuscospora cliffoidies,Fuscospora cliffortioides,typo,medium,N,3,seedlog (2 files),,fuscospora cliffoidies
+SP-069,Mountain beech (Fuscospora cliffortioides),Fuscospora cliffortioides,common_name,high,N,2,reference (1 files),Latin name in brackets decides the match,fuscospora cliffortioides
+SP-069,Fus cli\t\t\t,Fuscospora cliffortioides,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",fus cli
+SP-069,Fus cli\t\t\t?\t\t?,Fuscospora cliffortioides,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",fus cli
+SP-069,Fus clif\t\t              50,Fuscospora cliffortioides,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",fus clif
+SP-069,Fuscospora cliffortoidies,Fuscospora cliffortioides,typo,high,N,1,seedlog (1 files),,fuscospora cliffortoidies
+SP-070,Fuscospora fusca,Fuscospora fusca,exact,high,N,263,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (72 files),,fuscospora fusca
+SP-070,Red Beech seedlings,Fuscospora fusca,common_name,medium,N,30,seedlog (6 files),qualifier word after the name (e.g. seedlings),red beech
+SP-070,Fuscopora fusca seedlings,Fuscospora fusca,site_tagged,medium,N,26,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",fuscopora fusca
+SP-070,Fuscospora fusca                  \t                                            ,Fuscospora fusca,case_space,high,N,11,plan|stocktake (8 files),,fuscospora fusca
+SP-070,Fuscospora fusca ,Fuscospora fusca,case_space,high,N,8,seedlog (7 files),,fuscospora fusca
+SP-070,Red Beech,Fuscospora fusca,common_name,medium,N,8,seedlog (6 files),,red beech
+SP-071,Fuscospora truncata - Hard Beech,Fuscospora truncata,common_name,high,N,1,allocation (1 files),common name written after the Latin name,fuscospora truncata
+SP-072,Gaultheria antipoda,Gaultheria antipoda,exact,high,N,69,allocation|forecast|masterlist|potting|seedlog (18 files),,gaultheria antipoda
+SP-072,Gaultheria antipodea ,Gaultheria antipoda,typo,high,N,8,seedlog (7 files),,gaultheria antipodea
+SP-072,Gautheria antipoda,Gaultheria antipoda,typo,high,N,1,seedlog (1 files),,gautheria antipoda
+SP-073,Griselinia littoralis,Griselinia littoralis,exact,high,N,359,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (74 files),,griselinia littoralis
+SP-073,Griselinia littoralis\t\t             ,Griselinia littoralis,case_space,high,N,11,plan|stocktake (8 files),,griselinia littoralis
+SP-073,Griselinia littoralis ,Griselinia littoralis,case_space,high,N,8,seedlog (7 files),,griselinia littoralis
+SP-073,Griselina littoralis,Griselinia littoralis,typo,high,N,6,seedlog (5 files),,griselina littoralis
+SP-073,Broadleaf (Griselinia littorosa),Griselinia littoralis,common_name,medium,N,3,reference (1 files),Latin name in brackets decides the match,griselinia littorosa
+SP-073,Griselinia littoralis - 100 max,Griselinia littoralis,site_tagged,medium,N,1,order (1 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",griselinia littoralis
+SP-073,Griselinia\u00a0littoralis,Griselinia littoralis,case_space,high,N,1,allocation (1 files),,griselinia littoralis
+SP-073,Grisilina littoralis,Griselinia littoralis,typo,medium,N,1,seedlog (1 files),,grisilina littoralis
+SP-073,Grisilinea littoralis,Griselinia littoralis,typo,medium,N,1,seedlog (1 files),,grisilinea littoralis
+SP-074,Halocarpus bidwillii,Halocarpus bidwillii,exact,high,N,218,allocation|docxlist|forecast|history|potting|seedlog|stocktake (27 files),,halocarpus bidwillii
+SP-074,Halocarpus bidwillii ,Halocarpus bidwillii,case_space,high,N,57,allocation|forecast|masterlist|plan|potting|seedlog|stocktake (49 files),,halocarpus bidwillii
+SP-074,Halocarpus bidwillii\t\t  ,Halocarpus bidwillii,case_space,high,N,11,plan|stocktake (8 files),,halocarpus bidwillii
+SP-075,Helichrysum agregatum,Helichrysum aggregatum,typo,high,N,24,seedlog (5 files),,helichrysum agregatum
+SP-075,Helichrysum aggregart,Helichrysum aggregatum,typo,medium,N,6,seedlog (5 files),,helichrysum aggregart
+SP-075,Helichrysum aggregat,Helichrysum aggregatum,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",helichrysum aggregat
+SP-075,Helichrysum aggregatum,Helichrysum aggregatum,exact,high,N,1,stocktake (1 files),,helichrysum aggregatum
+SP-076,Helichrysum intermedium,Helichrysum intermedium,exact,high,N,20,allocation|seedlog|stocktake (16 files),,helichrysum intermedium
+SP-077,Helichrysum lanceolatum,Helichrysum lanceolatum,exact,high,N,223,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (61 files),,helichrysum lanceolatum
+SP-077,Helichrysum lanceolatum\t ,Helichrysum lanceolatum,case_space,high,N,11,plan|stocktake (8 files),,helichrysum lanceolatum
+SP-077,Helichrysum lanceolatum ,Helichrysum lanceolatum,case_space,high,N,8,seedlog (7 files),,helichrysum lanceolatum
+SP-078,Hoheria angustifolia,Hoheria angustifolia,exact,high,N,42,allocation|forecast|masterlist|potting|seedlog|stocktake (28 files),,hoheria angustifolia
+SP-078,Hoheria augustifolia,Hoheria angustifolia,typo,high,N,19,allocation (1 files),,hoheria augustifolia
+SP-078,Hoheria angustifolia ,Hoheria angustifolia,case_space,high,N,8,seedlog (7 files),,hoheria angustifolia
+SP-078,hoheria augustifolia,Hoheria angustifolia,typo,high,N,1,plan (1 files),,hoheria augustifolia
+SP-079,Hoheria glabrata,Hoheria glabrata,exact,high,N,295,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (73 files),,hoheria glabrata
+SP-079,Hoheria glabrata                                ,Hoheria glabrata,case_space,high,N,11,plan|stocktake (8 files),,hoheria glabrata
+SP-079,Hoheria glabrata ,Hoheria glabrata,case_space,high,N,8,seedlog (7 files),,hoheria glabrata
+SP-079,Mountain ribbonwood (Hoheria glabrata),Hoheria glabrata,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,hoheria glabrata
+SP-079,Mtn Ribbonwood,Hoheria glabrata,common_name,low,Y,1,seedlog (1 files),"Master Plant List calls Hoheria glabrata ""Mountain lacebark""; ""ribbonwood"" is also used for Plagianthus. Mapped to H. glabrata on the strength of ""mountain"".",mtn ribbonwood
+SP-080,Hoheria populnea,Hoheria populnea,exact,high,N,8,seedlog (7 files),,hoheria populnea
+SP-081,Hoheria sexstylosa,Hoheria sexstylosa,exact,high,N,215,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (52 files),,hoheria sexstylosa
+SP-081,hoheria sextylosa,Hoheria sexstylosa,typo,high,N,1,plan (1 files),,hoheria sextylosa
+SP-082,Juncus edgariae,Juncus edgariae,exact,high,N,237,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (66 files),,juncus edgariae
+SP-082,Juncus edgariae\t\t\t  ,Juncus edgariae,case_space,high,N,1,stocktake (1 files),,juncus edgariae
+SP-083,Kunzea ericoides,Kunzea ericoides,exact,high,Y,27,forecast|stocktake (14 files),"Contested C4: Which Kunzea does WRT grow as kanuka? Three lines or one? Plain ""kanuka"" has no mapping. Partner SP-084, SP-085.",kunzea ericoides
+SP-084,#Kanuka (Kunzea robusta),Kunzea robusta,maori_name,high,Y,1,reference (1 files),"Contested C4: Which Kunzea does WRT grow as kanuka? Three lines or one? Plain ""kanuka"" has no mapping. Partner SP-083, SP-085.; Latin name in brackets decides the match",kunzea robusta
+SP-084,Kanuka (Kunzea robusta),Kunzea robusta,maori_name,high,Y,1,reference (1 files),"Contested C4: Which Kunzea does WRT grow as kanuka? Three lines or one? Plain ""kanuka"" has no mapping. Partner SP-083, SP-085.; Latin name in brackets decides the match",kunzea robusta
+SP-085,#Kanuka (Kunzea serotina),Kunzea serotina,maori_name,high,Y,1,reference (1 files),"Contested C4: Which Kunzea does WRT grow as kanuka? Three lines or one? Plain ""kanuka"" has no mapping. Partner SP-083, SP-084.; Latin name in brackets decides the match",kunzea serotina
+SP-085,Kanuka (Kunzea serotina),Kunzea serotina,maori_name,high,Y,1,reference (1 files),"Contested C4: Which Kunzea does WRT grow as kanuka? Three lines or one? Plain ""kanuka"" has no mapping. Partner SP-083, SP-084.; Latin name in brackets decides the match",kunzea serotina
+SP-086,Leonohebe cupressoides,Leonohebe cupressoides,exact,high,Y,170,allocation|docxlist|forecast|history|potting|stocktake (22 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-155.,leonohebe cupressoides
+SP-086,Leonehebe cuppress,Leonohebe cupressoides,abbreviation,medium,Y,24,seedlog (6 files),"Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-155.; unique prefix match; import-only, not offered in dropdowns",leonehebe cuppress
+SP-086,Leonehebe cuppressoid,Leonohebe cupressoides,typo,medium,Y,18,seedlog (5 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-155.,leonehebe cuppressoid
+SP-086,Leonohebe cuppressoides,Leonohebe cupressoides,typo,high,Y,3,masterlist|plan (2 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-155.,leonohebe cuppressoides
+SP-086,Leonohebe\u00a0cupressoides,Leonohebe cupressoides,case_space,high,Y,1,allocation (1 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-155.,leonohebe cupressoides
+SP-087,Leptecophylla juniperina,Leptecophylla juniperina,exact,high,Y,201,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (43 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-060.",leptecophylla juniperina
+SP-087,Leptecophylla juniperina ,Leptecophylla juniperina,case_space,high,Y,8,seedlog (7 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-060.",leptecophylla juniperina
+SP-087,Leptecopylla juniperina,Leptecophylla juniperina,typo,medium,Y,8,seedlog (6 files),"Contested C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts. Partner SP-060.",leptecopylla juniperina
+SP-088,Leptospermum scoparium,Leptospermum scoparium,exact,high,N,237,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (72 files),,leptospermum scoparium
+SP-088,Leptospermum scop Manuka,Leptospermum scoparium,abbreviation,medium,N,40,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; common name appended",leptospermum scop
+SP-088,Leptospermum scoparium ,Leptospermum scoparium,case_space,high,N,34,seedlog (6 files),,leptospermum scoparium
+SP-088,Leptospermum scop ,Leptospermum scoparium,abbreviation,medium,N,28,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",leptospermum scop
+SP-088,Leptospermum scoparium\t           ,Leptospermum scoparium,case_space,high,N,11,plan|stocktake (8 files),,leptospermum scoparium
+SP-088,Leptospermum scop... Manuka,Leptospermum scoparium,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; common name appended",leptospermum scop
+SP-088,Manuka duff,Leptospermum scoparium,maori_name,medium,N,8,seedlog (6 files),qualifier word after the name (e.g. seedlings),manuka
+SP-088,#Manuka (Leptospermum scoparium),Leptospermum scoparium,maori_name,high,N,2,reference (1 files),Latin name in brackets decides the match,leptospermum scoparium
+SP-088,Manuka (Leptospermum scoparium),Leptospermum scoparium,maori_name,high,N,2,reference (1 files),Latin name in brackets decides the match,leptospermum scoparium
+SP-088,Lepto scoporim,Leptospermum scoparium,abbreviation,medium,N,1,seedlog (1 files),"unique prefix match; import-only, not offered in dropdowns",lepto scoporim
+SP-088,Leptospermun scoparium,Leptospermum scoparium,typo,high,N,1,seedlog (1 files),,leptospermun scoparium
+SP-089,Leucopogan fraseri,Leucopogan fraseri,exact,high,N,8,seedlog (6 files),,leucopogan fraseri
+SP-090,Libertia peregrians,Libertia peregrinans,typo,high,N,8,seedlog (6 files),,libertia peregrians
+SP-090,Libertia peregrinans,Libertia peregrinans,exact,high,N,8,seedlog (7 files),,libertia peregrinans
+SP-091,Lophomyrtus obcordata,Lophomyrtus obcordata,exact,high,N,230,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (68 files),,lophomyrtus obcordata
+SP-091,Lophomyrtus obcordata ,Lophomyrtus obcordata,case_space,high,N,8,seedlog (7 files),,lophomyrtus obcordata
+SP-091,Lophomyrtus obcordatum,Lophomyrtus obcordata,typo,medium,N,7,seedlog (5 files),,lophomyrtus obcordatum
+SP-091,Lophomyrtus obcordata\t\t                                            ,Lophomyrtus obcordata,case_space,high,N,1,stocktake (1 files),,lophomyrtus obcordata
+SP-091,Rohutu (Lophomyrtus obcordate),Lophomyrtus obcordata,maori_name,high,N,1,reference (1 files),Latin name in brackets decides the match,lophomyrtus obcordate
+SP-092,Lophozonia menziesii,Lophozonia menziesii,exact,high,N,219,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (56 files),,lophozonia menziesii
+SP-092,Lophozonia menziesii                        ,Lophozonia menziesii,case_space,high,N,1,stocktake (1 files),,lophozonia menziesii
+SP-092,Silver beech (Lophozonia menzeisii),Lophozonia menziesii,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,lophozonia menzeisii
+SP-093,Melicope simplex,Melicope simplex,exact,high,N,248,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (75 files),,melicope simplex
+SP-093,Melicope simplex\t\t\t\t                            ,Melicope simplex,case_space,high,N,1,stocktake (1 files),,melicope simplex
+SP-094,Melicytus alpinus,Melicytus alpinus,exact,high,N,339,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (74 files),,melicytus alpinus
+SP-094,Melicytus alpinus\t\t,Melicytus alpinus,case_space,high,N,11,plan|stocktake (8 files),,melicytus alpinus
+SP-094,Melicytus alpinus ,Melicytus alpinus,case_space,high,N,8,seedlog (7 files),,melicytus alpinus
+SP-094,Melicitus alpinus,Melicytus alpinus,typo,high,N,1,seedlog (1 files),,melicitus alpinus
+SP-094,Melicytis alpinus,Melicytus alpinus,typo,high,N,1,allocation (1 files),,melicytis alpinus
+SP-095,Melicytus ramiflorus,Melicytus ramiflorus,exact,high,N,276,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (75 files),,melicytus ramiflorus
+SP-095,Melicytus ramiflorus\t\t\t\t,Melicytus ramiflorus,case_space,high,N,11,plan|stocktake (8 files),,melicytus ramiflorus
+SP-096,Metrosideros excelsa,Metrosideros excelsa,exact,high,N,1,stocktake (1 files),,metrosideros excelsa
+SP-097,Metrosideros robusta - Northern rata,Metrosideros robusta,common_name,high,N,1,allocation (1 files),common name written after the Latin name,metrosideros robusta
+SP-098,Metrosideros umbellata,Metrosideros umbellata,exact,high,N,261,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (73 files),,metrosideros umbellata
+SP-098,Rata,Metrosideros umbellata,maori_name,low,Y,41,seedlog (12 files),"Plain ""rata"" mapped to Metrosideros umbellata (southern rata) as on the Master Plant List; Metrosideros robusta (northern rata) is now also on the Autumn 2026 list.",rata
+SP-098,Metrosideros umbellata       ,Metrosideros umbellata,case_space,high,N,11,plan|stocktake (8 files),,metrosideros umbellata
+SP-098,Metrosideros umbellata ,Metrosideros umbellata,case_space,high,N,8,seedlog (7 files),,metrosideros umbellata
+SP-098,Rata row 1&2,Metrosideros umbellata,site_tagged,low,Y,6,seedlog (5 files),"Bed or row tag after ""Rata""; same ambiguity as plain ""rata"".",rata row
+SP-098,Rata row 3&4,Metrosideros umbellata,site_tagged,low,Y,6,seedlog (5 files),"Bed or row tag after ""Rata""; same ambiguity as plain ""rata"".",rata row
+SP-098,Rata ([site tag withheld]),Metrosideros umbellata,site_tagged,low,Y,2,docxlist|stocktake (2 files),"Site-tagged rata (docx list row 98, stocktake). A normal rata line with a site tag, or a special order for that site? Tag belongs in a site field.; tag text withheld here; the full string is in 04a_species_variants.csv",rata
+SP-098,Metrosideros\u00a0umbellata,Metrosideros umbellata,case_space,high,N,1,allocation (1 files),,metrosideros umbellata
+SP-099,Muehlenbeckia astonii,Muehlenbeckia astonii,exact,high,N,19,seedlog|stocktake (17 files),,muehlenbeckia astonii
+SP-099,Muehlenbeckia ast,Muehlenbeckia astonii,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",muehlenbeckia ast
+SP-099,Muehlenbeckia astoni,Muehlenbeckia astonii,typo,high,N,1,seedlog (1 files),,muehlenbeckia astoni
+SP-100,Muehlenbeckia axillaris,Muehlenbeckia axillaris,exact,high,N,202,allocation|docxlist|forecast|history|plan|potting|seedlog|stocktake (55 files),,muehlenbeckia axillaris
+SP-100,Muhlenbeckia axillaris,Muehlenbeckia axillaris,typo,high,N,3,masterlist|plan (2 files),,muhlenbeckia axillaris
+SP-101,Muehlenbeckia coci?,Muehlenbeckia coci,case_space,medium,Y,8,seedlog (6 files),"Contested C11: Seed logs only (""Muehlenbeckia coci?""); matches no species. Which species is meant?; trailing ""?"" = recorder unsure",muehlenbeckia coci
+SP-102,Muehlenbeckia compacta,Muehlenbeckia compacta,exact,high,N,8,seedlog (6 files),,muehlenbeckia compacta
+SP-103,Muehlenbeckia complexa,Muehlenbeckia complexa,exact,high,N,222,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (61 files),,muehlenbeckia complexa
+SP-103,Muehlenbeckia complexa\t  ,Muehlenbeckia complexa,case_space,high,N,11,plan|stocktake (8 files),,muehlenbeckia complexa
+SP-103,Muehlenbeckia complexa ,Muehlenbeckia complexa,case_space,high,N,8,seedlog (7 files),,muehlenbeckia complexa
+SP-103,Muehlenbeckia comple,Muehlenbeckia complexa,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",muehlenbeckia comple
+SP-104,Myrsine australis,Myrsine australis,exact,high,N,324,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (75 files),,myrsine australis
+SP-104,Myrsine australis\t\t\t\t,Myrsine australis,case_space,high,N,11,plan|stocktake (8 files),,myrsine australis
+SP-104,Mysine australis ,Myrsine australis,typo,high,N,8,seedlog (7 files),,mysine australis
+SP-104,Mysine australis,Myrsine australis,typo,high,N,3,history|stocktake (2 files),,mysine australis
+SP-105,Myrsine divaricata,Myrsine divaricata,exact,high,N,281,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (76 files),,myrsine divaricata
+SP-105,Myrsine divaricata\t\t,Myrsine divaricata,case_space,high,N,11,plan|stocktake (8 files),,myrsine divaricata
+SP-105,Myrsine divaricata ,Myrsine divaricata,case_space,high,N,8,seedlog (7 files),,myrsine divaricata
+SP-105,Myrsine divericata,Myrsine divaricata,typo,high,N,6,seedlog (5 files),,myrsine divericata
+SP-105,Weeping mapou (Myrsine divaricate),Myrsine divaricata,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,myrsine divaricate
+SP-106,Myrsine nummularifolia ,Myrsine nummulariifolia,typo,high,N,8,seedlog (7 files),,myrsine nummularifolia
+SP-106,Myrsine nummulariif,Myrsine nummulariifolia,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",myrsine nummulariif
+SP-106,Myrsine nummulariifolia,Myrsine nummulariifolia,exact,high,N,8,seedlog (6 files),,myrsine nummulariifolia
+SP-107,Neomyrtus pedunculata,Neomyrtus pedunculata,exact,high,N,5,seedlog (5 files),,neomyrtus pedunculata
+SP-108,Olearia arborescens,Olearia arborescens,exact,high,N,245,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (68 files),,olearia arborescens
+SP-108,Olearia arborscens,Olearia arborescens,typo,high,N,54,seedlog (11 files),,olearia arborscens
+SP-108,Olearia arborescens              ,Olearia arborescens,case_space,high,N,10,plan (7 files),,olearia arborescens
+SP-108,Olearia arborescens ,Olearia arborescens,case_space,high,N,8,seedlog (7 files),,olearia arborescens
+SP-108,Olearia arborscens              ,Olearia arborescens,typo,high,N,1,stocktake (1 files),,olearia arborscens
+SP-109,Olearia avicenniifolia,Olearia avicenniifolia,exact,high,N,265,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (77 files),,olearia avicenniifolia
+SP-109,Olearia avicenniaefolia,Olearia avicenniifolia,typo,high,N,48,seedlog (6 files),,olearia avicenniaefolia
+SP-109,Olearia avicennifolia,Olearia avicenniifolia,typo,high,N,27,seedlog (9 files),,olearia avicennifolia
+SP-109,Olearia avicenniifolia\t\t,Olearia avicenniifolia,case_space,high,N,11,plan|stocktake (8 files),,olearia avicenniifolia
+SP-110,Olearia bullata,Olearia bullata,exact,high,N,466,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (75 files),,olearia bullata
+SP-110,Olearia bullata\t\t\t,Olearia bullata,case_space,high,N,11,plan|stocktake (8 files),,olearia bullata
+SP-110,Olearia bullata ,Olearia bullata,case_space,high,N,8,seedlog (7 files),,olearia bullata
+SP-110, Olearia bullata,Olearia bullata,case_space,high,N,3,seedlog (2 files),,olearia bullata
+SP-111,Olearia coreacea,Olearia coreacea,exact,high,N,1,allocation (1 files),,olearia coreacea
+SP-112,Olearia fimbriata,Olearia fimbriata,exact,high,N,390,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (75 files),,olearia fimbriata
+SP-112,Olearia frimbriata,Olearia fimbriata,typo,high,N,42,seedlog (6 files),,olearia frimbriata
+SP-112,Olearia fimbriata ,Olearia fimbriata,case_space,high,N,14,seedlog (12 files),,olearia fimbriata
+SP-112,Olearia fimbriata\t\t,Olearia fimbriata,case_space,high,N,11,plan|stocktake (8 files),,olearia fimbriata
+SP-112,Olearia fimbrata ,Olearia fimbriata,typo,high,N,6,seedlog (5 files),,olearia fimbrata
+SP-112,Olearia fimbriata. Heavy wood ,Olearia fimbriata,site_tagged,medium,N,5,seedlog (4 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",olearia fimbriata
+SP-112,Olearia fimbriata. Light wood,Olearia fimbriata,site_tagged,medium,N,5,seedlog (4 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",olearia fimbriata
+SP-112,Olearia fimbriata. Med wood,Olearia fimbriata,site_tagged,medium,N,5,seedlog (4 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",olearia fimbriata
+SP-112,#Pomahaka tree daisy (Olearia fimbriata),Olearia fimbriata,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,olearia fimbriata
+SP-112,Ole fim,Olearia fimbriata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole fim
+SP-112,Ole fim           \t\t270,Olearia fimbriata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole fim
+SP-112,Ole fim\t\t\t,Olearia fimbriata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole fim
+SP-112,Ole fim\t\t\t5\t\t75,Olearia fimbriata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole fim
+SP-113,Olearia fragrantissima,Olearia fragrantissima,exact,high,N,250,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (70 files),,olearia fragrantissima
+SP-113,Oleara fragrantissima,Olearia fragrantissima,typo,high,N,52,forecast|history|seedlog|stocktake (6 files),,oleara fragrantissima
+SP-113,Olearia fragrantissima\t,Olearia fragrantissima,case_space,high,N,11,plan|stocktake (8 files),,olearia fragrantissima
+SP-113,Olearia fragrantissima ,Olearia fragrantissima,case_space,high,N,8,seedlog (7 files),,olearia fragrantissima
+SP-113,#Fragrant tree daisy (Olearia fragrantissima),Olearia fragrantissima,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,olearia fragrantissima
+SP-114,Olearia hectorii,Olearia hectorii,exact,high,N,352,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (77 files),,olearia hectorii
+SP-114,Olearia hectorii\t\t\t,Olearia hectorii,case_space,high,N,11,plan|stocktake (8 files),,olearia hectorii
+SP-114,Olearia hectorii ,Olearia hectorii,case_space,high,N,8,seedlog (7 files),,olearia hectorii
+SP-114,#Hector’s tree daisy (Olearia hectorii),Olearia hectorii,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,olearia hectorii
+SP-114,Ole hec\t         \t200,Olearia hectorii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole hec
+SP-114,Ole hec\t\t,Olearia hectorii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole hec
+SP-114,Ole hec\t\t\t,Olearia hectorii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole hec
+SP-114,Ole hec\t\t\t3\t\t45,Olearia hectorii,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole hec
+SP-114,Olearia\u00a0hectorii,Olearia hectorii,case_space,high,N,1,allocation (1 files),,olearia hectorii
+SP-115,Olearia ilicifolia,Olearia ilicifolia,exact,high,N,28,seedlog (18 files),,olearia ilicifolia
+SP-116,Olearia lineata,Olearia lineata,exact,high,N,467,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (76 files),,olearia lineata
+SP-116,Olearia linata,Olearia lineata,typo,high,N,12,seedlog (5 files),,olearia linata
+SP-116,Olearia lineata\t\t\t,Olearia lineata,case_space,high,N,11,plan|stocktake (8 files),,olearia lineata
+SP-116,Olearia lineata ,Olearia lineata,case_space,high,N,8,seedlog (7 files),,olearia lineata
+SP-116,Olearia lineata ?,Olearia lineata,case_space,medium,N,6,seedlog (5 files),"trailing ""?"" = recorder unsure",olearia lineata
+SP-116, Olearia lineata,Olearia lineata,case_space,high,N,3,seedlog (2 files),,olearia lineata
+SP-116,#Olearia lineata,Olearia lineata,case_space,high,N,3,reference (1 files),"""#"" is the threatened-species marker in the Te Kakano list",olearia lineata
+SP-116,Ole lin\t\t\t,Olearia lineata,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole lin
+SP-116,Ole lin               \t\t500,Olearia lineata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole lin
+SP-116,Ole lin\t\t  \t,Olearia lineata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole lin
+SP-116,Ole lin\t\t\t\t,Olearia lineata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole lin
+SP-116,Olearia\u00a0lineata,Olearia lineata,case_space,high,N,1,allocation (1 files),,olearia lineata
+SP-117,Olearia nummularifolia,Olearia nummularifolia,exact,high,Y,114,forecast|history|plan|potting|seedlog|stocktake (24 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.,olearia nummularifolia
+SP-117,Olearia nummularifolia ,Olearia nummularifolia,case_space,high,Y,87,allocation|forecast|history|masterlist|plan|potting|seedlog|stocktake (44 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.,olearia nummularifolia
+SP-117,Olearia nummulariifolia,Olearia nummularifolia,typo,medium,Y,79,allocation|docxlist|forecast|seedlog|stocktake (17 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; this is the standard spelling; WRT's list uses the other form,olearia nummulariifolia
+SP-117,Olearia nummulariif,Olearia nummularifolia,abbreviation,low,Y,24,seedlog (6 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; prefix also fits SP-118,olearia nummulariif
+SP-117,Olearia nummularifolia                                                     ,Olearia nummularifolia,case_space,high,Y,11,plan|stocktake (8 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.,olearia nummularifolia
+SP-117,Olearia numm,Olearia nummularifolia,abbreviation,low,Y,8,seedlog (6 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; prefix also fits SP-118,olearia numm
+SP-117,Olearia num,Olearia nummularifolia,abbreviation,low,Y,6,seedlog (5 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; prefix also fits SP-118,olearia num
+SP-117,Olearia nummulariifolia ,Olearia nummularifolia,typo,medium,Y,1,history (1 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; this is the standard spelling; WRT's list uses the other form,olearia nummulariifolia
+SP-117,Olearia\u00a0nummulariifolia,Olearia nummularifolia,typo,medium,Y,1,allocation (1 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-118.; this is the standard spelling; WRT's list uses the other form,olearia nummulariifolia
+SP-118,Olearia num var cymbifolia ,Olearia nummulariifolia var cymbifolia,variety,medium,Y,8,seedlog (7 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-117.; variety written in a short or different form,olearia num var cymbifolia
+SP-118,Olearia nummulariifolia var cym,Olearia nummulariifolia var cymbifolia,variety,medium,Y,8,seedlog (6 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-117.; variety written in a short or different form,olearia nummulariifolia var cymbifolia
+SP-118,Olearia cymbifolia,Olearia nummulariifolia var cymbifolia,variety,medium,Y,6,seedlog (5 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-117.; variety written in a short or different form,olearia cymbifolia
+SP-118,Olearia num var cymbifolia,Olearia nummulariifolia var cymbifolia,variety,medium,Y,6,seedlog (5 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-117.; variety written in a short or different form,olearia num var cymbifolia
+SP-118,Olearia nummularifolia cym,Olearia nummulariifolia var cymbifolia,variety,medium,Y,4,seedlog (3 files),Contested C7: Is the cymbifolia variety its own line or folded into the parent? Partner SP-117.; variety written in a short or different form,olearia nummularifolia var cymbifolia
+SP-119,Olearia odorata,Olearia odorata,exact,high,N,482,allocation|docxlist|forecast|history|masterlist|order|plan|potting|reference|seedlog|stocktake (78 files),,olearia odorata
+SP-119,Olearia odorata ,Olearia odorata,case_space,high,N,58,seedlog (18 files),,olearia odorata
+SP-119,Olearia odorata\t\t\t,Olearia odorata,case_space,high,N,11,plan|stocktake (8 files),,olearia odorata
+SP-119,Ole odo            300,Olearia odorata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole odo
+SP-119,Ole odo\t\t ,Olearia odorata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole odo
+SP-119,Ole odo\t\t\t,Olearia odorata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole odo
+SP-119,Ole odo\t\t\t5\t\t75,Olearia odorata,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ole odo
+SP-120,Olearia polita,Olearia polita,exact,high,N,5,allocation|seedlog (4 files),,olearia polita
+SP-120,Olearis polita,Olearia polita,typo,high,N,5,seedlog (4 files),,olearis polita
+SP-121,Ozothamnus fulvida ,Ozothamnus fulvida,case_space,high,Y,8,seedlog (7 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-123.",ozothamnus fulvida
+SP-121,Ozothamnus fulvida,Ozothamnus fulvida,exact,high,Y,6,seedlog (5 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-123.",ozothamnus fulvida
+SP-122,Ozothamnus leptophyllus,Ozothamnus leptophyllus,exact,high,Y,192,allocation|docxlist|forecast|history|potting|stocktake (40 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-123, SP-121.",ozothamnus leptophyllus
+SP-122,Ozothamnus leptophyllus),Ozothamnus leptophyllus,case_space,high,Y,11,allocation|forecast|masterlist|plan (9 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-123, SP-121.; stray bracket or dash removed",ozothamnus leptophyllus
+SP-122,Ozothamnus leptophyllus (vauvilliersii),Ozothamnus leptophyllus,multi,low,Y,1,stocktake (1 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-123, SP-121.; Two taxa in one cell; filed under leptophyllus (its first name) only for lack of a rule.",ozothamnus leptophyllus
+SP-123,Ozothamnus vauvilliersii,Ozothamnus vauvilliersii,exact,high,Y,230,allocation|docxlist|forecast|history|plan|potting|seedlog|stocktake (60 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvilliersii
+SP-123,Ozothamnus vau,Ozothamnus vauvilliersii,abbreviation,medium,Y,22,seedlog (5 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.; unique prefix match; import-only, not offered in dropdowns",ozothamnus vau
+SP-123,Ozothamnus vauvilliersii  ),Ozothamnus vauvilliersii,case_space,high,Y,12,allocation|forecast|masterlist|plan|seedlog (10 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.; stray bracket or dash removed",ozothamnus vauvilliersii
+SP-123,Ozothamnus vauvilliersi\t,Ozothamnus vauvilliersii,typo,medium,Y,11,plan|stocktake (8 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvilliersi
+SP-123,Ozothamnus vauvilliersii ,Ozothamnus vauvilliersii,case_space,high,Y,8,seedlog (7 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvilliersii
+SP-123,Ozothamnus vauvillersii,Ozothamnus vauvilliersii,typo,medium,Y,2,seedlog (2 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvillersii
+SP-123,Ozothamnus vauvilliersii  ,Ozothamnus vauvilliersii,case_space,high,Y,1,masterlist (1 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvilliersii
+SP-123,Ozothamnus\u00a0vauvilliersii,Ozothamnus vauvilliersii,case_space,high,Y,1,allocation (1 files),"Contested C5: Three lines or one? Core rows carry a stray bracket; one string reads ""leptophyllus inc. vauvilliersii and fulvida"". Partner SP-122, SP-121.",ozothamnus vauvilliersii
+SP-124,Parsonia heterophylla,Parsonia heterophylla,exact,high,N,176,allocation|docxlist|forecast|history|masterlist|plan|potting|stocktake (30 files),,parsonia heterophylla
+SP-124,Parsonia heterphylla,Parsonia heterophylla,typo,high,N,7,seedlog (5 files),,parsonia heterphylla
+SP-124,Parsonsia heterophylla,Parsonia heterophylla,typo,high,N,7,seedlog (6 files),this is the standard spelling; WRT's list uses the other form,parsonsia heterophylla
+SP-125,Pennantia corymbosa,Pennantia corymbosa,exact,high,N,249,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (65 files),,pennantia corymbosa
+SP-125,Pennantia corymbosa ,Pennantia corymbosa,case_space,high,N,8,seedlog (7 files),,pennantia corymbosa
+SP-125,Pennantia corrumbosa,Pennantia corymbosa,typo,medium,N,4,plan (4 files),,pennantia corrumbosa
+SP-125,Pennantia corumbosa,Pennantia corymbosa,typo,high,N,4,plan|stocktake (4 files),,pennantia corumbosa
+SP-125,Pennantia corymbosa\t\t\t \t,Pennantia corymbosa,case_space,high,N,1,stocktake (1 files),,pennantia corymbosa
+SP-126,Phormium cookianum,Phormium cookianum,exact,high,N,250,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (69 files),,phormium cookianum
+SP-126,Phormium cookianu,Phormium cookianum,typo,high,N,24,seedlog (6 files),,phormium cookianu
+SP-126,Phormium cookianum \t,Phormium cookianum,case_space,high,N,11,plan|stocktake (8 files),,phormium cookianum
+SP-126,Phormium cookianum ,Phormium cookianum,case_space,high,N,8,seedlog (7 files),,phormium cookianum
+SP-127,Phormium tenax,Phormium tenax,exact,high,N,310,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (74 files),,phormium tenax
+SP-127,Phormum tenax\t\t\t,Phormium tenax,typo,high,N,9,plan|stocktake (6 files),,phormum tenax
+SP-127,Phormium tenax ,Phormium tenax,case_space,high,N,8,seedlog (7 files),,phormium tenax
+SP-127,Lowland flax (Phormium tenax),Phormium tenax,common_name,high,N,2,reference (1 files),Latin name in brackets decides the match,phormium tenax
+SP-127,Pho ten\t\t\t,Phormium tenax,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pho ten
+SP-127,Pho ten    ,Phormium tenax,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pho ten
+SP-127,Pho ten         480,Phormium tenax,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pho ten
+SP-127,Pho ten\t\t\t10\t\t300,Phormium tenax,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pho ten
+SP-127,Pho ten\t\t\t\t\t,Phormium tenax,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pho ten
+SP-127,Phorium tenax,Phormium tenax,typo,high,N,1,order (1 files),,phorium tenax
+SP-128,Phyllocladus alpinus,Phyllocladus alpinus,exact,high,N,264,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (69 files),,phyllocladus alpinus
+SP-128,Phyllocladus alpinus          \t\t\t            ,Phyllocladus alpinus,case_space,high,N,11,plan|stocktake (8 files),,phyllocladus alpinus
+SP-128,Phyllocladus alpinus ,Phyllocladus alpinus,case_space,high,N,8,seedlog (7 files),,phyllocladus alpinus
+SP-129,Phyllocladus trichomanoides,Phyllocladus trichomanoides,exact,high,N,1,allocation (1 files),,phyllocladus trichomanoides
+SP-130,Pimelea aridula,Pimelea aridula,exact,high,Y,6,seedlog (5 files),Contested C9: Is the oliga variety its own line or folded into the parent? Partner SP-131.,pimelea aridula
+SP-131,Pimealia aridula var oliga,Pimelea aridula var oliga,variety,medium,Y,8,seedlog (7 files),Contested C9: Is the oliga variety its own line or folded into the parent? Partner SP-130.; variety written in a short or different form,pimealia aridula var oliga
+SP-131,Pimelea aridula var oliga,Pimelea aridula var oliga,exact,high,Y,8,seedlog (6 files),Contested C9: Is the oliga variety its own line or folded into the parent? Partner SP-130.,pimelea aridula var oliga
+SP-132,Pittosporum eugenioides,Pittosporum eugenioides,exact,high,N,216,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (57 files),,pittosporum eugenioides
+SP-132,Pittosporum eug,Pittosporum eugenioides,abbreviation,medium,N,64,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",pittosporum eug
+SP-132,Pittosporum eugenoides,Pittosporum eugenioides,typo,high,N,13,seedlog (5 files),,pittosporum eugenoides
+SP-132,Pittosporum eugenioides\t  ,Pittosporum eugenioides,case_space,high,N,11,plan|stocktake (8 files),,pittosporum eugenioides
+SP-132,Pittosporum eugenioides ,Pittosporum eugenioides,case_space,high,N,8,seedlog (7 files),,pittosporum eugenioides
+SP-132,Pittosporum eugeniodes,Pittosporum eugenioides,typo,high,N,6,plan|seedlog (6 files),,pittosporum eugeniodes
+SP-132,Pittosporum eugeniodies,Pittosporum eugenioides,typo,high,N,2,seedlog (2 files),,pittosporum eugeniodies
+SP-132,Pitto eugen,Pittosporum eugenioides,abbreviation,medium,N,1,seedlog (1 files),"unique prefix match; import-only, not offered in dropdowns",pitto eugen
+SP-133,Pittosporum patulum,Pittosporum patulum,exact,high,N,7,stocktake (4 files),,pittosporum patulum
+SP-134,Pittosporum tenuifolium,Pittosporum tenuifolium,exact,high,N,226,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (66 files),,pittosporum tenuifolium
+SP-134,Pittosporum tennufolium,Pittosporum tenuifolium,typo,high,N,103,order|seedlog (7 files),,pittosporum tennufolium
+SP-134,Pittosporum tenn,Pittosporum tenuifolium,abbreviation,medium,N,24,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",pittosporum tenn
+SP-134,Pittosporum tenuifol,Pittosporum tenuifolium,abbreviation,medium,N,16,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns",pittosporum tenuifol
+SP-134,Pittosporum tennufolium    ,Pittosporum tenuifolium,typo,high,N,11,plan|stocktake (8 files),,pittosporum tennufolium
+SP-134,Pittosporum tenuifolium ,Pittosporum tenuifolium,case_space,high,N,8,seedlog (7 files),,pittosporum tenuifolium
+SP-134,Kohuhu (Pittosporum tenuifolium),Pittosporum tenuifolium,maori_name,high,N,3,reference (1 files),Latin name in brackets decides the match,pittosporum tenuifolium
+SP-134,Pit ten\t\t\t,Pittosporum tenuifolium,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",pit ten
+SP-135,Plagianthus regius,Plagianthus regius,exact,high,N,195,allocation|docxlist|forecast|history|order|potting|seedlog (30 files),,plagianthus regius
+SP-135,Plagianthus \u00a0regius,Plagianthus regius,case_space,high,N,72,allocation|forecast|masterlist|plan|potting|seedlog|stocktake (48 files),,plagianthus regius
+SP-135,Plagianthus\u00a0regius,Plagianthus regius,case_space,high,N,58,allocation|forecast|potting|stocktake (13 files),,plagianthus regius
+SP-135,Plagianthus regius\t\t,Plagianthus regius,case_space,high,N,11,plan|stocktake (8 files),,plagianthus regius
+SP-135,Plag reg,Plagianthus regius,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",plag reg
+SP-135,Plag reg\t\t\t,Plagianthus regius,abbreviation,medium,N,2,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",plag reg
+SP-135,Lowland ribbonwood (Plagianthus regius),Plagianthus regius,common_name,high,N,1,reference (1 files),Latin name in brackets decides the match,plagianthus regius
+SP-135,Plag reg\t        \t450,Plagianthus regius,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",plag reg
+SP-135,Plag reg\t\t\t5\t\t150,Plagianthus regius,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",plag reg
+SP-136,Poa cita,Poa cita,exact,high,N,302,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (71 files),,poa cita
+SP-136,Poa cita\t\t                            ,Poa cita,case_space,high,N,11,plan|stocktake (8 files),,poa cita
+SP-136,Poa cita ,Poa cita,case_space,high,N,8,seedlog (7 files),,poa cita
+SP-136,Poa cita plants,Poa cita,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",poa cita
+SP-137,Poa colensoi,Poa colensoi,exact,high,N,259,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (69 files),,poa colensoi
+SP-137,Poa colensoi\t\t\t,Poa colensoi,case_space,high,N,11,plan|stocktake (8 files),,poa colensoi
+SP-138,Podocarpus laetus,Podocarpus laetus,exact,high,N,309,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (74 files),,podocarpus laetus
+SP-138,Podocarpus laetus                          ,Podocarpus laetus,case_space,high,N,11,plan|stocktake (8 files),,podocarpus laetus
+SP-138,Podocarpus laetus ,Podocarpus laetus,case_space,high,N,8,seedlog (7 files),,podocarpus laetus
+SP-138,Mountain totara (Podocarpus laetus),Podocarpus laetus,common_name,low,Y,2,reference (1 files),"Master Plant List gives ""Halls Totara"" to P. laetus and ""Mountain Totara"" to P. nivalis; the bracket says laetus.",podocarpus laetus
+SP-138,Podocarpus latus,Podocarpus laetus,typo,medium,N,1,stocktake (1 files),,podocarpus latus
+SP-139,Podocarpus nivalis,Podocarpus nivalis,exact,high,N,151,allocation|docxlist|forecast|history|plan|potting|seedlog|stocktake (30 files),,podocarpus nivalis
+SP-139,Podocarpus nivalis ,Podocarpus nivalis,case_space,high,N,84,allocation|forecast|history|masterlist|plan|seedlog|stocktake (42 files),,podocarpus nivalis
+SP-139,Podocarpus nivalis               ,Podocarpus nivalis,case_space,high,N,11,plan|stocktake (8 files),,podocarpus nivalis
+SP-139,Podocarpus Nivalis Mtn Totara ,Podocarpus nivalis,common_name,high,N,8,seedlog (7 files),common name written after the Latin name,podocarpus nivalis
+SP-140,Podocarpus totara,Podocarpus totara,exact,high,N,183,allocation|docxlist|forecast|history|masterlist|plan|potting|stocktake (34 files),,podocarpus totara
+SP-140,Totara,Podocarpus totara,maori_name,medium,Y,10,seedlog (6 files),"Plain ""totara"" could be Podocarpus totara or Halls totara (P. laetus); mapped to P. totara as the Master Plant List has it.",totara
+SP-140,Totara ,Podocarpus totara,maori_name,medium,Y,6,seedlog (5 files),"Plain ""totara"" could be Podocarpus totara or Halls totara (P. laetus); mapped to P. totara as the Master Plant List has it.",totara
+SP-140,Podocarpus\u00a0totara,Podocarpus totara,case_space,high,N,1,allocation (1 files),,podocarpus totara
+SP-141,Prumnopitys ferruginea,Prumnopitys ferruginea,exact,high,N,213,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (55 files),,prumnopitys ferruginea
+SP-141,Primnopitys ferruginea      ,Prumnopitys ferruginea,typo,high,N,10,plan (7 files),,primnopitys ferruginea
+SP-141,Prumnopitys ferruginea Miro,Prumnopitys ferruginea,common_name,high,N,8,seedlog (6 files),common name written after the Latin name,prumnopitys ferruginea
+SP-141,Prumnopitys ferrugunea,Prumnopitys ferruginea,typo,high,N,8,seedlog (7 files),,prumnopitys ferrugunea
+SP-141,Prumnopitys ferruginea ,Prumnopitys ferruginea,case_space,high,N,6,seedlog (5 files),,prumnopitys ferruginea
+SP-141,Primnopitys ferruginea                      \t,Prumnopitys ferruginea,typo,high,N,1,stocktake (1 files),,primnopitys ferruginea
+SP-141,Prumnopitys\u00a0ferruginea,Prumnopitys ferruginea,case_space,high,N,1,allocation (1 files),,prumnopitys ferruginea
+SP-142,Prumnopitys taxifolius,Prumnopitys taxifolius,exact,high,N,232,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (68 files),,prumnopitys taxifolius
+SP-142,Prumnopitys taxifolia seedlings,Prumnopitys taxifolius,site_tagged,medium,N,15,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",prumnopitys taxifolia
+SP-142,Primnopitys taxifolius          ,Prumnopitys taxifolius,typo,high,N,11,plan|stocktake (8 files),,primnopitys taxifolius
+SP-142,Podocarpustaxifolius (Matai),Prumnopitys taxifolius,old_genus,medium,N,8,seedlog (6 files),"Older Latin name (Podocarpus taxifolius) with ""Matai"" in brackets; matai is Prumnopitys taxifolius on the Master Plant List.",podocarpustaxifolius
+SP-142,Matai Podocarpus taxifolia,Prumnopitys taxifolius,maori_name,medium,N,6,seedlog (5 files),Latin name follows the common name,matai podocarpus taxifolia
+SP-142,Matai ex [redacted] ,Prumnopitys taxifolius,site_tagged,medium,N,6,seedlog (5 files),"""ex"" = provenance tag (withheld by Phase 1); tag belongs in a source field",matai
+SP-142,"Matai, ex [redacted] ",Prumnopitys taxifolius,site_tagged,medium,N,6,seedlog (5 files),"""ex"" = provenance tag (withheld by Phase 1); tag belongs in a source field",matai
+SP-142,Prumnopitys taxifolius Matai,Prumnopitys taxifolius,common_name,high,N,6,seedlog (5 files),common name written after the Latin name,prumnopitys taxifolius
+SP-142,Primnopitys taxi seedlings,Prumnopitys taxifolius,abbreviation,medium,N,4,seedlog (3 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",primnopitys taxi
+SP-142,Primnopitys taxifolius,Prumnopitys taxifolius,typo,high,N,4,seedlog (3 files),,primnopitys taxifolius
+SP-142,Prumnopitys taxifolius ,Prumnopitys taxifolius,case_space,high,N,2,seedlog (2 files),,prumnopitys taxifolius
+SP-142,Matai,Prumnopitys taxifolius,maori_name,medium,N,1,seedlog (1 files),,matai
+SP-142,Prumnopitys taxifolia,Prumnopitys taxifolius,typo,high,N,1,history (1 files),this is the standard spelling; WRT's list uses the other form,prumnopitys taxifolia
+SP-143,Pseudopanax arboreus,Pseudopanax arboreus,exact,high,N,229,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (69 files),,pseudopanax arboreus
+SP-143,Pseudopanax arboreus                         \t,Pseudopanax arboreus,case_space,high,N,1,stocktake (1 files),,pseudopanax arboreus
+SP-144,Pseudopanax arborscens,Pseudopanax arborscens,exact,high,Y,9,plan|seedlog (7 files),"Contested C10: Matches no list name: typo for Pseudopanax arboreus, a mix-up with Olearia arborescens, or its own line? Which species?",pseudopanax arborscens
+SP-144,pseudopanax  arborscens,Pseudopanax arborscens,case_space,high,Y,8,plan (6 files),"Contested C10: Matches no list name: typo for Pseudopanax arboreus, a mix-up with Olearia arborescens, or its own line? Which species?",pseudopanax arborscens
+SP-144,Pseudopanax  arborscens,Pseudopanax arborscens,case_space,high,Y,1,plan (1 files),"Contested C10: Matches no list name: typo for Pseudopanax arboreus, a mix-up with Olearia arborescens, or its own line? Which species?",pseudopanax arborscens
+SP-145,Pseudopanax colensoi,Pseudopanax colensoi,exact,high,N,259,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (82 files),,pseudopanax colensoi
+SP-145,Pseudopanax colensoi\t\t\t   \t\t,Pseudopanax colensoi,case_space,high,N,1,stocktake (1 files),,pseudopanax colensoi
+SP-146,Pseudopanax crassifolius,Pseudopanax crassifolius,exact,high,N,228,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (66 files),,pseudopanax crassifolius
+SP-146,Pseudopanax crass,Pseudopanax crassifolius,abbreviation,medium,N,67,seedlog (11 files),"unique prefix match; import-only, not offered in dropdowns",pseudopanax crass
+SP-146,Pseudopanax crass seedlings,Pseudopanax crassifolius,abbreviation,medium,N,16,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",pseudopanax crass
+SP-146,Pseudopanax crassifolius \t ,Pseudopanax crassifolius,case_space,high,N,11,plan|stocktake (8 files),,pseudopanax crassifolius
+SP-146,Lancewood duff,Pseudopanax crassifolius,common_name,medium,N,8,seedlog (6 files),qualifier word after the name (e.g. seedlings),lancewood
+SP-146,Pseudopanax crass duff,Pseudopanax crassifolius,abbreviation,medium,N,8,seedlog (6 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",pseudopanax crass
+SP-146,Pseudopanax crassifolius ,Pseudopanax crassifolius,case_space,high,N,8,seedlog (7 files),,pseudopanax crassifolius
+SP-146,Pseud Cras Lancewood,Pseudopanax crassifolius,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns; common name appended",pseud cras
+SP-146,Pseudopanax crass ,Pseudopanax crassifolius,abbreviation,medium,N,6,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",pseudopanax crass
+SP-146,Pseud crass duff   S174,Pseudopanax crassifolius,abbreviation,medium,N,3,seedlog (3 files),"unique prefix match; import-only, not offered in dropdowns; also carries a qualifier",pseud crass
+SP-146,Lancewood Psudopanax cras,Pseudopanax crassifolius,common_name,medium,N,1,seedlog (1 files),Latin name follows the common name,lancewood
+SP-147,Pseudopanax ferox,Pseudopanax ferox,exact,high,N,273,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (76 files),,pseudopanax ferox
+SP-147,Pseudopanax ferox              ,Pseudopanax ferox,case_space,high,N,11,plan|stocktake (8 files),,pseudopanax ferox
+SP-147,Pseudopanax ferox - 100 max,Pseudopanax ferox,site_tagged,medium,N,1,order (1 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",pseudopanax ferox
+SP-148,Pseudowintera colorata,Pseudowintera colorata,exact,high,N,214,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (55 files),,pseudowintera colorata
+SP-148,Psuedowintera colorata,Pseudowintera colorata,typo,high,N,9,seedlog (8 files),,psuedowintera colorata
+SP-148,Psuedowintera colorata\t              \t,Pseudowintera colorata,typo,high,N,1,stocktake (1 files),,psuedowintera colorata
+SP-149,Raukaua simplex,Raukaua simplex,exact,high,N,201,allocation|docxlist|forecast|history|plan|potting|seedlog|stocktake (51 files),,raukaua simplex
+SP-149,Rauakau simplex,Raukaua simplex,typo,medium,N,6,seedlog (5 files),,rauakau simplex
+SP-149,Rakaua simplex,Raukaua simplex,typo,medium,N,3,masterlist|plan (2 files),,rakaua simplex
+SP-149,Raukaua simplex                                 \t,Raukaua simplex,case_space,high,N,1,stocktake (1 files),,raukaua simplex
+SP-149,Raukaua\u00a0simplex,Raukaua simplex,case_space,high,N,1,allocation (1 files),,raukaua simplex
+SP-150,Scheflera digitata,Scheflera digitata,exact,high,N,222,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (64 files),,scheflera digitata
+SP-150,Schefflera digitata,Scheflera digitata,typo,high,N,13,seedlog (5 files),this is the standard spelling; WRT's list uses the other form,schefflera digitata
+SP-150,Scheflera digitata\t\t\t   \t,Scheflera digitata,case_space,high,N,1,stocktake (1 files),,scheflera digitata
+SP-150,Scheflera\u00a0digitata,Scheflera digitata,case_space,high,N,1,allocation (1 files),,scheflera digitata
+SP-151,Sophora longicarinata,Sophora longicarinata,exact,high,N,10,stocktake (9 files),,sophora longicarinata
+SP-152,Sophora microphylla,Sophora microphylla,exact,high,N,436,allocation|docxlist|forecast|history|masterlist|order|plan|potting|seedlog|stocktake (70 files),,sophora microphylla
+SP-152,Kowhai,Sophora microphylla,maori_name,medium,Y,50,seedlog (7 files),"Plain ""kowhai"" mapped to Sophora microphylla as on the Master Plant List; Sophora longicarinata is also kowhai and has its own ID.",kowhai
+SP-152,Sophora microphylla\t\t,Sophora microphylla,case_space,high,N,11,plan|stocktake (8 files),,sophora microphylla
+SP-152,Kowhai ([redacted]),Sophora microphylla,site_tagged,medium,Y,8,seedlog (6 files),"Kowhai with a provenance tag (withheld by Phase 1); as plain ""kowhai"", also ambiguous with Sophora longicarinata.",kowhai
+SP-152,Kowhai seedlings,Sophora microphylla,maori_name,medium,Y,8,seedlog (6 files),"As ""kowhai""; ""seedlings"" is a qualifier.",kowhai
+SP-152,Sophora microphylla ,Sophora microphylla,case_space,high,N,8,seedlog (7 files),,sophora microphylla
+SP-152,Sophora microphylla [redacted],Sophora microphylla,site_tagged,medium,N,8,seedlog (6 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",sophora microphylla
+SP-152,Kowhai (Sophora microphylla),Sophora microphylla,maori_name,high,N,4,reference (1 files),Latin name in brackets decides the match,sophora microphylla
+SP-152,Sop mic\t        \t475,Sophora microphylla,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",sop mic
+SP-152,Sop mic\t\t\t,Sophora microphylla,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",sop mic
+SP-152,Sop mic\t\t\t10\t\t150,Sophora microphylla,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",sop mic
+SP-152,Sop mic\t\t\t10\t\t300,Sophora microphylla,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",sop mic
+SP-152,Sophora\u00a0microphylla,Sophora microphylla,case_space,high,N,1,allocation (1 files),,sophora microphylla
+SP-153,Streblus heterophyllus,Streblus heterophyllus,exact,high,N,211,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (52 files),,streblus heterophyllus
+SP-153,Streblus heterophyllus ,Streblus heterophyllus,case_space,high,N,8,seedlog (7 files),,streblus heterophyllus
+SP-153,Strebalus heterophyllus,Streblus heterophyllus,typo,high,N,6,seedlog (4 files),,strebalus heterophyllus
+SP-153,Streblus het,Streblus heterophyllus,abbreviation,medium,N,5,seedlog (5 files),"unique prefix match; import-only, not offered in dropdowns",streblus het
+SP-153,Streblus heterphyllus,Streblus heterophyllus,typo,high,N,2,plan (2 files),,streblus heterphyllus
+SP-153,Streblus heterophyllus\t\t  \t,Streblus heterophyllus,case_space,high,N,1,stocktake (1 files),,streblus heterophyllus
+SP-153,Streblus\u00a0heterophyllus,Streblus heterophyllus,case_space,high,N,1,allocation (1 files),,streblus heterophyllus
+SP-154,Veronica biggarii,Veronica biggarii,exact,high,N,187,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (38 files),,veronica biggarii
+SP-154,Hebe biggarii,Veronica biggarii,old_genus,high,N,19,seedlog|stocktake (6 files),"genus ""Hebe"" is an older or alternative genus name",hebe biggarii
+SP-154,Veronica biggarii ,Veronica biggarii,case_space,high,N,8,seedlog (7 files),,veronica biggarii
+SP-154,Veronica\u00a0biggarii,Veronica biggarii,case_space,high,N,1,allocation (1 files),,veronica biggarii
+SP-155,Veronica cupressoides,Veronica cupressoides,exact,high,Y,242,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (69 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.,veronica cupressoides
+SP-155,Veronica cupressoidies,Veronica cupressoides,typo,high,Y,35,seedlog (6 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.,veronica cupressoidies
+SP-155,Veronica cupressoides\t,Veronica cupressoides,case_space,high,Y,11,plan|stocktake (8 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.,veronica cupressoides
+SP-155,Hebe cupressoides seedlings,Veronica cupressoides,old_genus,low,Y,8,seedlog (6 files),"Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.; qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field; name part also differs in spelling; old genus ""Hebe"" filed under the Veronica row by the genus rule; confirm when the pair is ruled on",hebe cupressoides
+SP-155,Veronica cupressoides ,Veronica cupressoides,case_space,high,Y,8,seedlog (7 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.,veronica cupressoides
+SP-155,Veronica cupressoidies seedling,Veronica cupressoides,site_tagged,medium,Y,8,seedlog (6 files),"Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.; qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",veronica cupressoidies
+SP-155,Veronica cuppressoides,Veronica cupressoides,typo,high,Y,1,allocation (1 files),Contested C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only. Partner SP-086.,veronica cuppressoides
+SP-156,Veronica hectorii,Veronica hectorii,exact,high,Y,194,allocation|docxlist|forecast|history|potting|seedlog|stocktake (25 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.,veronica hectorii
+SP-156,Veronica hectorii ,Veronica hectorii,case_space,high,Y,42,allocation|forecast|masterlist|plan|potting|seedlog|stocktake (36 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.,veronica hectorii
+SP-156,Hebe hectorii,Veronica hectorii,old_genus,high,Y,12,seedlog (5 files),"Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.; genus ""Hebe"" is an older or alternative genus name",hebe hectorii
+SP-156,Veronica hec,Veronica hectorii,abbreviation,low,Y,2,plan (2 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.; prefix also fits SP-157,veronica hec
+SP-156,Hebe hectorii ,Veronica hectorii,old_genus,high,Y,1,stocktake (1 files),"Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.; genus ""Hebe"" is an older or alternative genus name",hebe hectorii
+SP-156,Veronica hectorii                                                                     ,Veronica hectorii,case_space,high,Y,1,stocktake (1 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.,veronica hectorii
+SP-156,Veronica\u00a0hectorii,Veronica hectorii,case_space,high,Y,1,allocation (1 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-157.,veronica hectorii
+SP-157,Veronica hectorii v demissa,Veronica hectorii v demissa,exact,high,Y,3,seedlog (3 files),Contested C8: Is the demissa variety its own line or folded into the parent? Partner SP-156.,veronica hectorii var demissa
+SP-158,Veronica odora,Veronica odora,exact,high,N,350,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (73 files),,veronica odora
+SP-158,Hebe odora,Veronica odora,old_genus,high,N,33,seedlog|stocktake (7 files),"genus ""Hebe"" is an older or alternative genus name",hebe odora
+SP-158,Veronica odora                              ,Veronica odora,case_space,high,N,11,plan|stocktake (8 files),,veronica odora
+SP-158,Veronica odora ,Veronica odora,case_space,high,N,8,seedlog (7 files),,veronica odora
+SP-158,Veronica\u00a0odora,Veronica odora,case_space,high,N,1,allocation (1 files),,veronica odora
+SP-159,Veronica pauciramosa,Veronica pauciramosa,exact,high,N,8,seedlog (7 files),,veronica pauciramosa
+SP-159,Hebe pauciramosa,Veronica pauciramosa,old_genus,high,N,6,seedlog (5 files),"genus ""Hebe"" is an older or alternative genus name",hebe pauciramosa
+SP-159,Veronica paucemosa,Veronica pauciramosa,typo,medium,N,5,seedlog (4 files),,veronica paucemosa
+SP-160,Veronica pimeliodesv faucola,Veronica pimeliodesv faucola,exact,high,Y,20,seedlog (12 files),"Contested C12: Variety written as its own line with no parent line in any list. Own line, or a form of Veronica pimeleoides?",veronica pimeliodesv var faucicola
+SP-161,Veronica propinqua,Veronica propinqua,exact,high,N,195,allocation|docxlist|forecast|history|masterlist|plan|potting|stocktake (40 files),,veronica propinqua
+SP-161,Veronica propinqua ,Veronica propinqua,case_space,high,N,8,seedlog (7 files),,veronica propinqua
+SP-161,Hebe propinqua,Veronica propinqua,old_genus,high,N,7,seedlog|stocktake (6 files),"genus ""Hebe"" is an older or alternative genus name",hebe propinqua
+SP-161,Leonehebe propinqua,Veronica propinqua,old_genus,high,N,6,seedlog (5 files),"genus ""Leonehebe"" is an older or alternative genus name",leonehebe propinqua
+SP-161,Veronica\u00a0propinqua,Veronica propinqua,case_space,high,N,1,allocation (1 files),,veronica propinqua
+SP-162,Veronica rakaiensis,Veronica rakaiensis,exact,high,N,218,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (60 files),,veronica rakaiensis
+SP-162,Hebe rakaiensis,Veronica rakaiensis,old_genus,high,N,31,seedlog|stocktake (6 files),"genus ""Hebe"" is an older or alternative genus name",hebe rakaiensis
+SP-162,Veronica rakaiensis ,Veronica rakaiensis,case_space,high,N,8,seedlog (7 files),,veronica rakaiensis
+SP-162,Veronica rakaiensis                     \t\t,Veronica rakaiensis,case_space,high,N,1,stocktake (1 files),,veronica rakaiensis
+SP-162,Veronica\u00a0rakaiensis,Veronica rakaiensis,case_space,high,N,1,allocation (1 files),,veronica rakaiensis
+SP-163,Veronica salicifolia,Veronica salicifolia,exact,high,N,361,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (68 files),,veronica salicifolia
+SP-163,Hebe salicifolia,Veronica salicifolia,old_genus,high,N,79,seedlog|stocktake (6 files),"genus ""Hebe"" is an older or alternative genus name",hebe salicifolia
+SP-163,Veronica salicifolia                      \t\t\t      ,Veronica salicifolia,case_space,high,N,11,plan|stocktake (8 files),,veronica salicifolia
+SP-163,Veronica salicifolia ,Veronica salicifolia,case_space,high,N,8,seedlog (7 files),,veronica salicifolia
+SP-163, Veronica salicifolia,Veronica salicifolia,case_space,high,N,6,seedlog (5 files),,veronica salicifolia
+SP-163,Veronica salicifolia seedlings,Veronica salicifolia,site_tagged,medium,N,6,seedlog (4 files),"qualifier after the name (e.g. seedlings, duff, a cap or a wood grade); belongs in a batch field",veronica salicifolia
+SP-163,Koromiko (Hebe salicifolia),Veronica salicifolia,maori_name,high,N,4,reference (1 files),Latin name in brackets decides the match,hebe salicifolia
+SP-163,Hebe Salicifolia,Veronica salicifolia,old_genus,high,N,2,seedlog (1 files),"genus ""Hebe"" is an older or alternative genus name",hebe salicifolia
+SP-163,Ver sal\t\t\t,Veronica salicifolia,abbreviation,medium,N,1,forecast (1 files),"unique prefix match; import-only, not offered in dropdowns",ver sal
+SP-164,Weinmania racemosa,Weinmania racemosa,exact,high,N,218,allocation|docxlist|forecast|history|masterlist|plan|potting|seedlog|stocktake (57 files),,weinmania racemosa
+SP-164,Weinmannia racemosa,Weinmania racemosa,typo,high,N,15,seedlog (7 files),this is the standard spelling; WRT's list uses the other form,weinmannia racemosa
+SP-164,Weinmannia racemosa\t\t  \t,Weinmania racemosa,typo,high,N,1,stocktake (1 files),this is the standard spelling; WRT's list uses the other form,weinmannia racemosa
+,Ozothamnus,,unknown,low,N,58,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",ozothamnus
+,Carmichaelia,,unknown,low,N,44,seedlog (12 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",carmichaelia
+,Dracophyllum,,unknown,low,N,31,seedlog|stocktake (14 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",dracophyllum
+,Lophomyrtus,,unknown,low,N,26,seedlog (11 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",lophomyrtus
+,Fuchsia,,unknown,low,N,20,seedlog (11 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",fuchsia
+,Coprosma dumosa/tayloriae,,multi,low,Y,18,allocation|forecast|seedlog|stocktake (8 files),"Slash string in the forecast site sheets. Coprosma dumosa alone, or its own line? Not aliased to Coprosma dumosa (no cross-pair aliases).",coprosma dumosa tayloriae
+,Pimelea,,unknown,low,N,16,seedlog (13 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",pimelea
+,Parsonsia,,unknown,low,N,14,plan|seedlog|stocktake (14 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",parsonsia
+,Carmichaelia [redacted],,unknown,low,Y,12,seedlog (5 files),"Genus plus a descriptor or tag (tag redacted in Phase 1); no species named. No ID. Which species is meant, or leave unmapped?",carmichaelia east
+,Charmichaelia,,unknown,low,N,12,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",charmichaelia
+,Eleocarpus,,unknown,low,N,12,plan|seedlog|stocktake (12 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",eleocarpus
+,Ozothamnus ,,unknown,low,N,12,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",ozothamnus
+,Acaena,,unknown,low,N,8,seedlog (7 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",acaena
+,Acaena ? Bidibid,,unknown,low,N,8,seedlog (6 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",acaena bidibid
+,Carex sp unknown,,unknown,low,N,8,seedlog (6 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",carex sp unknown
+,Carex unknown ,,unknown,low,N,8,seedlog (7 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",carex unknown
+,Dracophyllum ,,unknown,low,N,8,seedlog (7 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",dracophyllum
+,Helichrysum seedlings,,unknown,low,N,8,seedlog (6 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",helichrysum
+,Hoheria ,,unknown,low,N,8,seedlog (6 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Olearia ,,unknown,low,N,8,seedlog (6 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",olearia
+,hebe [redacted] [redacted],,unknown,low,N,8,seedlog (6 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.",hebe [redacted] [redacted]
+,Dracophyllum sp.,,unknown,low,N,7,stocktake (7 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",dracophyllum
+,Gaultheria sp.,,unknown,low,N,7,stocktake (7 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",gaultheria
+,Weeping Broom,,unknown,low,Y,7,seedlog (5 files),"Common name only; species not stated in the source. No ID. Which species is meant, or leave unmapped?",weeping broom
+,Apple tree roadside,,unknown,low,N,6,seedlog (5 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.",apple tree roadside
+,"Azealea,Benio.Rhodo Mavora",,unknown,low,N,6,seedlog (5 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.","azealea,benio.rhodo mavora"
+,Carmichaelia light gree,,unknown,low,Y,6,seedlog (5 files),"Genus plus a descriptor; no species named. No ID. Which species is meant, or leave unmapped?",carmichaelia light
+,Coprosma sp,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",coprosma
+,Hebe ?,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hebe
+,Hebe Emerald Green,,unknown,low,N,6,seedlog (5 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.",hebe emerald green
+,Hoheria,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Hoheria ?,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Matai  MIRO?,,multi,low,Y,6,seedlog (5 files),More than one taxon in one cell. No single ID. Which stock line was meant?,matai miro
+,Melicytus sp,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",melicytus
+,Muehlenbeckia ?,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",muehlenbeckia
+,Olearia X,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",olearia
+,Olearia odorata ? or fim,,multi,low,Y,6,seedlog (4 files),More than one taxon in one cell. No single ID. Which stock line was meant?,olearia odorata or fim
+,Pimealea ?,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",pimealea
+,Veronica?,,unknown,low,N,6,seedlog (5 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",veronica
+,"Whipcord hebe""[redacted] [redacted]""",,unknown,low,N,6,seedlog (5 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.","whipcord hebe""[redacted] [redacted]"""
+,Olearia fimbriata / virgata?,,multi,low,Y,5,seedlog (4 files),More than one taxon in one cell. No single ID. Which stock line was meant?,olearia fimbriata virgata
+,Coprosma sp.,,unknown,low,N,4,stocktake (2 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",coprosma
+,Carex (new),,unknown,low,N,2,potting (2 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",carex
+,Carmichelia,,unknown,low,N,1,seedlog (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",carmichelia
+,Drachphyllum,,unknown,low,N,1,seedlog (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",drachphyllum
+,Gaultheria,,unknown,low,N,1,stocktake (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",gaultheria
+,Gravilla,,unknown,low,N,1,seedlog (1 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.",gravilla
+,Helichrysum,,unknown,low,N,1,seedlog (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",helichrysum
+,Helichrysum aggregatum/lanceolatum,,multi,low,Y,1,seedlog (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,helichrysum aggregatum lanceolatum
+,Hoheria            \t\t170,,unknown,low,N,1,forecast (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Hoheria\t\t\t,,unknown,low,N,1,forecast (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Hoheria\t\t\t5\t\t75,,unknown,low,N,1,forecast (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Hoheria\t\t\t?\t\t?,,unknown,low,N,1,forecast (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",hoheria
+,Olearia odorata & Mtn Ribbonwood,,multi,low,Y,1,seedlog (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,olearia odorata mtn ribbonwood
+,Olearia sp,,unknown,low,N,1,stocktake (1 files),"Genus only. Stays unmapped by rule (shows ""not on Master"") unless WRT says which species it stands for.",olearia
+,Ozothamnus leptophyllus inc. vauvilliersii and fulvida,,multi,low,Y,1,stocktake (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,ozothamnus leptophyllus inc vauvilliersii and fulvida
+,Pseudopanex ferox (or crassifolia),,multi,low,Y,1,allocation (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,pseudopanex ferox or crassifolia
+,Rhodo?,,unknown,low,N,1,seedlog (1 files),"Ornamental, cultivar or non-native line. No ID. WRT to say whether such lines belong on the Species list at all.",rhodo?
+,Tauhinau/cottonwood (Ozothamnus vauvilliersii/fulvida) minor,,multi,low,Y,1,reference (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,tauhinau cottonwood minor ozothamnus vauvilliersii/fulvida
+,Tauhinau/cottonwood Ozothamnus vauvilliersii,,multi,low,Y,1,reference (1 files),More than one taxon in one cell. No single ID. Which stock line was meant?,tauhinau cottonwood ozothamnus vauvilliersii

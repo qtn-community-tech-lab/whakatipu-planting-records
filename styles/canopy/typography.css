@@ -1,0 +1,41 @@
+:root{
+  --font-sans:'Plus Jakarta Sans',ui-sans-serif,system-ui,sans-serif;
+  --font-mono:ui-monospace,Menlo,monospace;
+  --weight-regular:400; --weight-medium:500; --weight-semibold:600; --weight-bold:700; --weight-extrabold:800;
+  --tracking-display:-.035em; --tracking-tight:-.03em; --tracking-snug:-.02em; --tracking-brand:-.01em;
+
+  /* Type roles (font shorthand) */
+  --type-display:800 46px/1 var(--font-sans);        /* record title (species) — tracking-display */
+  --type-h1:800 42px/1.1 var(--font-sans);           /* page H1 — tracking-tight, brand green */
+  --type-h1-compact:800 38px/1.1 var(--font-sans);   /* page H1 on dense screens */
+  --type-sheet-title:800 34px/1 var(--font-sans);    /* side sheet title, banner headline */
+  --type-dialog-title:800 30px/1.1 var(--font-sans);
+  --type-modal-title:800 24px/1.1 var(--font-sans);  /* tracking-snug */
+  --type-stat-xl:800 40px/1 var(--font-sans);
+  --type-stat-lg:800 34px/1 var(--font-sans);
+  --type-stat:800 30px/1 var(--font-sans);
+  --type-stat-md:800 26px/1 var(--font-sans);
+  --type-stat-sm:800 22px/1 var(--font-sans);
+  --type-section:800 19px/1 var(--font-sans);        /* form section heading */
+  --type-card-title:700 17px/1 var(--font-sans);
+  --type-card-title-sm:700 15px/1 var(--font-sans);
+  --type-row-title:700 15px/1.2 var(--font-sans);
+  --type-body-strong:600 14px/1.4 var(--font-sans);
+  --type-body:500 13.5px/1.45 var(--font-sans);
+  --type-cell:600 14px/1 var(--font-sans);
+  --type-cell-compact:600 13.5px/1 var(--font-sans);
+  --type-eyebrow:600 13.5px/1 var(--font-sans);      /* sits above H1, green-600 */
+  --type-link:600 13px/1 var(--font-sans);
+  --type-small:500 12.5px/1.4 var(--font-sans);
+  --type-meta:500 12px/1.4 var(--font-sans);
+  --type-label:600 12px/1 var(--font-sans);          /* form field label */
+  --type-table-head:600 11.5px/1.2 var(--font-sans);
+  --type-badge:700 11.5px/1.15 var(--font-sans);
+  --type-latin:italic 400 11.5px/1 var(--font-sans); /* botanical name under common name */
+  --type-button:700 14px/1 var(--font-sans);
+  --type-button-lg:700 15px/1 var(--font-sans);
+  --type-nav:500 14.5px/1 var(--font-sans);
+  --type-nav-active:600 14.5px/1 var(--font-sans);
+  --type-code:600 11px/1 var(--font-mono);           /* seed source / IDs */
+  --type-annotation:500 13px/1 var(--font-mono);
+}

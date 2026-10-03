@@ -1,0 +1,2308 @@
+{
+ "batch_id": "B02_forecast_keystone_versions",
+ "files": [
+  {
+   "path": "1. Forecasting/Archive to sort through/Aug 2025 Keystone Sites Plants Summary.xlsx",
+   "purpose_guess": "Three-year-ahead planting forecast for WRT keystone sites (roll-up of per-site historic planting and planned quantities by species and season) with community-group and summary sheets, dated Aug 2025.",
+   "workflow_stage": "forecast",
+   "years_covered": "2015–2026 (history 2015–2025; forecast Autumn 2024–Spring 2026)",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "SUMMARY",
+     "role": "summary",
+     "header_row": 7,
+     "data_rows": "8-104",
+     "grain": "one species with forecast totals for all groups, per season, plus annual totals and % of total",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C–H",
+       "header": "Autumn 2024 … Spring 2026",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 1,
+       "examples": [
+        "#REF!"
+       ],
+       "notes": "=KEYSTONE SITES + COMMUNITY GROUPS + SCHOOLS for each season; every cached value is #REF!"
+      },
+      {
+       "letter": "J–L",
+       "header": "2024.0 / 2025.0 / 2026.0",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 1,
+       "examples": [
+        "#REF!"
+       ],
+       "notes": "annual totals =C+D, E+F, G+H"
+      },
+      {
+       "letter": "N–P",
+       "header": "2024 % / 2025 % / 2026 %",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 1,
+       "examples": [
+        "#REF!"
+       ],
+       "notes": "share of annual total =J/$J$5"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C7:H104",
+       "pattern": "='KEYSTONE SITES'!C8+'COMMUNITY GROUPS'!C8+SCHOOLS!C8",
+       "refs_other_sheets": [
+        "KEYSTONE SITES!C:H",
+        "COMMUNITY GROUPS!C:H",
+        "SCHOOLS!C:H (sheet does not exist)"
+       ]
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Whole sheet is #REF!: formulas refer to a SCHOOLS sheet that is not in the workbook",
+       "evidence": "Aug 2025 file › SUMMARY › C5:P104 (cached #REF!)",
+       "severity": "high"
+      },
+      {
+       "issue": "Row alignment is positional: SUMMARY row n adds KEYSTONE SITES row n+1, so species must stay in identical order",
+       "evidence": "SUMMARY › C8 (='KEYSTONE SITES'!C8 pattern)",
+       "severity": "med"
+      },
+      {
+       "issue": "Title says 2024-2026 but this is a view, not a plan; grand totals unusable",
+       "evidence": "SUMMARY › A1, row 5",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "KEYSTONE SITES",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "7-104",
+     "grain": "one species with its planned planting quantity for keystone sites in each of six seasons (Autumn 2024 to Spring 2026)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C–H",
+       "header": "Autumn 2024 … Spring 2026",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 38,
+       "examples": [
+        "55",
+        "42",
+        "213",
+        "0"
+       ],
+       "notes": "=link to '3 Year Plant Look Ahead (Keysto'!AY:BD; plain numbers, no contingency shown"
+      },
+      {
+       "letter": "J–K",
+       "header": "(no header)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "second copy of NO. and species name, apparently for printing or lookup"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C4:H104",
+       "pattern": "='3 Year Plant Look Ahead (Keysto'!AY4",
+       "refs_other_sheets": [
+        "3 Year Plant Look Ahead (Keysto'!AY:BD"
+       ]
+      },
+      {
+       "range": "C5:H5",
+       "pattern": "=sum(C7:C105)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Total row (5) sums rows 7-105 but the source total (3-year sheet AY5) sums only to row 103, so totals differ: 5285 v 5280 for Autumn 2024",
+       "evidence": "Aug 2025 file › KEYSTONE SITES › C5 v 3 Year Plant Look Ahead › AY5",
+       "severity": "med"
+      },
+      {
+       "issue": "GOAL row (4) is a link to a hard-typed goal total, not to the species rows; goals 2650/4950/5650... do not equal totals 5285/5500/5750...",
+       "evidence": "KEYSTONE SITES › C4:H5",
+       "severity": "med"
+      },
+      {
+       "issue": "Species name variants: 'Carex Maorica' (capital M), 'Oleara fragrantissima', 'Scheflera digitata', 'Parsonia heterophylla', 'Weinmania racemosa', 'Prumnopitys taxifolius'; trailing spaces on 'Olearia nummularifolia ' and 'Podocarpus nivalis '",
+       "evidence": "KEYSTONE SITES › B11, B66, B69, B84, B94, B104",
+       "severity": "med"
+      },
+      {
+       "issue": "Row 11 (Carex Maorica) has no numbers at all while neighbouring rows have 0",
+       "evidence": "KEYSTONE SITES › C11:H11",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "COMMUNITY GROUPS",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "7-101",
+     "grain": "one species with planned quantity for community-group planting per season (hard-typed)",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C–H",
+       "header": "Autumn 2024 … Spring 2026",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 99,
+       "distinct": 18,
+       "examples": [
+        "10",
+        "25",
+        "5",
+        "0"
+       ],
+       "notes": "typed values; TOTAL row 5 = sum(C7:C101); GOAL row blank"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:H5",
+       "pattern": "=sum(C7:C101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 96,
+     "quality_issues": [
+      {
+       "issue": "Species list differs from KEYSTONE SITES: 96 rows, no 'Carex Maorica', 'Chionochloa conspicua' or 'Coprosma brunea'; names lack trailing spaces so exact matching fails",
+       "evidence": "COMMUNITY GROUPS › B7:B101 v KEYSTONE SITES › B7:B104",
+       "severity": "med"
+      },
+      {
+       "issue": "Because rows are added by position in SUMMARY (row n to n+1), a shorter list here misaligns every row after the first missing species",
+       "evidence": "SUMMARY › C8 pattern; COMMUNITY GROUPS row 11 onwards",
+       "severity": "high"
+      },
+      {
+       "issue": "Title cell reads 'Keystone Sites Lookahead' in column B on a community-groups sheet (copied header)",
+       "evidence": "COMMUNITY GROUPS › B3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "3 Year Plant Look Ahead (Keysto",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "4-104",
+     "grain": "one species x site x season planned planting quantity, laid out as six season blocks side by side, with GOAL (row 4) and TOTAL (row 5) rows at the top",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "D–I",
+       "header": "(block 1) per-site columns: Whitechapel, Slope Hill Rd, Lake Hayes Pav, Jardine Park, Peace Park, Feehly Hill",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 24,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "185",
+        "30",
+        "535"
+       ],
+       "notes": "one column per site for the first season; Bush Creek absent from this block only; links to the site sheets' forecast columns"
+      },
+      {
+       "letter": "K–Q",
+       "header": "(block 2) 7 site columns",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 24,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "30",
+        "1000"
+       ],
+       "notes": "Whitechapel, Slope Hill, Bush Creek, Peace Park, Feehly Hill, Jardine Park, Lake Hayes Pav"
+      },
+      {
+       "letter": "S–Y, AA–AG, AI–AO, AQ–AW",
+       "header": "(blocks 3 to 6) 7 site columns each",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 24,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "2000"
+       ],
+       "notes": "same seven sites per season; column order differs from block 1"
+      },
+      {
+       "letter": "AY–BD",
+       "header": "Autumn 2024 … Spring 2026",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 38,
+       "examples": [
+        "55",
+        "60",
+        "213"
+       ],
+       "notes": "=SUM of each season's block (D:I, K:Q, S:Y, AA:AG, AI:AO, AQ:AW); feeds KEYSTONE SITES"
+      },
+      {
+       "letter": "BF",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 95,
+       "distinct": 40,
+       "examples": [
+        "110",
+        "102",
+        "423"
+       ],
+       "notes": "=sum(AY:AZ) per species; meaning unclear (2024 autumn plus spring?)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "D7:AW104",
+       "pattern": "='Whitechapel (15)'!$AC5 (and equivalents for each site/season)",
+       "refs_other_sheets": [
+        "Whitechapel (15)!AC:AH",
+        "Slope Hill Rd (11)!AD:AI",
+        "Lake Hayes Pavilion (9G)!K:P",
+        "JARDINE PK!R:W",
+        "Peace Park (21)!X:AD",
+        "Feehly Hill (12A)!T:Z",
+        "Bush Creek (13C)!P:V"
+       ]
+      },
+      {
+       "range": "AY4:BD104",
+       "pattern": "=SUM(D4:I4) etc",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "D5:AW5",
+       "pattern": "=sum(D7:D104)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Season labels in row 2 are wrong: block headers say Spring 2025, Autumn 2026 ... Spring 2028 but the summary columns AY:BD (which sum those blocks) are labelled Autumn 2024 ... Spring 2026. The older file has correct labels in caps",
+       "evidence": "Aug 2025 file › 3 Year Plant Look Ahead › D2,K2,S2,AA2,AI2,AQ2 v AY3:BD3",
+       "severity": "high"
+      },
+      {
+       "issue": "Links are positional row-for-row with a fixed offset (site row = this row minus 2). Where a site sheet has a different species order the wrong species is pulled: Feehly Hill 24 rows mismatched, Lake Hayes Pavilion 2 (Prumnopitys swapped), Jardine Park 2 (trailing-space names), Slope Hill 1 (row 18 Chionochloa rigida reads a conspicua row)",
+       "evidence": "3 Year Plant Look Ahead › I7:I104, F83:F84, E18 against site sheets",
+       "severity": "high"
+      },
+      {
+       "issue": "AY5:BD5 totals sum rows 7-103, omitting the last species (row 104, Weinmania racemosa), while site totals in row 5 sum to row 104",
+       "evidence": "3 Year Plant Look Ahead › AY5 v D5",
+       "severity": "med"
+      },
+      {
+       "issue": "Block 1 has six site columns and blocks 2 to 6 have seven; the column order differs between blocks 1 and 2 (Jardine Park moves from G to P)",
+       "evidence": "3 Year Plant Look Ahead › D3:I3 v K3:Q3",
+       "severity": "med"
+      },
+      {
+       "issue": "GOAL row 4 holds hard-typed numbers, one cell holds '?' for Jardine Park (G4); goals are not derived from species rows",
+       "evidence": "3 Year Plant Look Ahead › D4:AW4, G4",
+       "severity": "med"
+      },
+      {
+       "issue": "Per-site forecast mostly empty: Whitechapel 24% non-blank, Slope Hill 10%, Peace Park 20%, Feehly Hill 8% of species rows; site plans are round-number allocations (e.g. 25, 2000 totals), not need-driven",
+       "evidence": "3 Year Plant Look Ahead › column profile",
+       "severity": "low"
+      },
+      {
+       "issue": "Spelling variants carried from site sheets (Oleara, Scheflera, Parsonia, Weinmania)",
+       "evidence": "3 Year Plant Look Ahead › B66,B94,B73,B104",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Whitechapel (15)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Whitechapel Reserve (15)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "E–Y",
+       "header": "Autumn 2015 … Autumn 2025 (21 seasons)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "historic plantings by season, sparse; cached totals 23124 in total row"
+      },
+      {
+       "letter": "AC–AI",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "Autumn 2024 to Spring 2026 plus one unlabelled column (AI); under '3 Year Lookahead' banner (AC1)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AA5:AA102",
+       "pattern": "=sum(E5:Z5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Total column AA sums E:Z, i.e. includes the 2024 autumn/spring columns that also appear as forecast block; actual and forecast seasons overlap (Autumn/Spring 2024)",
+       "evidence": "Whitechapel (15) › W2:X2 v AC2:AD2",
+       "severity": "med"
+      },
+      {
+       "issue": "Forecast columns (AC:AI) are the same number repeated per season (e.g. 25, 50, 100); seven columns where six seasons labelled; AI header blank",
+       "evidence": "Whitechapel (15) › AC1:AI3",
+       "severity": "med"
+      },
+      {
+       "issue": "Autumn/Spring 2015 historical columns largely empty (F 1% filled), in-column 0 total",
+       "evidence": "Whitechapel (15) › F5:F102",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Lake Hayes Pavilion (9G)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Lake Hayes Pavilion (9G)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "(blank)",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "D–G",
+       "header": "Spring 2023 … Autumn 2025 (4 seasons)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "short history only; I = Total =sum(D:F)"
+      },
+      {
+       "letter": "K–P",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "six forecast seasons of 30/25/50 etc, 83% filled"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "I5:I102",
+       "pattern": "=sum(D5:F5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Species order differs from KEYSTONE SITES: Prumnopitys taxifolius / ferruginea swapped, so positional links pull the wrong species",
+       "evidence": "Lake Hayes Pavilion (9G) › B84:B85 v KEYSTONE SITES › B86:B87",
+       "severity": "high"
+      },
+      {
+       "issue": "Total I sums D:F (Spring 2023 to Spring 2024) and leaves out G (Autumn 2025); header of C is '%' but column empty",
+       "evidence": "Lake Hayes Pavilion (9G) › C2, I5",
+       "severity": "low"
+      },
+      {
+       "issue": "Header B2 reads 'Lake Hayes Pavilion (9G)'; row 3 label is 'Plant Description' (copied template text)",
+       "evidence": "Lake Hayes Pavilion (9G) › B3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Slope Hill Rd (11)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Slope Hill Road (11) - DOC",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "E–Y",
+       "header": "Autumn 2015 … Autumn 2025",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history; header cell has an empty column L; large single values (about 1000 per season) look like totals pasted into one cell"
+      },
+      {
+       "letter": "AC–AI",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast 1000 total per season"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AA4:AA104",
+       "pattern": "=sum(E:Z)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Several seasons carry only a single large value that equals the season total (e.g. 1000, 1005, 1028), likely a bulk planting not split by species",
+       "evidence": "Slope Hill Rd (11) › W3:X5",
+       "severity": "med"
+      },
+      {
+       "issue": "Row 4 contains a stray =sum in AA4 with no label; first data row 5 offset differs (link offset 2 or 3)",
+       "evidence": "Slope Hill Rd (11) › AA4",
+       "severity": "low"
+      },
+      {
+       "issue": "Highlight fills on species rows B32, B44, B66 (peach) with no key",
+       "evidence": "Slope Hill Rd (11) › B32,B44,B66",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "JARDINE PK",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Jardine Park(23B)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 99,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "E–N",
+       "header": "Spring 2020 … Autumn 2025",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history; O total =SUM(E:N)"
+      },
+      {
+       "letter": "R–W",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast 10/5/30 per species; X:Y add % share and a 1000-plant allocation"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "X6:Y104",
+       "pattern": "=R6/$R$3 ; =X6*$Y$3",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Numbering in column A restarts (13,14,15 repeated), 95 distinct NO. for 99 names",
+       "evidence": "JARDINE PK › A5:A24",
+       "severity": "low"
+      },
+      {
+       "issue": "Names 'Olearia nummularifolia' and 'Podocarpus nivalis' have no trailing space here but do in KEYSTONE SITES; exact-match joins fail",
+       "evidence": "JARDINE PK › B67,B82",
+       "severity": "med"
+      },
+      {
+       "issue": "Unlabelled columns X:Y hold share of Autumn 2024 total and a 1000-plant split (hard-typed Y3=1000)",
+       "evidence": "JARDINE PK › X5:Y104",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Ref Gardens",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Jardine Park(23B)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 99,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "E",
+       "header": "Autumn 2024 (single season)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "small reference-garden planting (113 plants in total)"
+      },
+      {
+       "letter": "H–M",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "copy of JARDINE PK's forecast block; same 1000 split"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "F5:F102",
+       "pattern": "=SUM(E5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Header B2 says 'Jardine Park(23B)' on a sheet named Ref Gardens (copy of JARDINE PK); not referenced by the 3-year sheet",
+       "evidence": "Ref Gardens › B2",
+       "severity": "med"
+      },
+      {
+       "issue": "Forecast H:M duplicates JARDINE PK R:W so would double count if ever linked",
+       "evidence": "Ref Gardens › H3:M104 v JARDINE PK › R3:W104",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Bush Creek (13C)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Bush Creek (13C) - DOC",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "D–M",
+       "header": "Autumn 2020 … Autumn 2024",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history of 10 seasons; total 5312"
+      },
+      {
+       "letter": "P–V",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast columns exist but all zero"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "N4:N104",
+       "pattern": "=sum(D:M)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Forecast block is all zeros yet 3-year sheet still links to it (columns M, U, AC, AK, AS)",
+       "evidence": "Bush Creek (13C) › P3:V3",
+       "severity": "low"
+      },
+      {
+       "issue": "Dropped from block 1 of the 3-year sheet in the Aug 2025 version",
+       "evidence": "3 Year Plant Look Ahead › D3:I3",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Peace Park (21)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Peace Park (21) - QLDC",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "D–U",
+       "header": "Autumn 2015 … Autumn 2024 (Spring 2018 absent)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history, total 4032"
+      },
+      {
+       "letter": "X–AD",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast 2 to 5 per species in alternating seasons"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "V5:V102",
+       "pattern": "=sum(D5:U5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Season sequence skips Spring 2018, Spring 2023, so columns are not a regular series",
+       "evidence": "Peace Park (21) › J2:K2",
+       "severity": "low"
+      },
+      {
+       "issue": "Forecast uses autumn only (spring zero) so 3-year spring blocks are empty for this site",
+       "evidence": "Peace Park (21) › Z3,AB3,AD3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Feehly Hill (12A)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Feehly Hill (12A)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total Planted to Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "E–P",
+       "header": "Autumn 2016 … Autumn 2024 (2020 and 2021 absent)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history; R3 = sum(E3:Q3)"
+      },
+      {
+       "letter": "T–Z",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast Autumn 2024 to Spring 2026"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "R3",
+       "pattern": "=sum(E3:Q3)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Species list has 98 names but omits 'Coprosma dumosa' and 'Dracophyllum rosmarinifolium'; has 'Kunzea ericoides' and 'Coprosma dumosa/tayloriae' instead, so row positions do not line up with KEYSTONE SITES",
+       "evidence": "Feehly Hill (12A) › B5:B102",
+       "severity": "high"
+      },
+      {
+       "issue": "Because of this, 24 rows of the 3-year sheet pull Feehly values for a different species",
+       "evidence": "3 Year Plant Look Ahead › I16:I104 v Feehly Hill (12A) › U15:U102",
+       "severity": "high"
+      },
+      {
+       "issue": "C3 total is formula with missing label in row 4",
+       "evidence": "Feehly Hill (12A) › C2:C3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Lake Hayes South (9A)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "one species with historical planted quantity per season (left) and forecast quantity per future season (right); TOTAL row 3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Lake Hayes South (9A)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 50,
+       "examples": [
+        "0",
+        "10",
+        "23124"
+       ],
+       "notes": "total planted to date; =lookup of the total column (e.g. =AA5)"
+      },
+      {
+       "letter": "D–S",
+       "header": "Autumn 2015 … Autumn 2024",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25",
+        "50"
+       ],
+       "notes": "history, total 7116"
+      },
+      {
+       "letter": "W–AC",
+       "header": "forecast season columns",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 23,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "100"
+       ],
+       "notes": "forecast block is all zero"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C102",
+       "pattern": "=total col",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "U5:U102",
+       "pattern": "=sum(D5:T5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Not linked to the 3-year sheet; forecast all zero",
+       "evidence": "Lake Hayes South (9A) › W3:AC3",
+       "severity": "low"
+      },
+      {
+       "issue": "Uses 'Coprosma dumosa/tayloriae' where KEYSTONE SITES has 'Coprosma dumosa'; totals in W:AC sum to row 101, not 102",
+       "evidence": "Lake Hayes South (9A) › B24; W5",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Earnslaw Slipway (22A)",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "5-100 and 108-200",
+     "grain": "one species with total planted at Earnslaw Slipway (Project Crimson) across four planting seasons; a second table (TOTAL BY SPECIES, row 107) repeats the species totals",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "TOTAL",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C",
+       "header": "655",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 98,
+       "distinct": 51,
+       "examples": [
+        "6",
+        "9",
+        "0"
+       ],
+       "notes": "=sum(E5:H5) per species; C3 = grand total 655"
+      },
+      {
+       "letter": "E–H",
+       "header": "QLDC (4 columns, seasons are in row 2)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 21,
+       "distinct": 17,
+       "examples": [
+        "5",
+        "10",
+        "7"
+       ],
+       "notes": "four plantings: Spring 2015, Autumn 2016, Spring 2016, Spring 2019 (E2:H2); row 3 holds funder/owner label 'QLDC' not a header"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C5:C99",
+       "pattern": "=sum(E5:H5)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Header is split across rows 1-3: title in B1, seasons in E2:H2, 'QLDC' repeated in E3:H3",
+       "evidence": "Earnslaw Slipway (22A) › B1,E2:H2,E3:H3",
+       "severity": "med"
+      },
+      {
+       "issue": "Second stacked table from row 105 ('Updated 19 May 2020', 'TOTAL BY SPECIES') repeats species with pasted values (rows 108-200)",
+       "evidence": "Earnslaw Slipway (22A) › B105:C200",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet range extends to row 806 with no content after row 200",
+       "evidence": "Earnslaw Slipway (22A) › A201:AA806",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "DR-3 Year Plant Look Ahead (ALL",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "6-100",
+     "grain": "one species with planting quantity by group (Keystone, Community, Schools, Buffer) for each of four seasons, then a season-by-season total block",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 96,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "D–G",
+       "header": "Keystone Sites / Community Groups / Schools / Buffer (first season)",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "#REF!",
+        "0"
+       ],
+       "notes": "D col =#REF!; E–G sum to zero"
+      },
+      {
+       "letter": "I–AA",
+       "header": "same four group columns for 4 later seasons",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 37,
+       "examples": [
+        "5",
+        "10",
+        "60"
+       ],
+       "notes": "I,N,S,X: keystone totals = links to 3 Year sheet AY:BB; community/schools/buffer are zero"
+      },
+      {
+       "letter": "AC–AG",
+       "header": "Spring 2023 … Spring 2025",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 37,
+       "examples": [
+        "#REF!",
+        "5285",
+        "5500"
+       ],
+       "notes": "=SUM(D:G) group total per season; AC all #REF!"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "I6:X100",
+       "pattern": "='3 Year Plant Look Ahead (Keysto'!$AY6",
+       "refs_other_sheets": [
+        "3 Year Plant Look Ahead (Keysto'!AY:BB"
+       ]
+      },
+      {
+       "range": "D6:D100",
+       "pattern": "=#REF!",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 96,
+     "quality_issues": [
+      {
+       "issue": "Whole 'Keystone Sites' column for the first season (D) is #REF! and the Spring 2023 total (AC) with it",
+       "evidence": "DR-3 Year Plant Look Ahead (ALL › D4:D100, AC4:AC100",
+       "severity": "high"
+      },
+      {
+       "issue": "Community Groups, Schools and Buffer columns are all zeros; the sheet does not read COMMUNITY GROUPS",
+       "evidence": "DR-3 Year Plant Look Ahead (ALL › E:G, J:L",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet is a 'DR' (draft/duplicate?) copy placed last in the Aug 2025 file; in the 01 file it is the first sheet",
+       "evidence": "workbook sheet order",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Template",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "7-102",
+     "grain": "blank per-site historical-planting template: one species x 13 seasons (Autumn 2015 to Autumn 2021), nothing filled in",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "NO.",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "3"
+       ],
+       "notes": "running species number 1-95/98; not a key"
+      },
+      {
+       "letter": "B",
+       "header": "Site",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 96,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "E–Q",
+       "header": "Autumn 2015 … Autumn 2021",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "empty"
+      },
+      {
+       "letter": "S",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 96,
+       "distinct": 1,
+       "examples": [
+        "0"
+       ],
+       "notes": "=sum(E:Q)"
+      }
+     ],
+     "formulas": [
+      {
+       "range": "S7:S102",
+       "pattern": "=sum(E7:Q7)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 95,
+     "quality_issues": [
+      {
+       "issue": "Species list has 95 names (missing Carex Maorica, Chionochloa conspicua, Coprosma brunea, Dracophyllum) and 'Kunzea ericoides' not in KEYSTONE SITES: an older list",
+       "evidence": "Template › B8:B102",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "1. Forecasting/Archive to sort through/01 Keystone Sites Plants Summary.xlsx",
+   "purpose_guess": "Earlier copy of the Keystone Sites Plants Summary workbook (same sheets, sampled): includes Bush Creek in every 3-year season block and correct season labels; otherwise the site sheets match the Aug 2025 file.",
+   "workflow_stage": "forecast",
+   "years_covered": "2015–2026",
+   "is_version_of": "1. Forecasting/Archive to sort through/Aug 2025 Keystone Sites Plants Summary.xlsx",
+   "sheets": [
+    {
+     "name": "DR-3 Year Plant Look Ahead (ALL",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "4-100",
+     "grain": "same group-by-season summary as Aug file but first sheet; Keystone block links one column left (AZ:BC)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 96,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "D–G",
+       "header": "Keystone Sites/Community/Schools/Buffer",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 1,
+       "examples": [
+        "#REF!"
+       ],
+       "notes": "D col =#REF!, identical to Aug"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 96,
+     "quality_issues": [
+      {
+       "issue": "Same #REF! column D and AC as Aug version; formulas point to AZ:BC (one column right of Aug AY:BB) because Bush Creek columns are present",
+       "evidence": "01 file › DR-3 Year Plant Look Ahead › D4, I6",
+       "severity": "high"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "SUMMARY",
+     "role": "summary",
+     "header_row": 7,
+     "data_rows": "8-104",
+     "grain": "identical to Aug SUMMARY (0 differing cells)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 97,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 97,
+     "quality_issues": [
+      {
+       "issue": "Same #REF! throughout",
+       "evidence": "01 file › SUMMARY › C5:P104",
+       "severity": "high"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "KEYSTONE SITES",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "7-104",
+     "grain": "same layout; links go to 3-year sheet columns AZ:BE instead of AY:BD; GOAL C4 = 5450 v 2650 in Aug",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "C–H",
+       "header": "Autumn 2024 … Spring 2026",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": 38,
+       "examples": [
+        "55",
+        "42"
+       ],
+       "notes": "cached values identical to Aug (diff 1 cell: C4 goal)"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "COMMUNITY GROUPS",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "7-101",
+     "grain": "identical to Aug (0 differing cells)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 96,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 96,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "3 Year Plant Look Ahead (Keysto",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "4-104",
+     "grain": "same six season blocks but each block has seven site columns including Bush Creek (13C) from the first season; season labels in row 2 are correct (AUTUMN 2024 … SPRING 2026); summary at AZ:BE; 5363 raw and 1894 value cells differ from Aug",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Keystone Sites Lookahead",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "D–BE",
+       "header": "7 site columns x 6 seasons then season totals",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 25,
+       "distinct": 8,
+       "examples": [
+        "25",
+        "50",
+        "2000"
+       ],
+       "notes": "column offset by one against Aug; totals AZ5:BE5 = 5280,5490,5740,5690,5540,4700 same as Aug AY5:BD5"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Aug 2025 version removed Bush Creek from block 1 and mislabelled the season headers (see Aug entry)",
+       "evidence": "01 file › 3 Year Plant Look Ahead › D2:BE3",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Whitechapel (15)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "site history to Autumn 2025 then forecast through Spring 2029 under '3 Year Lookahead' (AF1); has two extra columns (Spring 2025 and Autumn/Spring 2026) in the history block; forecast block starts 3 columns later (AF v AC in Aug)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Whitechapel Reserve (15)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      },
+      {
+       "letter": "E–AC",
+       "header": "Autumn 2015 … Spring 2026",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 25,
+       "distinct": 15,
+       "examples": [
+        "10",
+        "25"
+       ],
+       "notes": "history block widened to Spring 2026; AD total =sum(E:AC)"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "History block includes future seasons (Autumn 2025–Spring 2026) as blank columns, then a second forecast block labelled Autumn 2027–Spring 2029",
+       "evidence": "01 file › Whitechapel (15) › Y2:AM2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Lake Hayes Pavilion (9G)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Slope Hill Rd (11)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "JARDINE PK",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Ref Gardens",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Bush Creek (13C)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Peace Park (21)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Feehly Hill (12A)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Lake Hayes South (9A)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Earnslaw Slipway (22A)",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Template",
+     "role": "form",
+     "header_row": 2,
+     "data_rows": "3-102",
+     "grain": "cell-for-cell identical to the Aug 2025 sheet of the same name (0 differing formulas or values)",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "scientific names only; 'NO.' sequence in column A"
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Which version is current: the Aug 2025 file (Bush Creek dropped from the first season, wrong season labels) or the '01' file (Bush Creek kept, correct labels)? Which should be treated as the master forecast?",
+  "The SUMMARY and DR sheets refer to a SCHOOLS sheet that no longer exists. Was a schools forecast ever kept, and where is it?",
+  "What do the GOAL figures on the 3-year sheet (for example 2650, 4950, 5650) represent, and how are they set (total plants needed, or capacity)?",
+  "The site forecast columns are round numbers per season (for example 25, 50, 2000 totals). Are these genuine needs by species or a nominal allocation spread over the species list?",
+  "Are the historical columns on each site sheet the same data as the Plants Out Master / Plant Allocation lists, or typed separately for this forecast?",
+  "Is 'Ref Gardens' a separate site, a copy of Jardine Park, or a reference garden of 113 plants? Why is its header Jardine Park(23B)?",
+  "Why do Feehly Hill and Lake Hayes South lists differ from the master list (Coprosma dumosa/tayloriae, Kunzea ericoides, no Dracophyllum rosmarinifolium)? Is the 93/97/98-species list defined anywhere?",
+  "What is the meaning of the unlabelled column BF on the 3-year sheet and columns X:Y on JARDINE PK (share and 1000-plant split)?",
+  "Is 'QLDC' in row 3 of the Earnslaw Slipway sheet the planting funder, the land owner or the plant supplier?"
+ ]
+}

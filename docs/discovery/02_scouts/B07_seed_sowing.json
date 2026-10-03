@@ -1,0 +1,193 @@
+{
+"batch_id":"B07_seed_sowing",
+"files":[
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Seed Sowing 2026 .xlsx",
+"purpose_guess":"Current-year (2026) seed sowing list: a pre-populated species list with projected potting numbers and pricking-tray counts, only partly filled in with stratification, sowing and collection details.",
+"workflow_stage":"production_plan",
+"years_covered":"2026 (sowing); projected potting year not labelled",
+"is_version_of":null,
+"sheets":[{
+ "name":"Sheet1","role":"data","header_row":2,"data_rows":"3-57",
+ "grain":"One species per row for the 2026 sowing season: projected potting number, pricking trays needed, and (for about 10 species) seed-lot, stratification, sowing and collection details. The profiler guessed header row 19; the real header is row 2.",
+ "columns":[
+ {"letter":"A","header":"Name","concept":"scientific_name","type":"text","non_null_pct":100,"distinct":55,"examples":["Aristotelia fruticosa","Carex secta","Phormium tenax","Veronica salicifolia"],"notes":"55 species in A3:A57, alphabetical. No common or Māori names. Row 41 has stray text ('Ozothamnus vauvilliersii  )'); row 47 has a non-breaking space ('Plagianthus  regius')."},
+ {"letter":"B","header":"Projected potting ","concept":"target","type":"float","non_null_pct":100,"distinct":28,"examples":["96","192","616","960"],"notes":"Plants projected for potting. Stored as floats (96.0). Sum of B3:B57 is 10,980. Year the projection is for is not stated in the header (2025 file says 2026-27; 2024 file says 2025/2026). Mostly multiples of 24, except rows 5, 6, 18, 43, 44 (fast/T28 species) and a few others."},
+ {"letter":"C","header":"Pricking Tray size","concept":"quantity","type":"float","non_null_pct":94.5,"distinct":23,"examples":["4","7","40"],"notes":"Number of pricking trays (a bare number; container type is not stated, unlike 2025 where it reads '4 V150'). Mostly equals B/24 rounded (V150 = 24 plants per tray, inferred, medium confidence). Four rows break this: C5 (196 -> 7), C6 (616 -> 22), C11 (192 -> 6), C15 (192 -> 10). Blank for Cordyline australis, Phormium cookianum and Phormium tenax (rows 18, 43, 44), which are fast species."},
+ {"letter":"D","header":"Seeds Sown 2026 and source","concept":"seed_location","type":"text","non_null_pct":18.2,"distinct":10,"examples":[],"notes":"SENSITIVE. Free text combining a seed quantity (e.g. '1 tsp') with an abbreviated collection-site name. Filled in 10 of 55 rows. Values withheld."},
+ {"letter":"E","header":"Stratified","concept":"date","type":"mixed","non_null_pct":18.2,"distinct":5,"examples":["30.7.26","1.7.26","May?","July "],"notes":"Text dates in d.m.yy format mixed with vague entries. E19 reads '1.6.26 (2months)'. Several dates (30.7.26) look like planned or recent dates rather than events."},
+ {"letter":"F","header":"Sown","concept":"date","type":"text","non_null_pct":5.5,"distinct":1,"examples":["19.8.26"],"notes":"Only 3 rows filled (F19, F24, F46), all 19.8.26. Text d.m.yy."},
+ {"letter":"G","header":"Sowing Tray size","concept":"container","type":"text","non_null_pct":5.5,"distinct":1,"examples":["1 Hygiene"],"notes":"Sowing container (germination tray, Stage 1). Same 3 rows as column F."},
+ {"letter":"H","header":"Collected","concept":"date","type":"text","non_null_pct":18.2,"distinct":9,"examples":["11.2.26","13.4.26","1.7.25"],"notes":"Seed collection date as text d.m.yy. H46 is 1.7.25, a year earlier than the rest."},
+ {"letter":"I","header":"Label number","concept":"seed_source_code","type":"text","non_null_pct":3.6,"distinct":2,"examples":["S322","S324"],"notes":"Seed-lot label (S-number). Only 2 rows filled. This column is new in 2026; in 2024 and 2025 the S-numbers sit in the Notes column."},
+ {"letter":"J","header":"Notes","concept":"notes","type":"text","non_null_pct":10.9,"distinct":4,"examples":["T28","Soaked for 5 days. Janola bath. Cold moist strat in sphagnum moss"],"notes":"Free-text treatment notes. J5 and J6 hold 'T28' (the container marker is put in Notes here, not in the tray column). J49 notes warm then cold storage."}
+ ],
+ "formulas":[],
+ "species_name_column":"A","species_distinct_count":55,
+ "quality_issues":[
+ {"issue":"Profiler header guess is wrong (row 19); true header is row 2. Row 19 is a data row (Corokia cotoneaster).","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › A2:J2","severity":"low"},
+ {"issue":"Sparsely filled: columns D to J are populated for about 10 of 55 species, so this is a plan with a partial record.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › D3:J57","severity":"med"},
+ {"issue":"Stray characters and spacing in species names.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › A41, A47","severity":"low"},
+ {"issue":"Pricking tray count disagrees with the plants-per-tray pattern (B/24) on four rows; the count is hard-coded, not calculated.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › B5:C5, B6:C6, B11:C11, B15:C15","severity":"med"},
+ {"issue":"Dates are text in mixed formats and some are vague ('May?', 'July ', '1.6.26 (2months)').","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › E8:E53","severity":"med"},
+ {"issue":"Container (V150 or T28) is not recorded in the tray column; T28 appears only in the Notes cells J5 and J6, and not at all for the three blank-tray species. No indication of year the projection applies to.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › C2, J5:J6, C18, C43:C44","severity":"med"},
+ {"issue":"Species list is much shorter (55) than the 2025 (about 57 plus extras) and 2024 (about 87) lists, so it is not a full production species list.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › A3:A57","severity":"med"},
+ {"issue":"Fills (grey, pale yellow) exist but no clear meaning; yellow on A5, C5 and K3.","evidence":"Seed Sowing 2026 .xlsx › Sheet1 › A5, C5, K3","severity":"low"}
+ ],
+ "sensitive_columns":["D: seed quantity plus abbreviated seed-source location, free text, 10 filled rows, values withheld"],
+ "confidence":"high"}]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx",
+"purpose_guess":"2025 seed sowing list: species sown in winter 2025 with their seed source, stratification, sowing and collection dates, and the projected potting number for the 2026-27 production year.",
+"workflow_stage":"production_plan",
+"years_covered":"2025 (sowing); projected potting 2026-27",
+"is_version_of":null,
+"sheets":[{
+ "name":"Sheet1","role":"data","header_row":2,"data_rows":"3-65",
+ "grain":"One species per row for the 2025 sowing: seed sown and source, stratification date, sowing date, tray size, collection date, label number in notes, and projected potting for 2026-27. Rows 62-65 sit below an 'EXTRAS' marker.",
+ "columns":[
+ {"letter":"A","header":"Name","concept":"scientific_name","type":"text","non_null_pct":100,"distinct":62,"examples":["Aristotelia serrata","Austroderia richardii","Pittosporum eugeniodes","Cop rham","Plagianthus  regius"],"notes":"62 non-blank cells in A3:A65, including the word EXTRAS (one row) and four unlisted extras beneath it (Streblus het, Parsonsia, Eleocarpus, Cop rham: abbreviated or genus-only). Red font on 7 cells (A5, A6, A18, A34, A44, A45, A48), mostly fast/T28 species, meaning not documented."},
+ {"letter":"B","header":"Projected potting  2026 - 27 ","concept":"target","type":"int","non_null_pct":90.6,"distinct":26,"examples":["24","96","192","288"],"notes":"Plants projected for potting in 2026-27, numeric. Sum of B3:B65 is 11,121; stated total in B66 is 11,120 (hard-coded)."},
+ {"letter":"C","header":"Pricking Tray size","concept":"container","type":"text","non_null_pct":87.5,"distinct":29,"examples":["4 V150","8T28","13 T28","V150"],"notes":"Text combining a tray count with the container (V150 or T28). The count is blended with the unit, so needs parsing. Leading spaces and a missing space ('8T28') occur."},
+ {"letter":"D","header":"Seeds Sown 2025 and source","concept":"seed_location","type":"text","non_null_pct":62.5,"distinct":37,"examples":[],"notes":"SENSITIVE. Free text: seed quantity (tsp, Tbsp, cup fractions) plus abbreviated seed-source location. About 40 rows filled. Values withheld."},
+ {"letter":"E","header":"Stratified","concept":"date","type":"text","non_null_pct":62.5,"distinct":9,"examples":["23.7.25","24.7.25","No","yes","damp2 mo"],"notes":"Text d.m.yy dates mixed with yes/no and treatment words. One entry '24.7.24' is probably a typo for 2025 (medium confidence)."},
+ {"letter":"F","header":"Sown","concept":"date","type":"text","non_null_pct":56.2,"distinct":2,"examples":["13.8.25","13.6.25"],"notes":"Sowing date as text. 35 rows share 13.8.25 (one sowing day); F-column has one outlier 13.6.25."},
+ {"letter":"G","header":"Sowing Tray size","concept":"container","type":"text","non_null_pct":71.9,"distinct":6,"examples":[".5 V150","1 V150",".3 V150","1 Hygiene","1Hygiene"],"notes":"Fraction or count of a sowing container (V150 or Hygiene tray), as text. 'Hygiene' and 'V150' both used for the germination stage. Spacing inconsistent ('1Hygiene')."},
+ {"letter":"H","header":"Collected","concept":"date","type":"text","non_null_pct":60.9,"distinct":25,"examples":["3.2.25","11.2.25","12.4.25","22.2.24"],"notes":"Seed collection date as text d.m.yy. Some are from 2024, i.e. stored seed."},
+ {"letter":"I","header":"Notes","concept":"seed_source_code","type":"mixed","non_null_pct":76.6,"distinct":42,"examples":["S262","S263","seedlings","cuttings","no seed yet"],"notes":"Mixes seed label numbers (S-numbers, which link to the Seed collecting and Seed records) with status words (seedlings, cuttings, no seed yet). Seed lot code and notes share one column."}
+ ],
+ "formulas":[{"range":"I51","pattern":"=-B2872","refs_other_sheets":[]}],
+ "species_name_column":"A","species_distinct_count":62,
+ "quality_issues":[
+ {"issue":"Stray formula in a notes cell: I51 =-B2872 points at an empty cell far below the data and evaluates to 0, displayed against Pseudopanax arboreus.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › I51","severity":"med"},
+ {"issue":"Total in B66 (11,120) is hard-coded and differs by 1 from the sum of B3:B65 (11,121). A signing line 'dated 7/8/25 HM' sits in A67.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › B66, A67","severity":"low"},
+ {"issue":"Typos, abbreviations and genus-only names: 'Pittosporum eugeniodes' (correct spelling used elsewhere: eugenioides), 'Cop rham', 'Streblus het', 'Parsonsia', 'Eleocarpus', non-breaking space in 'Plagianthus  regius'.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › A45, A65, A62:A64, A47","severity":"med"},
+ {"issue":"Quantity and container are combined in one text cell, and spacing varies ('8T28', ' 3 V150').","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › C3:C65","severity":"med"},
+ {"issue":"All dates are text in d.m.yy format with some non-date words in the same columns.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › E3:H65","severity":"med"},
+ {"issue":"Red font used on some species names with no legend; five of seven match T28 species (Austroderia, Carex secta, Cordyline, Phormium tenax, Poa cita) but A34 and A45 are red too.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › A5, A6, A18, A34, A44, A45, A48","severity":"low"},
+ {"issue":"Sown, stratified and collected columns are blank for about 40% of species (cuttings, seedlings, no seed yet), so a blank means 'not sown from seed', not 'missing'.","evidence":"1. Seed Sowing 2025.xlsx › Sheet1 › D3:H65, I3:I65","severity":"low"}
+ ],
+ "sensitive_columns":["D: seed quantity plus abbreviated seed-source location, free text, about 40 filled rows, values withheld"],
+ "confidence":"high"}]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Archive seed Sowing Records annual/Seed Sowing 2025.xlsx",
+"purpose_guess":"Archived exact duplicate of 1. Seed Sowing 2025.xlsx (identical file checksum).",
+"workflow_stage":"production_plan","years_covered":"2025","is_version_of":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx","sheets":[]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Archive seed Sowing Records annual/Seed Sowing 2026 To be updated.xlsx",
+"purpose_guess":"File named as a 2026 template 'to be updated' but its content is a byte-for-byte copy of the 2025 sowing list (identical checksum), so it has not been updated.",
+"workflow_stage":"production_plan","years_covered":"2025 content, labelled 2026","is_version_of":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx","sheets":[]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /Archive seed Sowing Records annual/Seed sowing 2024.xlsx",
+"purpose_guess":"2024 seed sowing list in the same layout as 2025 but with a much longer species list (including many zero-projection species), kept as the archive of the previous year.",
+"workflow_stage":"production_plan","years_covered":"2024 (sowing); projected 2025/2026",
+"is_version_of":null,
+"sheets":[{
+ "name":"Sheet1","role":"data","header_row":2,"data_rows":"3-94",
+ "grain":"One species per row for the 2024 sowing (sampled): projected 2025/2026 potting number, pricking container, and seed source, stratification, sowing and collection details. Rows 92-94 sit below an EXTRAS marker.",
+ "columns":[
+ {"letter":"A","header":"Name","concept":"scientific_name","type":"text","non_null_pct":98.9,"distinct":87,"examples":["Griselinia littoralis","Veronica rakaiensis","Pseudowintera colorata","Podocarpus nivalis "],"notes":"About 91 non-blank cells. Four species appear twice (Griselinia littoralis, Olearia odorata, Olearia lineata, Olearia bullata); trailing spaces on 'Halocarpus bidwillii ' and 'Podocarpus nivalis '. 27 species not in the 2025 list (e.g. several Carex, Chionochloa, Muehlenbeckia, Coprosma species)."},
+ {"letter":"B","header":"Projected 2025/2026","concept":"target","type":"int","non_null_pct":89.4,"distinct":24,"examples":["0","48","96","144"],"notes":"Projection for the 2025/26 production year. 27 species show 0, so the list holds species not currently grown. B90 holds an unlabelled number 10,706 below the data; the sum of B3:B89 is 10,780."},
+ {"letter":"C","header":"Pricking Tray size","concept":"container","type":"text","non_null_pct":61.7,"distinct":2,"examples":["V150","T28"],"notes":"Container type only (V150 or T28) with no tray count; in 2025 this became count plus container."},
+ {"letter":"D","header":"Seed sown 2024","concept":"seed_location","type":"text","non_null_pct":40.4,"distinct":37,"examples":[],"notes":"SENSITIVE. Free-text seed quantity and source place name, about 38 rows. Values withheld."},
+ {"letter":"E","header":"Stratified\n","concept":"date","type":"text","non_null_pct":51.1,"distinct":10,"examples":["21.7.24","17.7.24","fresh","no "],"notes":"Text dates mixed with words (fresh, no)."},
+ {"letter":"F","header":"Sown","concept":"date","type":"text","non_null_pct":42.6,"distinct":4,"examples":["14.8.24","4.9.24","29.7.24","8.5.24"],"notes":"Text d.m.yy."},
+ {"letter":"G","header":"sowing Tray size","concept":"container","type":"text","non_null_pct":48.9,"distinct":8,"examples":[".5 tray",".33 tray","1 V150","1 Hygene","cuttings"],"notes":"Free-text container; 'Hygene' misspelt; 'cuttings' appears as a value, so propagation method leaks in."},
+ {"letter":"H","header":"Collected","concept":"date","type":"mixed","non_null_pct":35.1,"distinct":24,"examples":["21.2.24","25.2.24","30.1.24"],"notes":"Mostly text d.m.yy; one cell is a real date (2024-03-01)."},
+ {"letter":"I","header":"Notes","concept":"seed_source_code","type":"text","non_null_pct":47.9,"distinct":45,"examples":["S203","S219","S192"],"notes":"Mostly S-number seed labels."}
+ ],
+ "formulas":[],
+ "species_name_column":"A","species_distinct_count":87,
+ "quality_issues":[
+ {"issue":"Duplicate species rows (four species twice) within one year's list.","evidence":"Seed sowing 2024.xlsx › Sheet1 › column A (Griselinia littoralis, Olearia bullata, Olearia lineata, Olearia odorata)","severity":"med"},
+ {"issue":"Unlabelled subtotal in B90 (10,706) does not match the sum of the rows above (10,780); 'Total' row 96 is empty; sign-off text in A97.","evidence":"Seed sowing 2024.xlsx › Sheet1 › B90, A96, A97","severity":"med"},
+ {"issue":"Layout differs from 2025: container type without tray count (column C), header typos ('sowing', 'Hygene'), cuttings recorded in the sowing-tray column.","evidence":"Seed sowing 2024.xlsx › Sheet1 › C3:C94, G3:G94","severity":"low"},
+ {"issue":"Trailing spaces and extras below an EXTRAS marker with no numbers.","evidence":"Seed sowing 2024.xlsx › Sheet1 › A91:A94","severity":"low"}
+ ],
+ "sensitive_columns":["D: seed quantity plus seed-source place name, free text, about 38 filled rows, values withheld"],
+ "confidence":"high"}]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/latest from Helen/Seed Sowing 2025.xlsx",
+"purpose_guess":"A later working version of the 2025 sowing list, with a second sowing batch (20.8.25) and extra seed label numbers (S298-S305) added; not an exact copy of the version in the Seed Sowing folder.",
+"workflow_stage":"production_plan","years_covered":"2025 (sowing); projected 2026-27",
+"is_version_of":"2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Seed Sowing /1. Seed Sowing 2025.xlsx",
+"sheets":[{
+ "name":"Sheet1","role":"data","header_row":2,"data_rows":"3-65",
+ "grain":"Same as 1. Seed Sowing 2025.xlsx: one species per row. Profiled as a sample; only differences recorded.",
+ "columns":[
+ {"letter":"A","header":"Name","concept":"scientific_name","type":"text","non_null_pct":100,"distinct":62,"examples":["Aristotelia fruticosa","Carex secta"],"notes":"Same 62 names as the 2025 file. Red font on 6 cells (A45, the Pittosporum eugeniodes typo, is no longer red)."},
+ {"letter":"B","header":"Projected potting  2026 - 27 ","concept":"target","type":"int","non_null_pct":90.6,"distinct":26,"examples":["96","192"],"notes":"Identical to the 2025 file (sum 11,121; B66 total 11,120)."},
+ {"letter":"F","header":"Sown","concept":"date","type":"mixed","non_null_pct":68.8,"distinct":5,"examples":["13.8.25","20.8.25","2025-08-20"],"notes":"Adds 20.8.25 sowing for about 8 species and 16.8.25 for one. F5 is a real datetime while the others are text."},
+ {"letter":"I","header":"Notes","concept":"seed_source_code","type":"text","non_null_pct":84.4,"distinct":47,"examples":["S300","S302","S305"],"notes":"Adds label numbers S298-S305 (I5, I21, I25, I30, I34, I35, I36, I45) where the 2025 file had blanks or 'no seed yet'. Still has =-B2872 in I51."}
+ ],
+ "formulas":[{"range":"I51","pattern":"=-B2872","refs_other_sheets":[]}],
+ "species_name_column":"A","species_distinct_count":62,
+ "quality_issues":[
+ {"issue":"31 cells differ from the Seed Sowing folder version (rows 5, 21, 25, 30, 34, 35, 36, 45, 56; columns D to I): this version is more complete, so the two copies disagree on what was sown.","evidence":"latest from Helen/Seed Sowing 2025.xlsx › Sheet1 › F5, G5, I5, F21, I21, I25, D30:I30, F34:G34, I34, D35:I35, D36:I36, D45:I45, F56","severity":"med"},
+ {"issue":"A mix of real datetime and text dates in the same column.","evidence":"latest from Helen/Seed Sowing 2025.xlsx › Sheet1 › F5 vs F3:F65","severity":"low"},
+ {"issue":"Same stray formula, hard-coded total and species typos as the 2025 file.","evidence":"latest from Helen/Seed Sowing 2025.xlsx › Sheet1 › I51, B66, A65","severity":"low"}
+ ],
+ "sensitive_columns":["D: seed quantity plus abbreviated seed-source location, about 44 filled rows, values withheld"],
+ "confidence":"high"}]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/latest from Helen/Seed record 2026.xlsx",
+"purpose_guess":"Seed collecting record for the 2026 season: for each species on the 2025 sowing list, when seed was collected, from where, and its status (fridge or sown), with a note of older seed held.",
+"workflow_stage":"seed_provenance","years_covered":"2024-12 to 2026-02",
+"is_version_of":null,
+"sheets":[{
+ "name":"Sheet1","role":"data","header_row":2,"data_rows":"3-65",
+ "grain":"One species per row (same species list as the 2025 sowing list) with at most one collection event recorded: collection date, collection site, status and older-seed year.",
+ "columns":[
+ {"letter":"A","header":"Name","concept":"scientific_name","type":"text","non_null_pct":100,"distinct":62,"examples":["Aristotelia fruticosa","Austroderia richardii","Cop rham","Eleocarpus"],"notes":"Same 62 names as Seed Sowing 2025 (including the EXTRAS marker, four extras and the 'Pittosporum eugeniodes' typo). Red font on 6 cells."},
+ {"letter":"B","header":"Collected","concept":"date","type":"date","non_null_pct":14.5,"distinct":8,"examples":["2026-01-21","2026-01-11","2025-12-23"],"notes":"Real dates (unlike the sowing lists). Min 2024-12-30, max 2026-02-01. Only about 9 species filled."},
+ {"letter":"C","header":"Site","concept":"seed_location","type":"text","non_null_pct":12.9,"distinct":7,"examples":[],"notes":"SENSITIVE (seed collection location). About 8 filled rows, free text place names. Some names look like planting sites, so do not treat as the site concept. Values withheld."},
+ {"letter":"D","header":"Status","concept":"notes","type":"text","non_null_pct":11.3,"distinct":2,"examples":["fridge","sown"],"notes":"Where the collected seed is now. 7 filled."},
+ {"letter":"E","header":"0lder seed ","concept":"provenance_note","type":"mixed","non_null_pct":37.1,"distinct":4,"examples":["2025","2024","2023","frozen"],"notes":"Header begins with a zero ('0lder seed'). Year of older seed stock held, or 'frozen'. Mixed int and text. 23 filled."}
+ ],
+ "formulas":[],
+ "species_name_column":"A","species_distinct_count":62,
+ "quality_issues":[
+ {"issue":"Header typo '0lder seed' (zero for letter o).","evidence":"latest from Helen/Seed record 2026.xlsx › Sheet1 › E2","severity":"low"},
+ {"issue":"Heavily incomplete: collection date and site filled for fewer than 10 of about 57 species; this looks early-season only (data to Feb 2026) and is not a full season record.","evidence":"latest from Helen/Seed record 2026.xlsx › Sheet1 › B3:C65","severity":"med"},
+ {"issue":"No seed label (S-number) column, so it cannot be joined to the sowing list label numbers except by species name.","evidence":"latest from Helen/Seed record 2026.xlsx › Sheet1 › A2:E2","severity":"med"},
+ {"issue":"Species typos and the extras block repeated from the 2025 sowing list; implies this was copied from it.","evidence":"latest from Helen/Seed record 2026.xlsx › Sheet1 › A45, A62:A65","severity":"low"},
+ {"issue":"A collection date of 2024-12-30 sits in a sheet titled 2026.","evidence":"latest from Helen/Seed record 2026.xlsx › Sheet1 › B3:B65 (minimum)","severity":"low"}
+ ],
+ "sensitive_columns":["C: seed collection site, free text, about 8 filled rows, values withheld"],
+ "confidence":"high"}]
+},
+{
+"path":"2. Propagation (cuttings and seeds)/At 27 February 2025  Seed and Cutting trays active.docx",
+"purpose_guess":"A snapshot list, dated 27 February 2025, of seed lots (S-numbers) and cutting lots (C-numbers) with trays currently active, using abbreviated species names.",
+"workflow_stage":"seed_provenance","years_covered":"as at 27 February 2025","is_version_of":null,
+"sheets":[{
+ "name":"(document)","role":"notes","header_row":0,"data_rows":"none",
+ "grain":"Free text in two paragraph groups ('Cuttings:' and 'Seeds'): each item is a lot label plus an abbreviated species name, about 18 cutting lots (C-numbers) and about 76 seed lots (S-numbers, S6 to S251). No tables.",
+ "columns":[],"formulas":[],"species_name_column":null,"species_distinct_count":0,
+ "quality_issues":[
+ {"issue":"Species are given as three-letter abbreviations (e.g. 'Cop rig', 'Ole bul', 'Pod lat') and some with full names ('Carex secta'), so matching to the species list needs a lookup; some abbreviations are ambiguous (Cop = Coprosma; 'Cop wallii' is a name variant).","evidence":"At 27 February 2025 Seed and Cutting trays active.docx › (document) › paragraphs 2-15","severity":"med"},
+ {"issue":"Outcome notes in brackets (poor, failure, nothing) are free text, giving a germination result for 5 lots.","evidence":"At 27 February 2025 Seed and Cutting trays active.docx › (document) › 'S122 Myr aus (poor)', 'S217 Hoh gla (failure)', 'S218 Cop dum (failure)', 'S248 Ole bul (nothing)', 'S197 Cop luc (poor)'","severity":"low"},
+ {"issue":"Duplicated lot spellings and separators are inconsistent (semicolons, colons, trailing text such as 'Te kakano' supplier note and 'Ole odo 150624 Te Kakano' with a date and bought-in supplier mixed together).","evidence":"At 27 February 2025 Seed and Cutting trays active.docx › (document) › last two lines","severity":"low"}
+ ],
+ "sensitive_columns":[],
+ "confidence":"medium"}]
+}
+],
+"open_questions_for_wrt":[
+"Is Seed Sowing 2026 .xlsx the live file for the current year, and which year does its 'Projected potting' column refer to (2027-28?)? Why does it list only 55 species and have no source or date detail for most?",
+"Which 2025 version is the master: '1. Seed Sowing 2025.xlsx' or the version in 'latest from Helen' (which has the extra 20.8.25 sowings and label numbers S298 to S305)? Should the other be treated as superseded?",
+"'Seed Sowing 2026 To be updated.xlsx' in the archive is identical to the 2025 list. Was a blank 2026 template meant to be there?",
+"What does red font on species names mean in the 2024 and 2025 lists (T28 species only, or something else)? Why is Pittosporum eugenioides or Olearia avicenniifolia also red?",
+"How are pricking trays worked out from the projected potting number (24 plants per V150 tray?), and why do four species in 2026 differ from that rule?",
+"Is the 2025 'Projected potting 2026-27' the same number as the target in the Production planning and Pricking out list? Which one is the source of truth?",
+"Should species marked 0 in the 2024 projection (27 species) still count in the 93 to 98 species total, and are the 'EXTRAS' (Streblus, Parsonsia, Eleocarpus, Cop rham) in production?",
+"Do S-numbers in the Notes column and the 2026 'Label number' column match the Seed collecting record and Seed records, and is there one master list of seed lots with their collection details? (Seed-source locations are held only in free-text columns, so how should these be handled when the data is brought together?)",
+"Does a blank in the sowing columns mean 'cutting' or 'not yet sown' or 'bought in'? The 2025 notes use 'cuttings', 'seedlings', 'no seed yet' to cover this."
+]
+}

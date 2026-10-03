@@ -1,0 +1,1456 @@
+{
+ "batch_id": "B06_propagation_tallies",
+ "files": [
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation numbers from July to December 2026.xlsx",
+   "purpose_guess": "Current Jul-Dec pricking-out tally form with 2026 season goals per species but no weekly tallies entered.",
+   "workflow_stage": "pricking_out",
+   "years_covered": "2026 (Jul-Dec); footer says 26/7/23",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-89",
+     "grain": "One species per row (pricking-out target for the period); weekly cells are blank columns under a month banner for ticking in numbers pricked out. The sheet is stacked in three page-blocks (header repeated), not one continuous table.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species\t\t",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 74,
+       "examples": [
+        "Aristrotelia fruiticosa",
+        "Carex secta",
+        "Phormum tenax"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected. Scientific name only; no common or M\u0101ori name."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "mixed",
+       "non_null_pct": 98.8,
+       "distinct": 36,
+       "examples": [
+        "0",
+        "24",
+        "48",
+        "665",
+        "707+"
+       ],
+       "notes": "Season goal (number to prick out) per species, hard-coded. 23 zero goals. Includes 9 text values of the form 'N+' (e.g. '707+')."
+      },
+      {
+       "letter": "C:AE",
+       "header": "(unlabelled week cells under month banners: July/August, September, October, November, December)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Week cells are entirely empty in this file: no tallies have been entered and there are no week-ending dates. Month banners are merged cells at the top of each block; the number of columns per month varies (4-7)."
+      },
+      {
+       "letter": "AF",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Per-species row total column (highlighted yellow); empty, no formulas."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 74,
+     "quality_issues": [
+      {
+       "issue": "Despite the filename and being the live pricking-out folder, week and Total cells are blank; only goals are entered. Footer says 'updated 26/7/23 <initials>' (year 2023, not 2026), so either the date is a typo or the file was cloned from an older year.",
+       "evidence": "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation numbers from July to December 2026.xlsx \u203a Sheet1 \u203a A89, C3:AF87",
+       "severity": "high"
+      },
+      {
+       "issue": "Goals column mixes integers with 'N+' text values (open-ended or minimum goals): 9 cells.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a B8, B21, B27, B28, B39, B52, B55, B57, B60",
+       "severity": "high"
+      },
+      {
+       "issue": "Typed grand total (10668) equals the sum of the goals only if each 'N+' is read as N; sum of pure integers is 5614. Total is hard-coded.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a B88",
+       "severity": "med"
+      },
+      {
+       "issue": "Species list differs from the 2024/25 version: 74 species rows vs 76. Not in 2026: Lophomyrtus obcordata, Pennantia corumbosa (as spelt in 2024 file). 'Phormum tenax' here vs 'Phormium tenax' in 2024. Goals differ from Dec 2024 for 49 of 73 shared species.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A3:A86 vs Archive Dec 2024 \u203a Sheet1 \u203a A3:A83",
+       "severity": "med"
+      },
+      {
+       "issue": "No red-font marking and no 'Red into T28' footer: the T28 vs V150 pathway distinction used in 2024/25 files is not carried here.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A3:A86, A89",
+       "severity": "med"
+      },
+      {
+       "issue": "Species names padded with tabs and trailing spaces; 'Aristrotelia fruiticosa' typo persists.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A3:A86",
+       "severity": "low"
+      },
+      {
+       "issue": "Column B header row split across B1/B2 (cells filled orange) with header '' and, in lower blocks, 'Goals'/'set' on two rows.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a B1:B2, B32:B33, B63:B64",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation  Jan - April 25 Final.xlsx",
+   "purpose_guess": "Jan-Apr 2025 pricking-out tally form with goals identical to Jul-Dec 2024 and no weekly tallies entered.",
+   "workflow_stage": "pricking_out",
+   "years_covered": "Jan-Apr 2025 (title says 2024/25)",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "4-87",
+     "grain": "One species per row (pricking-out target for the period); weekly cells are blank columns under a month banner for ticking in numbers pricked out. The sheet is stacked in three page-blocks (header repeated), not one continuous table.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species\t\t",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 76,
+       "examples": [
+        "Aristrotelia fruiticosa",
+        "Carex secta",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected. Scientific name only; no common or M\u0101ori name."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 97.5,
+       "distinct": 25,
+       "examples": [
+        "0",
+        "24",
+        "48",
+        "96",
+        "216"
+       ],
+       "notes": "Season goal (number to prick out) per species, hard-coded. 20 zero goals."
+      },
+      {
+       "letter": "C:R",
+       "header": "(unlabelled week cells under month banners: January, February, March, April)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Week cells are entirely empty in this file: no tallies have been entered and there are no week-ending dates. Month banners are merged cells at the top of each block; the number of columns per month varies (4-7)."
+      },
+      {
+       "letter": "S",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Per-species row total column (highlighted yellow); empty, no formulas."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 76,
+     "quality_issues": [
+      {
+       "issue": "Weekly tally and row-Total cells are blank; the file is a goals-only form, not a record of what was pricked out. The roll-up from weeks to months to Total is therefore not demonstrated by any formula.",
+       "evidence": "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation  Jan - April 25 Final.xlsx \u203a Sheet1 \u203a C4:S87",
+       "severity": "high"
+      },
+      {
+       "issue": "Grand total in the Total row is typed in, not a formula (no formulas in the workbook); typed total differs from the sum of the goals column by 2 (10706 stated vs 10708 summed).",
+       "evidence": "\u2026 \u203a Sheet1 \u203a B85 (stated total) vs B4:B84 (sum)",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet title (A1) says 'Pricking out 2024/25' and goals (10706 total, identical to the Jul-Dec 2024 file) are unchanged, so the 'Final' Jan-Apr sheet reuses the Jul-Dec goal column; filename says 'Jan - April 25' so year labelling relies on filename and title together.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a C2, F2, J2, P2, S2 and rows 30, 59",
+       "severity": "med"
+      },
+      {
+       "issue": "Footer notes carry meaning in free text only: 'updated 23/7/24 <initials>' and 'Red into T28 all others V150'. Six species have red font (Austroderia richardii, Carex secta, Cordyline australis, Leptospermum scoparium, Olearia arborescens, Olearia avicenniifolia): red = goes into T28 (fast pathway), others into V150.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A86:A87; A6, A9, A28, A41, A51, A52 (red font)",
+       "severity": "med"
+      },
+      {
+       "issue": "Species names padded with tabs and trailing spaces; typos such as 'Aristrotelia fruiticosa' (cf. Aristotelia fructicosa) and 'Phormium tenax' spelling varies across versions.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A4:A84",
+       "severity": "med"
+      },
+      {
+       "issue": "Used range runs to row ~16,380 (blank padding / formatting); data stops at row 87.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a dimension A1:S16381",
+       "severity": "low"
+      },
+      {
+       "issue": "Filename says 'Final' but all tally cells are empty.",
+       "evidence": "2. Propagation (cuttings and seeds)/_Pricking out lists/Propagation  Jan - April 25 Final.xlsx \u203a Sheet1 \u203a C4:S87",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Propagation numbers from July - Dec 2024.xlsx",
+   "purpose_guess": "Archived Jul-Dec 2024 pricking-out tally form (title 'Pricking out 2024/25'), goals only.",
+   "workflow_stage": "pricking_out",
+   "years_covered": "Jul-Dec 2024",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-86",
+     "grain": "One species per row (pricking-out target for the period); weekly cells are blank columns under a month banner for ticking in numbers pricked out. The sheet is stacked in three page-blocks (header repeated), not one continuous table.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species\t\t",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 76,
+       "examples": [
+        "Aristrotelia fruiticosa",
+        "Carex secta",
+        "Cordyline australis",
+        "Phormium tenax"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected. Scientific name only; no common or M\u0101ori name."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 97.5,
+       "distinct": 25,
+       "examples": [
+        "0",
+        "24",
+        "48",
+        "96",
+        "216"
+       ],
+       "notes": "Season goal (number to prick out) per species, hard-coded. 20 zero goals."
+      },
+      {
+       "letter": "C:Z",
+       "header": "(unlabelled week cells under month banners: July/August, September, October, November, December)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Week cells are entirely empty in this file: no tallies have been entered and there are no week-ending dates. Month banners are merged cells at the top of each block; the number of columns per month varies (4-7)."
+      },
+      {
+       "letter": "AA",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Per-species row total column (highlighted yellow); empty, no formulas."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 76,
+     "quality_issues": [
+      {
+       "issue": "Weekly tally and row-Total cells are blank; the file is a goals-only form, not a record of what was pricked out. The roll-up from weeks to months to Total is therefore not demonstrated by any formula.",
+       "evidence": "2. Propagation (cuttings and seeds)/_Pricking out lists/Archive/Propagation numbers from July - Dec 2024.xlsx \u203a Sheet1 \u203a C3:AA86",
+       "severity": "high"
+      },
+      {
+       "issue": "Grand total in the Total row is typed in, not a formula (no formulas in the workbook); typed total differs from the sum of the goals column by 2 (10706 stated vs 10708 summed).",
+       "evidence": "\u2026 \u203a Sheet1 \u203a B84 (stated total) vs B3:B83 (sum)",
+       "severity": "med"
+      },
+      {
+       "issue": "Column B and C onward header text is 'Goals set' plus month banners with no week dates; banner text only on rows 2, 30, 59 (one per page-block).",
+       "evidence": "\u2026 \u203a Sheet1 \u203a C2, I2, M2, T2, W2, AA2 and rows 30, 59",
+       "severity": "low"
+      },
+      {
+       "issue": "Footer notes carry meaning in free text only: 'updated 23/7/24 <initials>' and 'Red into T28 all others V150'. Six species have red font (Austroderia richardii, Carex secta, Cordyline australis, Leptospermum scoparium, Olearia arborescens, Olearia avicenniifolia): red = goes into T28 (fast pathway), others into V150.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A85:A86; A5, A8, A27, A40, A50, A51 (red font)",
+       "severity": "med"
+      },
+      {
+       "issue": "Species names padded with tabs and trailing spaces; typos such as 'Aristrotelia fruiticosa' (cf. Aristotelia fructicosa) and 'Phormium tenax' spelling varies across versions.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a A3:A83",
+       "severity": "med"
+      },
+      {
+       "issue": "Used range runs to row ~16,380 (blank padding / formatting); data stops at row 87.",
+       "evidence": "\u2026 \u203a Sheet1 \u203a dimension A1:AI16380",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx",
+   "purpose_guess": "Blank July-December pricking-out recording template (hand-fill pages plus a combined set) for the production year; the same species list appears on three printed sheets and again on 'Complete set'.",
+   "workflow_stage": "pricking_out",
+   "years_covered": "2026/27 (title text on Sheet 1) ",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet 1",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page; the species list is split across three printed sheets (Sheet 1 about 30 species, Sheet 2 about 29, Sheet 3 about 18) to give a hand-fill recording sheet per page.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template (header '2026/27' on Sheet 1 only)."
+      },
+      {
+       "letter": "D:AA",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AB",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 30,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1!A1:AB32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1!A1:AB32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet 2",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page; the species list is split across three printed sheets (Sheet 1 about 30 species, Sheet 2 about 29, Sheet 3 about 18) to give a hand-fill recording sheet per page.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template (header '2026/27' on Sheet 1 only)."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AA",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AB",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 29,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2!A1:AB32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2!A1:AB32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet 3",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page; the species list is split across three printed sheets (Sheet 1 about 30 species, Sheet 2 about 29, Sheet 3 about 18) to give a hand-fill recording sheet per page.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template (header '2026/27' on Sheet 1 only)."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AA",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AB",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 18,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3!A1:AB32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3!A1:AB32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Complete set",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-96",
+     "grain": "Whole species list stacked in three blocks of about 30 (all 76 species), same layout as Sheets 1-3 combined.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty"
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AA",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AB",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 75,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Complete set!A1:AB96",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Complete set!A1:AB96 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Roughly 75 distinct species in the Complete set against 75 in Sheets 1-3 combined; the union of the three sheets and the Complete set agree on species. Species are duplicated across the sheets (same list in two views), so the template is maintained twice.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet July - December -annual template.xlsx \u203a Complete set \u203a A3:A96 vs Sheet 1-3 \u203a A3:A32",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx",
+   "purpose_guess": "Wide-format 2026/27 recording template spanning August to April, with season goals pre-filled on the per-page sheets.",
+   "workflow_stage": "pricking_out",
+   "years_covered": "2026/27",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet 1",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page; month banners run August to April (nine months) on a single wide sheet, not July-December only.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 64.5,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Pre-filled season goals (hard-coded, e.g. 96, 616, 48) for about 19 of 30 species on Sheet 1; goals for 2026/27, the only template carrying real goals."
+      },
+      {
+       "letter": "C:AK",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AL",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 30,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1!A1:AM33",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1!A1:AM33 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Goals prefilled in column B but not tied to the live goals in the 2026 propagation numbers file or any forecast workbook; compare before use.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1 \u203a B3:B31",
+       "severity": "med"
+      },
+      {
+       "issue": "Month banner 'Febuary' misspelt; header text includes variable runs of spaces ('2026/27             Species').",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 1 \u203a A1, AA1/AB1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet 2",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-33",
+     "grain": "One species per row on a printable page; month banners run August to April (nine months) on a single wide sheet, not July-December only.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 74.2,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Pre-filled season goals (hard-coded, e.g. 96, 616, 48) for about 19 of 30 species on Sheet 1; goals for 2026/27, the only template carrying real goals."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AL",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AM",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 30,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2!A1:AM33",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2!A1:AM33 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Goals prefilled in column B but not tied to the live goals in the 2026 propagation numbers file or any forecast workbook; compare before use.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2 \u203a B3:B31",
+       "severity": "med"
+      },
+      {
+       "issue": "Month banner 'Febuary' misspelt; header text includes variable runs of spaces ('2026/27             Species').",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 2 \u203a A1, AA1/AB1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet 3",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page; month banners run August to April (nine months) on a single wide sheet, not July-December only.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 73.7,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Pre-filled season goals (hard-coded, e.g. 96, 616, 48) for about 19 of 30 species on Sheet 1; goals for 2026/27, the only template carrying real goals."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AL",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AM",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 18,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3!A1:AM33",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3!A1:AM33 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Goals prefilled in column B but not tied to the live goals in the 2026 propagation numbers file or any forecast workbook; compare before use.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3 \u203a B3:B31",
+       "severity": "med"
+      },
+      {
+       "issue": "Month banner 'Febuary' misspelt; header text includes variable runs of spaces ('2026/27             Species').",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Sheet 3 \u203a A1, AA1/AB1",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Complete set",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-96",
+     "grain": "Whole species list in three blocks, same wide Aug-Apr layout; goals not filled in.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3.7,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty here although prefilled on Sheets 1-3"
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AL",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AM",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 75,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Complete set!A1:AM96",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Complete set!A1:AM96 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Goals filled on Sheets 1-3 but empty on Complete set; the two views disagree.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Complete set \u203a B3:B94 vs Sheet 1 \u203a B3:B31",
+       "severity": "med"
+      },
+      {
+       "issue": "Species 'Lophomyrtus obcordata' appears in Complete set but is missing from Sheets 1-3.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/FULL PAGE Propagation recording sheet July - December -annual template.xlsx \u203a Complete set \u203a A3:A96",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx",
+   "purpose_guess": "Blank January-April pricking-out recording template (hand-fill pages plus combined set).",
+   "workflow_stage": "pricking_out",
+   "years_covered": "2026/27 (title text) ",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet 1",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page for the Jan-Apr half of the year.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:T",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "U",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 29,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 1!A1:U32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 1!A1:U32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet 2",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page for the Jan-Apr half of the year.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:T",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "U",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 29,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 2!A1:U32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 2!A1:U32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet 3",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-32",
+     "grain": "One species per row on a printable page for the Jan-Apr half of the year.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty in this blank template."
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:T",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "U",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 18,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 3!A1:U32",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Sheet 3!A1:U32 \u203a header rows and column A",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Complete set",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-96",
+     "grain": "Whole species list in three blocks (Jan-Apr layout).",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty"
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:T",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "U",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 75,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Complete set!A1:U96",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Complete set!A1:U96 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Species list on Complete set includes repeated species (about 89 name cells vs 75 distinct) because of repeated header and block text; check for duplicates before using as a species master.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet January - April -annual template.xlsx \u203a Complete set \u203a A3:A96",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx",
+   "purpose_guess": "Single-sheet January-April template that is an unfinished copy of the July-December pricking-out list (wrong month banners).",
+   "workflow_stage": "pricking_out",
+   "years_covered": "unknown",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "form",
+     "header_row": 1,
+     "data_rows": "2-89",
+     "grain": "One species per row, in three stacked page-blocks on one sheet (same layout as the pricking-out lists).",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 96,
+       "distinct": 0,
+       "examples": [
+        "Coprosma intertexta",
+        "Fuscospora fusca",
+        "Olearia nummularifolia"
+       ],
+       "notes": "Species name followed by tabs and runs of trailing spaces (used for alignment); about 70 of 74-76 cells affected; some header cells prefixed '2026/27'."
+      },
+      {
+       "letter": "B",
+       "header": "Goals set",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": 6.2,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty (blank template)"
+      },
+      {
+       "letter": "C",
+       "header": "To Date",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 3,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Running 'to date' column; empty, no formulas."
+      },
+      {
+       "letter": "D:AF",
+       "header": "(week cells under month banners)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank week cells under merged month banners; no dates and no formulas."
+      },
+      {
+       "letter": "AG",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Row total; empty, no formulas. 'TOTALS' row at foot is also blank."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 75,
+     "quality_issues": [
+      {
+       "issue": "Blank template: no formulas anywhere, so the intended roll-up (weeks into month into Total / To Date) is not encoded; a user would add by hand.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx \u203a Sheet1!A1:AG89",
+       "severity": "med"
+      },
+      {
+       "issue": "Month header 'Febuary' misspelt (where present); species names padded with tabs and spaces.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx \u203a Sheet1!A1:AG89 \u203a header rows and column A",
+       "severity": "low"
+      },
+      {
+       "issue": "Header banners were copied from the Jul-Dec sheet and not updated: after 'January' the banners read 'September', 'October', 'November', 'December', so month labels are wrong for a Jan-Apr form.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx \u203a Sheet1 \u203a D1, J1, P1, X1, AB1",
+       "severity": "high"
+      },
+      {
+       "issue": "Header cell for column B is blank; 'Goals set'/'To Date' appear only on row 2.",
+       "evidence": "2. Propagation (cuttings and seeds)/Templates and Planning/Propagation recording sheet Jan - April -annual template.xlsx \u203a Sheet1 \u203a B1:C2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Where are the actual weekly pricking-out numbers kept? All three tally sheets (Jul-Dec 2024, Jan-Apr 2025, Jul-Dec 2026) have goals only, with blank week and Total cells. Are the filled-in paper sheets scanned elsewhere, or entered into another workbook (for example the 'Pricking out 2025/26 for potting' lists)?",
+  "What does '+' mean on a goal (for example '707+') in the 2026 file: a minimum, or a number still to be topped up?",
+  "Is red species-name font (Austroderia richardii, Carex secta, Cordyline australis, Leptospermum scoparium, Olearia arborescens, Olearia avicenniifolia) the formal rule for 'goes into T28', and why is it absent from the 2026 file?",
+  "The 2026 file footer reads 'updated 26/7/23': is that 2023 a typo for 2026 or did the sheet start from an old copy? Which 2026 species were dropped (Lophomyrtus obcordata, Pennantia corumbosa) on purpose?",
+  "Do goals in the 'Goals set' column mean pricking-out target for the season, or the planting target two seasons later with contingency applied?",
+  "Which template is current: the 'annual template' sets, the 'FULL PAGE' August-April version, or the single-sheet Jan-Apr one with wrong month banners?"
+ ]
+}

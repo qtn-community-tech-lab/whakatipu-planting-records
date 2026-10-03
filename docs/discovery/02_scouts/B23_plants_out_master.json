@@ -1,0 +1,1798 @@
+{
+ "batch_id": "B23_plants_out_master",
+ "files": [
+  {
+   "path": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+   "purpose_guess": "The historic 'Plants Out Master': a wide matrix of plant counts by species x planting site x season (Autumn/Spring 2015 to Autumn 2026) with by-site and by-species summaries and Trees that Count reporting sheets.",
+   "workflow_stage": "planting_history",
+   "years_covered": "2015–2026 (Autumn 2015 to Autumn 2026; no Spring 2026)",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Notes",
+     "role": "notes",
+     "header_row": 1,
+     "data_rows": "2-12",
+     "grain": "Free-text instructions for adding a new species.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Notes to Adding Plant Species",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 30,
+       "distinct": 3,
+       "examples": [
+        "1) Insert new row to add new species in Master Plant List"
+       ],
+       "notes": "Says to copy a new species to MASTER, SUMMARY PLANTS, the Plant Allocation (season) workbooks and the 01 Keystone / 02 Community Groups / 03 Schools sheets - confirms species are keyed by hand into several places."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Documents a manual multi-sheet re-keying process (no single master list).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Notes › A1:B12",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Master Plant List",
+     "role": "lookup",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species per row (98 species, numbered 1-98).",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Trees that Count >5m (Y)",
+       "concept": "ttc_field",
+       "type": "text",
+       "non_null_pct": 50,
+       "distinct": 1,
+       "examples": [
+        "Y"
+       ],
+       "notes": "Y = tree over 5 m (counts for TTC)."
+      },
+      {
+       "letter": "B",
+       "header": "Threatened Species (T)",
+       "concept": "provenance_note",
+       "type": "text",
+       "non_null_pct": 13.3,
+       "distinct": 1,
+       "examples": [
+        "T"
+       ],
+       "notes": "Threatened flag."
+      },
+      {
+       "letter": "C",
+       "header": "# On Master List",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "50",
+        "98"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "D",
+       "header": "BOTANICAL NAME",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 98,
+       "examples": [
+        "Lophozonia menziesii",
+        "Veronica salicifolia",
+        "Weinmania racemosa"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "E",
+       "header": "COMMON NAME",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 66.3,
+       "distinct": 65,
+       "examples": [
+        "Wineberry",
+        "Silver beech"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "F",
+       "header": "MAORI NAME",
+       "concept": "maori_name",
+       "type": "text",
+       "non_null_pct": 50,
+       "distinct": 49,
+       "examples": [
+        "Makomako",
+        "Tawhai"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "G",
+       "header": "Grown at JMN",
+       "concept": "container",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty; intended to say grown vs bought."
+      },
+      {
+       "letter": "H",
+       "header": "Purchased through Nursery",
+       "concept": "supplier/bought_in",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Empty."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "D",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Columns G and H (grown at JMN / purchased) are entirely empty.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Master Plant List › G3:H101",
+       "severity": "low"
+      },
+      {
+       "issue": "'Weinmania racemosa' spelling (current accepted: Weinmannia).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Master Plant List › D101",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "MASTER",
+     "role": "data",
+     "header_row": 4,
+     "data_rows": "8-106",
+     "grain": "One species (row) x one planting site x one season (Autumn/Spring of a year) (column). Wide matrix: 99 species rows by 23 season blocks (Autumn 2015 to Autumn 2026) each with 13-26 site columns (116 distinct site-header spellings overall) and a TOTAL column. Cell = plant count. No event date, event type, planting area or volunteer data.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 96.1,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "98"
+       ],
+       "notes": "Running species number 1-98 matching 'Master Plant List' col C; row 106 species has no number."
+      },
+      {
+       "letter": "B",
+       "header": "(no header)",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 47.1,
+       "distinct": 1,
+       "examples": [
+        "x"
+       ],
+       "notes": "'x' flag = tree over 5 m (Trees that Count >5m); header absent here, labelled 'Tree over 5m'/'TTC' on other sheets (medium confidence)."
+      },
+      {
+       "letter": "C",
+       "header": "Threatened Species",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 11.8,
+       "distinct": 1,
+       "examples": [],
+       "notes": "Threatened-species flag; 1 distinct value."
+      },
+      {
+       "letter": "D",
+       "header": "BOTANICAL NAME",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99.0,
+       "distinct": 101,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Veronica salicifolia",
+        "Weinmania racemosa"
+       ],
+       "notes": "Rows 8-105 (98 species) plus row 106 'Cyathoides juniperina' (not on Master Plant List). Rows 1-4 hold block headers; row 107 totals."
+      },
+      {
+       "letter": "E",
+       "header": "COMMON NAME",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 63.7,
+       "distinct": 65,
+       "examples": [
+        "Wineberry",
+        "Koromiko",
+        "Kamahi"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "F",
+       "header": "MAORI NAME",
+       "concept": "maori_name",
+       "type": "text",
+       "non_null_pct": 48.0,
+       "distinct": 49,
+       "examples": [
+        "Makomako",
+        "Tawhai",
+        "Toe toe"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "G–S",
+       "header": "AUTUMN 2015 site columns (13)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2015; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 2068 (row 107)."
+      },
+      {
+       "letter": "T",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2015 site columns per species (row 8-105); row 107 =SUM column = 2068."
+      },
+      {
+       "letter": "V–AO",
+       "header": "SPRING 2015 site columns (20)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2015; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 3483 (row 107)."
+      },
+      {
+       "letter": "AP",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2015 site columns per species (row 8-105); row 107 =SUM column = 3483."
+      },
+      {
+       "letter": "AR–BF",
+       "header": "AUTUMN 2016 site columns (15)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2016; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 3176 (row 107)."
+      },
+      {
+       "letter": "BG",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2016 site columns per species (row 8-105); row 107 =SUM column = 3176."
+      },
+      {
+       "letter": "BI–CH",
+       "header": "SPRING 2016 site columns (26)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2016; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4331 (row 107)."
+      },
+      {
+       "letter": "CI",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2016 site columns per species (row 8-105); row 107 =SUM column = 4331."
+      },
+      {
+       "letter": "CK–CX",
+       "header": "AUTUMN 2017 site columns (14)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2017; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4516 (row 107)."
+      },
+      {
+       "letter": "CY",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2017 site columns per species (row 8-105); row 107 =SUM column = 4516."
+      },
+      {
+       "letter": "DA–DQ",
+       "header": "SPRING 2017 site columns (17)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2017; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4667 (row 107)."
+      },
+      {
+       "letter": "DR",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2017 site columns per species (row 8-105); row 107 =SUM column = 4667."
+      },
+      {
+       "letter": "DT–EI",
+       "header": "AUTUMN 2018 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2018; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4589 (row 107)."
+      },
+      {
+       "letter": "EJ",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2018 site columns per species (row 8-105); row 107 =SUM column = 4589."
+      },
+      {
+       "letter": "EL–EX",
+       "header": "SPRING 2018 site columns (13)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2018; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 3458 (row 107)."
+      },
+      {
+       "letter": "EY",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2018 site columns per species (row 8-105); row 107 =SUM column = 3458."
+      },
+      {
+       "letter": "FA–FQ",
+       "header": "AUTUMN 2019 site columns (17)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2019; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5078 (row 107)."
+      },
+      {
+       "letter": "FR",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2019 site columns per species (row 8-105); row 107 =SUM column = 5078."
+      },
+      {
+       "letter": "FT–GI",
+       "header": "SPRING 2019 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2019; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5400 (row 107)."
+      },
+      {
+       "letter": "GJ",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2019 site columns per species (row 8-105); row 107 =SUM column = 5400."
+      },
+      {
+       "letter": "GL–GQ",
+       "header": "AUTUMN 2020 site columns (6)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2020; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 996 (row 107)."
+      },
+      {
+       "letter": "GR",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2020 site columns per species (row 8-105); row 107 =SUM column = 996."
+      },
+      {
+       "letter": "GT–HM",
+       "header": "SPRING 2020 site columns (19)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2020; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 7572 (row 107)."
+      },
+      {
+       "letter": "HN",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2020 site columns per species (row 8-105); row 107 =SUM column = 7572."
+      },
+      {
+       "letter": "HP–IE",
+       "header": "AUTUMN 2021 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2021; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5133 (row 107)."
+      },
+      {
+       "letter": "IF",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2021 site columns per species (row 8-105); row 107 =SUM column = 5133."
+      },
+      {
+       "letter": "IH–IY",
+       "header": "SPRING 2021 site columns (18)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2021; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5356 (row 107)."
+      },
+      {
+       "letter": "IZ",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2021 site columns per species (row 8-105); row 107 =SUM column = 5356."
+      },
+      {
+       "letter": "JB–JQ",
+       "header": "AUTUMN 2022 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2022; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5869 (row 107)."
+      },
+      {
+       "letter": "JR",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2022 site columns per species (row 8-105); row 107 =SUM column = 5869."
+      },
+      {
+       "letter": "JT–KI",
+       "header": "SPRING 2022 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2022; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5014 (row 107)."
+      },
+      {
+       "letter": "KJ",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2022 site columns per species (row 8-105); row 107 =SUM column = 5014."
+      },
+      {
+       "letter": "KL–KY",
+       "header": "AUTUMN 2023 site columns (14)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2023; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4886 (row 107)."
+      },
+      {
+       "letter": "KZ",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2023 site columns per species (row 8-105); row 107 =SUM column = 4886."
+      },
+      {
+       "letter": "LB–LV",
+       "header": "SPRING 2023 site columns (21)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2023; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 5720 (row 107)."
+      },
+      {
+       "letter": "LW",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2023 site columns per species (row 8-105); row 107 =SUM column = 5720."
+      },
+      {
+       "letter": "LY–MN",
+       "header": "AUTUMN 2024 site columns (16)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2024; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 13657 (row 107)."
+      },
+      {
+       "letter": "MO",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2024 site columns per species (row 8-105); row 107 =SUM column = 13657."
+      },
+      {
+       "letter": "MQ–NH",
+       "header": "SPRING 2024 site columns (18)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2024; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 29826 (row 107)."
+      },
+      {
+       "letter": "NI",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2024 site columns per species (row 8-105); row 107 =SUM column = 29826."
+      },
+      {
+       "letter": "NK–OD",
+       "header": "AUTUMN 2025 site columns (20)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2025; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4469 (row 107)."
+      },
+      {
+       "letter": "OE",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2025 site columns per species (row 8-105); row 107 =SUM column = 4469."
+      },
+      {
+       "letter": "OG–OZ",
+       "header": "SPRING 2025 site columns (20)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Spring 2025; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 6248 (row 107)."
+      },
+      {
+       "letter": "PA",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Spring 2025 site columns per species (row 8-105); row 107 =SUM column = 6248."
+      },
+      {
+       "letter": "PC–PV",
+       "header": "AUTUMN 2026 site columns (20)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "One column per planting site for Autumn 2026; header row 4 = site name, row 5 = site ID code (e.g. 9G), row 6 = landowner organisation (DOC/QLDC/PRIVATE etc.), row 1 = season label. Cell = number of that species planted at that site that season; blank = none. Block total 4556 (row 107)."
+      },
+      {
+       "letter": "PW",
+       "header": "TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 80.4,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM across the Autumn 2026 site columns per species (row 8-105); row 107 =SUM column = 4556."
+      },
+      {
+       "letter": "PY",
+       "header": "GRAND TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM of all 23 season TOTAL columns per species; PY107 =SUM(PY4:PY105)=140049; PY108 =PY107-NI107-MO107 = 96566 (excludes the 2024 spike seasons, undocumented)."
+      },
+      {
+       "letter": "PZ",
+       "header": "(none)",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Stray value PZ105 = 135501, unlabelled."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "T8:T105 and 22 other season TOTAL columns",
+       "pattern": "=SUM(G8:S8) (site columns of that block)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "G107:PW107",
+       "pattern": "=SUM(G8:G105) column totals per site per season",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "PY8:PY105",
+       "pattern": "=(SUM(PW8,PA8,OE8,NI8,MO8,...,AP8,T8)) grand total across seasons",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "AP8:AP105, etc.",
+       "pattern": "=SUM(V8:AO8)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "D",
+     "species_distinct_count": 99,
+     "quality_issues": [
+      {
+       "issue": "Grain is site x season only: no planting area codes (searched whole workbook for XX-NN pattern, no hits), no event date, no event type (establishment/infill/replacement/enrichment) and no volunteer count anywhere in the workbook. Season label is the only temporal field.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › G1:PW4",
+       "severity": "high"
+      },
+      {
+       "issue": "Site naming is inconsistent between seasons (116 distinct header spellings: e.g. 'Whitechapel  ' with trailing spaces to 2024 then 'Whitechapel'; 'PEACE'/'PEACE PARK'/'Peace Park'; 'LH WEST'/'LH WEST PG'; 'Slope Hill HGF' vs 'Slope Hill'); same site is a differently placed column each season, so a site dimension must be built by mapping headers (SITE ID in row 5 helps for ~70% of columns).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › G4:PW4",
+       "severity": "high"
+      },
+      {
+       "issue": "Site ID row 5 and landowner row 6 are incomplete and stop being filled: landowner is blank for all 2024-2026 blocks; site ID blank for all Autumn 2026 columns; site ID present for 11 of 20 in Autumn 2025.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › MQ5:PW6",
+       "severity": "med"
+      },
+      {
+       "issue": "2015-2016 blocks have inconsistent site detail and contain row-5/row-6 text codes mixed into numeric columns; 'Autumn 2020' has only 6 sites (Covid) with total 996.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › GL1:GR107",
+       "severity": "low"
+      },
+      {
+       "issue": "Two 2024 seasons are 13,657 and 29,826 plants against typical 4-10k; the spike is mostly one site column 'Slope Hill HGF' (22,000 across four species, e.g. Pittosporum tenuifolium 4,400) and 'Slope Hill Coronation' (7,000). Grand total row 108 deliberately subtracts both 2024 seasons (=PY107-NI107-MO107).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › MU35:MU81, MG, PY108",
+       "severity": "med"
+      },
+      {
+       "issue": "Species list has 99 rows vs 98 on Master Plant List: row 106 'Cyathoides juniperina' is unnumbered, sits outside the SUM(8:105) range used by most totals (only PW107 uses 8:106) but holds 19 in Spring 2025 Quail Rise; 'Quail Rise' Spring 2025 cell for row 50 holds text 'TBC '. Spellings that differ from other sheets: 'Weinmania racemosa', 'Carex Maorica' (archive has 'Carex maorica').",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › D106, OP106, OP50, D105, D12",
+       "severity": "med"
+      },
+      {
+       "issue": "Header block is stale/misleading: D1 'Jean Malpas Nursery Stock', D2:E3 'LAST UPDATED 2024-05-08 / UPDATED BY (first name)' although data runs to Autumn 2026; Autumn 2025 'Paper for Trees' column OD has no row-1 season label; two 'REMARKS' labels in row 3 (KE, LT) sit above Jardine Boulders site columns (Spring 2022/2023) and the cells hold counts, not remarks.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › D1:E3, OD1, KE3, LT3",
+       "severity": "low"
+      },
+      {
+       "issue": "Autumn 2026 block (PC:PV, total 4,556, 12 of 20 sites with numbers) lies after the file's 'last updated' date and there is no Spring 2026 block; unclear whether it is actual planting or allocation/plan (Autumn 2026 has already passed at 3 Oct 2026).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › PC1:PW107",
+       "severity": "med"
+      },
+      {
+       "issue": "Row 107 totals are computed per column; totals reconcile to SUMMARY SITES season totals, but SUMMARY PLANTS Autumn 2025 total is 4,389 vs 4,469 here (hard-coded).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › MASTER › OE107 vs SUMMARY PLANTS › AS4",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "Row 6 landowner organisation names (role-level, not personal) - no personal names in this sheet"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "SUMMARY SITES",
+     "role": "summary",
+     "header_row": 2,
+     "data_rows": "4-82",
+     "grain": "One row per site (77 sites), with Autumn / Spring / Total counts for each year 2015-2026 (12 year blocks of 4 columns). Counts are site totals, not by species.",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "New ID",
+       "concept": "site",
+       "type": "mixed",
+       "non_null_pct": 81.2,
+       "distinct": 68,
+       "examples": [
+        "1",
+        "1C",
+        "6A"
+       ],
+       "notes": "Site ID code (e.g. 9G); numeric parents with letter sub-sites."
+      },
+      {
+       "letter": "C",
+       "header": "SITE NAME",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 91.8,
+       "distinct": 78,
+       "examples": [
+        "PIGEON ISLAND",
+        "SLOPE HILL CORONATION",
+        "WHITECHAPEL RESERVE"
+       ],
+       "notes": "77 distinct sites incl. duplicates in spelling ('SHOTOVER RIVER ' twice)."
+      },
+      {
+       "letter": "D",
+       "header": "LANDOWNER",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 65.9,
+       "distinct": 11,
+       "examples": [
+        "DOC",
+        "QLDC",
+        "CROWN"
+       ],
+       "notes": "Organisation; variants 'OLDC', 'DOC ', 'Crown'."
+      },
+      {
+       "letter": "E",
+       "header": "WHO",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 72.9,
+       "distinct": 42,
+       "examples": [],
+       "notes": "Contact/group for the site; contains personal names in some rows."
+      },
+      {
+       "letter": "F–AZ",
+       "header": "AUTUMN/SPRING/TOTAL per year 2015-2026",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Year headers in row 1 (F=2015 ... AX=2026), season in row 2. F4 pattern =MASTER!G107 pulls site column totals from MASTER row 107 for 63 cells; the other ~430 cells are hard-coded. Row 3 totals = SUM(4:82)."
+      },
+      {
+       "letter": "BB",
+       "header": "Sites",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "GLENORCHY LAGOON & WALKWAY",
+        "QUEENSTOWN PRIMARY"
+       ],
+       "notes": "Alternative site name list."
+      },
+      {
+       "letter": "BC",
+       "header": "Grand Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM of the 12 year totals per site; BC3 = 139,948."
+      },
+      {
+       "letter": "BD",
+       "header": "K / C / S",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 3,
+       "examples": [
+        "K",
+        "C",
+        "S"
+       ],
+       "notes": "Site class: Keystone 18, Community 48, School 8, blank 5. BB84:BC86 give class totals (Community 21,213; Keystone 110,343; Schools 7,058)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "F4:AZ82",
+       "pattern": "=MASTER!G107 / =MASTER!$V$107 / =SUM(F4:G4)",
+       "refs_other_sheets": [
+        "MASTER!row 107"
+       ]
+      },
+      {
+       "range": "BC4:BC82",
+       "pattern": "=SUM(AZ4,AV4,AR4,...)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Mix of linked (63) and hard-coded (~430) cells; some links point to MASTER rows 109-116 which are empty (e.g. F5 =MASTER!G109, J5 =MASTER!AR111), so linking is by row-offset rather than by site.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY SITES › F5, J5, J8, J9",
+       "severity": "high"
+      },
+      {
+       "issue": "Grand total differs: SUMMARY SITES BC3 139,948 vs MASTER PY107 140,049 vs SUMMARY PLANTS AW4 135,413.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY SITES › BC3; MASTER › PY107; SUMMARY PLANTS › AW4",
+       "severity": "med"
+      },
+      {
+       "issue": "Year 2026 columns: Autumn 4,556 (matches MASTER Autumn 2026) and Spring 0; header AY says 2026 only on 'SPRING' marker. 2025 block moved to AT-AV with different column width.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY SITES › AX3:AZ3",
+       "severity": "low"
+      },
+      {
+       "issue": "Site list has near-duplicates: 'SHOTOVER RIVER ' and 'SHOTOVER RIVER'; 'LAKE HAYES PAVILLION'; 'QUEENSTOWN HILL ' trailing space; landowner variants.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY SITES › C4:D82",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "E - WHO contact names/groups (personal names present); values withheld"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "SUMMARY PLANTS",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "6-104",
+     "grain": "One row per species with Autumn/Spring/Total plant counts for each year 2015-2025 (11 year blocks), grand total and a count of seasons planted. Summary of MASTER by species, no site detail.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(row number)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 82.4,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2"
+       ],
+       "notes": "=A+1 numbering."
+      },
+      {
+       "letter": "B",
+       "header": "(Tree over 5m)",
+       "concept": "ttc_field",
+       "type": "text",
+       "non_null_pct": 41.2,
+       "distinct": 1,
+       "examples": [
+        "Y"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "D",
+       "header": "(species)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.3,
+       "distinct": 117,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Cyathoides juniperina"
+       ],
+       "notes": "Column also holds helper labels below the table: 'THREATENED SPECIES COUNT' (rows 106-117 yearly totals 586 to 1,596), 'TREES THAT COUNT 2024 - 16000 TREES FUNDED' (E120 32,656, F120 6,470 to go), 'TOTAL PLANTED IN SPRING 2024', 'SLOPE HILL 7000', 'AUTUMN PLANTING SEASON 6657'."
+      },
+      {
+       "letter": "E–AU",
+       "header": "AUTUMN / SPRING / TOTAL per year",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "2015 E:G, 2016 I:K ... 2024 AO:AQ, 2025 AS:AU. 2024 autumn AO is =MASTER!MO8 link; 2025 AS hard-coded, AT =MASTER!PA8; others hard-coded."
+      },
+      {
+       "letter": "AW",
+       "header": "GRAND TOTAL",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "=AU+AQ+AM+...+G; AW4 = 135,413; excludes 2026."
+      },
+      {
+       "letter": "AY",
+       "header": "(seasons planted flag)",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "=IF(AM6>0,1,0) etc. helper; BA:BB 'TOTAL NO. OF TREES OVER 5M' by year (2017 5,459; 2018 4,326; 2019 5,991; 2020 5,496); BG numbers 50-1000 unlabelled."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "AO6:AO104, AT6:AT104",
+       "pattern": "=MASTER!MO8 / =MASTER!PA8",
+       "refs_other_sheets": [
+        "MASTER!MO, PA"
+       ]
+      },
+      {
+       "range": "G4:AU104",
+       "pattern": "=sum(E6:F6) / =AO6+AP6",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "D",
+     "species_distinct_count": 116,
+     "quality_issues": [
+      {
+       "issue": "Species names include non-species rows (TOTALS, THREATENED SPECIES COUNT, years) and variants not on the Master Plant List: 'Carex maorica', 'Olearia nummulariifolia ' (trailing space), 'Cyathoides juniperina'.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY PLANTS › D4:D124",
+       "severity": "med"
+      },
+      {
+       "issue": "Totals do not reconcile with MASTER: 2025 Autumn 4,389 (AS4) vs 4,469 MASTER!OE107; grand total 135,413 vs 140,049. Autumn 2026 absent.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY PLANTS › AS4, AW4",
+       "severity": "high"
+      },
+      {
+       "issue": "Error cell BG5 '#' and blank-row helper columns; sheet range A1:BG1009 (padding).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY PLANTS › BG5",
+       "severity": "low"
+      },
+      {
+       "issue": "Header 'UPDATED 02/12/24 by' (first name) - stale relative to 2025 data.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › SUMMARY PLANTS › D2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "D2 contains a personal first name in an update note; withheld"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "HISTORIC SUMMARY SITES",
+     "role": "lookup",
+     "header_row": 1,
+     "data_rows": "3-59",
+     "grain": "One row per site in the original 2015-16 site register (about 57 sites), with old ID, new ID, site name, landowner and a contact/group.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 82.8,
+       "distinct": 48,
+       "examples": [
+        "1",
+        "13",
+        "33"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "B",
+       "header": "Old ID",
+       "concept": "site",
+       "type": "formula",
+       "non_null_pct": 43.1,
+       "distinct": 11,
+       "examples": [],
+       "notes": "14 cells are =#REF!; others =MASTER!$L$# etc."
+      },
+      {
+       "letter": "C",
+       "header": "New ID",
+       "concept": "site",
+       "type": "mixed",
+       "non_null_pct": 94.8,
+       "distinct": 55,
+       "examples": [
+        "1",
+        "1A",
+        "6A",
+        "17"
+       ],
+       "notes": "Matches SUMMARY SITES col B."
+      },
+      {
+       "letter": "D",
+       "header": "SITE NAME",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 58,
+       "examples": [
+        "GLENORCHY LAGOON & WALKWAY",
+        "GY SCHOOL",
+        "MOKE LAKE CAMPGROUND"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "E",
+       "header": "LANDOWNER",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 91.4,
+       "distinct": 9,
+       "examples": [
+        "DOC",
+        "QLDC",
+        "n/a"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "F",
+       "header": "WHO",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 96.6,
+       "distinct": 44,
+       "examples": [],
+       "notes": "Named people or groups; personal names present, values withheld."
+      },
+      {
+       "letter": "H",
+       "header": "(note)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 1.7,
+       "distinct": 1,
+       "examples": [],
+       "notes": "H2 note says all YELLOW sites are ARC...(truncated) - meaning of yellow fill not recorded; D2 'FINISHED 22/11/2016'."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B3:B59",
+       "pattern": "=MASTER!$L$# / =#REF!",
+       "refs_other_sheets": [
+        "MASTER"
+       ]
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "14 broken =#REF! links in Old ID; sheet is frozen at 22/11/2016 so lacks all sites added since 2017 (Pigeon Island, Slope Hill, Whitechapel etc. appear by other IDs).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › HISTORIC SUMMARY SITES › B8:B44",
+       "severity": "med"
+      },
+      {
+       "issue": "Fill colour (yellow) carries meaning that is not decoded; sheet dimension A1:Z1000 padded.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › HISTORIC SUMMARY SITES › H2",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "F - WHO personal names; values withheld"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "plants removed from list",
+     "role": "notes",
+     "header_row": 12,
+     "data_rows": "13-38",
+     "grain": "Ad hoc scratch notes: four species names removed from the list (rows 3-6) and a one-off allocation of abbreviated species (Plag reg, Car pet, Ver sal, Pit eug, wineberry) across Whitechapel, Bush Creek, Slope Hill and Lake Hayes South (counts 20-250).",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(species removed)",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 4,
+       "examples": [
+        "Aciphylla aurea",
+        "Dracophyllum"
+       ],
+       "notes": "Only 4 names in rows 3-6."
+      },
+      {
+       "letter": "C",
+       "header": "(site + abbreviated plant)",
+       "concept": "site",
+       "type": "text",
+       "non_null_pct": 56,
+       "distinct": 13,
+       "examples": [
+        "Whitechapel - 50 Plag reg",
+        "150 Car pet"
+       ],
+       "notes": "Free text, abbreviated species."
+      },
+      {
+       "letter": "E–J",
+       "header": "WHITECHAPE / BUSH CREEK / SLOPE HILL / LHS / TOTAL",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Allocation numbers by site."
+      },
+      {
+       "letter": "K",
+       "header": "PP",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 20,
+       "distinct": 4,
+       "examples": [],
+       "notes": "=J-SUM(F:I) remainder."
+      },
+      {
+       "letter": "L",
+       "header": "(note)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 84,
+       "distinct": 20,
+       "examples": [],
+       "notes": "Copied list text."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "K13:K17",
+       "pattern": "=J13-SUM(F13:I13)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 4,
+     "quality_issues": [
+      {
+       "issue": "Not a structured record; undated; abbreviated species (Plag reg, Car pet, Ver sal, Pit eug); sheet extends to QH104 with stray content.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › plants removed from list › C13:L38",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "CHART DATA",
+     "role": "summary",
+     "header_row": 5,
+     "data_rows": "6-7",
+     "grain": "Two rows: total plants and cumulative plants for each year 2015-2024 (not 2025/2026).",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Year",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 2,
+       "examples": [
+        "Total Plants",
+        "Cumulative"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "C–L",
+       "header": "2015..2024",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "5551",
+        "29826",
+        "100532"
+       ],
+       "notes": "='SUMMARY PLANTS'!G4 etc.; cumulative 2024 = 100,532."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C6:L6",
+       "pattern": "='SUMMARY PLANTS'!G4",
+       "refs_other_sheets": [
+        "SUMMARY PLANTS"
+       ]
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Stops at 2024; cumulative (100,532) excludes 2025 and 2026.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › CHART DATA › C7:L7",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "CHARTS",
+     "role": "chart",
+     "header_row": null,
+     "data_rows": "",
+     "grain": "Chart sheet with one chart (no cell data).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Trees that Count",
+     "role": "summary",
+     "header_row": 2,
+     "data_rows": "4-104",
+     "grain": "One species per row with plant counts for Autumn 2025, Spring 2025, Jardine Park Project, and Autumn 2024 / Spring 2024 (plus Coronation Slope Hill planting) for TTC reporting.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 94.4,
+       "distinct": 101,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "B",
+       "header": "Tree over 5m",
+       "concept": "ttc_field",
+       "type": "text",
+       "non_null_pct": 46.7,
+       "distinct": 2,
+       "examples": [
+        "Y"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "C",
+       "header": "(unlabelled)",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 92.5,
+       "distinct": 52,
+       "examples": [
+        "85",
+        "70"
+       ],
+       "notes": "Unlabelled counts; appears to be Jardine/Total-less value, hard-coded, meaning unclear (low confidence)."
+      },
+      {
+       "letter": "D",
+       "header": "Plant Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 94.4,
+       "distinct": 101,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Prumnopitys taxifolia"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "E",
+       "header": "Autumn 2025",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 92.5,
+       "distinct": 43,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "F",
+       "header": "Spring 2025",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 98.1,
+       "distinct": 48,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "G",
+       "header": "Jardine Park Project",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 53.3,
+       "distinct": 27,
+       "examples": [],
+       "notes": "Subset planted at Jardine Park."
+      },
+      {
+       "letter": "H",
+       "header": "Total 2025",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 98.1,
+       "distinct": 58,
+       "examples": [],
+       "notes": "=SUM(E+F)."
+      },
+      {
+       "letter": "I",
+       "header": "Total 2025 Less Jardine Pk",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 97.2,
+       "distinct": 56,
+       "examples": [],
+       "notes": "=SUM(E+F-G)."
+      },
+      {
+       "letter": "J",
+       "header": "Coronation",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 15.9,
+       "distinct": 9,
+       "examples": [],
+       "notes": "=MASTER!MG8 (Slope Hill Coronation, 7,000)."
+      },
+      {
+       "letter": "K",
+       "header": "Autumn 2024",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 93.5,
+       "distinct": 54,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "L",
+       "header": "Spring 2024",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 93.5,
+       "distinct": 53,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "M",
+       "header": "Total 2024",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 93.5,
+       "distinct": 64,
+       "examples": [],
+       "notes": "=K+L."
+      },
+      {
+       "letter": "N",
+       "header": "Total less Coronation",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 93.5,
+       "distinct": 63,
+       "examples": [],
+       "notes": "=M-J."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "J4:J101",
+       "pattern": "=MASTER!MG8",
+       "refs_other_sheets": [
+        "MASTER!MG"
+       ]
+      }
+     ],
+     "species_name_column": "D",
+     "species_distinct_count": 100,
+     "quality_issues": [
+      {
+       "issue": "Species spellings differ from Master Plant List: 'Carex Maorica (Slope Hill Trial)', 'Coprosma Cheesmanii', 'Coprosma rhammoides', 'Mysine australis', 'Oleara fragrantissima', 'Olearia nummularifolia ', 'Prumnopitys taxifolia' (not in master list).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count › D4:D104",
+       "severity": "med"
+      },
+      {
+       "issue": "TTC summary at F106:I108 (Jardine 2,503; Other 752; >5m 1,751; TTC system total 8,306; Remaining 5,999) is hard-coded and not tied to rows above; 2025 Autumn+Spring total in sheet differs from MASTER (autumn here 4,389 basis).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count › F106:I108",
+       "severity": "med"
+      },
+      {
+       "issue": "Contains one #REF! link and sheet range padded to row 966; Jardine Park Project not a column in MASTER (JP Welcome Forest / JP Reference Gardens are).",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count › A2, G4:G101",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    },
+    {
+     "name": "Trees that Count Audit 2025",
+     "role": "summary",
+     "header_row": 2,
+     "data_rows": "4-104",
+     "grain": "One species per row for 2020: Autumn 2020, Spring 2020, Total 2020, plus Whitechapel Autumn/Spring/Total 2020. Prepared for the 2025 TTC audit.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": 101,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "B",
+       "header": "TTC",
+       "concept": "ttc_field",
+       "type": "text",
+       "non_null_pct": 49.5,
+       "distinct": 2,
+       "examples": [
+        "Y"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "C",
+       "header": "Plant Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 99,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "TOTAL PLANTS"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "D",
+       "header": "Autumn 2020",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 93.1,
+       "distinct": 16,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "E",
+       "header": "Spring 2020",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 99,
+       "distinct": 57,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "F",
+       "header": "Total 2020",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 99,
+       "distinct": 60,
+       "examples": [],
+       "notes": "=SUM(D+E); total 8,568; >5 m trees 5,496 (F104)."
+      },
+      {
+       "letter": "H–J",
+       "header": "Whitechapel Autumn / Spring / Total 2020",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Whitechapel subset 2,145 (J103); Whitechapel >5 m 1,312."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "F4:F102",
+       "pattern": "=SUM(D4+E4)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "C",
+     "species_distinct_count": 100,
+     "quality_issues": [
+      {
+       "issue": "Hard-coded values for 2020 that match MASTER 2020 totals (996, 7,572, 8,568); only ties to MASTER by value.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count Audit 2025 › D103:F103",
+       "severity": "low"
+      },
+      {
+       "issue": "Contains summary rows (TOTAL PLANTS, Total Trees that Count Species) mixed with species rows.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count Audit 2025 › C103:C104",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Trees that Count Audit 2025 Sit",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "7-105",
+     "grain": "One species per row by site for 2019: 17 Autumn 2019 sites (D:T) and 16 Spring 2019 sites (V:AK) with totals U and AL (5,078 and 5,400). Despite the '2025' name the data is 2019 (U2 '2019'). Row 2 gives location groups, row 3 site names, row 4 site IDs, row 5 landowners.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "formula",
+       "non_null_pct": 97.1,
+       "distinct": 100,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "B",
+       "header": "(TTC flag)",
+       "concept": "ttc_field",
+       "type": "text",
+       "non_null_pct": 49.5,
+       "distinct": 3,
+       "examples": [
+        "Y"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "C",
+       "header": "Plant Name",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 97.1,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Austroderia richardii"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "D–T",
+       "header": "Autumn 2019 site columns",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "17 sites; mixed type where text codes sit in header rows."
+      },
+      {
+       "letter": "U",
+       "header": "TOTAL (Autumn)",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 92.2,
+       "distinct": 33,
+       "examples": [],
+       "notes": "=SUM(D:T)."
+      },
+      {
+       "letter": "V–AK",
+       "header": "Spring 2019 site columns",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "16 sites."
+      },
+      {
+       "letter": "AL",
+       "header": "TOTAL (Spring)",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "=SUM(V:AK)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "U7:U105",
+       "pattern": "=SUM(D7:T7)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "C",
+     "species_distinct_count": 100,
+     "quality_issues": [
+      {
+       "issue": "Sheet name says 2025 but content is the 2019 per-site breakdown copied from MASTER; header ranges padded to row 857.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count Audit 2025 Sit › U2, A1:AL857",
+       "severity": "med"
+      },
+      {
+       "issue": "Only one year (2019) broken down by site on this sheet; the same per-site data exists in MASTER for all years, so this is a duplicate extract.",
+       "evidence": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx › Trees that Count Audit 2025 Sit › D3:AL3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "_MASTER Nursery records and templates/archive/_JMN Plants Out Master.xlsx",
+   "purpose_guess": "Near-identical archive copy of the live Plants Out Master (cached values): all 11 shared sheets identical except MASTER D12 ('Carex maorica' vs 'Carex Maorica' in the live file) and SUMMARY SITES (C2 note 'UPDATED 08/05/2024 by (first name)' and a stray BE43 = 28530 present only in the archive); adds one extra sheet 'Copy of Trees that Count Audit '. Both still contain data to Autumn 2026, so the 'archive' is not an older state.",
+   "workflow_stage": "planting_history",
+   "years_covered": "2015–2026 (same as live file)",
+   "is_version_of": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+   "sheets": [
+    {
+     "name": "Copy of Trees that Count Audit ",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "4-103",
+     "grain": "Archive-only copy of the 'Trees that Count Audit 2025' sheet with columns A:K; plant name in D and a different year header (E2 '2027') and totals (TOTAL PLANTS E103 10,113; Total 2020 18,885), so values differ from the live audit sheet.",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": "D",
+     "species_distinct_count": 100,
+     "quality_issues": [
+      {
+       "issue": "Year header 'E2 = 2027' and totals not matching the live audit sheet; looks like an experimental copy (low confidence).",
+       "evidence": "_MASTER Nursery records and templates/archive/_JMN Plants Out Master.xlsx › Copy of Trees that Count Audit  › E2:G103",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "low"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Is Autumn 2026 (MASTER PC:PW, 4,556 plants) actual planting or an allocation plan, and should a Spring 2026 block be added?",
+  "Were the Spring/Autumn 2024 spikes (Slope Hill HGF 22,000 and Slope Hill Coronation 7,000) real plantings, and is it intended that row 108 excludes them?",
+  "Which grand total is authoritative: MASTER 140,049, SUMMARY SITES 139,948 or SUMMARY PLANTS 135,413?",
+  "Are planting areas (e.g. WH-06), event dates, event types (establishment/infill/replacement/enrichment) or volunteer counts recorded anywhere for pre-2026 plantings, or only at site/season level here?",
+  "Can WRT confirm the mapping of renamed or merged sites (e.g. Whitechapel / Whitechapel reserve, Peace Park / Peace, LH South Infill / Lake Hayes South, Jardine Park sub-sites)?",
+  "What do the yellow site-ID header fills in MASTER and the yellow note in HISTORIC SUMMARY SITES mean?",
+  "Which of the two files is the live copy? The 'archive' has the same data and a newer file date; is 'Copy of Trees that Count Audit' (archive) needed?",
+  "Is 'Cyathoides juniperina' (unnumbered MASTER row 106) the same as 'Leptecophylla juniperina' and should it be on the Master Plant List (98 species)?"
+ ]
+}

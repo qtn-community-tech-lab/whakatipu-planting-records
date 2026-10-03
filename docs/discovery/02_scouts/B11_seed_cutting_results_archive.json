@@ -1,0 +1,744 @@
+{
+ "batch_id": "B11_seed_cutting_results_archive",
+ "files": [
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(3).xlsx",
+   "purpose_guess": "Mid-series snapshot of the nursery's seed sowing and cutting tray results register, one species block after another, with source, amount, dates and survival (content sits between Aug 2022 and the undated .xls, despite the (3) suffix).",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2023",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1264",
+     "grain": "Two interleaved row kinds: (1) species heading row (name in A only, B:G blank) and (2) one tray/lot row beneath it = one seed sowing or cutting set of that species, with source, amount, dates and survival; a few continuation rows with no code in A add a later pricking-out tally to the tray above",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": 94.9,
+       "distinct": 1040,
+       "examples": [
+        "Acaena",
+        "S127",
+        "S210303",
+        "C210102",
+        "S210301 caesiiglauca"
+       ],
+       "notes": "Header cell is a stale title with a date (17/11/2021). Column mixes species heading rows (binomial or genus only) with tray codes. Two code styles: legacy S<n>/C<n> (seed-lot or cutting-batch number, repeated across sowings) and S/C+YYMMDD (looks like a sow date but rarely matches column D). Some codes carry a trailing species word or trailing spaces/commas."
+      },
+      {
+       "letter": "B",
+       "header": "Source",
+       "concept": "seed_location (SENSITIVE)",
+       "type": "text",
+       "non_null_pct": 84.5,
+       "distinct": 180,
+       "examples": [],
+       "notes": "Seed/cutting collection place names; values withheld. Filled on tray rows only."
+      },
+      {
+       "letter": "C",
+       "header": "#/quantities sown",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 79.2,
+       "distinct": 227,
+       "examples": [
+        "1 tsp",
+        "1/2 cup fluff",
+        "4 heads",
+        "18",
+        "seedlings"
+       ],
+       "notes": "Seeds by volume (tsp/Tbsp/cup/fluff/heads) or cuttings by count; 485 numeric, 485 text. Not comparable across rows."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 83.8,
+       "distinct": 321,
+       "examples": [
+        "2018-03-07",
+        "2021-03-03"
+       ],
+       "notes": "Real dates except 1 text cell. Range 2016-06-16 to 2023-10-08 in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 62.3,
+       "distinct": 217,
+       "examples": [
+        "2019-07-27",
+        "2023-01-11"
+       ],
+       "notes": "Blank where not yet pricked out or discarded. 19 text cells, 3 integers (serial numbers shown as ints). Pricked-out range 2016-10-01 to 2023-10-04."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 62.3,
+       "distinct": 167,
+       "examples": [
+        "60",
+        "240",
+        "0"
+       ],
+       "notes": "Count pricked out/surviving (0 to ~1554); 20 text cells."
+      },
+      {
+       "letter": "G",
+       "header": "%survival",
+       "concept": "unknown",
+       "type": "mixed",
+       "non_null_pct": 33.0,
+       "distinct": 103,
+       "examples": [
+        "0.14",
+        "1",
+        "V150",
+        "T28 + 35F"
+       ],
+       "notes": "Intended as survival fraction (some typed, not formula) but also holds container notes (V150, T28, 35F) and '?' in 48 cells; fraction scale mixed (0-1 and up to 77)."
+      },
+      {
+       "letter": "H",
+       "header": "(no header)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 38.4,
+       "distinct": 329,
+       "examples": [
+        "Stratified 7 weeks",
+        "tray finished",
+        "Discarded",
+        "sown fresh"
+       ],
+       "notes": "Free-text notes: stratification, discards, hand-offs, container destinations (V150/PB3 with dates and counts), loss reasons. Initials and personal names appear (values withheld). One typed formula ('=+ 24.8/25') in other versions."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A30:C30",
+       "pattern": "='[#]Sheet1'!$A$n / $C$n / $F$n",
+       "refs_other_sheets": [
+        "[external workbook '2a Seed records.xls']Sheet1!A,C,F (cached #REF!)"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 125,
+     "quality_issues": [
+      {
+       "issue": "Species heading rows and tray rows share column A; species is implied by position, so any extract must carry the heading forward. 125 heading rows, about 1037 coded tray rows, 63 continuation rows without a code",
+       "evidence": "3. Seed & Cutting results(3).xlsx › Sheet1 › A2:A1264",
+       "severity": "high"
+      },
+      {
+       "issue": "Species headings include genus-only entries and trailing-space variants, e.g. 'Acaena' (A2), 'Aristotelia fruticosa ' (A10)",
+       "evidence": "…(3).xlsx › Sheet1 › A2, A10",
+       "severity": "med"
+      },
+      {
+       "issue": "Cross-workbook formulas to an external 2a Seed records.xls, cached as #REF! in all three cells, so source/quantity/survived for that tray are lost",
+       "evidence": "…(3).xlsx › Sheet1 › A30:C30",
+       "severity": "med"
+      },
+      {
+       "issue": "Quantity sown in C is mixed units (tsp, Tbsp, cups of fluff, heads, counts, 'tiny amt'); not summable",
+       "evidence": "…(3).xlsx › Sheet1 › C2:C1264",
+       "severity": "high"
+      },
+      {
+       "issue": "%survival column holds container labels (V150, T28, 35F) and '?' in place of numbers; fractions and whole numbers mixed; mostly hard-typed not calculated",
+       "evidence": "…(3).xlsx › Sheet1 › G2:G1264",
+       "severity": "med"
+      },
+      {
+       "issue": "Non-date text in date columns (e.g. '?', two dates in one cell) and numeric serials in E",
+       "evidence": "…(3).xlsx › Sheet1 › E2:E1264 (3 ints, 19 text)",
+       "severity": "med"
+      },
+      {
+       "issue": "Pricked-out date before sown date on 2 rows",
+       "evidence": "…(3).xlsx › Sheet1 › rows 49, 252 (E earlier than D)",
+       "severity": "low"
+      },
+      {
+       "issue": "Title cell still reads 17/11/2021 although later sowings to Oct 2023 are present; no version date in file",
+       "evidence": "…(3).xlsx › Sheet1 › A1",
+       "severity": "low"
+      },
+      {
+       "issue": "Seed-lot codes S<n> repeat across sowings (same lot sown several times) so code is not a unique key",
+       "evidence": "…(3).xlsx › Sheet1 › A column (e.g. S316, S231, S275 three times each)",
+       "severity": "med"
+      },
+      {
+       "issue": "Row 953 and 1228+ blank spacer rows within/after data",
+       "evidence": "…(3).xlsx › Sheet1 › row 953, 1228-1264",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names (about 180 distinct, 84% of rows); values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/Seed & Cutting results_August 2022.xlsx",
+   "purpose_guess": "Snapshot dated August 2022 by filename (124 species); content runs to Dec 2022, so it was saved or edited later.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2022",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1160",
+     "grain": "Same grain as 3. Seed & Cutting results(3).xlsx: species heading rows followed by tray rows. Adds 3 species headings vs Nov 2021 (Carex maorica, Coprosma atropurpurea, Parsonsia heterophylla). Cross-workbook link is broken (#REF!). Sown dates entered with wrong year (1900) on four rows. Rows 1123-1160 blank padding.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 124,
+       "examples": [
+        "species heading + tray codes"
+       ],
+       "notes": "Same layout as the (3) version."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "1900-01-12 (bad) / 2016-06-16 to 2022-12-13"
+       ],
+       "notes": "Range of sown dates in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-10-01 to 2022-08-24"
+       ],
+       "notes": "Range of pricked-out dates."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Same meaning."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A29:C29",
+       "pattern": "='[#]Sheet1'!$A/$C/$F$n",
+       "refs_other_sheets": [
+        "[external 2a Seed records.xls]Sheet1 (cached #REF!)"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 124,
+     "quality_issues": [
+      {
+       "issue": "Four sown dates read as 1900 (year omitted on entry)",
+       "evidence": "Seed & Cutting results_August 2022.xlsx › Sheet1 › D701:D704",
+       "severity": "med"
+      },
+      {
+       "issue": "Cross-workbook formula broken, cached #REF!",
+       "evidence": "…_August 2022.xlsx › Sheet1 › A29:C29",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names; values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results_Nov 2021.xls",
+   "purpose_guess": "Earliest archived snapshot of the seed and cutting tray results register (Nov 2021 per filename; 121 species).",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2022",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1066",
+     "grain": "Same grain as 3. Seed & Cutting results(3).xlsx: species heading rows followed by tray rows. Smallest version (121 species, ~862 tray rows plus 44 continuation rows). No fills, no totals, no typed formula in H. Cross-workbook link to 2a Seed records.xls in A27:C27 cached without error. Rows 1029-1066 blank padding.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 121,
+       "examples": [
+        "species heading + tray codes"
+       ],
+       "notes": "Same layout as the (3) version."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-06-16 to 2022-09-09"
+       ],
+       "notes": "Range of sown dates in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-10-01 to 2022-03-23"
+       ],
+       "notes": "Range of pricked-out dates."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Same meaning."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A27:C27",
+       "pattern": "=[1]Sheet1!$A/$C/$F$n (cross-workbook)",
+       "refs_other_sheets": [
+        "[external 2a Seed records.xls]Sheet1"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 121,
+     "quality_issues": [
+      {
+       "issue": "Pricked-out date before sown date",
+       "evidence": "3. Seed & Cutting results_Nov 2021.xls › Sheet1 › row 214",
+       "severity": "low"
+      },
+      {
+       "issue": "Text in date cells (e.g. '?  2016', two dates in one cell)",
+       "evidence": "…_Nov 2021.xls › Sheet1 › D805, E294:E295, E549",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names; values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No data",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet4",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No data",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xls",
+   "purpose_guess": "Later snapshot (127 species, ~1143 tray rows) in legacy .xls format; sowings to Aug 2024.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2024",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1384",
+     "grain": "Same grain as 3. Seed & Cutting results(3).xlsx: species heading rows followed by tray rows. Adds Coprosma wallii and a genus-misspelt 'Olearis polita' heading vs (3); 'Pseud…' orphan row from earlier versions removed. Totals-like continuation rows at 181 and 825. 5 rows with pricked-out before sown. Single stray values in I1, K1, P1, Q1 (outside table). Read via converted copy.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 127,
+       "examples": [
+        "species heading + tray codes"
+       ],
+       "notes": "Same layout as the (3) version."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-06-16 to 2024-08-14"
+       ],
+       "notes": "Range of sown dates in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2012-12-20 (typo) to 2024-07-27"
+       ],
+       "notes": "Range of pricked-out dates."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Same meaning."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A33:C33",
+       "pattern": "=[1]Sheet1!$A/$C/$F$n (cross-workbook)",
+       "refs_other_sheets": [
+        "[external 2a Seed records.xls]Sheet1"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 127,
+     "quality_issues": [
+      {
+       "issue": "Pricked-out date of 2012 predates all sowings",
+       "evidence": "3. Seed & Cutting results.xls › Sheet1 › E901 (also in later versions)",
+       "severity": "med"
+      },
+      {
+       "issue": "Stray single cells outside the table",
+       "evidence": "…results.xls › Sheet1 › I1, K1, P1, Q1",
+       "severity": "low"
+      },
+      {
+       "issue": "Pricked-out before sown date on 5 rows",
+       "evidence": "…results.xls › Sheet1 › rows 53, 150, 273, 757, 1149",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names; values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "purpose_guess": "Largest and latest archived version of the register (129 species, ~1268 tray rows); byte-identical to '3. Seed & Cutting results(1).xlsx', which was skipped as an exact duplicate.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2026",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1557",
+     "grain": "Same grain as 3. Seed & Cutting results(3).xlsx: species heading rows followed by tray rows. Superset of every other version. Adds ~19 tray rows over (2). Cached #ERROR! in A36:C36 (external link to a OneDrive file). H429 '=E35549' points to a row far beyond the sheet. Rows 1521-1557 blank padding. Continuation rows 196 and 929 were flagged as totals rows but are only tray continuations.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 129,
+       "examples": [
+        "species heading + tray codes"
+       ],
+       "notes": "Same layout as the (3) version."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-06-16 to 2026-12-26 (future date)"
+       ],
+       "notes": "Range of sown dates in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2012-12-20 (typo) to 2026-04-09"
+       ],
+       "notes": "Range of pricked-out dates."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Same meaning."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A36:C36",
+       "pattern": "=[1]Sheet1!$A/$C/$F$333",
+       "refs_other_sheets": [
+        "[external OneDrive 2a Seed records.xls]Sheet1"
+       ]
+      },
+      {
+       "range": "H429",
+       "pattern": "=E35549",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "H23",
+       "pattern": "=+ 24.8/25",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 129,
+     "quality_issues": [
+      {
+       "issue": "Sown date in the future",
+       "evidence": "3. Seed & Cutting results.xlsx › Sheet1 › D1516",
+       "severity": "med"
+      },
+      {
+       "issue": "Formula referencing a non-existent distant row",
+       "evidence": "…results.xlsx › Sheet1 › H429 (=E35549)",
+       "severity": "med"
+      },
+      {
+       "issue": "External link cached as error",
+       "evidence": "…results.xlsx › Sheet1 › A36:C36",
+       "severity": "low"
+      },
+      {
+       "issue": "Pricked-out earlier than sown on 7 rows",
+       "evidence": "…results.xlsx › Sheet1 › rows 58, 163, 297, 847, 1195, 1258, 1300",
+       "severity": "low"
+      },
+      {
+       "issue": "Bracketed or placeholder survival entries such as '{30]' and '[   ]'",
+       "evidence": "…results.xlsx › Sheet1 › F929:F930",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names; values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(2).xlsx",
+   "purpose_guess": "Late snapshot (129 species, ~1257 tray rows), newest species headings; essentially the same as the main .xlsx minus ~19 later tray rows.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2026",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 1,
+     "data_rows": "2-1539",
+     "grain": "Same grain as 3. Seed & Cutting results(3).xlsx: species heading rows followed by tray rows. Adds Hoheria sexstylosa and Neomyrtus pedunculata headings vs .xls; same 129 headings as main. Contains a sown date of 26 Dec 2026, in the future. Cell fills used on 1536 cells (theme colours, meaning not determined). Typed formula in H23 (=+ 24.8/25).",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "SEEDS & CUTTINGS TRAYS RESULTS 17/11/2021",
+       "concept": "species_name / seed_source_code",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 129,
+       "examples": [
+        "species heading + tray codes"
+       ],
+       "notes": "Same layout as the (3) version."
+      },
+      {
+       "letter": "D",
+       "header": "Date sown/Cuttings set",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2016-06-16 to 2026-12-26 (future date)"
+       ],
+       "notes": "Range of sown dates in this version."
+      },
+      {
+       "letter": "E",
+       "header": "Date Pricked out",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "2012-12-20 (typo) to 2025-12-10"
+       ],
+       "notes": "Range of pricked-out dates."
+      },
+      {
+       "letter": "F",
+       "header": "# survived",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [],
+       "notes": "Same meaning."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "A34:C34",
+       "pattern": "=[1]Sheet1!$A/$C/$F$n (cross-workbook)",
+       "refs_other_sheets": [
+        "[external 2a Seed records.xls]Sheet1"
+       ]
+      }
+     ],
+     "species_name_column": "A",
+     "species_distinct_count": 129,
+     "quality_issues": [
+      {
+       "issue": "Sown date in the future (probable typo for 2025/2024)",
+       "evidence": "3. Seed & Cutting results(2).xlsx › Sheet1 › D1498",
+       "severity": "med"
+      },
+      {
+       "issue": "Typed formula in a notes cell",
+       "evidence": "…(2).xlsx › Sheet1 › H23",
+       "severity": "low"
+      },
+      {
+       "issue": "Theme-colour fills on ~1536 cells with no legend",
+       "evidence": "…(2).xlsx › Sheet1 › A1:H1539",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "B: seed/cutting collection place names; values withheld",
+      "H: free-text notes with some personal names/initials; values withheld"
+     ],
+     "confidence": "medium"
+    }
+   ]
+  },
+  {
+   "path": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results(1).xlsx",
+   "purpose_guess": "Exact duplicate of 3. Seed & Cutting results.xlsx (same MD5); not profiled.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2026",
+   "is_version_of": "2. Propagation (cuttings and seeds)/_Seed and Cutting Records/Archive/3. Seed & Cutting results.xlsx",
+   "sheets": []
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Which is the current live 'Seed & Cutting results' workbook, and is the main .xlsx in this Archive folder the latest or just the largest copy?",
+  "Content order across versions is Nov 2021, Aug 2022, (3), .xls, (2), main .xlsx; please confirm that is the true save order, since the (n) suffixes look like download copies.",
+  "What does the S<n>/C<n> code refer to (a seed-collecting-record lot number?) versus the S/C+YYMMDD codes, which rarely match the sown date in column D?",
+  "Is the 2a Seed records.xls (linked from A36:C36) still the master for source and quantity, and where is it now?",
+  "What do the container labels in the survival column (V150, T28, 35F) mean, in particular '35F', and what do the theme-colour cell fills signify?",
+  "How should volume amounts (tsp, Tbsp, cups of fluff, heads) be treated: is there a rough seeds-per-volume conversion by species?",
+  "Are the sown date of 26 Dec 2026 and the pricked-out date of Dec 2012 typos, and what are the correct dates?",
+  "Do tray-row initials in the notes column identify the volunteer or staff member who handled the tray, and is that needed in the new system?"
+ ]
+}

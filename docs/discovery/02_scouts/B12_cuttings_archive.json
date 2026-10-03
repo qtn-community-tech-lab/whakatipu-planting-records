@@ -1,0 +1,750 @@
+{
+ "batch_id": "B12_cuttings_archive",
+ "files": [
+  {
+   "path": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "purpose_guess": "Cutting propagation log (batch ID, species, collection locality, numbers, pricked-out date, container, strike rate), one of several archived snapshots; the most complete of the 2022 snapshots.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2022",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-468",
+     "grain": "One cutting batch (one species from one source locality propagated on one date), with a single pricked-out event and a survival tally. Some batches span 2-3 rows via merged cells to record staged pricking-out or potting.",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "No.",
+       "concept": "unknown",
+       "type": "text",
+       "non_null_pct": 98.3,
+       "distinct": 454,
+       "examples": [
+        "C1",
+        "C42",
+        "C220607"
+       ],
+       "notes": "Cutting batch ID. Early rows C1..C~260 run in sequence; later rows use C+YYMMDD (C220607 = 7 Jun 2022). Treated as the batch key (seed_source_code candidate, low confidence). Duplicates: C30, C42, C58, C138, C254, C258. Trailing spaces e.g. 'C3 '."
+      },
+      {
+       "letter": "B",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.5,
+       "distinct": 143,
+       "examples": [
+        "Olearia odorata",
+        "Veronica salicifolia",
+        "Carmichaelia petriei",
+        "Matai  MIRO?",
+        "Olearia fimbriata. Heavy wood"
+       ],
+       "notes": "Free text. Includes genus-only entries, '?' uncertainty, informal morphotypes, wood-hardness notes, and Māori common names used as the species (Matai, Totara, Rata). Red font on 755 cells across the sheet (meaning not documented)."
+      },
+      {
+       "letter": "C",
+       "header": "Site",
+       "concept": "seed_location",
+       "type": "text",
+       "non_null_pct": 97.8,
+       "distinct": 105,
+       "examples": [],
+       "notes": "SENSITIVE: where the cuttings were taken (abbreviations and place names). 455 non-null rows. Mixed abbreviations and full names for the same place, with trailing spaces. Not a planting site. Values withheld."
+      },
+      {
+       "letter": "D",
+       "header": "# (cuttings taken)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 97.0,
+       "distinct": 130,
+       "examples": [
+        "30",
+        "50",
+        "~30"
+       ],
+       "notes": "Number of cuttings set. 411 int, 40 text ('~30' approximate, 40 cells in D3:D468)."
+      },
+      {
+       "letter": "E",
+       "header": "Date prop",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 98.3,
+       "distinct": 187,
+       "examples": [
+        "2016-07-01",
+        "2017-05-03",
+        "2022-06-08"
+       ],
+       "notes": "Date propagated. Range 2010-11-02 (E364) to 2027-08-21 (E145); both look like typos. Genuine range roughly 2016-07 to 2022-06."
+      },
+      {
+       "letter": "F",
+       "header": "Pricked out",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 72.9,
+       "distinct": 120,
+       "examples": [
+        "2017-03-22",
+        "dead",
+        "?"
+       ],
+       "notes": "Pricked-out date. 320 dates, 19 text: 'dead' (6), '?' (5), and multi-date strings e.g. F61, F36 uses a second row. Stage 2 transition."
+      },
+      {
+       "letter": "G",
+       "header": "# (pricked out / surviving)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 74.8,
+       "distinct": 92,
+       "examples": [
+        "24",
+        "-",
+        "0"
+       ],
+       "notes": "Count after pricking out. 313 int, 35 text ('-' 20, paired values such as '27 22' in G35, '55  9' in G61)."
+      },
+      {
+       "letter": "H",
+       "header": "Pot size",
+       "concept": "container",
+       "type": "mixed",
+       "non_null_pct": 71.2,
+       "distinct": 54,
+       "examples": [
+        "V150",
+        "PB3",
+        "7",
+        "90",
+        "RX90"
+       ],
+       "notes": "Container. Mixed vocabulary: named trays (V150, PB3, RX90), bare numbers (7, 90, 5 = tray/pot codes), '1L', pairs ('5,7'). 40 floats in this column look like ratios that have slipped from column J (e.g. 0.8, 0.77, 0.55), so they are misplaced values."
+      },
+      {
+       "letter": "I",
+       "header": "Comments",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 72.5,
+       "distinct": 203,
+       "examples": [
+        "Excellent roots",
+        "Pumice peat & vermiculite",
+        "Pot into PB3 instead of 90",
+        "see C120 also. (combined)"
+       ],
+       "notes": "Free text: propagation notes, medium, potting-on dates ('28 into PB3 20/9/17'), cross-references to other batches. Also holds initials/first names of people (HM 84 rows, others) - volunteer/propagator name present, values withheld. Mixed with comments in the same column."
+      },
+      {
+       "letter": "J",
+       "header": "(no header)",
+       "concept": "loss_quantity",
+       "type": "mixed",
+       "non_null_pct": 47.3,
+       "distinct": 76,
+       "examples": [
+        "1",
+        "0.5",
+        "0.44"
+       ],
+       "notes": "Unlabelled strike-rate ratio (0-1). Approximately equals G/D in 139 of 173 checkable rows; 34 rows differ (e.g. J7, J13, J33). Typed in, not a formula."
+      },
+      {
+       "letter": "K",
+       "header": "(no header)",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 2.2,
+       "distinct": 10,
+       "examples": [
+        "more to do",
+        "overall",
+        "excellent roots"
+       ],
+       "notes": "Stray annotations in 10 cells (K100, K103, K144, K173, K188, K249-K251, K257, K262). Includes 'PB3 10/9/19' potting-on notes."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 143,
+     "quality_issues": [
+      {
+       "issue": "Species free text: genus-only, '?' uncertainty, typos (Camichaelia), morphotypes, notes inside the name, trailing spaces; 143 distinct values for roughly 14 genera clusters",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › B3:B468",
+       "severity": "high"
+      },
+      {
+       "issue": "Header row 2 with 'Cuttings at' and a date serial in row 1 (A1:B1); two columns both headed '#' (D2, G2, reported as error cells by the profiler)",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › A1:B2, D2, G2",
+       "severity": "low"
+      },
+      {
+       "issue": "Merged cells spreading one batch over 2-3 rows, leaving continuation rows with only partial data",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › A35:A36, A45:A47, A61:A62, A122:A123",
+       "severity": "med"
+      },
+      {
+       "issue": "Impossible dates: 2027-08-21 and 2010-11-02 in Date prop",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › E145, E364",
+       "severity": "med"
+      },
+      {
+       "issue": "Pricked-out date has text and multiple dates in one cell; 2 rows pricked out before propagated",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › F61, F3:F468",
+       "severity": "med"
+      },
+      {
+       "issue": "Approximate counts typed as text ('~30')",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › D3:D468 (40 cells)",
+       "severity": "low"
+      },
+      {
+       "issue": "Pot size mixes tray names, numeric codes and misplaced ratios",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › H3:H468",
+       "severity": "med"
+      },
+      {
+       "issue": "Duplicate batch IDs",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › A (C30, C42, C58, C138, C254, C258)",
+       "severity": "med"
+      },
+      {
+       "issue": "Strike-rate column J has no header, is hard-coded and disagrees with G/D in about 20 per cent of checkable rows",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › J3:J468",
+       "severity": "med"
+      },
+      {
+       "issue": "Colour carries meaning without a key: red font on 755 cells, blue font on 16 cells (row 138)",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › B3:B468, C138:G138",
+       "severity": "low"
+      },
+      {
+       "issue": "Collection locality written inconsistently (abbreviation and full name for the same place, trailing spaces)",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › C3:C468",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet dimension is A1:Z1000 with blank padding beyond data",
+       "evidence": "Archive/Archive/1. Cuttings records_August 2022.xlsx › Sheet1 › A469:Z1000",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [
+      "C: cutting source locality names, 455 rows, text (abbreviations and place names)",
+      "I: contains personal first names/initials of staff or volunteers in about 130 rows, mixed with notes"
+     ],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet2",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "Archive/Archive/1. Cuttings records_May 2022.xls",
+   "purpose_guess": "Earlier snapshot of the same cutting log (sampled): ends at batch C220410 with latest propagation date 2022-04-27; 439 rows, 136 distinct species values.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2022",
+   "is_version_of": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-447",
+     "grain": "One cutting batch, same layout as August 2022 (columns A-K, J unlabelled strike rate).",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.4,
+       "distinct": 138,
+       "examples": [
+        "Olearia odorata",
+        "Veronica salicifolia"
+       ],
+       "notes": "Same free-text issues as August 2022."
+      },
+      {
+       "letter": "C",
+       "header": "Site",
+       "concept": "seed_location",
+       "type": "text",
+       "non_null_pct": 97.8,
+       "distinct": 104,
+       "examples": [],
+       "notes": "SENSITIVE cutting source locality; values withheld."
+      },
+      {
+       "letter": "E",
+       "header": "Date prop",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 98.2,
+       "distinct": 181,
+       "examples": [
+        "2016-07-01"
+       ],
+       "notes": "Includes the same 2010 and 2027 outlier dates (E364, E145)."
+      },
+      {
+       "letter": "F",
+       "header": "Pricked out",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 75.6,
+       "distinct": 119,
+       "examples": [
+        "2017-03-22"
+       ],
+       "notes": "Pricked-out dates to 2022-03-23."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 136,
+     "quality_issues": [
+      {
+       "issue": "Same structural issues as the August 2022 file (merged rows, mixed types, unlabelled J, outlier dates)",
+       "evidence": "Archive/Archive/1. Cuttings records_May 2022.xls › Sheet1 › A1:K447",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "C: cutting source locality names",
+      "I: staff/volunteer first names or initials mixed into comments"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet2",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "Archive/Archive/1. Cuttings records.xls",
+   "purpose_guess": "Later snapshot (file dated Oct 2023, sampled): 478 rows, 146 distinct species values, latest propagation date 2023-09-24. Row 1 still reads 'Cuttings at' with date 2021-09-21 (stale). Last ID in the file is C21, which suggests batch numbering restarted after the C22xxxx IDs (low confidence; not checked further).",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2023",
+   "is_version_of": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-490",
+     "grain": "One cutting batch, same layout as August 2022 (columns A-K, J unlabelled strike rate).",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.6,
+       "distinct": 148,
+       "examples": [
+        "Olearia odorata",
+        "Veronica salicifolia"
+       ],
+       "notes": "Same free-text issues as August 2022."
+      },
+      {
+       "letter": "C",
+       "header": "Site",
+       "concept": "seed_location",
+       "type": "text",
+       "non_null_pct": 97.9,
+       "distinct": 108,
+       "examples": [],
+       "notes": "SENSITIVE cutting source locality; values withheld."
+      },
+      {
+       "letter": "E",
+       "header": "Date prop",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 98.4,
+       "distinct": 203,
+       "examples": [
+        "2016-07-01"
+       ],
+       "notes": "Includes the same 2010 and 2027 outlier dates (E364, E145)."
+      },
+      {
+       "letter": "F",
+       "header": "Pricked out",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 78.0,
+       "distinct": 133,
+       "examples": [
+        "2017-03-22"
+       ],
+       "notes": "Pricked-out dates to 2023-09-13."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 146,
+     "quality_issues": [
+      {
+       "issue": "Same structural issues as the August 2022 file (merged rows, mixed types, unlabelled J, outlier dates)",
+       "evidence": "Archive/Archive/1. Cuttings records.xls › Sheet1 › A1:K490",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "C: cutting source locality names",
+      "I: staff/volunteer first names or initials mixed into comments"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet2",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "Archive/Archive/1. Cuttings records(1).xls",
+   "purpose_guess": "Later snapshot (file dated Dec 2024, sampled): 498 rows, 150 distinct species values, latest propagation date 2024-07-31, pricked-out dates to 2024-03-20. Same layout; 'Cuttings at' date in A1 unchanged.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2024",
+   "is_version_of": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-510",
+     "grain": "One cutting batch, same layout as August 2022 (columns A-K, J unlabelled strike rate).",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.6,
+       "distinct": 152,
+       "examples": [
+        "Olearia odorata",
+        "Veronica salicifolia"
+       ],
+       "notes": "Same free-text issues as August 2022."
+      },
+      {
+       "letter": "C",
+       "header": "Site",
+       "concept": "seed_location",
+       "type": "text",
+       "non_null_pct": 98.0,
+       "distinct": 117,
+       "examples": [],
+       "notes": "SENSITIVE cutting source locality; values withheld."
+      },
+      {
+       "letter": "E",
+       "header": "Date prop",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 98.4,
+       "distinct": 217,
+       "examples": [
+        "2016-07-01"
+       ],
+       "notes": "Includes the same 2010 and 2027 outlier dates (E364, E145)."
+      },
+      {
+       "letter": "F",
+       "header": "Pricked out",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 78.9,
+       "distinct": 141,
+       "examples": [
+        "2017-03-22"
+       ],
+       "notes": "Pricked-out dates to 2024-03-20."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 150,
+     "quality_issues": [
+      {
+       "issue": "Same structural issues as the August 2022 file (merged rows, mixed types, unlabelled J, outlier dates)",
+       "evidence": "Archive/Archive/1. Cuttings records(1).xls › Sheet1 › A1:K510",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "C: cutting source locality names",
+      "I: staff/volunteer first names or initials mixed into comments"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet2",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "Archive/Archive/1. Cuttings records.xlsx",
+   "purpose_guess": "Most recent snapshot (file dated Feb 2025, sampled): 509 rows, 151 distinct species values, latest propagation date 2025-02-27, pricked-out dates to 2025-02-19. Same layout; likely the live version before archiving.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2025",
+   "is_version_of": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "sheets": [
+    {
+     "name": "Sheet1",
+     "role": "data",
+     "header_row": 2,
+     "data_rows": "3-521",
+     "grain": "One cutting batch, same layout as August 2022 (columns A-K, J unlabelled strike rate).",
+     "columns": [
+      {
+       "letter": "B",
+       "header": "Species",
+       "concept": "species_name",
+       "type": "text",
+       "non_null_pct": 98.6,
+       "distinct": 153,
+       "examples": [
+        "Olearia odorata",
+        "Veronica salicifolia"
+       ],
+       "notes": "Same free-text issues as August 2022."
+      },
+      {
+       "letter": "C",
+       "header": "Site",
+       "concept": "seed_location",
+       "type": "text",
+       "non_null_pct": 98.1,
+       "distinct": 118,
+       "examples": [],
+       "notes": "SENSITIVE cutting source locality; values withheld."
+      },
+      {
+       "letter": "E",
+       "header": "Date prop",
+       "concept": "date",
+       "type": "date",
+       "non_null_pct": 98.5,
+       "distinct": 223,
+       "examples": [
+        "2016-07-01"
+       ],
+       "notes": "Includes the same 2010 and 2027 outlier dates (E364, E145)."
+      },
+      {
+       "letter": "F",
+       "header": "Pricked out",
+       "concept": "date",
+       "type": "mixed",
+       "non_null_pct": 79.3,
+       "distinct": 146,
+       "examples": [
+        "2017-03-22"
+       ],
+       "notes": "Pricked-out dates to 2025-02-19; 12 rows share 2022-12-28."
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "B",
+     "species_distinct_count": 151,
+     "quality_issues": [
+      {
+       "issue": "Same structural issues as the August 2022 file (merged rows, mixed types, unlabelled J, outlier dates)",
+       "evidence": "Archive/Archive/1. Cuttings records.xlsx › Sheet1 › A1:K521",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "C: cutting source locality names",
+      "I: staff/volunteer first names or initials mixed into comments"
+     ],
+     "confidence": "medium"
+    },
+    {
+     "name": "Sheet2",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sheet3",
+     "role": "empty",
+     "header_row": 0,
+     "data_rows": "none",
+     "grain": "No content (A1:A1).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [],
+     "sensitive_columns": [],
+     "confidence": "high"
+    }
+   ]
+  },
+  {
+   "path": "Archive/Archive/Cuttings record 2017.doc",
+   "purpose_guess": "Oldest version of the cutting log as a Word table, 'At 4th Sept 2017'; same columns as the spreadsheets plus a Hormone column.",
+   "workflow_stage": "seed_provenance",
+   "years_covered": "2016–2017",
+   "is_version_of": "Archive/Archive/1. Cuttings records_August 2022.xlsx",
+   "sheets": [
+    {
+     "name": "(document)",
+     "role": "notes",
+     "header_row": 2,
+     "data_rows": "3-176",
+     "grain": "One cutting batch per table row (one table, 176 rows x 10 columns: No., Species, Site, #, Date prop, Hormone, Pricked out, #, Pot size, Comments).",
+     "columns": [],
+     "formulas": [],
+     "species_name_column": null,
+     "species_distinct_count": 80,
+     "quality_issues": [
+      {
+       "issue": "Hormone column (powder 'pwd' in about 101 rows, 'liquid' 37, blank 36) does not survive into the later spreadsheets; dates are text in dd/mm/yy; 31 rows have no batch number (blank padding); comments hold a percentage ('100.00%') where later versions use the unlabelled strike-rate column",
+       "evidence": "Archive/Archive/Cuttings record 2017.doc › (document) › table 1, rows 3-176",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [
+      "Site column (cutting source locality) present; values withheld",
+      "Comments may contain staff names"
+     ],
+     "confidence": "medium"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Is the cutting log still live? Which file is the current one, and does the 2025 .xlsx supersede the Archive copies?",
+  "What do the Site abbreviations in column C mean, and are they cutting-collection localities only, or ever planting sites? Is a lookup list held elsewhere?",
+  "Does the unlabelled column J mean strike rate (survivors / cuttings set), and should the typed-in values or G/D be trusted where they differ?",
+  "What do the red and blue font colours mean in column B and row 138?",
+  "How should Pot size codes 7, 90, 5 and RX90 be read (tray type, cell count or pot size)?",
+  "Are the 2010-11-02 and 2027-08-21 propagation dates typos, and what were the intended dates?",
+  "Do cutting batch IDs (C1..C2206xx) link to any other record, such as the seed collecting record or the pricking-out list, and why do the last IDs in the newer snapshots restart at low numbers?",
+  "Is cutting-propagated stock counted in the pricking-out list, or recorded only here?"
+ ]
+}

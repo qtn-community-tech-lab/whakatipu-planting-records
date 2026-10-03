@@ -1,0 +1,14 @@
+:root{
+  --shadow-frame:0 1px 3px rgba(0,0,0,.08);
+  --shadow-paper:0 6px 16px rgba(0,0,0,.06);
+  --shadow-popover:0 12px 30px rgba(21,38,28,.1);
+  --shadow-modal:0 20px 50px rgba(21,38,28,.18);
+  --shadow-sheet:0 24px 60px rgba(21,38,28,.22);
+  --ring-selected:inset 0 0 0 2px var(--cn-green-800);
+  --border-input:1.5px solid var(--cn-sage-200);
+  --border-input-active:2px solid var(--cn-green-800);
+  --border-dashed-empty:1.5px dashed #d8dcd5;
+  --bar-h:10px; --bar-h-sm:6px; --bar-h-xs:4px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --dur-fast:120ms; --dur:200ms; --dur-slow:320ms;
+}

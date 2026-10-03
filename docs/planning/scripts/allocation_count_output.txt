@@ -1,0 +1,19 @@
+
+Spring 2025 master: site columns 21 (unmapped headers 2); species x site cells (non-zero) 174; plants 6,248; species rows used 55
+  of which scheme (Paper4Trees) cells: 12
+  Plants Out Spring 2025 block: cells 174, plants 6,248
+  compare with Plants Out Spring 2025: species x site pairs: alloc 174, history 174; same 132, differs 0, alloc only 42, history only 42
+    plants: alloc 6,248 vs history 6,248; history plants on pairs that are 'same': 3,821 (61%)
+    sites: alloc 9, history 9, in both 8
+  column-vector match (no site mapping needed): 9 allocation columns; identical to a Plants Out column 9 (174 of 174 cells, 6,248 of 6,248 plants); near-identical (>=80% cells equal) 0 (0 cells); no counterpart 0; Plants Out columns with no allocation counterpart 0
+
+Autumn 2026 master: site columns 25 (unmapped headers 3); species x site cells (non-zero) 222; plants 4,294; species rows used 75
+  of which scheme (Paper4Trees) cells: 0
+  Plants Out Autumn 2026 block: cells 202, plants 4,556
+  compare with Plants Out Autumn 2026: species x site pairs: alloc 212, history 202; same 180, differs 7, alloc only 25, history only 15
+    plants: alloc 4,294 vs history 4,556; history plants on pairs that are 'same': 3,539 (78%)
+    sites: alloc 13, history 12, in both 11
+  column-vector match (no site mapping needed): 14 allocation columns; identical to a Plants Out column 9 (143 of 222 cells, 2,851 of 4,294 plants); near-identical (>=80% cells equal) 1 (17 cells); no counterpart 4; Plants Out columns with no allocation counterpart 2
+
+Spring 2026 plan: site columns 22 (unmapped headers 3); species x site cells (non-zero) 312; plants 8,829; species rows used 73
+  of which scheme (Paper4Trees) cells: 19

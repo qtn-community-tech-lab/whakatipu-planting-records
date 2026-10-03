@@ -1,0 +1,1587 @@
+{
+ "batch_id": "B13_potting_on_current",
+ "files": [
+  {
+   "path": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx",
+   "purpose_guess": "Current (2026/27) Potting On workbook: weekly volunteer potting-up counts per species by month, rolled into a Summary against a goal, with a 'Helen Master' target list and an Annual month total.",
+   "workflow_stage": "potting_up",
+   "years_covered": "2026/27 (Aug 2026 to Jun 2027); Annual also holds 2020/21 and 2023/24 totals",
+   "is_version_of": null,
+   "sheets": [
+    {
+     "name": "Summary",
+     "role": "summary",
+     "header_row": 3,
+     "data_rows": "4-103",
+     "grain": "One species (98 numbered rows plus 2 unnumbered extras) for the 2026/27 potting-on year: goal, T28 deduction, monthly potted-up tallies and running total",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "2",
+        "98"
+       ],
+       "notes": "Row number 1-98; blank for rows 102-103."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Plagianthus regius",
+        "Weinmania racemosa"
+       ],
+       "notes": "Typed text, not formula. The monthly sheets repeat this list by position (B4:B101), also typed."
+      },
+      {
+       "letter": "C",
+       "header": "*Notes*",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": 2,
+       "distinct": 2,
+       "examples": [
+        "(416)",
+        "(392)"
+       ],
+       "notes": "Only C6 and C9; echo the T28 figure in E."
+      },
+      {
+       "letter": "D",
+       "header": "Goal Set (Helen)",
+       "concept": "target",
+       "type": "mixed",
+       "non_null_pct": 52,
+       "distinct": 50,
+       "examples": [
+        "72",
+        "120",
+        "380"
+       ],
+       "notes": "HARD-CODED target; no link to 'Helen Master' or to any other workbook. Three cells are text ('416','392'). Green fill D9EAD3; D73 yellow."
+      },
+      {
+       "letter": "E",
+       "header": "Less T28",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 5,
+       "distinct": 4,
+       "examples": [
+        "416",
+        "392",
+        "644",
+        "139"
+       ],
+       "notes": "Hand-typed amounts deducted because already covered by T28. Five rows only (E6, E9, E31, E73, E77)."
+      },
+      {
+       "letter": "F",
+       "header": "Total to be potted on",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 99,
+       "distinct": null,
+       "examples": [
+        "=D4-E4"
+       ],
+       "notes": "=D#-E# in 97 rows; F31=0 and F73=0 hard-coded; F77=519 hard-coded (equals D77+E77, not D77-E77)."
+      },
+      {
+       "letter": "G",
+       "header": "Running Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 97,
+       "distinct": null,
+       "examples": [
+        "=sum(J4:U4)"
+       ],
+       "notes": "Sums the monthly columns J:U. G8=0 and G77=139 are hard-coded."
+      },
+      {
+       "letter": "H",
+       "header": "To go",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 98,
+       "distinct": null,
+       "examples": [
+        "=F4-G4"
+       ],
+       "notes": "Remaining to pot on = total to be potted on less running total."
+      },
+      {
+       "letter": "J",
+       "header": "Aug",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 100,
+       "distinct": 2,
+       "examples": [
+        "0",
+        "='Aug 2026'!D77"
+       ],
+       "notes": "Hard-coded 0 in 99 rows; only J77 links to the Aug 2026 sheet (to D77, a single weekly cell, not the sheet's Total column C). Aug is therefore not rolled up by formula."
+      },
+      {
+       "letter": "K",
+       "header": "Sept",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 99,
+       "distinct": null,
+       "examples": [
+        "=Sept!C4"
+       ],
+       "notes": "Live link to the Sept sheet Total column (C), rows 4-103. Only month fully wired."
+      },
+      {
+       "letter": "L-T",
+       "header": "Oct, Nov, Dec, Jan, Feb, March, April, May, June",
+       "concept": "quantity",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Headers present, no cells in rows 4-103: the Oct-Jun monthly sheets are not linked. Only the row 104 SUM and row 105 cumulative formulas exist."
+      },
+      {
+       "letter": "U",
+       "header": "(unlabelled; July?)",
+       "concept": "quantity",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "No header; U104 has =SUM(U4:U101) and Annual!M8 points to it. Header row says 'Aug 2026 - June 2027' but Annual has a July column."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "F4:F103",
+       "pattern": "=D#-E#",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "G4:G101",
+       "pattern": "=sum(J#:U#)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "H4:H101",
+       "pattern": "=F#-G#",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "K4:K103",
+       "pattern": "=Sept!C#",
+       "refs_other_sheets": [
+        "Sept!C4:C103"
+       ]
+      },
+      {
+       "range": "J77",
+       "pattern": "='Aug 2026'!D77",
+       "refs_other_sheets": [
+        "'Aug 2026'!D77"
+       ]
+      },
+      {
+       "range": "D104:U104",
+       "pattern": "=SUM(x4:x101) (D104 and F104 run to row 103)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "J105:T105",
+       "pattern": "=K104+J105 (cumulative)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 100,
+     "quality_issues": [
+      {
+       "issue": "Monthly roll-up is only partly wired: Sept links by formula; Aug is hard-coded 0 except J77; Oct-June columns L:T are empty, so G 'Running Total' only counts Aug+Sept.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › J4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Goal Set (Helen) is typed in, not linked to the 'Helen Master' sheet or to a pricking-out list; values differ from Helen Master I/J (e.g. Aristotelia fruticosa 72 vs 80 and 160). Provenance of the target is unknown.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › D4:D103 vs Helen Master › I4:J92",
+       "severity": "high"
+      },
+      {
+       "issue": "Three goals stored as text ('416','392','392'); SUM in D104 skips them while E104 includes the matching T28 figures, so F104 and H104 are internally inconsistent.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › D6, D9, D31; D104, E104",
+       "severity": "high"
+      },
+      {
+       "issue": "Plagianthus regius row hard-coded: F77=519 equals D+E rather than D-E, G77=139 typed, and E77=139 equals the Aug potting figure (looks like potted-on number entered in the T28 column).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › E77:G77; Aug 2026 › D77",
+       "severity": "high"
+      },
+      {
+       "issue": "Inconsistent SUM ranges in totals: D104 and F104 cover rows 4-103, E104, G104 and J:U cover 4-101, H104 starts at H2. Rows 102-103 (two extra species) sit outside most totals; K103 links to Sept but is excluded from K104.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › D104:U104; K103",
+       "severity": "med"
+      },
+      {
+       "issue": "Two species rows (Astelia fragrans, Carmichaelia racemosa) are unnumbered, appear only here and on monthly sheets, and not on the Weekly recording print form. Species list is 98 numbered, 100 in total.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › A102:B103; Weekly recording print › A4:E52",
+       "severity": "med"
+      },
+      {
+       "issue": "Spelling variants against the other sheets: 'Weinmania racemosa', 'Parsonia heterophylla', 'Carex Maorica' (capital M).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › B101, B4:B103",
+       "severity": "low"
+      },
+      {
+       "issue": "Cumulative row 105 is stale placeholder: F105=D105-E105 and F106 formulas on blank cells; 'Over / under' row 106 is empty.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › F105:F106, B106",
+       "severity": "low"
+      },
+      {
+       "issue": "Title says Aug 2026 - June 2027 but file name and Annual say through July; no July sheet exists.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › B1; Annual › M2",
+       "severity": "low"
+      },
+      {
+       "issue": "Header cell A3 '#' flagged as error cell by profiler; it is only the text '#'.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Summary › A3",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Aug 2026",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "int",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "0"
+       ],
+       "notes": "Row total across the weekly columns. Hard-coded 0.0 in every row, not a formula."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. Only D3 has a date, shown as 2026-12-08 (day/month swapped; probably 12 Aug). Only D77 holds a figure (139, Plagianthus regius); all others empty. Note C total is hard-coded 0 so this 139 never reaches C102 and Summary reaches it only via the one-off J77 link."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Template repeated for every month with the species list re-typed, so any species change must be made 13 times.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Aug 2026 › B4:B103",
+       "severity": "med"
+      },
+      {
+       "issue": "Date header is a true date that reads as 8 Dec 2026 (day/month swapped on entry); sheet is for August.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Aug 2026 › D3",
+       "severity": "med"
+      },
+      {
+       "issue": "Total column C is typed 0.0 in every row, so C102 shows 0 while D102 shows 139.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Aug 2026 › C4:C101; C102, D102",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Aug 2026 › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Sept",
+     "role": "data",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Row total across the weekly columns. =SUM(D#:H#) in 98 rows."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [
+        "44",
+        "54",
+        "142",
+        "63",
+        "104"
+       ],
+       "notes": "Weekly session columns. Headers D3:H3 mixed: D3 date 2026-02-09 and E3 2026-09-09 (real dates, D3 swapped day/month, probably 2 Sept), F3:H3 are text ('16/09/26','23/09/26','30/09/26'). 19 hand-typed counts in D, E, F, H (column G empty); 17 species rows. Cached totals: C102=1009, D=231, E=149, F=301, G=0, H=328. These counts are the manual entry point."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "C4:C101",
+       "pattern": "=SUM(D#:H#)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Template repeated for every month with the species list re-typed, so any species change must be made 13 times.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Sept › B4:B103",
+       "severity": "med"
+      },
+      {
+       "issue": "Mixed date header types (true dates with day/month swapped, then text strings) in one header row.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Sept › D3:H3",
+       "severity": "med"
+      },
+      {
+       "issue": "Weekly counts are hand-typed numbers; no species/date key beyond row/column position, and no loss, container or location detail.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Sept › D4:H101",
+       "severity": "low"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Sept › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Oct",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Oct › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Oct › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Nov",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Nov › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Nov › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Dec",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Dec › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Dec › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Jan 2027",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Jan 2027 › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Jan 2027 › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Feb",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Feb › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Month label misspelt 'Febuary' in A1:B1.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Feb › B1",
+       "severity": "low"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Feb › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "March",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › March › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › March › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "April",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › April › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › April › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "May",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › May › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › May › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "June",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-101",
+     "grain": "One species (the 98 numbered species of Summary, same order, matched by position) x one potting-up session date, giving the number potted into PB3",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "#",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 98,
+       "distinct": 98,
+       "examples": [
+        "1",
+        "98"
+       ],
+       "notes": "Row number."
+      },
+      {
+       "letter": "B",
+       "header": "Plant name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 100,
+       "examples": [
+        "Aristotelia fruticosa"
+       ],
+       "notes": "Typed copy of Summary B4:B101 (identical in order); the two extra species on Summary rows 102-103 are not on this sheet."
+      },
+      {
+       "letter": "C",
+       "header": "Total",
+       "concept": "quantity",
+       "type": "formula",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "=SUM(D4:H4)"
+       ],
+       "notes": "Total column header only; C4:C101 empty (no row formulas yet), only the C102 =SUM(C4:C101) total formula exists."
+      },
+      {
+       "letter": "D-O",
+       "header": "(weekly date columns)",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Weekly session columns. No weekly dates or counts yet (future months)."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "C102:O102",
+       "pattern": "=SUM(x4:x101)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Empty template; Summary does not link to it, so entries made here would not reach the Summary or Annual.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › June › C4:O101; Summary › L4:T103",
+       "severity": "high"
+      },
+      {
+       "issue": "Sheet has 98 species rows then TOTAL at row 102; Summary has two extra species (rows 102-103) with no monthly row, and Summary K103 links to the empty Sept!C103.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › June › B102; Summary › B102:B103, K103",
+       "severity": "med"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Annual",
+     "role": "summary",
+     "header_row": 2,
+     "data_rows": "4-9",
+     "grain": "One production year x month: total plants potted up in that month, with a cumulative row under each year",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Month / Year",
+       "concept": "season_label",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 6,
+       "examples": [
+        "2020/2021",
+        "2023/24",
+        "2024/25",
+        "Cumulative"
+       ],
+       "notes": "Year labels alternate with 'Cumulative' rows."
+      },
+      {
+       "letter": "B-M",
+       "header": "Aug ... July",
+       "concept": "quantity",
+       "type": "mixed",
+       "non_null_pct": 100,
+       "distinct": null,
+       "examples": [
+        "1649",
+        "779",
+        "=Summary!J104"
+       ],
+       "notes": "2020/21 and 2023/24 rows are typed values; the third row links to Summary row 104 totals J:U."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "B8:M8",
+       "pattern": "=Summary!x104",
+       "refs_other_sheets": [
+        "Summary!J104:U104"
+       ]
+      },
+      {
+       "range": "C5:M5, C7:M7, C9:M9",
+       "pattern": "=C4+B5 (running cumulative)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": null,
+     "species_distinct_count": 0,
+     "quality_issues": [
+      {
+       "issue": "Third row labelled 2024/25 but links to the 2026/27 Summary (Aug 139, Sept 1009), so the label is stale or the history is mislabelled.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Annual › A8:M8",
+       "severity": "high"
+      },
+      {
+       "issue": "Years 2021/22, 2022/23 and 2025/26 are missing; 2020/21 and 2023/24 totals are pasted values with no source sheet. 2020/21 has no June/July figures.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Annual › A4:M7",
+       "severity": "med"
+      },
+      {
+       "issue": "Orphan 'TARGET' label with no values; rows 10-24 blank (probably removed chart or targets).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Annual › A3",
+       "severity": "low"
+      },
+      {
+       "issue": "M8 points to Summary!U104, an unlabelled column.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Annual › M8; Summary › U104",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Weekly recording print",
+     "role": "form",
+     "header_row": 3,
+     "data_rows": "4-52",
+     "grain": "Blank print-out form: one species per row, two side-by-side blocks of 49 (98 species) with empty # and Location columns for volunteers to fill by hand",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "Botanical Name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 49,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Austroderia richardii"
+       ],
+       "notes": "Left block."
+      },
+      {
+       "letter": "B",
+       "header": "Common Name",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 48,
+       "examples": [
+        "Wineberry",
+        "Toe toe",
+        "Porcupine shrub"
+       ],
+       "notes": "Left block; some trailing spaces."
+      },
+      {
+       "letter": "C",
+       "header": "#",
+       "concept": "quantity",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank, filled in by hand on paper."
+      },
+      {
+       "letter": "D",
+       "header": "Location",
+       "concept": "unknown",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": "Blank; location meaning unclear (bench or bed?)."
+      },
+      {
+       "letter": "E",
+       "header": "Botanical Name",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 49,
+       "examples": [
+        "Melicytus ramiflorus",
+        "Weinmania racemosa"
+       ],
+       "notes": "Right block."
+      },
+      {
+       "letter": "F",
+       "header": "Common Name",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": 75,
+       "distinct": null,
+       "examples": [
+        "Southern rata",
+        "Kamahi"
+       ],
+       "notes": "Right block; some blanks."
+      },
+      {
+       "letter": "G",
+       "header": "#",
+       "concept": "quantity",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": ""
+      },
+      {
+       "letter": "H",
+       "header": "Location",
+       "concept": "unknown",
+       "type": "empty",
+       "non_null_pct": 0,
+       "distinct": 0,
+       "examples": [],
+       "notes": ""
+      }
+     ],
+     "formulas": [],
+     "species_name_column": "A",
+     "species_distinct_count": 98,
+     "quality_issues": [
+      {
+       "issue": "Form lists the 98 numbered species but not the two extras on Summary (Astelia fragrans, Carmichaelia racemosa).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Weekly recording print › A4:E52",
+       "severity": "med"
+      },
+      {
+       "issue": "Sub Total and Total rows (53-54) are empty with no formulas; DATE field F1 blank. This is the paper source for the weekly counts keyed into the monthly sheets.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Weekly recording print › A53:E54, F1",
+       "severity": "low"
+      },
+      {
+       "issue": "Species list is a third typed copy, in a different order (two columns) to Summary.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Weekly recording print › A4:E52",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "high"
+    },
+    {
+     "name": "Helen Master",
+     "role": "lookup",
+     "header_row": 2,
+     "data_rows": "4-92",
+     "grain": "One species with planned numbers by destination site/plot and a total required if 6500 plants, plus a doubled annual projection",
+     "columns": [
+      {
+       "letter": "A",
+       "header": "(number)",
+       "concept": "unknown",
+       "type": "int",
+       "non_null_pct": 100,
+       "distinct": 89,
+       "examples": [
+        "1",
+        "2",
+        "99"
+       ],
+       "notes": "Row number up to 99, 89 species rows."
+      },
+      {
+       "letter": "B",
+       "header": "PLANT NAME",
+       "concept": "scientific_name",
+       "type": "text",
+       "non_null_pct": 100,
+       "distinct": 89,
+       "examples": [
+        "Aristotelia fruticosa",
+        "Metrosideros umbellata"
+       ],
+       "notes": "Row 1 header, merged B1:B2."
+      },
+      {
+       "letter": "C",
+       "header": "Common Name",
+       "concept": "common_name",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "mt. wineberry",
+        "toe toe",
+        "kamahi"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "D",
+       "header": "White chapel",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "10",
+        "50"
+       ],
+       "notes": "Planned plants for Whitechapel; cached column total 1000 (row 93), while row 1 shows 2000 and row 3 shows 1000."
+      },
+      {
+       "letter": "E",
+       "header": "Lk Hayes",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "20",
+        "65"
+       ],
+       "notes": "Includes one '?'."
+      },
+      {
+       "letter": "F",
+       "header": "Wetland planting Slope Hill",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "50",
+        "20"
+       ],
+       "notes": ""
+      },
+      {
+       "letter": "G",
+       "header": "Jardine Pk",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "5",
+        "20"
+       ],
+       "notes": "Includes five '?' placeholders."
+      },
+      {
+       "letter": "H",
+       "header": "Spare FH, PPk, QR, Apt",
+       "concept": "site",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "45",
+        "65"
+       ],
+       "notes": "Spare/other sites lumped (abbreviations unexplained)."
+      },
+      {
+       "letter": "I",
+       "header": "Total required if 6500",
+       "concept": "target",
+       "type": "int",
+       "non_null_pct": null,
+       "distinct": null,
+       "examples": [
+        "80",
+        "200"
+       ],
+       "notes": "Typed, not a formula; the site columns D:H are not summed into it by formula. Not checked row by row."
+      },
+      {
+       "letter": "J",
+       "header": "Annual Projection (Best case)",
+       "concept": "target",
+       "type": "formula",
+       "non_null_pct": 98,
+       "distinct": null,
+       "examples": [
+        "=I4*2"
+       ],
+       "notes": "=I#*2 for 90 rows (so Aug-Jul production target double the 6500 scenario)."
+      },
+      {
+       "letter": "K",
+       "header": "comments",
+       "concept": "notes",
+       "type": "text",
+       "non_null_pct": null,
+       "distinct": 2,
+       "examples": [
+        "Total annual production will depend on how many plantings at each site per year..."
+       ],
+       "notes": "Free-text planning notes, K4:K16 merged; K93 notes a 50% uplift for 1500."
+      }
+     ],
+     "formulas": [
+      {
+       "range": "J4:J92",
+       "pattern": "=I#*2",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "D1:I1",
+       "pattern": "=SUM(x4:x98)",
+       "refs_other_sheets": []
+      },
+      {
+       "range": "D93:I93",
+       "pattern": "=SUM(x4:x92)",
+       "refs_other_sheets": []
+      }
+     ],
+     "species_name_column": "B",
+     "species_distinct_count": 89,
+     "quality_issues": [
+      {
+       "issue": "Not wired to Summary: Summary 'Goal Set (Helen)' is typed and matches neither I nor J (I matches 0, J matches 1 of 49 compared). Neither the direction of copying nor which version is current is evident.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Helen Master › I4:J92; Summary › D4:D101",
+       "severity": "high"
+      },
+      {
+       "issue": "89 species here vs 98 numbered (100 listed) on Summary. Present here but not on Summary (by exact text): 6 names with trailing space or non-breaking space (Plagianthus regius, Halocarpus bidwillii, Olearia nummularifolia, Veronica hectorii) or absent (Gaultheria antipoda, Hoheria angustifolia). 17 Summary species absent here.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Helen Master › B4:B92; Summary › B4:B103",
+       "severity": "high"
+      },
+      {
+       "issue": "Text placeholders '?' mixed into numeric site columns.",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Helen Master › D35, E47, G39, G47, G76, G77, G92",
+       "severity": "med"
+      },
+      {
+       "issue": "Header row 1 totals (2000, 2000, 2000, 2000, 5000, 12980) are SUMs of D4:D98 yet cached D93 is 1000: row 1 and row 3 and row 93 disagree (2000 vs 1000).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Helen Master › D1:I1, D3:H3, D93:I93",
+       "severity": "med"
+      },
+      {
+       "issue": "Sheet used range extends to AA1000 (blank padding).",
+       "evidence": "3. Potting On/2. 2026-27 JMN Potting On - August 2026 - July 27.xlsx › Helen Master › A1:AA1000",
+       "severity": "low"
+      }
+     ],
+     "sensitive_columns": [],
+     "confidence": "medium"
+    }
+   ]
+  }
+ ],
+ "open_questions_for_wrt": [
+  "Does the Summary 'Goal Set (Helen)' come from the pricking-out list, the Helen Master sheet, or somewhere else, and who types it in?",
+  "Is the Less T28 column a deduction for plants already in T28? E77 (Plagianthus regius, 139) looks like the August potting count, not a T28 figure: is that so?",
+  "Should the Oct-June monthly sheets link into the Summary the way Sept does? At present they do not, and August is linked for one species only.",
+  "The Annual row labelled 2024/25 reads the 2026/27 Summary: should it be labelled 2026/27? Where are the 2021/22, 2022/23, 2024/25 and 2025/26 totals?",
+  "Which species list is authoritative: 98 (Summary), 89 (Helen Master), or the 100 including Astelia fragrans and Carmichaelia racemosa?",
+  "How is the latest stocktake used to build this list? No formula or external reference to a stocktake or pricking-out workbook exists here, so it must be done by hand.",
+  "Is the '?' in Helen Master a placeholder for an unknown quantity, and what do 'Spare FH, PPk, QR, Apt' stand for?"
+ ]
+}

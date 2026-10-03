@@ -1,0 +1,91 @@
+== SOURCE (read-only) ==
+file     : _MASTER Nursery records and templates/_JMN Plants Out Master.xlsx
+bytes    : 460,012
+sha256   : 2df0e137ccf80e9d69ba164cd9d46b77136368db7ffedb9a7f8fe584c3154033
+
+== SEASON TOTALS: rows vs MASTER TOTAL column (row 107, SUM over rows 8-105 or 8-106) ==
+season        cols  rows sum of rows TOTAL r107  diff TOTAL col 8-106  diff
+Autumn 2015     13   166       2,068      2,068     0           2,068     0
+Spring 2015     20   364       3,483      3,483     0           3,483     0
+Autumn 2016     15   224       3,176      3,176     0           3,176     0
+Spring 2016     26   410       4,331      4,331     0           4,331     0
+Autumn 2017     14   271       4,516      4,516     0           4,516     0
+Spring 2017     17   288       4,667      4,667     0           4,667     0
+Autumn 2018     16   219       4,589      4,589     0           4,589     0
+Spring 2018     13   184       3,458      3,458     0           3,458     0
+Autumn 2019     17   239       5,078      5,078     0           5,078     0
+Spring 2019     16   271       5,400      5,400     0           5,400     0
+Autumn 2020      6    49         996        996     0             996     0
+Spring 2020     19   320       7,572      7,572     0           7,572     0
+Autumn 2021     16   215       5,133      5,133     0           5,133     0
+Spring 2021     18   201       5,356      5,356     0           5,356     0
+Autumn 2022     16   225       5,869      5,869     0           5,869     0
+Spring 2022     16   204       5,014      5,014     0           5,014     0
+Autumn 2023     14   178       4,886      4,886     0           4,886     0
+Spring 2023     21   233       5,720      5,720     0           5,720     0
+Autumn 2024     16   290      13,657     13,657     0          13,657     0
+Spring 2024     18   331      29,826     29,826     0          29,826     0
+Autumn 2025     19   190       4,469      4,469     0           4,469     0
+Spring 2025     20   174       6,248      6,248     0           6,248     0
+Autumn 2026     20   202       4,556      4,556     0           4,556     0
+seasons where rows equal the TOTAL column: 23 of 23
+
+== GRAND TOTAL ==
+sum of 5,448 numeric records (rows 8-106)         : 140,068
+  of which rows 8-105 only                       : 140,049   (row 106 = 19)
+sum of the 23 TOTAL r107 cells                    : 140,068
+MASTER!PY107 (grand total, SUM(PY4:PY105))             :    140,049  rows minus stated +19
+MASTER!PY8:PY106 summed (per-species totals)           :    140,068  rows minus stated +0
+MASTER!PZ107 (unlabelled cell beside the grand total)  :    137,273  rows minus stated +2,795
+SUMMARY SITES!BC3 (all-time, by site)                  :    139,948  rows minus stated +120
+SUMMARY PLANTS!AW4 (all-time, by species)              :    135,413  rows minus stated +4,655
+(for reference) records excluding Autumn 2026      : 135,512
+
+== SELF-CHECKS ==
+PASS  every numeric cell in the matrix is in the table once (matrix sum = row sum)
+PASS  record_id is unique
+PASS  every blank site_id_proposed or species_id_proposed has needs_review = Y
+PASS  every needs_review = Y row has a review_reason
+PASS  no row has a quantity of zero or below
+PASS  every row cites a source cell
+PASS  no masked header leaks an unmasked suffix (masked texts all exist in the 04d table or end in [name])
+PASS  each species row sums to its PY (all-time per-species) cell: 99 of 99 agree
+
+== STRUCTURE ==
+site columns with a season label and header : 386   TOTAL columns: 23   season blocks: 23
+species rows read                           : 99 (rows 8-106)
+rows in planting_history.csv                : 5,449 (5,448 with a quantity + 1 exception row)
+zero cells skipped                          : 397
+distinct proposed site IDs                   : 76   (provisional NEW- IDs: 12)
+distinct proposed groups                     : 39
+distinct original header texts (masked)      : 114
+rows with a blank site_id_proposed           : 177
+species IDs used                             : 95   rows with a species flag: 203
+
+== CONFIDENCE ==
+high     4207 ( 77.2%)   plants    86,300 (61.6%)
+medium   1055 ( 19.4%)   plants    52,071 (37.2%)
+low       187 (  3.4%)   plants     1,697 ( 1.2%)
+
+== REVIEW SHARE ==
+needs a ruling (RULING)            :   477 ( 8.8% of rows)  plants    37,049 (26.5%)
+rule applied, confirm once (CONFIRM):   190 ( 3.5%)  plants     7,241 ( 5.2%)
+needs_review = Y in total           :   667 (12.2%)  plants    44,290 (31.6%)
+automatic (needs_review = N)        :  4782 (87.8%)  plants    95,778 (68.4%)
+by cause (a row can have more than one):
+   species contested (needs a stock-line ruling)         203 rows ( 3.7%)  plants     5,920
+   Paper4Trees scheme column                             160 rows ( 2.9%)  plants     1,457
+   site header unclear / new site / ID conflict           88 rows ( 1.6%)  plants       768
+   2024 Slope Hill columns (decision 4)                   38 rows ( 0.7%)  plants    29,000
+   text cell                                               1 rows ( 0.0%)  plants         0
+rows needing a species ruling only: 190;  rows needing no species ruling (site/scheme/quantity only): 274
+
+rows by site tier : {'auto-id-agrees': 4378, 'auto-old-numbering-2015': 81, 'auto-id-blank': 531, 'review-not-found': 6, 'scheme-not-a-place': 160, 'review-uncertain': 20, 'rule-appended-text': 49, 'rule-documented-id-fault': 179, 'uncertain-needs-new-site-id': 45}
+rows by precision : {'site': 2243, 'subsite': 3028, 'unknown': 6, 'scheme': 160, 'area': 12}
+rows by class     : {'C': 1801, 'K': 3121, 'S': 367, 'unknown': 160}
+site columns by tier (all / non-zero): {'auto-id-agrees': (277, 268), 'auto-id-blank': (62, 48), 'auto-old-numbering-2015': (8, 8), 'review-not-found': (1, 1), 'review-uncertain': (3, 3), 'rule-appended-text': (9, 9), 'rule-documented-id-fault': (10, 9), 'scheme-not-a-place': (12, 11), 'uncertain-needs-new-site-id': (4, 3)}
+non-zero site columns: 360   crosswalk rows: 134   distinct (masked) header texts: 114
+
+wrote /home/claude/planning/prototype/planting_history.csv
+wrote /home/claude/planning/prototype/site_crosswalk.csv
+wrote /home/claude/planning/prototype/history_reconciliation.csv

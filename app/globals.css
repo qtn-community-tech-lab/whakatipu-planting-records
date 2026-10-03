@@ -1,26 +1,90 @@
+/*
+ * Styles entry.
+ * Canopy (styles/canopy, vendored unchanged from canopy-ds) is the source of
+ * truth for colour, type, radius, spacing and components. Tailwind and the
+ * shadcn variables below only point at Canopy's semantic aliases.
+ */
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/plus-jakarta-sans/wght.css";
+@import "@fontsource-variable/plus-jakarta-sans/wght-italic.css";
+@import "../styles/canopy/colors.css";
+@import "../styles/canopy/typography.css";
+@import "../styles/canopy/spacing.css";
+@import "../styles/canopy/effects.css";
+@import "../styles/canopy/components.css";
+@import "../styles/app.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* Self-hosted Plus Jakarta Sans (Canopy's fonts.css pulls Google Fonts; blocked offline). */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* shadcn variables mapped to Canopy aliases */
+  --background: var(--surface-app);
+  --foreground: var(--text-strong);
+  --card: var(--surface-card);
+  --card-foreground: var(--text-strong);
+  --popover: var(--surface-card);
+  --popover-foreground: var(--text-strong);
+  --primary: var(--action-primary);
+  --primary-foreground: var(--cn-white);
+  --secondary: var(--action-soft);
+  --secondary-foreground: var(--text-strong);
+  --muted: var(--surface-soft);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--surface-soft);
+  --accent-foreground: var(--text-strong);
+  --destructive: var(--cn-risk-strong);
+  --border: var(--border-card);
+  --input: var(--border-strong);
+  --ring: var(--border-focus);
+  --radius: var(--radius-tile);
 }
 
 @theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  /* Canopy palette as Tailwind colours */
+  --color-brand: var(--cn-green-800);
+  --color-ink: var(--cn-green-900);
+  --color-eyebrow: var(--cn-green-600);
+  --color-body: var(--text-body);
+  --color-soft: var(--surface-soft);
+  --color-tint: var(--surface-tint);
+  --color-stone: var(--surface-app);
+  --color-review: var(--cn-behind-bar);
+  --color-review-bg: var(--cn-behind-bg);
+  --color-review-fg: var(--cn-behind-fg);
+  --color-risk-bg: var(--cn-risk-bg);
+  --color-risk-fg: var(--cn-risk-fg);
+  --radius-sm: var(--radius-row);
+  --radius-md: var(--radius-field);
+  --radius-lg: var(--radius-tile);
+  --radius-xl: var(--radius-card);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html { background: var(--surface-app); }
+  body { margin: 0; }
 }
