@@ -61,8 +61,13 @@ function typoTolerance(len: number): number {
   return len >= 8 ? 2 : len >= 4 ? 1 : 0;
 }
 
+// ponytail: tiny list; add a pair when staff hit another look-alike name
+const LOOK_ALIKES = new Set(["kanuka|manuka", "manuka|kanuka"]);
+const lookAlike = (a: string, b: string) => LOOK_ALIKES.has(`${a}|${b}`);
+
 function wordMatches(qw: string, kw: string): boolean {
   if (kw.startsWith(qw)) return true;
+  if (lookAlike(qw, kw)) return false;
   const tol = typoTolerance(qw.length);
   if (!tol) return false;
   return editDistance(qw, kw, tol) <= tol || editDistance(qw, kw.slice(0, qw.length), tol) <= tol;
@@ -91,7 +96,9 @@ export function matchScore(query: string, keys: string[]): number {
       if (qWords.every((qw) => kWords.some((kw) => wordMatches(qw, kw)))) best = Math.max(best, 35);
       else {
         const tol = typoTolerance(qc.length);
-        if (tol && editDistance(qc, kc.slice(0, qc.length + 1), tol) <= tol) best = Math.max(best, 30);
+        if (tol && !lookAlike(qc, kc.slice(0, qc.length)) && editDistance(qc, kc.slice(0, qc.length + 1), tol) <= tol) {
+          best = Math.max(best, 30);
+        }
       }
     }
   }

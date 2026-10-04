@@ -1,4 +1,4 @@
-export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "about";
+export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "ask" | "about";
 export type NavCountKey = "sites" | "species" | "seasons" | "records";
 export type NavCounts = Partial<Record<NavCountKey, string>>;
 
@@ -15,6 +15,7 @@ export const NAV_MAIN: readonly NavItem[] = [
   { href: "/species", label: "Species", icon: "species", count: "species" },
   { href: "/seasons", label: "Seasons", icon: "seasons", count: "seasons" },
   { href: "/records", label: "Records", icon: "records", count: "records" },
+  { href: "/ask", label: "Ask", icon: "ask" },
 ];
 
 export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];

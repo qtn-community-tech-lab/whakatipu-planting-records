@@ -10,7 +10,9 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@ai-sdk/react": "^3.0.303",
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "ai": "^6.0.196",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -19,7 +21,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "zod": "4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -40,6 +40,13 @@ const PATHS: Record<NavIcon, React.ReactNode> = {
       <circle cx="4.6" cy="17.5" r="1.1" fill="currentColor" stroke="none" />
     </>
   ),
+  // Speech bubble with a leaf inside
+  ask: (
+    <>
+      <path d="M4 5.5h16v10H10l-4.5 3.5v-3.5H4Z" />
+      <path d="M12 13c0-2.6 1.6-4.2 4.2-4.2 0 2.6-1.6 4.2-4.2 4.2Z" />
+    </>
+  ),
   about: (
     <>
       <circle cx="12" cy="12" r="8.5" />

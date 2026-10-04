@@ -35,7 +35,7 @@ export function splitOf(records: Iterable<PlantingRecord>): QuantitySplit {
   return s;
 }
 
-function groupSplits<K>(records: PlantingRecord[], key: (r: PlantingRecord) => K): Map<K, QuantitySplit> {
+export function groupSplits<K>(records: PlantingRecord[], key: (r: PlantingRecord) => K): Map<K, QuantitySplit> {
   const m = new Map<K, QuantitySplit>();
   for (const r of records) {
     const k = key(r);
@@ -443,7 +443,8 @@ export function createQueries(repo: WrtRepository) {
     async search(query: string, limit = 8): Promise<SearchResult> {
       const c = await ctx();
       const q = query.trim();
-      if (!q) return { query, places: [], species: [], seasons: [] };
+      // One- and two-letter queries match half the register.
+      if (searchKey(q).length < 3) return { query, places: [], species: [], seasons: [] };
       const placeSplits = groupSplits(c.records, (r) => r.placeSlug);
       const speciesSplits = groupSplits(c.records, (r) => r.speciesId);
       const seasonSplits = groupSplits(c.records, (r) => r.seasonSlug);

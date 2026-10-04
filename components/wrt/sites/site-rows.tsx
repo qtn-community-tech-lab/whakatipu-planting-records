@@ -60,11 +60,11 @@ export interface SiteRowData {
   speciesHref: (s: Species) => string;
 }
 
-export function SiteRows({ rows, max }: { rows: SiteRowData[]; max: number }) {
+export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: SiteRowData[]; max: number; top?: number }) {
   return (
     <div className="wrt-sitesp">
       {rows.map((r) => {
-        const top = r.species.slice(0, TOP_PER_SITE);
+        const top = r.species.slice(0, perSite);
         const more = r.species.length - top.length;
         return (
           <div key={r.key} className="wrt-sitesp__site">

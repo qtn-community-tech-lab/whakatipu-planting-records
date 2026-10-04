@@ -305,3 +305,39 @@ describe("the query layer reads through the repository only", () => {
     for (const v of (await q.records()).rows) expect(repoIds.has(v.record.id)).toBe(true);
   });
 });
+
+// The numbers the chat must give, checked against the queries its tools wrap. No model needed.
+describe("chat golden questions", () => {
+  it("Whitechapel 2019", async () => {
+    const r = await q.records({ place: "whitechapel", year: 2019 });
+    expect([r.split.total, r.split.needsReview]).toEqual([2105, 136]);
+  });
+
+  it("mānuka, all seasons", async () => {
+    const r = await q.records({ species: "leptospermum-scoparium" });
+    expect([r.split.total, r.split.needsReview]).toEqual([2182, 148]);
+  });
+
+  it("kanuka never returns mānuka", async () => {
+    const r = await q.search("kanuka");
+    expect(r.species.map((s) => s.item.slug)).not.toContain("leptospermum-scoparium");
+  });
+
+  it("a site that doesn't exist finds nothing", async () => {
+    expect((await q.search("bobs cove")).places).toHaveLength(0);
+  });
+
+  it("two-letter queries find nothing", async () => {
+    const r = await q.search("ka");
+    expect(r.places.length + r.species.length).toBe(0);
+  });
+
+  it("Autumn 2026 has 11 places", async () => {
+    expect((await q.season("autumn-2026"))?.places).toHaveLength(11);
+  });
+
+  it("the Slope Hill 2024 columns hold 29,000 plants", async () => {
+    const t = (await q.overview()).themes.find((x) => x.theme === "slope-hill-2024");
+    expect(t?.split.total).toBe(29000);
+  });
+});
