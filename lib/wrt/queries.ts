@@ -197,6 +197,19 @@ export interface DataQuality {
   reconciliation: ReconciliationRow[];
   issues: { errors: number; warnings: number; sample: string[] };
   source: { description: string; files: { name: string; rows: number }[] };
+  /**
+   * Every species WRT marks threatened in either of its two lists, with recorded
+   * plants. Raised on About the data because the basis of the mark is unknown
+   * and the two lists disagree.
+   */
+  threatened: ThreatenedSpeciesRow[];
+}
+
+export interface ThreatenedSpeciesRow extends Ranked<Species> {
+  /** Both lists mark it. */
+  agreed: boolean;
+  /** Sites where it was recorded. */
+  placeCount: number;
 }
 
 export interface Lookups {
@@ -490,6 +503,18 @@ export function createQueries(repo: WrtRepository) {
           sample: issues.slice(0, 20).map((i) => `${i.file}: ${i.message}`),
         },
         source: { description: info.description, files: info.files },
+        threatened: c.species
+          .filter((sp) => sp.threatenedMarks.plantsOutMaster || sp.threatenedMarks.teKakano)
+          .map((sp) => {
+            const recs = c.records.filter((r) => r.speciesId === sp.id);
+            return {
+              item: sp,
+              split: splitOf(recs),
+              agreed: sp.threatenedMarks.plantsOutMaster && sp.threatenedMarks.teKakano,
+              placeCount: new Set(recs.map((r) => r.placeSlug)).size,
+            };
+          })
+          .sort((a, b) => Number(b.agreed) - Number(a.agreed) || b.split.total - a.split.total),
       };
     },
 

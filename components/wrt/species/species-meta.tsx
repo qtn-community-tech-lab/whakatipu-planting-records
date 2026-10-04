@@ -5,6 +5,7 @@
 import type { ReactNode } from "react";
 import type { Species } from "@/lib/wrt/types";
 import { Badge } from "@/components/ui/badge";
+import { ThreatenedBadge, threatenedState } from "@/components/wrt/names";
 
 /** Proper nouns that keep their capital when a name sits mid-sentence. */
 const KEEP_CAPITAL = [/^Hall/, /^Coronation/, /^Hector/];
@@ -26,12 +27,12 @@ export function InlineName({ species }: { species: Species }): ReactNode {
 
 /** Quiet markers. Each says the consequence, not a code. */
 export function SpeciesMarkers({ species }: { species: Species }) {
-  if (!species.needsDecision && !species.over5m && !species.threatened) return null;
+  if (!species.needsDecision && !species.over5m && !threatenedState(species)) return null;
   return (
     <span className="wrt-pills">
       {species.needsDecision && <Badge tone="review">Name needs a ruling</Badge>}
       {species.over5m === true && <Badge tone="soft">Over 5 m</Badge>}
-      {species.threatened === true && <Badge tone="risk">Threatened</Badge>}
+      <ThreatenedBadge species={species} />
     </span>
   );
 }
@@ -47,7 +48,7 @@ export type SortKey = (typeof SORTS)[number]["key"];
 export const SHOWS = [
   { key: "all", label: "All species" },
   { key: "over5m", label: "Over 5 m" },
-  { key: "threatened", label: "Threatened" },
+  { key: "threatened", label: "Marked threatened" },
   { key: "contested", label: "Name needs a ruling" },
 ] as const;
 export type ShowKey = (typeof SHOWS)[number]["key"];

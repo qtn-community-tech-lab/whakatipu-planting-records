@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/names";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
@@ -78,7 +79,15 @@ export function SpeciesHero({
           </span>
           <span className="wrt-shero__tag">Native</span>
           {sp.over5m === true && <span className="wrt-shero__tag">Over 5 m</span>}
-          {sp.threatened === true && <span className="wrt-shero__tag wrt-shero__tag--risk">Threatened</span>}
+          {threatenedState(sp) && (
+            <Link
+              href={THREATENED_HREF}
+              title={THREATENED_TITLE}
+              className={`wrt-shero__tag ${threatenedState(sp) === "both" ? "wrt-shero__tag--risk" : "wrt-shero__tag--review"} !no-underline`}
+            >
+              {threatenedState(sp) === "both" ? "Marked threatened · basis unknown" : "Marked threatened in one WRT list"}
+            </Link>
+          )}
           {sp.needsDecision && <span className="wrt-shero__tag wrt-shero__tag--review">Name needs a ruling</span>}
         </div>
 

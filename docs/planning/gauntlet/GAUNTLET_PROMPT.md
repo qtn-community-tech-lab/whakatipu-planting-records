@@ -52,6 +52,7 @@ Find each one in the app yourself. This list tells you where to look, not what t
 - **The "TBC" cell** in Spring 2025.
 - **Grand totals:** the workbook shows four different all-time totals; the app adds the rows to 140,068. Which figure does WRT quote to funders?
 - **Gaps:** Autumn 2020 has only six sites; Spring 2026 is not in the history yet.
+- **Threatened marks:** About the data › "Threatened species: marked by WRT, but on what basis?". Which threat list and year does WRT's mark follow, and should the species marked in only one of WRT's two lists be marked?
 - **Names staff may not recognise:** macrons the app added to Māori names, the fixed typos in common names, and Kohukohu shown for Pittosporum tenuifolium. Are these the names WRT uses?
 
 ## How to write each question

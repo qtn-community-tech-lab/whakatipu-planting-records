@@ -65,7 +65,14 @@ export interface Species {
   status: "core" | "appended" | "contested" | "seedlog_only" | "unknown";
   /** Trees That Count over-5 m flag, null when not stated. */
   over5m: boolean | null;
+  /**
+   * WRT's threatened mark in the Plants Out Master (`Master Plant List` column B = "T").
+   * Which threat list or year it follows is not recorded anywhere: show it as
+   * "marked threatened by WRT", never as an established conservation status.
+   */
   threatened: boolean | null;
+  /** Where WRT marks this species threatened. The two lists disagree; see About the data. */
+  threatenedMarks: ThreatenedMarks;
   /** True when WRT still has to rule on this species (contested pair etc.). */
   needsDecision: boolean;
   /** Species ids this one is contested with (join keys). */
@@ -75,6 +82,14 @@ export interface Species {
   /** Macron-free, lower-case keys used for search. */
   searchKeys: string[];
   note: string | null;
+}
+
+/** WRT's two threatened-species marks, kept separately because they disagree. */
+export interface ThreatenedMarks {
+  /** "T" in Plants Out Master › Master Plant List, column B (13 species). */
+  plantsOutMaster: boolean;
+  /** "#" before the name in the Te Kakano restoration plant species list. */
+  teKakano: boolean;
 }
 
 /** A registered site or sub-site. */

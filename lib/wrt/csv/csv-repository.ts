@@ -156,10 +156,13 @@ export function loadFromDirectory(dir: string): Loaded {
 
   // ---- species
   const aliasesBySpecies = new Map<string, { raw: string[]; keys: string[] }>();
+  // A leading "#" on a crosswalk spelling is the threatened marker in the Te Kakano list.
+  const teKakanoThreatened = new Set<string>();
   for (const a of tables.species_crosswalk.rows) {
     if (!a.species_id) continue;
+    if (a.raw_name?.trim().startsWith("#")) teKakanoThreatened.add(a.species_id);
     const entry = aliasesBySpecies.get(a.species_id) ?? { raw: [], keys: [] };
-    if (a.raw_name) entry.raw.push(cleanLabel(a.raw_name));
+    if (a.raw_name) entry.raw.push(cleanLabel(a.raw_name.replace(/^\s*#\s*/, "")));
     if (a.match_key) entry.keys.push(searchKey(a.match_key));
     aliasesBySpecies.set(a.species_id, entry);
   }
@@ -198,6 +201,7 @@ export function loadFromDirectory(dir: string): Loaded {
       status,
       over5m: yn(s.over_5m),
       threatened: yn(s.threatened),
+      threatenedMarks: { plantsOutMaster: s.threatened === "Y", teKakano: teKakanoThreatened.has(s.species_id) },
       needsDecision: s.needs_wrt_decision === "Y",
       contestedWith: (s.contested_with ?? "").split(/\s+/).filter(Boolean),
       aliases: [...new Set(alias.raw)].filter((a) => a !== scientificName),

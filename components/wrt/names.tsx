@@ -77,3 +77,32 @@ export function ReviewBadge({ count, plants }: { count?: number; plants?: number
     </Badge>
   );
 }
+
+/** Link target for every threatened mark: the About the data section that explains it. */
+export const THREATENED_HREF = "/about-the-data#threatened";
+
+export function threatenedState(species: Species): "both" | "one" | null {
+  const m = species.threatenedMarks;
+  if (m.plantsOutMaster && m.teKakano) return "both";
+  if (m.plantsOutMaster || m.teKakano) return "one";
+  return null;
+}
+
+export const THREATENED_TITLE =
+  "WRT marks this species threatened, but no file says which threat list or year the mark comes from. See About the data.";
+
+/**
+ * WRT's threatened mark, always flagged: the basis is not recorded and WRT's two
+ * lists disagree, so it is never shown as a settled conservation status.
+ */
+export function ThreatenedBadge({ species }: { species: Species }) {
+  const state = threatenedState(species);
+  if (!state) return null;
+  return (
+    <Link href={THREATENED_HREF} title={THREATENED_TITLE} className="!no-underline">
+      <Badge tone={state === "both" ? "risk" : "review"}>
+        {state === "both" ? "Marked threatened · basis unknown" : "Marked threatened in one WRT list"}
+      </Badge>
+    </Link>
+  );
+}

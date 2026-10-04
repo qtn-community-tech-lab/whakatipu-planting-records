@@ -7,6 +7,7 @@ import { ReviewThemeList } from "@/components/wrt/records";
 import { hrefs } from "@/components/wrt/names";
 import { ConfidenceList, PrecisionList } from "@/components/wrt/about/precision";
 import { GrandReconciliationTable, SeasonReconciliationTable } from "@/components/wrt/about/reconciliation";
+import { ThreatenedLink, ThreatenedQuestions, ThreatenedTable } from "@/components/wrt/about/threatened";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 const SECTIONS = [
   { id: "recorded", label: "Recorded, not verified" },
   { id: "rulings", label: "Open for a ruling" },
+  { id: "threatened", label: "Threatened marks" },
   { id: "precision", label: "How precise" },
   { id: "totals", label: "Checked against WRT’s totals" },
   { id: "source", label: "Where it comes from" },
@@ -40,6 +42,10 @@ export default async function AboutTheData() {
   const slopeHill = dq.themes.find((t) => t.theme === "slope-hill-2024");
 
   const areaRows = dq.byPrecision.find((r) => r.item === "area");
+  const marked = dq.threatened;
+  const markedBoth = marked.filter((r) => r.agreed).length;
+  const markedPo = marked.filter((r) => r.item.threatenedMarks.plantsOutMaster).length;
+  const markedTe = marked.filter((r) => r.item.threatenedMarks.teKakano).length;
   const warnings = dq.issues.sample;
 
   return (
@@ -130,6 +136,39 @@ export default async function AboutTheData() {
             theme links to its records.
           </p>
         </div>
+      </Card>
+
+      <Card
+        id="threatened"
+        title="Threatened species: marked by WRT, but on what basis?"
+        foot="The app shows WRT’s marks as they are. It does not add, remove or correct any until WRT answers."
+      >
+        <p className="cn-callout cn-callout--risk m-0" role="note">
+          <span>
+            <b>Needs WRT’s answer before any threatened-species figure is reported.</b> {marked.length} species carry a
+            threatened mark, but no file says which threat list or year the mark follows, and WRT’s two lists disagree on{" "}
+            {marked.length - markedBoth} of them.
+          </span>
+        </p>
+        <div className="wrt-prose">
+          <p>
+            WRT marks threatened species in two places: a <strong>T</strong> in the Master Plant List of the Plants Out
+            Master ({markedPo} species), and a <strong>#</strong> before the name in the Te Kakano restoration plant
+            species list ({markedTe} species). They agree on {markedBoth}.
+          </p>
+          <p className="!m-0">
+            <strong>Why this has to be asked rather than looked up:</strong> a threatened mark should be checkable against
+            the list it came from. Here there is nothing to check it against. Neither list names its source or the year
+            it was set, and threat rankings change over time. Mānuka and kānuka are the clearest case: Te Kakano marks
+            them, the Plants Out Master does not.
+          </p>
+        </div>
+        <ThreatenedTable rows={marked} />
+        <div className="flex flex-col gap-2 pt-2">
+          <h3 className="wrt-section-title">Questions for WRT</h3>
+          <ThreatenedQuestions rows={marked} />
+        </div>
+        <ThreatenedLink />
       </Card>
 
       <Card
