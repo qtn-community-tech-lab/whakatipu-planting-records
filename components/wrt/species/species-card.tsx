@@ -3,11 +3,11 @@ import Link from "next/link";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/names";
-import { SplitBar } from "@/components/wrt/quantity";
-import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import { getSpeciesPhotos, type SpeciesPhoto } from "@/lib/wrt/species-photos";
+import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { SpeciesMarkers } from "./species-meta";
-import { SpeciesProfilePreview } from "./species-profile-preview";
+import { SpeciesReferenceStatus } from "./species-reference-status";
+import { SpeciesProfileSources } from "./species-profile-preview";
 
 const TILE_TONES = 4;
 
@@ -40,13 +40,13 @@ function RingTile({ row }: { row: SpeciesSummary }) {
   );
 }
 
-function PhotoMedia({ photo, name }: { photo: SpeciesPhoto; name: string }) {
+function PhotoMedia({ photo, name, sizes }: { photo: SpeciesPhoto; name: string; sizes: string }) {
   return (
     <Image
       src={photo.src}
       width={photo.width}
       height={photo.height}
-      sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 300px"
+      sizes={sizes}
       style={{ objectPosition: photo.focalPoint }}
       alt={`Reference photo of ${name}: ${photo.caption}`}
       className="wrt-scard__img"
@@ -55,71 +55,98 @@ function PhotoMedia({ photo, name }: { photo: SpeciesPhoto; name: string }) {
   );
 }
 
-/** One species in the field guide, as a specimen card. The whole card opens the species. */
-export function SpeciesCard({ row, max, rank }: { row: SpeciesSummary; max: number; rank: number }) {
+/**
+ * One species in the field guide, as a full-width row, in the order people meet a plant:
+ * what it looks like (photos, right), what it's called and what kind of plant it is, how to recognise it,
+ * then how much of it the Trust has recorded. Review status stays quiet: a note only when most of it is unconfirmed.
+ * The whole row opens the species.
+ */
+export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; rank: number; tile?: boolean }) {
   const { item: sp, split, span, placeCount } = row;
   const photos = getSpeciesPhotos(sp.id);
   const photo = photos[0];
-  const years = span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
+  const profile = getSpeciesProfile(sp.id);
   const name = sp.displayName;
+  const years = span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
+  // Every other name it goes by: common name and Māori names, minus the one shown as the title.
+  const also = [...new Set([profile?.commonName ?? sp.commonName, ...(profile?.maoriNames ?? [sp.maoriName])])]
+    .filter((x): x is string => !!x && x !== name);
 
-  return (
-    <li className="wrt-scard" data-photo={photo ? true : undefined}>
-      <div className="wrt-scard__media">
-        {photo ? <PhotoMedia photo={photo} name={name} /> : <RingTile row={row} />}
-        <span className="wrt-scard__rank" title={`Number ${rank} by recorded plants`}>
-          <span className="sr-only">Rank </span>
-          {rank}
-        </span>
-        {photo ? (
-          <Link href={`${hrefs.species(sp.slug)}#photos`} className="wrt-scard__chip wrt-scard__above">
-            {photos.length} photo{photos.length === 1 ? "" : "s"}
-          </Link>
-        ) : (
-          <span className="wrt-scard__chip wrt-scard__chip--quiet">
-            {span.seasonsActive === 1 ? "1 season, 1 ring" : `${span.seasonsActive} seasons, one ring each`}
+  // Grid view: the photo, its rank, the name, and how much went in where. The whole card opens the species.
+  if (tile) {
+    return (
+      <li className="wrt-scard" data-photo={photo ? true : undefined}>
+        <div className="wrt-scard__media">
+          {photo ? <PhotoMedia photo={photo} name={name} sizes="(max-width: 760px) 50vw, (max-width: 1100px) 33vw, 300px" /> : <RingTile row={row} />}
+          <span className="wrt-scard__rank" title={`Number ${rank} by recorded plants`}>
+            <span className="sr-only">Rank </span>
+            {rank}
           </span>
-        )}
-        <div className="wrt-scard__marks">
-          <SpeciesMarkers species={sp} />
         </div>
-      </div>
-
-      <div className="wrt-scard__body">
         <h3 className="wrt-scard__name">
           <Link href={hrefs.species(sp.slug)} className="wrt-scard__link">
             <span className={sp.displayIsScientific ? "wrt-scard__common italic" : "wrt-scard__common"}>{name}</span>
           </Link>
           {!sp.displayIsScientific && <span className="wrt-scard__latin">{sp.scientificName}</span>}
         </h3>
+        <p className="wrt-scard__tilefacts">
+          <span><b className="tabular-nums">{formatNumber(split.total)}</b> recorded</span>
+          <span><b className="tabular-nums">{formatNumber(placeCount)}</b> {placeCount === 1 ? "site" : "sites"}</span>
+          {split.needsReview * 2 > split.total && <span className="wrt-scard__unsure">mostly unconfirmed</span>}
+        </p>
+      </li>
+    );
+  }
 
-        <SpeciesProfilePreview speciesId={sp.id} slug={sp.slug} />
-
-        <div className="wrt-scard__stats">
-          <div className="wrt-scard__figure">
-            <span className="wrt-scard__value tabular-nums">{formatNumber(split.total)}</span>
-            <span className="wrt-scard__unit">recorded plants</span>
-          </div>
-          <SplitBar split={split} max={max} size="sm" />
-          <span className={split.needsReview > 0 ? "wrt-scard__review tabular-nums" : "wrt-scard__review is-clear"}>
-            {split.needsReview > 0 ? `${formatNumber(split.needsReview)} need review` : "None need review"}
-          </span>
-          <div className="wrt-scard__meta">
-            <span className="wrt-scard__fact">
-              <NavGlyph name="sites" />
-              {formatNumber(placeCount)} site{placeCount === 1 ? "" : "s"}
-            </span>
-            <span
-              className="wrt-scard__fact"
-              title={`${span.seasonsActive} season${span.seasonsActive === 1 ? "" : "s"} with records, ${span.seasonsActive === 1 ? span.first.label : `${span.first.label} → ${span.last.label}`}`}
-            >
-              <NavGlyph name="seasons" />
-              {years}
-            </span>
-          </div>
+  return (
+    <li className="wrt-scard" data-photo={photo ? true : undefined}>
+      <div className="wrt-scard__body">
+        <div className="wrt-scard__title">
+          <h3 className="wrt-scard__name">
+            <Link href={hrefs.species(sp.slug)} className="wrt-scard__link">
+              <span className={sp.displayIsScientific ? "wrt-scard__common italic" : "wrt-scard__common"}>{name}</span>
+            </Link>
+            {!sp.displayIsScientific && <span className="wrt-scard__latin">{sp.scientificName}</span>}
+          </h3>
+          <SpeciesMarkers species={sp} />
         </div>
 
+        {profile?.summary && <p className="wrt-scard__summary">{profile.summary}</p>}
+        {profile?.lookFor && <p className="wrt-scard__look"><b>Look for</b> {profile.lookFor}</p>}
+        <SpeciesReferenceStatus speciesId={sp.id} />
+        <SpeciesProfileSources speciesId={sp.id} slug={sp.slug} includeLookFor={false} />
+
+        <dl className="wrt-scard__facts">
+          <div>
+            <dt>Recorded</dt>
+            <dd className="tabular-nums">
+              {formatNumber(split.total)}
+              {split.needsReview * 2 > split.total && (
+                <span className="wrt-scard__unsure" title={`${formatNumber(split.needsReview)} still need a WRT ruling`}>mostly unconfirmed</span>
+              )}
+            </dd>
+          </div>
+          <div><dt>Sites</dt><dd>{formatNumber(placeCount)}</dd></div>
+          <div title={`${span.seasonsActive} seasons with records`}><dt>Seasons</dt><dd>{years}</dd></div>
+          {also.length > 0 && <div className="wrt-scard__also"><dt>Also called</dt><dd>{also.join(" · ")}</dd></div>}
+        </dl>
+      </div>
+
+      <div className="wrt-scard__media" data-count={Math.min(photos.length, 3) || undefined}>
+        {photo
+          ? photos.slice(0, 3).map((p, i) => (
+              <PhotoMedia key={p.src} photo={p} name={name} sizes={i === 0 ? "(max-width: 760px) 66vw, 380px" : "(max-width: 760px) 33vw, 190px"} />
+            ))
+          : <RingTile row={row} />}
+        <span className="wrt-scard__rank" title={`Number ${rank} by recorded plants`}>
+          <span className="sr-only">Rank </span>
+          {rank}
+        </span>
+        {photo && photos.length > 1 && (
+          <Link href={`${hrefs.species(sp.slug)}#photos`} className="wrt-scard__chip wrt-scard__above">{photos.length} photos</Link>
+        )}
         {photo && (
+          // Shown on hover or focus, so the credit stays with the photos without crowding the row.
           <p className="wrt-scard__credit wrt-scard__above">
             Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
             <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>

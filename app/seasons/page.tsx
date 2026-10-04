@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, Rule } from "@/components/wrt/page";
-import { SplitKey, SplitLine } from "@/components/wrt/quantity";
+import { PageHead, Rule } from "@/components/wrt/page";
+import { SplitKey } from "@/components/wrt/quantity";
 import { SeasonColumns } from "@/components/wrt/charts";
 import { MissingSeasonRow, SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
 import type { SiteSpecies } from "@/components/wrt/sites/site-rows";
@@ -67,16 +67,20 @@ export default async function SeasonsPage() {
         }
       />
 
-      <Card title="Recorded plants by season" action={<SplitKey spring />}>
-        <SeasonColumns points={seasons} caption="Autumn and spring alternate. Amber is the part of each season that still needs a WRT ruling or confirmation." />
-        <SplitLine split={total} />
+      {/* No cards: the chart and the season rows sit straight on the page, like the species list. */}
+      <section className="flex flex-col gap-3" aria-labelledby="by-season">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <h2 id="by-season" className="wrt-section-title">Recorded plants by season</h2>
+          <SplitKey spring />
+        </div>
+        <SeasonColumns points={seasons} caption="Autumn and spring alternate. Amber is the part still waiting on a WRT ruling." />
         {slope && slopeSeasons.length > 0 && (
           <Rule>
             {slopeSeasons.join(" and ")} stand out because they include the Slope Hill 2024 columns ({formatNumber(slope.split.needsReview)} recorded plants,
             WRT decision 4 still open).
           </Rule>
         )}
-      </Card>
+      </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="by-year">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">

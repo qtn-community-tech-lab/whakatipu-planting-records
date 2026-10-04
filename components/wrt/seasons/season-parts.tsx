@@ -179,45 +179,38 @@ export interface TopSite {
 }
 
 /**
- * One season as a full-width row: the season and its numbers, then its top
- * trees and top sites side by side. The season name opens the season.
+ * One season as a full-width row, in the same order as the species rows: the season and its total,
+ * a quiet strip of facts, then its top trees and top sites side by side. Review stays quiet: a note only
+ * when most of the season is unconfirmed. The season name opens the season.
  */
 export function SeasonRow({
   s, fewSites, trees = [], sites = [],
 }: { s: SeasonSummary; fewSites: boolean; trees?: SiteSpecies[]; sites?: TopSite[] }) {
   const recon = s.reconciliation;
-  const share = s.split.total ? Math.round((s.split.needsReview / s.split.total) * 100) : 0;
   const q = { year: s.season.year, season: s.season.name };
   return (
     <li className="wrt-srow" data-season={s.season.name.toLowerCase()}>
       <div className="wrt-srow__main">
-        <div className="wrt-srow__head">
-          <h3 className="wrt-srow__title">
-            <Link href={hrefs.season(s.season.slug)}>{s.season.label}</Link>
-          </h3>
-          {recon && recon.difference !== 0 && (
-            <span className="wrt-scard2__check" title={reconSentence(recon)}>
-              {`${recon.difference < 0 ? "−" : "+"}${formatNumber(Math.abs(recon.difference))} vs workbook`}
-            </span>
-          )}
-        </div>
+        <h3 className="wrt-srow__title">
+          <Link href={hrefs.season(s.season.slug)}>{s.season.label}</Link>
+        </h3>
         <div className="wrt-scard2__figure">
           <b className="tabular-nums">{formatNumber(s.split.total)}</b>
           <span>recorded plants</span>
-        </div>
-        <SplitBar split={s.split} size="sm" />
-        <p className="wrt-scard2__line">
-          {s.split.needsReview > 0 ? (
-            <span className="wrt-scard2__review tabular-nums">
-              {formatNumber(s.split.needsReview)} need review ({share < 1 ? "<1" : share}%)
-            </span>
-          ) : (
-            <span className="wrt-scard2__clear">None need review</span>
+          {s.split.needsReview * 2 > s.split.total && (
+            <span className="wrt-scard__unsure" title={`${formatNumber(s.split.needsReview)} still need a WRT ruling`}>mostly unconfirmed</span>
           )}
-          <span className="tabular-nums">
-            {formatNumber(s.placeCount)} site{s.placeCount === 1 ? "" : "s"} · {formatNumber(s.speciesCount)} species
-          </span>
-        </p>
+        </div>
+        <dl className="wrt-scard__facts">
+          <div><dt>Sites</dt><dd>{formatNumber(s.placeCount)}</dd></div>
+          <div><dt>Species</dt><dd>{formatNumber(s.speciesCount)}</dd></div>
+          {recon && recon.difference !== 0 && (
+            <div title={reconSentence(recon)}>
+              <dt>Workbook</dt>
+              <dd>{`${recon.difference < 0 ? "−" : "+"}${formatNumber(Math.abs(recon.difference))}`}</dd>
+            </div>
+          )}
+        </dl>
         {fewSites && <span className="wrt-scard2__note">Only {s.placeCount} site{s.placeCount === 1 ? "" : "s"} recorded</span>}
       </div>
 
@@ -229,7 +222,6 @@ export function SeasonRow({
               <Link
                 href={hrefs.records({ ...q, species: t.species.slug })}
                 className="wrt-scard2__sp"
-                data-review={t.split.needsReview > 0 || undefined}
               >
                 <SpeciesAvatar species={t.species} />
                 <span className={t.species.displayIsScientific ? "wrt-scard2__spname italic" : "wrt-scard2__spname"}>
@@ -253,7 +245,6 @@ export function SeasonRow({
               <Link
                 href={hrefs.records({ ...q, place: t.slug })}
                 className="wrt-scard2__sp"
-                data-review={t.split.needsReview > 0 || undefined}
               >
                 <span className="wrt-srow__pin" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
