@@ -11,7 +11,7 @@ import { Fragment, type ReactNode } from "react";
 import { RankedBars, SeasonColumns } from "@/components/wrt/charts";
 import { hrefs } from "@/components/wrt/names";
 import { Card } from "@/components/wrt/page";
-import { QuantityFigure, SplitBar } from "@/components/wrt/quantity";
+import { QuantityFigure } from "@/components/wrt/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { SeasonRow } from "@/components/wrt/seasons/season-parts";
 import { SiteRows, partHref, type SiteRowData } from "@/components/wrt/sites/site-rows";
@@ -242,14 +242,18 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
       )}
       {o.profile && <p className="wrt-chat__plant-summary">{o.profile.summary}</p>}
 
-      <div className="wrt-scard__stats">
-        <div className="wrt-scard__figure">
-          <span className="wrt-scard__value tabular-nums">{formatNumber(o.split.total)}</span>
-          <span className="wrt-scard__unit">recorded across {o.places.length} {o.places.length === 1 ? "site" : "sites"} · {years}</span>
-          {o.split.needsReview > 0 && <span className="wrt-scard__review tabular-nums">{formatNumber(o.split.needsReview)} need review</span>}
+      {/* The same facts strip as the species page rows. */}
+      <dl className="wrt-scard__facts">
+        <div>
+          <dt>Recorded</dt>
+          <dd className="tabular-nums">
+            {formatNumber(o.split.total)}
+            {o.split.needsReview * 2 > o.split.total && <span className="wrt-scard__unsure">mostly unconfirmed</span>}
+          </dd>
         </div>
-        <SplitBar split={o.split} max={o.split.total} size="sm" />
-      </div>
+        <div><dt>Sites</dt><dd>{o.places.length}</dd></div>
+        <div><dt>Seasons</dt><dd>{years}</dd></div>
+      </dl>
 
       {inChat && o.places.length > 0 && (
         <p className="wrt-chat__plant-where wrt-scard__above">

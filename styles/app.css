@@ -1106,7 +1106,7 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 /* ---------------------------------------------------------------- chat (/ask)
  * Canopy tokens only. Answer cards are the site's own .cn-card, so they need nothing here.
  */
-.wrt-chat { display: flex; flex-direction: column; gap: 18px; max-width: 820px; }
+.wrt-chat { display: flex; flex-direction: column; gap: 18px; max-width: 820px; margin-inline: auto; width: 100%; }
 .wrt-chat__msg { display: flex; flex-direction: column; gap: 12px; }
 .wrt-chat__msg--user { align-items: flex-end; }
 .wrt-chat__text { margin: 0; font: var(--type-body); color: var(--text-body); max-width: 68ch; }
@@ -1131,21 +1131,14 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 @keyframes wrt-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .wrt-chat__stepchip i { animation: none; } }
 .wrt-chat__error { margin: 0; font: var(--type-small); color: var(--cn-risk-fg); }
-/* Dock: timeline, scope bar and composer, stuck to the bottom of the chat. */
+/* Dock: scope bar and composer, stuck to the bottom of the chat. */
 .wrt-chat__dock {
-  position: sticky; bottom: 0; z-index: 3; max-width: 820px; display: flex; flex-direction: column; gap: 8px;
+  position: sticky; bottom: 0; z-index: 3; display: flex; flex-direction: column; gap: 8px;
   padding: 10px 0 16px; background: var(--surface-app);
 }
-.wrt-chat__timeline {
-  display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; align-items: end;
-  padding: 8px 12px; border: 1px solid var(--border-card); border-radius: var(--radius-card); background: var(--surface-card);
-}
-.wrt-chat__timeline .wrt-cols--sm { height: 52px; }
-.wrt-chat__timeline .wrt-cols__axis { font-size: 10px; }
-.wrt-chat__timeline-label { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-bottom: 2px; }
-.wrt-chat__timeline-label span { font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
-.wrt-chat__timeline-label b { font: 700 12.5px/1.3 var(--font-sans); color: var(--text-strong); overflow-wrap: anywhere; }
-.wrt-chat__timeline-label em { font: 500 10.5px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; font-style: normal; color: var(--text-muted); }
+.wrt-chat__dock > * { width: 100%; max-width: 820px; margin-inline: auto; box-sizing: border-box; }
+.wrt-chat__hint { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font: 500 10.5px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-muted); }
+.wrt-chat__hint > span { margin-right: auto; opacity: .85; }
 .wrt-chat__scope { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 24px; }
 .wrt-chat__scope-label { font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); margin-right: 2px; }
 .wrt-chat__scope-empty { font: 500 12px/1 var(--font-sans); color: var(--text-muted); }
@@ -1155,13 +1148,45 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 }
 .wrt-chat__scopechip button { width: 18px; height: 18px; border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer; line-height: 1; }
 .wrt-chat__scopechip button:hover { background: var(--text-brand); color: #fff; }
-.wrt-chat__composer { display: flex; gap: 10px; align-items: flex-end; }
-@media (max-width: 600px) { .wrt-chat__timeline { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+/* Composer: one bordered box with the button inside, like the demo. */
+.wrt-chat__composer {
+  display: flex; gap: 8px; align-items: flex-end; padding: 6px 6px 6px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: var(--radius-card); background: var(--surface-card);
+}
+.wrt-chat__composer:focus-within { border-color: var(--text-brand); }
 
 /* Dev switch and panel (components/wrt/chat-dev.tsx): the inspector sits beside the chat. */
-.wrt-devswitch[aria-pressed="true"] { background: var(--text-brand); border-color: var(--text-brand); color: #fff; }
-.wrt-ask--dev { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; align-items: start; }
-@media (max-width: 1180px) { .wrt-ask--dev { grid-template-columns: minmax(0, 1fr); } }
+/* /ask as editor panes (from the demo): a conversation that scrolls on its own, the composer
+ * pinned under it (with New and Dev), and the Dev inspector as a full-height pane. On desktop the page fills the space under the
+ * top bar; on phones it stays an ordinary scrolling page with the composer stuck to the bottom. */
+.wrt-ask { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.wrt-ask--dev { grid-template-columns: minmax(0, 1fr) 360px; }
+.wrt-ask__main { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.wrt-ask__btn {
+  height: 24px; padding: 0 9px; border: 1px solid var(--border-strong); border-radius: 8px; background: none;
+  font: 600 12px/1 var(--font-sans); color: var(--text-body); cursor: pointer;
+}
+.wrt-ask__btn:hover { border-color: var(--text-brand); color: var(--text-brand); }
+.wrt-ask__btn[aria-pressed="true"] { background: var(--text-brand); border-color: var(--text-brand); color: #fff; }
+.wrt-ask__btn:disabled { opacity: .45; cursor: default; }
+.wrt-ask__stream { padding: 22px clamp(16px, 3vw, 40px) 28px; }
+/* Before the first question: a title, one line and the starters, centred in the pane. */
+.wrt-chat:has(> .wrt-ask__intro) { min-height: 100%; justify-content: center; }
+.wrt-ask__intro { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 4vh 0; text-align: center; }
+.wrt-ask__hello { margin: 0; font: 800 34px/1.1 var(--font-sans); letter-spacing: var(--tracking-tight); color: var(--text-brand); }
+.wrt-ask__intro p { margin: 0; max-width: 52ch; font: 500 15px/1.55 var(--font-sans); color: var(--text-body); }
+.wrt-ask__intro .wrt-pills { justify-content: center; max-width: 640px; }
+@media (min-width: 961px) {
+  /* Fill the main area exactly: no page padding or width cap, the notice as a thin strip above the panes. */
+  .wrt-main:has(> .wrt-ask) { max-width: none; padding: 0; gap: 0; height: calc(100dvh - var(--layout-topbar)); overflow: hidden; }
+  .wrt-main:has(> .wrt-ask) > .wrt-notice { margin: 0; padding: 8px clamp(16px, 3vw, 40px); border-bottom: 1px solid var(--border-card); }
+  .wrt-ask { flex: 1; min-height: 0; }
+  .wrt-ask__stream { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+  .wrt-chat__dock { position: static; padding: 10px clamp(16px, 3vw, 40px) 12px; border-top: 1px solid var(--border-card); background: var(--surface-card); }
+  .wrt-ask--dev .wrt-dev { position: static; height: 100%; max-height: none; border: 0; border-left: 1px solid var(--border-card); border-radius: 0; box-sizing: border-box; }
+}
+@media (max-width: 1180px) and (min-width: 961px) { .wrt-ask--dev { grid-template-columns: minmax(0, 1fr) 300px; } }
+@media (max-width: 960px) { .wrt-ask--dev { grid-template-columns: minmax(0, 1fr); } .wrt-ask__intro { padding-top: 2vh; } }
 .wrt-dev {
   position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow: auto; overscroll-behavior: contain;
   display: flex; flex-direction: column; gap: 14px; padding: 14px; border: 1px solid var(--border-card);
@@ -1192,10 +1217,10 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 .wrt-dev__out { opacity: .85; }
 .wrt-dev__err { color: var(--cn-risk-fg); }
 .wrt-chat__composer textarea {
-  flex: 1; min-width: 0; resize: none; padding: 12px 14px; border: var(--border-input);
-  border-radius: var(--radius-field); background: var(--surface-card); font: var(--type-body); color: var(--text-strong);
+  flex: 1; min-width: 0; max-height: 120px; resize: none; padding: 8px 0; border: 0; background: none;
+  font: var(--type-body); color: var(--text-strong);
 }
-.wrt-chat__composer textarea:focus-visible { outline: none; border: var(--border-input-active); }
+.wrt-chat__composer textarea:focus-visible { outline: none; }
 /* Follow-up questions under the newest answer and in the sidebar. */
 .wrt-chat__next .cn-chip::before { content: "↳ "; opacity: 0.6; }
 /* "When" card: one chip per season under the row. */

@@ -2,7 +2,7 @@
  * POST /api/chat: streams the WRT data chat. Prompt and tools: lib/chat-tools.ts.
  * Env (.env.local): AI_GATEWAY_API_KEY, optional WRT_CHAT_MODEL.
  */
-import { convertToModelMessages, stepCountIs, streamText } from "ai";
+import { convertToModelMessages, smoothStream, stepCountIs, streamText } from "ai";
 import { SYSTEM, scopeLine, tools, type ChatMessage, type ChatMeta, type Scope } from "@/lib/chat-tools";
 
 // ponytail: check maxDuration against the Next 16.3.8 route docs in node_modules/next/dist/docs/
@@ -39,9 +39,11 @@ export async function POST(req: Request) {
   const result = streamText({
     model: MODEL, // a Gateway model string, so swapping models is an env change (WRT_CHAT_MODEL)
     system: `${SYSTEM}\n${scopeLine(readScope(body?.scope))}`,
-    messages: await convertToModelMessages(messages),
+    // With tools, earlier results go back to the model as their short briefs, not the full card data.
+    messages: await convertToModelMessages(messages, { tools }),
     tools,
     stopWhen: stepCountIs(6),
+    experimental_transform: smoothStream({ chunking: "word" }), // even word-by-word text
     // ponytail: console only; keep a question log if staff use this daily
     onFinish: ({ totalUsage }) => console.info("[chat]", MODEL, totalUsage),
   });

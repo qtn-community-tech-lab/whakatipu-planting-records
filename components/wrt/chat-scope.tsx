@@ -1,12 +1,10 @@
 "use client";
 /**
- * The composer's scope bar and season timeline on /ask.
+ * The composer's scope bar on /ask.
  * Scope is what the last answer looked at (a site, a part, a species, a season). It's shown as chips,
  * can be cleared, and is sent with each question so follow-ups stay on it (scopeLine in lib/chat-tools.ts).
  */
-import { SeasonColumns } from "@/components/wrt/charts";
 import type { ChatMessage, Scope } from "@/lib/chat-tools";
-import type { SeasonPoint } from "@/lib/wrt/queries";
 
 const KEYS = ["place", "part", "species", "season", "year"] as const;
 
@@ -70,22 +68,6 @@ export function ScopeBar({ scope, onClear }: { scope: Scope; onClear: (key: "pla
           <button type="button" aria-label={`Clear ${c.label}`} onClick={() => onClear(c.key)}>×</button>
         </span>
       )) : <span className="wrt-chat__scope-empty">All sites, species and seasons</span>}
-    </div>
-  );
-}
-
-/** Season columns for the scope. Clicking a season asks about it (the page catches /seasons/ links). */
-export function Timeline({ scope, points }: { scope: Scope; points: SeasonPoint[] | null }) {
-  const active = points?.filter((p) => p.split.records) ?? [];
-  const current = scope.season && scope.year ? `${scope.season.toLowerCase()}-${scope.year}` : undefined;
-  return (
-    <div className="wrt-chat__timeline">
-      <div className="wrt-chat__timeline-label">
-        <span>Timeline</span>
-        <b>{[scopeWhere(scope), scope.species?.name].filter(Boolean).join(" · ") || "All sites"}</b>
-        {active.length > 0 && <em>{active[0].season.label} → {active.at(-1)!.season.label}</em>}
-      </div>
-      {points ? <SeasonColumns points={points} size="sm" currentSlug={current} /> : <span />}
     </div>
   );
 }
