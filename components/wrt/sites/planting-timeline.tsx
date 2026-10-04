@@ -16,21 +16,24 @@ interface Row {
   species?: Species;
   /** Part id when rows are parts. */
   parcelId?: string;
+  /** Site slug when rows are sites. */
+  placeSlug?: string;
   total: QuantitySplit;
   bySeason: Map<string, QuantitySplit>;
 }
 
-function buildRows(records: RecordView[], rowsBy: "species" | "part"): Row[] {
+function buildRows(records: RecordView[], rowsBy: "species" | "part" | "site"): Row[] {
   const rows = new Map<string, Row>();
   for (const v of records) {
-    const key = rowsBy === "species" ? v.species.slug : v.record.parcelId;
+    const key = rowsBy === "species" ? v.species.slug : rowsBy === "site" ? v.place.slug : v.record.parcelId;
     const row =
       rows.get(key) ??
       ({
         key,
-        name: rowsBy === "species" ? v.species.displayName : v.record.parcelName,
+        name: rowsBy === "species" ? v.species.displayName : rowsBy === "site" ? v.place.name : v.record.parcelName,
         species: rowsBy === "species" ? v.species : undefined,
         parcelId: rowsBy === "part" ? v.record.parcelId : undefined,
+        placeSlug: rowsBy === "site" ? v.place.slug : undefined,
         total: emptySplit(),
         bySeason: new Map(),
       } satisfies Row);
@@ -49,11 +52,11 @@ export function PlantingTimeline({
   records: RecordView[];
   /** Every season, in order. Columns are trimmed to the first and last with records. */
   seasons: Season[];
-  rowsBy: "species" | "part";
+  rowsBy: "species" | "part" | "site";
   /** Link for one dot: the records behind it. */
-  hrefFor: (row: { species?: Species; parcelId?: string }, season: Season) => string;
+  hrefFor: (row: { species?: Species; parcelId?: string; placeSlug?: string }, season: Season) => string;
   /** Link for a row name. */
-  rowHref?: (row: { species?: Species; parcelId?: string; name: string }) => string;
+  rowHref?: (row: { species?: Species; parcelId?: string; placeSlug?: string; name: string }) => string;
   cap?: number;
 }) {
   const rows = buildRows(records, rowsBy);
@@ -131,9 +134,9 @@ export function PlantingTimeline({
   return (
     <div className="wrt-tl">
       <div className="wrt-tl__scroll">
-        <div className="wrt-tl__grid" style={style} role="table" aria-label={`Recorded plants by ${rowsBy === "species" ? "species" : "part"} and season`}>
+        <div className="wrt-tl__grid" style={style} role="table" aria-label={`Recorded plants by ${rowsBy === "species" ? "species" : rowsBy === "site" ? "site" : "part"} and season`}>
           <div className="wrt-tl__row wrt-tl__row--years" role="row">
-            <div className="wrt-tl__name" role="columnheader">{rowsBy === "species" ? "Species" : "Part of site"}</div>
+            <div className="wrt-tl__name" role="columnheader">{rowsBy === "species" ? "Species" : rowsBy === "site" ? "Site" : "Part of site"}</div>
             {years.map((y) => (
               <div key={y.year} className="wrt-tl__year" style={{ gridColumn: `span ${y.span}` }} role="columnheader">
                 {y.year}

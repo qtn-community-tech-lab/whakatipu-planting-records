@@ -4,6 +4,7 @@
  * the exact spreadsheet cell it came from.
  */
 import { Fragment } from "react";
+import { SpeciesAvatar } from "./overview/overview-hero";
 import Link from "next/link";
 import type { PlantingRecord, ReviewNote } from "@/lib/wrt/types";
 import type { RecordView, ThemeSummary } from "@/lib/wrt/queries";
@@ -215,7 +216,7 @@ export function RecordsTable({
                   </span>
                 </td>
               )}
-              {show("species") && <td><SpeciesName species={species} link /></td>}
+              {show("species") && <td><span className="wrt-tcell-sp"><SpeciesAvatar species={species} /><SpeciesName species={species} link /></span></td>}
               <td className="cn-num font-extrabold">{record.hasQuantity ? formatNumber(record.quantity) : <span className="cn-num--empty">–</span>}</td>
               <td><RecordStatus record={record} /></td>
               <td><Provenance record={record} /></td>

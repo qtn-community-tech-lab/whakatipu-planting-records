@@ -8,7 +8,7 @@ import { PageHead, Card, EmptyState } from "@/components/wrt/page";
 import { SplitBar, SplitLine } from "@/components/wrt/quantity";
 import { RecordsTable } from "@/components/wrt/records";
 import { partHref } from "@/components/wrt/sites/site-rows";
-import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
+import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
   PAGE_SIZE, PARAM_KEYS, type RawParams, type RecordsView, exportHref, hasFilters, parseRecordParams, recordsHref,
 } from "@/components/wrt/explore/filters";
@@ -64,7 +64,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   }
 
   const wrt = getWrt();
-  const [lookups, places] = await Promise.all([wrt.lookups(), wrt.places()]);
+  const [lookups, places, allSeasons] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons()]);
   const parsed = parseRecordParams(raw, lookups);
   const result = await wrt.records(parsed.filter);
   const { filter, split } = result;
@@ -82,7 +82,6 @@ export default async function RecordsPage({ searchParams }: Props) {
   const siteCount = new Set(result.rows.filter((v) => !v.place.isScheme).map((v) => v.place.slug)).size;
   const schemeCount = new Set(result.rows.filter((v) => v.place.isScheme).map((v) => v.place.slug)).size;
   const filtered = hasFilters(filter);
-  const showSummary = total > 0 && speciesCount > 1 && !filter.species && filtered;
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
   const selectedPart = filter.parcel && selectedPlace && selectedPlace.parcels.length > 1
     ? selectedPlace.parcels.find((p) => p.id === filter.parcel)
@@ -154,22 +153,38 @@ export default async function RecordsPage({ searchParams }: Props) {
         </p>
       )}
 
-      {filtered ? (
-        <section className="wrt-rfilters" aria-label="Filters">
-          <ActiveFilters view={view} lookups={lookups} />
-          <details className="wrt-rfilters__more">
-            <summary>Change filters</summary>
-            <div className="wrt-rfilters__form">
-              <RecordsFilter view={view} lookups={lookups} places={places} />
-              <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
-            </div>
-          </details>
-        </section>
-      ) : (
-        <Card title="Filter records" foot="Every filter is in the page address, so any view can be copied and shared.">
-          <RecordsFilter view={view} lookups={lookups} places={places} />
-        </Card>
-      )}
+      <section className="rx-bar" aria-label="Filters">
+        <div className="rx-bar__chips">
+          {filtered ? (
+            <ActiveFilters view={view} lookups={lookups} />
+          ) : (
+            <span className="rx-bar__none">All {formatNumber(total)} records<span className="rx-bar__hint"> · select anything below to narrow them</span></span>
+          )}
+        </div>
+        <nav className="rx-bar__review" aria-label="Review status">
+          {([
+            ["all", "All", undefined],
+            ["needs-review", "Needs review", "needs-review"],
+            ["resolved", "Resolved", "resolved"],
+          ] as const).map(([key, label, value]) => (
+            <Link
+              key={key}
+              href={recordsHref(view, { review: value, ...(value !== "needs-review" ? { theme: undefined } : {}) })}
+              className="rx-bar__opt"
+              aria-current={(filter.review ?? "all") === key ? "true" : undefined}
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
+        <details className="rx-bar__more">
+          <summary>{filtered ? "Change filters" : "Filter"}</summary>
+          <div className="rx-bar__form">
+            <RecordsFilter view={view} lookups={lookups} places={places} />
+            <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
+          </div>
+        </details>
+      </section>
 
       {total === 0 ? (
         <EmptyState title="No records match these filters">
@@ -179,26 +194,11 @@ export default async function RecordsPage({ searchParams }: Props) {
         </EmptyState>
       ) : (
         <>
-          {showSummary && (
-            <Card
-              title={`Trees in these records (${formatNumber(speciesCount)} species)`}
-              foot={
-                filter.review === "needs-review" || filter.theme
-                  ? "Only records needing review are counted here. Select a species to narrow the records below."
-                  : "Totals include records still needing review; amber is that part. Select a species to narrow the records below."
-              }
-            >
-              <SpeciesTiles
-                records={result.rows}
-                spread={siteCount + schemeCount > 1 ? "sites" : "seasons"}
-                cap={12}
-                hrefFor={(s) => recordsHref(view, { species: s.slug, page: undefined })}
-              />
-            </Card>
-          )}
+          <RecordsInsights rows={result.rows} view={view} lookups={lookups} seasons={allSeasons.map((x) => x.season)} />
 
           <Card
-            title="Records"
+            id="records"
+            title={<span className="rx-records-title">Records <small>{formatNumber(total)} · {from}–{to} shown</small></span>}
             variant="table"
             action={
               <a href={exportHref(view)} className="cn-btn cn-btn--soft cn-btn--sm !no-underline" download>
@@ -223,7 +223,7 @@ export default async function RecordsPage({ searchParams }: Props) {
                 from={from}
                 to={to}
                 total={total}
-                hrefFor={(p) => recordsHref(view, { page: p > 1 ? p : undefined })}
+                hrefFor={(p) => `${recordsHref(view, { page: p > 1 ? p : undefined })}#records`}
               />
             </div>
           </Card>

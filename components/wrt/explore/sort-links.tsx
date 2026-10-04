@@ -11,7 +11,7 @@ export function SortLinks({ view }: { view: RecordsView }) {
         {SORT_KEYS.map((k) => (
           <Link
             key={k}
-            href={recordsHref(view, { sort: k === "season" ? undefined : k })}
+            href={`${recordsHref(view, { sort: k === "season" ? undefined : k })}#records`}
             className="cn-seg__opt"
             aria-current={view.sort === k ? "true" : undefined}
             replace
