@@ -1,0 +1,1739 @@
+{
+  "batch": 1,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 51,
+      "speciesId": "SP-018",
+      "scientificName": "Carex virgata",
+      "profile": {
+        "speciesId": "SP-018",
+        "scientificName": "Carex virgata",
+        "commonName": "Swamp sedge",
+        "maoriNames": [
+          "Pukio",
+          "Toitoi",
+          "Toetoe"
+        ],
+        "summary": "A densely clumped native sedge of wetlands, damp forest and stream margins across New Zealand.",
+        "lookFor": "Narrow light-green leaves form a tussock; stiff upright brown flowering panicles help separate it from drooping Carex secta.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/carex-virgata/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN treats Carex virgata as a species and lists Carex appressa var. virgata as a synonym; Commons uses that older category. Pukio, toitoi and toetoe follow NZPCN’s spellings and are shared names also used for other sedges or grasses."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-018",
+          "scientificName": "Carex virgata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Carex_virgata_kz1.jpg/960px-Carex_virgata_kz1.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Carex virgata tussock in Auckland Botanic Gardens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_kz1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-virgata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-018",
+          "scientificName": "Carex virgata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Carex_virgata_Sol._ex_Boott_%28AM_AK355782-2%29.jpg/960px-Carex_virgata_Sol._ex_Boott_%28AM_AK355782-2%29.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Carex virgata living plants photographed for Auckland Museum accession AK355782.",
+          "author": "A. E. Wright / Auckland Museum",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-2).jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-virgata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-018",
+          "scientificName": "Carex virgata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/28/Carex_virgata_Sol._ex_Boott_%28AM_AK355782-1%29.jpg/960px-Carex_virgata_Sol._ex_Boott_%28AM_AK355782-1%29.jpg",
+          "width": 960,
+          "height": 1386,
+          "caption": "Carex virgata herbarium specimen AK355782 from Auckland Museum.",
+          "author": "A. E. Wright / Auckland Museum",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-1).jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-virgata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/carex-virgata/",
+          "note": "NZPCN treats Carex virgata as a species and lists Carex appressa var. virgata as a synonym; Commons uses that older category. Pukio, toitoi and toetoe follow NZPCN’s spellings and are shared names also used for other sedges or grasses."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_kz1.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Carex virgata in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Carex virgata tussock in Auckland Botanic Gardens. Observed: rounded light-green tussock with many narrow arching leaves and upright brown seed stalks.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-26 12:47:20",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Carex virgata kz1",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Carex appressa var. virgata|Self-published work|Plants in Auckland Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Carex virgata in Auckland Botanic Gardens",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-11 00:40:15",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-2).jpg",
+          "license": "CC BY 4.0",
+          "author": "A. E. Wright / Auckland Museum",
+          "description": "Carex virgata living plants photographed for Auckland Museum accession AK355782.",
+          "viewed": true,
+          "visualCheck": "Carex virgata living plants photographed for Auckland Museum accession AK355782. Observed: several slender green tussocks on a forest floor; photograph rather than a pressed specimen.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-20 18:33:02",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "<div class=\"fn\">\nCarex virgata Sol. ex Boott</div>",
+              "source": "commons-desc-page"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Carex appressa var. virgata|Images uploaded by Fæ|Artworks without Wikidata item|Images from Auckland Museum|Unsupported object|Artworks with known accession number|Photographs of plants in Auckland Museum",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Artist": {
+              "value": "<div class=\"fn value\">\nA. E. Wright</div>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "24 Dec 2014; 23 Nov 2014",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<p><a rel=\"nofollow\" class=\"external text\" href=\"http://api.aucklandmuseum.com/id/naturalsciences/object/775657\">API data</a><br>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://www.aucklandmuseum.com/collection/object/am_naturalsciences-object-775657\">Catalogue record</a>\n</p>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://api.aucklandmuseum.com/id/media/v/452855\">Photo</a>",
+              "source": "commons-desc-page"
+            },
+            "Permission": {
+              "value": "This image has been released as \"CCBY\" by Auckland Museum. For details refer to the <a href=\"//commons.wikimedia.org/wiki/Commons:Batch_uploading/AucklandMuseumCCBY\" title=\"Commons:Batch uploading/AucklandMuseumCCBY\">Commons project page</a>.",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Attribution": {
+              "value": "Auckland Museum",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "attribution": "Auckland Museum"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-1).jpg",
+          "license": "CC BY 4.0",
+          "author": "A. E. Wright / Auckland Museum",
+          "description": "Carex virgata herbarium specimen AK355782 from Auckland Museum.",
+          "viewed": true,
+          "visualCheck": "Carex virgata herbarium specimen AK355782 from Auckland Museum. Observed: mounted long narrow leaves, culms and inflorescence branches, with a Carex virgata label.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-01-19 05:54:33",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "<div class=\"fn\">\nCarex virgata Sol. ex Boott</div>",
+              "source": "commons-desc-page"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Images uploaded by Fæ|Artworks without Wikidata item|Images from Auckland Museum|Unsupported object|Artworks with known accession number|Herbarium specimens of plants in Auckland Museum|Carex appressa var. virgata (herbarium specimens)",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Artist": {
+              "value": "<div class=\"fn value\">\nA. E. Wright</div>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "24 Dec 2014; 23 Nov 2014",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<p><a rel=\"nofollow\" class=\"external text\" href=\"http://api.aucklandmuseum.com/id/naturalsciences/object/775657\">API data</a><br>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://www.aucklandmuseum.com/collection/object/am_naturalsciences-object-775657\">Catalogue record</a>\n</p>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://api.aucklandmuseum.com/id/media/v/363136\">Photo</a>",
+              "source": "commons-desc-page"
+            },
+            "Permission": {
+              "value": "This image has been released as \"CCBY\" by Auckland Museum. For details refer to the <a href=\"//commons.wikimedia.org/wiki/Commons:Batch_uploading/AucklandMuseumCCBY\" title=\"Commons:Batch uploading/AucklandMuseumCCBY\">Commons project page</a>.",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Attribution": {
+              "value": "Auckland Museum",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "attribution": "Auckland Museum"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/carex-virgata/",
+        "https://commons.wikimedia.org/wiki/File:Carex_virgata_kz1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-2).jpg",
+        "https://commons.wikimedia.org/wiki/File:Carex_virgata_Sol._ex_Boott_(AM_AK355782-1).jpg"
+      ]
+    },
+    {
+      "rank": 52,
+      "speciesId": "SP-068",
+      "scientificName": "Fuchsia excorticata",
+      "profile": {
+        "speciesId": "SP-068",
+        "scientificName": "Fuchsia excorticata",
+        "commonName": "Tree fuchsia",
+        "maoriNames": [
+          "Kōtukutuku"
+        ],
+        "summary": "A spreading endemic tree with peeling bark and flowers borne directly on woody branches. It can lose its leaves in southern New Zealand.",
+        "lookFor": "Thin pointed leaves have pale undersides; hanging green-to-purple flowers and flaky orange-brown bark are distinctive.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-068",
+          "scientificName": "Fuchsia excorticata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Fuchsia_excorticata_-_mature_specimen.jpg/960px-Fuchsia_excorticata_-_mature_specimen.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Mature Fuchsia excorticata growing in situ.",
+          "author": "Alexeyevitch",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_-_mature_specimen.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-068",
+          "scientificName": "Fuchsia excorticata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/43/Fuchsia_excorticata_%28tree_fuchsia%29_flowers_and_leaves.jpg/960px-Fuchsia_excorticata_%28tree_fuchsia%29_flowers_and_leaves.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Fuchsia excorticata flowers and leaves.",
+          "author": "Pseudopanax at English Wikipedia",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_(tree_fuchsia)_flowers_and_leaves.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-068",
+          "scientificName": "Fuchsia excorticata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Fuchsia_excorticata_bark.JPG/960px-Fuchsia_excorticata_bark.JPG",
+          "width": 960,
+          "height": 1280,
+          "caption": "Fuchsia excorticata bark in Christchurch Botanic Gardens.",
+          "author": "Andy king50",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_bark.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/",
+          "note": "Species-specific name and identification description checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_-_mature_specimen.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Alexeyevitch",
+          "description": "A Fuchsia excorticata specimen growing in situ",
+          "viewed": true,
+          "visualCheck": "Mature Fuchsia excorticata growing in situ. Observed: branching woody tree with a dense leafy crown in grass.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-11-11 04:54:08",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Fuchsia excorticata - mature specimen",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Fuchsia excorticata|Self-published work",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "A Fuchsia excorticata specimen growing in situ",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2025",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Alexeyevitch\" title=\"User:Alexeyevitch\">Alexeyevitch</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_(tree_fuchsia)_flowers_and_leaves.jpg",
+          "license": "Public domain",
+          "author": "Pseudopanax at English Wikipedia",
+          "description": "Kōtukutuku / tree fuchsia (Fuchsia excorticata) flowers (two fully opened flowers and a few unopened flower buds) and leaves",
+          "viewed": true,
+          "visualCheck": "Fuchsia excorticata flowers and leaves. Observed: two hanging purple-and-green tubular flowers, unopened buds and toothed oval leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2022-07-21 23:48:19",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Fuchsia excorticata (tree fuchsia) flowers and leaves",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Fuchsia excorticata|Karori Wildlife Sanctuary|Self-published work|PD-self|Myrtales flowers",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Kōtukutuku / tree fuchsia (Fuchsia excorticata) flowers (two fully opened flowers and a few unopened flower buds) and leaves",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2021-10-10",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"https://en.wikipedia.org/wiki/User:Pseudopanax\" class=\"extiw\" title=\"wikipedia:User:Pseudopanax\">Pseudopanax</a> at <a href=\"https://en.wikipedia.org/wiki/\" class=\"extiw\" title=\"wikipedia:\">English Wikipedia</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "Public domain",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Public domain",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Copyrighted": {
+              "value": "False",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "pd",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_bark.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Andy king50",
+          "description": "Fuchsia excorticata bark, Christchurch Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Fuchsia excorticata bark in Christchurch Botanic Gardens. Observed: trunk close-up with thin peeling tan bark and irregular flakes.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-02-05 11:31:41",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Fuchsia excorticata bark",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Fuchsia excorticata|Taken with Sony DSC-HX5V|Self-published work|Files with coordinates missing SDC location of creation|Plants in Christchurch Botanic Gardens|Photographs by User:Andy king50",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Fuchsia excorticata bark, Christchurch Botanic Gardens",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2011-12-10",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Andy_king50\" title=\"User:Andy king50\">Andy king50</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/",
+        "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_-_mature_specimen.jpg",
+        "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_(tree_fuchsia)_flowers_and_leaves.jpg",
+        "https://commons.wikimedia.org/wiki/File:Fuchsia_excorticata_bark.JPG"
+      ]
+    },
+    {
+      "rank": 53,
+      "speciesId": "SP-061",
+      "scientificName": "Dacrycarpus dacrydioides",
+      "profile": {
+        "speciesId": "SP-061",
+        "scientificName": "Dacrycarpus dacrydioides",
+        "commonName": "White pine",
+        "maoriNames": [
+          "Kahikatea"
+        ],
+        "summary": "A tall endemic conifer of lowland forest, especially river flats and poorly drained ground. Mature trees often have buttressed trunks.",
+        "lookFor": "Fine scale-like adult foliage and dark seeds held above orange-red fleshy receptacles; young adult trees have a narrow crown.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-061",
+          "scientificName": "Dacrycarpus dacrydioides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Dacrycarpus_dacrydioides_young_adult.jpg/960px-Dacrycarpus_dacrydioides_young_adult.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Young adult Dacrycarpus dacrydioides showing its crown.",
+          "author": "Jacqui Geux",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_young_adult.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-061",
+          "scientificName": "Dacrycarpus dacrydioides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Kahikatea_foliage%2C_Rosedale_Park.jpg/960px-Kahikatea_foliage%2C_Rosedale_Park.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Kahikatea foliage in Rosedale Park, Auckland.",
+          "author": "Bjankuloski06",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kahikatea_foliage,_Rosedale_Park.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-061",
+          "scientificName": "Dacrycarpus dacrydioides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Dacrycarpus_dacrydioides_female_cones.jpg/960px-Dacrycarpus_dacrydioides_female_cones.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Dacrycarpus dacrydioides female cones beginning to develop.",
+          "author": "Jacqui Geux",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_female_cones.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/",
+          "note": "Species-specific name and identification description checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_young_adult.jpg",
+          "license": "CC BY 4.0",
+          "author": "Jacqui Geux",
+          "description": "A young adult tree of the New Zealand endemic conifer Dacrycarpus dacrydioides, commonly called Kahikatea, showing its conical growth habit.",
+          "viewed": true,
+          "visualCheck": "Young adult Dacrycarpus dacrydioides showing its crown. Observed: tall conical crown with tiered rounded branches among surrounding forest.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2022-02-27 10:20:44",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Dacrycarpus dacrydioides young adult",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Dacrycarpus dacrydioides|Jacqui Geux|Media from iNaturalist|Podocarpaceae in New Zealand|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2018-10-26",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "A young adult tree of the New Zealand endemic conifer Dacrycarpus dacrydioides, commonly called Kahikatea, showing its conical growth habit.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2018-10-26",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/27365029\">https://www.inaturalist.org/photos/27365029</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Jacqui Geux",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kahikatea_foliage,_Rosedale_Park.jpg",
+          "license": "CC BY 4.0",
+          "author": "Bjankuloski06",
+          "description": "Foilage of the kahikatea tree (Dacrycarpus dacrydioides) in Rosedale Park, Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Kahikatea foliage in Rosedale Park, Auckland. Observed: slender drooping branchlets densely clothed in tiny scale-like leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2024-11-11 23:16:13",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Kahikatea foliage, Rosedale Park",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Dacrycarpus dacrydioides|Self-published work|Files with coordinates missing SDC location of creation|Rosedale Park, New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Foilage of the <a href=\"https://en.wikipedia.org/wiki/Dacrycarpus_dacrydioides\" class=\"extiw\" title=\"w:Dacrycarpus dacrydioides\">kahikatea tree</a> (<i>Dacrycarpus dacrydioides</i>) in Rosedale Park, Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-11-11",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Bjankuloski06\" title=\"User:Bjankuloski06\">Bjankuloski06</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_female_cones.jpg",
+          "license": "CC BY 4.0",
+          "author": "Jacqui Geux",
+          "description": "The female cones of the New Zealand endemic conifer Dacrycarpus dacrydioides, commonly called Kahikatea, with the fruit beginning to form.",
+          "viewed": true,
+          "visualCheck": "Dacrycarpus dacrydioides female cones beginning to develop. Observed: pale blue-green ovules and green receptacles at branchlet tips; these are immature, not ripe orange fruit.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2022-02-27 10:17:53",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Dacrycarpus dacrydioides female cones",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Dacrycarpus dacrydioides|Jacqui Geux|Media from iNaturalist|Podocarpaceae in New Zealand|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2018-10-26",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "The female cones of the New Zealand endemic conifer Dacrycarpus dacrydioides, commonly called Kahikatea, with the fruit beginning to form.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2018-10-26",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/27365638\">https://www.inaturalist.org/photos/27365638</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Jacqui Geux",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/",
+        "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_young_adult.jpg",
+        "https://commons.wikimedia.org/wiki/File:Kahikatea_foliage,_Rosedale_Park.jpg",
+        "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_female_cones.jpg"
+      ]
+    },
+    {
+      "rank": 54,
+      "speciesId": "SP-092",
+      "scientificName": "Lophozonia menziesii",
+      "profile": {
+        "speciesId": "SP-092",
+        "scientificName": "Lophozonia menziesii",
+        "commonName": "Silver beech",
+        "maoriNames": [
+          "Tāwhairauriki"
+        ],
+        "summary": "An evergreen endemic forest tree found from lowland to mountain forest, sometimes forming a shrub near the treeline.",
+        "lookFor": "Small leathery nearly round leaves have uneven rounded teeth; young trunks carry silvery-grey bark.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/"
+          },
+          {
+            "label": "Flora of New Zealand · names",
+            "url": "https://www.nzflora.info/factsheet/taxon/Lophozonia-menziesii.html"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN uses Lophozonia menziesii and lists Nothofagus menziesii as a synonym. The selected Commons images retain the Nothofagus name."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-092",
+          "scientificName": "Lophozonia menziesii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Nothofagus_menziesii_bark_and_foliage.jpg/960px-Nothofagus_menziesii_bark_and_foliage.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Lophozonia menziesii bark and foliage, catalogued as Nothofagus menziesii.",
+          "author": "Kate McAlpine",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_bark_and_foliage.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-092",
+          "scientificName": "Lophozonia menziesii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Nothofagus_menziesii_developing_nuts.jpg/960px-Nothofagus_menziesii_developing_nuts.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Developing silver beech nuts, catalogued as Nothofagus menziesii.",
+          "author": "Matt Berger",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_developing_nuts.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-092",
+          "scientificName": "Lophozonia menziesii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fc/Nothofagus_menziesii_in_Aoraki_Mount_Cook_NP_01.jpg/960px-Nothofagus_menziesii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Silver beech trunk at Governor’s Bush Walk, Aoraki / Mount Cook, catalogued as Nothofagus menziesii.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/",
+          "note": "NZPCN uses Lophozonia menziesii and lists Nothofagus menziesii as a synonym. The selected Commons images retain the Nothofagus name."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Lophozonia-menziesii.html",
+          "note": "Species-specific vernacular name tāwhairauriki, with this macron and joined spelling."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_bark_and_foliage.jpg",
+          "license": "CC BY 4.0",
+          "author": "Kate McAlpine",
+          "description": "Nothofagus menziesii bark and foliage",
+          "viewed": true,
+          "visualCheck": "Lophozonia menziesii bark and foliage, catalogued as Nothofagus menziesii. Observed: silver trunk beside small rounded green leaves with scalloped toothed margins.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-04-05 06:35:37",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Nothofagus menziesii bark and foliage",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Media from iNaturalist|Nothofagus menziesii|INaturalist images reviewed by iNaturalistReviewBot|Media from GBIF",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Nothofagus menziesii bark and foliage",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2022-11-06",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/observations/141736042\">https://www.inaturalist.org/observations/141736042</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Kate McAlpine",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_developing_nuts.jpg",
+          "license": "CC BY 4.0",
+          "author": "Matt Berger",
+          "description": "Nothofagus menziesii developing nuts",
+          "viewed": true,
+          "visualCheck": "Developing silver beech nuts, catalogued as Nothofagus menziesii. Observed: green developing cupules with rows of small gland-tipped processes between toothed leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-04-05 06:57:34",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Nothofagus menziesii developing nuts",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Media from iNaturalist|Nothofagus menziesii|INaturalist images reviewed by iNaturalistReviewBot|Media from GBIF|INaturalist images missing SDC depicts",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Nothofagus menziesii developing nuts",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2022-11-16",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/observations/144625951\">https://www.inaturalist.org/observations/144625951</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Matt Berger",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Nothofagus menziesii at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Silver beech trunk at Governor’s Bush Walk, Aoraki / Mount Cook, catalogued as Nothofagus menziesii. Observed: thick grey-brown trunk with horizontal marks and moss; this photograph shows bark rather than the whole crown.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-04 10:53:16",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Nothofagus menziesii in Aoraki Mount Cook NP 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Fagales in New Zealand in November 2017|Nothofagus menziesii|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk|Nothofagaceae in Aoraki/Mount Cook National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Nothofagus menziesii</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 00:07:06",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/",
+        "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_bark_and_foliage.jpg",
+        "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_developing_nuts.jpg",
+        "https://commons.wikimedia.org/wiki/File:Nothofagus_menziesii_in_Aoraki_Mount_Cook_NP_01.jpg",
+        "https://www.nzflora.info/factsheet/taxon/Lophozonia-menziesii.html"
+      ]
+    },
+    {
+      "rank": 55,
+      "speciesId": "SP-142",
+      "scientificName": "Prumnopitys taxifolius",
+      "profile": {
+        "speciesId": "SP-142",
+        "scientificName": "Prumnopitys taxifolius",
+        "commonName": "Black pine",
+        "maoriNames": [
+          "Mataī"
+        ],
+        "summary": "An endemic conifer of lowland forest with a distinctive tangled juvenile stage and tall mature trees.",
+        "lookFor": "Adult leaves are short and flattened; circular bark flakes leave a hammered pattern, and ripe fruits are purple-black.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "WRT’s database spelling Prumnopitys taxifolius is retained. NZPCN and the photo sources identify mataī as Prumnopitys taxifolia."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-142",
+          "scientificName": "Prumnopitys taxifolius",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/MataiTree877.jpg/960px-MataiTree877.jpg",
+          "width": 960,
+          "height": 1857,
+          "caption": "Mataī tree in Auckland, identified by the source as Prumnopitys taxifolia.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiTree877.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-142",
+          "scientificName": "Prumnopitys taxifolius",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/MataiLeaves267.jpg/960px-MataiLeaves267.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Adult mataī foliage, identified by the source as Prumnopitys taxifolia.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiLeaves267.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-142",
+          "scientificName": "Prumnopitys taxifolius",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/MataiBark877.jpg/960px-MataiBark877.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Mataī bark in Auckland, identified by the source as Prumnopitys taxifolia.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Template:PD-self",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiBark877.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/",
+          "note": "WRT’s database spelling Prumnopitys taxifolius is retained. NZPCN and the photo sources identify mataī as Prumnopitys taxifolia."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiTree877.jpg",
+          "license": "Public domain",
+          "author": "Kahuroa",
+          "description": "Mataī tree, Prumnopitys taxifolia, Podocarpaceae. Endemic to New Zealand. Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Mataī tree in Auckland, identified by the source as Prumnopitys taxifolia. Observed: tall multi-branched conifer with slender grey trunks and rounded layered foliage.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2007-07-09 05:41:37",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "MataiTree877",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Prumnopitys taxifolia|PD-user|Files by User:Kahuroa",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Mataī tree, <i><a href=\"//commons.wikimedia.org/wiki/Prumnopitys_taxifolia\" title=\"Prumnopitys taxifolia\">Prumnopitys taxifolia</a></i>, Podocarpaceae. Endemic to New Zealand. Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2007-07-08",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kahuroa\" title=\"User:Kahuroa\">Kahuroa</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "Public domain",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Public domain",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Copyrighted": {
+              "value": "False",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "pd",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiLeaves267.jpg",
+          "license": "Public domain",
+          "author": "Kahuroa",
+          "description": "adult foliage of a Mataī, Prumnopitys taxifolia, Podocarpaceae. Endemic to New Zealand. The adult leaves are dark green, somewhat glaucous above, glaucous below, 10-15 x 1-2 mm.",
+          "viewed": true,
+          "visualCheck": "Adult mataī foliage, identified by the source as Prumnopitys taxifolia. Observed: short narrow flattened leaves densely arranged on reddish twigs.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2007-06-05 10:38:17",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "MataiLeaves267",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Prumnopitys taxifolia|PD-user|Files by User:Kahuroa",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "adult foliage of a Mataī, <i><a href=\"//commons.wikimedia.org/wiki/Prumnopitys_taxifolia\" title=\"Prumnopitys taxifolia\">Prumnopitys taxifolia</a></i>, Podocarpaceae. Endemic to New Zealand. The adult leaves are dark green, somewhat glaucous above, glaucous below, 10-15 x 1-2 mm.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2007-06-02",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kahuroa\" title=\"User:Kahuroa\">Kahuroa</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "Public domain",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Public domain",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Copyrighted": {
+              "value": "False",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "pd",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:MataiBark877.jpg",
+          "license": "Public domain",
+          "author": "Kahuroa",
+          "description": "Bark of a Mataī tree, Prumnopitys taxifolia, Podocarpaceae. Endemic to New Zealand. Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Mataī bark in Auckland, identified by the source as Prumnopitys taxifolia. Observed: dark trunk close-up with thick circular flakes and lighter shallow scars.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2007-07-09 05:47:20",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "MataiBark877",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Prumnopitys taxifolia|PD-user|Files by User:Kahuroa",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Bark of a Mataī tree, <i><a href=\"//commons.wikimedia.org/wiki/Prumnopitys_taxifolia\" title=\"Prumnopitys taxifolia\">Prumnopitys taxifolia</a></i>, Podocarpaceae. Endemic to New Zealand. Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2007-07-08",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kahuroa\" title=\"User:Kahuroa\">Kahuroa</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "Public domain",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Public domain",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Copyrighted": {
+              "value": "False",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "pd",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/",
+        "https://commons.wikimedia.org/wiki/File:MataiTree877.jpg",
+        "https://commons.wikimedia.org/wiki/File:MataiLeaves267.jpg",
+        "https://commons.wikimedia.org/wiki/File:MataiBark877.jpg"
+      ]
+    }
+  ]
+}

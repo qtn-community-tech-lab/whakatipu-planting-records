@@ -1,0 +1,662 @@
+{
+  "batch": 3,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 61,
+      "speciesId": "SP-139",
+      "scientificName": "Podocarpus nivalis",
+      "profile": {
+        "speciesId": "SP-139",
+        "scientificName": "Podocarpus nivalis",
+        "commonName": "Mountain tōtara",
+        "maoriNames": [
+          "Tauhinu"
+        ],
+        "summary": "A spreading New Zealand conifer shrub of mountain scrub, tussock grassland and rocky alpine ground. Its branches often form a low, dense dome.",
+        "lookFor": "Small, closely spaced stiff leaves on densely leafy twigs; green seeds sit above swollen red receptacles.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/"
+          },
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/taxon/Podocarpus-nivalis.html"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Flora of New Zealand lists Tauhinu for Podocarpus nivalis. Tauhinu is shared with other shrubs; mountain tōtara and snow tōtara are also documented common names, and tōtara occurs in the names of several Podocarpus species."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-139",
+          "scientificName": "Podocarpus nivalis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/82/Podocarpus_nivalis_-_John_Barkla_-_1573555.jpeg/960px-Podocarpus_nivalis_-_John_Barkla_-_1573555.jpeg",
+          "width": 960,
+          "height": 720,
+          "caption": "Mountain tōtara forming a low patch in the Kakanui Mountains.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_-_John_Barkla_-_1573555.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-139",
+          "scientificName": "Podocarpus nivalis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e5/Podocarpus_nivalis_in_Lewis_Pass_Scenic_Reserve_01.jpg/960px-Podocarpus_nivalis_in_Lewis_Pass_Scenic_Reserve_01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Mountain tōtara foliage at Lewis Pass.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_in_Lewis_Pass_Scenic_Reserve_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-139",
+          "scientificName": "Podocarpus nivalis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/39/Podocarpus_nivalis_aril.jpg/960px-Podocarpus_nivalis_aril.jpg",
+          "width": 960,
+          "height": 609,
+          "caption": "Mountain tōtara seed above a red fleshy receptacle.",
+          "author": "Austrodyptornithian",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_aril.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/",
+          "note": "Tōtara is shared across Podocarpus species; no additional species-specific Māori name was verified."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Podocarpus-nivalis.html",
+          "note": "Lists mountain totara, Snow totara and Tauhinu as vernacular names for this species."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_-_John_Barkla_-_1573555.jpeg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "John Barkla",
+          "description": "Podocarpus nivalis, Kakanui Mountains, North Otago, 2015-02-17 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Low dense green mat spreading between tussocks and rocks on a mountain slope.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Podocarpus nivalis - John Barkla - 1573555.jpeg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_in_Lewis_Pass_Scenic_Reserve_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Golik",
+          "description": "Podocarpus nivalis in Lewis Pass Scenic Reserve, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Small yellow-bronze stiff leaves on woody lichen-covered twigs.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Podocarpus nivalis in Lewis Pass Scenic Reserve 01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_aril.jpg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "Austrodyptornithian",
+          "description": "Succulent aril of Snow Totara (Podocarpus nivalis), Otira Valley, Arthur's Pass National Park.",
+          "viewed": true,
+          "visualCheck": "Close view of green seed atop bright red receptacle amid small stiff green leaves.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Podocarpus nivalis aril.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/",
+        "https://commons.wikimedia.org/wiki/Category:podocarpus_nivalis",
+        "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_-_John_Barkla_-_1573555.jpeg",
+        "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_in_Lewis_Pass_Scenic_Reserve_01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Podocarpus_nivalis_aril.jpg",
+        "https://www.nzflora.info/factsheet/taxon/Podocarpus-nivalis.html"
+      ]
+    },
+    {
+      "rank": 62,
+      "speciesId": "SP-091",
+      "scientificName": "Lophomyrtus obcordata",
+      "profile": {
+        "speciesId": "SP-091",
+        "scientificName": "Lophomyrtus obcordata",
+        "commonName": "Rōhutu",
+        "maoriNames": [
+          "Rōhutu"
+        ],
+        "summary": "An endemic bushy shrub or small tree of coastal and lowland forest. It has small firm leaves, white flowers and red to dark berries.",
+        "lookFor": "Opposite leaves with a clear notch at the tip, giving a reversed heart shape; white flowers have many stamens.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-091",
+          "scientificName": "Lophomyrtus obcordata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Lophomyrtus_obcordata_at_Pati_Tapu_Bush_Scenic_Reserve.jpg/960px-Lophomyrtus_obcordata_at_Pati_Tapu_Bush_Scenic_Reserve.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Rōhutu foliage and berries at Pati Tapu Bush Scenic Reserve.",
+          "author": "Anna Burrows",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lophomyrtus_obcordata_at_Pati_Tapu_Bush_Scenic_Reserve.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-091",
+          "scientificName": "Lophomyrtus obcordata",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/e/e5/Flower_Lophomyrtus_obcordata.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Rōhutu white flowers and notched leaves.",
+          "author": "de Lande, P. J.",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Flower_Lophomyrtus_obcordata.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-091",
+          "scientificName": "Lophomyrtus obcordata",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Fruit_Lophomyrtus_obcordata.jpg",
+          "width": 960,
+          "height": 730,
+          "caption": "Rōhutu red berry and foliage.",
+          "author": "de Lande, P. J.",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fruit_Lophomyrtus_obcordata.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/",
+          "note": "Species-specific factsheet supports name, habitat and identification summary."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lophomyrtus_obcordata_at_Pati_Tapu_Bush_Scenic_Reserve.jpg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "Anna Burrows",
+          "description": "Lophomyrtus obcordata seen at Pati Tapu Bush Scenic Reserve, NZ",
+          "viewed": true,
+          "visualCheck": "Woody branching shrub with small notched opposite leaves and red berries.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Lophomyrtus obcordata at Pati Tapu Bush Scenic Reserve.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Flower_Lophomyrtus_obcordata.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "de Lande, P. J.",
+          "description": "Flower Lophomyrtus obcordata",
+          "viewed": true,
+          "visualCheck": "White flowers with numerous fine stamens beside small heart-shaped leaves; source is low resolution.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Flower Lophomyrtus obcordata.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Fruit_Lophomyrtus_obcordata.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "de Lande, P. J.",
+          "description": "fruit of Lophomyrtus obcordata",
+          "viewed": true,
+          "visualCheck": "Single red-purple berry adjacent to small green notched leaves; source is low resolution.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Fruit Lophomyrtus obcordata.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/",
+        "https://commons.wikimedia.org/wiki/Category:lophomyrtus_obcordata",
+        "https://commons.wikimedia.org/wiki/File:Lophomyrtus_obcordata_at_Pati_Tapu_Bush_Scenic_Reserve.jpg",
+        "https://commons.wikimedia.org/wiki/File:Flower_Lophomyrtus_obcordata.jpg",
+        "https://commons.wikimedia.org/wiki/File:Fruit_Lophomyrtus_obcordata.jpg"
+      ]
+    },
+    {
+      "rank": 63,
+      "speciesId": "SP-074",
+      "scientificName": "Halocarpus bidwillii",
+      "profile": {
+        "speciesId": "SP-074",
+        "scientificName": "Halocarpus bidwillii",
+        "commonName": "Bog pine",
+        "maoriNames": [],
+        "summary": "A much-branched New Zealand conifer shrub or small tree with different juvenile and adult foliage. Some spreading branches root where they touch the ground.",
+        "lookFor": "Adult twigs have tiny overlapping scale leaves; dark grooved seeds are held in conspicuous waxy white cups.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-074",
+          "scientificName": "Halocarpus bidwillii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Halocarpus_bidwillii_in_Wilderness_Reserve.jpg/960px-Halocarpus_bidwillii_in_Wilderness_Reserve.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Bog pine shrubs in the Wilderness Reserve.",
+          "author": "Pseudopanax at English Wikipedia",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Wilderness_Reserve.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-074",
+          "scientificName": "Halocarpus bidwillii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Halocarpus_bidwillii_inat1.jpg/960px-Halocarpus_bidwillii_inat1.jpg",
+          "width": 960,
+          "height": 1399,
+          "caption": "Bog pine seeds held in white fleshy cups.",
+          "author": "Peter de Lange",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_inat1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-074",
+          "scientificName": "Halocarpus bidwillii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Halocarpus_bidwillii_in_Aoraki_Mount_Cook_NP_01.jpg/960px-Halocarpus_bidwillii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Bog pine bark at Aoraki / Mount Cook.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/",
+          "note": "Species-specific factsheet supports name, habitat and identification summary."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Wilderness_Reserve.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Pseudopanax at English Wikipedia",
+          "description": "Wilderness Reserve with snow-covered mountains in the distance (Mt Titiroa, Hunter Mountains)",
+          "viewed": true,
+          "visualCheck": "Landscape of rounded yellow-brown shrubs across open ground with mountains beyond.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Halocarpus bidwillii in Wilderness Reserve.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_inat1.jpg",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "author": "Peter de Lange",
+          "description": "Halocarpus bidwillii in Te Anau - Mossburn Highway, The Wilderness Scientific Reserve",
+          "viewed": true,
+          "visualCheck": "Close view of dark grooved seeds set in white swollen collars; scale-like green twigs visible.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Halocarpus bidwillii inat1.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Golik",
+          "description": "Halocarpus bidwillii at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Pale grey lichen-covered trunk with fine green conifer branchlets at the edge.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Halocarpus bidwillii in Aoraki Mount Cook NP 01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/",
+        "https://commons.wikimedia.org/wiki/Category:halocarpus_bidwillii",
+        "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Wilderness_Reserve.jpg",
+        "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_inat1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Halocarpus_bidwillii_in_Aoraki_Mount_Cook_NP_01.jpg"
+      ]
+    },
+    {
+      "rank": 64,
+      "speciesId": "SP-095",
+      "scientificName": "Melicytus ramiflorus",
+      "profile": {
+        "speciesId": "SP-095",
+        "scientificName": "Melicytus ramiflorus",
+        "commonName": "Whitey wood",
+        "maoriNames": [
+          "Māhoe",
+          "Hinahina"
+        ],
+        "summary": "A common native small tree in coastal, lowland and lower mountain forests. Its pale bark and toothed leaves are useful recognition features.",
+        "lookFor": "Light green tapered leaves with toothed edges; tiny flowers cluster along twigs and berries ripen purple.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "The NZPCN factsheet uses Melicytus ramiflorus subsp. ramiflorus for the New Zealand taxon and discusses the treatment of former Pacific subspecies. The WRT species-level name is retained."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-095",
+          "scientificName": "Melicytus ramiflorus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mahoe-foliage.jpg/960px-Mahoe-foliage.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Māhoe tapered, toothed foliage.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mahoe-foliage.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-095",
+          "scientificName": "Melicytus ramiflorus",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/8/80/Melicytus_ramiflorus_-_whiteywood_flowers.jpg",
+          "width": 960,
+          "height": 957,
+          "caption": "Māhoe small flowers along a twig.",
+          "author": "Dracophyllum",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_whiteywood_flowers.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-095",
+          "scientificName": "Melicytus ramiflorus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Melicytus_ramiflorus_-_John_Barkla_-_5332743.jpeg/960px-Melicytus_ramiflorus_-_John_Barkla_-_5332743.jpeg",
+          "width": 960,
+          "height": 640,
+          "caption": "Māhoe foliage at Okuti Valley Scenic Reserve.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_John_Barkla_-_5332743.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/",
+          "note": "The NZPCN factsheet uses Melicytus ramiflorus subsp. ramiflorus for the New Zealand taxon and discusses the treatment of former Pacific subspecies. The WRT species-level name is retained."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mahoe-foliage.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Kahuroa",
+          "description": "Melicytus ramiflorus, (Violaceae), foliage. This tree has two common names, 'Māhoe' and 'Whitey-wood', of which the Māori name Māhoe tends to be used more in New Zealand English.",
+          "viewed": true,
+          "visualCheck": "Dense bright green foliage with serrated edges and tapered tips.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Mahoe-foliage.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_whiteywood_flowers.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Dracophyllum",
+          "description": "The small white flowers of the New Zealand endemic tree Melicytus ramiflorus, commonly known as whiteywood or māhoe in the Māori language.",
+          "viewed": true,
+          "visualCheck": "Pale small five-lobed flowers and buds arise on fine stalks from a woody twig.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Melicytus ramiflorus - whiteywood flowers.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_John_Barkla_-_5332743.jpeg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "John Barkla",
+          "description": "Melicytus ramiflorus, Okuti Valley Scenic Reserve, New Zealand, 2016-10-22 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Leafy branch with glossy green tapered serrated leaves in sunlight.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Melicytus ramiflorus - John Barkla - 5332743.jpeg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/",
+        "https://commons.wikimedia.org/wiki/Category:Melicytus_ramiflorus",
+        "https://commons.wikimedia.org/wiki/File:Mahoe-foliage.jpg",
+        "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_whiteywood_flowers.jpg",
+        "https://commons.wikimedia.org/wiki/File:Melicytus_ramiflorus_-_John_Barkla_-_5332743.jpeg"
+      ]
+    },
+    {
+      "rank": 65,
+      "speciesId": "SP-038",
+      "scientificName": "Coprosma acerosa",
+      "profile": {
+        "speciesId": "SP-038",
+        "scientificName": "Coprosma acerosa",
+        "commonName": "Sand coprosma",
+        "maoriNames": [
+          "Tātaraheke"
+        ],
+        "summary": "A low sprawling shrub endemic to New Zealand coastal sands. Orange-brown interlacing twigs form cushions or trailing patches.",
+        "lookFor": "Narrow small leaves in opposite pairs or clusters; translucent pale blue fruit can have darker flecks.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-038",
+          "scientificName": "Coprosma acerosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/88/Coprosma_acerosa_11.JPG/960px-Coprosma_acerosa_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Sand coprosma on the Petone foreshore.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-038",
+          "scientificName": "Coprosma acerosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Coprosma_acerosa_kz01.jpg/960px-Coprosma_acerosa_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Sand coprosma spreading foliage at Dunedin Botanic Garden.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-038",
+          "scientificName": "Coprosma acerosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e3/Coprosma_acerosa_kz2.jpg/960px-Coprosma_acerosa_kz2.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Sand coprosma narrow leaves and orange-brown twigs.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz2.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/",
+          "note": "Species-specific factsheet supports name, habitat and identification summary."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "author": "Rudolph89",
+          "description": "Coprosma acerosa, sand coprosma, on Petone foreshore, Wellington, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Low tangled wiry shrub on sand with yellowish foliage and orange-brown twigs.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma acerosa 11.JPG",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Coprosma acerosa in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Wide view of dense fine branching groundcover, tiny linear leaves and scattered pale berries.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma acerosa kz01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz2.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Coprosma acerosa in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Closer view of slender interlacing orange stems carrying very narrow green leaves.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma acerosa kz2.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/",
+        "https://commons.wikimedia.org/wiki/Category:coprosma_acerosa",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_11.JPG",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_acerosa_kz2.jpg"
+      ]
+    }
+  ]
+}

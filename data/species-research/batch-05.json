@@ -1,0 +1,1792 @@
+{
+  "batch": 5,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 71,
+      "speciesId": "SP-117",
+      "scientificName": "Olearia nummularifolia",
+      "profile": {
+        "speciesId": "SP-117",
+        "scientificName": "Olearia nummularifolia",
+        "commonName": null,
+        "maoriNames": [],
+        "nameNote": "NZPCN now uses Shawia nummulariifolia, with Olearia nummulariifolia as a synonym. WRT’s recorded spelling Olearia nummularifolia is retained. Its separate cymbifolia line remains for WRT to resolve; no quantities or IDs are merged.",
+        "summary": "A bushy native shrub of subalpine country. Its compact, leathery leaves have pale undersides.",
+        "lookFor": "Small yellow-green oval leaves with rolled-under edges and white undersides. Sticky yellow twigs bear small clusters of white daisy flowers.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/shawia-nummulariifolia/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-117",
+          "scientificName": "Olearia nummularifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg/960px-Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg",
+          "width": 960,
+          "height": 561,
+          "caption": "Olearia nummulariifolia in Dunedin Botanic Garden, Dunedin, New Zealand Reference for the verified Shawia nummulariifolia synonym; database spelling retained.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Olearia_nummulariifolia",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-117",
+          "scientificName": "Olearia nummularifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/84/Olearia_nummulariifolia_kz01.jpg/960px-Olearia_nummulariifolia_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Olearia nummulariifolia in Dunedin Botanic Garden Reference for the verified Shawia nummulariifolia synonym; database spelling retained.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummulariifolia_kz01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Olearia_nummulariifolia",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-117",
+          "scientificName": "Olearia nummularifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c5/Olearia_nummularifolia_-_Savill_Garden_-_Windsor_Great_Park%2C_England_-_DSC05982.jpg/960px-Olearia_nummularifolia_-_Savill_Garden_-_Windsor_Great_Park%2C_England_-_DSC05982.jpg",
+          "width": 960,
+          "height": 1220,
+          "caption": "Horticultural specimen in Savill Garden - Windsor Great Park, England. Reference for the verified Shawia nummulariifolia synonym; database spelling retained.",
+          "author": "Daderot",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummularifolia_-_Savill_Garden_-_Windsor_Great_Park,_England_-_DSC05982.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Olearia_nummulariifolia",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "partial",
+      "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/shawia-nummulariifolia/",
+          "note": "NZPCN now uses Shawia nummulariifolia, with Olearia nummulariifolia as a synonym. WRT’s recorded spelling Olearia nummularifolia is retained. Its separate cymbifolia line remains for WRT to resolve; no quantities or IDs are merged."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Olearia nummulariifolia in Dunedin Botanic Garden, Dunedin, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw small thick green oval leaves with edges curved under along a twig.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-12 15:16:32",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia nummulariifolia in Dunedin Botanic Garden 10",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia nummulariifolia|Self-published work|Files with coordinates missing SDC location of creation|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Olearia nummulariifolia in Dunedin Botanic Garden, Dunedin, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 23:58:10",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 5010,
+            "height": 2926
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummulariifolia_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Olearia nummulariifolia in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Saw a close view of clustered leathery oval leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-16 10:05:56",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia nummulariifolia kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia nummulariifolia|Self-published work|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Olearia nummulariifolia in Dunedin Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 22:44:23",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3836,
+            "height": 2557
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_nummularifolia_-_Savill_Garden_-_Windsor_Great_Park,_England_-_DSC05982.jpg",
+          "license": "CC0",
+          "author": "Daderot",
+          "description": "Horticultural specimen in Savill Garden - Windsor Great Park, England.",
+          "viewed": true,
+          "visualCheck": "Saw an upright branched garden shrub with a visible Olearia nummularifolia label.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-04-23 10:54:42",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia nummularifolia - Savill Garden - Windsor Great Park, England - DSC05982",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia nummulariifolia|CC-Zero|Self-published work|Files uploaded by Daderot|Specimens in Savill Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Horticultural specimen in Savill Garden - Windsor Great Park, England.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2016-06-06 07:26:13",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Daderot\" title=\"User:Daderot\">Daderot</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Zero, Public Domain Dedication",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3498,
+            "height": 4444
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/shawia-nummulariifolia/",
+        "https://commons.wikimedia.org/wiki/Category:Olearia_nummulariifolia"
+      ]
+    },
+    {
+      "rank": 72,
+      "speciesId": "SP-122",
+      "scientificName": "Ozothamnus leptophyllus",
+      "profile": {
+        "speciesId": "SP-122",
+        "scientificName": "Ozothamnus leptophyllus",
+        "commonName": "Tauhinu",
+        "maoriNames": [
+          "Tauhinu"
+        ],
+        "nameNote": "Tauhinu is shared with other shrubs. NZPCN lists Cassinia leptophylla as a synonym and discusses a broad, variable species concept. WRT’s separate leptophyllus, vauvilliersii and fulvida lines remain unresolved and are not merged here.",
+        "summary": "A variable native shrub found from coastal scrub to subalpine country throughout New Zealand. Its foliage may look grey, yellow-green or green.",
+        "lookFor": "Very small narrow leaves, pale and woolly underneath, on slender branchlets. Small flower heads form flat-topped clusters at the tips; mature seeds have fluffy hairs.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/ozothamnus-leptophyllus/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-122",
+          "scientificName": "Ozothamnus leptophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Ozothamnus_leptophyllus_11.JPG/960px-Ozothamnus_leptophyllus_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Ozothamnus leptophyllus, tauhinu",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ozothamnus_leptophyllus_11.JPG",
+          "articleUrl": "https://en.wikipedia.org/wiki/Ozothamnus_leptophyllus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-122",
+          "scientificName": "Ozothamnus leptophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4b/Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_01.jpg/960px-Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "width": 960,
+          "height": 940,
+          "caption": "Cassinia leptophylla at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand Cassinia leptophylla is a synonym listed by NZPCN.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Ozothamnus_leptophyllus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-122",
+          "scientificName": "Ozothamnus leptophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_02.jpg/960px-Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "width": 960,
+          "height": 1453,
+          "caption": "Cassinia leptophylla at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand Cassinia leptophylla is a synonym listed by NZPCN.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Ozothamnus_leptophyllus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "partial",
+      "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/ozothamnus-leptophyllus/",
+          "note": "Tauhinu is shared with other shrubs. NZPCN lists Cassinia leptophylla as a synonym and discusses a broad, variable species concept. WRT’s separate leptophyllus, vauvilliersii and fulvida lines remain unresolved and are not merged here."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ozothamnus_leptophyllus_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Ozothamnus leptophyllus, tauhinu",
+          "viewed": true,
+          "visualCheck": "Saw a dense fine-leaved shrub with brown spent flower heads and some fluffy seeds.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2013-06-10 08:38:39",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Ozothamnus leptophyllus 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus leptophyllus|Taken with Olympus FE-4000 / X-920 / X-925|Self-published work",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Ozothamnus leptophyllus, tauhinu",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-11-04",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3968,
+            "height": 2976
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Cassinia leptophylla at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw small narrow yellow-green leaves on slender upright shoots.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-03 21:10:28",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Cassinia leptophylla in Aoraki Mount Cook NP 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus leptophyllus|Self-published work|Asterales in New Zealand in November 2017|Gnaphalieae in New Zealand|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Cassinia leptophylla</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 01:25:58",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3830,
+            "height": 3752
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cassinia_leptophylla_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Cassinia leptophylla at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a wider view of fine leafy shoots in natural vegetation.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-03 21:10:28",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Cassinia leptophylla in Aoraki Mount Cook NP 02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus leptophyllus|Self-published work|Asterales in New Zealand in November 2017|Gnaphalieae in New Zealand|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Cassinia leptophylla</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 01:26:03",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3161,
+            "height": 4785
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/ozothamnus-leptophyllus/",
+        "https://commons.wikimedia.org/wiki/Category:Ozothamnus_leptophyllus"
+      ]
+    },
+    {
+      "rank": 73,
+      "speciesId": "SP-143",
+      "scientificName": "Pseudopanax arboreus",
+      "profile": {
+        "speciesId": "SP-143",
+        "scientificName": "Pseudopanax arboreus",
+        "commonName": "Five finger",
+        "maoriNames": [
+          "Whauwhaupaku"
+        ],
+        "nameNote": "Five finger is shared with other Pseudopanax species. Some sources use Neopanax arboreus; WRT’s recorded name is retained.",
+        "summary": "An endemic small tree of moist forest, stream margins and regenerating bush. It is widespread through both main islands, though uncommon in Central Otago.",
+        "lookFor": "Glossy toothed leaflets radiate from long stalks, usually in groups of five. Dark purple-black fruit forms conspicuous branched clusters.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/pseudopanax-arboreus/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-143",
+          "scientificName": "Pseudopanax arboreus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6a/Five_finger_tree%2C_Brookfield_Stream_Reserve.jpg/960px-Five_finger_tree%2C_Brookfield_Stream_Reserve.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "A five finger tree (Pseudopanax arboreus). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "author": "Bjankuloski06",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Five_finger_tree,_Brookfield_Stream_Reserve.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_arboreus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-143",
+          "scientificName": "Pseudopanax arboreus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Five_finger_leaves%2C_Brookfield_Stream_Reserve.jpg/960px-Five_finger_leaves%2C_Brookfield_Stream_Reserve.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Leaves of the five finger tree (Pseudopanax arboreus). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "author": "Bjankuloski06",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Five_finger_leaves,_Brookfield_Stream_Reserve.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_arboreus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-143",
+          "scientificName": "Pseudopanax arboreus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/34/Neopanax_arboreus_berries_at_Moore%27s_Bush_in_Dunedin_KC_010519.jpg/960px-Neopanax_arboreus_berries_at_Moore%27s_Bush_in_Dunedin_KC_010519.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Five Finger (Pseudopanax arboreus) berries at Moore's Bush in Dunedin",
+          "author": "Kimberley Collins",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Neopanax_arboreus_berries_at_Moore%27s_Bush_in_Dunedin_KC_010519.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_arboreus",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/pseudopanax-arboreus/",
+          "note": "Five finger is shared with other Pseudopanax species. Some sources use Neopanax arboreus; WRT’s recorded name is retained."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Five_finger_tree,_Brookfield_Stream_Reserve.jpg",
+          "license": "CC BY 4.0",
+          "author": "Bjankuloski06",
+          "description": "A five finger tree (Pseudopanax arboreus). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Saw leafy spreading tree branches with dark clustered fruit.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2024-11-20 10:03:04",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Five finger tree, Brookfield Stream Reserve",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Pseudopanax arboreus|Files with coordinates missing SDC location of creation|Brookfield Stream Reserve",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "A <a href=\"https://en.wikipedia.org/wiki/Pseudopanax_arboreus\" class=\"extiw\" title=\"w:Pseudopanax arboreus\">five finger tree</a> (<i>Pseudopanax arboreus</i>). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-11-18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Bjankuloski06\" title=\"User:Bjankuloski06\">Bjankuloski06</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Five_finger_leaves,_Brookfield_Stream_Reserve.jpg",
+          "license": "CC BY 4.0",
+          "author": "Bjankuloski06",
+          "description": "Leaves of the five finger tree (Pseudopanax arboreus). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Saw compound leaves with five toothed leaflets radiating on individual stalks.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2024-11-20 10:03:02",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Five finger leaves, Brookfield Stream Reserve",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Pseudopanax arboreus|Files with coordinates missing SDC location of creation|Brookfield Stream Reserve",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Leaves of the <a href=\"https://en.wikipedia.org/wiki/Pseudopanax_arboreus\" class=\"extiw\" title=\"w:Pseudopanax arboreus\">five finger tree</a> (<i>Pseudopanax arboreus</i>). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-11-18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Bjankuloski06\" title=\"User:Bjankuloski06\">Bjankuloski06</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Neopanax_arboreus_berries_at_Moore%27s_Bush_in_Dunedin_KC_010519.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Kimberley Collins",
+          "description": "Five Finger (Pseudopanax arboreus) berries at Moore's Bush in Dunedin",
+          "viewed": true,
+          "visualCheck": "Saw small dark purple-black berries along a branched hanging fruit cluster.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-05-01 02:23:17",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Neopanax arboreus berries at Moore's Bush in Dunedin KC 010519",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Moore's Bush|Self-published work|Apiales in New Zealand in May 2019|Pseudopanax arboreus|Araliaceae in the South Island, New Zealand|New Zealand photographs taken on 2019-05-01",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Five Finger (Pseudopanax arboreus) berries at Moore's Bush in Dunedin",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2019-05-01 11:30:50",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/w/index.php?title=User:Kimbirdley&amp;action=edit&amp;redlink=1\" class=\"new\" title=\"User:Kimbirdley (page does not exist)\">Kimberley Collins</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 5472,
+            "height": 3648
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/pseudopanax-arboreus/",
+        "https://commons.wikimedia.org/wiki/Category:Pseudopanax_arboreus"
+      ]
+    },
+    {
+      "rank": 74,
+      "speciesId": "SP-156",
+      "scientificName": "Veronica hectorii",
+      "profile": {
+        "speciesId": "SP-156",
+        "scientificName": "Veronica hectorii",
+        "commonName": "Whipcord hebe",
+        "maoriNames": [],
+        "nameNote": "Whipcord hebe is shared with several species. Flora of New Zealand recognises three subspecies and lists Hebe hectorii and Leonohebe hectorii as synonyms. No subspecies is assigned here, and WRT’s disputed separate demissa line remains unresolved.",
+        "summary": "An endemic compact shrub of mountain grassland and scrub in the South and Stewart islands. Its tightly pressed scale leaves make the shoots look like cords.",
+        "lookFor": "Short upright shoots sheathed in overlapping pairs of glossy green or olive scale leaves. Small white flowers crowd the branch tips.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/Taxon/Veronica-hectorii.html"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-156",
+          "scientificName": "Veronica hectorii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg/960px-Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Veronica hectorii in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Veronica_hectorii",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-156",
+          "scientificName": "Veronica hectorii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Veronica_hectorii_in_Christchurch_Botanic_Gardens_02.jpg/960px-Veronica_hectorii_in_Christchurch_Botanic_Gardens_02.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Veronica hectorii in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_in_Christchurch_Botanic_Gardens_02.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Veronica_hectorii",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-156",
+          "scientificName": "Veronica hectorii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/78/Veronica_hectorii_-_Flavien_Saboureau_-_463853303.jpeg/960px-Veronica_hectorii_-_Flavien_Saboureau_-_463853303.jpeg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Veronica hectorii, Fiordland, NZ-SO-SL, NZ-SO, NZ, 2025-01-12 (iNaturalist).",
+          "author": "Flavien Saboureau",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_-_Flavien_Saboureau_-_463853303.jpeg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Veronica_hectorii",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "partial",
+      "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/Taxon/Veronica-hectorii.html",
+          "note": "Whipcord hebe is shared with several species. Flora of New Zealand recognises three subspecies and lists Hebe hectorii and Leonohebe hectorii as synonyms. No subspecies is assigned here, and WRT’s disputed separate demissa line remains unresolved."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Veronica hectorii in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a compact rounded garden shrub composed of upright green whipcord shoots.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-09-10 18:12:48",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica hectorii in Christchurch Botanic Gardens 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Veronica hectorii|Files with coordinates missing SDC location of creation|Plants in Christchurch Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Veronica hectorii</i> in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-16 01:47:54",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_in_Christchurch_Botanic_Gardens_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Veronica hectorii in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw close-up shoots with tightly overlapping paired scale leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-09-10 18:12:51",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica hectorii in Christchurch Botanic Gardens 02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Veronica hectorii|Files with coordinates missing SDC location of creation|Plants in Christchurch Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Veronica hectorii</i> in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-16 01:47:59",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectorii_-_Flavien_Saboureau_-_463853303.jpeg",
+          "license": "CC BY 4.0",
+          "author": "Flavien Saboureau",
+          "description": "Veronica hectorii, Fiordland, NZ-SO-SL, NZ-SO, NZ, 2025-01-12 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Saw yellow-green whipcord branchlets with small white flowers at their tips in rocky habitat.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-02-16 22:37:10",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica hectorii - Flavien Saboureau - 463853303",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Veronica hectorii|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Veronica hectorii, Fiordland, NZ-SO-SL, NZ-SO, NZ, 2025-01-12 (iNaturalist).",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2025-01-12",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/463853303\">https://www.inaturalist.org/photos/463853303</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.inaturalist.org/users/2361794\">Flavien Saboureau</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1536,
+            "height": 2048
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/Taxon/Veronica-hectorii.html",
+        "https://commons.wikimedia.org/wiki/Category:Veronica_hectorii"
+      ],
+      "rejectedCandidates": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_hectori_in_Wellington_Botanical_Garden_04.jpg",
+          "reason": "Actually viewed: broad oval leaves conflict with the scale-leaved whipcord morphology of Veronica hectorii. Title/category alone were insufficient."
+        }
+      ]
+    },
+    {
+      "rank": 75,
+      "speciesId": "SP-103",
+      "scientificName": "Muehlenbeckia complexa",
+      "profile": {
+        "speciesId": "SP-103",
+        "scientificName": "Muehlenbeckia complexa",
+        "commonName": "Wire vine",
+        "maoriNames": [
+          "Pōhuehue",
+          "Pōhue",
+          "Pōpōhue",
+          "Tororaro",
+          "Waekāhu"
+        ],
+        "nameNote": "Flora of New Zealand records these vernacular names. Pōhuehue is shared with other climbers, including Muehlenbeckia australis; Tororaro is also used for other Muehlenbeckia species. NZPCN recognises varieties; this species-level profile does not assign a variety to WRT’s records.",
+        "summary": "A native climbing or sprawling plant with many interlacing stems. It grows over other vegetation and can form dense tangled masses.",
+        "lookFor": "Small rounded or broadly oval leaves on wiry stems. Tiny pale flowers occur along the shoots, followed by dark seeds surrounded by pale fleshy flower parts.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/Taxon/Muehlenbeckia-complexa.html"
+          },
+          {
+            "label": "NZPCN · names for the typical variety",
+            "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-complexa-var-complexa/"
+          },
+          {
+            "label": "Wikipedia · shared name",
+            "url": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-103",
+          "scientificName": "Muehlenbeckia complexa",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/f/f8/Muehlenbeckia_complexawith_flowers.jpeg",
+          "width": 945,
+          "height": 2048,
+          "caption": "Muehlenbeckia complexa foliage and small pale flowers at Waikanae Beach, New Zealand.",
+          "author": "Stuart Yeates",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexawith_flowers.jpeg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-103",
+          "scientificName": "Muehlenbeckia complexa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Muehlenbeckia_complexa_in_Burwood_Bush_SR_%282%29.jpg/960px-Muehlenbeckia_complexa_in_Burwood_Bush_SR_%282%29.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Muehlenbeckia complexa in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexa_in_Burwood_Bush_SR_(2).jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-103",
+          "scientificName": "Muehlenbeckia complexa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a2/Muehlenbeckia_complexa_in_Burwood_Bush_SR_%281%29.jpg/960px-Muehlenbeckia_complexa_in_Burwood_Bush_SR_%281%29.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Muehlenbeckia complexa in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexa_in_Burwood_Bush_SR_(1).jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/Taxon/Muehlenbeckia-complexa.html",
+          "note": "Pōhuehue is shared with other climbers, including Muehlenbeckia australis. NZPCN recognises varieties; this species-level profile does not assign a variety to WRT’s records."
+        },
+        {
+          "label": "NZPCN · names for the typical variety",
+          "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-complexa-var-complexa/",
+          "note": "Pōhuehue is shared with other climbers, including Muehlenbeckia australis. NZPCN recognises varieties; this species-level profile does not assign a variety to WRT’s records."
+        },
+        {
+          "label": "Wikipedia · shared name",
+          "url": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa",
+          "note": "Pōhuehue is shared with other climbers, including Muehlenbeckia australis. NZPCN recognises varieties; this species-level profile does not assign a variety to WRT’s records."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexawith_flowers.jpeg",
+          "license": "CC BY-SA 4.0",
+          "author": "Stuart Yeates",
+          "description": "Muehlenbeckia complexa, William Street at Toru Street, Waikanae Beach 5036, New Zealand, 2026-02-06 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Saw wiry reddish stems with small rounded green leaves and clusters of tiny pale flowers.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2026-02-08 23:31:20",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia complexawith flowers",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia complexa|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot|INaturalist images missing SDC depicts|Media uploaded with inat2wiki",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Muehlenbeckia complexa, William Street at Toru Street, Waikanae Beach 5036, New Zealand, 2026-02-06 (iNaturalist).",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2026-02-06",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/613578049\">https://www.inaturalist.org/photos/613578049</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.inaturalist.org/users/6442153\">Stuart Yeates</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 945,
+            "height": 2048
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexa_in_Burwood_Bush_SR_(2).jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Muehlenbeckia complexa in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw small oval leaves on interlacing grey twiggy stems.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2021-03-09 08:11:10",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia complexa in Burwood Bush SR (2)",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia complexa|Burwood Bush (Red Tussock) Scientific Reserve|Self-published work|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-18",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Muehlenbeckia complexa</i> in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-18 23:23:55",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3882,
+            "height": 2588
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_complexa_in_Burwood_Bush_SR_(1).jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Muehlenbeckia complexa in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a tangled shrub-like mass of woody stems with small leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2021-03-09 08:11:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia complexa in Burwood Bush SR (1)",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia complexa|Burwood Bush (Red Tussock) Scientific Reserve|Self-published work|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-18",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Muehlenbeckia complexa</i> in Burwood Bush Scientific Reserve in Southland region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-18 23:23:50",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2600,
+            "height": 3900
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/Taxon/Muehlenbeckia-complexa.html",
+        "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-complexa-var-complexa/",
+        "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa",
+        "https://commons.wikimedia.org/wiki/Category:Muehlenbeckia_complexa"
+      ]
+    }
+  ]
+}

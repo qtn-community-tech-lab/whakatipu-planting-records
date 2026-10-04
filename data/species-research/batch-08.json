@@ -1,0 +1,1248 @@
+{
+  "batch": 8,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 86,
+      "speciesId": "SP-093",
+      "scientificName": "Melicope simplex",
+      "profile": {
+        "speciesId": "SP-093",
+        "scientificName": "Melicope simplex",
+        "commonName": "Poataniwha",
+        "maoriNames": [
+          "Poataniwha"
+        ],
+        "nameNote": "Poataniwha is recorded by NZPCN for this species. No additional Māori spelling or name has been inferred from WRT’s register.",
+        "summary": "An endemic shrub with widely spreading branches and small rounded leaves. Young plants can have leaves divided into three leaflets.",
+        "lookFor": "Small thick leaves with finely roughened margins and a joint where each blade meets its flattened stalk. Cream star-shaped flowers are followed by dry fruit divided into several parts.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/melicope-simplex/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-093",
+          "scientificName": "Melicope simplex",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ca/Melicope_simplex_11.JPG/960px-Melicope_simplex_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Melicope simplex, poataniwha, foliage at Pinehaven Reserve, Wellington, New Zealand.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicope_simplex_11.JPG",
+          "articleUrl": "https://en.wikipedia.org/wiki/Melicope_simplex",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-093",
+          "scientificName": "Melicope simplex",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/108201355/large.jpeg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Melicope simplex foliage, research-grade iNaturalist reference.",
+          "author": "naturewatchwidow",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/108201355",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/melicope-simplex/",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "articleLabel": "NZPCN species reference",
+          "observationUrl": "https://www.inaturalist.org/observations/67032234"
+        },
+        {
+          "speciesId": "SP-093",
+          "scientificName": "Melicope simplex",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/108201370/large.jpeg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Melicope simplex foliage, research-grade iNaturalist reference.",
+          "author": "naturewatchwidow",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/108201370",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/melicope-simplex/",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "articleLabel": "NZPCN species reference",
+          "observationUrl": "https://www.inaturalist.org/observations/67032234"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/melicope-simplex/",
+          "note": "Poataniwha is recorded by NZPCN for this species. No additional Māori spelling or name has been inferred from WRT’s register."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Melicope_simplex_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Melicope simplex, poataniwha, foliage at Pinehaven Reserve, Wellington, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Saw small rounded finely toothed leaves on slender branching twigs.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-06-24 11:09:37",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Melicope simplex 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Melicope simplex|Taken with Olympus FE-4000 / X-920 / X-925|Flora of New Zealand|Self-published work",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Melicope simplex, poataniwha, foliage at Pinehaven Reserve, Wellington, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-06-09",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3968,
+            "height": 2976
+          }
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/108201355",
+          "license": "CC BY 4.0",
+          "author": "naturewatchwidow",
+          "description": "Melicope simplex foliage, research-grade iNaturalist reference.",
+          "viewed": true,
+          "visualCheck": "Saw small rounded leaves along interlacing dark branches.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/67032234",
+          "observationId": 67032234,
+          "photoId": 108201355,
+          "taxonId": 366690,
+          "taxonName": "Melicope simplex",
+          "qualityGrade": "research",
+          "photoLicenseCode": "cc-by",
+          "attribution": "(c) naturewatchwidow, some rights reserved (CC BY)",
+          "originalDimensions": {
+            "width": 2048,
+            "height": 1536
+          },
+          "licenseVersionSource": "https://raw.githubusercontent.com/inaturalist/inaturalist/main/app/models/shared/license_module.rb",
+          "hostedDimensions": {
+            "width": 1024,
+            "height": 768
+          },
+          "dimensionCheck": "Read naturalWidth and naturalHeight from the source-hosted browser image on 2026-10-04."
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/108201370",
+          "license": "CC BY 4.0",
+          "author": "naturewatchwidow",
+          "description": "Melicope simplex foliage, research-grade iNaturalist reference.",
+          "viewed": true,
+          "visualCheck": "Saw a close-up of finely toothed rounded leaves on short flattened stalks.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/67032234",
+          "observationId": 67032234,
+          "photoId": 108201370,
+          "taxonId": 366690,
+          "taxonName": "Melicope simplex",
+          "qualityGrade": "research",
+          "photoLicenseCode": "cc-by",
+          "attribution": "(c) naturewatchwidow, some rights reserved (CC BY)",
+          "originalDimensions": {
+            "width": 1536,
+            "height": 2048
+          },
+          "licenseVersionSource": "https://raw.githubusercontent.com/inaturalist/inaturalist/main/app/models/shared/license_module.rb",
+          "hostedDimensions": {
+            "width": 768,
+            "height": 1024
+          },
+          "dimensionCheck": "Read naturalWidth and naturalHeight from the source-hosted browser image on 2026-10-04."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/melicope-simplex/",
+        "https://commons.wikimedia.org/wiki/Category:Melicope_simplex",
+        "https://www.inaturalist.org/observations/67032234"
+      ]
+    },
+    {
+      "rank": 87,
+      "speciesId": "SP-022",
+      "scientificName": "Carmichaelia crassicaulis",
+      "profile": {
+        "speciesId": "SP-022",
+        "scientificName": "Carmichaelia crassicaulis",
+        "commonName": "Coral broom",
+        "maoriNames": [],
+        "nameNote": "Flora of New Zealand recognises subsp. crassicaulis and subsp. racemosa; this species-level entry does not assign either. Corallospartium crassicaule is an older synonym. WRT’s disputed identity remains unresolved, and subspecies threat assessments are not applied to its planting records.",
+        "summary": "An endemic broom with rigid branching stems and few visible leaves. Its yellowish branchlets are grooved, and small cream to pale pink pea flowers form clusters along them.",
+        "lookFor": "Stout grooved branchlets and tightly grouped pea flowers, often with purple markings. Small dry pods follow flowering; subspecies identification needs closer botanical examination.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html"
+          },
+          {
+            "label": "NZPCN · typical subspecies reference",
+            "url": "https://www.nzpcn.org.nz/flora/species/carmichaelia-crassicaulis-subsp-crassicaulis/"
+          },
+          {
+            "label": "Otago Regional Council · species common name",
+            "url": "https://www.orc.govt.nz/environment/biosecurity-and-pests/plant-pests/gorse-and-broom"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-022",
+          "scientificName": "Carmichaelia crassicaulis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Carmichaelia_crassicaulis_463247951.jpg/960px-Carmichaelia_crassicaulis_463247951.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Carmichaelia crassicaulis flowers in a species-labelled reference photographed by Joe Dillon; no subspecies is assigned to WRT’s record.",
+          "author": "Joe Dillon",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carmichaelia_crassicaulis_463247951.jpg",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons",
+          "articleLabel": "Flora of New Zealand species reference"
+        },
+        {
+          "speciesId": "SP-022",
+          "scientificName": "Carmichaelia crassicaulis",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/463247939/large.jpeg",
+          "width": 1024,
+          "height": 683,
+          "caption": "Carmichaelia crassicaulis branching habit. Research-grade iNaturalist reference; no subspecies assigned to WRT records.",
+          "author": "Joe Dillon",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/463247939",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "articleLabel": "Flora of New Zealand species reference",
+          "observationUrl": "https://www.inaturalist.org/observations/258212600"
+        },
+        {
+          "speciesId": "SP-022",
+          "scientificName": "Carmichaelia crassicaulis",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/463247945/large.jpeg",
+          "width": 1024,
+          "height": 683,
+          "caption": "Carmichaelia crassicaulis flower detail. Research-grade iNaturalist reference; no subspecies assigned to WRT records.",
+          "author": "Joe Dillon",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/463247945",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "articleLabel": "Flora of New Zealand species reference",
+          "observationUrl": "https://www.inaturalist.org/observations/258212600"
+        }
+      ],
+      "status": "partial",
+      "reason": "Species-level identity confirmed; WRT subspecies or database-boundary ruling remains unresolved.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html",
+          "note": "Flora of New Zealand recognises subsp. crassicaulis and subsp. racemosa; this species-level entry does not assign either. Corallospartium crassicaule is an older synonym. WRT’s disputed identity remains unresolved, and subspecies threat assessments are not applied to its planting records."
+        },
+        {
+          "label": "NZPCN · typical subspecies reference",
+          "url": "https://www.nzpcn.org.nz/flora/species/carmichaelia-crassicaulis-subsp-crassicaulis/",
+          "note": "Flora of New Zealand recognises subsp. crassicaulis and subsp. racemosa; this species-level entry does not assign either. Corallospartium crassicaule is an older synonym. WRT’s disputed identity remains unresolved, and subspecies threat assessments are not applied to its planting records."
+        },
+        {
+          "label": "Otago Regional Council · species common name",
+          "url": "https://www.orc.govt.nz/environment/biosecurity-and-pests/plant-pests/gorse-and-broom",
+          "note": "Flora of New Zealand recognises subsp. crassicaulis and subsp. racemosa; this species-level entry does not assign either. Corallospartium crassicaule is an older synonym. WRT’s disputed identity remains unresolved, and subspecies threat assessments are not applied to its planting records."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carmichaelia_crassicaulis_463247951.jpg",
+          "license": "CC BY 4.0",
+          "author": "Joe Dillon",
+          "description": "Carmichaelia crassicaulis flowers in a species-labelled reference photographed by Joe Dillon; no subspecies is assigned to WRT’s record.",
+          "viewed": true,
+          "visualCheck": "Saw densely clustered cream pea flowers with purple markings and woolly flower bases on grooved stems.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2026-04-01 18:32:43",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Carmichaelia crassicaulis 463247951",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Carmichaelia crassicaulis|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation|Uploaded with iNaturalist2Commons|Media from GBIF|INaturalist images missing SDC depicts",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Coral Broom (<i>Carmichaelia crassicaulis</i>) in New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2025-01-05",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/463247951\">https://www.inaturalist.org/photos/463247951</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.inaturalist.org/users/727377\">Joe Dillon</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2048,
+            "height": 1365
+          }
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/463247939",
+          "license": "CC BY 4.0",
+          "author": "Joe Dillon",
+          "description": "Carmichaelia crassicaulis branching habit. Research-grade iNaturalist reference; no subspecies assigned to WRT records.",
+          "viewed": true,
+          "visualCheck": "Saw a leafless upright branched broom shoot among low mountain shrubs.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/258212600",
+          "observationId": 258212600,
+          "photoId": 463247939,
+          "taxonId": 400480,
+          "taxonName": "Carmichaelia crassicaulis",
+          "qualityGrade": "research",
+          "photoLicenseCode": "cc-by",
+          "attribution": "(c) Joe Dillon, some rights reserved (CC BY)",
+          "originalDimensions": {
+            "width": 2048,
+            "height": 1365
+          },
+          "licenseVersionSource": "https://raw.githubusercontent.com/inaturalist/inaturalist/main/app/models/shared/license_module.rb",
+          "hostedDimensions": {
+            "width": 1024,
+            "height": 683
+          },
+          "dimensionCheck": "Read naturalWidth and naturalHeight from the source-hosted browser image on 2026-10-04."
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/463247945",
+          "license": "CC BY 4.0",
+          "author": "Joe Dillon",
+          "description": "Carmichaelia crassicaulis flower detail. Research-grade iNaturalist reference; no subspecies assigned to WRT records.",
+          "viewed": true,
+          "visualCheck": "Saw cream and purple pea flowers tightly clustered around a thick grooved branchlet.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/258212600",
+          "observationId": 258212600,
+          "photoId": 463247945,
+          "taxonId": 400480,
+          "taxonName": "Carmichaelia crassicaulis",
+          "qualityGrade": "research",
+          "photoLicenseCode": "cc-by",
+          "attribution": "(c) Joe Dillon, some rights reserved (CC BY)",
+          "originalDimensions": {
+            "width": 2048,
+            "height": 1365
+          },
+          "licenseVersionSource": "https://raw.githubusercontent.com/inaturalist/inaturalist/main/app/models/shared/license_module.rb",
+          "hostedDimensions": {
+            "width": 1024,
+            "height": 683
+          },
+          "dimensionCheck": "Read naturalWidth and naturalHeight from the source-hosted browser image on 2026-10-04."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html",
+        "https://www.nzpcn.org.nz/flora/species/carmichaelia-crassicaulis-subsp-crassicaulis/",
+        "https://www.orc.govt.nz/environment/biosecurity-and-pests/plant-pests/gorse-and-broom",
+        "https://commons.wikimedia.org/wiki/Category:Carmichaelia_crassicaulis",
+        "https://www.inaturalist.org/observations/258212600"
+      ]
+    },
+    {
+      "rank": 88,
+      "speciesId": "SP-148",
+      "scientificName": "Pseudowintera colorata",
+      "profile": {
+        "speciesId": "SP-148",
+        "scientificName": "Pseudowintera colorata",
+        "commonName": "Mountain horopito",
+        "maoriNames": [
+          "Horopito"
+        ],
+        "nameNote": "Horopito is shared with other Pseudowintera species; NZPCN calls this one red or mountain horopito.",
+        "summary": "An endemic shrub of forest edges and scrub through the North, South and Stewart islands. Its leaf colouring becomes especially conspicuous in exposed places.",
+        "lookFor": "Matte green to yellow-green oval leaves often blotched red, with pale whitish undersides. Dark branchlets bear small yellow-green flowers and dark red or black berries.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/pseudowintera-colorata/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-148",
+          "scientificName": "Pseudowintera colorata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Christchurch_Botanic_Gardens%2C_New_Zealand_section%2C_pseudowintera_colorata_2016-02-04.jpg/960px-Christchurch_Botanic_Gardens%2C_New_Zealand_section%2C_pseudowintera_colorata_2016-02-04.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Pseudowintera colorata",
+          "author": "Szilas",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christchurch_Botanic_Gardens,_New_Zealand_section,_pseudowintera_colorata_2016-02-04.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudowintera_colorata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-148",
+          "scientificName": "Pseudowintera colorata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/17/Pseudowintera_colorata_in_Mount_Aspiring_NP_02.jpg/960px-Pseudowintera_colorata_in_Mount_Aspiring_NP_02.jpg",
+          "width": 960,
+          "height": 1001,
+          "caption": "Leaf of Pseudowintera colorata in Mount Aspiring National Park, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudowintera_colorata_in_Mount_Aspiring_NP_02.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudowintera_colorata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-148",
+          "scientificName": "Pseudowintera colorata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Pseudowintera_colorata_in_Mount_Aspiring_NP_01.jpg/960px-Pseudowintera_colorata_in_Mount_Aspiring_NP_01.jpg",
+          "width": 960,
+          "height": 559,
+          "caption": "Bottom surface of the leaves of Pseudowintera colorata in Mount Aspiring National Park, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudowintera_colorata_in_Mount_Aspiring_NP_01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudowintera_colorata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/pseudowintera-colorata/",
+          "note": "Horopito is shared with other Pseudowintera species; NZPCN calls this one red or mountain horopito."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Christchurch_Botanic_Gardens,_New_Zealand_section,_pseudowintera_colorata_2016-02-04.jpg",
+          "license": "Public domain",
+          "author": "Szilas",
+          "description": "Pseudowintera colorata",
+          "viewed": true,
+          "visualCheck": "Saw a small upright branched garden tree with yellow-green foliage.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2016-08-13 15:30:59",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Christchurch Botanic Gardens, New Zealand section, pseudowintera colorata 2016-02-04",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Pseudowintera colorata|Self-published work|PD-self|Uploaded with Commonist|Plants in Christchurch Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Pseudowintera colorata</i>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2016-02-04",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\">Self-photographed</span> Photo by Szilas in Christchurch",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Szilas",
+              "source": "commons-desc-page"
+            },
+            "Permission": {
+              "value": "<table class=\"licensetpl\" style=\"display:none\">\n<tbody><tr>\n<td><span class=\"licensetpl_short\">Public domain</span><span class=\"licensetpl_long\">Public domain</span><span class=\"licensetpl_link_req\">false</span><span class=\"licensetpl_attr_req\">false</span>\n</td></tr></tbody></table>\n<table style=\"width: 100%; clear: both; margin: 0.5em auto; background-color: var(--background-color-progressive-subtle, #f7f8ff); color: var(--color-base, #202122); border: var(--border-subtle, 2px solid #8888aa); border-spacing: 8px; padding: 0px;\" dir=\"ltr\" class=\"layouttemplate\" lang=\"en\">\n<tbody><tr>\n<td><span typeof=\"mw:File\"><span title=\"Public domain\"><img alt=\"Public domain\" src=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/PD-icon.svg/120px-PD-icon.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail\" decoding=\"async\" loading=\"lazy\" width=\"64\" height=\"64\" class=\"mw-file-element\" srcset=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/62/PD-icon.svg/250px-PD-icon.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail 2x\" data-file-width=\"196\" data-file-height=\"196\"></span></span>\n</td>\n<td>I, the copyright holder of this work, release this work into the <b><a href=\"https://en.wikipedia.org/wiki/en:public_domain\" class=\"extiw\" title=\"w:en:public domain\">public domain</a></b>. This applies worldwide.<br><small>In some countries this may not be legally possible; if so:</small><br><i>I grant anyone the right to use this work <b>for any purpose</b>, without any conditions, unless such conditions are required by law.</i>\n</td></tr></tbody></table>",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseShortName": {
+              "value": "Public domain",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Public domain",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Copyrighted": {
+              "value": "False",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "pd",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2592,
+            "height": 3888
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudowintera_colorata_in_Mount_Aspiring_NP_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Leaf of Pseudowintera colorata in Mount Aspiring National Park, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a green upper leaf surface with red-purple blotches and a reddish margin.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-03 22:44:26",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pseudowintera colorata in Mount Aspiring NP 02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Pseudowintera colorata|Self-published work|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-20|Flora of Mount Aspiring National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Leaf of <i>Pseudowintera colorata</i> in Mount Aspiring National Park, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-20 22:01:31",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1919,
+            "height": 2000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudowintera_colorata_in_Mount_Aspiring_NP_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Bottom surface of the leaves of Pseudowintera colorata in Mount Aspiring National Park, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw pale whitish undersides of oval leaves, with some insect damage.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-03 22:44:26",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pseudowintera colorata in Mount Aspiring NP 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Pseudowintera colorata|Self-published work|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-20|Underside of leaves|Flora of Mount Aspiring National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Bottom surface of the leaves of <i>Pseudowintera colorata</i> in Mount Aspiring National Park, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-20 22:01:15",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2999,
+            "height": 1745
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/pseudowintera-colorata/",
+        "https://commons.wikimedia.org/wiki/Category:Pseudowintera_colorata"
+      ]
+    },
+    {
+      "rank": 89,
+      "speciesId": "SP-140",
+      "scientificName": "Podocarpus totara",
+      "profile": {
+        "speciesId": "SP-140",
+        "scientificName": "Podocarpus totara",
+        "commonName": "Tōtara",
+        "maoriNames": [
+          "Tōtara",
+          "Amoka"
+        ],
+        "nameNote": "Flora of New Zealand records Tōtara and Amoka. Tōtara also occurs in names of other Podocarpus species; no variety is assigned to this species-level record.",
+        "summary": "An endemic conifer that can become a large forest tree. Mature trees have thick stringy bark and a broad spreading crown.",
+        "lookFor": "Stiff narrow pointed leaves on woody branchlets. Older trunks show deep furrows and long fibrous bark strips.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/Taxon/Podocarpus-totara.html"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-140",
+          "scientificName": "Podocarpus totara",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Giant_lowland_totara.jpg/960px-Giant_lowland_totara.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Giant lowland totara tree (31 metres tall, 8.4 metres around the trunk, 1000 years old), Peel Forest, Canterbury, New Zealand",
+          "author": "Tomas Sobek",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Giant_lowland_totara.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Podocarpus_totara",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-140",
+          "scientificName": "Podocarpus totara",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Podocarpus_totara_in_Auckland_Botanic_Gardens_02.jpg/960px-Podocarpus_totara_in_Auckland_Botanic_Gardens_02.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Podocarpus totara in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_totara_in_Auckland_Botanic_Gardens_02.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Podocarpus_totara",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-140",
+          "scientificName": "Podocarpus totara",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f2/T%C5%8Dtara_tree_trunk%2C_Brookfield_Stream_Reserve.jpg/960px-T%C5%8Dtara_tree_trunk%2C_Brookfield_Stream_Reserve.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Trunk of a mature tōtara tree (Podocarpus totara). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "author": "Bjankuloski06",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:T%C5%8Dtara_tree_trunk,_Brookfield_Stream_Reserve.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Podocarpus_totara",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/Taxon/Podocarpus-totara.html",
+          "note": "Flora of New Zealand records Tōtara and Amoka. Tōtara also occurs in names of other Podocarpus species; no variety is assigned to this species-level record."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Giant_lowland_totara.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Tomas Sobek",
+          "description": "Giant lowland totara tree (31 metres tall, 8.4 metres around the trunk, 1000 years old), Peel Forest, Canterbury, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a very large flared trunk with stringy bark beneath a high spreading crown.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-01-29 08:13:35",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Giant lowland totara",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Podocarpus totara|Peel Forest|Self-published work|Files with coordinates missing SDC location of creation",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Giant lowland totara tree (31 metres tall, 8.4 metres around the trunk, 1000 years old), Peel Forest, Canterbury, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2016-12-26 12:43:57",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tomas.sobek\" title=\"User:Tomas.sobek\">Tomas Sobek</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3867,
+            "height": 5801
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Podocarpus_totara_in_Auckland_Botanic_Gardens_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Podocarpus totara in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw narrow pointed green leaves densely arranged around slender woody branchlets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-05-17 16:30:25",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Podocarpus totara in Auckland Botanic Gardens 02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Files with coordinates missing SDC location of creation|Podocarpus totara (cultivated)|Plants in Auckland Botanic Gardens|Podocarpus totara (leaves)",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Podocarpus totara in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-11 04:13:51",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:T%C5%8Dtara_tree_trunk,_Brookfield_Stream_Reserve.jpg",
+          "license": "CC BY 4.0",
+          "author": "Bjankuloski06",
+          "description": "Trunk of a mature tōtara tree (Podocarpus totara). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Saw a mature trunk with long fibrous bark ridges.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2024-11-20 10:03:57",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Tōtara tree trunk, Brookfield Stream Reserve",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Podocarpus totara|Self-published work|Files with coordinates missing SDC location of creation|Brookfield Stream Reserve",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Trunk of a mature <a href=\"https://en.wikipedia.org/wiki/Podocarpus_totara\" class=\"extiw\" title=\"w:Podocarpus totara\">tōtara tree</a> (<i>Podocarpus totara</i>). Brookfield Stream Reserve, Albany, Auckland, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-11-18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Bjankuloski06\" title=\"User:Bjankuloski06\">Bjankuloski06</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/Taxon/Podocarpus-totara.html",
+        "https://commons.wikimedia.org/wiki/Category:Podocarpus_totara"
+      ]
+    },
+    {
+      "rank": 90,
+      "speciesId": "SP-060",
+      "scientificName": "Cyathoides juniperina",
+      "profile": {
+        "speciesId": "SP-060",
+        "scientificName": "Cyathoides juniperina",
+        "commonName": null,
+        "maoriNames": [],
+        "nameNote": "The recorded spelling Cyathoides juniperina was not verified. NZOR and Kew confirm Cyathodes juniperina as a synonym of Leptecophylla juniperina, but that does not establish what WRT’s SP-060 record represents. Keep it separate from SP-087 until WRT confirms the intended name.",
+        "summary": "This recorded botanical name remains unverified. A possible spelling correction points to an older name for Leptecophylla juniperina, but WRT must confirm the intended identity before botanical traits or reference photos are assigned.",
+        "lookFor": "Confirm the intended botanical identity against WRT’s original records or a verified specimen before using identification features.",
+        "sources": [
+          {
+            "label": "NZOR · Cyathodes synonym record",
+            "url": "https://nzor.org.nz/names/4f5ed3ff-b4cb-4074-8182-2c5768a04e72"
+          },
+          {
+            "label": "Kew · Leptecophylla juniperina",
+            "url": "https://powo.science.kew.org/taxon/1012580-1"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [],
+      "status": "unresolved",
+      "reason": "Exact recorded spelling not verified; the similar historical name Cyathodes juniperina is a confirmed synonym, but mapping SP-060 to it would be an unsupported assumption.",
+      "identityEvidence": [
+        {
+          "label": "NZOR · Cyathodes synonym record",
+          "url": "https://nzor.org.nz/names/4f5ed3ff-b4cb-4074-8182-2c5768a04e72",
+          "note": "The recorded spelling Cyathoides juniperina was not verified. NZOR and Kew confirm Cyathodes juniperina as a synonym of Leptecophylla juniperina, but that does not establish what WRT’s SP-060 record represents. Keep it separate from SP-087 until WRT confirms the intended name."
+        },
+        {
+          "label": "Kew · Leptecophylla juniperina",
+          "url": "https://powo.science.kew.org/taxon/1012580-1",
+          "note": "The recorded spelling Cyathoides juniperina was not verified. NZOR and Kew confirm Cyathodes juniperina as a synonym of Leptecophylla juniperina, but that does not establish what WRT’s SP-060 record represents. Keep it separate from SP-087 until WRT confirms the intended name."
+        }
+      ],
+      "photoEvidence": [],
+      "searchedSources": [
+        "https://nzor.org.nz/names/4f5ed3ff-b4cb-4074-8182-2c5768a04e72",
+        "https://powo.science.kew.org/taxon/1012580-1",
+        "https://commons.wikimedia.org/wiki/Category:Cyathoides_juniperina",
+        "https://www.nzflora.info/factsheet/Taxon/Leptecophylla-juniperina.html"
+      ]
+    }
+  ]
+}

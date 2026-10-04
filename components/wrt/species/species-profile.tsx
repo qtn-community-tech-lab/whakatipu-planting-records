@@ -1,6 +1,8 @@
 import { getSpeciesProfile, type SpeciesProfile } from "@/lib/wrt/species-profiles";
 import { Card } from "@/components/wrt/page";
 import "./species-profile.css";
+import { SpeciesReferenceStatus } from "./species-reference-status";
+import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
 /** Reused by the photo guide and species detail pages. */
 export function SpeciesProfileContent({ profile }: { profile: SpeciesProfile }) {
@@ -25,10 +27,16 @@ export function SpeciesProfileContent({ profile }: { profile: SpeciesProfile }) 
 
 export function SpeciesProfilePanel({ speciesId }: { speciesId: string }) {
   const profile = getSpeciesProfile(speciesId);
-  if (!profile) return null;
+  if (!profile && !getSpeciesReferenceReview(speciesId)) return null;
+  if (!profile) return (
+    <Card id="about-species" title="Species reference review">
+      <SpeciesReferenceStatus speciesId={speciesId} />
+    </Card>
+  );
   return (
     <Card id="about-species" title={`About ${profile.commonName ?? profile.scientificName}`}>
       <SpeciesProfileContent profile={profile} />
+      <SpeciesReferenceStatus speciesId={speciesId} />
     </Card>
   );
 }

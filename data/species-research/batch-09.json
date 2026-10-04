@@ -1,0 +1,618 @@
+{
+  "batch": 9,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 91,
+      "speciesId": "SP-154",
+      "scientificName": "Veronica biggarii",
+      "profile": {
+        "speciesId": "SP-154",
+        "scientificName": "Veronica biggarii",
+        "commonName": "Biggar’s hebe",
+        "maoriNames": [],
+        "summary": "A small Southland alpine shrub restricted to the Eyre and Thomson mountains and Mid Dome. It grows on rocky outcrops and in open snow-tussock grassland.",
+        "lookFor": "Pairs of fleshy oval leaves often edged red; flower spikes on noticeable stalks, with bright pink young buds or developing capsules.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN lists Hebe biggarii as a synonym and describes this range-restricted species as Naturally Uncommon. No Māori name was verified."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-154",
+          "scientificName": "Veronica biggarii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Veronica_biggarii_-_John_Barkla_-_1228975.jpeg/960px-Veronica_biggarii_-_John_Barkla_-_1228975.jpeg",
+          "width": 960,
+          "height": 639,
+          "caption": "Biggar’s hebe flowers and red-margined leaves in Dunedin.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_biggarii_-_John_Barkla_-_1228975.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "partial",
+      "reason": "Only one suitable Commons photograph was found. The nine iNaturalist observations returned for taxon 738691 included this same CC BY image, five research-grade observations with CC BY-NC photos, one research-grade observation without photo licences, and two casual observations without images. Restricted or unlicensed photos excluded; no image quota forced.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/",
+          "note": "NZPCN lists Hebe biggarii as a synonym and describes this range-restricted species as Naturally Uncommon. No Māori name was verified."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_biggarii_-_John_Barkla_-_1228975.jpeg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "John Barkla",
+          "description": "Veronica biggarii, Dunedin, NZ-OT, NZ, 2013-10-20 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Close view of clustered white flowers with purple anthers, cream buds and small thick green leaves edged red.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Veronica biggarii - John Barkla - 1228975.jpeg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/",
+        "https://commons.wikimedia.org/wiki/Category:veronica_biggarii",
+        "https://commons.wikimedia.org/wiki/File:Veronica_biggarii_-_John_Barkla_-_1228975.jpeg",
+        "https://api.inaturalist.org/v1/taxa?q=Veronica%20biggarii&per_page=5",
+        "https://api.inaturalist.org/v1/observations?taxon_id=738691&per_page=12",
+        "https://www.inaturalist.org/observations/974356"
+      ]
+    },
+    {
+      "rank": 92,
+      "speciesId": "SP-065",
+      "scientificName": "Dracophyllum rosmarinifolium",
+      "profile": {
+        "speciesId": "SP-065",
+        "scientificName": "Dracophyllum rosmarinifolium",
+        "commonName": "Common grass tree",
+        "maoriNames": [
+          "Inaka"
+        ],
+        "summary": "An endemic mountain shrub with several woody stems and dense narrow leaves. It occurs in scrub, tussock grassland, rocky alpine ground and mountain bogs.",
+        "lookFor": "Very narrow pointed leaves stand out from twigs and sheath them at the base; solitary white tubular flowers finish short side branches.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Inaka is a shared Dracophyllum name; NZPCN explicitly lists it for this species. NZPCN lists Dracophyllum uniflorum as a synonym."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-065",
+          "scientificName": "Dracophyllum rosmarinifolium",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Dracophyllum_rosmarinifolium_kz01.jpg/960px-Dracophyllum_rosmarinifolium_kz01.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Dracophyllum rosmarinifolium narrow foliage and flowers at Cardrona.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-065",
+          "scientificName": "Dracophyllum rosmarinifolium",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Dracophyllum_rosmarinifolium_kz02.jpg/960px-Dracophyllum_rosmarinifolium_kz02.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Dracophyllum rosmarinifolium solitary tubular flowers.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz02.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-065",
+          "scientificName": "Dracophyllum rosmarinifolium",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/59/Dracophyllum_rosmarinifolium.jpg/960px-Dracophyllum_rosmarinifolium.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Dracophyllum rosmarinifolium flowering shrub.",
+          "author": "Leon Billows",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/",
+          "note": "Inaka is a shared Dracophyllum name; NZPCN explicitly lists it for this species. NZPCN lists Dracophyllum uniflorum as a synonym."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Dracophyllum rosmarinifolium in Cardrona, Otago, New Zealand",
+          "viewed": true,
+          "visualCheck": "Woody twig with many erect narrow pointed green and bronze leaves and small white tubular flowers.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Dracophyllum rosmarinifolium kz01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz02.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Dracophyllum rosmarinifolium in Cardrona, Otago, New Zealand",
+          "viewed": true,
+          "visualCheck": "Closer view of narrow erect leaves and white tubes with flared lobes at branch tips.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Dracophyllum rosmarinifolium kz02.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium.jpg",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "author": "Leon Billows",
+          "description": "Dracophyllum rosmarinifolium. Species of plant.",
+          "viewed": true,
+          "visualCheck": "Spreading woody branches with short narrow reddish-green leaves and cream tubular flowers.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Dracophyllum rosmarinifolium.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/",
+        "https://commons.wikimedia.org/wiki/Category:dracophyllum_rosmarinifolium",
+        "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium_kz02.jpg",
+        "https://commons.wikimedia.org/wiki/File:Dracophyllum_rosmarinifolium.jpg"
+      ]
+    },
+    {
+      "rank": 93,
+      "speciesId": "SP-150",
+      "scientificName": "Scheflera digitata",
+      "profile": {
+        "speciesId": "SP-150",
+        "scientificName": "Scheflera digitata",
+        "commonName": "Seven-finger",
+        "maoriNames": [
+          "Patatē",
+          "Patē"
+        ],
+        "summary": "An endemic small tree of lowland and mountain forest. Its large thin divided leaves give it a distinctive fan-like crown.",
+        "lookFor": "Usually seven finely toothed leaflets radiate from one point on a long stalk; cream flower sprays are followed by dark purple fruit.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/"
+          },
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/taxon/Schefflera-digitata.html"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "The database spelling Scheflera digitata is retained. NZPCN and Flora of New Zealand verify Schefflera digitata, with a double f; those sources distinguish it from Pseudopanax five-finger."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-150",
+          "scientificName": "Scheflera digitata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/ScheffleraDigitataLeaf.jpg/960px-ScheffleraDigitataLeaf.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Seven-finger young divided leaf at Mangemangeroa Reserve.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:ScheffleraDigitataLeaf.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-150",
+          "scientificName": "Scheflera digitata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/Schefflera_digitata_-_John_Barkla_-_214303192.jpeg/960px-Schefflera_digitata_-_John_Barkla_-_214303192.jpeg",
+          "width": 960,
+          "height": 1275,
+          "caption": "Seven-finger purple fruit clusters in Dunedin.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Schefflera_digitata_-_John_Barkla_-_214303192.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-150",
+          "scientificName": "Scheflera digitata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/SDigitata337.jpg/960px-SDigitata337.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Seven-finger adult leaflets.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:SDigitata337.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/",
+          "note": "The database spelling Scheflera digitata is retained. NZPCN and Flora of New Zealand verify Schefflera digitata, with a double f; those sources distinguish it from Pseudopanax five-finger."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Schefflera-digitata.html",
+          "note": "Confirms double-f Schefflera digitata spelling, fan-like divided leaves and vernacular names; checked sources keep this species separate from Pseudopanax."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:ScheffleraDigitataLeaf.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Kahuroa",
+          "description": "Leaf of a young Patē (Schefflera digitata) in regenerating native forest at Mangemangeroa Reserve, Howick, Auckland.",
+          "viewed": true,
+          "visualCheck": "Thin toothed leaflets fan from one reddish central point, with some irregular lobing.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:ScheffleraDigitataLeaf.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Schefflera_digitata_-_John_Barkla_-_214303192.jpeg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "John Barkla",
+          "description": "Schefflera digitata, Dunedin North, Dunedin, New Zealand, 2022-07-15 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Many small purple fruits hang on a large branching cream-green panicle.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Schefflera digitata - John Barkla - 214303192.jpeg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:SDigitata337.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Kahuroa",
+          "description": "Schefflera digitata, endemic to New Zealand. Common name Patē, Patete, or sometimes Seven-finger.",
+          "viewed": true,
+          "visualCheck": "Long thin green toothed leaflets radiate from a central reddish junction, several overlapping leaves visible.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:SDigitata337.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/",
+        "https://commons.wikimedia.org/wiki/Category:schefflera_digitata",
+        "https://commons.wikimedia.org/wiki/File:ScheffleraDigitataLeaf.jpg",
+        "https://commons.wikimedia.org/wiki/File:Schefflera_digitata_-_John_Barkla_-_214303192.jpeg",
+        "https://commons.wikimedia.org/wiki/File:SDigitata337.jpg",
+        "https://www.nzflora.info/factsheet/taxon/Schefflera-digitata.html"
+      ]
+    },
+    {
+      "rank": 94,
+      "speciesId": "SP-124",
+      "scientificName": "Parsonia heterophylla",
+      "profile": {
+        "speciesId": "SP-124",
+        "scientificName": "Parsonia heterophylla",
+        "commonName": "New Zealand jasmine",
+        "maoriNames": [
+          "Kaihua"
+        ],
+        "summary": "An endemic woody climber that twines through shrubs and forest margins. Its leaves vary markedly in shape, especially on young plants.",
+        "lookFor": "Twining stems, clusters of fragrant pale tubular flowers and long thin pods that split to release tufted seeds.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/"
+          },
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://nzflora.info/factsheet/Taxon/Parsonsia-heterophylla.html"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "The database spelling Parsonia heterophylla is retained; NZPCN and Flora of New Zealand verify Parsonsia heterophylla. Kaihua is documented by Flora of New Zealand. New Zealand jasmine is shared with other Parsonsia species."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-124",
+          "scientificName": "Parsonia heterophylla",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/66/Parsonsia_heterophylla_11.JPG/960px-Parsonsia_heterophylla_11.JPG",
+          "width": 960,
+          "height": 1280,
+          "caption": "New Zealand jasmine flowering vine at Redwood Bush.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-124",
+          "scientificName": "Parsonia heterophylla",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/55/Parsonsia_heterophylla_kz1.jpg/960px-Parsonsia_heterophylla_kz1.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "New Zealand jasmine flower buds at Auckland Botanic Gardens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-124",
+          "scientificName": "Parsonia heterophylla",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Parsonsia_heterophylla_kz2.jpg/960px-Parsonsia_heterophylla_kz2.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "New Zealand jasmine juvenile leaves at Hinehopu Scenic Reserve.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz2.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/",
+          "note": "The database spelling Parsonia heterophylla is retained; NZPCN and Flora of New Zealand verify Parsonsia heterophylla. Kaihua is documented by Flora of New Zealand. New Zealand jasmine is shared with other Parsonsia species."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://nzflora.info/factsheet/Taxon/Parsonsia-heterophylla.html",
+          "note": "Confirms botanical spelling, Kaihua name, twining habit, variable leaves, fragrant flowers and seed pods."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "author": "Rudolph89",
+          "description": "Parsonsia heterophylla, New Zealand jasmine in flower at Redwood Bush, Tawa, Wellington, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Twining slender stems bearing elongated green leaves and clusters of cream-white flowers.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Parsonsia heterophylla 11.JPG",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz1.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Parsonsia heterophylla in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Upright vine shoot with branching clusters of pale elongated buds and young leaves.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Parsonsia heterophylla kz1.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz2.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Parsonsia heterophylla in Hinehopu Scenic Reserve, Bay of Plenty  (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Slender twining woody stem bears opposite pairs of narrow irregularly lobed green leaves.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Parsonsia heterophylla kz2.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/",
+        "https://commons.wikimedia.org/wiki/Category:parsonsia_heterophylla",
+        "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_11.JPG",
+        "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Parsonsia_heterophylla_kz2.jpg",
+        "https://nzflora.info/factsheet/Taxon/Parsonsia-heterophylla.html"
+      ]
+    },
+    {
+      "rank": 95,
+      "speciesId": "SP-087",
+      "scientificName": "Leptecophylla juniperina",
+      "profile": {
+        "speciesId": "SP-087",
+        "scientificName": "Leptecophylla juniperina",
+        "commonName": "Prickly mingimingi",
+        "maoriNames": [
+          "Mingimingi"
+        ],
+        "summary": "A native prickly shrub of scrub and forest. Narrow stiff leaves and rounded fruit varying from white to red are useful recognition features.",
+        "lookFor": "Sharp-tipped narrow leaves with pale undersides; small cream flowers and white, pink or red berries.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Mingimingi is shared with several shrubs. NZPCN treats the New Zealand plant as Leptecophylla juniperina subsp. juniperina and lists Cyathodes juniperina as a synonym. The database Cyathoides juniperina spelling and its SP-060 relationship to SP-087 still need a WRT ruling. This profile illustrates the source taxon; it does not merge IDs, assign a nursery line to a subspecies or change SP-087’s zero recorded quantity."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-087",
+          "scientificName": "Leptecophylla juniperina",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Leptecophylla_juniperina_11.jpg/960px-Leptecophylla_juniperina_11.jpg",
+          "width": 960,
+          "height": 943,
+          "caption": "Prickly mingimingi with red berries in Upper Hutt.",
+          "author": "Rudolph89",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_11.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-087",
+          "scientificName": "Leptecophylla juniperina",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Prickly_mingimingi%2C_Kauri_Point_Centennial_Park.jpg/960px-Prickly_mingimingi%2C_Kauri_Point_Centennial_Park.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Prickly mingimingi sharp leaves at Kauri Point Centennial Park.",
+          "author": "Bjankuloski06",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Prickly_mingimingi,_Kauri_Point_Centennial_Park.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-087",
+          "scientificName": "Leptecophylla juniperina",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Leptecophylla_juniperina_kz1.jpg/960px-Leptecophylla_juniperina_kz1.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Prickly mingimingi with white fruit near Mount Christina.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_kz1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "partial",
+      "reason": "WRT identity ruling remains open; profile and images describe the source taxon without merging SP-060 or quantities.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/",
+          "note": "Mingimingi is shared with several shrubs. NZPCN treats the New Zealand plant as Leptecophylla juniperina subsp. juniperina and lists Cyathodes juniperina as a synonym. The database Cyathoides juniperina spelling and its SP-060 relationship to SP-087 still need a WRT ruling. This profile illustrates the source taxon; it does not merge IDs, assign a nursery line to a subspecies or change SP-087’s zero recorded quantity."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_11.jpg",
+          "license": "CC0",
+          "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "author": "Rudolph89",
+          "description": "Leptecophylla juniperina, or prickly mingimingi shown with red fruit in Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Bushy network of small narrow prickly leaves with scattered rounded red berries.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Leptecophylla juniperina 11.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Prickly_mingimingi,_Kauri_Point_Centennial_Park.jpg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "Bjankuloski06",
+          "description": "Leaves of the prickly mingimingi (Leptecophylla juniperina). Kauri Point Centennial Park, Auckland, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Close view of stiff narrow pointed leaves projecting from slender brown twigs.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Prickly mingimingi, Kauri Point Centennial Park.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_kz1.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Leptecophylla juniperina ssp. juniperina near Mt Christina, Southland (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Rounded dense shrub with short sharp foliage and conspicuous scattered white berries; source labels subsp. juniperina.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Leptecophylla juniperina kz1.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/",
+        "https://commons.wikimedia.org/wiki/Category:Leptecophylla_juniperina",
+        "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_11.jpg",
+        "https://commons.wikimedia.org/wiki/File:Prickly_mingimingi,_Kauri_Point_Centennial_Park.jpg",
+        "https://commons.wikimedia.org/wiki/File:Leptecophylla_juniperina_kz1.jpg"
+      ]
+    }
+  ]
+}

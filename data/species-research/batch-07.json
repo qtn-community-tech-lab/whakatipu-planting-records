@@ -1,0 +1,1752 @@
+{
+  "batch": 7,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 81,
+      "speciesId": "SP-015",
+      "scientificName": "Carex maorica",
+      "profile": {
+        "speciesId": "SP-015",
+        "scientificName": "Carex maorica",
+        "commonName": "Māori sedge",
+        "maoriNames": [],
+        "summary": "An endemic tufted sedge of freshwater wetlands, streambanks, lake margins and damp forest. Its long pale green leaves surround stems carrying several crowded flowering spikes.",
+        "lookFor": "Look for long folded leaves and several short female spikes clustered close to the base of a terminal male spike. Confirm flowering material before distinguishing similar sedges.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/carex-maorica/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN recognises Carex maorica as a distinct species and does not list Carex secta as its synonym. WRT nursery identity remains unresolved; these species-specific references do not resolve which stock a historic record represented. Keep SP-015 and SP-016 separate. No verified Māori vernacular name was found; Māori sedge is the documented common name."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-015",
+          "scientificName": "Carex maorica",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Carex_maorica_Hamlin_%28AM_AK294597%29.jpg/960px-Carex_maorica_Hamlin_%28AM_AK294597%29.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Carex maorica living tuft in habitat.",
+          "author": "Ewen Cameron / Auckland Museum",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK294597).jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-maorica/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-015",
+          "scientificName": "Carex maorica",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Carex_maorica_Hamlin_%28AM_AK295028%29.jpg/960px-Carex_maorica_Hamlin_%28AM_AK295028%29.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Carex maorica foliage and flowering stems.",
+          "author": "A. E. Wright / Auckland Museum",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK295028).jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-maorica/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-015",
+          "scientificName": "Carex maorica",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/31613687/large.jpeg",
+          "width": 1024,
+          "height": 683,
+          "caption": "Carex maorica flowering-spike detail.",
+          "author": "Joe Potter Butler",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/31613687",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/carex-maorica/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/20485226"
+        }
+      ],
+      "status": "partial",
+      "reason": "The botanical profile and three distinct licensed images of Carex maorica are confirmed. The separate WRT nursery-stock identity question involving Carex secta remains unresolved; no Carex secta image or identification has been substituted.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/carex-maorica/",
+          "note": "NZPCN lists Carex maorica as a distinct species, describes the clustered spike arrangement and gives synonyms that do not include Carex secta."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK294597).jpg",
+          "license": "CC BY 4.0",
+          "author": "Ewen Cameron / Auckland Museum",
+          "description": "Carex maorica living tuft in habitat.",
+          "viewed": true,
+          "visualCheck": "Carex maorica tuft in habitat. Observed: A small upright tuft of narrow folded green leaves growing through dried vegetation, with spike-bearing stems visible; this is a living plant photograph, not a herbarium sheet.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-18 01:37:50",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "<div class=\"fn\">\nCarex maorica Hamlin</div>",
+              "source": "commons-desc-page"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Carex maorica|Images uploaded by Fæ|Artworks without Wikidata item|Images from Auckland Museum|Unsupported object|Artworks with known accession number|Photographs of plants in Auckland Museum",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Artist": {
+              "value": "<div class=\"fn value\">\nEwen Cameron</div>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "19 Nov 2005; 22 Nov 2005",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<p><a rel=\"nofollow\" class=\"external text\" href=\"http://api.aucklandmuseum.com/id/naturalsciences/object/648735\">API data</a><br>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://www.aucklandmuseum.com/collection/object/am_naturalsciences-object-648735\">Catalogue record</a>\n</p>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://api.aucklandmuseum.com/id/media/v/59351\">Photo</a>",
+              "source": "commons-desc-page"
+            },
+            "Permission": {
+              "value": "This image has been released as \"CCBY\" by Auckland Museum. For details refer to the <a href=\"//commons.wikimedia.org/wiki/Commons:Batch_uploading/AucklandMuseumCCBY\" title=\"Commons:Batch uploading/AucklandMuseumCCBY\">Commons project page</a>.",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Attribution": {
+              "value": "Auckland Museum",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Carex maorica Hamlin (AM AK294597).jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACarex+maorica+Hamlin+%28AM+AK294597%29.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+          "attribution": "Auckland Museum",
+          "sourceImageType": "Living plant photograph associated with an Auckland Museum collection record; not a pressed herbarium sheet.",
+          "recheckedAt": "2026-10-04",
+          "recheckNote": "Exact saved Commons file AK294597 was reopened in Chrome and visually inspected again. It shows a living green tuft in dried vegetation, matching the saved image and caption. Commons source title and museum classification identify Carex maorica."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK295028).jpg",
+          "license": "CC BY 4.0",
+          "author": "A. E. Wright / Auckland Museum",
+          "description": "Carex maorica foliage and flowering stems.",
+          "viewed": true,
+          "visualCheck": "Carex maorica foliage and flowering stems. Observed: Yellow-green arching narrow leaves and several clustered green spikes on thin upright stems in a dense living clump.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-18 02:22:00",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "<div class=\"fn\">\nCarex maorica Hamlin</div>",
+              "source": "commons-desc-page"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Carex maorica|Images uploaded by Fæ|Artworks without Wikidata item|Images from Auckland Museum|Unsupported object|Artworks with known accession number|Photographs of plants in Auckland Museum",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Artist": {
+              "value": "<div class=\"fn value\">\nA. E. Wright</div>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "15 Feb 2006; 09 Jan 2006",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<p><a rel=\"nofollow\" class=\"external text\" href=\"http://api.aucklandmuseum.com/id/naturalsciences/object/650480\">API data</a><br>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://www.aucklandmuseum.com/collection/object/am_naturalsciences-object-650480\">Catalogue record</a>\n</p>\n<a rel=\"nofollow\" class=\"external text\" href=\"https://api.aucklandmuseum.com/id/media/v/63734\">Photo</a>",
+              "source": "commons-desc-page"
+            },
+            "Permission": {
+              "value": "This image has been released as \"CCBY\" by Auckland Museum. For details refer to the <a href=\"//commons.wikimedia.org/wiki/Commons:Batch_uploading/AucklandMuseumCCBY\" title=\"Commons:Batch uploading/AucklandMuseumCCBY\">Commons project page</a>.",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Attribution": {
+              "value": "Auckland Museum",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Carex maorica Hamlin (AM AK295028).jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACarex+maorica+Hamlin+%28AM+AK295028%29.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+          "attribution": "Auckland Museum",
+          "sourceImageType": "Living plant photograph associated with an Auckland Museum collection record; not a pressed herbarium sheet."
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/31613687",
+          "license": "CC BY 4.0",
+          "author": "Joe Potter Butler",
+          "description": "Carex maorica flowering-spike detail.",
+          "viewed": true,
+          "visualCheck": "Several densely packed green cylindrical female spikes spread around a terminal brown male spike; narrow bracts and an upright green stem are visible. The image is consistent with NZPCN spike arrangement; observation API identifies Carex maorica at research grade.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/20485226",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/20485226",
+          "photoId": 31613687,
+          "taxonId": 141187,
+          "taxonName": "Carex maorica",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) Joe Potter Butler, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/carex-maorica/",
+        "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK294597).jpg",
+        "https://commons.wikimedia.org/wiki/File:Carex_maorica_Hamlin_(AM_AK295028).jpg",
+        "https://www.inaturalist.org/photos/31613687",
+        "https://www.inaturalist.org/observations/20485226",
+        "https://api.inaturalist.org/v1/observations/20485226",
+        "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3ACarex_maorica&cmtype=file&cmlimit=100&format=json",
+        "https://api.inaturalist.org/v1/observations?taxon_id=141187&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACarex+maorica+Hamlin+%28AM+AK294597%29.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACarex+maorica+Hamlin+%28AM+AK295028%29.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+      ],
+      "searchEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3ACarex_maorica&cmtype=file&cmlimit=100&format=json",
+          "query": {
+            "category": "Carex maorica",
+            "type": "file",
+            "limit": 100
+          },
+          "returnedFileTitles": [
+            "File:Carex maorica Hamlin (AM AK294597).jpg",
+            "File:Carex maorica Hamlin (AM AK295028).jpg"
+          ],
+          "note": "Direct category files returned; empty categories do not establish rarity. Additional title searches and primary identity sources were used as needed.",
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://api.inaturalist.org/v1/observations?taxon_id=141187&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes",
+          "query": {
+            "taxonId": 141187,
+            "qualityGrade": "research",
+            "photoLicenses": [
+              "cc-by",
+              "cc-by-sa",
+              "cc0"
+            ],
+            "perPage": 12
+          },
+          "note": "Species-specific observation and individual photo licence metadata checked. Only selected observation metadata is retained; precise locations are omitted.",
+          "checkedAt": "2026-10-04"
+        }
+      ],
+      "rejectedCandidates": [
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/114804759",
+          "observationUrl": "https://www.inaturalist.org/observations/70599938",
+          "taxonName": "Carex maorica",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "reason": "Visually inspected licensed alternate; selected images give more complementary detail.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/31613683",
+          "observationUrl": "https://www.inaturalist.org/observations/20485226",
+          "taxonName": "Carex maorica",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "reason": "Visually inspected licensed alternate; selected images give more complementary detail.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        }
+      ]
+    },
+    {
+      "rank": 82,
+      "speciesId": "SP-153",
+      "scientificName": "Streblus heterophyllus",
+      "profile": {
+        "speciesId": "SP-153",
+        "scientificName": "Streblus heterophyllus",
+        "commonName": "Small-leaved milk tree",
+        "maoriNames": [
+          "Tūrepo"
+        ],
+        "summary": "An endemic forest tree with a marked change between its wiry, small-leaved juvenile form and broader adult foliage. Small red fruits develop along the branches.",
+        "lookFor": "Young plants have slender interlacing twigs and tiny irregularly lobed leaves. Adult leaves are small and oval with shallow teeth and visible veins; fruit is red.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "The database spelling Streblus heterophyllus is retained. NZPCN currently accepts Paratrophis microphylla and explicitly lists Streblus heterophyllus as a synonym. These source names refer to this taxon, not a merged database record."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-153",
+          "scientificName": "Streblus heterophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Streblus_heterophyllus_12.JPG/960px-Streblus_heterophyllus_12.JPG",
+          "width": 960,
+          "height": 784,
+          "caption": "Tūrepo / small-leaved milk tree, adult form.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_12.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-153",
+          "scientificName": "Streblus heterophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Streblus_heterophyllus_11.JPG/960px-Streblus_heterophyllus_11.JPG",
+          "width": 960,
+          "height": 644,
+          "caption": "Tūrepo seedling foliage.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-153",
+          "scientificName": "Streblus heterophyllus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f1/Streblus_heterophyllus_110234300.jpg/960px-Streblus_heterophyllus_110234300.jpg",
+          "width": 960,
+          "height": 1998,
+          "caption": "Tūrepo foliage and red fruit.",
+          "author": "titine",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_110234300.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/",
+          "note": "The database spelling Streblus heterophyllus is retained. NZPCN currently accepts Paratrophis microphylla and explicitly lists Streblus heterophyllus as a synonym. These source names refer to this taxon, not a merged database record."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_12.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Streblus heterophyllus, small-leaved milk tree, in California Park, Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Tūrepo / small-leaved milk tree, adult form. Observed: A single-trunked tree with a dense rounded crown and fine branching, photographed in a park.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-09-18 07:08:01",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Streblus heterophyllus 12",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Taken with Olympus FE-4000 / X-920 / X-925|Solitary trees|Self-published work|Moraceae in the North Island, New Zealand|Paratrophis microphylla",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Streblus heterophyllus, small-leaved milk tree, in California Park, Upper Hutt, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-09-18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Streblus heterophyllus 12.JPG",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+12.JPG&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Streblus heterophyllus, small-leaved milk tree, seedling in Benge Park, Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Tūrepo seedling foliage. Observed: A small seedling in leaf litter with dull green, irregularly lobed or toothed leaves on slender stems.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-09-16 06:16:30",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Streblus heterophyllus 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Taken with Olympus FE-4000 / X-920 / X-925|Self-published work|Moraceae in New Zealand|Paratrophis microphylla",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Streblus heterophyllus, small-leaved milk tree, seedling in Benge Park, Upper Hutt, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-09-16",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Streblus heterophyllus 11.JPG",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+11.JPG&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_110234300.jpg",
+          "license": "CC BY 4.0",
+          "author": "titine",
+          "description": "small leaved milk tree (Streblus heterophyllus)",
+          "viewed": true,
+          "visualCheck": "Tūrepo foliage and red fruit. Observed: Thin interlacing woody twigs carry small oval green leaves and numerous glossy red round-to-oval fruits.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2022-01-08 00:35:40",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Streblus heterophyllus 110234300",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Media from iNaturalist|Rosales in New Zealand in January 2021|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation|Moraceae in New Zealand|Uploaded with iNaturalist2Commons|New Zealand photographs taken on 2021-01-16|Paratrophis microphylla",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "small leaved milk tree (<i>Streblus heterophyllus</i>)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2021-01-16",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/110234300\">https://www.inaturalist.org/photos/110234300</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.inaturalist.org/users/57877\">titine</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Streblus heterophyllus 110234300.jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+110234300.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/",
+        "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_12.JPG",
+        "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_11.JPG",
+        "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_110234300.jpg",
+        "https://nzflora.info/factsheet/Taxon/Streblus-heterophyllus.html",
+        "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AStreblus_heterophyllus&cmtype=file&cmlimit=100&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+12.JPG&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+11.JPG&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AStreblus+heterophyllus+110234300.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+      ],
+      "searchEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AStreblus_heterophyllus&cmtype=file&cmlimit=100&format=json",
+          "query": {
+            "category": "Streblus heterophyllus",
+            "type": "file",
+            "limit": 100
+          },
+          "returnedFileTitles": [],
+          "note": "Direct category files returned; empty categories do not establish rarity. Additional title searches and primary identity sources were used as needed.",
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php",
+          "query": {
+            "action": "query",
+            "list": "search",
+            "srsearch": "Streblus heterophyllus",
+            "srnamespace": 6,
+            "srlimit": 20
+          },
+          "returnedFileTitles": [
+            "File:Streblus heterophyllus 12.JPG",
+            "File:Streblus heterophyllus 110234300.jpg",
+            "File:Streblus heterophyllus 11.JPG",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3758).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3763).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3756).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3760).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3762).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3751).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3754).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK218652).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3755).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3753).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3761).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3759).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK218653).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3752).jpg",
+            "File:Streblus heterophyllus (Blume) Corner (AM AK3757).jpg",
+            "File:Paratrophis microphylla nmnhbotany 15280110 NMNH-03664429.jpg",
+            "File:Paratrophis microphylla nmnhbotany 15280145 NMNH-03664432.jpg"
+          ],
+          "checkedAt": "2026-10-04"
+        }
+      ],
+      "rejectedCandidates": []
+    },
+    {
+      "rank": 83,
+      "speciesId": "SP-041",
+      "scientificName": "Coprosma cheesemanii",
+      "profile": {
+        "speciesId": "SP-041",
+        "scientificName": "Coprosma cheesemanii",
+        "commonName": null,
+        "maoriNames": [],
+        "summary": "An endemic low shrub of upland grassland and rocky places. It forms an intricate network of short branches with tiny glossy leaves and orange to reddish fruit.",
+        "lookFor": "Look for branches that spread in a flattened pattern, with many short side twigs at near-right angles. Small pointed leaves occur in pairs or tight clusters; fine hairs are present on the young twigs.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "No common or Māori name was documented in the checked NZPCN species account. The database scientific name is retained."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-041",
+          "scientificName": "Coprosma cheesemanii",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Coprosma_cheesemanii_-_Richard_Littauer_-_465283741.jpeg/960px-Coprosma_cheesemanii_-_Richard_Littauer_-_465283741.jpeg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Coprosma cheesemanii shrub in habitat.",
+          "author": "Richard Littauer",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_cheesemanii_-_Richard_Littauer_-_465283741.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-041",
+          "scientificName": "Coprosma cheesemanii",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/117041803/large.jpeg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Coprosma cheesemanii fruit and small leaves.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/117041803",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/71847735"
+        },
+        {
+          "speciesId": "SP-041",
+          "scientificName": "Coprosma cheesemanii",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/41413877/large.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Coprosma cheesemanii twig and leaf-bud detail.",
+          "author": "Brett Sandford",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/41413877",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/26662098"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/",
+          "note": "No common or Māori name was documented in the checked NZPCN species account. The database scientific name is retained."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_cheesemanii_-_Richard_Littauer_-_465283741.jpeg",
+          "license": "CC BY 4.0",
+          "author": "Richard Littauer",
+          "description": "Coprosma cheesemanii, Wairau Valley 7271, New Zealand, 2025-01-22 (iNaturalist).",
+          "viewed": true,
+          "visualCheck": "Coprosma cheesemanii shrub in habitat. Observed: A low spreading shrub among grass and stones, with a dense angular twig network and many tiny bright green leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-02-01 08:47:36",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Coprosma cheesemanii - Richard Littauer - 465283741",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Media from iNaturalist|Coprosma cheesemanii|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Coprosma cheesemanii, Wairau Valley 7271, New Zealand, 2025-01-22 (iNaturalist).",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2025-01-22",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/465283741\">https://www.inaturalist.org/photos/465283741</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a rel=\"nofollow\" class=\"external text\" href=\"https://www.inaturalist.org/users/1513074\">Richard Littauer</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Coprosma cheesemanii - Richard Littauer - 465283741.jpeg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACoprosma+cheesemanii+-+Richard+Littauer+-+465283741.jpeg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/117041803",
+          "license": "CC BY 4.0",
+          "author": "John Barkla",
+          "description": "Coprosma cheesemanii fruit and small leaves.",
+          "viewed": true,
+          "visualCheck": "Numerous orange and reddish round fruits are carried among tiny glossy paired leaves and pale, finely branched woody stems. The research-grade observation taxon is Coprosma cheesemanii.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/71847735",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/71847735",
+          "photoId": 117041803,
+          "taxonId": 366651,
+          "taxonName": "Coprosma cheesemanii",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) John Barkla, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/41413877",
+          "license": "CC BY 4.0",
+          "author": "Brett Sandford",
+          "description": "Coprosma cheesemanii twig and leaf-bud detail.",
+          "viewed": true,
+          "visualCheck": "A close view shows pale woody twigs, short angular side branches, fine twig hairs and small dark buds or emerging leaf clusters. The research-grade observation taxon is Coprosma cheesemanii; this is a sparse-leaved detail, not a flowering image.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/26662098",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/26662098",
+          "photoId": 41413877,
+          "taxonId": 366651,
+          "taxonName": "Coprosma cheesemanii",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) Brett Sandford, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_cheesemanii_-_Richard_Littauer_-_465283741.jpeg",
+        "https://www.inaturalist.org/photos/117041803",
+        "https://www.inaturalist.org/observations/71847735",
+        "https://api.inaturalist.org/v1/observations/71847735",
+        "https://www.inaturalist.org/photos/41413877",
+        "https://www.inaturalist.org/observations/26662098",
+        "https://api.inaturalist.org/v1/observations/26662098",
+        "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3ACoprosma_cheesemanii&cmtype=file&cmlimit=100&format=json",
+        "https://api.inaturalist.org/v1/observations?taxon_id=366651&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3ACoprosma+cheesemanii+-+Richard+Littauer+-+465283741.jpeg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+      ],
+      "searchEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3ACoprosma_cheesemanii&cmtype=file&cmlimit=100&format=json",
+          "query": {
+            "category": "Coprosma cheesemanii",
+            "type": "file",
+            "limit": 100
+          },
+          "returnedFileTitles": [
+            "File:Coprosma cheesemanii - Richard Littauer - 465283741.jpeg"
+          ],
+          "note": "Direct category files returned; empty categories do not establish rarity. Additional title searches and primary identity sources were used as needed.",
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://api.inaturalist.org/v1/observations?taxon_id=366651&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes",
+          "query": {
+            "taxonId": 366651,
+            "qualityGrade": "research",
+            "photoLicenses": [
+              "cc-by",
+              "cc-by-sa",
+              "cc0"
+            ],
+            "perPage": 12
+          },
+          "note": "Species-specific observation and individual photo licence metadata checked. Only selected observation metadata is retained; precise locations are omitted.",
+          "checkedAt": "2026-10-04"
+        }
+      ],
+      "rejectedCandidates": [
+        {
+          "title": "File:Coprosma cheesemanii W.R.B.Oliv. (AM AK362658).jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_cheesemanii_W.R.B.Oliv._(AM_AK362658).jpg",
+          "license": "CC BY 4.0",
+          "author": "A E Esler",
+          "reason": "Inspected alternate herbarium reference; selected living photographs better show complementary recognition features.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/41413865",
+          "observationUrl": "https://www.inaturalist.org/observations/26662098",
+          "taxonName": "Coprosma cheesemanii",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "reason": "Visually inspected licensed alternate; selected images give more complementary detail.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        }
+      ]
+    },
+    {
+      "rank": 84,
+      "speciesId": "SP-100",
+      "scientificName": "Muehlenbeckia axillaris",
+      "profile": {
+        "speciesId": "SP-100",
+        "scientificName": "Muehlenbeckia axillaris",
+        "commonName": "Creeping pōhuehue",
+        "maoriNames": [
+          "Pōhuehue"
+        ],
+        "summary": "A native creeping shrub that spreads by wiry stems rooting at their nodes. Its mats carry very small round or oval leaves; the fruit has a black seed surrounded by fleshy white flower parts.",
+        "lookFor": "Look for a close ground-covering mat of thin reddish-brown stems and tiny rounded leaves. Pale star-like flowers occur in leaf axils; white fleshy fruit surrounds a dark triangular centre.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/"
+          },
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/taxon/Muehlenbeckia-axillaris.html"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Pōhuehue is a shared Māori name used for more than one Muehlenbeckia species. Creeping pōhuehue and the scientific name distinguish this low-growing species."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-100",
+          "scientificName": "Muehlenbeckia axillaris",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/27/Muehlenbeckia_axillaris_kz01.jpg/960px-Muehlenbeckia_axillaris_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Creeping pōhuehue mat.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-100",
+          "scientificName": "Muehlenbeckia axillaris",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/db/Muehlenbeckia_axillaris_kz03.jpg/960px-Muehlenbeckia_axillaris_kz03.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Creeping pōhuehue stems, leaves and flowers.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz03.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-100",
+          "scientificName": "Muehlenbeckia axillaris",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e1/Muehlenbeckia_axillaris_fruiting.jpg/960px-Muehlenbeckia_axillaris_fruiting.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Creeping pōhuehue fleshy white fruit.",
+          "author": "Austrodyptornithian",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_fruiting.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/",
+          "note": "Pōhuehue is a shared Māori name used for more than one Muehlenbeckia species. Creeping pōhuehue and the scientific name distinguish this low-growing species."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Muehlenbeckia-axillaris.html",
+          "note": "Growth habit, leaf dimensions, axillary flowers and succulent white tepals around black fruit checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Muehlenbeckia axillaris in Alter Botanischer Garten der Universität Göttingen",
+          "viewed": true,
+          "visualCheck": "Creeping pōhuehue mat. Observed: A broad dense carpet of tiny green leaves follows rounded ground contours in a botanic garden.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-06-17 21:24:50",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia axillaris kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia axillaris|Self-published work|Files with coordinates missing SDC location of creation (51° N, 9° E)|Specimens in Alter Botanischer Garten der Universität Göttingen",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Muehlenbeckia axillaris in Alter Botanischer Garten der Universität Göttingen",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2019-06-05 10:44:50",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Muehlenbeckia axillaris kz01.jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+kz01.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz03.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Muehlenbeckia axillaris in the UMCS Botanical Garden in Lublin",
+          "viewed": true,
+          "visualCheck": "Creeping pōhuehue stems, leaves and flowers. Observed: Thin trailing stems carry small rounded green leaves and pale star-shaped flowers close to stony ground.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2021-03-22 17:14:13",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia axillaris kz03",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia axillaris|Self-published work|Polygonaceae in the UMCS Botanical Garden in Lublin",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Muehlenbeckia axillaris in the UMCS Botanical Garden in Lublin",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-09-29 14:55:18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Muehlenbeckia axillaris kz03.jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+kz03.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_fruiting.jpg",
+          "license": "CC BY 4.0",
+          "author": "Austrodyptornithian",
+          "description": "A fruiting plant growing on shingle riverbed on the outskirts of Arthur's Pass Village, Canterbury, New Zealand. Fruits of varying stages of development can be seen here, as well as fully ripe fruit with the prominent black seeds.\nOriginally posted on iNaturalist NZ: https://inaturalist.nz/observations/198347287",
+          "viewed": true,
+          "visualCheck": "Creeping pōhuehue fleshy white fruit. Observed: Numerous white swollen star-shaped fruit parts surround dark centres among tiny rounded green leaves on reddish trailing stems.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2024-05-03 04:25:32",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Muehlenbeckia axillaris fruiting",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Muehlenbeckia axillaris|Self-published work|Flora of Arthur's Pass National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "A fruiting plant growing on shingle riverbed on the outskirts of Arthur's Pass Village, Canterbury, New Zealand. Fruits of varying stages of development can be seen here, as well as fully ripe fruit with the prominent black seeds.\nOriginally posted on iNaturalist NZ: <a rel=\"nofollow\" class=\"external free\" href=\"https://inaturalist.nz/observations/198347287\">https://inaturalist.nz/observations/198347287</a>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-01-26 13:35:35",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/w/index.php?title=User:Austrodyptornithian&amp;action=edit&amp;redlink=1\" class=\"new\" title=\"User:Austrodyptornithian (page does not exist)\">Austrodyptornithian</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "sourceTitle": "File:Muehlenbeckia axillaris fruiting.jpg",
+          "apiUrl": "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+fruiting.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/",
+        "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_kz03.jpg",
+        "https://commons.wikimedia.org/wiki/File:Muehlenbeckia_axillaris_fruiting.jpg",
+        "https://www.nzflora.info/factsheet/taxon/Muehlenbeckia-axillaris.html",
+        "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AMuehlenbeckia_axillaris&cmtype=file&cmlimit=100&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+kz01.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+kz03.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json",
+        "https://commons.wikimedia.org/w/api.php?action=query&titles=File%3AMuehlenbeckia+axillaris+fruiting.jpg&prop=imageinfo&iiprop=url%7Csize%7Cextmetadata&iiurlwidth=960&format=json"
+      ],
+      "searchEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AMuehlenbeckia_axillaris&cmtype=file&cmlimit=100&format=json",
+          "query": {
+            "category": "Muehlenbeckia axillaris",
+            "type": "file",
+            "limit": 100
+          },
+          "returnedFileTitles": [
+            "File:Muehlenbeckia axillaris - Berlin Botanical Garden - IMG 8745.JPG",
+            "File:Muehlenbeckia axillaris 1.jpg",
+            "File:Muehlenbeckia axillaris 1zz.jpg",
+            "File:Muehlenbeckia axillaris 2.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4493.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4494.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4495.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4496.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4498.jpg",
+            "File:Muehlenbeckia axillaris 2017-09-26 4498b.jpg",
+            "File:Muehlenbeckia axillaris 400116607.jpg",
+            "File:Muehlenbeckia axillaris fruiting.jpg",
+            "File:Muehlenbeckia axillaris in Higashiyama Zoo and Botanical Gardens, Nagoya.jpg",
+            "File:Muehlenbeckia axillaris in La Jaysinia.jpg",
+            "File:Muehlenbeckia axillaris kz01.jpg",
+            "File:Muehlenbeckia axillaris kz02.jpg",
+            "File:Muehlenbeckia axillaris kz03.jpg",
+            "File:Muehlenbeckia axillaris kz04.jpg",
+            "File:Muehlenbeckia axillaris kz05.jpg",
+            "File:Muehlenbeckia axillaris kz06.jpg",
+            "File:Muehlenbeckia axillaris kz07.jpg",
+            "File:Muehlenbeckia axillaris kz1.jpg",
+            "File:Muehlenbeckia axillaris kz2.jpg",
+            "File:Muehlenbeckia axillaris kz3.jpg",
+            "File:Muehlenbeckia axillaris kz4.jpg",
+            "File:Muehlenbeckia axillaris kz5.jpg",
+            "File:Muehlenbeckia axillaris kz6.jpg",
+            "File:Muehlenbeckia axillaris kz7.jpg",
+            "File:Muehlenbeckia axillaris kz8.jpg",
+            "File:Muehlenbeckia axillaris Muhlenbekia niska 2017-10-15 01.jpg",
+            "File:Muehlenbeckia axillaris Muhlenbekia niska 2017-10-15 02.jpg",
+            "File:Muehlenbeckia axillaris Muhlenbekia niska 2017-10-15 03.jpg",
+            "File:Muehlenbeckia axillaris Muhlenbekia niska 2017-10-15 04.jpg"
+          ],
+          "note": "Direct category files returned; empty categories do not establish rarity. Additional title searches and primary identity sources were used as needed.",
+          "checkedAt": "2026-10-04"
+        }
+      ],
+      "rejectedCandidates": []
+    },
+    {
+      "rank": 85,
+      "speciesId": "SP-161",
+      "scientificName": "Veronica propinqua",
+      "profile": {
+        "speciesId": "SP-161",
+        "scientificName": "Veronica propinqua",
+        "commonName": "Whipcord hebe",
+        "maoriNames": [],
+        "summary": "An endemic low, spreading whipcord hebe of Otago and Southland mountain grassland and scrub. Its narrow green branchlets carry closely pressed scale leaves, with small groups of white flowers at the tips.",
+        "lookFor": "Look for upright or ascending cord-like shoots with overlapping rounded green scales and visible joints between them. Similar whipcord hebes need careful comparison of scales, branchlets and flowers.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Whipcord hebe is a shared common name for several species. NZPCN accepts Veronica propinqua and lists Hebe propinqua as a synonym. No Māori name was documented in the checked species account."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-161",
+          "scientificName": "Veronica propinqua",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/456964574/large.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Veronica propinqua spreading whipcord shoots.",
+          "author": "Matt Scott",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/456964574",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/255041017"
+        },
+        {
+          "speciesId": "SP-161",
+          "scientificName": "Veronica propinqua",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/456964585/large.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Veronica propinqua scale-leaf detail.",
+          "author": "Matt Scott",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/456964585",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/255041017"
+        },
+        {
+          "speciesId": "SP-161",
+          "scientificName": "Veronica propinqua",
+          "src": "https://inaturalist-open-data.s3.amazonaws.com/photos/262748066/large.jpeg",
+          "width": 1024,
+          "height": 771,
+          "caption": "Veronica propinqua low spreading growth.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+          "sourceUrl": "https://www.inaturalist.org/photos/262748066",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "iNaturalist",
+          "observationUrl": "https://www.inaturalist.org/observations/152217826"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/",
+          "note": "Whipcord hebe is a shared common name for several species. NZPCN accepts Veronica propinqua and lists Hebe propinqua as a synonym. No Māori name was documented in the checked species account."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/456964574",
+          "license": "CC BY 4.0",
+          "author": "Matt Scott",
+          "description": "Veronica propinqua spreading whipcord shoots.",
+          "viewed": true,
+          "visualCheck": "A dense spreading branch system has many ascending yellow-green cord-like shoots covered in rounded overlapping scales; older woody stems and cut or dead tips are visible. API taxon is Veronica propinqua at research grade.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/255041017",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/255041017",
+          "photoId": 456964574,
+          "taxonId": 738793,
+          "taxonName": "Veronica propinqua",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) Matt Scott, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/456964585",
+          "license": "CC BY 4.0",
+          "author": "Matt Scott",
+          "description": "Veronica propinqua scale-leaf detail.",
+          "viewed": true,
+          "visualCheck": "A close-up held against fingers shows rounded closely pressed green scale leaves in opposite pairs on short upright branchlets, with visible joints. API taxon is Veronica propinqua at research grade.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/255041017",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/255041017",
+          "photoId": 456964585,
+          "taxonId": 738793,
+          "taxonName": "Veronica propinqua",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) Matt Scott, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/262748066",
+          "license": "CC BY 4.0",
+          "author": "John Barkla",
+          "description": "Veronica propinqua low spreading growth.",
+          "viewed": true,
+          "visualCheck": "Many thin green whipcord branchlets ascend from low spreading woody branches among tussock grass. The overlapping scales give the shoots a segmented appearance. API taxon is Veronica propinqua at research grade.",
+          "checkedAt": "2026-10-04",
+          "observationUrl": "https://www.inaturalist.org/observations/152217826",
+          "apiUrl": "https://api.inaturalist.org/v1/observations/152217826",
+          "photoId": 262748066,
+          "taxonId": 738793,
+          "taxonName": "Veronica propinqua",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "attribution": "(c) John Barkla, some rights reserved (CC BY)",
+          "licenseMappingSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb",
+          "hostedDimensionsChecked": "Browser DOM naturalWidth/naturalHeight after image completion.",
+          "licenseVersionSource": "https://github.com/inaturalist/inaturalist/blob/main/app/models/shared/license_module.rb"
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/",
+        "https://www.inaturalist.org/photos/456964574",
+        "https://www.inaturalist.org/observations/255041017",
+        "https://api.inaturalist.org/v1/observations/255041017",
+        "https://www.inaturalist.org/photos/456964585",
+        "https://www.inaturalist.org/photos/262748066",
+        "https://www.inaturalist.org/observations/152217826",
+        "https://api.inaturalist.org/v1/observations/152217826",
+        "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AVeronica_propinqua&cmtype=file&cmlimit=100&format=json",
+        "https://api.inaturalist.org/v1/observations?taxon_id=738793&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes"
+      ],
+      "searchEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category%3AVeronica_propinqua&cmtype=file&cmlimit=100&format=json",
+          "query": {
+            "category": "Veronica propinqua",
+            "type": "file",
+            "limit": 100
+          },
+          "returnedFileTitles": [],
+          "note": "Direct category files returned; empty categories do not establish rarity. Additional title searches and primary identity sources were used as needed.",
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://api.inaturalist.org/v1/observations?taxon_id=738793&quality_grade=research&photos=true&photo_license=cc-by%2Ccc-by-sa%2Ccc0&per_page=12&order_by=votes",
+          "query": {
+            "taxonId": 738793,
+            "qualityGrade": "research",
+            "photoLicenses": [
+              "cc-by",
+              "cc-by-sa",
+              "cc0"
+            ],
+            "perPage": 12
+          },
+          "note": "Species-specific observation and individual photo licence metadata checked. Only selected observation metadata is retained; precise locations are omitted.",
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/w/api.php",
+          "query": {
+            "action": "query",
+            "list": "search",
+            "srsearch": "Hebe propinqua",
+            "srnamespace": 6,
+            "srlimit": 20
+          },
+          "returnedFileTitles": [
+            "File:Hebe propinqua, Arthur's Pass, New Zealand 08.jpg",
+            "File:Hebe propinqua, Arthur's Pass, New Zealand 09.jpg",
+            "File:Hebe propinqua, Arthur's Pass, New Zealand 01.jpg",
+            "File:Hebe propinqua (Cheeseman) Cockayne and Allan (AM AK8258).jpg",
+            "File:Hebe propinqua, Arthur's Pass, New Zealand 03.jpg",
+            "File:Hebe propinqua (Cheeseman) Cockayne and Allan (AM AK50973).jpg",
+            "File:Hebe propinqua, Arthur's Pass, New Zealand 02.jpg",
+            "File:Hebe propinqua (Cheeseman) Cockayne and Allan (AM AK107836-1).jpg",
+            "File:Arati Solensis Phaenomena et Prognostica (IA ARes61205).pdf",
+            "File:Endangered wildlife - Eastern States (IA endangeredwildli23meri).pdf",
+            "File:Compendium historiae naturalis (IA compendiumhistor00mitt).pdf",
+            "File:De morbis animi ab infirmato tenore medullae cerebri dissertatio (IA demorbisanimiabi00kloe).pdf",
+            "File:List of intercepted plant pests, 1968 (pests recorded from July 1, 1967, through June 30, 1968) (IA listofintercepte63gira).pdf",
+            "File:Musarum Anglicanarum analecta- ... 1699 (IA bim early-english-books-1641-1700 musarum-anglicanarum-ana mus-us 1699).pdf",
+            "File:List of intercepted plant pests - United States Department of Agriculture, Plant Quarantine and Control Administration. (IA CAT73387830021).pdf",
+            "File:Land and freshwater Mollusca of India, including South Arabia, Baluchistan, Afghanistan, Kashmir (IA landfreshwatermo02god).pdf",
+            "File:Crambe. Viola. Lilium. Phlogis. Terpsinoe (IA BIUSante pharma res012227x02).pdf",
+            "File:Conchologia indica- illustrations of the land and freshwater shells of British India (IA conchologiaindic00hanl 0).pdf",
+            "File:Liber Galeni de Symptomatum causis primus in theses contractus et publici ac solennis exerciti gratia in inclyta Argentoratensium academia... a Melchiore Sebizio (IA BIUSante 05879x04).pdf",
+            "File:Zeitschrift für Entomologie (IA zeitschriftfre810185456vere).pdf"
+          ],
+          "checkedAt": "2026-10-04"
+        }
+      ],
+      "rejectedCandidates": [
+        {
+          "title": "File:Hebe propinqua (Cheeseman) Cockayne and Allan (AM AK8258).jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua_(Cheeseman)_Cockayne_and_Allan_(AM_AK8258).jpg",
+          "license": "CC BY 4.0",
+          "author": "T. F. Cheeseman",
+          "reason": "Inspected alternate herbarium reference; selected living photographs better show complementary recognition features.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "sourceUrl": "https://www.inaturalist.org/photos/262748049",
+          "observationUrl": "https://www.inaturalist.org/observations/152217826",
+          "taxonName": "Veronica propinqua",
+          "qualityGrade": "research",
+          "licenseCode": "cc-by",
+          "reason": "Visually inspected licensed alternate; selected images give more complementary detail.",
+          "viewed": true,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "title": "File:Hebe propinqua, Arthur's Pass, New Zealand 01.jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua,_Arthur%27s_Pass,_New_Zealand_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Michal Klajban",
+          "description": "Hebe propinqua, Arthur's Pass, New Zealand",
+          "reason": "File title and image metadata identify Arthur's Pass, outside NZPCN's Otago/Southland natural distribution. Species-specific suitability remains unverified, so the candidate was excluded before visual selection. This does not prove misidentification or establish rarity.",
+          "viewed": false,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "title": "File:Hebe propinqua, Arthur's Pass, New Zealand 02.jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua,_Arthur%27s_Pass,_New_Zealand_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Michal Klajban",
+          "description": "Hebe propinqua, Arthur's Pass, New Zealand",
+          "reason": "File title and image metadata identify Arthur's Pass, outside NZPCN's Otago/Southland natural distribution. Species-specific suitability remains unverified, so the candidate was excluded before visual selection. This does not prove misidentification or establish rarity.",
+          "viewed": false,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "title": "File:Hebe propinqua, Arthur's Pass, New Zealand 03.jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua,_Arthur%27s_Pass,_New_Zealand_03.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Michal Klajban",
+          "description": "Hebe propinqua, Arthur's Pass, New Zealand",
+          "reason": "File title and image metadata identify Arthur's Pass, outside NZPCN's Otago/Southland natural distribution. Species-specific suitability remains unverified, so the candidate was excluded before visual selection. This does not prove misidentification or establish rarity.",
+          "viewed": false,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "title": "File:Hebe propinqua, Arthur's Pass, New Zealand 08.jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua,_Arthur%27s_Pass,_New_Zealand_08.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Michal Klajban",
+          "description": "Hebe propinqua, Arthur's Pass, New Zealand",
+          "reason": "File title and image metadata identify Arthur's Pass, outside NZPCN's Otago/Southland natural distribution. Species-specific suitability remains unverified, so the candidate was excluded before visual selection. This does not prove misidentification or establish rarity.",
+          "viewed": false,
+          "checkedAt": "2026-10-04"
+        },
+        {
+          "title": "File:Hebe propinqua, Arthur's Pass, New Zealand 09.jpg",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_propinqua,_Arthur%27s_Pass,_New_Zealand_09.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Michal Klajban",
+          "description": "Hebe propinqua, Arthur's Pass, New Zealand",
+          "reason": "File title and image metadata identify Arthur's Pass, outside NZPCN's Otago/Southland natural distribution. Species-specific suitability remains unverified, so the candidate was excluded before visual selection. This does not prove misidentification or establish rarity.",
+          "viewed": false,
+          "checkedAt": "2026-10-04"
+        }
+      ]
+    }
+  ]
+}

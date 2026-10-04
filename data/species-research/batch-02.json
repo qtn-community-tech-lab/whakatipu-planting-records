@@ -1,0 +1,1780 @@
+{
+  "batch": 2,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 56,
+      "speciesId": "SP-081",
+      "scientificName": "Hoheria sexstylosa",
+      "profile": {
+        "speciesId": "SP-081",
+        "scientificName": "Hoheria sexstylosa",
+        "commonName": "Lacebark",
+        "maoriNames": [
+          "Houhere"
+        ],
+        "nameNote": "Houhere and lacebark are shared by other Hoheria species.",
+        "summary": "A native tree of streamside forest in central New Zealand. Its tangled juvenile growth develops into a taller tree with larger leaves.",
+        "lookFor": "Toothed, pointed adult leaves and grey bark; white flowers are followed by winged dry fruit. Juvenile leaves are smaller and rounder.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/hoheria-sexstylosa/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-081",
+          "scientificName": "Hoheria sexstylosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Hoheria_sexstylosa_11.JPG/960px-Hoheria_sexstylosa_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Hoheria sexstylosa, long-leaved lacebark, on Wright's Hill, Karori, Wellington.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria_sexstylosa_11.JPG",
+          "articleUrl": "https://en.wikipedia.org/wiki/Hoheria_sexstylosa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-081",
+          "scientificName": "Hoheria sexstylosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Hoheria_sexstylosa_kz01.jpg/960px-Hoheria_sexstylosa_kz01.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Hoheria sexstylosa in Dunedin Botanic Garden",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria_sexstylosa_kz01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Hoheria_sexstylosa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-081",
+          "scientificName": "Hoheria sexstylosa",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/5/53/Hoheria-sexstylosa-leaves.jpg",
+          "width": 659,
+          "height": 914,
+          "caption": "Closeup of long-leaved lacebark leaves (hoheria sexstylosa)",
+          "author": "Grapeman4",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria-sexstylosa-leaves.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Hoheria_sexstylosa",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/hoheria-sexstylosa/",
+          "note": "Species-specific factsheet validates the identity and profile features."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria_sexstylosa_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Hoheria sexstylosa, long-leaved lacebark, on Wright's Hill, Karori, Wellington.",
+          "viewed": true,
+          "visualCheck": "Saw narrow toothed green leaves on leafy branchlets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2013-02-24 08:43:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Hoheria sexstylosa 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Hoheria sexstylosa|Taken with Olympus FE-4000 / X-920 / X-925|Self-published work|Malvaceae in New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Hoheria sexstylosa, long-leaved lacebark, on Wright's Hill, Karori, Wellington.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2013-02-24",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3968,
+            "height": 2976
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria_sexstylosa_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Hoheria sexstylosa in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Saw a mature grey trunk and spreading high branches in a garden.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-18 17:42:53",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Hoheria sexstylosa kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Hoheria sexstylosa|Self-published work|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Hoheria sexstylosa in Dunedin Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-18 00:34:09",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3072,
+            "height": 4608
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hoheria-sexstylosa-leaves.jpg",
+          "license": "CC BY-SA 3.0",
+          "author": "Grapeman4",
+          "description": "Closeup of long-leaved lacebark leaves (hoheria sexstylosa)",
+          "viewed": true,
+          "visualCheck": "Saw a close view of toothed leaves and reddish young twigs.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-07-23 02:15:34",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Hoheria-sexstylosa-leaves",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Hoheria sexstylosa|Self-published work|Malvaceae in New Zealand|New Zealand photographs taken on 2012-07-23",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Closeup of long-leaved lacebark leaves (hoheria sexstylosa)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-07-23",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Grapeman4\" title=\"User:Grapeman4\">Grapeman4</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 659,
+            "height": 914
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/hoheria-sexstylosa/",
+        "https://commons.wikimedia.org/wiki/Category:Hoheria_sexstylosa"
+      ]
+    },
+    {
+      "rank": 57,
+      "speciesId": "SP-145",
+      "scientificName": "Pseudopanax colensoi",
+      "profile": {
+        "speciesId": "SP-145",
+        "scientificName": "Pseudopanax colensoi",
+        "commonName": "Mountain five-finger",
+        "maoriNames": [
+          "Orihou"
+        ],
+        "nameNote": "Flora of New Zealand recognises three varieties; no variety is assigned to this database entry. Neopanax colensoi is a synonym.",
+        "summary": "An endemic shrub or small tree with spreading branches. Its leaves are divided into several broad, leathery leaflets.",
+        "lookFor": "Three to five leaflets radiating from a long stalk, with coarse teeth toward their ends. Small flowers occur in branched umbels and fruit darkens almost to black.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/Taxon/Pseudopanax-colensoi.html"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-145",
+          "scientificName": "Pseudopanax colensoi",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/24/Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_03.jpg/960px-Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_03.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_03.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_colensoi",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-145",
+          "scientificName": "Pseudopanax colensoi",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_02.jpg/960px-Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_colensoi",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-145",
+          "scientificName": "Pseudopanax colensoi",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0e/Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_01.jpg/960px-Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Pseudopanax_colensoi",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/Taxon/Pseudopanax-colensoi.html",
+          "note": "Flora of New Zealand recognises three varieties; no variety is assigned to this database entry. Neopanax colensoi is a synonym."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_03.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw dense compound foliage, with three broad toothed leaflets on many leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-04 11:49:48",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pseudopanax colensoi in Aoraki Mount Cook NP 03",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Apiales in New Zealand in November 2017|Pseudopanax colensoi|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk|Araliaceae in Aoraki/Mount Cook National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Pseudopanax colensoi</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 00:40:58",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw backlit compound leaves with broad toothed leaflets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-04 11:49:45",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pseudopanax colensoi in Aoraki Mount Cook NP 02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Apiales in New Zealand in November 2017|Pseudopanax colensoi|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk|Araliaceae in Aoraki/Mount Cook National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Pseudopanax colensoi</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 00:26:17",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pseudopanax_colensoi_in_Aoraki_Mount_Cook_NP_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Pseudopanax colensoi at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw a narrow grey-brown trunk heavily covered in lichen.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-04 11:49:48",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pseudopanax colensoi in Aoraki Mount Cook NP 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Self-published work|Apiales in New Zealand in November 2017|Pseudopanax colensoi|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-17|Governor's Bush Walk|Araliaceae in Aoraki/Mount Cook National Park",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Pseudopanax colensoi</i> at Governor's Bush Walk in Aoraki/Mount Cook National Park, Canterbury Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 00:26:08",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 4000,
+            "height": 6000
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/Taxon/Pseudopanax-colensoi.html",
+        "https://commons.wikimedia.org/wiki/Category:Pseudopanax_colensoi"
+      ]
+    },
+    {
+      "rank": 58,
+      "speciesId": "SP-052",
+      "scientificName": "Coprosma rhamnoides",
+      "profile": {
+        "speciesId": "SP-052",
+        "scientificName": "Coprosma rhamnoides",
+        "commonName": "Twiggy coprosma",
+        "maoriNames": [],
+        "nameNote": "No species-specific Māori name was verified in the sources checked.",
+        "summary": "An endemic small shrub with a dense tangle of widely spreading twigs. Its small leaves vary considerably in shape.",
+        "lookFor": "Tiny paired leaves clustered on fine branches, often unequal in a pair. Small dark-red berries are a useful seasonal feature.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rhamnoides/"
+          },
+          {
+            "label": "Wikipedia · common names",
+            "url": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-052",
+          "scientificName": "Coprosma rhamnoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Coprosma_rhamnoides_11.JPG/960px-Coprosma_rhamnoides_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Coprosma rhamnoides, or twiggy coprosma fruiting in Upper Hutt, New Zealand.",
+          "author": "Rudolph89",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_11.JPG",
+          "articleUrl": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-052",
+          "scientificName": "Coprosma rhamnoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Coprosma_rhamnoides_in_Abel_Tasman_NP_%281%29.jpg/960px-Coprosma_rhamnoides_in_Abel_Tasman_NP_%281%29.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Coprosma rhamnoides in Abel Tasman National Park, Tasman Region, South Island of New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_in_Abel_Tasman_NP_(1).jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-052",
+          "scientificName": "Coprosma rhamnoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Coprosma_rhamnoides_in_Auckland_Botanic_Gardens.jpg/960px-Coprosma_rhamnoides_in_Auckland_Botanic_Gardens.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Coprosma rhamnoides in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_in_Auckland_Botanic_Gardens.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rhamnoides/",
+          "note": "Species-specific factsheet validates the identity and profile features."
+        },
+        {
+          "label": "Wikipedia · common names",
+          "url": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides",
+          "note": "Species-specific factsheet validates the identity and profile features."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_11.JPG",
+          "license": "CC0",
+          "author": "Rudolph89",
+          "description": "Coprosma rhamnoides, or twiggy coprosma fruiting in Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Saw dark red round berries scattered through tiny leaves and tangled pale twigs.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-04-12 06:20:29",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Coprosma rhamnoides 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Coprosma rhamnoides|Taken with Olympus FE-4000 / X-920 / X-925|CC-Zero|Self-published work|Rubiaceae in New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Coprosma rhamnoides, or twiggy coprosma fruiting in Upper Hutt, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-04-12",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Zero, Public Domain Dedication",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3968,
+            "height": 2976
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_in_Abel_Tasman_NP_(1).jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Coprosma rhamnoides in Abel Tasman National Park, Tasman Region, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw small rounded leaves on widely angled dark branchlets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2021-01-19 12:06:45",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Coprosma rhamnoides in Abel Tasman NP (1)",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Coprosma rhamnoides|Self-published work|Flora of Abel Tasman National Park|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-23",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Coprosma rhamnoides</i> in Abel Tasman National Park, Tasman Region, South Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-23 03:22:24",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 3360,
+            "height": 2240
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rhamnoides_in_Auckland_Botanic_Gardens.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Coprosma rhamnoides in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+          "viewed": true,
+          "visualCheck": "Saw dense small paired leaves and fine interlacing dark twigs in a garden specimen.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-13 23:31:34",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Coprosma rhamnoides in Auckland Botanic Gardens",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Coprosma rhamnoides|Self-published work|Files with coordinates missing SDC location of creation|Plants in Auckland Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Coprosma rhamnoides in Auckland Botanic Gardens, Manurewa, South Auckland, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-11 00:42:38",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 6000,
+            "height": 4000
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/coprosma-rhamnoides/",
+        "https://en.wikipedia.org/wiki/Coprosma_rhamnoides",
+        "https://commons.wikimedia.org/wiki/Category:Coprosma_rhamnoides"
+      ]
+    },
+    {
+      "rank": 59,
+      "speciesId": "SP-098",
+      "scientificName": "Metrosideros umbellata",
+      "profile": {
+        "speciesId": "SP-098",
+        "scientificName": "Metrosideros umbellata",
+        "commonName": "Southern rātā",
+        "maoriNames": [
+          "Rātā"
+        ],
+        "nameNote": "Rātā is a shared name for several Metrosideros species.",
+        "summary": "An endemic forest tree concentrated in southern and western New Zealand. It can form gnarled trees or remain low in exposed places.",
+        "lookFor": "Leathery opposite leaves taper to sharp tips. Summer flowers have masses of red projecting stamens; mature bark flakes in thin strips.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/metrosideros-umbellata/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-098",
+          "scientificName": "Metrosideros umbellata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Foliage_of_Metrosideros_umbellata.jpg/960px-Foliage_of_Metrosideros_umbellata.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Foliage of Metrosideros umbellata",
+          "author": "René Boe Sørensen",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Foliage_of_Metrosideros_umbellata.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Metrosideros_umbellata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-098",
+          "scientificName": "Metrosideros umbellata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/de/Bark_of_Metrosideros_umbellata.jpg/960px-Bark_of_Metrosideros_umbellata.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Bark of Metrosideros umbellata",
+          "author": "Duncan Cunningham",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bark_of_Metrosideros_umbellata.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Metrosideros_umbellata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-098",
+          "scientificName": "Metrosideros umbellata",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Metrosideros_umbellata_1.jpg/960px-Metrosideros_umbellata_1.jpg",
+          "width": 960,
+          "height": 1158,
+          "caption": "Photo of Metrosideros umbellata at the San Francisco Botanical Garden",
+          "author": "Stan Shebs",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Metrosideros_umbellata_1.jpg",
+          "articleUrl": "https://en.wikipedia.org/wiki/Metrosideros_umbellata",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Identity and profile checked; three licensed source images actually viewed.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/metrosideros-umbellata/",
+          "note": "Species-specific factsheet validates the identity and profile features."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Foliage_of_Metrosideros_umbellata.jpg",
+          "license": "CC BY 4.0",
+          "author": "René Boe Sørensen",
+          "description": "Foliage of Metrosideros umbellata",
+          "viewed": true,
+          "visualCheck": "Saw sharply pointed glossy leaves beside red brush-like flowers.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-03-08 12:43:30",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Foliage of Metrosideros umbellata",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Metrosideros umbellata|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Foliage of Metrosideros umbellata",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2024-11-24",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/observations/253027851\">https://www.inaturalist.org/observations/253027851</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "René Boe Sørensen",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1536,
+            "height": 2048
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bark_of_Metrosideros_umbellata.jpg",
+          "license": "CC BY 4.0",
+          "author": "Duncan Cunningham",
+          "description": "Bark of Metrosideros umbellata",
+          "viewed": true,
+          "visualCheck": "Saw a large branching trunk with long peeling brown bark strips.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2025-03-08 12:39:48",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Bark of Metrosideros umbellata",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Metrosideros umbellata|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot|Media from GBIF",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Bark of Metrosideros umbellata",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2020-08-04",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/photos/88265398\">https://www.inaturalist.org/photos/88265398</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "Duncan Cunningham",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1536,
+            "height": 2048
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Metrosideros_umbellata_1.jpg",
+          "license": "CC BY-SA 3.0",
+          "author": "Stan Shebs",
+          "description": "Photo of Metrosideros umbellata at the San Francisco Botanical Garden",
+          "viewed": true,
+          "visualCheck": "Saw a garden tree densely covered in red flowers.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2006-04-10 03:00:33",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Metrosideros umbellata 1",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Metrosideros umbellata|GFDL|Taken with Panasonic Lumix DMC-FZ20|License migration redundant|Self-published work|Photos by Stan Shebs",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Photo of <i><a href=\"//commons.wikimedia.org/wiki/Metrosideros_umbellata\" title=\"Metrosideros umbellata\">Metrosideros umbellata</a></i> at the <a href=\"//commons.wikimedia.org/wiki/San_Francisco_Botanical_Garden\" title=\"San Francisco Botanical Garden\">San Francisco Botanical Garden</a>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2005-06",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Stan_Shebs\" title=\"User:Stan Shebs\">Stan Shebs</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Attribution": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Stan_Shebs\" title=\"User:Stan Shebs\">Stan Shebs</a>",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1800,
+            "height": 2171
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/metrosideros-umbellata/",
+        "https://commons.wikimedia.org/wiki/Category:Metrosideros_umbellata"
+      ]
+    },
+    {
+      "rank": 60,
+      "speciesId": "SP-086",
+      "scientificName": "Leonohebe cupressoides",
+      "profile": {
+        "speciesId": "SP-086",
+        "scientificName": "Leonohebe cupressoides",
+        "commonName": "Cypress hebe",
+        "maoriNames": [],
+        "nameNote": "NZPCN lists Leonohebe cupressoides as a synonym of Veronica cupressoides. WRT’s SP-086 and SP-155 remain separate pending its identity ruling; these are synonym-based illustrations, not proof of the identity of recorded plantings.",
+        "summary": "An aromatic native shrub of eastern South Island scrub. Fine branchlets and tiny scale leaves give it a cypress-like outline.",
+        "lookFor": "Slender green to blue-green branchlets with small triangular leaves clasping the stem. Small pale blue or mauve flowers occur near the tips.",
+        "sources": [
+          {
+            "label": "NZPCN",
+            "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-086",
+          "scientificName": "Leonohebe cupressoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Veronica_cupressoides2_at_WBG.jpg/960px-Veronica_cupressoides2_at_WBG.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Cypress hebe reference under the verified synonym Veronica cupressoides: scale leaves and jointed green branchlets.",
+          "author": "Siobhan Leachman",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides2_at_WBG.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons",
+          "articleLabel": "NZPCN species reference"
+        },
+        {
+          "speciesId": "SP-086",
+          "scientificName": "Leonohebe cupressoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Veronica_cupressoides_at_WBG.jpg/960px-Veronica_cupressoides_at_WBG.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Cypress hebe reference under the verified synonym Veronica cupressoides: a labelled garden shrub with fine green branchlets.",
+          "author": "Siobhan Leachman",
+          "license": "CC0",
+          "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_at_WBG.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons",
+          "articleLabel": "NZPCN species reference"
+        },
+        {
+          "speciesId": "SP-086",
+          "scientificName": "Leonohebe cupressoides",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Veronica_cupressoides_kz01.jpg/960px-Veronica_cupressoides_kz01.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Cypress hebe reference under the verified synonym Veronica cupressoides. the bushy cypress-like habit with upright fine stems.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons",
+          "articleLabel": "NZPCN species reference"
+        }
+      ],
+      "status": "partial",
+      "reason": "Botanical synonym confirmed; WRT database identity remains unresolved.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+          "note": "NZPCN lists Leonohebe cupressoides as a synonym of Veronica cupressoides. WRT’s SP-086 and SP-155 remain separate pending its identity ruling; these are synonym-based illustrations, not proof of the identity of recorded plantings."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides2_at_WBG.jpg",
+          "license": "CC0",
+          "author": "Siobhan Leachman",
+          "description": "Veronica cupressoides at Wellington Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Saw a close view of scale leaves and jointed green branchlets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-04-21 20:49:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica cupressoides2 at WBG",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Veronica cupressoides|CC-Zero|Self-published work|Plants in Wellington Botanical Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Veronica cupressoides at Wellington Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2019-04-02",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Ambrosia10\" title=\"User:Ambrosia10\">Siobhan Leachman</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Zero, Public Domain Dedication",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 1111,
+            "height": 1481
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_at_WBG.jpg",
+          "license": "CC0",
+          "author": "Siobhan Leachman",
+          "description": "Veronica cupressoides at Wellington Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Saw a labelled Veronica cupressoides garden shrub with fine green branchlets.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-04-21 20:49:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica cupressoides at WBG",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Veronica cupressoides|CC-Zero|Self-published work|Plants in Wellington Botanical Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Veronica cupressoides at Wellington Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2019-04-02",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Ambrosia10\" title=\"User:Ambrosia10\">Siobhan Leachman</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Zero, Public Domain Dedication",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "false",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2104,
+            "height": 1578
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Veronica cupressoides in Christchurch Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Saw the bushy cypress-like habit with upright fine stems.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2022-12-28 18:37:13",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Veronica cupressoides kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Veronica cupressoides|Self-published work|Plants in Christchurch Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Veronica cupressoides in Christchurch Botanic Gardens",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-16 00:08:04",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          },
+          "originalDimensions": {
+            "width": 2987,
+            "height": 3984
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+        "https://commons.wikimedia.org/wiki/Category:Veronica_cupressoides"
+      ]
+    }
+  ]
+}

@@ -10,3 +10,7 @@
 .wrt-profile-preview__more { display: flex; flex-direction: column; gap: 10px; padding-top: 10px; }
 .wrt-profile-preview__note, .wrt-profile-preview__sources { color: var(--text-muted); font-size: 11.5px; }
 .wrt-profile-preview a { color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; }
+.wrt-profile-preview__more p { margin: 0; }
+.wrt-profile-preview__more a { color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; }
+.wrt-sgrid > .wrt-scard:has(.wrt-profile-preview__details) { height: auto; min-height: 276px; }
+.wrt-sgrid .wrt-scard__body:has(.wrt-profile-preview__details) > * { flex-shrink: 0; }

@@ -965,5 +965,851 @@
     ],
     "checkedAt": "2026-10-04",
     "nameNote": "Mikimiki is a shared name for several small-leaved shrubs; it does not uniquely identify this species."
+  },
+  {
+    "speciesId": "SP-018",
+    "scientificName": "Carex virgata",
+    "commonName": "Swamp sedge",
+    "maoriNames": [
+      "Pukio",
+      "Toitoi",
+      "Toetoe"
+    ],
+    "summary": "A densely clumped native sedge of wetlands, damp forest and stream margins across New Zealand.",
+    "lookFor": "Narrow light-green leaves form a tussock; stiff upright brown flowering panicles help separate it from drooping Carex secta.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/carex-virgata/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN treats Carex virgata as a species and lists Carex appressa var. virgata as a synonym; Commons uses that older category. Pukio, toitoi and toetoe follow NZPCN’s spellings and are shared names also used for other sedges or grasses."
+  },
+  {
+    "speciesId": "SP-068",
+    "scientificName": "Fuchsia excorticata",
+    "commonName": "Tree fuchsia",
+    "maoriNames": [
+      "Kōtukutuku"
+    ],
+    "summary": "A spreading endemic tree with peeling bark and flowers borne directly on woody branches. It can lose its leaves in southern New Zealand.",
+    "lookFor": "Thin pointed leaves have pale undersides; hanging green-to-purple flowers and flaky orange-brown bark are distinctive.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/fuchsia-excorticata/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-061",
+    "scientificName": "Dacrycarpus dacrydioides",
+    "commonName": "White pine",
+    "maoriNames": [
+      "Kahikatea"
+    ],
+    "summary": "A tall endemic conifer of lowland forest, especially river flats and poorly drained ground. Mature trees often have buttressed trunks.",
+    "lookFor": "Fine scale-like adult foliage and dark seeds held above orange-red fleshy receptacles; young adult trees have a narrow crown.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/dacrycarpus-dacrydioides/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-092",
+    "scientificName": "Lophozonia menziesii",
+    "commonName": "Silver beech",
+    "maoriNames": [
+      "Tāwhairauriki"
+    ],
+    "summary": "An evergreen endemic forest tree found from lowland to mountain forest, sometimes forming a shrub near the treeline.",
+    "lookFor": "Small leathery nearly round leaves have uneven rounded teeth; young trunks carry silvery-grey bark.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/lophozonia-menziesii/"
+      },
+      {
+        "label": "Flora of New Zealand · names",
+        "url": "https://www.nzflora.info/factsheet/taxon/Lophozonia-menziesii.html"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN uses Lophozonia menziesii and lists Nothofagus menziesii as a synonym. The selected Commons images retain the Nothofagus name."
+  },
+  {
+    "speciesId": "SP-142",
+    "scientificName": "Prumnopitys taxifolius",
+    "commonName": "Black pine",
+    "maoriNames": [
+      "Mataī"
+    ],
+    "summary": "An endemic conifer of lowland forest with a distinctive tangled juvenile stage and tall mature trees.",
+    "lookFor": "Adult leaves are short and flattened; circular bark flakes leave a hammered pattern, and ripe fruits are purple-black.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/prumnopitys-taxifolia/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "WRT’s database spelling Prumnopitys taxifolius is retained. NZPCN and the photo sources identify mataī as Prumnopitys taxifolia."
+  },
+  {
+    "speciesId": "SP-081",
+    "scientificName": "Hoheria sexstylosa",
+    "commonName": "Lacebark",
+    "maoriNames": [
+      "Houhere"
+    ],
+    "nameNote": "Houhere and lacebark are shared by other Hoheria species.",
+    "summary": "A native tree of streamside forest in central New Zealand. Its tangled juvenile growth develops into a taller tree with larger leaves.",
+    "lookFor": "Toothed, pointed adult leaves and grey bark; white flowers are followed by winged dry fruit. Juvenile leaves are smaller and rounder.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/hoheria-sexstylosa/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-145",
+    "scientificName": "Pseudopanax colensoi",
+    "commonName": "Mountain five-finger",
+    "maoriNames": [
+      "Orihou"
+    ],
+    "nameNote": "Flora of New Zealand recognises three varieties; no variety is assigned to this database entry. Neopanax colensoi is a synonym.",
+    "summary": "An endemic shrub or small tree with spreading branches. Its leaves are divided into several broad, leathery leaflets.",
+    "lookFor": "Three to five leaflets radiating from a long stalk, with coarse teeth toward their ends. Small flowers occur in branched umbels and fruit darkens almost to black.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Pseudopanax-colensoi.html"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-052",
+    "scientificName": "Coprosma rhamnoides",
+    "commonName": "Twiggy coprosma",
+    "maoriNames": [],
+    "nameNote": "No species-specific Māori name was verified in the sources checked.",
+    "summary": "An endemic small shrub with a dense tangle of widely spreading twigs. Its small leaves vary considerably in shape.",
+    "lookFor": "Tiny paired leaves clustered on fine branches, often unequal in a pair. Small dark-red berries are a useful seasonal feature.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rhamnoides/"
+      },
+      {
+        "label": "Wikipedia · common names",
+        "url": "https://en.wikipedia.org/wiki/Coprosma_rhamnoides"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-098",
+    "scientificName": "Metrosideros umbellata",
+    "commonName": "Southern rātā",
+    "maoriNames": [
+      "Rātā"
+    ],
+    "nameNote": "Rātā is a shared name for several Metrosideros species.",
+    "summary": "An endemic forest tree concentrated in southern and western New Zealand. It can form gnarled trees or remain low in exposed places.",
+    "lookFor": "Leathery opposite leaves taper to sharp tips. Summer flowers have masses of red projecting stamens; mature bark flakes in thin strips.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/metrosideros-umbellata/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-086",
+    "scientificName": "Leonohebe cupressoides",
+    "commonName": "Cypress hebe",
+    "maoriNames": [],
+    "nameNote": "NZPCN lists Leonohebe cupressoides as a synonym of Veronica cupressoides. WRT’s SP-086 and SP-155 remain separate pending its identity ruling; these are synonym-based illustrations, not proof of the identity of recorded plantings.",
+    "summary": "An aromatic native shrub of eastern South Island scrub. Fine branchlets and tiny scale leaves give it a cypress-like outline.",
+    "lookFor": "Slender green to blue-green branchlets with small triangular leaves clasping the stem. Small pale blue or mauve flowers occur near the tips.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-139",
+    "scientificName": "Podocarpus nivalis",
+    "commonName": "Mountain tōtara",
+    "maoriNames": [
+      "Tauhinu"
+    ],
+    "summary": "A spreading New Zealand conifer shrub of mountain scrub, tussock grassland and rocky alpine ground. Its branches often form a low, dense dome.",
+    "lookFor": "Small, closely spaced stiff leaves on densely leafy twigs; green seeds sit above swollen red receptacles.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/podocarpus-nivalis/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Podocarpus-nivalis.html"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Flora of New Zealand lists Tauhinu for Podocarpus nivalis. Tauhinu is shared with other shrubs; mountain tōtara and snow tōtara are also documented common names, and tōtara occurs in the names of several Podocarpus species."
+  },
+  {
+    "speciesId": "SP-091",
+    "scientificName": "Lophomyrtus obcordata",
+    "commonName": "Rōhutu",
+    "maoriNames": [
+      "Rōhutu"
+    ],
+    "summary": "An endemic bushy shrub or small tree of coastal and lowland forest. It has small firm leaves, white flowers and red to dark berries.",
+    "lookFor": "Opposite leaves with a clear notch at the tip, giving a reversed heart shape; white flowers have many stamens.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/lophomyrtus-obcordata/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-074",
+    "scientificName": "Halocarpus bidwillii",
+    "commonName": "Bog pine",
+    "maoriNames": [],
+    "summary": "A much-branched New Zealand conifer shrub or small tree with different juvenile and adult foliage. Some spreading branches root where they touch the ground.",
+    "lookFor": "Adult twigs have tiny overlapping scale leaves; dark grooved seeds are held in conspicuous waxy white cups.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/halocarpus-bidwillii/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-095",
+    "scientificName": "Melicytus ramiflorus",
+    "commonName": "Whitey wood",
+    "maoriNames": [
+      "Māhoe",
+      "Hinahina"
+    ],
+    "summary": "A common native small tree in coastal, lowland and lower mountain forests. Its pale bark and toothed leaves are useful recognition features.",
+    "lookFor": "Light green tapered leaves with toothed edges; tiny flowers cluster along twigs and berries ripen purple.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/melicytus-ramiflorus-subsp-ramiflorus/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The NZPCN factsheet uses Melicytus ramiflorus subsp. ramiflorus for the New Zealand taxon and discusses the treatment of former Pacific subspecies. The WRT species-level name is retained."
+  },
+  {
+    "speciesId": "SP-038",
+    "scientificName": "Coprosma acerosa",
+    "commonName": "Sand coprosma",
+    "maoriNames": [
+      "Tātaraheke"
+    ],
+    "summary": "A low sprawling shrub endemic to New Zealand coastal sands. Orange-brown interlacing twigs form cushions or trailing patches.",
+    "lookFor": "Narrow small leaves in opposite pairs or clusters; translucent pale blue fruit can have darker flecks.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-acerosa/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-077",
+    "scientificName": "Helichrysum lanceolatum",
+    "commonName": "Hells bells",
+    "maoriNames": [
+      "Niniao"
+    ],
+    "summary": "An endemic, much-branched shrub of open forest, scrub and rocky places. It can reach about three metres.",
+    "lookFor": "Alternate oval-to-rounded leaves have white woolly undersides; small creamy flower heads gather into rounded clusters.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Helichrysum-lanceolatum.html"
+      },
+      {
+        "label": "DOC · names",
+        "url": "https://www.doc.govt.nz/nature/native-plants/canterbury-native-plants/native-plants-natural-to-coastal-areas/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Niniao is documented by DOC and Flora of New Zealand. Helichrysum glomeratum and Helichrysum aggregatum are historical names listed in the botanical references."
+  },
+  {
+    "speciesId": "SP-125",
+    "scientificName": "Pennantia corymbosa",
+    "commonName": "Kaikōmako",
+    "maoriNames": [
+      "Kaikōmako"
+    ],
+    "summary": "An endemic small tree found across New Zealand. Young plants form a dense mesh of zigzagging twigs before developing a more open adult crown.",
+    "lookFor": "Juvenile leaves are tiny with lobed tips; adult leaves are larger but retain small lobes or teeth near their ends.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-066",
+    "scientificName": "Elaeocarpus hookerianus",
+    "commonName": "Pōkākā",
+    "maoriNames": [
+      "Pōkākā"
+    ],
+    "summary": "An endemic forest tree with sharply different juvenile and adult foliage, found from lowland to mountain forest.",
+    "lookFor": "Young plants have interlacing twigs and variable narrow leaves. Adult leaves are larger; small hanging flowers have finely fringed edges.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-108",
+    "scientificName": "Olearia arborescens",
+    "commonName": "Common tree daisy",
+    "maoriNames": [],
+    "summary": "A bushy endemic shrub or small tree of forest and scrub from lowland to mountain environments.",
+    "lookFor": "Glossy leathery leaves have pale undersides and a few teeth; clusters of white daisy flowers later produce fluffy seeds.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN now accepts Shawia arborescens and lists Olearia arborescens as a synonym. WRT’s database name and species ID remain separate from that nomenclatural update."
+  },
+  {
+    "speciesId": "SP-034",
+    "scientificName": "Chionochloa rigida",
+    "commonName": "Narrow-leaved snow tussock",
+    "maoriNames": [
+      "Wī kura"
+    ],
+    "summary": "An endemic tall tussock of the South Island, especially eastern and southern hill and mountain grasslands.",
+    "lookFor": "Long narrow golden-green leaves sweep outward from a dense base; tall flowering stems carry open branched panicles.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html"
+      },
+      {
+        "label": "Wikipedia · names",
+        "url": "https://en.wikipedia.org/wiki/Chionochloa_rigida"
+      },
+      {
+        "label": "Dunedin City Council · planting schedule",
+        "url": "https://www.dunedin.govt.nz/resources/documents/council/central-city-plan/previuous-documents/george-street/developed-design-report.pdf"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Wī kura is documented by Wikipedia and a Dunedin City Council planting schedule. WRT’s Hunangamoho was not confirmed for this species; NZPCN applies that shared name to Chionochloa conspicua. Flora recognises two subspecies; this profile does not assign WRT stock to either."
+  },
+  {
+    "speciesId": "SP-117",
+    "scientificName": "Olearia nummularifolia",
+    "commonName": null,
+    "maoriNames": [],
+    "nameNote": "NZPCN now uses Shawia nummulariifolia, with Olearia nummulariifolia as a synonym. WRT’s recorded spelling Olearia nummularifolia is retained. Its separate cymbifolia line remains for WRT to resolve; no quantities or IDs are merged.",
+    "summary": "A bushy native shrub of subalpine country. Its compact, leathery leaves have pale undersides.",
+    "lookFor": "Small yellow-green oval leaves with rolled-under edges and white undersides. Sticky yellow twigs bear small clusters of white daisy flowers.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/shawia-nummulariifolia/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-122",
+    "scientificName": "Ozothamnus leptophyllus",
+    "commonName": "Tauhinu",
+    "maoriNames": [
+      "Tauhinu"
+    ],
+    "nameNote": "Tauhinu is shared with other shrubs. NZPCN lists Cassinia leptophylla as a synonym and discusses a broad, variable species concept. WRT’s separate leptophyllus, vauvilliersii and fulvida lines remain unresolved and are not merged here.",
+    "summary": "A variable native shrub found from coastal scrub to subalpine country throughout New Zealand. Its foliage may look grey, yellow-green or green.",
+    "lookFor": "Very small narrow leaves, pale and woolly underneath, on slender branchlets. Small flower heads form flat-topped clusters at the tips; mature seeds have fluffy hairs.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/ozothamnus-leptophyllus/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-143",
+    "scientificName": "Pseudopanax arboreus",
+    "commonName": "Five finger",
+    "maoriNames": [
+      "Whauwhaupaku"
+    ],
+    "nameNote": "Five finger is shared with other Pseudopanax species. Some sources use Neopanax arboreus; WRT’s recorded name is retained.",
+    "summary": "An endemic small tree of moist forest, stream margins and regenerating bush. It is widespread through both main islands, though uncommon in Central Otago.",
+    "lookFor": "Glossy toothed leaflets radiate from long stalks, usually in groups of five. Dark purple-black fruit forms conspicuous branched clusters.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/pseudopanax-arboreus/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-156",
+    "scientificName": "Veronica hectorii",
+    "commonName": "Whipcord hebe",
+    "maoriNames": [],
+    "nameNote": "Whipcord hebe is shared with several species. Flora of New Zealand recognises three subspecies and lists Hebe hectorii and Leonohebe hectorii as synonyms. No subspecies is assigned here, and WRT’s disputed separate demissa line remains unresolved.",
+    "summary": "An endemic compact shrub of mountain grassland and scrub in the South and Stewart islands. Its tightly pressed scale leaves make the shoots look like cords.",
+    "lookFor": "Short upright shoots sheathed in overlapping pairs of glossy green or olive scale leaves. Small white flowers crowd the branch tips.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Veronica-hectorii.html"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-103",
+    "scientificName": "Muehlenbeckia complexa",
+    "commonName": "Wire vine",
+    "maoriNames": [
+      "Pōhuehue",
+      "Pōhue",
+      "Pōpōhue",
+      "Tororaro",
+      "Waekāhu"
+    ],
+    "nameNote": "Flora of New Zealand records these vernacular names. Pōhuehue is shared with other climbers, including Muehlenbeckia australis; Tororaro is also used for other Muehlenbeckia species. NZPCN recognises varieties; this species-level profile does not assign a variety to WRT’s records.",
+    "summary": "A native climbing or sprawling plant with many interlacing stems. It grows over other vegetation and can form dense tangled masses.",
+    "lookFor": "Small rounded or broadly oval leaves on wiry stems. Tiny pale flowers occur along the shoots, followed by dark seeds surrounded by pale fleshy flower parts.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Muehlenbeckia-complexa.html"
+      },
+      {
+        "label": "NZPCN · names for the typical variety",
+        "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-complexa-var-complexa/"
+      },
+      {
+        "label": "Wikipedia · shared name",
+        "url": "https://en.wikipedia.org/wiki/Muehlenbeckia_complexa"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-128",
+    "scientificName": "Phyllocladus alpinus",
+    "commonName": "Mountain celery pine",
+    "maoriNames": [
+      "Toatoa"
+    ],
+    "summary": "An endemic conifer shrub or small tree chiefly found in subalpine scrub and low alpine habitats, also occurring on low-elevation frost flats.",
+    "lookFor": "Flattened grey-green leaf-like stems, called phylloclades, with lobed or toothed margins; seeds develop on red fleshy scales.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN lists mountain toatoa; toatoa is shared with other celery pines. Its factsheet excludes the distinct unnamed yellow-foliaged P. aff. alpinus entity."
+  },
+  {
+    "speciesId": "SP-054",
+    "scientificName": "Coprosma rotundifolia",
+    "commonName": null,
+    "maoriNames": [],
+    "summary": "An endemic shrub or small tree of streamside forest and shrubland. Slender spreading branches carry rounded leaves that may be blotched brown or purple.",
+    "lookFor": "Opposite rounded leaves with fine hairs and a visible vein network; wide-angled twigs and red or sometimes white berries.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-082",
+    "scientificName": "Juncus edgariae",
+    "commonName": "Edgar’s rush",
+    "maoriNames": [
+      "Wiwi"
+    ],
+    "summary": "A widespread endemic rush forming clumps of erect wiry stems. It grows beside wetlands, in seasonally damp places and in open shrubland or pasture.",
+    "lookFor": "Smooth shining leafless stems with branching flower clusters appearing off to one side; species separation can require checking stem pith and capsules.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Wiwi is a shared rush name. NZPCN distinguishes this species from Juncus continuus and the Australian J. gregiflorus, with which it was formerly confused."
+  },
+  {
+    "speciesId": "SP-164",
+    "scientificName": "Weinmania racemosa",
+    "commonName": "Kāmahi",
+    "maoriNames": [
+      "Kāmahi",
+      "Tawheo",
+      "Tawhero",
+      "Tawherowhero"
+    ],
+    "summary": "An endemic forest tree found from coastal areas to subalpine habitats. It can be common in disturbed forest and dominate some higher mountain forests.",
+    "lookFor": "Adult leaves usually simple with deeply toothed margins; white or pink flowers gather in narrow spike-like clusters.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The database spelling Weinmania racemosa is retained. Botanical references spell the former name Weinmannia racemosa; NZPCN now accepts Pterophylla racemosa and lists Weinmannia racemosa as its synonym. Tawhero is shared with other trees."
+  },
+  {
+    "speciesId": "SP-162",
+    "scientificName": "Veronica rakaiensis",
+    "commonName": "Hebe",
+    "maoriNames": [],
+    "summary": "A bushy South Island shrub often found in upland stream valleys. It usually forms a rounded plant with short narrow leaves and white flower spikes.",
+    "lookFor": "Pairs of small glossy leaves widest toward the tip; white flower clusters and minute hairs on leaf margins and capsules.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Hebe is a shared common name. NZPCN lists Hebe rakaiensis as a synonym of Veronica rakaiensis; source photographs using Hebe retain that labelling in captions."
+  },
+  {
+    "speciesId": "SP-015",
+    "scientificName": "Carex maorica",
+    "commonName": "Māori sedge",
+    "maoriNames": [],
+    "summary": "An endemic tufted sedge of freshwater wetlands, streambanks, lake margins and damp forest. Its long pale green leaves surround stems carrying several crowded flowering spikes.",
+    "lookFor": "Look for long folded leaves and several short female spikes clustered close to the base of a terminal male spike. Confirm flowering material before distinguishing similar sedges.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/carex-maorica/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN recognises Carex maorica as a distinct species and does not list Carex secta as its synonym. WRT nursery identity remains unresolved; these species-specific references do not resolve which stock a historic record represented. Keep SP-015 and SP-016 separate. No verified Māori vernacular name was found; Māori sedge is the documented common name."
+  },
+  {
+    "speciesId": "SP-153",
+    "scientificName": "Streblus heterophyllus",
+    "commonName": "Small-leaved milk tree",
+    "maoriNames": [
+      "Tūrepo"
+    ],
+    "summary": "An endemic forest tree with a marked change between its wiry, small-leaved juvenile form and broader adult foliage. Small red fruits develop along the branches.",
+    "lookFor": "Young plants have slender interlacing twigs and tiny irregularly lobed leaves. Adult leaves are small and oval with shallow teeth and visible veins; fruit is red.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/paratrophis-microphylla/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The database spelling Streblus heterophyllus is retained. NZPCN currently accepts Paratrophis microphylla and explicitly lists Streblus heterophyllus as a synonym. These source names refer to this taxon, not a merged database record."
+  },
+  {
+    "speciesId": "SP-041",
+    "scientificName": "Coprosma cheesemanii",
+    "commonName": null,
+    "maoriNames": [],
+    "summary": "An endemic low shrub of upland grassland and rocky places. It forms an intricate network of short branches with tiny glossy leaves and orange to reddish fruit.",
+    "lookFor": "Look for branches that spread in a flattened pattern, with many short side twigs at near-right angles. Small pointed leaves occur in pairs or tight clusters; fine hairs are present on the young twigs.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/coprosma-cheesemanii/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "No common or Māori name was documented in the checked NZPCN species account. The database scientific name is retained."
+  },
+  {
+    "speciesId": "SP-100",
+    "scientificName": "Muehlenbeckia axillaris",
+    "commonName": "Creeping pōhuehue",
+    "maoriNames": [
+      "Pōhuehue"
+    ],
+    "summary": "A native creeping shrub that spreads by wiry stems rooting at their nodes. Its mats carry very small round or oval leaves; the fruit has a black seed surrounded by fleshy white flower parts.",
+    "lookFor": "Look for a close ground-covering mat of thin reddish-brown stems and tiny rounded leaves. Pale star-like flowers occur in leaf axils; white fleshy fruit surrounds a dark triangular centre.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/muehlenbeckia-axillaris/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Muehlenbeckia-axillaris.html"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Pōhuehue is a shared Māori name used for more than one Muehlenbeckia species. Creeping pōhuehue and the scientific name distinguish this low-growing species."
+  },
+  {
+    "speciesId": "SP-161",
+    "scientificName": "Veronica propinqua",
+    "commonName": "Whipcord hebe",
+    "maoriNames": [],
+    "summary": "An endemic low, spreading whipcord hebe of Otago and Southland mountain grassland and scrub. Its narrow green branchlets carry closely pressed scale leaves, with small groups of white flowers at the tips.",
+    "lookFor": "Look for upright or ascending cord-like shoots with overlapping rounded green scales and visible joints between them. Similar whipcord hebes need careful comparison of scales, branchlets and flowers.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/veronica-propinqua/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Whipcord hebe is a shared common name for several species. NZPCN accepts Veronica propinqua and lists Hebe propinqua as a synonym. No Māori name was documented in the checked species account."
+  },
+  {
+    "speciesId": "SP-093",
+    "scientificName": "Melicope simplex",
+    "commonName": "Poataniwha",
+    "maoriNames": [
+      "Poataniwha"
+    ],
+    "nameNote": "Poataniwha is recorded by NZPCN for this species. No additional Māori spelling or name has been inferred from WRT’s register.",
+    "summary": "An endemic shrub with widely spreading branches and small rounded leaves. Young plants can have leaves divided into three leaflets.",
+    "lookFor": "Small thick leaves with finely roughened margins and a joint where each blade meets its flattened stalk. Cream star-shaped flowers are followed by dry fruit divided into several parts.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/melicope-simplex/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-022",
+    "scientificName": "Carmichaelia crassicaulis",
+    "commonName": "Coral broom",
+    "maoriNames": [],
+    "nameNote": "Flora of New Zealand recognises subsp. crassicaulis and subsp. racemosa; this species-level entry does not assign either. Corallospartium crassicaule is an older synonym. WRT’s disputed identity remains unresolved, and subspecies threat assessments are not applied to its planting records.",
+    "summary": "An endemic broom with rigid branching stems and few visible leaves. Its yellowish branchlets are grooved, and small cream to pale pink pea flowers form clusters along them.",
+    "lookFor": "Stout grooved branchlets and tightly grouped pea flowers, often with purple markings. Small dry pods follow flowering; subspecies identification needs closer botanical examination.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Carmichaelia-crassicaulis.html"
+      },
+      {
+        "label": "NZPCN · typical subspecies reference",
+        "url": "https://www.nzpcn.org.nz/flora/species/carmichaelia-crassicaulis-subsp-crassicaulis/"
+      },
+      {
+        "label": "Otago Regional Council · species common name",
+        "url": "https://www.orc.govt.nz/environment/biosecurity-and-pests/plant-pests/gorse-and-broom"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-148",
+    "scientificName": "Pseudowintera colorata",
+    "commonName": "Mountain horopito",
+    "maoriNames": [
+      "Horopito"
+    ],
+    "nameNote": "Horopito is shared with other Pseudowintera species; NZPCN calls this one red or mountain horopito.",
+    "summary": "An endemic shrub of forest edges and scrub through the North, South and Stewart islands. Its leaf colouring becomes especially conspicuous in exposed places.",
+    "lookFor": "Matte green to yellow-green oval leaves often blotched red, with pale whitish undersides. Dark branchlets bear small yellow-green flowers and dark red or black berries.",
+    "sources": [
+      {
+        "label": "NZPCN",
+        "url": "https://www.nzpcn.org.nz/flora/species/pseudowintera-colorata/"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-140",
+    "scientificName": "Podocarpus totara",
+    "commonName": "Tōtara",
+    "maoriNames": [
+      "Tōtara",
+      "Amoka"
+    ],
+    "nameNote": "Flora of New Zealand records Tōtara and Amoka. Tōtara also occurs in names of other Podocarpus species; no variety is assigned to this species-level record.",
+    "summary": "An endemic conifer that can become a large forest tree. Mature trees have thick stringy bark and a broad spreading crown.",
+    "lookFor": "Stiff narrow pointed leaves on woody branchlets. Older trunks show deep furrows and long fibrous bark strips.",
+    "sources": [
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/Taxon/Podocarpus-totara.html"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-060",
+    "scientificName": "Cyathoides juniperina",
+    "commonName": null,
+    "maoriNames": [],
+    "nameNote": "The recorded spelling Cyathoides juniperina was not verified. NZOR and Kew confirm Cyathodes juniperina as a synonym of Leptecophylla juniperina, but that does not establish what WRT’s SP-060 record represents. Keep it separate from SP-087 until WRT confirms the intended name.",
+    "summary": "This recorded botanical name remains unverified. A possible spelling correction points to an older name for Leptecophylla juniperina, but WRT must confirm the intended identity before botanical traits or reference photos are assigned.",
+    "lookFor": "Confirm the intended botanical identity against WRT’s original records or a verified specimen before using identification features.",
+    "sources": [
+      {
+        "label": "NZOR · Cyathodes synonym record",
+        "url": "https://nzor.org.nz/names/4f5ed3ff-b4cb-4074-8182-2c5768a04e72"
+      },
+      {
+        "label": "Kew · Leptecophylla juniperina",
+        "url": "https://powo.science.kew.org/taxon/1012580-1"
+      }
+    ],
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-154",
+    "scientificName": "Veronica biggarii",
+    "commonName": "Biggar’s hebe",
+    "maoriNames": [],
+    "summary": "A small Southland alpine shrub restricted to the Eyre and Thomson mountains and Mid Dome. It grows on rocky outcrops and in open snow-tussock grassland.",
+    "lookFor": "Pairs of fleshy oval leaves often edged red; flower spikes on noticeable stalks, with bright pink young buds or developing capsules.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "NZPCN lists Hebe biggarii as a synonym and describes this range-restricted species as Naturally Uncommon. No Māori name was verified."
+  },
+  {
+    "speciesId": "SP-065",
+    "scientificName": "Dracophyllum rosmarinifolium",
+    "commonName": "Common grass tree",
+    "maoriNames": [
+      "Inaka"
+    ],
+    "summary": "An endemic mountain shrub with several woody stems and dense narrow leaves. It occurs in scrub, tussock grassland, rocky alpine ground and mountain bogs.",
+    "lookFor": "Very narrow pointed leaves stand out from twigs and sheath them at the base; solitary white tubular flowers finish short side branches.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/dracophyllum-rosmarinifolium/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Inaka is a shared Dracophyllum name; NZPCN explicitly lists it for this species. NZPCN lists Dracophyllum uniflorum as a synonym."
+  },
+  {
+    "speciesId": "SP-150",
+    "scientificName": "Scheflera digitata",
+    "commonName": "Seven-finger",
+    "maoriNames": [
+      "Patatē",
+      "Patē"
+    ],
+    "summary": "An endemic small tree of lowland and mountain forest. Its large thin divided leaves give it a distinctive fan-like crown.",
+    "lookFor": "Usually seven finely toothed leaflets radiate from one point on a long stalk; cream flower sprays are followed by dark purple fruit.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/schefflera-digitata/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://www.nzflora.info/factsheet/taxon/Schefflera-digitata.html"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The database spelling Scheflera digitata is retained. NZPCN and Flora of New Zealand verify Schefflera digitata, with a double f; those sources distinguish it from Pseudopanax five-finger."
+  },
+  {
+    "speciesId": "SP-124",
+    "scientificName": "Parsonia heterophylla",
+    "commonName": "New Zealand jasmine",
+    "maoriNames": [
+      "Kaihua"
+    ],
+    "summary": "An endemic woody climber that twines through shrubs and forest margins. Its leaves vary markedly in shape, especially on young plants.",
+    "lookFor": "Twining stems, clusters of fragrant pale tubular flowers and long thin pods that split to release tufted seeds.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/parsonsia-heterophylla/"
+      },
+      {
+        "label": "Flora of New Zealand",
+        "url": "https://nzflora.info/factsheet/Taxon/Parsonsia-heterophylla.html"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "The database spelling Parsonia heterophylla is retained; NZPCN and Flora of New Zealand verify Parsonsia heterophylla. Kaihua is documented by Flora of New Zealand. New Zealand jasmine is shared with other Parsonsia species."
+  },
+  {
+    "speciesId": "SP-087",
+    "scientificName": "Leptecophylla juniperina",
+    "commonName": "Prickly mingimingi",
+    "maoriNames": [
+      "Mingimingi"
+    ],
+    "summary": "A native prickly shrub of scrub and forest. Narrow stiff leaves and rounded fruit varying from white to red are useful recognition features.",
+    "lookFor": "Sharp-tipped narrow leaves with pale undersides; small cream flowers and white, pink or red berries.",
+    "sources": [
+      {
+        "label": "New Zealand Plant Conservation Network",
+        "url": "https://www.nzpcn.org.nz/flora/species/leptecophylla-juniperina-subsp-juniperina/"
+      }
+    ],
+    "checkedAt": "2026-10-04",
+    "nameNote": "Mingimingi is shared with several shrubs. NZPCN treats the New Zealand plant as Leptecophylla juniperina subsp. juniperina and lists Cyathodes juniperina as a synonym. The database Cyathoides juniperina spelling and its SP-060 relationship to SP-087 still need a WRT ruling. This profile illustrates the source taxon; it does not merge IDs, assign a nursery line to a subspecies or change SP-087’s zero recorded quantity."
   }
 ]

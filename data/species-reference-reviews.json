@@ -1,0 +1,371 @@
+[
+  {
+    "speciesId": "SP-018",
+    "scientificName": "Carex virgata",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-068",
+    "scientificName": "Fuchsia excorticata",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-061",
+    "scientificName": "Dacrycarpus dacrydioides",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-092",
+    "scientificName": "Lophozonia menziesii",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-142",
+    "scientificName": "Prumnopitys taxifolius",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-081",
+    "scientificName": "Hoheria sexstylosa",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-145",
+    "scientificName": "Pseudopanax colensoi",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-052",
+    "scientificName": "Coprosma rhamnoides",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-098",
+    "scientificName": "Metrosideros umbellata",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-086",
+    "scientificName": "Leonohebe cupressoides",
+    "status": "partial",
+    "reason": "Botanical synonym confirmed; WRT database identity remains unresolved.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "These photos illustrate the verified Veronica cupressoides synonym. WRT’s separate records still need an identity ruling."
+  },
+  {
+    "speciesId": "SP-139",
+    "scientificName": "Podocarpus nivalis",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-091",
+    "scientificName": "Lophomyrtus obcordata",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-074",
+    "scientificName": "Halocarpus bidwillii",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-095",
+    "scientificName": "Melicytus ramiflorus",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-038",
+    "scientificName": "Coprosma acerosa",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-077",
+    "scientificName": "Helichrysum lanceolatum",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-125",
+    "scientificName": "Pennantia corymbosa",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-066",
+    "scientificName": "Elaeocarpus hookerianus",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-108",
+    "scientificName": "Olearia arborescens",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-034",
+    "scientificName": "Chionochloa rigida",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-117",
+    "scientificName": "Olearia nummularifolia",
+    "status": "partial",
+    "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "References use Shawia nummulariifolia. WRT must confirm its recorded spelling and separate cymbifolia entry."
+  },
+  {
+    "speciesId": "SP-122",
+    "scientificName": "Ozothamnus leptophyllus",
+    "status": "partial",
+    "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "These illustrate the source’s variable species concept. WRT’s related nursery names still need a ruling."
+  },
+  {
+    "speciesId": "SP-143",
+    "scientificName": "Pseudopanax arboreus",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-156",
+    "scientificName": "Veronica hectorii",
+    "status": "partial",
+    "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "No subspecies has been assigned to WRT’s records. The separate demissa entry still needs a ruling."
+  },
+  {
+    "speciesId": "SP-103",
+    "scientificName": "Muehlenbeckia complexa",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-128",
+    "scientificName": "Phyllocladus alpinus",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-054",
+    "scientificName": "Coprosma rotundifolia",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-082",
+    "scientificName": "Juncus edgariae",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-164",
+    "scientificName": "Weinmania racemosa",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-162",
+    "scientificName": "Veronica rakaiensis",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-015",
+    "scientificName": "Carex maorica",
+    "status": "partial",
+    "reason": "The botanical profile and three distinct licensed images of Carex maorica are confirmed. The separate WRT nursery-stock identity question involving Carex secta remains unresolved; no Carex secta image or identification has been substituted.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "These illustrate Carex maorica. WRT must confirm which species its disputed nursery records represent."
+  },
+  {
+    "speciesId": "SP-153",
+    "scientificName": "Streblus heterophyllus",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-041",
+    "scientificName": "Coprosma cheesemanii",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-100",
+    "scientificName": "Muehlenbeckia axillaris",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-161",
+    "scientificName": "Veronica propinqua",
+    "status": "confirmed",
+    "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-093",
+    "scientificName": "Melicope simplex",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-022",
+    "scientificName": "Carmichaelia crassicaulis",
+    "status": "partial",
+    "reason": "Species-level identity confirmed; WRT subspecies or database-boundary ruling remains unresolved.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "Species-level references are available. WRT must confirm its nursery identity before any subspecies is assigned."
+  },
+  {
+    "speciesId": "SP-148",
+    "scientificName": "Pseudowintera colorata",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-140",
+    "scientificName": "Podocarpus totara",
+    "status": "confirmed",
+    "reason": "Identity and profile checked; three licensed source images actually viewed.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-060",
+    "scientificName": "Cyathoides juniperina",
+    "status": "unresolved",
+    "reason": "Exact recorded spelling not verified; the similar historical name Cyathodes juniperina is a confirmed synonym, but mapping SP-060 to it would be an unsupported assumption.",
+    "photoCount": 0,
+    "checkedAt": "2026-10-04",
+    "summary": "The name is unverified as written. Confirm the intended species before attaching identification features or photos."
+  },
+  {
+    "speciesId": "SP-154",
+    "scientificName": "Veronica biggarii",
+    "status": "partial",
+    "reason": "Only one suitable Commons photograph was found. The nine iNaturalist observations returned for taxon 738691 included this same CC BY image, five research-grade observations with CC BY-NC photos, one research-grade observation without photo licences, and two casual observations without images. Restricted or unlicensed photos excluded; no image quota forced.",
+    "photoCount": 1,
+    "checkedAt": "2026-10-04",
+    "summary": "Only one suitable reusable image was confirmed. Two more references are still needed."
+  },
+  {
+    "speciesId": "SP-065",
+    "scientificName": "Dracophyllum rosmarinifolium",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-150",
+    "scientificName": "Scheflera digitata",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-124",
+    "scientificName": "Parsonia heterophylla",
+    "status": "confirmed",
+    "reason": "Species source and three distinct openly licensed images visually checked.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04"
+  },
+  {
+    "speciesId": "SP-087",
+    "scientificName": "Leptecophylla juniperina",
+    "status": "partial",
+    "reason": "WRT identity ruling remains open; profile and images describe the source taxon without merging SP-060 or quantities.",
+    "photoCount": 3,
+    "checkedAt": "2026-10-04",
+    "summary": "These describe Leptecophylla juniperina. Its relationship to WRT’s “Cyathoides juniperina” entry still needs confirmation."
+  }
+]

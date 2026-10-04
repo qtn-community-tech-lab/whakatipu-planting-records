@@ -16,7 +16,7 @@ Documentation for the Wakatipu Reforestation Trust (WRT) nursery and planting so
 ## Application reference guides
 
 - [Species photo guide](species-photo-guide.md): shared names, identification profiles, photo sources, attribution and future offline use.
-- [Species coverage audit and remaining work](species-photo-guide.md#coverage-audit-and-remaining-work): the dated top-50 coverage snapshot, all 45 remaining planting-history entries, unverified name gaps and the 69 register entries outside the planting-history listing.
+- [Species coverage audit and remaining work](species-photo-guide.md#coverage-audit-and-remaining-work): the reviewed 95-entry coverage, nine batches of five, photo-to-species checks, remaining identity/image/name gaps and the 69 register-only entries.
 
 ## Sensitivity rule
 

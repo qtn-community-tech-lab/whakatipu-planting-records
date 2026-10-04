@@ -7,7 +7,6 @@ import { formatNumber, formatShare } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
-import { SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
 
 function Mosaic({ photos, name }: { photos: readonly SpeciesPhoto[]; name: string }) {
   const shown = photos.slice(0, 3);
@@ -144,7 +143,7 @@ export function SpeciesHero({
             <Mosaic photos={photos} name={sp.displayName} />
             <p className="wrt-shero__note">
               Reference photos from other places, not WRT sites. Young plants may look different.{" "}
-              <a href={photos[0].articleUrl}>{photos[0].articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Top {SPECIES_PROFILE_LIMIT} species guide</Link>
+              <a href={photos[0].articleUrl}>{photos[0].articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
             </p>
           </>
         ) : (

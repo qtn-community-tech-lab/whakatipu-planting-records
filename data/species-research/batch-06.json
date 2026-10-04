@@ -1,0 +1,654 @@
+{
+  "batch": 6,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 76,
+      "speciesId": "SP-128",
+      "scientificName": "Phyllocladus alpinus",
+      "profile": {
+        "speciesId": "SP-128",
+        "scientificName": "Phyllocladus alpinus",
+        "commonName": "Mountain celery pine",
+        "maoriNames": [
+          "Toatoa"
+        ],
+        "summary": "An endemic conifer shrub or small tree chiefly found in subalpine scrub and low alpine habitats, also occurring on low-elevation frost flats.",
+        "lookFor": "Flattened grey-green leaf-like stems, called phylloclades, with lobed or toothed margins; seeds develop on red fleshy scales.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN lists mountain toatoa; toatoa is shared with other celery pines. Its factsheet excludes the distinct unnamed yellow-foliaged P. aff. alpinus entity."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-128",
+          "scientificName": "Phyllocladus alpinus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Mountain_Toatoa_%28Phyllocladus_alpinus%29.jpg/960px-Mountain_Toatoa_%28Phyllocladus_alpinus%29.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Mountain celery pine with red cone structures at Tongariro.",
+          "author": "Matt Berger",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_Toatoa_(Phyllocladus_alpinus).jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-128",
+          "scientificName": "Phyllocladus alpinus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b2/Phyllocladus_alpinus_foliage.jpg/960px-Phyllocladus_alpinus_foliage.jpg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Mountain celery pine phylloclades at Arthur’s Pass.",
+          "author": "Matt Berger",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_foliage.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-128",
+          "scientificName": "Phyllocladus alpinus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a7/Phyllocladus_alpinus_kz02.jpg/960px-Phyllocladus_alpinus_kz02.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Mountain celery pine flattened stems and cone structures.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_kz02.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/",
+          "note": "NZPCN lists mountain toatoa; toatoa is shared with other celery pines. Its factsheet excludes the distinct unnamed yellow-foliaged P. aff. alpinus entity."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mountain_Toatoa_(Phyllocladus_alpinus).jpg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "Matt Berger",
+          "description": "Mountain Toatoa (Phyllocladus alpinus), Tongariro National Park, Tongariro, Ruapehu, Manawatu-Wanganui, New Zealand",
+          "viewed": true,
+          "visualCheck": "Upright shrub branch covered in flat lobed green phylloclades and many red cone structures.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Mountain Toatoa (Phyllocladus alpinus).jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_foliage.jpg",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "author": "Matt Berger",
+          "description": "Phyllocladus alpinus foliage, Arthurs Pass, Arthur's Pass National Park, Selwyn, Canterbury, New Zealand",
+          "viewed": true,
+          "visualCheck": "Closer view of flat blue-green lobed phylloclades and clustered red cone structures.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Phyllocladus alpinus foliage.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_kz02.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Phyllocladus alpinus in Christchurch Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Flat lobed green phylloclades around small brown cone-like clusters; photograph labelled Christchurch Botanic Gardens.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Phyllocladus alpinus kz02.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/phyllocladus-alpinus/",
+        "https://commons.wikimedia.org/wiki/Category:phyllocladus_alpinus",
+        "https://commons.wikimedia.org/wiki/File:Mountain_Toatoa_(Phyllocladus_alpinus).jpg",
+        "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_foliage.jpg",
+        "https://commons.wikimedia.org/wiki/File:Phyllocladus_alpinus_kz02.jpg"
+      ]
+    },
+    {
+      "rank": 77,
+      "speciesId": "SP-054",
+      "scientificName": "Coprosma rotundifolia",
+      "profile": {
+        "speciesId": "SP-054",
+        "scientificName": "Coprosma rotundifolia",
+        "commonName": null,
+        "maoriNames": [],
+        "summary": "An endemic shrub or small tree of streamside forest and shrubland. Slender spreading branches carry rounded leaves that may be blotched brown or purple.",
+        "lookFor": "Opposite rounded leaves with fine hairs and a visible vein network; wide-angled twigs and red or sometimes white berries.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-054",
+          "scientificName": "Coprosma rotundifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Coprosma_rotundifolia_11.jpg/960px-Coprosma_rotundifolia_11.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Coprosma rotundifolia rounded foliage at Harcourt Park.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_11.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-054",
+          "scientificName": "Coprosma rotundifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Coprosma_rotundifolia_12.JPG/960px-Coprosma_rotundifolia_12.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Coprosma rotundifolia hairy, blotched leaves.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_12.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-054",
+          "scientificName": "Coprosma rotundifolia",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Coprosma_rotundifolia_in_Mount_Aspiring_National_Park_01.jpg/960px-Coprosma_rotundifolia_in_Mount_Aspiring_National_Park_01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Coprosma rotundifolia branching habit in Mount Aspiring National Park.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_in_Mount_Aspiring_National_Park_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/",
+          "note": "Species-specific factsheet supports name, habitat and identification summary."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_11.jpg",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "author": "Rudolph89",
+          "description": "Coprosma rotundifolia at Harcourt Park, Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Rounded pale green leaves arranged along slender widely branching twigs.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma rotundifolia 11.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_12.JPG",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "author": "Rudolph89",
+          "description": "Coprosma rotundifolia, close up of foliage in Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Close view of rounded hairy green leaves with purple-brown blotches and pointed ends.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma rotundifolia 12.JPG",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_in_Mount_Aspiring_National_Park_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Golik",
+          "description": "Coprosma rotundifolia in Mount Aspiring National Park, South Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Sparse small rounded leaves on a widely angled network of woody twigs; source labelled this species.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Coprosma rotundifolia in Mount Aspiring National Park 01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/coprosma-rotundifolia/",
+        "https://commons.wikimedia.org/wiki/Category:coprosma_rotundifolia",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_11.jpg",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_12.JPG",
+        "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_in_Mount_Aspiring_National_Park_01.jpg"
+      ]
+    },
+    {
+      "rank": 78,
+      "speciesId": "SP-082",
+      "scientificName": "Juncus edgariae",
+      "profile": {
+        "speciesId": "SP-082",
+        "scientificName": "Juncus edgariae",
+        "commonName": "Edgar’s rush",
+        "maoriNames": [
+          "Wiwi"
+        ],
+        "summary": "A widespread endemic rush forming clumps of erect wiry stems. It grows beside wetlands, in seasonally damp places and in open shrubland or pasture.",
+        "lookFor": "Smooth shining leafless stems with branching flower clusters appearing off to one side; species separation can require checking stem pith and capsules.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Wiwi is a shared rush name. NZPCN distinguishes this species from Juncus continuus and the Australian J. gregiflorus, with which it was formerly confused."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-082",
+          "scientificName": "Juncus edgariae",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b0/Juncus_edgariae_kz1.jpg/960px-Juncus_edgariae_kz1.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Edgar’s rush clump at Auckland Botanic Gardens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-082",
+          "scientificName": "Juncus edgariae",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Juncus_edgariae_kz2.jpg/960px-Juncus_edgariae_kz2.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Edgar’s rush branching inflorescence.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz2.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-082",
+          "scientificName": "Juncus edgariae",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1e/Juncus_edgariae_11.JPG/960px-Juncus_edgariae_11.JPG",
+          "width": 960,
+          "height": 1435,
+          "caption": "Edgar’s rush stems and mature capsules in Upper Hutt.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/",
+          "note": "Wiwi is a shared rush name. NZPCN distinguishes this species from Juncus continuus and the Australian J. gregiflorus, with which it was formerly confused."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz1.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Juncus edgariae in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Tall dense clump of slender green and dry tan stems bearing branching pale flower or fruit clusters.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Juncus edgariae kz1.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz2.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Juncus edgariae in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Close view of branched pale brown inflorescence beside a smooth upright stem.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Juncus edgariae kz2.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "author": "Rudolph89",
+          "description": "Juncus edgariae, Edgar's rush, wiwi, in Upper Hutt, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Fine upright green stems with loose brown capsule clusters on branches appearing lateral.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Juncus edgariae 11.JPG",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/juncus-edgariae/",
+        "https://commons.wikimedia.org/wiki/Category:juncus_edgariae",
+        "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_kz2.jpg",
+        "https://commons.wikimedia.org/wiki/File:Juncus_edgariae_11.JPG"
+      ]
+    },
+    {
+      "rank": 79,
+      "speciesId": "SP-164",
+      "scientificName": "Weinmania racemosa",
+      "profile": {
+        "speciesId": "SP-164",
+        "scientificName": "Weinmania racemosa",
+        "commonName": "Kāmahi",
+        "maoriNames": [
+          "Kāmahi",
+          "Tawheo",
+          "Tawhero",
+          "Tawherowhero"
+        ],
+        "summary": "An endemic forest tree found from coastal areas to subalpine habitats. It can be common in disturbed forest and dominate some higher mountain forests.",
+        "lookFor": "Adult leaves usually simple with deeply toothed margins; white or pink flowers gather in narrow spike-like clusters.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "The database spelling Weinmania racemosa is retained. Botanical references spell the former name Weinmannia racemosa; NZPCN now accepts Pterophylla racemosa and lists Weinmannia racemosa as its synonym. Tawhero is shared with other trees."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-164",
+          "scientificName": "Weinmania racemosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/KamahiFoliage.jpg/960px-KamahiFoliage.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Kāmahi young foliage, labelled Weinmannia racemosa at source.",
+          "author": "Kahuroa",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:KamahiFoliage.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-164",
+          "scientificName": "Weinmania racemosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d1/Weinmannia_racemosa_flowers.jpg/960px-Weinmannia_racemosa_flowers.jpg",
+          "width": 960,
+          "height": 1078,
+          "caption": "Kāmahi white flower spikes on the Milford Road.",
+          "author": "Alan Liefting",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_flowers.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-164",
+          "scientificName": "Weinmania racemosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Weinmannia_racemosa_Ulva_Island.JPG/960px-Weinmannia_racemosa_Ulva_Island.JPG",
+          "width": 960,
+          "height": 1285,
+          "caption": "Kāmahi flowering branch on Ulva Island.",
+          "author": "MurielBendel",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_Ulva_Island.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/",
+          "note": "The database spelling Weinmania racemosa is retained. Botanical references spell the former name Weinmannia racemosa; NZPCN now accepts Pterophylla racemosa and lists Weinmannia racemosa as its synonym. Tawhero is shared with other trees."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:KamahiFoliage.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Kahuroa",
+          "description": "Foliage of a young kāmahi tree, Weinmannia racemosa, the most abundant forest tree in New Zealand. Family Cunoniaceae.",
+          "viewed": true,
+          "visualCheck": "Opposite oval green leaves with conspicuous deep marginal teeth and reddish stems.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:KamahiFoliage.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_flowers.jpg",
+          "license": "Public domain",
+          "licenseUrl": "https://commons.wikimedia.org/wiki/Commons:Public_domain",
+          "author": "Alan Liefting",
+          "description": "Weinmannia racemosa (kamahi) flowers photographed in December on the Milford Road.",
+          "viewed": true,
+          "visualCheck": "Many upright white flower spikes with fine projecting stamens, above toothed foliage.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Weinmannia racemosa flowers.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_Ulva_Island.JPG",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "MurielBendel",
+          "description": "Kāmahi (Weinmannia racemosa) on Ulva Island, South Island, New Zealand.\nThis tree species is endemic to NZ.",
+          "viewed": true,
+          "visualCheck": "Close view of a narrow flower spike and strongly toothed leaves; more shrubs behind.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Weinmannia racemosa Ulva Island.JPG",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/pterophylla-racemosa/",
+        "https://commons.wikimedia.org/wiki/Category:pterophylla_racemosa",
+        "https://commons.wikimedia.org/wiki/File:KamahiFoliage.jpg",
+        "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_flowers.jpg",
+        "https://commons.wikimedia.org/wiki/File:Weinmannia_racemosa_Ulva_Island.JPG"
+      ]
+    },
+    {
+      "rank": 80,
+      "speciesId": "SP-162",
+      "scientificName": "Veronica rakaiensis",
+      "profile": {
+        "speciesId": "SP-162",
+        "scientificName": "Veronica rakaiensis",
+        "commonName": "Hebe",
+        "maoriNames": [],
+        "summary": "A bushy South Island shrub often found in upland stream valleys. It usually forms a rounded plant with short narrow leaves and white flower spikes.",
+        "lookFor": "Pairs of small glossy leaves widest toward the tip; white flower clusters and minute hairs on leaf margins and capsules.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Hebe is a shared common name. NZPCN lists Hebe rakaiensis as a synonym of Veronica rakaiensis; source photographs using Hebe retain that labelling in captions."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-162",
+          "scientificName": "Veronica rakaiensis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/97/Veronica_rakaiensis_01.jpg/960px-Veronica_rakaiensis_01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Veronica rakaiensis leaf pairs and woody branches.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-162",
+          "scientificName": "Veronica rakaiensis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f5/Veronica_rakaiensis_MRD_Otari.jpg/960px-Veronica_rakaiensis_MRD_Otari.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Veronica rakaiensis leafy shrub at Ōtari-Wilton’s Bush.",
+          "author": "Mike Dickison",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_MRD_Otari.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-162",
+          "scientificName": "Veronica rakaiensis",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/56/Hebe_rakaiensis.jpg/960px-Hebe_rakaiensis.jpg",
+          "width": 960,
+          "height": 768,
+          "caption": "Veronica rakaiensis white flower spikes, labelled Hebe rakaiensis at source.",
+          "author": "Alan Pascoe",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_rakaiensis.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species source and three distinct openly licensed images visually checked.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN species factsheet",
+          "url": "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/",
+          "note": "Hebe is a shared common name. NZPCN lists Hebe rakaiensis as a synonym of Veronica rakaiensis; source photographs using Hebe retain that labelling in captions."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Krzysztof Golik",
+          "description": "Veronica rakaiensis in Christchurch Botanic Gardens in Christchurch, Canterbury Region, New Zealand",
+          "viewed": true,
+          "visualCheck": "Sparse woody branches ending in small clusters of paired glossy narrow leaves.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Veronica rakaiensis 01.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_MRD_Otari.jpg",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "author": "Mike Dickison",
+          "description": "Veronica rakaiensis, Otari-Wilton's Bush, Wellington, New Zealand",
+          "viewed": true,
+          "visualCheck": "Dense green leafy branchlets with small narrow opposite leaves and pale midribs.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Veronica rakaiensis MRD Otari.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Hebe_rakaiensis.jpg",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "http://creativecommons.org/licenses/by-sa/3.0/",
+          "author": "Alan Pascoe",
+          "description": "The leaves and flowers of Hebe rakaiensis, a plant of the Hebe genus. The picture was taken at approximately 12:30 UTC under conditions of broken cloud. The equipment used was a Toshiba PDR-M1 digital camera in Auto and Macro modes.",
+          "viewed": true,
+          "visualCheck": "Many dense white flower spikes above small opposite leaves, with a bumblebee visible.",
+          "checkedAt": "2026-10-04",
+          "commonsFileTitle": "File:Hebe rakaiensis.jpg",
+          "metadataMethod": "Wikimedia Commons API action=query, prop=imageinfo, iiprop=url|size|extmetadata, iiurlwidth=960. Licence and creator read from extmetadata; hosted thumbnail viewed in browser."
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/veronica-rakaiensis/",
+        "https://commons.wikimedia.org/wiki/Category:veronica_rakaiensis",
+        "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Veronica_rakaiensis_MRD_Otari.jpg",
+        "https://commons.wikimedia.org/wiki/File:Hebe_rakaiensis.jpg"
+      ]
+    }
+  ]
+}

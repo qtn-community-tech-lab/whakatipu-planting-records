@@ -9,7 +9,8 @@ import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SplitLine } from "@/components/wrt/quantity";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
 import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile, SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
+import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
+import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
@@ -66,6 +67,10 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
 
   const all = await getWrt().speciesList();
   const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
+  const referenceGapCount = all.filter((r) => {
+    const review = getSpeciesReferenceReview(r.item.id);
+    return review && review.status !== "confirmed";
+  }).length;
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
@@ -90,6 +95,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
           <>
             {formatNumber(allSplit.total)} recorded plants since Autumn 2015.
             {" "}{guideCount} species have reference photos and identification notes.
+            {referenceGapCount > 0 && <> {referenceGapCount} reference sets have gaps or unresolved identities.</>}
             {contested > 0 && (
               <>
                 {" "}
@@ -103,7 +109,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
         }
         aside={
           <Link href="/species/photos" className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
-            Top {SPECIES_PROFILE_LIMIT} species guide →
+            Species reference guide →
           </Link>
         }
       />

@@ -1,0 +1,1767 @@
+{
+  "batch": 4,
+  "checkedAt": "2026-10-04",
+  "entries": [
+    {
+      "rank": 66,
+      "speciesId": "SP-077",
+      "scientificName": "Helichrysum lanceolatum",
+      "profile": {
+        "speciesId": "SP-077",
+        "scientificName": "Helichrysum lanceolatum",
+        "commonName": "Hells bells",
+        "maoriNames": [
+          "Niniao"
+        ],
+        "summary": "An endemic, much-branched shrub of open forest, scrub and rocky places. It can reach about three metres.",
+        "lookFor": "Alternate oval-to-rounded leaves have white woolly undersides; small creamy flower heads gather into rounded clusters.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/"
+          },
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/Taxon/Helichrysum-lanceolatum.html"
+          },
+          {
+            "label": "DOC · names",
+            "url": "https://www.doc.govt.nz/nature/native-plants/canterbury-native-plants/native-plants-natural-to-coastal-areas/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Niniao is documented by DOC and Flora of New Zealand. Helichrysum glomeratum and Helichrysum aggregatum are historical names listed in the botanical references."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-077",
+          "scientificName": "Helichrysum lanceolatum",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0d/Helichrysum_lanceolatum_kz07.jpg/960px-Helichrysum_lanceolatum_kz07.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Helichrysum lanceolatum shrub in Dunedin Botanic Garden.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz07.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-077",
+          "scientificName": "Helichrysum lanceolatum",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/Helichrysum_lanceolatum_kz01.jpg/960px-Helichrysum_lanceolatum_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Helichrysum lanceolatum flowers near Lake Waikaremoana.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-077",
+          "scientificName": "Helichrysum lanceolatum",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Helichrysum_lanceolatum_kz02.jpg/960px-Helichrysum_lanceolatum_kz02.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Helichrysum lanceolatum flowering branch near Lake Waikaremoana.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz02.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/",
+          "note": "Niniao is documented by DOC and Flora of New Zealand. Helichrysum glomeratum and Helichrysum aggregatum are historical names listed in the botanical references."
+        },
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/Taxon/Helichrysum-lanceolatum.html",
+          "note": "Niniao name and/or species description checked."
+        },
+        {
+          "label": "DOC · names",
+          "url": "https://www.doc.govt.nz/nature/native-plants/canterbury-native-plants/native-plants-natural-to-coastal-areas/",
+          "note": "Niniao name and/or species description checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz07.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Helichrysum lanceolatum in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Helichrysum lanceolatum shrub in Dunedin Botanic Garden. Observed: bushy densely branched shrub with small pale green oval leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-16 10:18:58",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Helichrysum lanceolatum kz07",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus glomeratus|Self-published work|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Helichrysum lanceolatum in Dunedin Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 22:47:02",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Helichrysum lanceolatum in Waikaremoana Lake, Hawkes's Bay (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Helichrysum lanceolatum flowers near Lake Waikaremoana. Observed: clusters of tiny white flower heads beside a rounded leaf.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-13 15:53:47",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Helichrysum lanceolatum kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus glomeratus|Self-published work|Asterales in New Zealand in November 2017|New Zealand in 2017 by Kenraiz|Gnaphalieae in New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Helichrysum lanceolatum in Waikaremoana Lake, Hawkes's Bay (New Zealand)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-25 23:13:35",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz02.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Helichrysum lanceolatum in Waikaremoana Lake, Hawkes's Bay (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Helichrysum lanceolatum flowering branch near Lake Waikaremoana. Observed: multiple cream-white flower clusters, green upper leaves and some white leaf undersides.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-13 15:53:46",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Helichrysum lanceolatum kz02",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Ozothamnus glomeratus|Self-published work|Asterales in New Zealand in November 2017|New Zealand in 2017 by Kenraiz|Gnaphalieae in New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Helichrysum lanceolatum in Waikaremoana Lake, Hawkes's Bay (New Zealand)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-25 23:13:46",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/helichrysum-lanceolatum/",
+        "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz07.jpg",
+        "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Helichrysum_lanceolatum_kz02.jpg",
+        "https://www.nzflora.info/factsheet/Taxon/Helichrysum-lanceolatum.html",
+        "https://www.doc.govt.nz/nature/native-plants/canterbury-native-plants/native-plants-natural-to-coastal-areas/"
+      ]
+    },
+    {
+      "rank": 67,
+      "speciesId": "SP-125",
+      "scientificName": "Pennantia corymbosa",
+      "profile": {
+        "speciesId": "SP-125",
+        "scientificName": "Pennantia corymbosa",
+        "commonName": "Kaikōmako",
+        "maoriNames": [
+          "Kaikōmako"
+        ],
+        "summary": "An endemic small tree found across New Zealand. Young plants form a dense mesh of zigzagging twigs before developing a more open adult crown.",
+        "lookFor": "Juvenile leaves are tiny with lobed tips; adult leaves are larger but retain small lobes or teeth near their ends.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-125",
+          "scientificName": "Pennantia corymbosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Pennantia_corymbosa_tree11.JPG/960px-Pennantia_corymbosa_tree11.JPG",
+          "width": 960,
+          "height": 1530,
+          "caption": "Pennantia corymbosa tree at Ngā Manu Nature Reserve, Waikanae.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_tree11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-125",
+          "scientificName": "Pennantia corymbosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Pennantia_corymbosa_by_Leon_Perrie.jpeg/960px-Pennantia_corymbosa_by_Leon_Perrie.jpeg",
+          "width": 960,
+          "height": 1280,
+          "caption": "Juvenile Pennantia corymbosa leaves photographed by Leon Perrie.",
+          "author": "Leon Perrie (Q18982370)",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_by_Leon_Perrie.jpeg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-125",
+          "scientificName": "Pennantia corymbosa",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/07/Pennantia_corymbosa_11.JPG/960px-Pennantia_corymbosa_11.JPG",
+          "width": 960,
+          "height": 720,
+          "caption": "Pennantia corymbosa leaves and fruit at Lake Kohangatera.",
+          "author": "Rudolph89",
+          "license": "CC BY-SA 3.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_11.JPG",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/",
+          "note": "Species-specific name and identification description checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_tree11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Pennantia corymbosa, kaikōmako, tree at Nga Manu Nature Reserve, Waikanae, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Pennantia corymbosa tree at Ngā Manu Nature Reserve, Waikanae. Observed: a slender branching tree beside a path, with green foliage concentrated toward the crown.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-04-23 09:33:53",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pennantia corymbosa tree11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Trees in New Zealand|Pennantia corymbosa|Taken with Olympus FE-4000 / X-920 / X-925|Nga Manu Nature Reserve|Self-published work",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Pennantia corymbosa, kaikōmako, tree at Nga Manu Nature Reserve, Waikanae, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-04-21",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_by_Leon_Perrie.jpeg",
+          "license": "CC BY 4.0",
+          "author": "Leon Perrie (Q18982370)",
+          "description": "Pennantia corymbosa (Q4046587) by Leon Perrie (Q18982370) via iNaturalist observation at the Wellington Botanic Garden BioBlitz 2019 (Q62770398)",
+          "viewed": true,
+          "visualCheck": "Juvenile Pennantia corymbosa leaves photographed by Leon Perrie. Observed: small lobed leaves against a hand, with distinct blunt lobes near the tips.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-04-05 19:59:36",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "<div class=\"fn\">\nPennantia corymbosa by Leon Perrie</div>",
+              "source": "commons-desc-page"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Pennantia corymbosa|Wellington Botanic Garden BioBlitz 2019|Uploaded with pattypan|Media from iNaturalist|INaturalist images reviewed by iNaturalistReviewBot|Photos by Leon Perrie",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Artist": {
+              "value": "<div class=\"fn value\">\n<a href=\"https://www.wikidata.org/wiki/Q18982370\" class=\"extiw\" title=\"d:Q18982370\"><span title=\"New Zealand botanist, curator and botanical collector\">Leon Perrie <small>(Q18982370)</small></span></a></div>",
+              "source": "commons-desc-page"
+            },
+            "ImageDescription": {
+              "value": "<a href=\"https://www.wikidata.org/wiki/Q4046587\" class=\"extiw\" title=\"d:Q4046587\"><span title=\"species of plant\">Pennantia corymbosa <small>(Q4046587)</small></span></a> by <a href=\"https://www.wikidata.org/wiki/Q18982370\" class=\"extiw\" title=\"d:Q18982370\"><span title=\"New Zealand botanist, curator and botanical collector\">Leon Perrie <small>(Q18982370)</small></span></a> via iNaturalist observation at the <a href=\"https://www.wikidata.org/wiki/Q62770398\" class=\"extiw\" title=\"d:Q62770398\"><span title=\"bioblitz held on the 5th and 6th of April\">Wellington Botanic Garden BioBlitz 2019 <small>(Q62770398)</small></span></a>",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "5 April 2019",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.inaturalist.org/observations/22007713\">https://www.inaturalist.org/observations/22007713</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_11.JPG",
+          "license": "CC BY-SA 3.0",
+          "author": "Rudolph89",
+          "description": "Pennantia corymbosa, or kaikomako, leaves and fruit at Lake Kohangatera, Wellington, New Zealand",
+          "viewed": true,
+          "visualCheck": "Pennantia corymbosa leaves and fruit at Lake Kohangatera. Observed: larger adult leaves and clusters of dark purple-black fruit on tangled branches.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2012-04-15 09:46:26",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Pennantia corymbosa 11",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Pennantia corymbosa|Taken with Olympus FE-4000 / X-920 / X-925|Self-published work|Apiales in New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Pennantia corymbosa, or kaikomako, leaves and fruit at Lake Kohangatera, Wellington, New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2012-04-15",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Rudolph89\" title=\"User:Rudolph89\">Rudolph89</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 3.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 3.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/3.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-3.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/pennantia-corymbosa/",
+        "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_tree11.JPG",
+        "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_by_Leon_Perrie.jpeg",
+        "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_11.JPG"
+      ]
+    },
+    {
+      "rank": 68,
+      "speciesId": "SP-066",
+      "scientificName": "Elaeocarpus hookerianus",
+      "profile": {
+        "speciesId": "SP-066",
+        "scientificName": "Elaeocarpus hookerianus",
+        "commonName": "Pōkākā",
+        "maoriNames": [
+          "Pōkākā"
+        ],
+        "summary": "An endemic forest tree with sharply different juvenile and adult foliage, found from lowland to mountain forest.",
+        "lookFor": "Young plants have interlacing twigs and variable narrow leaves. Adult leaves are larger; small hanging flowers have finely fringed edges.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/"
+          }
+        ],
+        "checkedAt": "2026-10-04"
+      },
+      "photos": [
+        {
+          "speciesId": "SP-066",
+          "scientificName": "Elaeocarpus hookerianus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e2/Elaeocarpus_hookerianus_kz6.jpg/960px-Elaeocarpus_hookerianus_kz6.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Juvenile Elaeocarpus hookerianus beside the Lake Marian Trail, Southland.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz6.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-066",
+          "scientificName": "Elaeocarpus hookerianus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8e/Elaeocarpus_hookerianus_kz1.jpg/960px-Elaeocarpus_hookerianus_kz1.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Elaeocarpus hookerianus adult foliage and flowers in Auckland Botanic Gardens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz1.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-066",
+          "scientificName": "Elaeocarpus hookerianus",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/11/Elaeocarpus_hookerianus_kz3.jpg/960px-Elaeocarpus_hookerianus_kz3.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Elaeocarpus hookerianus flower detail in Auckland Botanic Gardens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz3.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/",
+          "note": "Species-specific name and identification description checked."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz6.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Elaeocarpus hookerianus at Lake Marian Trail, Southland (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Juvenile Elaeocarpus hookerianus beside the Lake Marian Trail, Southland. Observed: thin tangled branches with narrow irregularly toothed brown-green leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-07 16:01:00",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Elaeocarpus hookerianus kz6",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Elaeocarpus hookerianus|Self-published work|New Zealand in 2017 by Kenraiz",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Elaeocarpus hookerianus at Lake Marian Trail, Southland (New Zealand)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-19 06:11:15",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz1.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Elaeocarpus hookerianus in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Elaeocarpus hookerianus adult foliage and flowers in Auckland Botanic Gardens. Observed: larger oval dark leaves, buds and hanging pale flowers.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-26 14:55:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Elaeocarpus hookerianus kz1",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Elaeocarpus hookerianus|Self-published work|Plants in Auckland Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Elaeocarpus hookerianus in Auckland Botanic Gardens",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-11 00:45:18",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz3.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Elaeocarpus hookerianus in Auckland Botanic Gardens",
+          "viewed": true,
+          "visualCheck": "Elaeocarpus hookerianus flower detail in Auckland Botanic Gardens. Observed: drooping pale green-white bells with fine fringed edges, with a toothed adult leaf alongside.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2017-12-26 14:55:14",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Elaeocarpus hookerianus kz3",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Elaeocarpus hookerianus|Self-published work|Plants in Auckland Botanic Gardens",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Elaeocarpus hookerianus in Auckland Botanic Gardens",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-11 00:45:30",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/elaeocarpus-hookerianus/",
+        "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz6.jpg",
+        "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Elaeocarpus_hookerianus_kz3.jpg"
+      ]
+    },
+    {
+      "rank": 69,
+      "speciesId": "SP-108",
+      "scientificName": "Olearia arborescens",
+      "profile": {
+        "speciesId": "SP-108",
+        "scientificName": "Olearia arborescens",
+        "commonName": "Common tree daisy",
+        "maoriNames": [],
+        "summary": "A bushy endemic shrub or small tree of forest and scrub from lowland to mountain environments.",
+        "lookFor": "Glossy leathery leaves have pale undersides and a few teeth; clusters of white daisy flowers later produce fluffy seeds.",
+        "sources": [
+          {
+            "label": "New Zealand Plant Conservation Network",
+            "url": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "NZPCN now accepts Shawia arborescens and lists Olearia arborescens as a synonym. WRT’s database name and species ID remain separate from that nomenclatural update."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-108",
+          "scientificName": "Olearia arborescens",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Olearia_arborescens_kz01.jpg/960px-Olearia_arborescens_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Olearia arborescens leafy branch in Whakapapa; NZPCN now uses Shawia arborescens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-108",
+          "scientificName": "Olearia arborescens",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/67/Olearia_arborescens_in_Tongariro_National_Park_01.jpg/960px-Olearia_arborescens_in_Tongariro_National_Park_01.jpg",
+          "width": 960,
+          "height": 773,
+          "caption": "Olearia arborescens in Tongariro National Park; NZPCN now uses Shawia arborescens.",
+          "author": "Krzysztof Golik",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_in_Tongariro_National_Park_01.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-108",
+          "scientificName": "Olearia arborescens",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/Olearia_arborescens_kz03.jpg/960px-Olearia_arborescens_kz03.jpg",
+          "width": 960,
+          "height": 1441,
+          "caption": "Olearia arborescens leaves and developing flower heads in Whakapapa; NZPCN now uses Shawia arborescens.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz03.jpg",
+          "articleUrl": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/",
+          "articleLabel": "NZPCN",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "NZPCN",
+          "url": "https://www.nzpcn.org.nz/flora/species/shawia-arborescens/",
+          "note": "NZPCN now accepts Shawia arborescens and lists Olearia arborescens as a synonym. WRT’s database name and species ID remain separate from that nomenclatural update."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Olearia arborescens in Whakapapa, Waikato (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Olearia arborescens leafy branch in Whakapapa; NZPCN now uses Shawia arborescens. Observed: bushy cluster of leathery oval pointed leaves with a few marginal teeth.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-13 17:16:05",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia arborescens kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia arborescens|Self-published work|New Zealand in 2017 by Kenraiz",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Olearia arborescens in Whakapapa, Waikato (New Zealand)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-24 22:29:02",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_in_Tongariro_National_Park_01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Golik",
+          "description": "Olearia arborescens in Whakapapa Village in Tongariro National Park, Waikato Region, North Island of New Zealand",
+          "viewed": true,
+          "visualCheck": "Olearia arborescens in Tongariro National Park; NZPCN now uses Shawia arborescens. Observed: close view of green upper leaf surfaces and prominent irregular teeth on woody branches.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-02-11 00:07:20",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia arborescens in Tongariro National Park 01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia arborescens|Self-published work|Flora of Tongariro National Park|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2017-11-24",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "<i>Olearia arborescens</i> in Whakapapa Village in Tongariro National Park, Waikato Region, North Island of New Zealand",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-24 22:45:59",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Tournasol7\" title=\"User:Tournasol7\">Krzysztof Golik</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz03.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Olearia arborescens in Whakapapa, Waikato (New Zealand)",
+          "viewed": true,
+          "visualCheck": "Olearia arborescens leaves and developing flower heads in Whakapapa; NZPCN now uses Shawia arborescens. Observed: pale felted leaf undersides, dark upper surfaces and tightly closed flower-head clusters.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-02-13 17:16:04",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Olearia arborescens kz03",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Olearia arborescens|Self-published work|New Zealand in 2017 by Kenraiz",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Olearia arborescens in Whakapapa, Waikato (New Zealand)",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-25 03:41:19",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzpcn.org.nz/flora/species/olearia-arborescens/",
+        "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_in_Tongariro_National_Park_01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz03.jpg"
+      ]
+    },
+    {
+      "rank": 70,
+      "speciesId": "SP-034",
+      "scientificName": "Chionochloa rigida",
+      "profile": {
+        "speciesId": "SP-034",
+        "scientificName": "Chionochloa rigida",
+        "commonName": "Narrow-leaved snow tussock",
+        "maoriNames": [
+          "Wī kura"
+        ],
+        "summary": "An endemic tall tussock of the South Island, especially eastern and southern hill and mountain grasslands.",
+        "lookFor": "Long narrow golden-green leaves sweep outward from a dense base; tall flowering stems carry open branched panicles.",
+        "sources": [
+          {
+            "label": "Flora of New Zealand",
+            "url": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html"
+          },
+          {
+            "label": "Wikipedia · names",
+            "url": "https://en.wikipedia.org/wiki/Chionochloa_rigida"
+          },
+          {
+            "label": "Dunedin City Council · planting schedule",
+            "url": "https://www.dunedin.govt.nz/resources/documents/council/central-city-plan/previuous-documents/george-street/developed-design-report.pdf"
+          }
+        ],
+        "checkedAt": "2026-10-04",
+        "nameNote": "Wī kura is documented by Wikipedia and a Dunedin City Council planting schedule. WRT’s Hunangamoho was not confirmed for this species; NZPCN applies that shared name to Chionochloa conspicua. Flora recognises two subspecies; this profile does not assign WRT stock to either."
+      },
+      "photos": [
+        {
+          "speciesId": "SP-034",
+          "scientificName": "Chionochloa rigida",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/72/Chionochloa_rigida_in_Flagstaff.jpg/960px-Chionochloa_rigida_in_Flagstaff.jpg",
+          "width": 960,
+          "height": 720,
+          "caption": "Chionochloa rigida on Flagstaff, Dunedin.",
+          "author": "John Barkla",
+          "license": "CC BY 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_in_Flagstaff.jpg",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html",
+          "articleLabel": "Flora of New Zealand",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-034",
+          "scientificName": "Chionochloa rigida",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Chionochloa_rigida_kz01.jpg/960px-Chionochloa_rigida_kz01.jpg",
+          "width": 960,
+          "height": 640,
+          "caption": "Chionochloa rigida in Dunedin Botanic Garden.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz01.jpg",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html",
+          "articleLabel": "Flora of New Zealand",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        },
+        {
+          "speciesId": "SP-034",
+          "scientificName": "Chionochloa rigida",
+          "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/29/Chionochloa_rigida_kz03.jpg/960px-Chionochloa_rigida_kz03.jpg",
+          "width": 960,
+          "height": 1440,
+          "caption": "Chionochloa rigida foliage and panicles in Dunedin Botanic Garden.",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "license": "CC BY-SA 4.0",
+          "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz03.jpg",
+          "articleUrl": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html",
+          "articleLabel": "Flora of New Zealand",
+          "retrievedAt": "2026-10-04",
+          "focalPoint": "50% 50%",
+          "sourceName": "Wikimedia Commons"
+        }
+      ],
+      "status": "confirmed",
+      "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
+      "identityEvidence": [
+        {
+          "label": "Flora of New Zealand",
+          "url": "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html",
+          "note": "Species-level identification and two subspecies checked."
+        },
+        {
+          "label": "Wikipedia · names",
+          "url": "https://en.wikipedia.org/wiki/Chionochloa_rigida",
+          "note": "Wī kura is documented by Wikipedia and a Dunedin City Council planting schedule. WRT’s Hunangamoho was not confirmed for this species; NZPCN applies that shared name to Chionochloa conspicua. Flora recognises two subspecies; this profile does not assign WRT stock to either."
+        },
+        {
+          "label": "Dunedin City Council · planting schedule",
+          "url": "https://www.dunedin.govt.nz/resources/documents/council/central-city-plan/previuous-documents/george-street/developed-design-report.pdf",
+          "note": "Wī kura is documented by Wikipedia and a Dunedin City Council planting schedule. WRT’s Hunangamoho was not confirmed for this species; NZPCN applies that shared name to Chionochloa conspicua. Flora recognises two subspecies; this profile does not assign WRT stock to either."
+        }
+      ],
+      "photoEvidence": [
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_in_Flagstaff.jpg",
+          "license": "CC BY 4.0",
+          "author": "John Barkla",
+          "description": "Narrow-leaved snow tussock (Chionochloa rigida) in Flagstaff, Dunedin, New Zealand.",
+          "viewed": true,
+          "visualCheck": "Chionochloa rigida on Flagstaff, Dunedin. Observed: golden tall tussock on exposed rocky hillside, with long sweeping leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2019-12-03 21:07:03",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Chionochloa rigida in Flagstaff",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Chionochloa rigida|Media from iNaturalist|Poales in New Zealand in April 2013|Danthonioideae in the Southern Hemisphere in April|INaturalist images reviewed by iNaturalistReviewBot|Files with coordinates missing SDC location of creation|New Zealand photographs taken on 2013-04-25|Danthonioideae in the South Island, New Zealand",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Narrow-leaved snow tussock (Chionochloa rigida) in Flagstaff, Dunedin, New Zealand.",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2013-04-25",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://inaturalist.nz/observations/960428\">https://inaturalist.nz/observations/960428</a>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "John Barkla",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz01.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Chionochloa rigida in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Chionochloa rigida in Dunedin Botanic Garden. Observed: dense green and gold tussock with upright branching seed stalks above arching leaves.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-16 13:58:56",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Chionochloa rigida kz01",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Chionochloa rigida|Self-published work|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Chionochloa rigida in Dunedin Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-17 23:19:35",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        },
+        {
+          "sourceUrl": "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz03.jpg",
+          "license": "CC BY-SA 4.0",
+          "author": "Krzysztof Ziarnek, Kenraiz",
+          "description": "Chionochloa rigida in Dunedin Botanic Garden",
+          "viewed": true,
+          "visualCheck": "Chionochloa rigida foliage and panicles in Dunedin Botanic Garden. Observed: long narrow leaves, dense dry basal litter and many fine open panicles.",
+          "checkedAt": "2026-10-04",
+          "extmetadata": {
+            "DateTime": {
+              "value": "2018-04-25 20:16:28",
+              "source": "mediawiki-metadata",
+              "hidden": ""
+            },
+            "ObjectName": {
+              "value": "Chionochloa rigida kz03",
+              "source": "mediawiki-metadata"
+            },
+            "CommonsMetadataExtension": {
+              "value": 1.2,
+              "source": "extension",
+              "hidden": ""
+            },
+            "Categories": {
+              "value": "Chionochloa rigida|Self-published work|Plants in Dunedin Botanic Garden",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "Assessments": {
+              "value": "",
+              "source": "commons-categories",
+              "hidden": ""
+            },
+            "ImageDescription": {
+              "value": "Chionochloa rigida in Dunedin Botanic Garden",
+              "source": "commons-desc-page"
+            },
+            "DateTimeOriginal": {
+              "value": "2017-11-18 02:15:49",
+              "source": "commons-desc-page"
+            },
+            "Credit": {
+              "value": "<span class=\"int-own-work\" lang=\"en\">Own work</span>",
+              "source": "commons-desc-page"
+            },
+            "Artist": {
+              "value": "<a href=\"//commons.wikimedia.org/wiki/User:Kenraiz\" title=\"User:Kenraiz\">Krzysztof Ziarnek, Kenraiz</a>",
+              "source": "commons-desc-page"
+            },
+            "LicenseShortName": {
+              "value": "CC BY-SA 4.0",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "UsageTerms": {
+              "value": "Creative Commons Attribution-Share Alike 4.0",
+              "source": "commons-desc-page"
+            },
+            "AttributionRequired": {
+              "value": "true",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "LicenseUrl": {
+              "value": "https://creativecommons.org/licenses/by-sa/4.0",
+              "source": "commons-desc-page"
+            },
+            "Copyrighted": {
+              "value": "True",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "Restrictions": {
+              "value": "",
+              "source": "commons-desc-page",
+              "hidden": ""
+            },
+            "License": {
+              "value": "cc-by-sa-4.0",
+              "source": "commons-templates",
+              "hidden": ""
+            }
+          }
+        }
+      ],
+      "searchedSources": [
+        "https://www.nzflora.info/factsheet/taxon/Chionochloa-rigida.html",
+        "https://en.wikipedia.org/wiki/Chionochloa_rigida",
+        "https://www.dunedin.govt.nz/resources/documents/council/central-city-plan/previuous-documents/george-street/developed-design-report.pdf",
+        "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_in_Flagstaff.jpg",
+        "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz01.jpg",
+        "https://commons.wikimedia.org/wiki/File:Chionochloa_rigida_kz03.jpg"
+      ]
+    }
+  ]
+}

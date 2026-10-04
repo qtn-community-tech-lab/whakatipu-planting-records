@@ -2,20 +2,24 @@ import { describe, expect, it } from "vitest";
 import { getSpeciesProfile, speciesProfiles, SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import { q } from "./helpers";
+import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
 describe("reviewed species profiles", () => {
-  it("covers the current top fifty without attaching information to other taxa", async () => {
+  it("covers researched species without attaching information to unconfirmed identities", async () => {
     const all = await q.speciesList();
     const top = topPlantedSpecies(all, SPECIES_PROFILE_LIMIT);
-    expect(top).toHaveLength(50);
-    expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(134846);
-    expect(speciesProfiles).toHaveLength(50);
-    expect(new Set(speciesProfiles.map((p) => p.speciesId))).toEqual(new Set(top.map((r) => r.item.id)));
+    expect(top).toHaveLength(95);
+    expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(140068);
+    expect(speciesProfiles.length).toBeGreaterThanOrEqual(75);
+    expect(new Set(speciesProfiles.map((p) => p.speciesId)).size).toBe(speciesProfiles.length);
+    expect(speciesProfiles.every((p) => top.some((r) => r.item.id === p.speciesId))).toBe(true);
     for (const row of top) {
-      expect(getSpeciesProfile(row.item.id)?.scientificName).toBe(row.item.scientificName);
+      const profile = getSpeciesProfile(row.item.id);
+      if (profile) expect(profile.scientificName).toBe(row.item.scientificName);
+      else expect(getSpeciesReferenceReview(row.item.id)?.status).toBe("unresolved");
     }
     const maorica = all.find((r) => r.item.scientificName === "Carex maorica")!;
-    expect(getSpeciesProfile(maorica.item.id)).toBeUndefined();
+    expect(getSpeciesProfile(maorica.item.id)?.scientificName).toBe("Carex maorica");
     expect(getSpeciesProfile("unknown")).toBeUndefined();
   });
 
