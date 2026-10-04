@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/page";
-import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
+import { SplitKey } from "@/components/wrt/quantity";
 import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/charts";
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
 import { PlaceName, hrefs } from "@/components/wrt/names";
@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
-import { SpeciesPhotoFigure } from "@/components/wrt/species/species-photo";
+import { SpeciesHero } from "@/components/wrt/species/species-hero";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,14 +36,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function eyebrow(over5m: boolean | null, threatened: boolean | null, contested: boolean) {
-  const bits = ["Native species"];
-  if (contested) bits.push("name needs a ruling");
-  if (over5m === true) bits.push("on the over-5 m list");
-  if (threatened === true) bits.push("threatened");
-  return bits.join(" · ");
-}
-
 export default async function SpeciesDetailPage({ params }: Props) {
   const { slug } = await params;
   const d = await getWrt().species(slug);
@@ -57,46 +49,27 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const reviewRows = records.filter((r) => r.record.needsReview);
   const reviewSorted = [...reviewRows].sort((a, b) => b.record.quantity - a.record.quantity).slice(0, REVIEW_ROWS_SHOWN);
   const siteCount = places.length;
-  const since = span.seasonsActive === 1 ? `in ${span.first.label}` : `since ${span.first.label}`;
+  const ranked = [...(await getWrt().speciesList())].sort(
+    (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
+  );
+  const at = ranked.findIndex((r) => r.item.slug === sp.slug);
+  const rank = at + 1;
+  const prev = at > 0 ? ranked[at - 1] : null;
+  const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
   return (
     <>
-      <header className="cn-pagehead">
-        <div className="cn-pagehead__text">
-          <Link href="/species" className="wrt-back">← All species</Link>
-          <span className="cn-eyebrow">{eyebrow(sp.over5m, sp.threatened, sp.needsDecision)}</span>
-          <h1 className="cn-display">
-            <span className={sp.displayIsScientific ? "wrt-latin" : undefined}>{sp.displayName}</span>
-          </h1>
-          {!sp.displayIsScientific && (
-            <p className="m-0 text-[20px] font-semibold italic text-[var(--text-body)]">{sp.scientificName}</p>
-          )}
-          {sp.suggestedSpelling && (
-            <p className="wrt-muted m-0">
-              Usual spelling: <i>{sp.suggestedSpelling}</i>. WRT’s lists use <i>{sp.scientificName}</i>.
-            </p>
-          )}
-          {otherNames.length > 0 && (
-            <p className="wrt-muted m-0">Also recorded as {otherNames.join(" · ")}</p>
-          )}
-        </div>
-      </header>
-
-      <Card>
-        <h2 className="cn-card__title !text-[22px] !leading-tight m-0 mb-5 max-w-[34ch] text-balance">
-          {formatNumber(split.total)} recorded <InlineName species={sp} /> across {formatNumber(siteCount)} site
-          {siteCount === 1 ? "" : "s"} {since}
-        </h2>
-        <div className="wrt-grid wrt-grid--main-rail items-start">
-          <QuantityFigure split={split} />
-          <p className="wrt-muted m-0">
-            {span.seasonsActive === 1
-              ? `Recorded in one season only.`
-              : `Recorded in ${formatNumber(span.seasonsActive)} of ${seasons.length} seasons, ${span.first.label} → ${span.last.label}.`}{" "}
-            {formatNumber(split.records)} record{split.records === 1 ? "" : "s"}, each one a site and season.
-          </p>
-        </div>
-      </Card>
+      <SpeciesHero
+        species={sp}
+        split={split}
+        span={span}
+        seasons={seasons}
+        siteCount={siteCount}
+        rank={rank}
+        rankOf={ranked.length}
+        photos={photos}
+        otherNames={otherNames}
+      />
 
       {contested.length > 0 && (
         <div className="cn-callout cn-callout--note !items-start">
@@ -119,13 +92,6 @@ export default async function SpeciesDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
-      )}
-
-      {photos.length > 0 && (
-        <Card id="photos" title={`${photos.length} reference photos`} action={<CardLink href="/species/photos">Top 20 photo guide</CardLink>}
-          foot="Reference photos from other locations. Previews are cropped to fit; open Full image for the entire frame. These do not confirm plants currently growing at a WRT site; young plants may look different.">
-          <div className="wrt-species-photo-set">{photos.map((photo) => <SpeciesPhotoFigure key={photo.src} photo={photo} />)}</div>
-        </Card>
       )}
 
       <SpeciesProfilePanel speciesId={sp.id} />
@@ -201,6 +167,23 @@ export default async function SpeciesDetailPage({ params }: Props) {
           All {formatNumber(split.records)} records for this species →
         </Link>
       </Rule>
+
+      <nav className="wrt-snext" aria-label="Neighbouring species by recorded plants">
+        {prev ? (
+          <Link href={hrefs.species(prev.item.slug)} className="wrt-snext__link">
+            <span className="wrt-snext__dir">← No. {rank - 1}</span>
+            <span className={prev.item.displayIsScientific ? "wrt-snext__name italic" : "wrt-snext__name"}>{prev.item.displayName}</span>
+            <span className="wrt-snext__sub">{formatNumber(prev.split.total)} recorded plants</span>
+          </Link>
+        ) : <span />}
+        {next ? (
+          <Link href={hrefs.species(next.item.slug)} className="wrt-snext__link wrt-snext__link--next">
+            <span className="wrt-snext__dir">No. {rank + 1} →</span>
+            <span className={next.item.displayIsScientific ? "wrt-snext__name italic" : "wrt-snext__name"}>{next.item.displayName}</span>
+            <span className="wrt-snext__sub">{formatNumber(next.split.total)} recorded plants</span>
+          </Link>
+        ) : <span />}
+      </nav>
     </>
   );
 }

@@ -8,9 +8,9 @@ import { splitOf } from "@/lib/wrt/queries";
 import type { Place, QuantitySplit, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink } from "@/components/wrt/page";
-import { SpeciesName, hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
-import { RankedBars } from "@/components/wrt/charts";
+import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 
 export function YearView({ place, year, rows }: { place: Place; year: number; rows: RecordView[] }) {
   const recs = rows.filter((r) => r.record.year === year);
@@ -36,7 +36,7 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
       id="year-view"
       title={`${formatNumber(ranked.length)} species recorded at ${place.name} in ${year}`}
       action={<SplitKey />}
-      foot="Each row opens that species’ records for this site and year, with the source cell."
+      foot="Each tile opens that species’ records for this site and year, with the source cell."
     >
       <div className="flex flex-col gap-4">
         <QuantityFigure split={total} size="md" />
@@ -54,14 +54,7 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
             </span>
           )}
         </p>
-        <RankedBars
-          items={ranked.map((r) => ({
-            key: r.species.id,
-            label: <SpeciesName species={r.species} />,
-            split: r.split,
-            href: q({ species: r.species.slug }),
-          }))}
-        />
+        <SpeciesTiles records={recs} spread="seasons" hrefFor={(sp) => q({ species: sp.slug })} cap={12} />
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <CardLink href={q()}>All {formatNumber(total.records)} records for {year}</CardLink>
           {total.recordsNeedingReview > 0 && (

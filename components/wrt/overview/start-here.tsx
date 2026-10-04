@@ -2,20 +2,27 @@
  * "Start exploring": the questions staff actually ask, each one a link.
  */
 import Link from "next/link";
+import { NavGlyph } from "@/components/wrt/shell/nav-icons";
+import type { NavIcon } from "@/components/wrt/shell/nav";
 
 export interface StartQuestion {
   href: string;
   question: string;
   answer: string;
+  icon?: NavIcon;
 }
 
 export function StartHere({ questions }: { questions: StartQuestion[] }) {
   return (
-    <div className="wrt-grid wrt-grid--3">
-      {questions.map((q) => (
-        <Link key={q.href} href={q.href} className="cn-tile !gap-2.5 !p-5 !no-underline hover:bg-[var(--surface-tint)] transition-colors">
-          <span className="cn-row__title !text-[var(--text-strong)]">{q.question} →</span>
-          <span className="cn-row__line">{q.answer}</span>
+    <div className="wrt-start">
+      {questions.map((q, i) => (
+        <Link key={q.href} href={q.href} className="wrt-start__card" data-tone={i % 3}>
+          <span className="wrt-start__icon">
+            <NavGlyph name={q.icon ?? "overview"} />
+          </span>
+          <span className="wrt-start__q">{q.question}</span>
+          <span className="wrt-start__a">{q.answer}</span>
+          <span className="wrt-start__go" aria-hidden="true">→</span>
         </Link>
       ))}
     </div>

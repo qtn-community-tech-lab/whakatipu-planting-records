@@ -2,15 +2,21 @@
 
 Audit date: 3 October 2026, Pacific/Auckland. This file records answers found in the app, generated data, source workbook and code. Staff decisions belong in QUESTIONS.md; interface problems belong in APP_CONFUSIONS.md. No app, data, source workbook or generator was changed, and no git commands were run.
 
+**Assessment:** the app faithfully copies the selected MASTER snapshot and adds its quantities consistently. It is a useful reading copy with good source tracing. Its present “Resolved” status means no open mapping flag, rather than a verified planting outcome or fully completed register. Reliability is strongest at the source-cell and arithmetic layers; reporting scope, some site identities, stock names and completed outcomes still need WRT decisions. AI can help prepare evidence-backed name proposals, while approved aliases and import rules should remain deterministic.
+
 ## Coverage and limits
 
 The browser walk covered the Overview; the required large sites, Paper4Trees and two small sites; all 11 history species returned by “Name needs a ruling”, plus Mānuka, Kohukohu, Tī kōuka and Weinmania racemosa; all 23 season cards; the five requested season detail pages; and Records with each of its nine review-question choices. At least three Source panels were read for each populated theme with three rows available. The nonnumeric theme has only its one TBC row; “Other check” has no rows. About the data was read before and after the walk. These browser observations are separate from the independent source checks below.
 
 The contested-partner link for Ozothamnus fulvida opened a “Page not found” screen. The audit stopped at the original gauntlet's stop condition, reported the failure, and continued after the user explicitly authorised the expanded audit. The 404 is an app defect, not evidence that WRT's species information is wrong. Its proposed repair is recorded separately; nothing was repaired during this audit.
 
+The served app was changing during the audit: a photo module appeared while question screenshots were being captured. One navigation briefly displayed a Next.js build error for the missing `@/data/species-photos.json` import. Capture stopped and the error was reported; a subsequent check showed that the file had appeared and the app had recovered. No audit code change repaired it. All 44 question screenshots were then completed on working pages. The initial page walk and source checks do not certify the newly added photo catalogue's identification, credits or coverage.
+
 No regeneration, build or test suite was run. Existing tests were read, not presented as newly passing checks. Source checks used read-only Python, opened ZIP members in memory and printed bounded audit results. No workbook was extracted, saved or recalculated in Excel.
 
 ## Recorded plants and review status
+
+The desktop presentation is coherent: large quantities, the consistent green/amber split, clickable season bars and the Source disclosure make it easy to move from an overview to evidence. The key presentation weakness is semantic: “resolved”, “went in”, “sites” and a displayed zero can imply stronger conclusions than the records support. The dark 2024 bars also dominate the small seasons. The specific wording and navigation proposals are in [APP_CONFUSIONS.md](APP_CONFUSIONS.md); the numbered screenshots supply the concrete views behind the questions. This was a desktop walk, without a separate mobile or full accessibility audit.
 
 | Question answered | Answer and evidence |
 |---|---|
@@ -213,3 +219,137 @@ PY
 ```
 
 This deliberately checks fidelity to the specified source snapshot. It cannot decide whether that snapshot reflects completed plantings, whether a proposed name is right, or which total WRT should publish.
+
+## Site registration: answers beyond the amber filter
+
+The source register's official numbers are in `SUMMARY SITES!A4:A82`; column B is blank. The Python reader uses A correctly. Earlier discovery documents citing B have a documentation error, not proof of an incorrect import. Number clashes were checked against the original workbook and agree with the app's notes.
+
+The complete provisional-site inventory is larger than “Site with no WRT number” suggests:
+
+| Site | Records | Recorded plants | Amber plants | What the supplied register answers |
+|---|---:|---:|---:|---|
+| Slope Hill HGF | 22 | 22,000 | 22,000 | Named at C35; number A35 blank |
+| Walter Peak Station | 28 | 496 | 15 | Named at C12; number A12 blank |
+| Shotover Rotary Track | 38 | 400 | 0 | Named at C64; number A64 blank |
+| Little Difference | 22 | 200 | 200 | No matching row |
+| Paererewa | 15 | 118 | 118 | No matching row |
+| Skippers – DOC | 10 | 110 | 0 | Named at C24; number A24 blank |
+| Kiwi Park | 8 | 105 | 0 | Named at C68; number A68 blank |
+| Bridesdale | 6 | 80 | 0 | No matching row |
+| Arrowtown Preschool | 8 | 80 | 80 | No separate row; possible existing 13A needs confirmation |
+| Matakauri Wetlands | 8 | 80 | 0 | No matching row |
+| Kingsview | 3 | 25 | 0 | Named at C69; number A69 blank |
+| QLDC Tohu | 1 | 4 | 0 | No matching row |
+| **Total** | **169** | **23,698** | **22,413** | |
+
+Of the eight additional small sites beyond HGF and the three already flagged under this theme, 101 records carrying 1,285 plants are resolved. Walter Peak has a further 15 amber plants for an unrelated species issue. A name already present in the register answers whether WRT recognised that site; assigning an official number is still a decision. For Bridesdale, Matakauri Wetlands and QLDC Tohu, even the registration category needs confirmation.
+
+The five number clashes cover 179 records and 14,915 plants: Coronation 7,000; Welcome Forest 4,575; Slope Hill Road 3,132; Akarua Corner 135; Derby Street Reserve 73. All are amber. Number corrections alone preserve quantities. “Uncertain site” covers 43 records and 370 plants: 1 Mile 165, unknown Shotover parcel 130, Rapley Close 40, and Gorge Rd Wetlands / QPS 35. Rapley's source uses old number 10, which the proposed mapping translates to current number 16; the source did not directly say 16.
+
+The 49 cleaned Shotover records carry 377 plants: 247 assigned to registered part 28A, and 130 whose part remains unknown. Their saved headings are already masked. No removed personal name was observed in the generated output; the staff question concerns whether the cleaned site identity is right.
+
+## Species names: what the existing validation really does
+
+The species preparation starts with a census of 820 distinct raw-name variants across source types. It excludes 91 non-species entries and one free-text note, leaving 728 alias entries: 668 mapped and 60 unassigned. It proposes 164 species entries; 95 are represented in this history, including the TBC-only Leptecophylla entry. The other 69 have no history records. These are different object types and scopes, rather than four counts of independently verified botanical identities. Evidence is in [source variants](/Users/kyleg/wtr-app-tree-reforestation/docs/discovery/04a_species_variants.csv), [alias proposals](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/prototype/species_crosswalk.csv), and [proposed species](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/prototype/species_master_proposed.csv).
+
+All 5,449 current history strings join through exact aliases. No current fallback-name join or species mapping discrepancy was found. The visible names then pass through a separate [display-name overlay](/Users/kyleg/wtr-app-tree-reforestation/lib/wrt/display-names.ts), so a polished label does not establish that the source register or nursery stock was corrected.
+
+| Naming issue | Scope in this history | What the files can answer |
+|---|---|---|
+| Carex maorica / Carex secta | 51 records / 4,059 plants | 56 under maorica, 4,003 under secta; separate source rows |
+| Leonohebe / Veronica cupressoides | 70 / 842 | 181 under Leonohebe, 661 under Veronica |
+| Ozothamnus group | 61 / 811 | 727 under vauvilliersii, 84 under leptophyllus; fulvida has no history records |
+| Olearia nummularifolia and its proposed variety | 7 / 89 | Variety is in the proposed catalogue, with no history records |
+| Veronica hectorii and demissa | 9 / 75 | Demissa is in the proposed catalogue, with no history records |
+| Carmichaelia group | 3 / 25 | Two proposed racemosa partners have no history records |
+| Cyathoides / Leptecophylla juniperina | 2 / 19 plus an unknown quantity | One numeric 19 and one TBC cell, both at Quail Rise in Spring 2025 |
+| **Seven contested groups** | **203 / 5,920 plus the unknown quantity** | All are flagged; grouping and stock identity remain open |
+
+There are 25 proposed species marked as needing a decision in the whole catalogue; eleven occur in this history. The browser's eleven-name filter is therefore correctly narrower than the proposed catalogue. Six visible partner links target five different species with no history. All five targets were followed and returned “Page not found”. Their absence from the history explains the route failure, without answering the stock-identity question.
+
+The macron overlay affects 20 species used in the history: 1,509 records and 38,762 plants, including 15,168 amber plants. Their leading display labels are Pūrei, Mākaka, Putaputawētā, Karamū, Tī kōuka, Pōkākā, Kōtukutuku, Kāpuka, Mānuka, Rōhutu, Rātā, Pōhuehue, Kaikōmako, Mānatu, Halls tōtara, Mountain tōtara, Mataī, Kōwhai, Tūrepo and Kāmahi. Some secondary labels also gain macrons, such as Southern rātā on the Rātā entry. This is a 20-species scope, rather than exactly twenty changed strings.
+
+The four common-name cleanups cover 529 records and 17,281 plants, including 6,393 amber plants: Scented tree dasiy → Scented tree daisy; Tree fuscia → Tree fuchsia; Ribonwood → Ribbonwood; Toe toe → Toetoe. Recognising a spelling correction is straightforward; selecting the leading name that WRT wants is a separate decision.
+
+Kohukohu was copied from WRT's Māori-name field, alongside Black matipo and the alias Kohuhu. It was not invented by the app. NZPCN lists kohukohu, kōhūhū and black matipo for Pittosporum tenuifolium. That answers whether Kohukohu is a plausible common name; it does not pick WRT's preferred label. [NZPCN species account](https://www.nzpcn.org.nz/flora/species/pittosporum-tenuifolium/)
+
+Weinmania racemosa remains the source handle, with a spelling suggestion and Weinmannia aliases available. Its eleven records carry 58 plants, with no review flags. Mānuka's 109 records carry 2,182 plants, including 148 amber; a plain “manuka” browser search finds that macron-labelled entry. These show how source spelling, aliases, display labels and review status operate independently.
+
+### Current defects and future naming risks
+
+| Finding | Current effect or limit | Proposed change |
+|---|---|---|
+| IDs are assigned by sorted name position. [Generator](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/scripts/species_crosswalk.py:272). | An added earlier name can shift later SP numbers, making future rulings or stored references unstable. | Give every WRT stock line a persistent ID; version changes to names and relationships. |
+| Alias-level uncertainty is not fully propagated. [Importer](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/scripts/build_history_prototype.py:191). | Twelve uncertain aliases belong to six otherwise unflagged species. None occurs in this history, so this is a future import risk. | Carry explicit alias and species decision flags, independently of the wording of a note. |
+| Import and browser search normalise Unicode differently. [Import](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/scripts/build_history_prototype.py:177), [search](/Users/kyleg/wtr-app-tree-reforestation/lib/wrt/text.ts:17). | Import turns Mānuka into `m nuka` and Tī kōuka into `t k uka`; search folds them correctly. Current source names lack macrons, so the current joins are unaffected. | Use one tested Unicode-aware normalisation rule, with original text retained. |
+| Literal escape sequences survive display cleaning. [Cleaner](/Users/kyleg/wtr-app-tree-reforestation/lib/wrt/text.ts:33). | 142 aliases across 75 history species contain literal `\t` or `\u00a0`; some appear on screen. | Decode the known export escapes for display and matching; preserve the raw exported value separately. |
+| Lexical match confidence looks like name approval. | Exact matching can give a high score to a misspelling. No calibrated accuracy rate or staff approval follows from that score. | Show matching evidence, botanical evidence and WRT approval as separate fields. |
+
+### Botanical reference check
+
+An exploratory screen queried all 164 proposed handles and the ten existing spelling suggestions against the official NZOR service. On the audit date, 129 handles had exact scientific-name hits with no differing accepted label, six had at least one differing accepted-name relationship, and 29 had no exact hit. **The 29 are not 29 proven errors.** Qualifiers, ranks, ambiguous identities and spelling can all prevent a literal hit. This was a name-resolution screen, not a full expert review of every taxon. [NZOR usage guidance](https://nzor.org.nz/how-can-i-use-nzor), [official service documentation](https://manaakiwhenua.atlassian.net/wiki/spaces/NZOR/pages/4441047097/Web%2BService%2BDocumentation)
+
+The screen was reproduced with `GET https://data.nzor.org.nz/names/search?query=<URL-encoded handle>`, requesting JSON. It retained results whose class was Scientific Name and whose `partialName` equalled the input case-insensitively. No exact hit placed a name in the 29; any exact hit with a different accepted `partialName` placed it in the six; otherwise it went in the 129. All 174 requests succeeded; the largest result list had nine entries. The screen used default page 1 / page size 20, with no pagination logic or saved raw response snapshot. It therefore has the limits of unqualified-name queries and a changing registry. Nine of the ten spelling suggestions had exact hits with the same accepted label; one had no exact hit. Future production matching should save evidence snapshots and handle pagination explicitly.
+
+Carex maorica and Carex secta have separate recognised species accounts. A model should preserve that distinction while asking whether WRT's own stock was mislabelled. [Carex maorica](https://www.nzpcn.org.nz/flora/species/carex-maorica/), [Carex secta](https://www.nzpcn.org.nz/flora/species/carex-secta/)
+
+NZOR links Leonohebe cupressoides to Veronica cupressoides. That supports a taxonomic relationship; it does not prove that WRT recorded the same physical plants twice. NZOR also now relates Olearia odorata and Olearia bullata to Shawia names following a 2025 treatment. A dated reference matters: an external accepted name can change while a historical WRT stock label remains useful. [Olearia odorata record](https://www.nzor.org.nz/names/64b6c556-aaed-4bbc-8428-37242441da8c), [Olearia bullata record](https://www.nzor.org.nz/names/60506039-6d67-4438-b189-3b87be49909f)
+
+Dracophyllum rosmarinifolium returned three exact scientific-name hits with differing authority or concept relationships. Taking the first exact hit would be unsafe. The reference match should retain the name authority, taxon concept, provider and date, and leave ambiguous matches unresolved.
+
+## A feasible AI-assisted name review
+
+AI could reduce the work of preparing name rulings. Most repeat inputs should resolve through an approved WRT alias table. A model can investigate the remaining cases, explain candidate relationships and draft one clear question for staff. It should have no authority to infer physical duplicate plants or silently rewrite historical quantities.
+
+The proposed data model separates four things that currently sit too close together:
+
+| Field or record | Purpose |
+|---|---|
+| Immutable source observation | Original string, masked context, workbook hash, sheet and cell |
+| Persistent WRT stock-line ID | The local identity staff mean; survives a spelling or accepted-name change |
+| Approved aliases and display labels | Deterministic matching and staff-facing wording, with dated WRT rulings |
+| External botanical reference | NZOR/name-authority and taxon-concept identifiers, evidence snapshot and reference date |
+
+The proposed workflow is:
+
+```mermaid
+flowchart LR
+  A[Masked source name] --> B[Approved alias lookup]
+  B -->|Unique approved match| C[Stable WRT stock line]
+  B -->|Unresolved or ambiguous| D[Retrieve WRT and NZOR candidates]
+  D --> E[AI proposal with cited evidence or abstention]
+  E --> F[WRT review and dated ruling]
+  F --> B
+  C --> G[Validated history with unchanged quantities]
+```
+
+1. **Make input reproducible.** Store a source hash and catalogue version. Normalise whitespace, macrons and known export escapes consistently. Detect multiple taxa, non-name text and ambiguous aliases explicitly.
+2. **Retrieve before proposing.** Collect candidate approved WRT lines and official NZOR records. Preserve multiple exact hits rather than choosing the first. Use the model to explain evidence already retrieved; a model's remembered botanical fact is insufficient evidence.
+3. **Return a structured proposal.** Include problem type (spelling, synonym, ambiguous common name, several taxa, non-name or stock identity), candidate IDs, evidence references, uncertainty, recommended action and a staff question. Allow “no supported match” and “WRT stock identity needed”. A fluent explanation or self-reported confidence is not a validation result.
+4. **Keep proposals reviewable.** Staff choose names and local stock identity. Each approval records its author, date, source evidence and affected aliases. Previously approved unambiguous aliases become deterministic matches on the next import.
+5. **Apply rulings without losing history.** Keep the original observation. Label merges can change grouping while preserving every source quantity. A quantity correction requires independent evidence and its own explicit ruling.
+6. **Control private context locally.** Remove personal tags and private filename/context text before model input. Send only the minimum masked species evidence. Retain and verify the upstream site-header masking contract.
+
+No model calls on private source data, new integration, automated rename or quantity correction were made in this audit. This is a design that can be implemented after the audit-only pass.
+
+### How to tell whether it helps
+
+Build a staff-reviewed evaluation set from the 820 source variants. Split by name family or workbook, so repeated spellings of the same name do not leak between development and evaluation. Include straightforward names as well as difficult cases. The existing 728 proposal aliases can inform candidate retrieval; they should not be treated as the independent ground truth for all uncertain cases.
+
+| Evaluation case | Required behaviour |
+|---|---|
+| Mānuka / Manuka; Tī kōuka / Ti kouka | Consistent import and search keys, original text retained |
+| Kohukohu | Recognise a valid name and leave leading-label choice to WRT |
+| Weinmania racemosa | Offer a supported spelling suggestion, without changing quantities |
+| Leonohebe / Veronica cupressoides | Explain the taxonomic relationship; abstain on physical duplication |
+| Carex maorica / secta | Preserve distinct taxa; ask about local stock labelling |
+| TBC | Preserve an unknown quantity |
+| Several taxa in one cell | Preserve ambiguity; do not choose a species by guess |
+| Dracophyllum rosmarinifolium | Handle multiple exact botanical hits with authority/concept evidence |
+| Unrecognised or provenance-tagged text | Abstain when evidence is lacking, with no private text disclosure |
+
+Measure candidate accuracy, false merges, missed ambiguities, evidence correctness, abstention quality and staff review time. Compare the AI-assisted queue with the approved-alias baseline. Count a confident wrong merge as a more serious failure than an abstention needing staff attention. Before using any proposals in the app, require unchanged quantity totals, exact retained source-cell coverage, stable IDs, preserved unresolved flags and a passing privacy check.
+
+### Concrete next implementation pass
+
+Start with the deterministic trust fixes: useful no-history species pages; unknown-quantity wording; complete provisional-site filtering; accurate reconciliation explanations; stable stock IDs; Unicode normalisation; explicit alias review flags. Then add a dry-run name review queue that cannot modify the history. Trial it on the seven contested groups and the spelling/common-name examples, have WRT rule on the proposals, and measure whether it saves review time. The existing 140,068 stays a reproducible source sum throughout; a staff ruling must explain any subsequent reporting or quantity change.

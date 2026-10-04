@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, CardLink, Rule } from "@/components/wrt/page";
-import { SpeciesName, hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
-import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/charts";
+import { SeasonColumns, YearTable } from "@/components/wrt/charts";
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
 import { ChipLinks } from "@/components/wrt/sites/filter-chips";
 import { YearView } from "@/components/wrt/sites/year-view";
+import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
+import { SiteRows, partHref, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,7 +21,6 @@ type Props = {
 };
 
 const REVIEW_CAP = 25;
-const SPECIES_CAP = 15;
 
 export async function generateStaticParams() {
   const places = await getWrt().places();
@@ -70,8 +71,6 @@ export default async function SitePage({ params, searchParams }: Props) {
   const reviewHidden = needsReview.length - reviewRows.length;
 
   const activeSeasons = d.seasons.filter((s) => s.split.records > 0).length;
-  const topSpecies = d.species.slice(0, SPECIES_CAP);
-  const maxSpecies = topSpecies[0]?.split.total ?? 1;
 
   return (
     <>
@@ -110,81 +109,103 @@ export default async function SitePage({ params, searchParams }: Props) {
         </div>
       </Card>
 
-      <div className="wrt-grid wrt-grid--main-rail items-start">
-        <Card
-          title="Year by year"
-          foot={
-            <>
-              Autumn and spring figures open that season’s records at {place.name}. Pick a year to see which species went
-              into it.
-            </>
-          }
-        >
-          <div className="flex flex-col gap-4">
-            <ChipLinks
-              label="Pick a year"
-              chips={d.years.map((y) => ({
-                key: String(y.year),
-                label: String(y.year),
-                href: `/sites/${place.slug}?year=${y.year}#year-view`,
-                active: year === y.year,
-              }))}
-            />
-            <YearTable
-              years={d.years}
-              seasonHref={(y, s) =>
-                recordsFor({ year: y, season: s === "autumn" ? "Autumn" : "Spring" })
-              }
-            />
-          </div>
-        </Card>
+      <Card
+        title={`Trees recorded ${place.isScheme ? "through" : "at"} ${place.name} (${formatNumber(d.species.length)} species)`}
+        action={<CardLink href={recordsFor()}>All {formatNumber(split.records)} records</CardLink>}
+        foot="Largest first, across every season. Select a species for its records here. Pick a year below to see what went in that year."
+      >
+        <SpeciesTiles records={d.records} spread="seasons" hrefFor={(s) => recordsFor({ species: s.slug })} />
+      </Card>
 
+      {d.parcels.length > 1 && (
         <Card
-          title="Species recorded here"
-          foot={
-            <>
-              {d.species.length > topSpecies.length
-                ? `Top ${topSpecies.length} of ${d.species.length} species. `
-                : `${d.species.length} species recorded. `}
-              <Link href={recordsFor()} className="cn-link">All records →</Link>
-            </>
-          }
+          title={`When each part of ${place.name} was planted`}
+          foot={`Each row is one part of ${place.name}; each column one season. Open a part for its own species and records.`}
         >
-          <RankedBars
-            max={maxSpecies}
-            items={topSpecies.map((s) => ({
-              key: s.item.id,
-              label: <SpeciesName species={s.item} />,
-              split: s.split,
-              href: hrefs.species(s.item.slug),
-            }))}
+          <PlantingTimeline
+            records={d.records}
+            seasons={d.seasons.map((p) => p.season)}
+            rowsBy="part"
+            rowHref={(r) => partHref(place.slug, r.name)}
+            hrefFor={(r, season) => recordsFor({ parcel: r.parcelId, season: season.name, year: season.year })}
           />
         </Card>
-      </div>
+      )}
+
+      <Card
+        title="When each tree went in"
+        foot={`Every species recorded ${place.isScheme ? "through" : "at"} ${place.name}, largest first, season by season.`}
+      >
+        <PlantingTimeline
+          records={d.records}
+          seasons={d.seasons.map((p) => p.season)}
+          rowsBy="species"
+          rowHref={(r) => (r.species ? recordsFor({ species: r.species.slug }) : recordsFor())}
+          hrefFor={(r, season) => recordsFor({ species: r.species?.slug, season: season.name, year: season.year })}
+        />
+      </Card>
+
+      <Card
+        title="Year by year"
+        foot={
+          <>
+            Autumn and spring figures open that season’s records at {place.name}. Pick a year to see which species went
+            into it.
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <ChipLinks
+            label="Pick a year"
+            chips={d.years.map((y) => ({
+              key: String(y.year),
+              label: String(y.year),
+              href: `/sites/${place.slug}?year=${y.year}#year-view`,
+              active: year === y.year,
+            }))}
+          />
+          <YearTable
+            years={d.years}
+            seasonHref={(y, s) =>
+              recordsFor({ year: y, season: s === "autumn" ? "Autumn" : "Spring" })
+            }
+          />
+        </div>
+      </Card>
+
 
       {year !== undefined && <YearView place={place} year={year} rows={d.records} />}
 
       {d.parcels.length > 1 && (
         <Card
-          title="Parts of this site"
-          foot="Select a part to see its species and records. Parcels are WRT’s registered sub-sites; their recorded plants add up to the site."
+          title={`Parts of this site (${d.parcels.length})`}
+          action={<SplitKey />}
+          foot="Parts are WRT’s registered sub-sites; their recorded plants add up to the site. Open a part for its own species, seasons and records."
         >
-          <RankedBars
-            items={d.parcels.map((p) => ({
-              key: p.item.id,
-              label: (
-                <span className="cn-species">
-                  <span className="cn-species__common">{p.item.name}</span>
-                  <span className="cn-species__latin is-plain">
+          <SiteRows
+            max={Math.max(1, ...d.parcels.map((p) => p.split.total))}
+            rows={d.parcels.map((p) => {
+              const recs = d.records.filter((r) => r.record.parcelId === p.item.id);
+              const species = [...speciesBySite(recs).values()][0]?.species ?? [];
+              const href = partHref(place.slug, p.item.name);
+              return {
+                key: p.item.id,
+                name: p.item.name,
+                href,
+                split: p.split,
+                species,
+                meta: (
+                  <>
                     {p.span.first.slug === p.span.last.slug ? p.span.first.label : `${p.span.first.label} → ${p.span.last.label}`}
                     {" · "}
-                    {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"}
-                  </span>
-                </span>
-              ),
-              split: p.split,
-              href: recordsFor({ parcel: p.item.id }),
-            }))}
+                    {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {species.length} species
+                  </>
+                ),
+                totalHref: href,
+                moreHref: href,
+                speciesHref: (s) => recordsFor({ parcel: p.item.id, species: s.slug }),
+              };
+            })}
           />
         </Card>
       )}

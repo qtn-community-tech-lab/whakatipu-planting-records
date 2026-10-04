@@ -4,7 +4,9 @@ import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, Rule } from "@/components/wrt/page";
 import { SplitKey, SplitLine } from "@/components/wrt/quantity";
 import { SeasonColumns } from "@/components/wrt/charts";
-import { MissingSeasonCell, SeasonCell, medianSites } from "@/components/wrt/seasons/season-parts";
+import { MissingSeasonRow, SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
+import type { SiteSpecies } from "@/components/wrt/sites/site-rows";
+import { addRecord, emptySplit } from "@/components/wrt/species/species-tiles";
 
 export const metadata: Metadata = {
   title: "Planting seasons",
@@ -13,7 +15,30 @@ export const metadata: Metadata = {
 
 export default async function SeasonsPage() {
   const wrt = getWrt();
-  const [seasons, overview] = await Promise.all([wrt.seasons(), wrt.overview()]);
+  const [seasons, overview, records] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records()]);
+  // Most recorded species in each season, largest first.
+  // Top trees and top sites in each season, largest first.
+  const topBySeason = new Map<string, SiteSpecies[]>();
+  const sitesBySeason = new Map<string, TopSite[]>();
+  {
+    const trees = new Map<string, Map<string, SiteSpecies>>();
+    const sites = new Map<string, Map<string, TopSite>>();
+    for (const v of records.rows) {
+      const m = trees.get(v.season.slug) ?? new Map<string, SiteSpecies>();
+      const e = m.get(v.species.slug) ?? { species: v.species, split: emptySplit() };
+      addRecord(e.split, v);
+      m.set(v.species.slug, e);
+      trees.set(v.season.slug, m);
+      const sm = sites.get(v.season.slug) ?? new Map<string, TopSite>();
+      const se = sm.get(v.place.slug) ?? { slug: v.place.slug, name: v.place.name, split: emptySplit() };
+      addRecord(se.split, v);
+      sm.set(v.place.slug, se);
+      sites.set(v.season.slug, sm);
+    }
+    const top3 = <T extends { split: { total: number } }>(m: Map<string, T>) => [...m.values()].sort((a, b) => b.split.total - a.split.total).slice(0, 3);
+    for (const [slug, m] of trees) topBySeason.set(slug, top3(m));
+    for (const [slug, m] of sites) sitesBySeason.set(slug, top3(m));
+  }
 
   const total = overview.split;
 
@@ -27,10 +52,8 @@ export default async function SeasonsPage() {
   const slope = overview.themes.find((t) => t.theme === "slope-hill-2024");
   const slopeSeasons = seasons.filter((s) => s.season.year === 2024).map((s) => s.season.label);
 
-  // Group by year. A year with only one season gets a gap for the other (e.g. Spring 2026).
-  const years = [...new Set(seasons.map((s) => s.season.year))];
-  const lastYear = last.year;
-  const missingSpring = last.name === "Autumn" ? `Spring ${lastYear}` : null;
+  // The workbook ends on an autumn: show the spring after it as "not in yet".
+  const missingSpring = last.name === "Autumn" ? `Spring ${last.year}` : null;
 
   return (
     <>
@@ -62,39 +85,21 @@ export default async function SeasonsPage() {
             {matching} of {checked} seasons match the workbook&rsquo;s own total
           </span>
         </div>
-        {missingSpring && (
-          <p className="wrt-muted m-0">
-            The data ends at {last.label}. {missingSpring} is not in the master workbook yet, so there is nothing to show for it.
-          </p>
-        )}
-        <Card className="!gap-0">
-          {years.map((year, i) => {
-            const autumn = seasons.find((s) => s.season.year === year && s.season.name === "Autumn");
-            const spring = seasons.find((s) => s.season.year === year && s.season.name === "Spring");
-            return (
-              <div
-                key={year}
-                className={`grid gap-x-8 gap-y-4 py-5 md:grid-cols-[72px_minmax(0,1fr)_minmax(0,1fr)] ${i > 0 ? "border-t border-[var(--border-row)]" : "pt-0"}`}
-              >
-                <h3 className="m-0 [font:var(--type-section)] text-[var(--text-strong)]">{year}</h3>
-                {autumn ? (
-                  <SeasonCell s={autumn} fewSites={autumn.placeCount < median * 0.6} />
-                ) : (
-                  <MissingSeasonCell label={`Autumn ${year}`} />
-                )}
-                {spring ? (
-                  <SeasonCell s={spring} fewSites={spring.placeCount < median * 0.6} />
-                ) : year === lastYear && missingSpring ? (
-                  <MissingSeasonCell label={missingSpring} />
-                ) : (
-                  <MissingSeasonCell label={`Spring ${year}`} />
-                )}
-              </div>
-            );
-          })}
-        </Card>
+        <p className="wrt-muted m-0">Newest first. Select a season to see every site and species in it.</p>
+        <ol className="wrt-srows">
+          {missingSpring && <MissingSeasonRow label={missingSpring} />}
+          {[...seasons].reverse().map((s) => (
+            <SeasonRow
+              key={s.season.slug}
+              s={s}
+              fewSites={s.placeCount < median * 0.6}
+              trees={topBySeason.get(s.season.slug)}
+              sites={sitesBySeason.get(s.season.slug)}
+            />
+          ))}
+        </ol>
         <Rule>
-          &ldquo;Matches workbook total&rdquo; means the generated total for the season equals the TOTAL cell in the workbook&rsquo;s own MASTER sheet. Hover a badge for the cell.
+          Each season&rsquo;s generated total is checked against the TOTAL cell in the workbook&rsquo;s own MASTER sheet. A season only shows a badge when the two differ.
         </Rule>
       </section>
     </>

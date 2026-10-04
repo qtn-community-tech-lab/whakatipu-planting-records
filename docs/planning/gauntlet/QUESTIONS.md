@@ -1,6 +1,6 @@
 # Questions for WRT
 
-This review turns the app's open issues and the source checks into 44 questions for WRT, ordered by the number of recorded plants they touch. Ask these five first: Q1 (all-time reporting figure), Q2 (which sheet owns the species counts), Q3 (the basis of the earlier history), Q4 (Māori display names), Q5 (HGF planting outcome). Each asks for information or a decision the files cannot supply.
+This review turns the app's open issues and the source checks into 44 questions for WRT, ordered by the number of recorded plants they touch. Ask these five first: Q1 (all-time reporting figure), Q2 (which sheet owns the species counts), Q3 (how the history was entered), Q4 (Māori display names), Q5 (HGF planting outcome). Each asks for information or a decision the files cannot supply.
 
 Reviewed on 3 October 2026. The resumed review continues past the earlier broken species link at Kyle's request. These questions overlap, so their plant counts must not be added together. Affected plants means the scope of a decision, not a claim that all those counts are wrong. Label and numbering questions often change no quantities. Unknown quantities sort last. Screenshots show the relevant app view; source-only omissions are described explicitly.
 
@@ -24,23 +24,23 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Who probably knows: Nursery manager and whoever maintains the history.
 - Records affected: 5,449 records, 140,068 recorded plants; 44,290 of those plants are amber.
 
-### Q3. What was the basis of the earlier history?
+### Q3. How was the history entered?
 
 - Where: `/about-the-data#recorded` ([screenshots/q03.png](screenshots/q03.png)).
-- What the app shows: The page describes the whole history as copied from allocations. Direct comparisons support that for Spring 2025 and Autumn 2026; the earlier 21 seasons hold 129,264 recorded plants.
+- What the app shows: The page describes all 140,068 recorded plants as copied from allocations. Direct comparisons support a close relationship with Spring 2025 and Autumn 2026 allocation sheets, but do not prove whether the outcomes were checked.
 - Why we have to ask: The two allocation sheets we can compare closely match the history, but that does not show whether anyone checked what was planted. The files do not explain how each earlier season was entered.
-- The question: **For Autumn 2015 to Autumn 2025, were the figures taken from allocations, checked planting outcomes, or a mixture?**
-- What the answer changes: Determines whether the earlier history can support claims about plants sent or planted, and corrects the page's explanation.
+- The question: **For Autumn 2015 to Autumn 2026, were the history figures taken from allocations, checked planting outcomes, or a mixture?**
+- What the answer changes: Determines which seasons, if any, support claims about plants sent or planted, and corrects the page's explanation.
 - Who probably knows: Whoever maintained the Plants Out Master.
-- Records affected: 5,072 records, 129,264 recorded plants; 39,945 of those plants are amber.
+- Records affected: 5,449 records, 140,068 recorded plants; 44,290 of those plants are amber.
 
 ### Q4. Are these the Māori display names WRT wants?
 
 - Where: `/species/leptospermum-scoparium` ([screenshots/q04.png](screenshots/q04.png)).
-- What the app shows: Macrons were added on screen for 20 names used in the history, including Mānuka, Tī kōuka, Pūrei, Kōwhai and Kāmahi. Those species cover 38,762 recorded plants.
+- What the app shows: Macrons were added on screen for 20 species entries used in the history, including Mānuka, Tī kōuka, Pūrei, Kōwhai and Kāmahi. Those species cover 38,762 recorded plants.
 - Why we have to ask: It is a decision about staff-facing names: the source register has no macrons and no approved display-name field. A spelling reference cannot tell us WRT's preferred labels.
-- The question: **Does WRT want the app's 20 macron spellings as its display names, or are any preferred labels different?**
-- What the answer changes: Changes names and search aliases, with no change to quantities; the full 20-name list is in ANSWERED.md.
+- The question: **Does WRT want the macron spellings shown for these 20 species, or are any preferred display labels different?**
+- What the answer changes: Changes names and search aliases, with no change to quantities; the full 20-species list is in ANSWERED.md.
 - Who probably knows: Nursery manager and WRT's te reo adviser.
 - Records affected: 1,509 records, 38,762 recorded plants; 15,168 of those plants are amber.
 
@@ -49,7 +49,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Where: `/seasons/spring-2024` ([screenshots/q05.png](screenshots/q05.png)).
 - What the app shows: Spring 2024 contains 22,000 under Slope Hill HGF, on 22 records. The season total is 29,826.
 - Why we have to ask: It was never recorded here whether this count was checked against a planting outcome. There are no planting dates or delivery evidence attached to it, and WRT's ruling is still open.
-- The question: **How many of the 22,000 HGF plants were actually planted by WRT: all, none, another number, or not known?**
+- The question: **How many of the 22,000 HGF plants can WRT count as verified WRT plantings: all, none, another number, or not known?**
 - What the answer changes: Sets the verified outcome for this entry; if the whole entry is excluded by WRT's reporting rule, 140,068 becomes 118,068.
 - Who probably knows: Operations manager or Slope Hill project lead.
 - Records affected: 22 records, 22,000 recorded plants; 22,000 of those plants are amber.
@@ -66,7 +66,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 
 ### Q7. Which site number should HGF use?
 
-- Where: `/sites/slope-hill` ([screenshots/q07.png](screenshots/q07.png)).
+- Where: `/records?place=slope-hill&year=2024&season=Spring&theme=slope-hill-2024` ([screenshots/q07.png](screenshots/q07.png)).
 - What the app shows: HGF has 22,000 plants and is named in the site register, but the official number is blank. The app treats it as a separate part of Slope Hill.
 - Why we have to ask: It is a decision, not a fact: the register confirms the name, but does not assign a number or say whether an existing number should be used.
 - The question: **Should HGF use an existing Slope Hill number, receive a new number, or remain deliberately unnumbered?**
@@ -78,7 +78,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 
 - Where: `/species/olearia-odorata` ([screenshots/q08.png](screenshots/q08.png)).
 - What the app shows: The display layer changes Scented tree dasiy to Scented tree daisy, Tree fuscia to Tree fuchsia, Ribonwood to Ribbonwood and Toe toe to Toetoe. The four species cover 17,281 plants.
-- Why we have to ask: It is a decision about preferred labels: we can identify spelling fixes, but the register does not say which common name staff want to lead with.
+- Why we have to ask: It is a decision about preferred labels: we can identify spelling fixes, but the register does not say which spelling or common label staff want displayed.
 - The question: **Should these four cleaned names be used on screen, or does WRT prefer a different name for any of them?**
 - What the answer changes: Changes display labels and aliases, with no change to quantities.
 - Who probably knows: Nursery manager.
@@ -99,7 +99,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Where: `/seasons/autumn-2024` ([screenshots/q10.png](screenshots/q10.png)).
 - What the app shows: Autumn 2024 contains 7,000 under Slope Hill Coronation, on 16 records. The season total is 13,657.
 - Why we have to ask: It was never recorded here whether this count was checked against a planting outcome. There are no planting dates or delivery evidence attached to it, and WRT's ruling is still open.
-- The question: **How many of the 7,000 Coronation plants were actually planted by WRT: all, none, another number, or not known?**
+- The question: **How many of the 7,000 Coronation plants can WRT count as verified WRT plantings: all, none, another number, or not known?**
 - What the answer changes: Sets the verified outcome; if the entire entry is excluded by WRT's reporting rule, 140,068 becomes 133,068.
 - Who probably knows: Operations manager or Slope Hill project lead.
 - Records affected: 16 records, 7,000 recorded plants; 7,000 of those plants are amber.
@@ -153,6 +153,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - What the answer changes: Corrects the site assignment for all three seasons without changing quantities.
 - Who probably knows: Operations manager or site-register keeper.
 - Records affected: 49 records, 3,132 recorded plants; 3,132 of those plants are amber.
+- Source note: The screenshot shows the 2025 examples (2,000 plants); the full affected scope also includes Spring 2024 (1,132 plants).
 
 ### Q16. How should Paper4Trees plants count?
 
@@ -189,7 +190,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Where: `/species/ozothamnus-vauvilliersii` ([screenshots/q19.png](screenshots/q19.png)).
 - What the app shows: Ozothamnus vauvilliersii has 727 plants and leptophyllus 84; fulvida is named as a partner but has no history records. All 811 recorded plants are flagged.
 - Why we have to ask: It was typed by hand with no fixed list: the labels and proposed partners do not show whether staff meant the same nursery stock.
-- The question: **Were vauvilliersii, leptophyllus and fulvida one stock line, two lines, or three?**
+- The question: **Which of Ozothamnus vauvilliersii, leptophyllus and fulvida describe the same WRT stock line, if any?**
 - What the answer changes: Sets the species groups and aliases; no quantity is removed merely because names are combined.
 - Who probably knows: Nursery manager.
 - Records affected: 61 records, 811 recorded plants; 811 of those plants are amber.
@@ -236,13 +237,14 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 
 ### Q24. Is 1 Mile the registered 1 Mile Creek?
 
-- Where: `/records?place=gorge-road-area&theme=site-identity&year=2016` ([screenshots/q24.png](screenshots/q24.png)).
+- Where: `/records?place=gorge-road-area&theme=site-identity` ([screenshots/q24.png](screenshots/q24.png)).
 - What the app shows: The 1 MILE - QTMBC entry is mapped to 1 Mile Creek, within Gorge Road area, with 165 plants on 16 records.
 - Why we have to ask: It was typed by hand with no fixed list: the source has no number and the app inferred the registered place from the label.
 - The question: **Does this entry mean registered 1 Mile Creek, or another place?**
 - What the answer changes: Confirms or changes the assignment of 165 plants.
 - Who probably knows: Operations manager or local project lead.
 - Records affected: 16 records, 165 recorded plants; 165 of those plants are amber.
+- Source note: The filtered view also contains 35 Gorge Rd Wetlands / QPS plants, asked about separately in Q37; this question concerns only the 1 Mile entries.
 
 ### Q25. Which number is right for Akarua Corner?
 
@@ -354,12 +356,12 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Who probably knows: Site-register keeper.
 - Records affected: 7 records, 73 recorded plants; 73 of those plants are amber.
 
-### Q36. Do the number 16 entries belong to Rapley Close?
+### Q36. Do the old number 10 entries belong to Rapley Close?
 
 - Where: `/sites/rapley-close` ([screenshots/q36.png](screenshots/q36.png)).
-- What the app shows: Autumn 2015 has 40 plants on six records assigned to Rapley Close using number 16; the site header was withheld.
+- What the app shows: The source uses the old number 10 without a clear name. The app maps these six records, carrying 40 plants, to current number 16, Rapley Close.
 - Why we have to ask: It was never recorded clearly enough to confirm the place: the assignment rests on a number alone, and the removed personal text is not needed for this check.
-- The question: **Do the Autumn 2015 entries carrying number 16 belong to Rapley Close, or another site?**
+- The question: **Do these old number 10 entries belong to Rapley Close, another site, or an unknown site?**
 - What the answer changes: Confirms or changes their assignment without asking for removed names.
 - Who probably knows: Operations manager or 2015 history keeper.
 - Records affected: 6 records, 40 recorded plants; 40 of those plants are amber.
@@ -374,12 +376,14 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - Who probably knows: Operations manager.
 - Records affected: 4 records, 35 recorded plants; 35 of those plants are amber.
 
+- Source note: This view also includes 1 Mile entries, asked about in Q24; the screenshot opens the Gorge Rd Wetlands / QPS source example.
+
 ### Q38. Which Carmichaelia stock lines did WRT mean?
 
 - Where: `/species/carmichaelia-crassicaulis` ([screenshots/q38.png](screenshots/q38.png)).
 - What the app shows: Carmichaelia crassicaulis has 25 plants on three records; crassicule var racemosa and racemosa are named as partners without history records.
 - Why we have to ask: It was typed by hand with no fixed list: similar spellings and variety labels do not establish which nursery stock was intended.
-- The question: **Were these three labels one stock line, two lines, or three?**
+- The question: **Which of Carmichaelia crassicaulis, the racemosa variety and Carmichaelia racemosa describe the same WRT stock line, if any?**
 - What the answer changes: Sets species grouping and aliases while preserving quantities.
 - Who probably knows: Nursery manager.
 - Records affected: 3 records, 25 recorded plants; 25 of those plants are amber.
@@ -412,7 +416,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - The question: **Should QLDC Tohu belong to an existing registered site, a new site, or another kind of allocation?**
 - What the answer changes: Confirms classification and any site number.
 - Who probably knows: Operations manager.
-- Records affected: 1 records, 4 recorded plants; 0 of those plants are amber.
+- Records affected: 1 record, 4 recorded plants; 0 of those plants are amber.
 
 ### Q42. What quantity does TBC mean?
 
@@ -422,7 +426,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - The question: **Should TBC be replaced by a quantity, refer to the adjacent 19, or remain unknown?**
 - What the answer changes: May add a confirmed quantity or close the exception without adding anything; it must not be guessed as zero.
 - Who probably knows: Nursery manager or history keeper.
-- Records affected: true
+- Records affected: 1 record; quantity unknown (no imported numeric plants; the record needs review).
 
 ### Q43. What do the three unlabelled 72 cells mean?
 
@@ -432,8 +436,7 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - The question: **What do these three unlabelled 72 values represent?**
 - What the answer changes: Confirms whether they are metadata or unassigned quantities needing a separate correction; 216 is not established as omitted plants.
 - Who probably knows: Whoever prepared the recent reference-garden sheets.
-- Records affected: true
-- Source note: Three source cells; no imported records or established plant quantity.
+- Records affected: Three source cells; no imported records or established plant quantity.
 
 ### Q44. Which Spring 2026 outcomes are ready for the history?
 
@@ -443,5 +446,5 @@ Reviewed on 3 October 2026. The resumed review continues past the earlier broken
 - The question: **Which completed Spring 2026 figures, if any, are ready to enter the master history?**
 - What the answer changes: Extends coverage only when WRT has an agreed basis; no missing quantity is known yet.
 - Who probably knows: Operations manager and history keeper.
-- Records affected: true
+- Records affected: No imported Spring 2026 records; plant quantity unknown.
 - Source note: No imported Spring 2026 records; the number of plants is unknown.

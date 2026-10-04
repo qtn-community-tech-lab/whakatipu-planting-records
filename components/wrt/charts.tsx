@@ -37,11 +37,14 @@ export function SeasonColumns({
   return (
     <figure className="m-0">
       <div className={cn("wrt-cols", size === "sm" && "wrt-cols--sm")} role="list" aria-label={caption ?? "Recorded plants by season"}>
-        {points.map((p) => {
+        {points.map((p, i) => {
           const r = (p.split.resolved / max) * 100;
           const n = (p.split.needsReview / max) * 100;
           const body = (
-            <div className="wrt-col__stack" style={{ height: p.split.total ? `${Math.max(1.5, r + n)}%` : undefined }}>
+            <div
+              className="wrt-col__stack"
+              style={{ height: p.split.total ? `${Math.max(1.5, r + n)}%` : undefined, "--i": i } as React.CSSProperties}
+            >
               {r > 0 && (
                 <span
                   className={cn("wrt-col__seg", p.season.name === "Spring" && "wrt-col__seg--spring")}

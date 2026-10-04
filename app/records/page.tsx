@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
@@ -6,12 +7,13 @@ import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/page";
 import { SplitBar, SplitLine } from "@/components/wrt/quantity";
 import { RecordsTable } from "@/components/wrt/records";
+import { partHref } from "@/components/wrt/sites/site-rows";
+import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import {
   PAGE_SIZE, PARAM_KEYS, type RawParams, type RecordsView, exportHref, hasFilters, parseRecordParams, recordsHref,
 } from "@/components/wrt/explore/filters";
 import { RecordsFilter } from "@/components/wrt/explore/records-filter";
 import { ActiveFilters } from "@/components/wrt/explore/active-filters";
-import { SpeciesSummary, seasonsIn } from "@/components/wrt/explore/species-summary";
 import { RecordsPager } from "@/components/wrt/explore/records-pager";
 import { SortLinks } from "@/components/wrt/explore/sort-links";
 import { recordsHeadline } from "@/components/wrt/explore/records-headline";
@@ -79,34 +81,61 @@ export default async function RecordsPage({ searchParams }: Props) {
   const speciesCount = new Set(result.rows.map((v) => v.species.id)).size;
   const siteCount = new Set(result.rows.filter((v) => !v.place.isScheme).map((v) => v.place.slug)).size;
   const schemeCount = new Set(result.rows.filter((v) => v.place.isScheme).map((v) => v.place.slug)).size;
-  const seasons = seasonsIn(result.rows);
-  const showSummary = total > 0 && (seasons.length <= 2 || !!filter.parcel) && speciesCount > 1;
-  const summarySeasons = seasons.length <= 2 ? seasons : [];
+  const filtered = hasFilters(filter);
+  const showSummary = total > 0 && speciesCount > 1 && !filter.species && filtered;
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
+  const selectedPart = filter.parcel && selectedPlace && selectedPlace.parcels.length > 1
+    ? selectedPlace.parcels.find((p) => p.id === filter.parcel)
+    : undefined;
 
   const hide: ("season" | "site" | "species")[] = [];
   if (filter.place) hide.push("site");
   if (filter.species) hide.push("species");
   if (filter.year && filter.season) hide.push("season");
 
-  const filtered = hasFilters(filter);
+
+  // Pages that tell the bigger story behind this filter.
+  const contextLinks: { href: string; kind: string; label: string }[] = [];
+  if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.name), kind: "Part of site", label: selectedPart.name });
+  if (selectedPlace) contextLinks.push({ href: `/sites/${selectedPlace.slug}${filter.year ? `?year=${filter.year}#year-view` : ""}`, kind: "Site", label: selectedPlace.name });
+  if (filter.year && filter.season) contextLinks.push({ href: `/seasons/${filter.season.toLowerCase()}-${filter.year}`, kind: "Season", label: `${filter.season} ${filter.year}` });
+  const selectedSpecies = filter.species ? lookups.species.find((s) => s.slug === filter.species) : undefined;
+  if (selectedSpecies) contextLinks.push({ href: `/species/${selectedSpecies.slug}`, kind: "Species", label: selectedSpecies.displayName });
 
   return (
     <>
       <PageHead
-        back={selectedPlace ? { href: `/sites/${selectedPlace.slug}`, label: selectedPlace.name } : undefined}
+        back={
+          selectedPart && selectedPlace
+            ? { href: partHref(selectedPlace.slug, selectedPart.name), label: selectedPart.name }
+            : selectedPlace
+              ? { href: `/sites/${selectedPlace.slug}`, label: selectedPlace.name }
+              : undefined
+        }
         eyebrow="Records"
         title={recordsHeadline(filter, split, lookups)}
       />
 
       {total > 0 && (
-        <div className="flex flex-col gap-2.5 -mt-2">
-          <SplitBar split={split} className="max-w-[520px]" />
-          <SplitLine split={split} />
-          <p className="wrt-muted m-0">
-            {formatNumber(total)} record{total === 1 ? "" : "s"} · {formatNumber(speciesCount)} species · {formatNumber(siteCount)} site{siteCount === 1 ? "" : "s"}
-            {schemeCount > 0 && ` · ${schemeCount} order scheme`}
-          </p>
+        <div className="wrt-rhead">
+          <div className="wrt-rhead__figure">
+            <SplitBar split={split} className="wrt-rhead__bar" />
+            <SplitLine split={split} />
+            <p className="wrt-muted m-0">
+              {formatNumber(total)} record{total === 1 ? "" : "s"} · {formatNumber(speciesCount)} species · {formatNumber(siteCount)} site{siteCount === 1 ? "" : "s"}
+              {schemeCount > 0 && ` · ${schemeCount} order scheme`}
+            </p>
+          </div>
+          {contextLinks.length > 0 && (
+            <nav className="wrt-rhead__links" aria-label="Related pages">
+              {contextLinks.map((l) => (
+                <Link key={l.href} href={l.href} className="wrt-rhead__link">
+                  <span className="wrt-rhead__kind">{l.kind}</span>
+                  <span>{l.label} →</span>
+                </Link>
+              ))}
+            </nav>
+          )}
         </div>
       )}
 
@@ -125,10 +154,22 @@ export default async function RecordsPage({ searchParams }: Props) {
         </p>
       )}
 
-      <Card title="Filter records" foot="Every filter is in the page address, so any view can be copied and shared.">
-        <RecordsFilter view={view} lookups={lookups} places={places} />
-        <ActiveFilters view={view} lookups={lookups} />
-      </Card>
+      {filtered ? (
+        <section className="wrt-rfilters" aria-label="Filters">
+          <ActiveFilters view={view} lookups={lookups} />
+          <details className="wrt-rfilters__more">
+            <summary>Change filters</summary>
+            <div className="wrt-rfilters__form">
+              <RecordsFilter view={view} lookups={lookups} places={places} />
+              <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
+            </div>
+          </details>
+        </section>
+      ) : (
+        <Card title="Filter records" foot="Every filter is in the page address, so any view can be copied and shared.">
+          <RecordsFilter view={view} lookups={lookups} places={places} />
+        </Card>
+      )}
 
       {total === 0 ? (
         <EmptyState title="No records match these filters">
@@ -140,15 +181,19 @@ export default async function RecordsPage({ searchParams }: Props) {
         <>
           {showSummary && (
             <Card
-              title="By species"
-              variant="table"
+              title={`Trees in these records (${formatNumber(speciesCount)} species)`}
               foot={
                 filter.review === "needs-review" || filter.theme
-                  ? "Only records needing review are counted here."
-                  : "Totals include records still needing review; the amber figure is that part."
+                  ? "Only records needing review are counted here. Select a species to narrow the records below."
+                  : "Totals include records still needing review; amber is that part. Select a species to narrow the records below."
               }
             >
-              <SpeciesSummary rows={result.rows} seasons={summarySeasons} />
+              <SpeciesTiles
+                records={result.rows}
+                spread={siteCount + schemeCount > 1 ? "sites" : "seasons"}
+                cap={12}
+                hrefFor={(s) => recordsHref(view, { species: s.slug, page: undefined })}
+              />
             </Card>
           )}
 
@@ -168,6 +213,7 @@ export default async function RecordsPage({ searchParams }: Props) {
             <RecordsTable
               rows={pageRows}
               hide={hide}
+              focusTheme={filter.theme}
               caption={`Records ${from} to ${to} of ${total}, sorted by ${view.sort}`}
             />
             <div className="px-2.5">

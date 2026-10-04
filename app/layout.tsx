@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
+import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
 import { getWrt } from "@/lib/wrt/server";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
-import { SidebarNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
+import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
 import { GlobalSearch } from "@/components/wrt/shell/global-search";
+import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
+import { BrandMark } from "@/components/wrt/shell/nav-icons";
+import { Contours } from "@/components/wrt/shell/contours";
+import type { NavCounts } from "@/components/wrt/shell/nav";
+import { formatNumber } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
   title: { default: "Restoration history · Whakatipu Reforestation Trust", template: "%s · WRT restoration history" },
@@ -15,6 +21,19 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const [overview, index] = await Promise.all([getWrt().overview(), buildSearchIndex()]);
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
+  const counts: NavCounts = {
+    sites: formatNumber(overview.placeCount),
+    species: formatNumber(overview.speciesCount),
+    seasons: formatNumber(overview.seasons.length),
+    records: formatNumber(overview.split.records),
+  };
+  const rings: RingSeason[] = overview.seasons.map((p) => ({
+    slug: p.season.slug,
+    label: p.season.label,
+    autumn: p.season.name === "Autumn",
+    total: p.split.total,
+    needsReview: p.split.needsReview,
+  }));
   return (
     <html lang="en-NZ">
       <body className="cn-app">
@@ -23,21 +42,30 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <div className="wrt-shell">
           <div className="wrt-shell__side">
-            <aside className="cn-sidebar">
-              <Link href="/" className="cn-sidebar__brand !no-underline">
-                <span className="cn-sidebar__name">Whakatipu Reforestation Trust</span>
-                <span className="cn-sidebar__sub">Restoration history</span>
+            <aside className="wrt-side">
+              <Contours />
+              <Link href="/" className="wrt-side__brand">
+                <BrandMark />
+                <span className="wrt-side__brandtext">
+                  <span className="wrt-side__name">Whakatipu Reforestation Trust</span>
+                  <span className="wrt-side__sub">Restoration history</span>
+                </span>
               </Link>
-              <SidebarNav />
+              <SidebarNav counts={counts} />
+              <GrowthRings seasons={rings} />
+              <SidebarFootNav />
             </aside>
           </div>
           <div className="wrt-shell__body">
             <div className="wrt-mobilebar">
-              <Link href="/" className="cn-sidebar__brand !p-0">
-                <span className="cn-sidebar__name !text-[15px]">Whakatipu Reforestation Trust</span>
-                <span className="cn-sidebar__sub">Restoration history</span>
+              <Link href="/" className="wrt-mobilebar__brand">
+                <BrandMark size={34} />
+                <span className="cn-sidebar__brand !p-0">
+                  <span className="cn-sidebar__name !text-[15px]">Whakatipu Reforestation Trust</span>
+                  <span className="cn-sidebar__sub">Restoration history</span>
+                </span>
               </Link>
-              <MobileNav />
+              <MobileNav counts={counts} />
             </div>
             <header className="wrt-topbar">
               <Crumb />
@@ -46,16 +74,18 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
                 {range}
               </span>
             </header>
-            <main id="main" className="wrt-main">
-              <p className="wrt-notice" role="note">
-                <span>
-                  <b>Recorded plants, not verified plantings.</b> The history was filled from allocation sheets.{" "}
-                  <span className="text-[var(--cn-behind-fg)]">Amber</span> marks plants on records WRT still has to rule on.
-                </span>
-                <Link href="/about-the-data">How to read these numbers</Link>
-              </p>
-              {children}
-            </main>
+            <ViewTransition default="wrt-page-fade">
+              <main id="main" className="wrt-main">
+                <p className="wrt-notice" role="note">
+                  <span>
+                    <b>Recorded plants, not verified plantings.</b> The history was filled from allocation sheets.{" "}
+                    <span className="text-[var(--cn-behind-fg)]">Amber</span> marks plants on records WRT still has to rule on.
+                  </span>
+                  <Link href="/about-the-data">How to read these numbers</Link>
+                </p>
+                {children}
+              </main>
+            </ViewTransition>
           </div>
         </div>
       </body>

@@ -88,3 +88,24 @@
   html { background: var(--surface-app); }
   body { margin: 0; }
 }
+
+/* Fade the layout's main content when routes change. */
+::view-transition { pointer-events: none; }
+::view-transition-group(.wrt-page-fade) { animation: none; }
+::view-transition-old(.wrt-page-fade) {
+  animation: wrt-page-fade var(--dur) var(--ease) both reverse;
+  mix-blend-mode: normal;
+}
+::view-transition-new(.wrt-page-fade) {
+  animation: wrt-page-fade var(--dur) var(--ease) both;
+  mix-blend-mode: normal;
+}
+@keyframes wrt-page-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none !important; }
+}

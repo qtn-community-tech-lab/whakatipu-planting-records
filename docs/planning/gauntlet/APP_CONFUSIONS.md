@@ -11,7 +11,8 @@ Reviewed on 3 October 2026. This is an audit, with no app or source-data changes
 | `/`, `/seasons/*`, `/species` | “What went in” and “where and when it went in” imply planting outcomes while the banner says the figures are not verified plantings. | Use “What was recorded” consistently until the outcome is established. |
 | `/about-the-data#recorded` | The prose turns allocation comparisons into a claim that the whole history was copied from allocations, then calls the figures what was “sent”. | Describe the comparison evidence and its limits, and keep allocated, sent and planted as distinct statuses. |
 | `/records?review=needs-review&theme=new-site` | “Site with no WRT number” finds only three sites, although twelve provisional sites have no official number. | Add a complete “No official site number” filter, keeping identity uncertainty and incomplete numbering separate. |
-| `/sites/shotover-rotary-track`, `/sites/kiwi-park` and six other unnumbered sites | “Resolved” and “No records here need a WRT ruling” hide unfinished numbering; three of these places are not in the supplied register at all. | Say “No open mapping flags” and display registration/numbering status alongside it. |
+| `/sites/shotover-rotary-track`, `/sites/kiwi-park` and six other unnumbered sites | Seven have no review flags; Walter Peak has just one unrelated species flag for 15 plants. Their numbering remains unfinished, and three are not in the supplied register at all. | Say “No open mapping flags” and display registration/numbering status alongside it. |
+| `/records?place=gorge-road-area&theme=site-identity&q=1+Mile` | Searching for 1 Mile returns all 200 plants in the Gorge Road group, including 35 under Gorge Rd Wetlands / QPS; the group’s aliases match every record. | Offer a source-header or site-part filter, and state when a name search matches an entire site group. |
 | `/records?place=tucker-beach-and-shotover-river&theme=site-identity` | The same Source panel says the number does not identify a parcel, then says the parcel came from that number. | Say “Parcel unknown” on the 17 affected records and reserve the assigned-parcel note for the other records. |
 | `/sites/tucker-beach-and-shotover-river` | Two entries in “Parts of this site” are both called Shotover River, with 247 and 130 plants; the distinction is hard to see. | Label the registered part and the whole-site/unknown-parcel part distinctly, without restoring removed names. |
 | `/species/leptecophylla-juniperina`, `/records?review=needs-review&theme=not-a-number` | The main figure says 0 plants and 0% needing review, but the only record is an unknown TBC quantity. | Show “Quantity unknown: one record needs review”, and make the percentage unavailable when no quantity is known. |
@@ -29,6 +30,8 @@ Reviewed on 3 October 2026. This is an audit, with no app or source-data changes
 
 Broken-link evidence: [species-link-error.png](screenshots/species-link-error.png). All five distinct companion targets were followed in the browser and displayed the error screen. The first stop was respected; the expanded run followed Kyle's explicit instruction to continue.
 
+During screenshot capture the live app briefly showed a build error for a missing `@/data/species-photos.json` import. It recovered after that file appeared, and the 44 captures were completed. Treat this as a development interruption, rather than a reproduced failure in the final state. The newly added photo catalogue was outside the original page walk and has not been fully audited here.
+
 ## Proposed fixes in an order that protects the evidence
 
 1. **Correct the visible trust problems:** no-history species details; consistent recorded/allocated/sent/planted language; missing quantity display; accurate reconciliation explanations.
@@ -40,10 +43,9 @@ These are proposals, not applied changes. Existing numbers should remain intact 
 
 ## Technical evidence behind the proposals
 
-- [Species route](/Users/kyleg/wtr-app-tree-reforestation/app/species/[slug]/page.tsx:45) rejects a species without a history span. The contested callout nevertheless builds a link to every partner. A source-register entry and a history span need separate display rules.
+- [Species route](/Users/kyleg/wtr-app-tree-reforestation/app/species/[slug]/page.tsx:49) rejects a species without a history span. The contested callout nevertheless builds a link to every partner. A source-register entry and a history span need separate display rules.
 - [Source panel](/Users/kyleg/wtr-app-tree-reforestation/components/wrt/records.tsx:36) uses “Counted as 0” for missing quantities. The record table itself correctly shows a dash.
 - [Provisional-number treatment](/Users/kyleg/wtr-app-tree-reforestation/docs/planning/scripts/build_history_prototype.py:285) often adds an FYI note, which does not set the review flag. Across the eight extra small sites, 101 records and 1,285 plants are marked resolved despite incomplete numbering; Walter Peak has another 15 plants amber for an unrelated species question.
 - [Site-name lookup](/Users/kyleg/wtr-app-tree-reforestation/lib/wrt/csv/csv-repository.ts:211) keys the mapping by cleaned header alone. Repeated current headers resolve to the same name, so no present wrong name was found; a future header reused for another number could overwrite its mapping. Carry the resolved name on each history record or key by header and proposed number.
 - The current generated site headers are already masked. No removed personal name was observed in the saved output. Source rendering relies on upstream masking; retain that contract and test it before any AI inputs or exports.
 - The register-ID concern was checked against the original workbook: current IDs are in column A and B is blank. The Python reader is correct; earlier discovery citations to B need correction.
-

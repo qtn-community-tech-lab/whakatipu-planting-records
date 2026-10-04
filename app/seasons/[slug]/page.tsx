@@ -7,15 +7,15 @@ import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { PageHead, Card, CardLink, Rule } from "@/components/wrt/page";
 import { QuantityFigure, SplitKey, plants } from "@/components/wrt/quantity";
 import { RankedBars, SeasonColumns } from "@/components/wrt/charts";
-import { PlaceName, SpeciesName, hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/names";
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
 import { buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
+import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
 
 type Props = { params: Promise<{ slug: string }> };
 
 const RECORDS_CAP = 12;
-const SPECIES_CAP = 20;
 
 export async function generateStaticParams() {
   const seasons = await getWrt().seasons();
@@ -144,49 +144,31 @@ export default async function SeasonPage({ params }: Props) {
         </div>
       )}
 
-      <div className="wrt-grid wrt-grid--2 items-start">
-        <Card
-          title={`Sites this season (${formatNumber(siteCount)})`}
-          action={<SplitKey />}
-          foot="Select a site to see its full history."
-        >
-          <RankedBars
-            items={d.places.map((p) => ({
-              key: p.item.slug,
-              label: <PlaceName place={p.item} />,
-              split: p.split,
-              href: hrefs.place(p.item.slug),
-            }))}
-          />
-        </Card>
+      <Card
+        title={`Trees recorded in ${season.label} (${formatNumber(speciesCount)} species)`}
+        action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
+        foot="Largest first. Select a species name for its records this season. Bars are relative to the largest species this season; amber still needs a WRT ruling."
+      >
+        <SeasonSpeciesGrid season={season} records={d.records} />
+      </Card>
 
-        <div className="flex flex-col gap-[var(--layout-grid-gap)]">
-          <Card
-            title={`Species this season (${formatNumber(speciesCount)})`}
-            action={speciesCount > SPECIES_CAP ? <CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink> : undefined}
-            foot={speciesCount > SPECIES_CAP ? `Top ${SPECIES_CAP} of ${formatNumber(speciesCount)} species. The records list has the rest.` : undefined}
-          >
-            <RankedBars
-              items={d.species.slice(0, SPECIES_CAP).map((s) => ({
-                key: s.item.slug,
-                label: <SpeciesName species={s.item} />,
-                split: s.split,
-                href: hrefs.species(s.item.slug),
-              }))}
-            />
-          </Card>
+      <Card
+        title={`Sites this season (${formatNumber(siteCount)})`}
+        action={<SplitKey />}
+        foot="Each site with its three most recorded species this season. Open a site for every species recorded there."
+      >
+        <SeasonSiteSpecies season={season} records={d.records} />
+      </Card>
 
-          <Card title="By site class" foot="Keystone, community and school sites, as WRT classes them.">
-            <RankedBars
-              items={d.byClass.map((c) => ({
-                key: c.item,
-                label: <span className="cn-row__title">{SITE_CLASS_LABELS[c.item]}</span>,
-                split: c.split,
-              }))}
-            />
-          </Card>
-        </div>
-      </div>
+      <Card title="By site class" foot="Keystone, community and school sites, as WRT classes them.">
+        <RankedBars
+          items={d.byClass.map((c) => ({
+            key: c.item,
+            label: <span className="cn-row__title">{SITE_CLASS_LABELS[c.item]}</span>,
+            split: c.split,
+          }))}
+        />
+      </Card>
 
       <Card
         title="Open questions for WRT in this season"
