@@ -1,8 +1,8 @@
 "use client";
 /**
  * /ask: chat with the planting history, laid out like the demo (WRT chat artifact):
- * steps above each answer, then its cards and text; a dock with the scope bar and the composer;
- * and a Dev switch for the inspector (components/wrt/chat-dev.tsx).
+ * steps above each answer, then its cards and text; a floating composer (components/wrt/chat-composer.tsx)
+ * holding the scope chips, New, and the Dev switch for the inspector (components/wrt/chat-dev.tsx).
  * Clicking a site or species opens it in a sidebar; a part or a season asks about it; cmd-click opens the page.
  */
 import { useChat } from "@ai-sdk/react";
@@ -10,7 +10,8 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Next, PlaceCard, SpeciesCard, Steps, ToolPart, nextQuestions, placeNext, speciesNext } from "@/components/wrt/chat-cards";
 import { ChatDev, useDev } from "@/components/wrt/chat-dev";
-import { ScopeBar, scopeOf, scopeWhere } from "@/components/wrt/chat-scope";
+import { Composer } from "@/components/wrt/chat-composer";
+import { scopeOf, scopeWhere } from "@/components/wrt/chat-scope";
 import type { ChatMessage, Scope } from "@/lib/chat-tools";
 import { openDetail } from "./actions";
 
@@ -31,6 +32,8 @@ export default function AskPage() {
   const [text, setText] = useState("");
   const busy = status === "submitted" || status === "streaming";
   const [dev, setDev] = useDev();
+  // ↑ in an empty composer brings this back.
+  const lastQuestion = messages.findLast((m) => m.role === "user")?.parts.flatMap((p) => (p.type === "text" ? [p.text] : []))[0];
 
   // Scope: what the last answer looked at, minus any chip the user cleared since.
   const found = scopeOf(messages);
@@ -98,7 +101,7 @@ export default function AskPage() {
             {messages.length === 0 && (
               <div className="wrt-ask__intro">
                 <h1 className="wrt-ask__hello">Ask the planting history</h1>
-                <p>Sites, parts of sites, plants and seasons, answered from the same records as every other page.</p>
+                <p>Sites, parts of sites, plants and seasons, answered from the same records as every other page. Click a site or plant in an answer to open it beside the chat.</p>
                 <div className="wrt-pills">
                   {STARTERS.map((s) => (
                     <button key={s} type="button" className="cn-chip" onClick={() => ask(s)}>{s}</button>
@@ -131,25 +134,13 @@ export default function AskPage() {
         </div>
 
         <div className="wrt-chat__dock">
-          <ScopeBar scope={scope} onClear={(k) => setOff({ key: foundKey, keys: [...cleared, k] })} />
-          <form className="wrt-chat__composer" onSubmit={(e) => { e.preventDefault(); ask(text); }}>
-            <label htmlFor="ask" className="sr-only">Ask about a site, species or season</label>
-            <textarea
-              id="ask" rows={1} value={text} placeholder="Ask about a site, species or season…"
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); ask(text); } }}
-            />
-            {busy
-              ? <button type="button" className="cn-btn cn-btn--secondary" onClick={stop}>Stop</button>
-              : <button type="submit" className="cn-btn cn-btn--primary" disabled={!text.trim()}>Ask</button>}
-          </form>
-          <div className="wrt-chat__hint">
-            <span>Enter to send · Shift+Enter for a new line · click a site or plant to open it beside the chat</span>
-            {messages.length > 0 && (
-              <button type="button" className="wrt-ask__btn" disabled={busy} onClick={() => { setMessages([]); setSide(null); }}>New</button>
-            )}
-            <button type="button" className="wrt-ask__btn" aria-pressed={dev} onClick={() => setDev(!dev)}>Dev</button>
-          </div>
+          <Composer
+            value={text} onChange={setText} onSend={ask} status={status} onStop={stop}
+            scope={scope} onClearScope={(k) => setOff({ key: foundKey, keys: [...cleared, k] })}
+            lastQuestion={lastQuestion}
+            onNew={messages.length ? () => { setMessages([]); setSide(null); } : undefined}
+            dev={dev} onDev={setDev} resting={messages.length === 0}
+          />
         </div>
       </section>
 

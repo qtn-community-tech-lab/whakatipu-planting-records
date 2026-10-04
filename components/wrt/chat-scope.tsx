@@ -1,8 +1,8 @@
 "use client";
 /**
- * The composer's scope bar on /ask.
- * Scope is what the last answer looked at (a site, a part, a species, a season). It's shown as chips,
- * can be cleared, and is sent with each question so follow-ups stay on it (scopeLine in lib/chat-tools.ts).
+ * Scope on /ask: what the last answer looked at (a site, a part, a species, a season). It's shown as chips
+ * in the composer (chat-composer.tsx), can be cleared, and is sent with each question so follow-ups stay on it
+ * (scopeLine in lib/chat-tools.ts).
  */
 import type { ChatMessage, Scope } from "@/lib/chat-tools";
 
@@ -51,23 +51,3 @@ export function scopeOf(messages: ChatMessage[]): Scope {
 /** "Gorge Rd Wetlands" and "Spring 2019": the scope in words. */
 export const scopeWhere = (s: Scope) => s.part ?? s.place?.name;
 export const scopeWhen = (s: Scope) => [s.season, s.year].filter(Boolean).join(" ");
-
-/** Chips for the scope; × clears one (a site and its part go together, so do season and year). */
-export function ScopeBar({ scope, onClear }: { scope: Scope; onClear: (key: "place" | "species" | "when") => void }) {
-  const chips = [
-    scope.place && { key: "place" as const, label: scope.part ? `${scope.place.name} › ${scope.part}` : scope.place.name },
-    scope.species && { key: "species" as const, label: scope.species.name },
-    scopeWhen(scope) && { key: "when" as const, label: scopeWhen(scope) },
-  ].filter((c) => !!c);
-  return (
-    <div className="wrt-chat__scope">
-      <span className="wrt-chat__scope-label">Scope</span>
-      {chips.length ? chips.map((c) => (
-        <span key={c.key} className="wrt-chat__scopechip">
-          {c.label}
-          <button type="button" aria-label={`Clear ${c.label}`} onClick={() => onClear(c.key)}>×</button>
-        </span>
-      )) : <span className="wrt-chat__scope-empty">All sites, species and seasons</span>}
-    </div>
-  );
-}
