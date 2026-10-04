@@ -16,6 +16,16 @@ npm run build && npm start
 
 Node 20.9+ (tested on 22). No database or accounts. Planting data loads from local CSVs; reference photos require internet access.
 
+## Deployment
+
+The source is in the private [GitHub repository](https://github.com/ktgcreative/wtr-app-tree-reforestation).
+The [Vercel project](https://vercel.com/ktgcreatives-projects/wtr-app-tree-reforestation) is connected to it;
+pushes to the existing production branch `z` trigger a deployment.
+
+Vercel uses the Next.js preset and `npm run build`. No environment variables or database are required.
+Leave `WRT_DATA_DIR` unset: `next.config.ts` includes the tracked prototype CSVs in the server functions.
+`.vercelignore` excludes local build output and research material from CLI uploads while retaining those CSVs.
+
 ## Pages
 
 | Route | Answers |
