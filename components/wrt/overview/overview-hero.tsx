@@ -61,11 +61,16 @@ export function OverviewHero({
         <div className="wrt-ohero__figure">
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-ohero__split">
-            {formatNumber(split.resolved)} resolved ·{" "}
-            <Link href={hrefs.records({ review: "needs-review" })} className="wrt-shero__amber wrt-ohero__review">
-              {formatNumber(split.needsReview)} ({formatShare(split.needsReview, split.total)}) on{" "}
-              {formatNumber(split.recordsNeedingReview)} records WRT still has to rule on →
-            </Link>
+            {formatNumber(split.resolved)} resolved
+            {split.recordsNeedingReview > 0 && (
+              <>
+                {" · "}
+                <Link href={hrefs.records({ review: "needs-review" })} className="wrt-shero__amber wrt-ohero__review">
+                  {formatNumber(split.needsReview)} ({formatShare(split.needsReview, split.total)}) on{" "}
+                  {formatNumber(split.recordsNeedingReview)} records WRT still has to rule on →
+                </Link>
+              </>
+            )}
           </p>
         </div>
 

@@ -11,6 +11,7 @@ import { hrefs } from "@/components/wrt/names";
 import { SplitLine, SplitKey } from "@/components/wrt/quantity";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SiteRows, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { LocationCard } from "@/components/wrt/sites/location-card";
 
 export const metadata: Metadata = {
   title: "Sites",
@@ -96,6 +97,8 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
           </>
         }
       />
+
+      <LocationCard sites={rows.filter((p) => !p.item.isScheme).map((p) => p.item)} records={records.rows.map((row) => row.record)} />
 
       <Card
         foot={

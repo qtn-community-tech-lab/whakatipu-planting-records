@@ -19,8 +19,8 @@
 .wrt-topbar__crumb { font: 600 14px/1 var(--font-sans); color: var(--text-body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .wrt-topbar__crumb a { color: var(--text-muted); }
 .wrt-topbar__crumb a:hover { color: var(--text-brand); }
-.wrt-topbar__search { margin-left: auto; }
-.wrt-main { padding: var(--layout-main-pad); display: flex; flex-direction: column; gap: var(--layout-main-gap); max-width: 1240px; width: 100%; box-sizing: border-box; }
+.wrt-topbar__search { margin-left: auto; flex: 0 10 360px; min-width: 150px; }
+.wrt-main { padding: var(--layout-main-pad); display: flex; flex-direction: column; gap: var(--layout-main-gap); max-width: 1240px; width: 100%; margin-inline: auto; box-sizing: border-box; }
 .wrt-mobilebar { display: none; }
 .wrt-mobilebar__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
 
@@ -41,12 +41,35 @@
 
 /* ---------------------------------------------------------------- recorded-plants notice */
 .wrt-notice {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
-  margin: -12px 0 -6px; padding: 0 2px;
-  background: none; color: var(--text-muted); font: 500 12.5px/1.45 var(--font-sans);
+  display: flex; align-items: center; gap: 12px;
+  margin: -8px 0 -4px; padding: 10px 16px;
+  border: 1px solid var(--border-card); border-radius: var(--radius-field); background: var(--surface-card);
+  color: var(--text-body); font: 500 13px/1.45 var(--font-sans);
 }
-.wrt-notice b { font-weight: 700; color: var(--text-body); }
-.wrt-notice a { font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.wrt-notice__icon {
+  flex: none; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  background: var(--surface-tint); color: var(--text-brand); font: 800 12px/1 var(--font-sans);
+}
+.wrt-notice__text { flex: 1; min-width: 0; margin: 0; }
+.wrt-notice b { font-weight: 700; color: var(--text-strong); }
+.wrt-notice__amber { padding: 1px 7px; border-radius: var(--radius-pill); background: var(--cn-behind-bg); color: var(--cn-behind-fg); font-weight: 700; }
+.wrt-notice__link { flex: none; font-weight: 700; white-space: nowrap; text-decoration: none; }
+.wrt-notice__link:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 720px) { .wrt-notice { flex-wrap: wrap; } .wrt-notice__text { flex-basis: calc(100% - 34px); } .wrt-notice__link { margin-left: 34px; } }
+
+/* Review switch: off shows confirmed records only (lib/wrt/review-scope.ts). */
+.wrt-switch { display: inline-flex; flex: none; }
+.wrt-switch__btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; border: 0; background: none; cursor: pointer;
+  color: var(--text-body); font: 700 12.5px/1 var(--font-sans); white-space: nowrap;
+}
+.wrt-switch__btn:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; border-radius: var(--radius-pill); }
+.wrt-switch__track { flex: none; width: 30px; height: 18px; padding: 2px; border-radius: var(--radius-pill); background: var(--border-card); transition: background .15s; box-sizing: border-box; }
+.wrt-switch__track i { display: block; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.wrt-switch__btn[aria-checked="true"] .wrt-switch__track { background: var(--cn-behind-bar); }
+.wrt-switch__btn[aria-checked="true"] .wrt-switch__track i { transform: translateX(12px); }
+/* With review records left out, every figure is all resolved: drop the labels that would only say so. */
+[data-review="hidden"] :is(.wrt-split-line:not(.wrt-split-line--none), .wrt-key--review, .wrt-scard2__clear, .rx-fact--review) { display: none; }
 
 /* ---------------------------------------------------------------- grids */
 .wrt-grid { display: grid; gap: var(--layout-grid-gap); }
@@ -159,6 +182,40 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   border: 1px solid var(--border-card); font: 600 13.5px/1 var(--font-sans); color: var(--text-strong); appearance: none; max-width: 100%;
 }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+
+/* Public reference locations are distinct from planting quantities and review flags. */
+.wrt-location-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.wrt-location-picker label { color: var(--text-muted); font: var(--type-small); }
+.wrt-location-picker select { flex: 1; min-width: 0; max-width: 100%; }
+.wrt-location-marker {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 56px; height: 36px; padding: 0 9px;
+  border: 2px solid var(--surface-card); border-radius: var(--radius-pill);
+  background: var(--action-primary); color: var(--cn-white); cursor: pointer;
+  font: var(--type-button);
+  box-shadow: var(--shadow-frame);
+}
+.wrt-location-marker:hover, .wrt-location-marker[aria-pressed="true"] { background: var(--cn-green-900); }
+.wrt-location-marker--group { min-width: 72px; height: 48px; gap: 3px; border-radius: var(--radius-field); }
+.wrt-location-marker__places { font: var(--type-label); font-weight: var(--weight-medium); }
+.wrt-location-marker__review { position: absolute; width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--cn-behind-bar); right: -1px; top: -1px; border: 1px solid var(--surface-card); }
+.wrt-location-marker:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 3px; }
+@media (pointer: coarse) { .wrt-location-marker { min-width: 60px; min-height: 44px; } }
+/* Popover on the selected marker: the count and where to go next. Sources and coordinates sit under the map. */
+.wrt-mappop { width: 248px; padding: 14px 16px 16px; border: 1px solid var(--border-card); border-radius: var(--radius-card, 16px); background: var(--surface-card); box-shadow: 0 10px 30px rgb(20 40 30 / .16); font-family: var(--font-sans); color: var(--text-body); }
+.wrt-mappop__body { display: flex; flex-direction: column; gap: 10px; }
+.wrt-mappop__eyebrow { font: 700 10.5px/1 var(--font-sans); letter-spacing: .06em; text-transform: uppercase; color: var(--text-muted); }
+.wrt-mappop__title { margin: 0; padding-right: 22px; font: 700 15px/1.25 var(--font-sans); color: var(--text-strong); }
+.wrt-mappop__figure { display: flex; align-items: baseline; gap: 6px; }
+.wrt-mappop__figure b { font: 800 26px/1 var(--font-sans); letter-spacing: -.02em; color: var(--text-brand); }
+.wrt-mappop__figure span { font: 600 12.5px/1 var(--font-sans); color: var(--text-muted); }
+.wrt-mappop__split { display: flex; flex-wrap: wrap; gap: 2px 10px; font: 600 12px/1.3 var(--font-sans); }
+.wrt-mappop__split .is-review { color: var(--cn-behind-fg); }
+.wrt-mappop__go { display: flex; align-items: center; justify-content: center; height: 36px; margin-top: 2px; border-radius: var(--radius-pill); background: var(--action-primary); font: 700 13px/1 var(--font-sans); text-decoration: none; }
+.cn-app a.wrt-mappop__go { color: #fff; }
+.wrt-mappop__go:hover { background: var(--cn-green-900); }
+.wrt-mappop__go:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 2px; }
+@media (max-width: 480px) { .wrt-location-picker { flex-direction: column; align-items: stretch; } }
 .wrt-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -1235,7 +1292,7 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 @media (min-width: 961px) {
   /* Fill the main area exactly: no page padding or width cap, the notice as a thin strip above the panes. */
   .wrt-main:has(> .wrt-ask) { max-width: none; padding: 0; gap: 0; height: calc(100dvh - var(--layout-topbar)); overflow: hidden; }
-  .wrt-main:has(> .wrt-ask) > .wrt-notice { margin: 0; padding: 8px clamp(16px, 3vw, 40px); border-bottom: 1px solid var(--border-card); }
+  .wrt-main:has(> .wrt-ask) > .wrt-notice { margin: 0; padding: 8px clamp(16px, 3vw, 40px); border-width: 0 0 1px; border-radius: 0; background: none; }
   .wrt-ask { flex: 1; min-height: 0; }
   .wrt-ask__stream { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
   .wrt-chat__dock { position: relative; padding: 2px clamp(16px, 3vw, 40px) 16px; background: none; }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrtAll, reviewShown } from "@/lib/wrt/server";
 import { Card, CardLink, PageHead, Rule } from "@/components/wrt/page";
 import { QuantityFigure } from "@/components/wrt/quantity";
 import { ReviewThemeList } from "@/components/wrt/records";
@@ -26,8 +26,9 @@ const SECTIONS = [
 ];
 
 export default async function AboutTheData() {
-  const wrt = getWrt();
-  const [dq, overview] = await Promise.all([wrt.dataQuality(), wrt.overview()]);
+  // This page explains the whole history, so it always counts every record, whatever the review switch says.
+  const wrt = getWrtAll();
+  const [dq, overview, showReview] = await Promise.all([wrt.dataQuality(), wrt.overview(), reviewShown()]);
   const { split } = dq;
 
   const seasonRows = dq.reconciliation.filter((r) => r.kind === "season");
@@ -65,6 +66,17 @@ export default async function AboutTheData() {
           </>
         }
       />
+
+      {!showReview && (
+        <p className="cn-callout cn-callout--note cn-callout--sm m-0" role="note">
+          <span>
+            <b>This page counts every record.</b> The rest of the app is showing confirmed records only:{" "}
+            {formatNumber(split.resolved)} recorded plants on {formatNumber(split.records - split.recordsNeedingReview)} records.
+            Turn on “Needs review” in the top bar to see the other {formatNumber(split.needsReview)} everywhere, and to
+            follow the links below to them.
+          </span>
+        </p>
+      )}
 
       <nav aria-label="On this page" className="flex flex-wrap gap-2">
         {SECTIONS.map((s) => (

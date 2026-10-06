@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { PageHead, Card, CardLink, Rule } from "@/components/wrt/page";
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!d) return { title: "Season not found" };
   return {
     title: `${d.season.label}: ${formatNumber(d.split.total)} recorded plants`,
-    description: `${plants(d.split.total)} in ${d.season.label} across ${d.places.length} sites and ${d.species.length} species, with the part that still needs a WRT ruling.`,
+    description: `${plants(d.split.total)} in ${d.season.label} across ${d.places.length} sites and ${d.species.length} species.`,
   };
 }
 
@@ -39,7 +39,7 @@ function list(items: string[]) {
 export default async function SeasonPage({ params }: Props) {
   const { slug } = await params;
   const wrt = getWrt();
-  const [d, all] = await Promise.all([wrt.season(slug), wrt.seasons()]);
+  const [d, all, showReview] = await Promise.all([wrt.season(slug), wrt.seasons(), reviewShown()]);
   if (!d) notFound();
 
   const { season, split, reconciliation: recon } = d;
@@ -147,7 +147,7 @@ export default async function SeasonPage({ params }: Props) {
       <Card
         title={`Trees recorded in ${season.label} (${formatNumber(speciesCount)} species)`}
         action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
-        foot="Largest first. Select a species name for its records this season. Bars are relative to the largest species this season; amber still needs a WRT ruling."
+        foot={`Largest first. Select a species name for its records this season. Bars are relative to the largest species this season${showReview ? "; amber still needs a WRT ruling" : ""}.`}
       >
         <SeasonSpeciesGrid season={season} records={d.records} />
       </Card>
@@ -170,13 +170,15 @@ export default async function SeasonPage({ params }: Props) {
         />
       </Card>
 
-      <Card
-        title="Open questions for WRT in this season"
-        action={d.themes.length ? <CardLink href={needsReviewHref}>All needs-review records</CardLink> : undefined}
-        foot="Each question can be answered once and covers every record under it."
-      >
-        <ReviewThemeList themes={d.themes} recordsQuery={{ year: season.year, season: season.name }} />
-      </Card>
+      {showReview && (
+        <Card
+          title="Open questions for WRT in this season"
+          action={d.themes.length ? <CardLink href={needsReviewHref}>All needs-review records</CardLink> : undefined}
+          foot="Each question can be answered once and covers every record under it."
+        >
+          <ReviewThemeList themes={d.themes} recordsQuery={{ year: season.year, season: season.name }} />
+        </Card>
+      )}
 
       {reviewRows.length > 0 && (
         <Card
@@ -195,7 +197,7 @@ export default async function SeasonPage({ params }: Props) {
 
       {reviewRows.length === 0 && (
         <Rule>
-          Every record in {season.label} is resolved. <Link className="cn-link" href={recordsHref}>See all {formatNumber(split.records)} records →</Link>
+          {showReview && <>Every record in {season.label} is resolved. </>}<Link className="cn-link" href={recordsHref}>See all {formatNumber(split.records)} records →</Link>
         </Rule>
       )}
     </>

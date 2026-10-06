@@ -40,7 +40,7 @@ export default async function SpeciesPhotosPage() {
         back={{ href: "/species", label: "All species" }}
         eyebrow="Species · Field guide"
         title={`Meet ${rows.length} species in the planting history`}
-        lead={<>Ranked by recorded plants across all sites and seasons, including records needing review.
+        lead={<>Ranked by recorded plants across all sites and seasons.
           These {rows.length} species account for {formatNumber(split.total)} plants—{Math.round(split.total / total * 100)}% of the recorded total.</>}
       />
       <Card title="Before you head out" action={<SplitLine split={split} />}>
@@ -69,7 +69,7 @@ export default async function SpeciesPhotosPage() {
                   <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <SpeciesPhotoFigure key={extra.src} photo={extra} />)}</div>
                 </details>}
               </> : <p className="wrt-muted">A reference photo has not been reviewed for this species yet.</p>}
-              <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>
+              {row.split.needsReview > 0 && <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>}
             </Card>
           );
         })}

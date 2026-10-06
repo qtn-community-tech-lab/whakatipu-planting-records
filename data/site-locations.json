@@ -1,0 +1,216 @@
+[
+  {
+    "id": "slope-hill-riparian",
+    "siteSlug": "slope-hill",
+    "label": "Slope Hill riparian site",
+    "latitude": -44.9716,
+    "longitude": 168.7985,
+    "precision": "historic-event",
+    "description": "A historic WRT planting-day location beside the creek and cycle trail. Access from Speargrass Flat Road along Slope Hill Road. Other Slope Hill planting areas extend beyond this point.",
+    "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
+    "sourceLabel": "WRT planting directions",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
+    "coordinateMethod": "Official WRT Spring 2022 event pin beside the riparian site. The larger ledger group also includes Coronation and HGF areas; this point is not their boundary or centroid. Current access is about 1 km along Slope Hill Road from Speargrass Flat Road.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "whitechapel-reserve",
+    "siteSlug": "whitechapel",
+    "label": "Whitechapel Reserve",
+    "latitude": -44.9736,
+    "longitude": 168.8546,
+    "precision": "historic-event",
+    "description": "WRT’s historic planting-day location on Whitechapel Road, Arrow Junction, beside the Queenstown Trail. The reserve’s planting areas extend beyond this reference point.",
+    "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
+    "sourceLabel": "WRT planting directions",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
+    "coordinateMethod": "Official WRT Spring 2022 planting-site pin on Whitechapel Road, Arrow Junction. QLDC reserve beside the cycle trail. Approximate reference point, not the reserve boundary or its internal planting areas.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "lake-hayes-south-wetland",
+    "siteSlug": "lake-hayes",
+    "label": "Lake Hayes South wetland",
+    "latitude": -44.9918,
+    "longitude": 168.7986,
+    "precision": "landmark",
+    "description": "A reference point within the southern Lake Hayes wetland, near the South/Roadside planting area. It marks the wider wetland rather than an individual planting patch.",
+    "sourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/lake-hayes-margins",
+    "sourceLabel": "Otago Regional Council",
+    "coordinateSourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/lake-hayes-margins",
+    "coordinateMethod": "ORC published centre of the Lake Hayes Margins wetland on the southern/western lake margin, converted from NZTM E1268820 N5009370 to WGS84. A broad wetland reference near the South/Roadside planting area; not a verified WRT planting pin.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "9A"
+    ]
+  },
+  {
+    "id": "lake-hayes-pavilion",
+    "siteSlug": "lake-hayes",
+    "label": "Lake Hayes Pavilion",
+    "latitude": -44.9899,
+    "longitude": 168.8096,
+    "precision": "landmark",
+    "description": "The pavilion at 719 Lake Hayes–Arrow Junction Highway is a landmark for planting on the shoreline below. The marker shows the building, rather than the planting area.",
+    "sourceUrl": "https://www.qldc.govt.nz/venues/lake-hayes-pavilion",
+    "sourceLabel": "QLDC venue information",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/466884805",
+    "coordinateMethod": "Lake Hayes Pavilion building at 719 Lake Hayes–Arrow Junction Highway. QLDC confirms WRT planting below the pavilion. Coordinates geocoded from the OSM building; a navigation landmark, not the shoreline planting centroid.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "9G"
+    ]
+  },
+  {
+    "id": "jardine-park-nursery",
+    "siteSlug": "jardine-park",
+    "label": "Jardine Park / Jean Malpas Nursery",
+    "latitude": -45.0454,
+    "longitude": 168.6941,
+    "precision": "landmark",
+    "description": "The nursery on Poplar Drive, Kelvin Heights, provides an approach to nearby Jardine Park planting areas. The Reference Gardens and Welcome Forest are separate parts of the site.",
+    "sourceUrl": "https://wrtqt.org.nz/community-nursery/",
+    "sourceLabel": "WRT nursery information",
+    "coordinateSourceUrl": "https://www.eventbrite.co.nz/e/community-nursery-volunteer-sessions-tickets-1998116193322",
+    "coordinateMethod": "WRT organizer-published location for the Jean Malpas community nursery on Poplar Drive, Kelvin Heights. Current park plantings are reached on foot from nursery parking. Reference Gardens, Track Entrance and Welcome Forest are separate ledger parts; this is not a Welcome Forest centroid.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "bush-creek-event",
+    "siteSlug": "arrowtown-and-bush-creek",
+    "label": "Bush Creek",
+    "latitude": -44.9373,
+    "longitude": 168.8276,
+    "precision": "historic-event",
+    "description": "A historic WRT planting-day location near Arrowtown’s Chinese Settlement. The group also includes separate school and reserve locations.",
+    "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
+    "sourceLabel": "WRT planting information",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
+    "coordinateMethod": "Published organizer KML point supplied by parent researcher.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "feehly-cemetery",
+    "siteSlug": "feehly-hill",
+    "label": "Feehly Hill / Arrowtown Cemetery",
+    "latitude": -44.9399,
+    "longitude": 168.827,
+    "precision": "landmark",
+    "description": "The cemetery is a landmark for WRT plantings on the hillside behind it. Additional planting areas lie near Manse Road and the Powder Magazine.",
+    "sourceUrl": "https://www.queenstownhistoricalsociety.org.nz/Courier%20101%20published.pdf",
+    "sourceLabel": "Feehly Hill history",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Cemeteries/MapServer/4/query?where=OBJECTID%3D384&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of the official QLDC Arrowtown Cemetery polygon in WGS84.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "peace-park",
+    "siteSlug": "peace-park-and-frankton",
+    "label": "Peace Park",
+    "latitude": -45.0253,
+    "longitude": 168.7317,
+    "precision": "landmark",
+    "description": "A council-mapped WRT restoration area on the Frankton foreshore. This reference point does not include the separate Frankton Beach and Boyes Crescent areas.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D6401&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC planting reference",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D6401&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Community Planting feature 6401 in WGS84; not a reconciliation of all historical WRT planting records.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "harvest-gardens",
+    "siteSlug": "gorge-road-area",
+    "label": "Harvest Gardens",
+    "latitude": -45.014,
+    "longitude": 168.6666,
+    "precision": "landmark",
+    "description": "The gardens at 201 Gorge Road have native planting along their southern fence. The marker shows a nearby address reference.",
+    "sourceUrl": "https://harvestgardens.nz/resources/native-planting-area/",
+    "sourceLabel": "Harvest Gardens planting information",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/node/12009361230",
+    "coordinateMethod": "OSM address node 12009361230 resolved via Nominatim; street address independently corroborated by Charities Services CC40889.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "5B"
+    ]
+  },
+  {
+    "id": "alpine-retreat",
+    "siteSlug": "gorge-road-area",
+    "label": "Alpine Retreat",
+    "latitude": -45.0466,
+    "longitude": 168.5966,
+    "precision": "landmark",
+    "description": "A road reference within the Alpine Retreat community, accessed via Moke Lake Road. Restoration extends onto shared common land nearby.",
+    "sourceUrl": "https://whakatipuwildlifetrust.org.nz/alpine-retreat/",
+    "sourceLabel": "Alpine Retreat conservation project",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/223291862",
+    "coordinateMethod": "Published Nominatim representative coordinate of OSM road way 223291862.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "5D"
+    ]
+  },
+  {
+    "id": "ziptrek-course",
+    "siteSlug": "gorge-road-area",
+    "label": "Ziptrek / Bob’s Peak",
+    "latitude": -45.0282,
+    "longitude": 168.6517,
+    "precision": "landmark",
+    "description": "A reference point within Ziptrek’s tour area above Queenstown, where WRT-supported restoration has taken place. Individual planting patches are not shown.",
+    "sourceUrl": "https://www.ziptrek.co.nz/latest-news/ziptrek-ecotours-achieve-zero-carbon-zipping-for-another-year/",
+    "sourceLabel": "Ziptrek restoration information",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=19fTsCPTo5LpPkFS6bYNkwVrX1Xo&forcekml=1",
+    "coordinateMethod": "Area-weighted centroid of Tour Area polygon in official Ziptrek map embedded at https://www.ziptrek.co.nz/location/ .",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "5E"
+    ]
+  },
+  {
+    "id": "rees-lakefront",
+    "siteSlug": "gorge-road-area",
+    "label": "The Rees lakefront",
+    "latitude": -45.0286,
+    "longitude": 168.6891,
+    "precision": "landmark",
+    "description": "A council-mapped community planting area on the Frankton Track below The Rees Hotel. This is one of several separate places grouped under Gorge Road area.",
+    "sourceUrl": "https://therees.co.nz/sustainability/environmental/",
+    "sourceLabel": "The Rees lakefront restoration",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D10506&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Community Planting feature 10506 in WGS84; adjacent 10507 also maps planting.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "5F"
+    ]
+  },
+  {
+    "id": "morning-star-reserve",
+    "siteSlug": "arthurs-point",
+    "label": "Morning Star Reserve",
+    "latitude": -44.9809,
+    "longitude": 168.6679,
+    "precision": "landmark",
+    "description": "A broad reference for Morning Star Beach Recreation Reserve beside the Shotover River. WRT-supported planting occupies a plateau within the reserve; this point does not mark the plateau or an entrance.",
+    "sourceUrl": "https://www.doc.govt.nz/contentassets/982a0ad602034fdda26295c0918db005/morning-star-reserve-submission-9-kapow.pdf",
+    "sourceLabel": "Morning Star restoration evidence",
+    "coordinateSourceUrl": "https://api.inaturalist.org/v1/places/89383",
+    "coordinateMethod": "Published location field of iNaturalist reserve place 89383.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "shotover-wetland",
+    "siteSlug": "shotover-primary",
+    "label": "Shotover Wetland",
+    "latitude": -45.0109,
+    "longitude": 168.7735,
+    "precision": "landmark",
+    "description": "A reference within the council’s wetland and recreation zone east of the Shotover–Kawarau confluence. Most Shotover Primary records relate to this wetland, with separate planting on school grounds.",
+    "sourceUrl": "https://www.queenstownairport.co.nz/explore-queenstown-beyond/zqn-stories/shotover-wetland-project/",
+    "sourceLabel": "Shotover Wetland project",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/Planning/Structure_Plans/MapServer/58/query?where=OBJECTID%3D448&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Structure Plans feature 448, Activity 5d - Open Space - Wetland, in WGS84.",
+    "checkedOn": "2026-10-07"
+  }
+]

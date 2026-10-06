@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/page";
 import { SplitKey } from "@/components/wrt/quantity";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function SeasonsPage() {
   const wrt = getWrt();
-  const [seasons, overview, records] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records()]);
+  const [seasons, overview, records, showReview] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records(), reviewShown()]);
   // Most recorded species in each season, largest first.
   // Top trees and top sites in each season, largest first.
   const topBySeason = new Map<string, SiteSpecies[]>();
@@ -73,7 +73,7 @@ export default async function SeasonsPage() {
           <h2 id="by-season" className="wrt-section-title">Recorded plants by season</h2>
           <SplitKey spring />
         </div>
-        <SeasonColumns points={seasons} caption="Autumn and spring alternate. Amber is the part still waiting on a WRT ruling." />
+        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
         {slope && slopeSeasons.length > 0 && (
           <Rule>
             {slopeSeasons.join(" and ")} stand out because they include the Slope Hill 2024 columns ({formatNumber(slope.split.needsReview)} recorded plants,

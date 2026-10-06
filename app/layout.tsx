@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
@@ -10,6 +10,7 @@ import { GlobalSearch } from "@/components/wrt/shell/global-search";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
 import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
+import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
 import type { NavCounts } from "@/components/wrt/shell/nav";
 import { formatNumber } from "@/lib/wrt/text";
 
@@ -19,7 +20,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [overview, index] = await Promise.all([getWrt().overview(), buildSearchIndex()]);
+  const [overview, index, showReview, everything] = await Promise.all([
+    getWrt().overview(), buildSearchIndex(), reviewShown(), getWrtAll().overview(),
+  ]);
+  const left = everything.split;
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
   const counts: NavCounts = {
     sites: formatNumber(overview.placeCount),
@@ -35,7 +39,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     needsReview: p.split.needsReview,
   }));
   return (
-    <html lang="en-NZ">
+    <html lang="en-NZ" data-review={showReview ? "shown" : "hidden"}>
       <body className="cn-app">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 cn-btn cn-btn--primary cn-btn--sm">
           Skip to content
@@ -70,19 +74,29 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <header className="wrt-topbar">
               <Crumb />
               <GlobalSearch index={index} />
-              <span className="cn-topbar__date !ml-0 hidden md:inline-flex whitespace-nowrap" title="Seasons covered by the records">
+              <ReviewSwitch shown={showReview} />
+              <span className="cn-topbar__date !ml-0 hidden xl:inline-flex whitespace-nowrap" title="Seasons covered by the records">
                 {range}
               </span>
             </header>
             <ViewTransition default="wrt-page-fade">
               <main id="main" className="wrt-main">
-                <p className="wrt-notice" role="note">
-                  <span>
-                    <b>Recorded plants, not verified plantings.</b> The history was filled from allocation sheets.{" "}
-                    <span className="text-[var(--cn-behind-fg)]">Amber</span> marks plants on records WRT still has to rule on.
-                  </span>
-                  <Link href="/about-the-data">How to read these numbers</Link>
-                </p>
+                <div className="wrt-notice" role="note">
+                  <span className="wrt-notice__icon" aria-hidden="true">i</span>
+                  <p className="wrt-notice__text">
+                    <b>Recorded plants, not verified plantings.</b>{" "}
+                    Figures come from nursery allocation sheets, not from counts in the ground.{" "}
+                    {showReview ? (
+                      <><span className="wrt-notice__amber">Amber</span> marks plants on records WRT still has to rule on.</>
+                    ) : (
+                      <>
+                        Showing confirmed records only: {formatNumber(left.needsReview)} plants on{" "}
+                        {formatNumber(left.recordsNeedingReview)} records WRT still has to rule on are left out.
+                      </>
+                    )}
+                  </p>
+                  <Link href="/about-the-data" className="wrt-notice__link">How to read these numbers →</Link>
+                </div>
                 {children}
               </main>
             </ViewTransition>

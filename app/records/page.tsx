@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/page";
@@ -64,7 +64,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   }
 
   const wrt = getWrt();
-  const [lookups, places, allSeasons] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons()]);
+  const [lookups, places, allSeasons, showReview] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown()]);
   const parsed = parseRecordParams(raw, lookups);
   const result = await wrt.records(parsed.filter);
   const { filter, split } = result;
@@ -161,7 +161,7 @@ export default async function RecordsPage({ searchParams }: Props) {
             <span className="rx-bar__none">All {formatNumber(total)} records<span className="rx-bar__hint"> · select anything below to narrow them</span></span>
           )}
         </div>
-        <nav className="rx-bar__review" aria-label="Review status">
+        {showReview && <nav className="rx-bar__review" aria-label="Review status">
           {([
             ["all", "All", undefined],
             ["needs-review", "Needs review", "needs-review"],
@@ -176,11 +176,11 @@ export default async function RecordsPage({ searchParams }: Props) {
               {label}
             </Link>
           ))}
-        </nav>
+        </nav>}
         <details className="rx-bar__more">
           <summary>{filtered ? "Change filters" : "Filter"}</summary>
           <div className="rx-bar__form">
-            <RecordsFilter view={view} lookups={lookups} places={places} />
+            <RecordsFilter view={view} lookups={lookups} places={places} showReview={showReview} />
             <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
           </div>
         </details>
@@ -188,7 +188,9 @@ export default async function RecordsPage({ searchParams }: Props) {
 
       {total === 0 ? (
         <EmptyState title="No records match these filters">
-          {filtered
+          {!showReview && (filter.theme || filter.review === "needs-review")
+            ? "Records needing review are switched off. Turn on “Needs review” in the top bar to see them."
+            : filtered
             ? "Try removing one of the filters above, or clear them all. Names are matched without macrons, so “manuka” finds Mānuka."
             : "There are no records to show."}
         </EmptyState>

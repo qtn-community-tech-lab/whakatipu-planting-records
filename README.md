@@ -85,6 +85,10 @@ display only. Delete it once the species register has its own display-name colum
 - History only: no current stock, seed lots, potting or allocations.
 - Spring 2026 is not in the MASTER workbook yet.
 
+## Site reference maps
+
+The Sites map and individual site pages show approximate public reference locations for the ten largest historical site groups. `data/site-locations.json` keeps these points separate from the CSV planting ledger, with explicit latitude/longitude, location and coordinate source URLs, derivation notes and a checked date. Points come from WRT's historic event map, council geometry or public landmarks; they do not claim historical planting boundaries. Lake Hayes and the dispersed Gorge Road group have multiple points. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. A single site reference uses its whole-site count; multi-point sites use distinct registered parcel IDs so quantities are not duplicated. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
+
 ## Species photo guide
 
 Open **Species → Top 20 photo guide** for hosted reference photos of the twenty most planted species. Each species has three photos; thumbnails appear in the main Species list, and the full set appears on its detail page, with photographer credits, licences and source links. See [the source and maintenance notes](docs/species-photo-guide.md).

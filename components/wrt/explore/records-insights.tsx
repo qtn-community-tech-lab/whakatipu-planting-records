@@ -215,7 +215,7 @@ export function RecordsInsights({
               </b>
               <span>{first && last ? (first.slug === last.slug ? first.label : `${first.label} → ${last.label}`) : ""}</span>
             </div>
-            <div className="rx-fact">
+            <div className="rx-fact rx-fact--review">
               <span className="rx-fact__k">Needs review</span>
               <b className="tabular-nums rx-fact__amber">{formatShare(rows.reduce((n, v) => n + (v.record.needsReview ? v.record.quantity : 0), 0), rows.reduce((n, v) => n + v.record.quantity, 0))}</b>
               <span>of recorded plants here</span>

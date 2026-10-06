@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getWrt } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import Link from "next/link";
 import { Card, CardLink, Rule } from "@/components/wrt/page";
 import { SplitKey } from "@/components/wrt/quantity";
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const wrt = getWrt();
-  const [o, places, seasons] = await Promise.all([wrt.overview(), wrt.places(), wrt.seasons()]);
+  const [o, places, seasons, showReview] = await Promise.all([wrt.overview(), wrt.places(), wrt.seasons(), reviewShown()]);
 
   const { split } = o;
   const slopeHill = o.themes.find((t) => t.theme === "slope-hill-2024");
@@ -109,13 +109,15 @@ export default async function Home() {
         )}
       </Card>
 
-      <Card
-        title="Open questions for WRT"
-        action={<CardLink href="/about-the-data">About the data</CardLink>}
-        foot="Each question can be answered once and then applies to every record it touches."
-      >
-        <OpenQuestions themes={o.themes} />
-      </Card>
+      {showReview && (
+        <Card
+          title="Open questions for WRT"
+          action={<CardLink href="/about-the-data">About the data</CardLink>}
+          foot="Each question can be answered once and then applies to every record it touches."
+        >
+          <OpenQuestions themes={o.themes} />
+        </Card>
+      )}
 
       <div className="wrt-grid wrt-grid--2">
         <Card

@@ -14,7 +14,7 @@ export function plants(n: number) {
 
 /** "of which 931 need review (3%)" or "all records resolved". */
 export function SplitLine({ split, className }: { split: QuantitySplit; className?: string }) {
-  if (split.records === 0) return <span className={cn("wrt-split-line", className)}>No records</span>;
+  if (split.records === 0) return <span className={cn("wrt-split-line wrt-split-line--none", className)}>No records</span>;
   return (
     <span className={cn("wrt-split-line", className)}>
       {formatNumber(split.resolved)} resolved
@@ -42,7 +42,7 @@ export function SplitBar({
     <div
       className={cn("cn-bar cn-bar--seg", size === "sm" && "cn-bar--sm", className)}
       role="img"
-      aria-label={label ?? `${formatNumber(split.resolved)} resolved, ${formatNumber(split.needsReview)} needing review`}
+      aria-label={label ?? `${formatNumber(split.resolved)} resolved${split.needsReview > 0 ? `, ${formatNumber(split.needsReview)} needing review` : ""}`}
     >
       {r > 0 && <div className="cn-bar__fill" style={{ width: `${r}%` }} />}
       {n > 0 && <div className="cn-bar__fill cn-bar__fill--review" style={{ width: `${n}%` }} />}
@@ -72,7 +72,7 @@ export function SplitKey({ spring = false }: { spring?: boolean }) {
     <span className="flex flex-wrap gap-x-4 gap-y-2">
       <span className="wrt-key"><i />{spring ? "Autumn, resolved" : "Resolved"}</span>
       {spring && <span className="wrt-key"><i style={{ background: "var(--cn-green-600)" }} />Spring, resolved</span>}
-      <span className="wrt-key"><i className="is-review" />Needs review</span>
+      <span className="wrt-key wrt-key--review"><i className="is-review" />Needs review</span>
     </span>
   );
 }

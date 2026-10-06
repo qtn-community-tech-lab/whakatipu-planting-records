@@ -14,6 +14,7 @@ import { YearView } from "@/components/wrt/sites/year-view";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref, speciesBySite } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
+import { LocationCard } from "@/components/wrt/sites/location-card";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -84,6 +85,8 @@ export default async function SitePage({ params, searchParams }: Props) {
             : undefined
         }
       />
+
+      {!place.isScheme && <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />}
 
       <Card title="Recorded plants by season" action={<SplitKey spring />}
         foot={

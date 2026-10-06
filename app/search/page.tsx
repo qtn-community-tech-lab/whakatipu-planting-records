@@ -83,7 +83,7 @@ export default async function SearchPage({ searchParams }: Props) {
       )}
 
       {r.species.length > 0 && (
-        <Card title="Species" variant="table" foot="Recorded plants across all sites and seasons, with the part still needing review.">
+        <Card title="Species" variant="table" foot="Recorded plants across all sites and seasons.">
           <div className="exp-results">
             {r.species.map(({ item: s, split }) => (
               <Result key={s.slug} href={hrefs.species(s.slug)} split={split} note={`${formatNumber(split.records)} records`}>

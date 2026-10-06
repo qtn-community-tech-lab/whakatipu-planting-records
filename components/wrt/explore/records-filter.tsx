@@ -30,8 +30,8 @@ function Segmented({
  * so the result is a linkable URL and works without JavaScript.
  */
 export function RecordsFilter({
-  view, lookups, places,
-}: { view: RecordsView; lookups: Lookups; places: PlaceSummary[] }) {
+  view, lookups, places, showReview = true,
+}: { view: RecordsView; lookups: Lookups; places: PlaceSummary[]; /** False when records needing review are switched off. */ showReview?: boolean }) {
   const f = view.filter;
   const sites = places.map((p) => p.item).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -80,7 +80,7 @@ export function RecordsFilter({
             ))}
           </select>
         </div>
-        <div className="cn-field">
+        {showReview && <div className="cn-field">
           <label className="cn-field__label" htmlFor="exp-theme">Review question</label>
           <select id="exp-theme" name="theme" className="wrt-select" defaultValue={f.theme ?? ""}>
             <option value="">Any</option>
@@ -88,7 +88,7 @@ export function RecordsFilter({
               <option key={t} value={t}>{REVIEW_THEMES[t].label}</option>
             ))}
           </select>
-        </div>
+        </div>}
       </div>
 
       <div className="exp-form__row">
@@ -103,14 +103,14 @@ export function RecordsFilter({
           name="season" label="Planting season" value={f.season ?? ""}
           options={[{ value: "", label: "All" }, { value: "Autumn", label: "Autumn" }, { value: "Spring", label: "Spring" }]}
         />
-        <Segmented
+        {showReview && <Segmented
           name="review" label="Review status" value={f.review ?? ""}
           options={[
             { value: "", label: "All" },
             { value: "resolved", label: "Resolved" },
             { value: "needs-review", label: "Needs review" },
           ]}
-        />
+        />}
         {view.sort !== "season" && <input type="hidden" name="sort" value={view.sort} />}
         <div className="exp-form__actions">
           <button type="submit" className="cn-btn cn-btn--primary cn-btn--md">Apply</button>
