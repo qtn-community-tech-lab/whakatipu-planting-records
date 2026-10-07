@@ -1,6 +1,6 @@
 # Planting location references
 
-Checked 7 October 2026. The map contains 38 public reference points across 29 of the 38 physical site groups. The second research batch investigated 20 additional groups, found supported references for 18, and added KingsView School as a further identifiable school site. Skippers–DOC and Kingston remain unmapped.
+Checked 7 October 2026. The map contains 50 public reference points across 29 of the 38 physical site groups. The second research batch investigated 20 additional groups, found supported references for 18, and added KingsView School as a further identifiable school site. Skippers–DOC and Kingston remain unmapped.
 
 Coordinates, source links, derivations and checked dates are maintained in [site-locations.json](../data/site-locations.json). These references locate named reserves, schools, restoration projects and historical events. They do not reconstruct the boundaries of historical planting patches. Recorded quantities come from the existing planting CSV and follow the reader's review switch. Public project totals are never substituted for the application's quantities.
 
@@ -42,9 +42,54 @@ Numbers below are full-history quantities, including records needing review. Mul
 
 **Moderate correspondence:** Bridesdale's reference is a known 2023 Bush Trust planting polygon in the WRT-supported project; the ledger's 2025 records do not establish that exact patch. Arrow Morven's historic register alias is “Arrow River Track – Arrow Junction” in [the site variants](discovery/04d_sites_variants.csv). The council reserve plan places Morven Ferry Reserve beside that river and trail. This supports a locality reference, while the 2015 planting stretch remains unknown. Both limitations are visible in the marker descriptions.
 
+## Sub-location audit
+
+A third research batch focused on parts within the already mapped groups. It added **12 reference points**, keeping the same 29 mapped groups. Seven existing markers now count only their identified ledger part: Slope Hill Road, Bush Creek, Feehly cemetery, Peace Park, Morning Star, Shotover Wetland and Jardine Nursery Reference Gardens. The CSV ledger and whole-site totals are unchanged. This prevents unmapped or separately mapped parts from inflating a specific marker's count.
+
+| Group | New sub-location | Parcel | Recorded plants, including review |
+|---|---|---|---:|
+| Lake Hayes | West / Project Gold | 9 | 2,259 |
+| Lake Hayes | East / Rowing Club | 9H | 1,130 |
+| Arthurs Point | Atley Downs / Atley Road Reserve | 6 | 592 |
+| Arthurs Point | DOC Office / Cavells Building | 6A | 115 |
+| Feehly Hill | Powder Magazine | 12 | 50 |
+| Feehly Hill | Manse Road Reserve | 12B | 370 |
+| Arrowtown and Bush Creek | Arrowtown Primary School | 13B | 220 |
+| Arrowtown and Bush Creek | Derby Street Road Reserve | 13D | 73 |
+| Peace Park and Frankton | Frankton Beach / Domain | 21A | 155 |
+| Peace Park and Frankton | Boyes Crescent residents planting | 21B | 508 |
+| Shotover Primary | Internal school grounds | 20B | 700 |
+| Jardine Park | Welcome Forest | 23B | 6,995 |
+
+**Planting-area references:** QLDC community planting polygons explicitly identify the Rowing Club, Derby Street restoration group, Boyes Crescent residents, and WRT native planting in Jardine Park. The [March 2025 Jardine development plan](https://www.qldc.govt.nz/media/tbupdms0/jardine-park-cdp-reve-final-lr-4032025.pdf) identifies Welcome Forest in the southern park, corroborating feature 1778. The nursery remains a navigation landmark for Reference Gardens, supported by [QLDC's educational garden expansion approval](https://www.qldc.govt.nz/2022/august/22-08-19-tree-replacement-requests-granted-in-kelvin-peninsula).
+
+**Improved Lake Hayes anchors:** The previous broad ORC wetland point for South is replaced with an interior point in council WRT keystone planting polygon 1845. The Pavilion building landmark is replaced with an interior point in WRT planting polygon 1844. Project Gold uses an interior point in the largest western-shore polygon 1854; the [council's 2019 announcement](https://www.qldc.govt.nz/media/4eipwwf2/qldc-scuttlebutt-april19-issue131-web.pdf) separately confirms WRT's Lake Hayes West planting with DOC. These are references to current mapped areas, not verified historical planting boundaries.
+
+**Published building coordinates:** [Heritage New Zealand](https://www.heritage.org.nz/list-details/2108/Listing) publishes Powder Magazine coordinates. The [official Shotover community response plan](https://www.otagocdem.govt.nz/media/1173/shotover-and-lake-hayes-community-response-plan.pdf) publishes the school's coordinates; these identify internal school grounds rather than the separate wetland. DOC confirms its office at Cavells Building, and Queenstown Trails supplies a shared building pin. Arrowtown Primary's official address corroborates its named OSM school polygon.
+
+**Broader locality references:** Atley Downs, Manse Road and Frankton Beach use named public reserve geometry. Their descriptions explicitly leave historical planting patches unconfirmed. Project Gold also has only a broader correspondence: some council attribute names say Lake Hayes South, while geometry lies on the western shore and the notes identify Project Gold.
+
+**Independent coordinate audit:** Every new rounded council reference was checked inside its cited polygon. Several concave or separated polygons had centroids outside their geometry. South, Manse and Frankton therefore use the midpoint of an interior horizontal segment; Pavilion and West use interior centroids of individual representative planting polygons. Source queries and exact derivations are stored with each point. The council's Welcome Forest feature 10902 is in Wanaka and was rejected.
+
 ## Unmapped parts and groups
 
-The following parts of otherwise mapped groups remain unlocated: Glenorchy Entrance and Bible Terrace; Kelvin Peninsula KPCA and Corner; Swiftburn; Shotover River private or unnamed projects; Lake Hayes Estate Trail; and the Queenstown Hill QCC plot. Their quantities are excluded from the new parcel markers. The QCC plot is described by its organizer as a secret location, so a generic hill trailhead is not substituted.
+The following parts within the 29 mapped groups remain unresolved. Their quantities are excluded from parcel marker totals.
+
+| Group | Unlocated parts | Why they remain unpinned |
+|---|---|---|
+| Slope Hill | Coronation 11A; HGF NEW-SLOPE-HILL-HGF | Projects confirmed, but distinct planting areas not spatially identified |
+| Lake Hayes | Rutherford Road 9D; Green Cabs 9E; North / Akarua Corner 9F | Ambiguous historical labels; modern nearby planting is insufficient evidence |
+| Glenorchy | Entrance 1B; Bible Terrace 1D | Planting projects confirmed, exact reference points not established |
+| Kelvin Peninsula | KPCA 22; Corner 22C | KPCA operates throughout peninsula; ledger does not identify which corner |
+| Gorge Road area | Wetlands 5; One Mile Creek 5C | Historical QPS/QTMBC records do not identify a particular area; newer projects must not be substituted |
+| Arrowtown and Bush Creek | Preschool 13A | Explicit Bush Creek aliases and preschool nature outings suggest an off-campus plot, not either preschool campus |
+| Jardine Park | Track Entrance 23A | Multiple entrances; historical ledger does not say which |
+| Swiftburn and Kawarau Bridge | Swiftburn 18 | Public funding evidence confirms restoration, but not the planting segment |
+| Tucker Beach and Shotover River | Private / unnamed river projects, including 28A and unresolved parcel IDs | Public evidence does not establish correspondence to those records |
+| Lake Hayes Estate | Trail 10A | No particular trail section established |
+| Queenstown Hill and Primary | QCC plot 4A | Organizer describes a secret location; a generic hill trailhead is not substituted |
+
+The preschool part 13A is distinct from the separate unmapped Arrowtown Preschool group. Location research does not resolve uncertain source identifiers or the review status of quantities.
 
 Skippers–DOC has only a generic 2017 header and no subsite. DOC describes the wider locality but does not identify that planting place. Kingston has a generic 2020 community entry; later reserve enhancement and predator-trapping projects do not establish where those plants went. Both need WRT or project staff to identify the relevant place.
 

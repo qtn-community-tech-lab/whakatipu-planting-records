@@ -6,12 +6,15 @@
     "latitude": -44.9716,
     "longitude": 168.7985,
     "precision": "historic-event",
-    "description": "A historic WRT planting-day location beside the creek and cycle trail. Access from Speargrass Flat Road along Slope Hill Road. Other Slope Hill planting areas extend beyond this point.",
+    "description": "A historic WRT planting-day location beside the creek and cycle trail, accessed from Speargrass Flat Road along Slope Hill Road. Its count covers the Road planting part; the separate Coronation and HGF areas remain unlocated.",
     "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
     "sourceLabel": "WRT planting directions",
     "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
     "coordinateMethod": "Official WRT Spring 2022 event pin beside the riparian site. The larger ledger group also includes Coronation and HGF areas; this point is not their boundary or centroid. Current access is about 1 km along Slope Hill Road from Speargrass Flat Road.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "11"
+    ]
   },
   {
     "id": "whitechapel-reserve",
@@ -30,15 +33,15 @@
   {
     "id": "lake-hayes-south-wetland",
     "siteSlug": "lake-hayes",
-    "label": "Lake Hayes South wetland",
-    "latitude": -44.9918,
-    "longitude": 168.7986,
+    "label": "Lake Hayes South planting area",
+    "latitude": -44.9949,
+    "longitude": 168.8019,
     "precision": "landmark",
-    "description": "A reference point within the southern Lake Hayes wetland, near the South/Roadside planting area. It marks the wider wetland rather than an individual planting patch.",
-    "sourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/lake-hayes-margins",
-    "sourceLabel": "Otago Regional Council",
-    "coordinateSourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/lake-hayes-margins",
-    "coordinateMethod": "ORC published centre of the Lake Hayes Margins wetland on the southern/western lake margin, converted from NZTM E1268820 N5009370 to WGS84. A broad wetland reference near the South/Roadside planting area; not a verified WRT planting pin.",
+    "description": "A reference within the council-mapped Lake Hayes South planting area beside the highway. The council identifies it as a WRT keystone site. This current footprint does not define the historical planting boundary.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1845&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC community planting areas",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1845&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Representative interior point of official QLDC Community Planting polygon 1845 in WGS84. Its local-origin signed-ring centroid lies outside the concave polygon, so use the midpoint of the widest interior horizontal slice at centroid latitude (-44.99487952575074, 168.8018652576946); the rounded point is verified inside. Attributes explicitly name Lake Hayes South, Lake Hayes–Arrow Junction Highway and Whakatipu Reforestation Trust keystone site – Community/Volunteer Agreement. Stronger direct WRT-site evidence than the earlier ORC broader wetland centre. Current mapped footprint, not the full historical parcel 9A boundary.",
     "checkedOn": "2026-10-07",
     "parcelIds": [
       "9A"
@@ -47,15 +50,15 @@
   {
     "id": "lake-hayes-pavilion",
     "siteSlug": "lake-hayes",
-    "label": "Lake Hayes Pavilion",
-    "latitude": -44.9899,
-    "longitude": 168.8096,
+    "label": "Lake Hayes Pavilion planting area",
+    "latitude": -44.9907,
+    "longitude": 168.8082,
     "precision": "landmark",
-    "description": "The pavilion at 719 Lake Hayes–Arrow Junction Highway is a landmark for planting on the shoreline below. The marker shows the building, rather than the planting area.",
-    "sourceUrl": "https://www.qldc.govt.nz/venues/lake-hayes-pavilion",
-    "sourceLabel": "QLDC venue information",
-    "coordinateSourceUrl": "https://www.openstreetmap.org/way/466884805",
-    "coordinateMethod": "Lake Hayes Pavilion building at 719 Lake Hayes–Arrow Junction Highway. QLDC confirms WRT planting below the pavilion. Coordinates geocoded from the OSM building; a navigation landmark, not the shoreline planting centroid.",
+    "description": "A reference within a council-mapped WRT planting area below Lake Hayes Pavilion. The council records first planting here in spring 2023. The current footprint does not define the full historical planting boundary.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1844&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC community planting areas",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1844&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Representative interior point of official QLDC Community Planting polygon 1844, the largest mapped WRT Pavilion polygon. Local-origin signed-ring WGS84 centroid (-44.990670801075645, 168.8082373758633); rounded point verified inside the polygon. Attributes explicitly identify Lake Hayes Pavilion / Showgrounds and WRT keystone site; first plantings Spring 2023. Adjacent polygons 5601 / 10004 identify Spring 2025 planting but do not shift this point. More direct planting-area evidence than the former building coordinate. Current footprint, not all historical parcel 9G plantings.",
     "checkedOn": "2026-10-07",
     "parcelIds": [
       "9G"
@@ -64,16 +67,19 @@
   {
     "id": "jardine-park-nursery",
     "siteSlug": "jardine-park",
-    "label": "Jardine Park / Jean Malpas Nursery",
+    "label": "Jardine Park / Nursery Reference Gardens",
     "latitude": -45.0454,
     "longitude": 168.6941,
     "precision": "landmark",
-    "description": "The nursery on Poplar Drive, Kelvin Heights, provides an approach to nearby Jardine Park planting areas. The Reference Gardens and Welcome Forest are separate parts of the site.",
-    "sourceUrl": "https://wrtqt.org.nz/community-nursery/",
-    "sourceLabel": "WRT nursery information",
+    "description": "Jean Malpas Community Nursery on Poplar Drive is a navigation reference for the surrounding native Reference Gardens. The marker identifies the nursery venue, rather than the boundary of the planted gardens.",
+    "sourceUrl": "https://www.qldc.govt.nz/2022/august/22-08-19-tree-replacement-requests-granted-in-kelvin-peninsula",
+    "sourceLabel": "QLDC nursery reference garden information",
     "coordinateSourceUrl": "https://www.eventbrite.co.nz/e/community-nursery-volunteer-sessions-tickets-1998116193322",
-    "coordinateMethod": "WRT organizer-published location for the Jean Malpas community nursery on Poplar Drive, Kelvin Heights. Current park plantings are reached on foot from nursery parking. Reference Gardens, Track Entrance and Welcome Forest are separate ledger parts; this is not a Welcome Forest centroid.",
-    "checkedOn": "2026-10-07"
+    "coordinateMethod": "WRT organizer-published nursery venue coordinates on Eventbrite (-45.0453584,168.6941158), rounded four decimals. QLDC2022 tree replacement approval confirms expansion of its educational garden and library of native plants near the nursery; TreesThatCount2020 also confirms nursery reference gardens. The venue is an approximate navigation reference for parcel23; it does not mark a surveyed garden centroid. Excludes Track Entrance23A and Welcome Forest23B.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "23"
+    ]
   },
   {
     "id": "bush-creek-event",
@@ -87,7 +93,10 @@
     "sourceLabel": "WRT planting information",
     "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
     "coordinateMethod": "Official WRT Spring 2022 event-map KML point for Bush Creek Planting Site, rounded to four decimal places. Historic event reference near the Chinese Settlement, not a boundary or a point for the separate school parcels.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "13C"
+    ]
   },
   {
     "id": "feehly-cemetery",
@@ -101,7 +110,10 @@
     "sourceLabel": "Feehly Hill history",
     "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Cemeteries/MapServer/4/query?where=OBJECTID%3D384&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
     "coordinateMethod": "Area-weighted centroid of the official QLDC Arrowtown Cemetery polygon in WGS84.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "12A"
+    ]
   },
   {
     "id": "peace-park",
@@ -115,7 +127,10 @@
     "sourceLabel": "QLDC planting reference",
     "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D6401&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
     "coordinateMethod": "Area-weighted centroid of QLDC Community Planting feature 6401 in WGS84; not a reconciliation of all historical WRT planting records.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "21"
+    ]
   },
   {
     "id": "harvest-gardens",
@@ -197,7 +212,10 @@
     "sourceLabel": "Morning Star restoration evidence",
     "coordinateSourceUrl": "https://api.inaturalist.org/v1/places/89383",
     "coordinateMethod": "Published location field of iNaturalist reserve place 89383.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "6B"
+    ]
   },
   {
     "id": "shotover-wetland",
@@ -211,7 +229,10 @@
     "sourceLabel": "Shotover Wetland project",
     "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/Planning/Structure_Plans/MapServer/58/query?where=OBJECTID%3D448&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
     "coordinateMethod": "Area-weighted centroid of QLDC Structure Plans feature 448, Activity 5d - Open Space - Wetland, in WGS84.",
-    "checkedOn": "2026-10-07"
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "20A"
+    ]
   },
   {
     "id": "quail-rise-jims-way",
@@ -581,5 +602,209 @@
     "coordinateSourceUrl": "https://www.openstreetmap.org/way/384923492",
     "coordinateMethod": "Nominatim representative coordinate of OSM school way 384923492 (-45.0176656, 168.7279115), with school name and 14 Yewlett Crescent address independently confirmed by the school and Education Counts institution 633. Rounded to four decimal places. School landmark, not verified planting boundary.",
     "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "jardine-welcome-forest",
+    "siteSlug": "jardine-park",
+    "label": "Jardine Park / Welcome Forest",
+    "latitude": -45.0476,
+    "longitude": 168.6888,
+    "precision": "landmark",
+    "description": "A council-mapped WRT native planting area in the southern part of Jardine Park. The council development plan identifies Welcome Forest plantings here. This point represents one planting patch, rather than the full forest boundary.",
+    "sourceUrl": "https://www.qldc.govt.nz/media/tbupdms0/jardine-park-cdp-reve-final-lr-4032025.pdf",
+    "sourceLabel": "QLDC Jardine Park development plan",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1778&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of official QLDC Community Planting polygon1778, native plantings by Whakatipu Reforestation Trust, at -45.04757644852401,168.6888288832655. Calculated after translating polygon to local origin to avoid cancellation. March2025 Jardine Park Concept Development Plan section1.1 places Welcome Forest at southernpark; section1.2/p5 identifies its native planting patches west/southwest of nursery. Polygon1778 lies in this area. Approximate patch reference for parcel23B, not a mapped boundary for the full Welcome Forest.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "23B"
+    ]
+  },
+  {
+    "id": "atley-downs-reserve",
+    "siteSlug": "arthurs-point",
+    "label": "Atley Downs / Atley Road Reserve",
+    "latitude": -44.9861,
+    "longitude": 168.6764,
+    "precision": "landmark",
+    "description": "A public reserve reference in the Atley Downs area. The historic planting records do not identify the individual planting patch.",
+    "sourceUrl": "https://www.arthurspoint.nz/projects/plantings-and-waterways",
+    "sourceLabel": "Arthurs Point Community Association",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D393&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of official QLDC Atley Road Reserve polygon OBJECTID 393, calculated with coordinates translated to a local origin to avoid cancellation. Reference for the broader Atley Downs ledger locality, not a verified centroid of the 2015–2019 planting. APCA confirms planting at the end of Atley Road but does not locate these historic records.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "6"
+    ]
+  },
+  {
+    "id": "arthurs-point-doc-office",
+    "siteSlug": "arthurs-point",
+    "label": "Arthurs Point / DOC Office",
+    "latitude": -44.9876,
+    "longitude": 168.6721,
+    "precision": "landmark",
+    "description": "The Cavells Building at 1 Arthurs Point Road is a landmark for the DOC Office planting records. It does not locate individual planting beds.",
+    "sourceUrl": "https://www.doc.govt.nz/footer-links/contact-us/office-by-name/south-island/whakatipu-wai-maori-queenstown-office/",
+    "sourceLabel": "Department of Conservation",
+    "coordinateSourceUrl": "https://maps.app.goo.gl/EW6RH5P4npyXG5uHA",
+    "coordinateMethod": "Queenstown Trails publishes this Google Maps link for Canyon Brewing, which occupies the ground floor of the Cavells Building below DOC. DOC concession application confirms the shared building. Resolved place coordinates -44.9875607,168.6721377, rounded to four decimals; building landmark, not planting centroid. Supporting source https://www.doc.govt.nz/globalassets/documents/getting-involved/consultations/2025/4jqt-limited/4jqt-limited-application-form.pdf and link publisher https://www.queenstowntrails.org.nz/trails/arthurs-point-trail",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "6A"
+    ]
+  },
+  {
+    "id": "feehly-powder-magazine",
+    "siteSlug": "feehly-hill",
+    "label": "Feehly Hill / Powder Magazine",
+    "latitude": -44.9423,
+    "longitude": 168.8277,
+    "precision": "landmark",
+    "description": "The historic Powder Magazine beside Malaghans Road is a landmark for the Magazine planting area at the foot of Feehly Hill.",
+    "sourceUrl": "https://www.heritage.org.nz/list-details/2108/Listing",
+    "sourceLabel": "Heritage New Zealand",
+    "coordinateSourceUrl": "https://www.heritage.org.nz/list-details/2108/Listing",
+    "coordinateMethod": "Heritage New Zealand publishes latitude -44.9422943372709 and longitude 168.82767234528086 in its official listing location data. Rounded to four decimal places. Building landmark for the ledger Magazine locality, not an individual planting bed.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "12"
+    ]
+  },
+  {
+    "id": "feehly-manse-road",
+    "siteSlug": "feehly-hill",
+    "label": "Feehly Hill / Manse Road",
+    "latitude": -44.9388,
+    "longitude": 168.8203,
+    "precision": "landmark",
+    "description": "Manse Road Reserve is a reference on the western side of Feehly Hill. The exact historical planting patches remain unconfirmed.",
+    "sourceUrl": "https://www.arrowtownvillage.nz/environment/feehly/",
+    "sourceLabel": "Arrowtown Village Association",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D745&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Interior reference point of official QLDC Manse Road Reserve (MBO) polygon OBJECTID 745. At latitude -44.9388, intersected all polygon rings with a horizontal line and selected the midpoint of the widest interior interval (longitude168.82028708091724 to168.8203800823854), then rounded to four decimals and verified the rounded point remains inside. AVA confirms restoration associated with Manse Road and Feehly Hill. This is an interior reserve landmark, not a polygon centroid or verified WRT planting point.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "12B"
+    ]
+  },
+  {
+    "id": "arrowtown-primary-school",
+    "siteSlug": "arrowtown-and-bush-creek",
+    "label": "Arrowtown Primary School",
+    "latitude": -44.9486,
+    "longitude": 168.8393,
+    "precision": "landmark",
+    "description": "School grounds at 9 Chalmers Place provide a reference for the Arrowtown Primary records. The individual planting beds are not documented.",
+    "sourceUrl": "https://www.arrowtown.school.nz/contact-us",
+    "sourceLabel": "Arrowtown School",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/133134846",
+    "coordinateMethod": "Nominatim geocoding of the OSM Arrowtown School grounds polygon returned -44.9486408,168.8393458. Official school contact information confirms 9 Chalmers Place. School grounds reference only, not a verified planting patch.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "13B"
+    ]
+  },
+  {
+    "id": "derby-street-reserve",
+    "siteSlug": "arrowtown-and-bush-creek",
+    "label": "Derby Street Road Reserve",
+    "latitude": -44.9423,
+    "longitude": 168.8289,
+    "precision": "landmark",
+    "description": "The council-mapped native planting area maintained by the Derby Street Reserve Restoration Group. Historical records are assigned to the Derby Street sub-site.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1776&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC community planting",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1776&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Community Planting polygon OBJECTID 1776, calculated with coordinates translated to a local origin. Official attributes identify Derby Street Road Reserve and native planting by its restoration group. Exact correspondence between the ledger 2023 allocation and the current council polygon is not verified.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "13D"
+    ]
+  },
+  {
+    "id": "frankton-beach",
+    "siteSlug": "peace-park-and-frankton",
+    "label": "Frankton Beach / Domain",
+    "latitude": -45.0206,
+    "longitude": 168.7298,
+    "precision": "landmark",
+    "description": "A broad reference within Frankton Domain beside the beach. The Frankton Beach planting records do not identify individual shoreline planting patches.",
+    "sourceUrl": "https://www.qldc.govt.nz/2024/february/24-02-26-help-shape-the-future-use-of-frankton-s-riverside-road-reserves",
+    "sourceLabel": "QLDC Frankton reserve information",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D1165&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Interior reference point of QLDC Frankton Domain polygon OBJECTID 1165. At latitude -45.0206, intersected all polygon rings with a horizontal line and selected the midpoint of the widest interior interval (longitude168.72881451297047 to168.73072394409695), then rounded to four decimals and verified the rounded point remains inside. Council describes Frankton Beach beside the Domain and BBQ area off Lake Avenue. This is a broad interior reserve landmark, not a polygon centroid or verified WRT planting point.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "21A"
+    ]
+  },
+  {
+    "id": "boyes-crescent-residents",
+    "siteSlug": "peace-park-and-frankton",
+    "label": "Boyes Crescent residents planting",
+    "latitude": -45.0239,
+    "longitude": 168.7323,
+    "precision": "landmark",
+    "description": "The council-mapped native planting area cared for by Boyes Crescent residents, separate from the Peace Park planting area.",
+    "sourceUrl": "https://wrtqt.org.nz/wp-content/uploads/2025/03/WRT-Impact-Report-2024-final.pdf",
+    "sourceLabel": "WRT Impact Report 2024",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1772&outFields=%2A&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Community Planting polygon OBJECTID 1772, calculated with coordinates translated to a local origin. Council names Boyes Crescent Residents and native planting by residents; WRT 2024 Impact Report confirms the supported resident restoration project. Polygon reference, not each planted tree.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "21B"
+    ]
+  },
+  {
+    "id": "shotover-primary-internal-school",
+    "siteSlug": "shotover-primary",
+    "label": "Shotover Primary / School grounds",
+    "latitude": -45.0059,
+    "longitude": 168.7765,
+    "precision": "landmark",
+    "description": "The school at 57 Stalker Road is a reference for internal school planting records. The separate Shotover Wetland marker covers wetland planting.",
+    "sourceUrl": "https://www.shotover.school.nz/visiting-us",
+    "sourceLabel": "Shotover Primary School",
+    "coordinateSourceUrl": "https://www.otagocdem.govt.nz/media/1173/shotover-and-lake-hayes-community-response-plan.pdf",
+    "coordinateMethod": "Official civil-defence community response plan pages 22–23 publishes Shotover Primary School S45°00′21.32″ E168°46′35.45″, converted to -45.0059222,168.7765139 and rounded to four decimals. School building reference for internal-school ledger parcel20B; not the separate wetland parcel20A or exact internal planting beds.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "20B"
+    ]
+  },
+  {
+    "id": "lake-hayes-rowing-club",
+    "siteSlug": "lake-hayes",
+    "label": "Lake Hayes East / Rowing Club",
+    "latitude": -44.988,
+    "longitude": 168.8119,
+    "precision": "landmark",
+    "description": "A reference among the council-mapped planting areas beside Whakatipu Rowing Club on the eastern shore. The current mapped areas are a landmark for this ledger part, rather than its historical planting boundary.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID+IN+%281749%2C1751%2C1781%2C10001%29&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC community planting areas",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID+IN+%281749%2C1751%2C1781%2C10001%29&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of four QLDC Community Planting polygons1749,1751,1781,10001 in WGS84, calculated after translating coordinates to a local origin. They explicitly name Wakatipu Rowing Club;1781 records Spring2024 club planting. Ledger9H names LakeHayesEast(RowingClub etc). Reference for the named club locality, not a verified WRT event pin or historical9H boundary.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "9H"
+    ]
+  },
+  {
+    "id": "lake-hayes-west-project-gold",
+    "siteSlug": "lake-hayes",
+    "label": "Lake Hayes West / Project Gold",
+    "latitude": -44.9758,
+    "longitude": 168.8041,
+    "precision": "landmark",
+    "description": "A reference within a current council-mapped Project Gold planting area on the western Lake Hayes trail. The historical West PG planting boundary is not verified.",
+    "sourceUrl": "https://www.qldc.govt.nz/media/4eipwwf2/qldc-scuttlebutt-april19-issue131-web.pdf",
+    "sourceLabel": "QLDC WRT planting announcement",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1854&outFields=OBJECTID%2CSITENME%2CROAD%2CSUBLOC%2CNOTES&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Representative interior point of QLDC Community Planting polygon 1854, the largest of the four western-shore polygons 1851–1854 labelled Project: GOLD community plantings (MBO). Its centroid was calculated with local-origin signed-ring area weighting in WGS84, then the rounded point was verified inside the polygon. Layer SITENME is Lake Hayes South and ROAD Marshall Avenue, so this is a broad named-project/locality anchor, not a verified historical WRT footprint. QLDC April 2019 newsletter independently documents WRT Lake Hayes West planting with DOC; ledger parcel 9 is West PG. Eastern-shore Project Gold polygon 1855 is excluded.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "9"
+    ]
   }
 ]

@@ -80,6 +80,25 @@ describe("public site reference locations", () => {
     expect(confirmed.find((p) => p.id === "whitechapel-reserve")!.split.total).toBe(26273);
     expect(all.find((p) => p.id === "lake-hayes-south-wetland")!.split.total).toBe(7082);
     expect(all.find((p) => p.id === "lake-hayes-pavilion")!.split.total).toBe(5743);
+    const partCounts = {
+      "slope-hill-riparian": 13478,
+      "bush-creek-event": 5312,
+      "feehly-cemetery": 4965,
+      "peace-park": 4149,
+      "morning-star-reserve": 3869,
+      "shotover-wetland": 3846,
+      "jardine-park-nursery": 1109,
+      "jardine-welcome-forest": 6995,
+      "shotover-primary-internal-school": 700,
+    };
+    for (const [id, total] of Object.entries(partCounts)) {
+      const point = all.find((p) => p.id === id)!;
+      expect(point.countScope, id).toBe("part");
+      expect(point.split.total, id).toBe(total);
+    }
+    // Derby's allocation needs review: hiding it must remove its marker quantity.
+    expect(all.find((p) => p.id === "derby-street-reserve")!.split.total).toBe(73);
+    expect(confirmed.find((p) => p.id === "derby-street-reserve")!.split.total).toBe(0);
     expect(all.filter((p) => p.siteSlug === "gorge-road-area").reduce((sum, p) => sum + p.split.total, 0)).toBe(4457);
     for (const point of all) expect(point.split.total).toBe(point.split.resolved + point.split.needsReview);
     expect(compactPlantCount(1200)).toBe("1.2k");
