@@ -14,6 +14,7 @@ export function LocationCard({ sites, records, siteName }: { sites: { slug: stri
           Points show approximate landmarks or historic planting-day locations, not planting boundaries.
           {locations.length > mappedSites && " Some sites have several reference points."}
           {" Marker labels show recorded plants in the current view; separate markers use their part’s count."}
+          {locations.some((location) => location.countScope === "part") && " Unmapped parts are not included in marker totals."}
           {locations.some((location) => location.split.needsReview > 0) && " An amber dot marks counts that include records needing review."}
         </>
       ) : undefined}>

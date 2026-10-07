@@ -24,16 +24,31 @@ describe("public site reference locations", () => {
     }
   });
 
-  it("keeps every point in the Whakatipu basin with public source provenance", () => {
+  it("keeps every point in the wider Whakatipu area with public source provenance", () => {
     for (const location of siteLocations) {
-      expect(location.latitude, location.label).toBeGreaterThan(-45.2);
-      expect(location.latitude, location.label).toBeLessThan(-44.8);
-      expect(location.longitude, location.label).toBeGreaterThan(168.4);
+      expect(location.latitude, location.label).toBeGreaterThan(-45.6);
+      expect(location.latitude, location.label).toBeLessThan(-44.6);
+      expect(location.longitude, location.label).toBeGreaterThan(168.1);
       expect(location.longitude, location.label).toBeLessThan(169);
       expect(["historic-event", "landmark"]).toContain(location.precision);
       expect(new URL(location.sourceUrl).protocol).toBe("https:");
       expect(new URL(location.coordinateSourceUrl).protocol).toBe("https:");
       expect(location.description.length).toBeGreaterThan(30);
+      expect(location.coordinateMethod?.length, location.label).toBeGreaterThan(30);
+      expect(location.checkedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+
+  it("uses disjoint parcel counts for every site with several reference points", () => {
+    const slugs = new Set(siteLocations.map((location) => location.siteSlug));
+    for (const slug of slugs) {
+      const points = siteLocations.filter((location) => location.siteSlug === slug);
+      if (points.length < 2) continue;
+      const ids = points.flatMap((point) => {
+        expect(point.parcelIds?.length, point.label).toBeGreaterThan(0);
+        return point.parcelIds ?? [];
+      });
+      expect(new Set(ids).size, slug).toBe(ids.length);
     }
   });
 

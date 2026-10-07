@@ -86,7 +86,7 @@
     "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
     "sourceLabel": "WRT planting information",
     "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
-    "coordinateMethod": "Published organizer KML point supplied by parent researcher.",
+    "coordinateMethod": "Official WRT Spring 2022 event-map KML point for Bush Creek Planting Site, rounded to four decimal places. Historic event reference near the Chinese Settlement, not a boundary or a point for the separate school parcels.",
     "checkedOn": "2026-10-07"
   },
   {
@@ -211,6 +211,375 @@
     "sourceLabel": "Shotover Wetland project",
     "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/Planning/Structure_Plans/MapServer/58/query?where=OBJECTID%3D448&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
     "coordinateMethod": "Area-weighted centroid of QLDC Structure Plans feature 448, Activity 5d - Open Space - Wetland, in WGS84.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "quail-rise-jims-way",
+    "siteSlug": "quail-rise",
+    "label": "Quail Rise / Jim’s Way",
+    "latitude": -45.0003,
+    "longitude": 168.7546,
+    "precision": "historic-event",
+    "description": "WRT’s historic planting-day pin for the Jim’s Way community restoration area at Quail Rise. Planting extends along the reserve beyond this point.",
+    "sourceUrl": "https://wrtqt.org.nz/wp-content/uploads/2025/03/WRT-Impact-Report-2024-final.pdf",
+    "sourceLabel": "WRT impact report",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
+    "coordinateMethod": "Official WRT Spring Planting 2022 KML placemark Quail Rise Community Planting (Jim’s Way): -45.000341,168.7546026. Independently corroborated by QLDC Community_Planting feature1770, native Quail Rise Restoration on Cockerell Lane; feature1771 is an orchard and was not used.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "tucker-beach-wildlife-reserve",
+    "siteSlug": "tucker-beach-and-shotover-river",
+    "label": "Tucker Beach Wildlife Reserve",
+    "latitude": -44.9821,
+    "longitude": 168.7406,
+    "precision": "historic-event",
+    "description": "WRT’s historic community planting-day location within Tucker Beach Wildlife Reserve. Separate Shotover River ledger parts have not been assigned to this marker.",
+    "sourceUrl": "https://wrtqt.org.nz/community-planting-days/",
+    "sourceLabel": "WRT planting information",
+    "coordinateSourceUrl": "https://www.google.com/maps/d/kml?mid=1xjcJLd9yNvuMP6KkSce-tRHYfHJWQbQ&forcekml=1",
+    "coordinateMethod": "Official WRT Spring Planting 2022 KML placemark Tucker Beach Wildlife Reserve Community Planting: -44.9820806,168.7406139. Applies to Tucker Beach parcel28 only; the Shotover River parts28A and28B, plus unresolved river records, cannot be located confidently from public evidence.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "28"
+    ]
+  },
+  {
+    "id": "gibbston-community-reserve",
+    "siteSlug": "gibbston",
+    "label": "Gibbston Community Reserve",
+    "latitude": -45.0253,
+    "longitude": 168.9553,
+    "precision": "landmark",
+    "description": "The community reserve on Coal Pit Road is the named location in the planting ledger. This marker is a reserve reference point rather than a mapped planting patch.",
+    "sourceUrl": "https://queenstowntrails.org.nz/maps-and-trails/all-trails/gibbston-river-wine-trail/",
+    "sourceLabel": "Queenstown Trails reserve directions",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_VIEWER/MapServer/31/query?where=OBJECTID%3D548&outFields=OBJECTID%2CSITENME&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of QLDC Open_Spaces polygon OBJECTID548, SITENME Gibbston Community Reserve, ROAD Coal Pit Road, WGS84 centroid -45.0252884111,168.9553161222. Ledger explicitly names GIBBSTON RESERVE (COAL PIT ROAD). Important: Xyst Coal Pit Road point -45.0365272,168.9473839 is a road assessment location over1km away and was not used.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "kawarau-gorge-suspension-bridge",
+    "siteSlug": "swiftburn-and-kawarau-bridge",
+    "label": "Kawarau Gorge Suspension Bridge",
+    "latitude": -45.009,
+    "longitude": 168.899,
+    "precision": "landmark",
+    "description": "The historic AJ Hackett bungy bridge is the landmark named in the Kawarau Bridge records. Swiftburn plantings are a separate ledger part and are not counted at this marker.",
+    "sourceUrl": "https://d2rjvl4n5h2b61.cloudfront.net/media/documents/kawarau_gorge_suspension_bridgereport.pdf",
+    "sourceLabel": "IPENZ engineering heritage report",
+    "coordinateSourceUrl": "https://d2rjvl4n5h2b61.cloudfront.net/media/documents/kawarau_gorge_suspension_bridgereport.pdf",
+    "coordinateMethod": "IPENZ primary engineering heritage report,29March2011,page3 explicitly publishes structure centre latitude -45.009 longitude168.899 and identifies AJ Hackett bungy use. Matches ledger KAWARAU BRIDGE AJ HACKET / parcel18A. Coordinates have only three decimal places in the source. Swiftburn parcel18 is separate and excluded.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "18A"
+    ]
+  },
+  {
+    "id": "rotary-tucker-beach-trail-start",
+    "siteSlug": "shotover-rotary-track",
+    "label": "Rotary Tucker Beach Trail",
+    "latitude": -44.9973,
+    "longitude": 168.7562,
+    "precision": "landmark",
+    "description": "The start of the Rotary Tucker Beach Trail near the Old Lower Shotover Bridge is a navigation landmark for planting along the trail. The planting history does not identify a particular section of this 3.2 km route.",
+    "sourceUrl": "https://queenstownrotary.co.nz/Stories/rotary-tucker-beach-trail-opening",
+    "sourceLabel": "Queenstown Rotary trail history",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_VIEWER/MapServer/57/query?where=OBJECTID%3D6804&outFields=OBJECTID%2CSITENME&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "QLDC Tracks_and_Trails feature6804,TRAILNME Tucker Beach Trail; southern endpoint -44.9972735172,168.7561901201. Rotary primary source describes a3.2km walk/cycle trail from its restored old Shotover suspension bridge along Tucker Beach Road and subsequent native plantings. This is an endpoint navigation reference, not a planting-area centroid. It is distinct from Tucker Beach Wildlife Reserve’s western WRT event pin.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "kelvin-earnslaw-slipway",
+    "siteSlug": "kelvin-peninsula",
+    "label": "Kelvin Peninsula / Earnslaw Slipway",
+    "latitude": -45.0404,
+    "longitude": 168.6767,
+    "precision": "landmark",
+    "description": "The Earnslaw Slipway reserve is the named landmark for the Slipway / Project Crimson planting records. This reference point covers that part of the ledger only.",
+    "sourceUrl": "https://www.qldc.govt.nz/media/3bhfjwza/aa3-chapter-38-open-space-and-recreation-zones-mar-2023.pdf",
+    "sourceLabel": "QLDC reserve policy",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_VIEWER/MapServer/23/query?where=OBJECTID%3D10516&outFields=OBJECTID%2CSITENME&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "QLDC Community_Planting feature10516,SITENME Earnslaw Slipway,ROAD Kelvin Peninsula Road. Polygon centroid -45.0404277696,168.6767485104. QLDC Chapter38 section38.4.3 recognises the established native plantings at Kelvin Peninsula Slipway Informal Recreation Reserve. Applies only to historical parcel22A.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "22A"
+    ]
+  },
+  {
+    "id": "kelvin-queenstown-golf-course",
+    "siteSlug": "kelvin-peninsula",
+    "label": "Kelvin Peninsula / Queenstown Golf Club",
+    "latitude": -45.043,
+    "longitude": 168.6708,
+    "precision": "landmark",
+    "description": "Queenstown Golf Club occupies the head of Kelvin Peninsula. This is a broad course reference for the golf-course planting records; it does not identify which hole or planting area.",
+    "sourceUrl": "https://wrtqt.org.nz/wp-content/uploads/2025/03/WRT-Impact-Report-2024-final.pdf",
+    "sourceLabel": "WRT impact report",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/89381653",
+    "coordinateMethod": "WRT2024impact report names Kelvin Peninsula Golf Course as a supported community planting project; ledger parcel22B says KP-GOLF COURSE / Kelvin Heights Golf Course. Official Queenstown Golf Club address759PeninsulaRoad corroborates identity. OSM Nominatim geocode of named golf_course way89381653: -45.0429512,168.6708062, a broad course reference rather than clubhouse/planting centroid.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "22B"
+    ]
+  },
+  {
+    "id": "glenorchy-lagoon-walkway",
+    "siteSlug": "glenorchy",
+    "label": "Glenorchy Lagoon Walkway",
+    "latitude": -44.8499,
+    "longitude": 168.3823,
+    "precision": "landmark",
+    "description": "A public reference point on the lagoon walkway near Glenorchy’s waterfront. Historical lagoon and walkway planting extends around the wetlands beyond this point.",
+    "sourceUrl": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/glenorchy-area/things-to-do/glenorchy-walkway",
+    "sourceLabel": "DOC walkway information",
+    "coordinateSourceUrl": "https://scd.landcareresearch.co.nz/Specimen/PDD%20108570",
+    "coordinateMethod": "Manaaki Whenua/New Zealand Fungarium primary georeferenced specimen PDD108570 records Glenorchy Lagoon Walkway at WGS84 -44.849922,168.382257. DOC confirms the northern town walkway and Mull Street access; Glenorchy Community Association2019planting event identifies start of Lagoon Walkway and WRT support. Point is a published walkway locality, not a recorded WRT planting pin. Applies to lagoon/walkway parcel1 only.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "1"
+    ]
+  },
+  {
+    "id": "glenorchy-lakefront-wharf",
+    "siteSlug": "glenorchy",
+    "label": "Glenorchy Lakefront / Wharf",
+    "latitude": -44.8515,
+    "longitude": 168.3815,
+    "precision": "landmark",
+    "description": "The wharf is a landmark beside Glenorchy’s lakefront planting area. The marker shows the wharf and does not map individual shoreline planting patches.",
+    "sourceUrl": "https://www.glenorchycommunity.nz/events/show/206/community-planting/?start=5",
+    "sourceLabel": "Glenorchy community planting notice",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/1289096084",
+    "coordinateMethod": "Glenorchy Community Association2019planting event says WRT provided200plants for waterfront planting. July2015GCAminutes identify north end of Wharf Shed beside walkway entrance as proposed WRT plantings. OSM named Glenorchy Wharf way1289096084 geocodes -44.8515213,168.3815220. Applies only to separate lakefront parcel1C; lagoon parcel1 is represented separately.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "1C"
+    ]
+  },
+  {
+    "id": "glenorchy-pigeon-island",
+    "siteSlug": "glenorchy",
+    "label": "Pigeon Island / Wāwāhi Waka",
+    "latitude": -44.9227,
+    "longitude": 168.3965,
+    "precision": "landmark",
+    "description": "The island in northern Lake Whakatipu is a separate part of the Glenorchy planting history. This broad island reference does not show the restoration plots or landing points.",
+    "sourceUrl": "https://www.qldc.govt.nz/recreation/parks-and-walkways/pigeon-island",
+    "sourceLabel": "QLDC island information",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_VIEWER/MapServer/31/query?where=OBJECTID%3D873&outFields=OBJECTID%2CSITENME&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "QLDC Open_Spaces polygon873,SITENME Pigeon Island Reserve (MBO); polygon centroid WGS84 -44.9227329907,168.3964913373. QLDC primary page confirms the island north in Lake Whakatipu and privately owned water transport for access. WRT2024impact report corroborates Whakatipu Islands Reforestation Trust support. Applies only to ledger Pigeon Island parcel1E.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "1E"
+    ]
+  },
+  {
+    "id": "glenorchy-school",
+    "siteSlug": "glenorchy",
+    "label": "Glenorchy School",
+    "latitude": -44.8507,
+    "longitude": 168.387,
+    "precision": "landmark",
+    "description": "The school on Oban Street is a separate part of Glenorchy’s planting history. This marker locates the school grounds rather than its planting patch.",
+    "sourceUrl": "https://www.glenorchy.school.nz/",
+    "sourceLabel": "Glenorchy School",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/466602386",
+    "coordinateMethod": "Official school website confirms71ObanStreet,Glenorchy; Education Counts institution3955 independently confirms identity onObanStreet. OSM named school polygonway466602386 geocodes WGS84 -44.8506749,168.3870099. Applies only to historical GY SCHL parcel1A. This is a grounds reference, not a recorded planting point.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "1A"
+    ]
+  },
+  {
+    "id": "lake-hayes-estate-widgeon",
+    "siteSlug": "lake-hayes-estate",
+    "label": "Widgeon Park",
+    "latitude": -45.0078,
+    "longitude": 168.7941,
+    "precision": "landmark",
+    "description": "A reference within Widgeon Park below Lake Hayes Estate. Native planting at the base of Widgeon Place is documented by the residents association. The separate Lake Hayes Estate Trail records are not located by this marker.",
+    "sourceUrl": "https://qldc.serve2.net/assets/Uploads/Your-Views/Annual-Plan-2016/Organisations-G-Q.pdf",
+    "sourceLabel": "Lake Hayes residents planting submission",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D1051&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of official QLDC Open Spaces polygon 1051, Widgeon Park (MBO), in WGS84. This named reserve corresponds to Widgeon Place in parcel 10; it is a broad reference, not the historic planting patch. Excludes parcel 10A (LHE Trail) because no exact trail segment is documented.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "10"
+    ]
+  },
+  {
+    "id": "queenstown-primary-school",
+    "siteSlug": "queenstown-hill-and-primary",
+    "label": "Queenstown Primary School",
+    "latitude": -45.0276,
+    "longitude": 168.6587,
+    "precision": "landmark",
+    "description": "The school at 20 Robins Road is a reference for the school-ground planting records. The marker does not locate individual school planting patches. Visit arrangements belong to the school.",
+    "sourceUrl": "https://www.queenstown.school.nz/enrolment-information/",
+    "sourceLabel": "Queenstown Primary School location",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/150605658",
+    "coordinateMethod": "Nominatim published representative coordinate of OSM school grounds way 150605658 (-45.0276448,168.6587305), rounded to four decimals. Official school site confirms 20 Robins Road. Includes only parcel 4; excludes Queenstown Hill and Kerry Drive Reserve.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "4"
+    ]
+  },
+  {
+    "id": "kerry-drive-reserve",
+    "siteSlug": "queenstown-hill-and-primary",
+    "label": "Kerry Drive Reserve",
+    "latitude": -45.0284,
+    "longitude": 168.6657,
+    "precision": "landmark",
+    "description": "A reference within the council-mapped Kerry Drive Reserve. This marker covers the Kerry Drive records; Queenstown Hill and the primary school are separate parts of the ledger group.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D659&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC Kerry Drive Reserve",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D659&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of official QLDC Open Spaces polygon 659, Kerry Drive Reserve, in WGS84. Native planting by the Kerry Drive and Ballarat Street Restoration Group is also recorded in the Queenstown Lakes Carbon Zero discussion paper. Only parcel 4B is counted; not an exact planting patch.",
+    "checkedOn": "2026-10-07",
+    "parcelIds": [
+      "4B"
+    ]
+  },
+  {
+    "id": "kiwi-park",
+    "siteSlug": "kiwi-park",
+    "label": "Kiwi Park",
+    "latitude": -45.0274,
+    "longitude": 168.6571,
+    "precision": "landmark",
+    "description": "A reference within Kiwi Park, the wildlife sanctuary on Brecon Street below the gondola. It marks the park grounds rather than an individual planting area. Visitor entry is managed by the park.",
+    "sourceUrl": "https://kiwibird.co.nz/visit/plan-your-visit/",
+    "sourceLabel": "Kiwi Park visitor location",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/248085277",
+    "coordinateMethod": "Nominatim published representative coordinate of OSM Kiwi Birdlife Park way 248085277 (-45.0274256,168.6570760), rounded to four decimals. The operator confirms Brecon Street below the gondola; DOC-hosted 2025 consent confirms 51 Brecon Street. A park landmark, not a precise historic planting location.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "bridesdale-bush-hayes-creek",
+    "siteSlug": "bridesdale",
+    "label": "Bridesdale Bush / Hayes Creek",
+    "latitude": -45.0036,
+    "longitude": 168.799,
+    "precision": "landmark",
+    "description": "A reference within a council-mapped Bridesdale Bush Trust planting area on Hayes Creek Road. Council identifies the wider restoration project as supported by WRT. The individual planting patch behind the ledger’s Bridesdale records is not established.",
+    "sourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1748&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "sourceLabel": "QLDC Bridesdale Bush planting reference",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/40/query?where=OBJECTID%3D1748&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid computed after translating polygon vertices to a local origin to avoid floating-point cancellation of official QLDC Community Planting polygon 1748, whose notes say maintained by Bridesdale Bush Trust and planted Spring 2023, in WGS84. QLDC Scuttlebutt June/July 2024 page 13 corroborates WRT support. Ledger Bridesdale records are Autumn/Spring 2025; this is a nearby project reference, not a claim that the 2025 plants occupy the 2023 polygon.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "matakauri-wetland",
+    "siteSlug": "matakauri-wetlands",
+    "label": "Matakauri Wetland",
+    "latitude": -45.0169,
+    "longitude": 168.6656,
+    "precision": "landmark",
+    "description": "The published centre of Matakauri Wetland, east of Gorge Road and Industrial Place. It represents the wider wetland; the particular 2026 planting area and an entrance are not established.",
+    "sourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/matakauri-wetland",
+    "sourceLabel": "Otago Regional Council wetland location",
+    "coordinateSourceUrl": "https://www.orc.govt.nz/environment/water-care/wetlands-and-estuaries/regionally-significant-wetlands/queenstown-lakes-district/matakauri-wetland",
+    "coordinateMethod": "ORC publishes wetland centre NZTM E1258480 N5006030 (EPSG2193). Projected to WGS84 through ArcGIS GeometryServer yields longitude168.66556001708514, latitude-45.016866953313325; rounded four decimals. Broad wetland reference, not the council Community Planting10517 polygon to the north or the specific 2026 ledger plantings.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "arrow-morven-ferry-reference",
+    "siteSlug": "arrow-morven",
+    "label": "Arrow River / Morven Ferry Reserve",
+    "latitude": -44.991,
+    "longitude": 168.8548,
+    "precision": "landmark",
+    "description": "Morven Ferry Reserve is a reference beside the Arrow River and trail at Arrow Junction. The historic register calls this planting group Arrow River Track – Arrow Junction. The exact 2015 planting stretch is not established.",
+    "sourceUrl": "https://www.qldc.govt.nz/media/op0hn2pe/arrowtown-lake_hayes-reserve-management-plan-p2.pdf",
+    "sourceLabel": "QLDC Morven Ferry Reserve plan",
+    "coordinateSourceUrl": "https://gis.qldc.govt.nz/server/rest/services/OpenSpaces/Parks_and_Open_Spaces_VIEWER/MapServer/32/query?where=OBJECTID%3D797&outFields=*&outSR=4326&returnGeometry=true&f=pjson",
+    "coordinateMethod": "Area-weighted centroid of official QLDC Open Spaces polygon 797, Morven Ferry Reserve on Arrow Junction Road, WGS84. Historic source register alias ARROW RIVER TRACK - ARROW JUNCTION establishes the relevant river/trail locality (docs/discovery/04d_sites_variants.csv). QLDC plan section2.23 confirms the reserve adjoins Arrow River and Queenstown Trail passes its upper terrace. This is an inferred locality reference, not a verified 2015 planting point.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "walter-peak-beach-point",
+    "siteSlug": "walter-peak-station",
+    "label": "Walter Peak — Beach Point",
+    "latitude": -45.1034,
+    "longitude": 168.5415,
+    "precision": "landmark",
+    "description": "Beach Point campsite and public lakeshore walkway are landmarks for the wider Walter Peak restoration area. The historic WRT planting was on adjacent DOC land; this point does not identify the individual planting patch.",
+    "sourceUrl": "https://www.realnz.com/en/conservation/key-conservation-projects/walter-peak-land-restoration-project/",
+    "sourceLabel": "RealNZ restoration project",
+    "coordinateSourceUrl": "https://www.doc.govt.nz/documents/parks-and-recreation/places-to-stay/campsite-information/campsites-otago.pdf",
+    "coordinateMethod": "DOC campsite guide publishes Beach Point at Walter Peak at latitude -45.10341, longitude 168.54149. RealNZ identifies WRT volunteer planting on adjacent DOC land in September 2017, matching the ledger season; the campsite is a public reference, not the verified planting patch.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "wye-creek-main-wall",
+    "siteSlug": "wye-creek",
+    "label": "Wye Creek — Main Wall area",
+    "latitude": -45.1419,
+    "longitude": 168.7699,
+    "precision": "landmark",
+    "description": "A climbing-area reference near Main Wall, where Queenstown Climbing Club describes its native bush restoration work. Plantings extend around the climbing area; the marker is not a planting boundary or a car park.",
+    "sourceUrl": "https://queenstownclimbingclub.com/conservation",
+    "sourceLabel": "Queenstown Climbing Club",
+    "coordinateSourceUrl": "https://www.thecrag.com/en/climbing/new-zealand/queenstown/wye-creek/route/13862503",
+    "coordinateMethod": "Published climber coordinates for The Mission at Main Wall: -45.14186,168.76992, corroborated by Proud Monkey, Dream Thing and Aratika route records. The club explicitly identifies native restoration around Main Wall. This is a crag reference, not a surveyed planting patch.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "jardines-boulder-field",
+    "siteSlug": "jardine-boulders",
+    "label": "Jardines Boulder Field",
+    "latitude": -45.0958,
+    "longitude": 168.7649,
+    "precision": "landmark",
+    "description": "A reference for the named boulder field on Remarkables Station, beside SH6. The exact position of the ledger’s native plantings within this area has not been established.",
+    "sourceUrl": "https://qeiinationaltrust.org.nz/places/lake-wakatipu-jardines-boulder-field/",
+    "sourceLabel": "QEII National Trust",
+    "coordinateSourceUrl": "https://www.thecrag.com/en/climbing/new-zealand/queenstown/area/1484755365",
+    "coordinateMethod": "The named Jardines bouldering-area map publishes -45.095774,168.764851. QEII confirms the identity and SH6 access. Used as a broader area landmark, not a planting pin; QEII website embedded map coordinates were rejected because they point far south of the named boulder field.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "moke-lake-campsite",
+    "siteSlug": "moke-lake",
+    "label": "Moke Lake campsite",
+    "latitude": -44.9981,
+    "longitude": 168.5731,
+    "precision": "landmark",
+    "description": "DOC’s published campsite location corresponds to the ledger’s Moke Lake Camp name. It is a campsite reference rather than the exact position of the historic plantings.",
+    "sourceUrl": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/queenstown-area/things-to-do/moke-lake-campsite/",
+    "sourceLabel": "DOC campsite location",
+    "coordinateSourceUrl": "https://www.doc.govt.nz/parks-and-recreation/places-to-go/otago/places/queenstown-area/things-to-do/moke-lake-campsite/",
+    "coordinateMethod": "Direct published DOC latitude -44.99811782, longitude168.57308923 (also NZTM E1251305 N5007714). The source ledger says ML CAMP / Moke Lake Camp, matching this public campsite.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "lower-shotover-conservation-area",
+    "siteSlug": "lower-shotover-conservation-area",
+    "label": "Lower Shotover Conservation Area",
+    "latitude": -44.9877,
+    "longitude": 168.728,
+    "precision": "landmark",
+    "description": "A reference point inside the DOC conservation area along the Shotover River east of Arthurs Point. The historic planting patch is unknown; this marker represents the named reserve rather than its planting boundary.",
+    "sourceUrl": "https://services1.arcgis.com/3JjYDyG3oajxU6HO/arcgis/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query?where=NaPALIS_ID%3D2804651&outFields=%2A&outSR=4326&returnGeometry=true&f=geojson",
+    "sourceLabel": "DOC conservation land",
+    "coordinateSourceUrl": "https://services1.arcgis.com/3JjYDyG3oajxU6HO/arcgis/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query?where=NaPALIS_ID%3D2804651&outFields=%2A&outSR=4326&returnGeometry=true&f=geojson",
+    "coordinateMethod": "Interior point derived from DOC Public Conservation Land polygon NaPALIS_ID2804651, Conservation Area - Lower Shotover, unitF41048. The area centroid falls outside this narrow winding polygon; used the midpoint of the widest interior segment at centroid latitude -44.98770238, yielding longitude168.72800053. This is a reserve reference, not the unknown 2015 planting patch.",
+    "checkedOn": "2026-10-07"
+  },
+  {
+    "id": "kingsview-school",
+    "siteSlug": "kingsview",
+    "label": "KingsView School",
+    "latitude": -45.0177,
+    "longitude": 168.7279,
+    "precision": "landmark",
+    "description": "KingsView School at 14 Yewlett Crescent, Frankton, is a reference for the school planting records. The marker identifies the school rather than an individual planting patch.",
+    "sourceUrl": "https://www.kingsview.school.nz/our-school-2/",
+    "sourceLabel": "KingsView School address",
+    "coordinateSourceUrl": "https://www.openstreetmap.org/way/384923492",
+    "coordinateMethod": "Nominatim representative coordinate of OSM school way 384923492 (-45.0176656, 168.7279115), with school name and 14 Yewlett Crescent address independently confirmed by the school and Education Counts institution 633. Rounded to four decimal places. School landmark, not verified planting boundary.",
     "checkedOn": "2026-10-07"
   }
 ]
