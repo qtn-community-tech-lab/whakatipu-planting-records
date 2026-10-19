@@ -1,72 +1,80 @@
-# 07 · WRT planting database (Supabase)
+# 07 · WRT database: the old layer and the new one
 
-19 October 2026. Built against branch `z` at `a094f07`. Second draft: the first draft's 16 flat tables are replaced by a smaller relational model. An illustrated version lives in the "WRT Planting Database" artifact.
+19 October 2026. Third draft. The schema is now declared once, in TypeScript with Drizzle (`db/schema/`). Migrations, row types and zod schemas are all generated from that declaration. Supabase provides the database, sign-in and access rules.
 
-## The model
+## Two layers
 
-**A planting record says how many of one species went to one site area in one season.** Every other table describes one of those four things, or explains where a number came from.
+**`legacy` schema: the old.** The five CSVs generated from the Plants Out Master, loaded as they are, one table per file: `planting_history`, `species_register`, `species_crosswalk`, `site_crosswalk` and `reconciliation`, plus an `imports` row whose id is the data version. Only the import writes here. Staff can read it; the app's API never sees it.
 
-Files:
-- `supabase/migrations/20261019000000_wrt_schema.sql`: tables, views, access rules.
-- `scripts/export-supabase.ts`: writes `supabase/export/*.csv` from the generated CSVs and `data/*.json`.
-- `supabase/import.sql`: loads those CSVs in one transaction.
+**`public` schema: the new, designed model.** Built from the old layer, and the place new data goes.
 
-## Tables
+| Table | Holds |
+|---|---|
+| `sites` | Lake Hayes, Whitechapel… Paper4Trees flagged as a scheme. Description and `is_public` for staff |
+| `site_areas` | Parts of a site: WRT site number, class (keystone / community / school) |
+| `site_locations` | One pin per site or per area, with an optional `radius_m` |
+| `species` | WRT's register: Māori and common names, over-5 m, both threatened marks, contested group C1–C9 |
+| `species_profiles`, `species_photos` | Write-ups and reference photos with licence credit |
+| `seasons` | Autumn / Spring per year, with the workbook's TOTAL cell for checking |
+| `planting_events` | One site area, one season, and for new events one date. `source` = `workbook` or `app` |
+| `planting_lines` | How many of one species in an event. History lines keep `legacy_code`, a foreign key to their legacy row |
+| `line_notes` | Why a line needs review, filed under a topic |
+| `review_topics` | The questions WRT must answer, and their decisions |
+| `profiles` | Staff and other signed-in people, linked to Supabase Auth |
 
-From the workbook (refreshed by every import):
+Views: `line_details`, `totals_by_site`, `totals_by_species`, `totals_by_season`, `totals_by_review_topic`. Every total keeps the split: plants, plants resolved, plants needing review.
 
-| Table | Rows | Links to | Holds |
-|---|---:|---|---|
-| `planting_records` | 5,449 | seasons, site_areas, species | code, quantity (empty for "TBC"), needs_review |
-| `sites` | 39 | | slug, name, is_scheme (Paper4Trees) |
-| `site_areas` | 78 | sites | slug, name, WRT site number, site class |
-| `seasons` | 23 | | slug, year, Autumn/Spring, sort order, workbook TOTAL cell and value |
-| `species` | 164 | | register names, status, over-5 m, both threatened marks, contested group (C1–C9), needs decision |
-| `record_notes` | 1,501 | planting_records, review_topics | kind (ruling / confirm / fyi), text |
+## How history fits the new model
 
-Written by staff (imports only add missing rows):
+History becomes 360 events (one per area per season) holding 5,449 lines. History events have no date and no type, because the workbook never recorded them. New events must have a date (a database check). Each history line points at the legacy row it came from, and that row can't be deleted while a line uses it.
 
-| Table | Rows | Links to | Holds |
-|---|---:|---|---|
-| `review_topics` | 9 | | the question, and WRT's decision, date and decider |
-| `site_locations` | 50 | sites, optionally one site_area | lat, lng, **radius_m**, accuracy, sources |
-| `species_profiles` | 95 | species (one each) | names, summary, look-for, sources, photo check |
-| `species_photos` | 280 | species | image, credit, licence |
+Example: Whitechapel Reserve, Autumn 2019 is one event with 25 lines and 1,005 plants.
 
-Source, in a separate `source` schema the API cannot see: `imports` (the data version), `record_sources` (workbook cell, names as typed, match confidence and precision), `site_spellings` (134 headers), `species_spellings` (728 spellings).
+## Rules, and where each is enforced
 
-Views: `record_details` (records with everything joined), `totals_by_site`, `totals_by_species`, `totals_by_season`, `totals_by_review_topic`. Every total keeps the split: plants, plants resolved, plants needing review, records, records needing review.
+| Rule | Where |
+|---|---|
+| New events need a date; history doesn't | Postgres check |
+| One line per species per event; no negative quantities; unknown quantity is empty, never 0 | Postgres unique index and check |
+| One pin per site and per area; a pin's area belongs to its site | Partial unique indexes; composite foreign key |
+| Signed out: published records and the species list only | Access rules (RLS) |
+| Staff read and write everything; nobody deletes, they deactivate | Access rules + `deactivated_at` |
+| Who changed what, and when | `created_by` default + trigger on every editable table |
+| Forms: real dates, each species once, at least one species | zod (`db/zod.ts`, generated from the tables) |
+| Content files are well formed; CC BY photos credit the author | zod (`db/content.ts`), checked by the import and by tests |
 
-## Decisions
-
-- **Number ids for links, slugs for URLs.** Imports match rows on slug or record code, so ids stay the same between imports.
-- **A record is seven columns.** Year, site and class come through its links. Workbook detail sits in `source.record_sources`.
-- **Site class lives on the area.** All 78 areas have a single class across their records.
-- **Contested species carry WRT's own group code** (C1–C9) instead of a pairs table.
-- **A pin covers a whole site or one area.** No pin covers two, so one optional foreign key does it, and the database checks the area belongs to the pin's site.
-- **Workbook totals sit on each season**; the five grand totals and the "TBC" exception sit on the import row.
-- **Review topics are a table**, so WRT's rulings get recorded where the questions are.
-- **Staff tables are protected.** Imports never change their rows, and a site, area or species they point at cannot be deleted.
-
-## Loading
+## Commands
 
 ```bash
-supabase link --project-ref <ref> && supabase db push      # once
-npx tsx scripts/export-supabase.ts                          # each regeneration
-psql "$SUPABASE_DB_URL" -f supabase/import.sql              # from the repo root
+npm run db:generate    # after changing db/schema/*: writes the next migration
+npm run db:migrate     # applies migrations (DATABASE_URL in .env, see .env.example)
+npm run db:import      # refreshes legacy from the CSVs and builds the new layer on it
 ```
 
-## Checked
+The import runs in one transaction:
+1. It replaces the legacy tables.
+2. It updates the new layer, matched on slugs and record codes, so ids stay the same.
+3. It adds missing pins, profiles and photos, and never overwrites what staff changed.
 
-On Postgres 16 with the real data: 140,068 plants, 44,290 needing review, 5,449 records, 667 needing review; Whitechapel 2019 = 2,105 (136); all 23 season totals match the workbook; all 157 site, species and season totals match the app's query layer; a second import changes nothing and keeps record ids; staff edits (a pin radius, a decision) survive it; signed-out users read nothing; the `source` schema is closed to signed-in users.
+Sites or areas that lose all their history are reported, not deleted.
 
-## Using it in the app
+Drizzle owns the migrations; don't also make schema changes with the Supabase CLI. Server code connects through Drizzle as the database owner, so access rules don't apply there and the server must check the signed-in user itself. The browser uses supabase-js, where the rules do apply.
 
-Write a `DbWrtRepository` that implements `WrtRepository`, reads the tables (paging past Supabase's 1,000-row default), and rebuilds the same domain objects, so `queries.ts`, the pages and the chat stay as they are. Run the existing tests against both repositories before switching.
+## Checked (Postgres 16, Supabase roles and auth stubbed)
 
-## Before production
+- **Migrations:** applied with `drizzle-kit migrate`, building 18 tables, 49 access rules, 10 edit-trail triggers and 5 views. `drizzle-kit generate` reports no drift.
+- **Totals:** 140,068 plants, 44,290 needing review, 5,449 lines. All 157 site, species and season totals match the app's query layer exactly.
+- **Legacy link:** every line matches its legacy row, with the same quantity and review flag.
+- **Re-import:** line ids stay the same. A pin radius, a site description, its public flag and a WRT decision all survive.
+- **Access:**
+  - Signed out: sees only published sites and the species list.
+  - Volunteer: sees the same, cannot write, and cannot see review topics or legacy rows.
+  - Staff: sees everything, and their writes are stamped with their id.
+- **Refusals:** a new event with no date, the same species twice, a negative quantity, a pin on another site's area, a second whole-site pin, and deleting a legacy row a line points at.
+- **Tests:** 202 pass, including 9 new zod tests that also check all four content files.
 
-1. Limit editing of staff tables to a staff role; today any signed-in user can edit them.
-2. Add PostGIS only when we need "pins within X m".
-3. Copy reference photos to Supabase Storage if hotlinking becomes a problem.
-4. Rulings from WRT (Slope Hill 2024, contested groups, macron spellings, Paper4Trees) change rows, not the schema.
+## Next
+
+1. A `DbWrtRepository` that reads `line_details` through Drizzle and returns the app's existing domain objects, run against the current tests.
+2. Staff sign-in (Supabase magic links, invite-only) and a planting-day form using `plantingDayForm`.
+3. A real Supabase project: `db:migrate`, then `db:import`.
