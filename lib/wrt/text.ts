@@ -25,6 +25,9 @@ export function searchKey(s: string): string {
 }
 
 /** URL slug: "Lake Hayes Pavilion" → "lake-hayes-pavilion". */
+/** Trust boundary: a slug that came from the browser. */
+export const SLUG = /^[a-z0-9-]{1,80}$/;
+
 export function slugify(s: string): string {
   return searchKey(s).replace(/\s+/g, "-");
 }
@@ -106,6 +109,11 @@ export function matchScore(query: string, keys: string[]): number {
 }
 
 /** en-NZ number formatting: 7,020. */
+/** "Autumn 2019 → Spring 2024", or just the one season when first and last are the same. */
+export function spanLabel(span: { first: { slug: string; label: string }; last: { slug: string; label: string } }): string {
+  return span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
+}
+
 export function formatNumber(n: number): string {
   return new Intl.NumberFormat("en-NZ").format(n);
 }

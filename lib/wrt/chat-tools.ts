@@ -3,7 +3,7 @@
  *
  * Each tool wraps a query that already exists in lib/wrt/queries.ts, so the
  * chat and the pages always give the same numbers. Each result is drawn by
- * the matching card in components/wrt/chat-cards.tsx.
+ * the matching card in components/wrt/ask/chat-cards.tsx.
  *
  * Lives here, not in the route, because Next route files may only export
  * handlers, and the cards need the ChatMessage type below.
@@ -11,13 +11,13 @@
 import "server-only";
 import { tool, type InferUITools, type LanguageModelUsage, type UIMessage } from "ai";
 import { z } from "zod";
-import { emptySplit, groupSplits, type RecordFilter, type RecordView } from "@/lib/wrt/queries";
+import { speciesBySite, emptySplit, groupSplits, type RecordFilter, type RecordView } from "@/lib/wrt/queries";
 import { getWrt } from "@/lib/wrt/server";
 import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
 import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { matchScore, searchKey } from "@/lib/wrt/text";
-import { speciesBySite } from "@/components/wrt/sites/site-rows";
-import type { PlantingRecord, QuantitySplit } from "@/lib/wrt/types";
+
+import type { PlantingRecord, QuantitySplit, SeasonName } from "@/lib/wrt/types";
 
 export const SYSTEM = `You answer questions about the Wakatipu Reforestation Trust planting history, Autumn 2015 to Autumn 2026, straight from the data.
 - Every number comes from a tool. Never estimate, add or subtract figures yourself. Call counts "recorded".
@@ -322,7 +322,7 @@ export type Scope = {
   place?: { slug: string; name: string };
   part?: string;
   species?: { slug: string; name: string };
-  season?: "Autumn" | "Spring";
+  season?: SeasonName;
   year?: number;
 };
 

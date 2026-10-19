@@ -22,7 +22,7 @@ describe("five-species reference research batches", () => {
   it("retains viewed image evidence and source checks for all 45 additional entries", () => {
     const entries: ResearchEntry[] = [];
     for (let batch = 1; batch <= 9; batch++) {
-      const file = path.join(process.cwd(), "data", "species-research", `batch-${String(batch).padStart(2, "0")}.json`);
+      const file = path.join(process.cwd(), "data", "research", "species-research", `batch-${String(batch).padStart(2, "0")}.json`);
       const data = JSON.parse(readFileSync(file, "utf8")) as { entries: ResearchEntry[] };
       expect(data.entries).toHaveLength(5);
       entries.push(...data.entries);

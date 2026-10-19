@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { cleanLabel, editDistance, foldMacrons, formatNumber, formatShare, matchScore, searchKey, slugify } from "@/lib/wrt/text";
+import { cleanLabel, editDistance, foldMacrons, formatNumber, formatShare, matchScore, searchKey, slugify, spanLabel } from "@/lib/wrt/text";
+import { first } from "@/lib/wrt/params";
 
 describe("foldMacrons", () => {
   it("removes macrons, both cases", () => {
@@ -106,5 +107,24 @@ describe("formatShare", () => {
     expect(formatShare(1, 1000)).toBe("<1%");
     expect(formatShare(0, 1000)).toBe("0%");
     expect(formatShare(5, 0)).toBe("0%");
+  });
+});
+
+describe("spanLabel", () => {
+  const a = { slug: "autumn-2019", label: "Autumn 2019" };
+  const b = { slug: "spring-2024", label: "Spring 2024" };
+  it("joins two different seasons with an arrow", () => {
+    expect(spanLabel({ first: a, last: b })).toBe("Autumn 2019 → Spring 2024");
+  });
+  it("names a single season once", () => {
+    expect(spanLabel({ first: a, last: a })).toBe("Autumn 2019");
+  });
+});
+
+describe("first (search params)", () => {
+  it("takes the first of a repeated param and passes a single one through", () => {
+    expect(first(["2019", "2020"])).toBe("2019");
+    expect(first("2019")).toBe("2019");
+    expect(first(undefined)).toBeUndefined();
   });
 });

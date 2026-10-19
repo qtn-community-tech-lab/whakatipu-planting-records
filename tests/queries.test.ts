@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { expectCoherentSplit, q, repo } from "./helpers";
-import { splitOf } from "@/lib/wrt/queries";
+import { needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
 const SPLIT_KEYS = ["total", "resolved", "needsReview", "records", "recordsNeedingReview"];
@@ -339,5 +339,15 @@ describe("chat golden questions", () => {
   it("the Slope Hill 2024 columns hold 29,000 plants", async () => {
     const t = (await q.overview()).themes.find((x) => x.theme === "slope-hill-2024");
     expect(t?.split.total).toBe(29000);
+  });
+});
+
+describe("needsReviewByPlants", () => {
+  it("keeps only flagged rows, largest first, and drops none", async () => {
+    const { rows } = await q.records({});
+    const out = needsReviewByPlants(rows);
+    expect(out.length).toBe(rows.filter((v) => v.record.needsReview).length);
+    expect(out.every((v) => v.record.needsReview)).toBe(true);
+    for (let i = 1; i < out.length; i++) expect(out[i - 1].record.quantity).toBeGreaterThanOrEqual(out[i].record.quantity);
   });
 });
