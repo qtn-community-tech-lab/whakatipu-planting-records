@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { formatNumber } from "@/lib/wrt/text";
-import "./explore.css";
 
 /** Previous / Next with "Showing 51–100 of 584". Plain links, no JS. */
 export function RecordsPager({

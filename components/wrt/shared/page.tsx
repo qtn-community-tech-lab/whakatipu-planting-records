@@ -51,17 +51,6 @@ export function CardLink({ href, children }: { href: string; children: ReactNode
   return <Link href={href} className="cn-link whitespace-nowrap">{children} →</Link>;
 }
 
-/** Small fact tile (Canopy cn-tile). Use sparingly: this is not a KPI dashboard. */
-export function Fact({ label, value, note }: { label: ReactNode; value: ReactNode; note?: ReactNode }) {
-  return (
-    <div className="cn-tile">
-      <span className="cn-tile__label">{label}</span>
-      <span className="cn-tile__value tabular-nums">{value}</span>
-      {note && <span className="wrt-rule">{note}</span>}
-    </div>
-  );
-}
-
 export function EmptyState({ title, children }: { title: ReactNode; children?: ReactNode }) {
   return (
     <div className="cn-tile cn-tile--empty items-start p-6">

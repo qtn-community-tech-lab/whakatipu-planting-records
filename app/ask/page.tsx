@@ -1,18 +1,18 @@
 "use client";
 /**
  * /ask: chat with the planting history, laid out like the demo (WRT chat artifact):
- * steps above each answer, then its cards and text; a floating composer (components/wrt/chat-composer.tsx)
- * holding the scope chips, New, and the Dev switch for the inspector (components/wrt/chat-dev.tsx).
+ * steps above each answer, then its cards and text; a floating composer (components/wrt/ask/chat-composer.tsx)
+ * holding the scope chips, New, and the Dev switch for the inspector (components/wrt/ask/chat-dev.tsx).
  * Clicking a site or species opens it in a sidebar; a part or a season asks about it; cmd-click opens the page.
  */
 import { useChat } from "@ai-sdk/react";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { Next, PlaceCard, SpeciesCard, Steps, ToolPart, nextQuestions, placeNext, speciesNext } from "@/components/wrt/chat-cards";
-import { ChatDev, useDev } from "@/components/wrt/chat-dev";
-import { Composer } from "@/components/wrt/chat-composer";
-import { scopeOf, scopeWhere } from "@/components/wrt/chat-scope";
-import type { ChatMessage, Scope } from "@/lib/chat-tools";
+import { Next, PlaceCard, SpeciesCard, Steps, ToolPart, nextQuestions, placeNext, speciesNext } from "@/components/wrt/ask/chat-cards";
+import { ChatDev, useDev } from "@/components/wrt/ask/chat-dev";
+import { Composer } from "@/components/wrt/ask/chat-composer";
+import { scopeOf, scopeWhere } from "@/components/wrt/ask/chat-scope";
+import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 import { openDetail } from "./actions";
 
 const STARTERS = [

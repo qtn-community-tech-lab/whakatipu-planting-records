@@ -3,7 +3,6 @@ import type { Lookups, PlaceSummary } from "@/lib/wrt/queries";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { type RecordsView, hasFilters } from "./filters";
 import { AutoSubmit } from "./auto-submit";
-import "./explore.css";
 
 /** Radio group styled as a Canopy segmented control. Works without JS. */
 function Segmented({

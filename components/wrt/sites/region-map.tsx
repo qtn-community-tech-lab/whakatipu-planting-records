@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
 import { formatNumber } from "@/lib/wrt/text";
-import { SplitBar, SplitLine } from "@/components/wrt/quantity";
+import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
 function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation }) {
   const { map, isLoaded } = useMap();

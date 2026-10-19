@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatNumber } from "@/lib/wrt/text";
 
 /** True minus for negative differences, plus sign for positive, nothing for zero. */
-export function formatDifference(n: number): string {
+function formatDifference(n: number): string {
   if (n === 0) return "0";
   return n > 0 ? `+${formatNumber(n)}` : `−${formatNumber(Math.abs(n))}`;
 }
@@ -19,7 +19,7 @@ const GRAND_NAMES: { match: RegExp; name: string }[] = [
   { match: /^MASTER!PZ107$/, name: "Unlabelled cell beside the grand total, MASTER sheet" },
 ];
 
-export function grandName(row: ReconciliationRow): string {
+function grandName(row: ReconciliationRow): string {
   const known = GRAND_NAMES.find((g) => g.match.test(row.statedCell));
   if (known) return known.name;
   if (/SUMMARY SITES/i.test(row.label)) return "All-time total by site, SUMMARY SITES sheet";

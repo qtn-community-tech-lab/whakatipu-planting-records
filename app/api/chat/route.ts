@@ -1,15 +1,15 @@
 /**
- * POST /api/chat: streams the WRT data chat. Prompt and tools: lib/chat-tools.ts.
+ * POST /api/chat: streams the WRT data chat. Prompt and tools: lib/wrt/chat-tools.ts.
  * Env (.env.local): AI_GATEWAY_API_KEY, optional WRT_CHAT_MODEL.
  */
 import { convertToModelMessages, smoothStream, stepCountIs, streamText } from "ai";
-import { SYSTEM, scopeLine, tools, type ChatMessage, type ChatMeta, type Scope } from "@/lib/chat-tools";
+import { SYSTEM, scopeLine, tools, type ChatMessage, type ChatMeta, type Scope } from "@/lib/wrt/chat-tools";
+import { SLUG } from "@/lib/wrt/text";
 
 // ponytail: check maxDuration against the Next 16.3.8 route docs in node_modules/next/dist/docs/
 export const maxDuration = 60;
 
 const MODEL = process.env.WRT_CHAT_MODEL ?? "openai/gpt-6-luna";
-const SLUG = /^[a-z0-9-]{1,80}$/;
 const text = (v: unknown) => (typeof v === "string" ? v.replace(/["\n]/g, "").slice(0, 80) || undefined : undefined);
 
 /** Trust boundary: the scope comes from the browser, so keep only well-formed values. */

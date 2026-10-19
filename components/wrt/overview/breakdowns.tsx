@@ -6,8 +6,7 @@ import type { Ranked } from "@/lib/wrt/queries";
 import type { Precision, SiteClass } from "@/lib/wrt/types";
 import { PRECISION_LABELS, SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
-import type { RankedItem } from "@/components/wrt/charts";
-import { AlignedBars } from "./ranked";
+import { RankedBars, type RankedItem } from "@/components/wrt/shared/charts";
 
 const CLASS_NOTE: Record<SiteClass, string> = {
   keystone: "Large restoration sites",
@@ -33,7 +32,7 @@ export function ClassBreakdown({ rows }: { rows: Ranked<SiteClass>[] }) {
     label: <Label title={SITE_CLASS_LABELS[r.item]} note={`${CLASS_NOTE[r.item]} · ${formatShare(r.split.total, total)}`} />,
     split: r.split,
   }));
-  return <AlignedBars items={items} />;
+  return <RankedBars items={items} aligned />;
 }
 
 const PRECISION_NOTE: Record<Precision, string> = {
@@ -56,5 +55,5 @@ export function PrecisionBreakdown({ rows }: { rows: Ranked<Precision>[] }) {
     ),
     split: r.split,
   }));
-  return <AlignedBars items={items} />;
+  return <RankedBars items={items} aligned />;
 }

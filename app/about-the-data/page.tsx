@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getWrtAll, reviewShown } from "@/lib/wrt/server";
-import { Card, CardLink, PageHead, Rule } from "@/components/wrt/page";
-import { QuantityFigure } from "@/components/wrt/quantity";
-import { ReviewThemeList } from "@/components/wrt/records";
-import { hrefs } from "@/components/wrt/names";
+import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
+import { QuantityFigure } from "@/components/wrt/shared/quantity";
+import { ReviewThemeList } from "@/components/wrt/shared/records";
+import { hrefs } from "@/components/wrt/shared/names";
 import { ConfidenceList, PrecisionList } from "@/components/wrt/about/precision";
 import { GrandReconciliationTable, SeasonReconciliationTable } from "@/components/wrt/about/reconciliation";
 import { ThreatenedLink, ThreatenedQuestions, ThreatenedTable } from "@/components/wrt/about/threatened";

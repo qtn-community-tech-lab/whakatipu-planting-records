@@ -6,8 +6,8 @@ import Link from "next/link";
 import type { ThemeSummary } from "@/lib/wrt/queries";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { formatNumber } from "@/lib/wrt/text";
-import { hrefs } from "@/components/wrt/names";
-import { SplitBar } from "@/components/wrt/quantity";
+import { hrefs } from "@/components/wrt/shared/names";
+import { SplitBar } from "@/components/wrt/shared/quantity";
 import { Badge } from "@/components/ui/badge";
 
 export function OpenQuestions({ themes }: { themes: ThemeSummary[] }) {

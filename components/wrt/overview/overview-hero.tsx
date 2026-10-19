@@ -4,10 +4,10 @@ import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
 import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { SplitBar } from "@/components/wrt/quantity";
+import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
-import { hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/shared/names";
 
 interface Stat {
   href: string;
@@ -124,30 +124,5 @@ export function OverviewHero({
         </div>
       )}
     </section>
-  );
-}
-
-/** Small round picture for a species in a ranked list: its photo, or its initial. */
-export function SpeciesAvatar({ species }: { species: Species }) {
-  const photo = getSpeciesPhoto(species.id);
-  const initial = (species.displayIsScientific ? species.scientificName : species.displayName).charAt(0).toUpperCase();
-  return (
-    <span className="wrt-avatar" aria-hidden="true">
-      {photo ? (
-        <Image src={photo.src} width={photo.width} height={photo.height} alt="" sizes="40px" style={{ objectPosition: photo.focalPoint }} unoptimized />
-      ) : (
-        <span className="wrt-avatar__initial">{initial}</span>
-      )}
-    </span>
-  );
-}
-
-/** Leaderboard label: rank chip in front of whatever names the row. */
-export function RankLabel({ rank, children }: { rank: number; children: React.ReactNode }) {
-  return (
-    <span className="wrt-lb">
-      <span className="wrt-lb__rank" data-top={rank <= 3 || undefined}>{rank}</span>
-      {children}
-    </span>
   );
 }

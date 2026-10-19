@@ -2,9 +2,9 @@
 /**
  * Scope on /ask: what the last answer looked at (a site, a part, a species, a season). It's shown as chips
  * in the composer (chat-composer.tsx), can be cleared, and is sent with each question so follow-ups stay on it
- * (scopeLine in lib/chat-tools.ts).
+ * (scopeLine in lib/wrt/chat-tools.ts).
  */
-import type { ChatMessage, Scope } from "@/lib/chat-tools";
+import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 
 const KEYS = ["place", "part", "species", "season", "year"] as const;
 

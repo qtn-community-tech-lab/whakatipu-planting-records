@@ -14,6 +14,10 @@
 @import "../styles/canopy/effects.css";
 @import "../styles/canopy/components.css";
 @import "../styles/app.css";
+@import "../styles/explore.css";
+@import "../styles/records-explore.css";
+@import "../styles/species-profile.css";
+@import "../styles/species-profile-preview.css";
 
 @custom-variant dark (&:is(.dark *));
 

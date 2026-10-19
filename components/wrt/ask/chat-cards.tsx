@@ -3,22 +3,23 @@
  * Draws each chat tool result with the components the site's own pages use:
  * site rows with species photo chips (Sites page), the field-guide card
  * (Species page) and the season row with top trees and top sites (Seasons page).
- * One case per tool in lib/chat-tools.ts. Add a tool there → add a case here.
+ * One case per tool in lib/wrt/chat-tools.ts. Add a tool there → add a case here.
  */
 import Image from "next/image";
+import { byTotalDesc } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
-import { RankedBars, SeasonColumns } from "@/components/wrt/charts";
-import { hrefs } from "@/components/wrt/names";
-import { Card } from "@/components/wrt/page";
-import { QuantityFigure } from "@/components/wrt/quantity";
+import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
+import { hrefs } from "@/components/wrt/shared/names";
+import { Card } from "@/components/wrt/shared/page";
+import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { SeasonRow } from "@/components/wrt/seasons/season-parts";
 import { SiteRows, partHref, type SiteRowData } from "@/components/wrt/sites/site-rows";
-import type { ChatMessage } from "@/lib/chat-tools";
+import type { ChatMessage } from "@/lib/wrt/chat-tools";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
+import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
 type Part = ChatMessage["parts"][number];
@@ -26,7 +27,7 @@ type Out<N extends string> = Extract<Part, { type: `tool-${N}`; state: "output-a
 type Found<N extends string> = Extract<Out<N>, { found: true }>;
 
 /** A tool call inside a message. */
-export type ToolCall = Extract<Part, { toolCallId: string }>;
+type ToolCall = Extract<Part, { toolCallId: string }>;
 export const isTool = (p: Part): p is ToolCall => p.type.startsWith("tool-");
 
 /** One chip per lookup above the answer: spinning while it runs, a dot when done. Like the demo's steps. */
@@ -86,7 +87,7 @@ const qs = (...xs: (string | false | null | undefined)[]) => xs.filter((x): x is
 
 export function placeNext(o: Found<"place">) {
   const n = o.place.name;
-  const parts = o.parts.length > 1 ? [...o.parts].sort((a, b) => b.split.total - a.split.total).slice(0, 2) : [];
+  const parts = o.parts.length > 1 ? [...o.parts].sort(byTotalDesc).slice(0, 2) : [];
   return qs(
     ...parts.map((p) => `What's recorded at ${p.name} in ${n}?`),
     `Which plants am I most likely to see at ${n}?`,
@@ -182,7 +183,7 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
               const href = partHref(o.place.slug, p.name);
               return {
                 key: p.name, name: p.name, href, split: p.split, species: p.species,
-                meta: `${p.span.first.slug === p.span.last.slug ? p.span.first.label : `${p.span.first.label} → ${p.span.last.label}`}`
+                meta: spanLabel(p.span)
                   + ` · ${p.span.seasonsActive} ${p.span.seasonsActive === 1 ? "season" : "seasons"} · ${p.speciesCount} species`,
                 totalHref: href, moreHref: href, speciesHref: speciesAtHref(o.place.slug, p.name),
               };

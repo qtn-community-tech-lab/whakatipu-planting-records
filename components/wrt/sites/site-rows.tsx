@@ -5,42 +5,17 @@
  */
 import Link from "next/link";
 import type { ReactNode } from "react";
-import type { RecordView } from "@/lib/wrt/queries";
-import type { Place, QuantitySplit, Species } from "@/lib/wrt/types";
+import type { SiteSpecies } from "@/lib/wrt/queries";
+import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import { formatNumber, slugify } from "@/lib/wrt/text";
-import { SplitBar } from "@/components/wrt/quantity";
-import { SpeciesAvatar } from "@/components/wrt/overview/overview-hero";
-import { addRecord, emptySplit } from "@/components/wrt/species/species-tiles";
+import { SplitBar } from "@/components/wrt/shared/quantity";
+import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
 const TOP_PER_SITE = 3;
 
 /** Address of one part (parcel) of a site, by its readable name. */
 export function partHref(placeSlug: string, parcelName: string) {
   return `/sites/${placeSlug}/parts/${slugify(parcelName)}`;
-}
-
-export interface SiteSpecies {
-  species: Species;
-  split: QuantitySplit;
-}
-
-/** Group records by site, each with its species ranked by recorded plants. */
-export function speciesBySite(records: RecordView[]) {
-  const byPlace = new Map<string, { place: Place; split: QuantitySplit; species: Map<string, SiteSpecies> }>();
-  for (const v of records) {
-    const p = byPlace.get(v.place.slug) ?? { place: v.place, split: emptySplit(), species: new Map() };
-    addRecord(p.split, v);
-    const s = p.species.get(v.species.slug) ?? { species: v.species, split: emptySplit() };
-    addRecord(s.split, v);
-    p.species.set(v.species.slug, s);
-    byPlace.set(v.place.slug, p);
-  }
-  return new Map(
-    [...byPlace].map(([slug, p]) => [
-      slug,
-      { place: p.place, split: p.split, species: [...p.species.values()].sort((a, b) => b.split.total - a.split.total) },
-    ]),
-  );
 }
 
 export interface SiteRowData {

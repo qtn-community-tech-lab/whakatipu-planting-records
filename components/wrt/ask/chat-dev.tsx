@@ -4,8 +4,8 @@
  * what it cost. Off by default; the Dev switch turns it on for this browser. The chat works without it.
  */
 import { useSyncExternalStore } from "react";
-import { isTool } from "@/components/wrt/chat-cards";
-import type { ChatMessage, Scope } from "@/lib/chat-tools";
+import { isTool } from "@/components/wrt/ask/chat-cards";
+import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 
 const KEY = "wrt-ask-dev";
 let fallback = false; // when the browser blocks storage

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber, foldMacrons, matchScore } from "@/lib/wrt/text";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
-import { splitOf } from "@/lib/wrt/queries";
-import { EmptyState, PageHead, Rule } from "@/components/wrt/page";
+import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
+import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
 import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
@@ -16,9 +17,6 @@ import {
 
 export const metadata: Metadata = { title: "Species" };
 
-type SP = Record<string, string | string[] | undefined>;
-
-const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 function pick<T extends { key: string }>(list: readonly T[], v: string | undefined, fallback: T["key"]): T["key"] {
   return list.some((o) => o.key === v) ? (v as T["key"]) : fallback;
@@ -36,7 +34,7 @@ const nameKey = (s: string) => foldMacrons(s).toLowerCase();
 
 function sortRows(rows: SpeciesSummary[], sort: SortKey) {
   const out = [...rows];
-  if (sort === "plants") out.sort((a, b) => b.split.total - a.split.total);
+  if (sort === "plants") out.sort(byTotalDesc);
   if (sort === "sites") out.sort((a, b) => b.placeCount - a.placeCount || b.split.total - a.split.total);
   if (sort === "name") out.sort((a, b) => nameKey(a.item.displayName).localeCompare(nameKey(b.item.displayName)));
   if (sort === "botanical") out.sort((a, b) => nameKey(a.item.scientificName).localeCompare(nameKey(b.item.scientificName)));
@@ -63,11 +61,11 @@ const SHORT: Record<ShowKey, string> = {
   contested: "Name needs a ruling",
 };
 
-export default async function SpeciesPage({ searchParams }: { searchParams: Promise<SP> }) {
+export default async function SpeciesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
   const sp = await searchParams;
-  const sort = pick(SORTS, one(sp.sort), "plants") as SortKey;
-  const show = pick(SHOWS, one(sp.show), "all") as ShowKey;
-  const view: View = one(sp.view) === "grid" ? "grid" : "list";
+  const sort = pick(SORTS, first(sp.sort), "plants") as SortKey;
+  const show = pick(SHOWS, first(sp.show), "all") as ShowKey;
+  const view: View = first(sp.view) === "grid" ? "grid" : "list";
 
   const all = await getWrt().speciesList();
   const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
@@ -78,7 +76,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
-  const q = (one(sp.q) ?? "").trim();
+  const q = (first(sp.q) ?? "").trim();
   const byName = (r: SpeciesSummary) => !q || matchScore(q, r.item.searchKeys) > 0;
   const shown = sortRows(all.filter((r) => matches(show, r) && byName(r)), sort);
   const shownSplit = splitOf([]);

@@ -4,7 +4,7 @@
  * the exact spreadsheet cell it came from.
  */
 import { Fragment } from "react";
-import { SpeciesAvatar } from "./overview/overview-hero";
+import { SpeciesAvatar } from "./species-avatar";
 import Link from "next/link";
 import type { PlantingRecord, ReviewNote } from "@/lib/wrt/types";
 import type { RecordView, ThemeSummary } from "@/lib/wrt/queries";
@@ -53,7 +53,7 @@ export function Provenance({ record }: { record: PlantingRecord }) {
   );
 }
 
-export function RecordStatus({ record }: { record: PlantingRecord }) {
+function RecordStatus({ record }: { record: PlantingRecord }) {
   const asks = actionable(record);
   const decisions = asks.filter((n) => n.kind === "ruling").length;
   const checks = asks.length - decisions;
@@ -110,7 +110,7 @@ const KIND_COPY = {
 } as const;
 
 /** What WRT needs to settle on one record: the question, the detail, and where its siblings are. */
-export function ReviewIssue({ record, focusTheme }: { record: PlantingRecord; focusTheme?: string }) {
+function ReviewIssue({ record, focusTheme }: { record: PlantingRecord; focusTheme?: string }) {
   const asks = actionable(record);
   if (!asks.length) return null;
   return (

@@ -4,20 +4,20 @@
  * URL changes, so any view can be shared); a small arrow opens the full page.
  */
 import Link from "next/link";
+import { Pin } from "@/components/wrt/shared/pin";
 import type { ReactNode } from "react";
 import type { Lookups, RecordView, SeasonPoint } from "@/lib/wrt/queries";
 import type { QuantitySplit, ReviewTheme } from "@/lib/wrt/types";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { hrefs } from "@/components/wrt/names";
-import { SplitBar, SplitKey } from "@/components/wrt/quantity";
-import { SeasonColumns } from "@/components/wrt/charts";
-import { SpeciesAvatar } from "@/components/wrt/overview/overview-hero";
+import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
+import { hrefs } from "@/components/wrt/shared/names";
+import { SplitBar, SplitKey } from "@/components/wrt/shared/quantity";
+import { SeasonColumns } from "@/components/wrt/shared/charts";
+import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { partHref } from "@/components/wrt/sites/site-rows";
-import { addRecord, emptySplit } from "@/components/wrt/species/species-tiles";
+import { addToSplit, emptySplit, byTotalDesc } from "@/lib/wrt/queries";
 import { type RecordsView, recordsHref } from "./filters";
-import "./records-explore.css";
 
 const TOP = 8;
 
@@ -34,26 +34,16 @@ interface Item {
   page?: string;
 }
 
-function Pin() {
-  return (
-    <span className="rx-pin" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 21s-6.5-5.7-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.3 12 21 12 21Z" />
-        <circle cx="12" cy="9.8" r="2.3" />
-      </svg>
-    </span>
-  );
-}
 
 function group<T>(rows: RecordView[], keyOf: (v: RecordView) => string, init: (v: RecordView) => T) {
   const m = new Map<string, { meta: T; split: QuantitySplit }>();
   for (const v of rows) {
     const k = keyOf(v);
     const e = m.get(k) ?? { meta: init(v), split: emptySplit() };
-    addRecord(e.split, v);
+    addToSplit(e.split, v.record);
     m.set(k, e);
   }
-  return [...m.values()].sort((a, b) => b.split.total - a.split.total);
+  return [...m.values()].sort(byTotalDesc);
 }
 
 /** A ranked, clickable list: picture, name, bar, number. */
@@ -122,7 +112,7 @@ export function RecordsInsights({
   const bySeason = new Map<string, QuantitySplit>();
   for (const v of rows) {
     const s = bySeason.get(v.season.slug) ?? emptySplit();
-    addRecord(s, v);
+    addToSplit(s, v.record);
     bySeason.set(v.season.slug, s);
   }
   const points: SeasonPoint[] = seasons.map((season) => ({ season, split: bySeason.get(season.slug) ?? emptySplit() }));
@@ -140,7 +130,7 @@ export function RecordsInsights({
         key: meta.slug,
         name: meta.name,
         sub: meta.isScheme ? "Order scheme, not a place" : undefined,
-        avatar: <Pin />,
+        avatar: <Pin className="rx-pin" />,
         split,
         href: recordsHref(view, { place: meta.slug }),
         page: hrefs.place(meta.slug),
@@ -149,7 +139,7 @@ export function RecordsInsights({
       ? group(rows, (v) => v.record.parcelId, (v) => ({ id: v.record.parcelId, name: v.record.parcelName })).map(({ meta, split }) => ({
           key: meta.id,
           name: meta.name,
-          avatar: <Pin />,
+          avatar: <Pin className="rx-pin" />,
           split,
           href: recordsHref(view, { parcel: meta.id }),
           page: partHref(place!.slug, meta.name),
@@ -182,7 +172,7 @@ export function RecordsInsights({
         if (n.kind === "fyi" || seen.has(n.theme)) continue;
         seen.add(n.theme);
         const t = themes.get(n.theme) ?? emptySplit();
-        addRecord(t, v);
+        addToSplit(t, v.record);
         themes.set(n.theme, t);
       }
     }
@@ -213,7 +203,7 @@ export function RecordsInsights({
               <b className="tabular-nums">
                 {activePoints.length} <span className="rx-fact__of">of {seasons.length}</span>
               </b>
-              <span>{first && last ? (first.slug === last.slug ? first.label : `${first.label} → ${last.label}`) : ""}</span>
+              <span>{first && last ? spanLabel({ first, last }) : ""}</span>
             </div>
             <div className="rx-fact rx-fact--review">
               <span className="rx-fact__k">Needs review</span>

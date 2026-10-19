@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, EmptyState } from "@/components/wrt/page";
-import { SplitBar, SplitLine } from "@/components/wrt/quantity";
-import { RecordsTable } from "@/components/wrt/records";
+import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
+import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
+import { RecordsTable } from "@/components/wrt/shared/records";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
@@ -57,7 +58,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   const raw = await searchParams;
 
   // A GET form sends empty fields (?place=&year=…). Redirect to the clean URL so the link is shareable.
-  if (PARAM_KEYS.some((k) => raw[k] === "" || (Array.isArray(raw[k]) && (raw[k] as string[])[0] === ""))) {
+  if (PARAM_KEYS.some((k) => first(raw[k]) === "")) {
     const wrt0 = getWrt();
     const v = parseRecordParams(raw, await wrt0.lookups());
     redirect(recordsHref(v));

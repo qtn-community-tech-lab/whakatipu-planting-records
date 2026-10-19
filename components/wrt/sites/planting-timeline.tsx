@@ -4,11 +4,12 @@
  * all of it still needs a WRT ruling. Every dot links to its records.
  */
 import Link from "next/link";
+import { Pin } from "@/components/wrt/shared/pin";
 import type { RecordView } from "@/lib/wrt/queries";
 import type { QuantitySplit, Season, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
-import { SpeciesAvatar } from "@/components/wrt/overview/overview-hero";
-import { addRecord, emptySplit } from "@/components/wrt/species/species-tiles";
+import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
+import { addToSplit, emptySplit } from "@/lib/wrt/queries";
 
 interface Row {
   key: string;
@@ -37,9 +38,9 @@ function buildRows(records: RecordView[], rowsBy: "species" | "part" | "site"): 
         total: emptySplit(),
         bySeason: new Map(),
       } satisfies Row);
-    addRecord(row.total, v);
+    addToSplit(row.total, v.record);
     const cell = row.bySeason.get(v.season.slug) ?? emptySplit();
-    addRecord(cell, v);
+    addToSplit(cell, v.record);
     row.bySeason.set(v.season.slug, cell);
     rows.set(key, row);
   }
@@ -86,12 +87,7 @@ export function PlantingTimeline({
         {r.species ? (
           <SpeciesAvatar species={r.species} />
         ) : (
-          <span className="wrt-srow__pin" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 21s-6.5-5.7-6.5-11.2a6.5 6.5 0 0 1 13 0C18.5 15.3 12 21 12 21Z" />
-              <circle cx="12" cy="9.8" r="2.3" />
-            </svg>
-          </span>
+          <Pin className="wrt-srow__pin" />
         )}
         {rowHref ? (
           <Link href={rowHref(r)} className={r.species?.displayIsScientific ? "wrt-tl__label italic" : "wrt-tl__label"}>

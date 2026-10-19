@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Card, PageHead } from "@/components/wrt/page";
+import { Card, PageHead } from "@/components/wrt/shared/page";
 
 export const metadata: Metadata = { title: "Page not found" };
 

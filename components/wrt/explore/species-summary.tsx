@@ -2,16 +2,8 @@ import type { RecordView } from "@/lib/wrt/queries";
 import { addToSplit, emptySplit } from "@/lib/wrt/queries";
 import type { QuantitySplit, Season } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
-import { QuantityCell } from "@/components/wrt/quantity";
-import { SpeciesName } from "@/components/wrt/names";
-import "./explore.css";
-
-/** How many seasons the rows cover, in order. */
-export function seasonsIn(rows: RecordView[]): Season[] {
-  const m = new Map<string, Season>();
-  for (const r of rows) m.set(r.season.slug, r.season);
-  return [...m.values()].sort((a, b) => a.order - b.order);
-}
+import { QuantityCell } from "@/components/wrt/shared/quantity";
+import { SpeciesName } from "@/components/wrt/shared/names";
 
 /**
  * "By species": the direct answer to "What did we plant at Whitechapel in 2019?".

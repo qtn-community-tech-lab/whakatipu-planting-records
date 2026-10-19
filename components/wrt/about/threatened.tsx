@@ -7,8 +7,8 @@ import Link from "next/link";
 import type { ThreatenedSpeciesRow } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { Badge } from "@/components/ui/badge";
-import { SpeciesName } from "@/components/wrt/names";
-import { QuantityCell } from "@/components/wrt/quantity";
+import { SpeciesName } from "@/components/wrt/shared/names";
+import { QuantityCell } from "@/components/wrt/shared/quantity";
 import { midSentence } from "@/components/wrt/species/species-meta";
 
 function Mark({ on }: { on: boolean }) {

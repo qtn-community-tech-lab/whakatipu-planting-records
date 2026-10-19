@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import type { PlaceSummary } from "@/lib/wrt/queries";
-import { emptySplit } from "@/lib/wrt/queries";
+import { speciesBySite, byTotalDesc, emptySplit } from "@/lib/wrt/queries";
 import type { SiteClass } from "@/lib/wrt/types";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
-import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, Rule, EmptyState } from "@/components/wrt/page";
-import { hrefs } from "@/components/wrt/names";
-import { SplitLine, SplitKey } from "@/components/wrt/quantity";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
+import { PageHead, Card, Rule, EmptyState } from "@/components/wrt/shared/page";
+import { hrefs } from "@/components/wrt/shared/names";
+import { SplitLine, SplitKey } from "@/components/wrt/shared/quantity";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
-import { SiteRows, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { SiteRows } from "@/components/wrt/sites/site-rows";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 
 export const metadata: Metadata = {
@@ -18,7 +19,6 @@ export const metadata: Metadata = {
   description: "Every site with recorded plants since Autumn 2015, with seasons active, species and recorded plants.",
 };
 
-type SP = Record<string, string | string[] | undefined>;
 const CLASSES = ["keystone", "community", "school"] as const;
 type ClassFilter = (typeof CLASSES)[number];
 const SORTS = [
@@ -27,8 +27,6 @@ const SORTS = [
   { key: "name", label: "Name A–Z" },
 ] as const;
 type SortKey = (typeof SORTS)[number]["key"];
-
-const first = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 function href(cls: ClassFilter | undefined, sort: SortKey) {
   const sp = new URLSearchParams();
@@ -43,16 +41,11 @@ function sortSites(list: PlaceSummary[], sort: SortKey) {
   if (sort === "name") out.sort((a, b) => a.item.name.localeCompare(b.item.name, "en-NZ"));
   else if (sort === "recent")
     out.sort((a, b) => b.span.last.order - a.span.last.order || b.split.total - a.split.total);
-  else out.sort((a, b) => b.split.total - a.split.total);
+  else out.sort(byTotalDesc);
   return out;
 }
 
-function spanLabel(p: PlaceSummary) {
-  const { first, last } = p.span;
-  return first.slug === last.slug ? first.label : `${first.label} → ${last.label}`;
-}
-
-export default async function SitesPage({ searchParams }: { searchParams: Promise<SP> }) {
+export default async function SitesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
   const sp = await searchParams;
   const classParam = first(sp.class);
   const cls = CLASSES.find((c) => c === classParam);
@@ -165,7 +158,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
                 meta: (
                   <>
                     {classes && <>{classes} · </>}
-                    {spanLabel(p)} · {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {p.speciesCount} species
+                    {spanLabel(p.span)} · {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {p.speciesCount} species
                     {p.item.parcels.length > 1 && <> · {p.item.parcels.length} parcels</>}
                   </>
                 ),

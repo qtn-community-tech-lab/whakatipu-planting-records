@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { getWrt, reviewShown } from "@/lib/wrt/server";
 import Link from "next/link";
-import { Card, CardLink, Rule } from "@/components/wrt/page";
-import { SplitKey } from "@/components/wrt/quantity";
-import { OverviewHero, RankLabel, SpeciesAvatar } from "@/components/wrt/overview/overview-hero";
-import { SeasonColumns } from "@/components/wrt/charts";
-import { AlignedBars } from "@/components/wrt/overview/ranked";
+import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { SplitKey } from "@/components/wrt/shared/quantity";
+import { OverviewHero } from "@/components/wrt/overview/overview-hero";
+import { RankLabel, SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
+import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
 import { OpenQuestions } from "@/components/wrt/overview/open-questions";
-import { SpeciesName, hrefs } from "@/components/wrt/names";
+import { SpeciesName, hrefs } from "@/components/wrt/shared/names";
 import { ClassBreakdown, PrecisionBreakdown } from "@/components/wrt/overview/breakdowns";
 import { StartHere, type StartQuestion } from "@/components/wrt/overview/start-here";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
@@ -125,7 +125,8 @@ export default async function Home() {
           action={<CardLink href="/sites">All sites</CardLink>}
           foot={`${topPlaces.length} of ${o.placeCount} sites${o.schemeCount ? ` and ${o.schemeCount} order scheme` : ""}, ranked by recorded plants.`}
         >
-          <AlignedBars
+          <RankedBars
+            aligned
             items={topPlaces.map((p, i) => ({
               key: p.item.slug,
               label: <RankLabel rank={i + 1}><span className="cn-species__common">{p.item.name}</span></RankLabel>,
@@ -139,7 +140,8 @@ export default async function Home() {
           action={<CardLink href="/species">All species</CardLink>}
           foot={`${topSpecies.length} of ${o.speciesCount} species, ranked by recorded plants.`}
         >
-          <AlignedBars
+          <RankedBars
+            aligned
             items={topSpecies.map((s, i) => ({
               key: s.item.slug,
               label: (
