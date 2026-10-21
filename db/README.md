@@ -6,7 +6,7 @@ The app talks to Supabase directly through `@supabase/ssr`, as the signed-in per
 
 | Path | Holds |
 |---|---|
-| `types.ts` | The tables, views and function the app touches, as one `Database` type. Column names are checked against it. `supabase gen types` replaces it later. |
+| `types.ts` | Only the columns the app reads and writes, as one `Database` type the client checks names against. Writable columns come from the use cases. `supabase gen types` replaces it later. |
 | `queries/` | Every read, one small flat function each: species, places, plantings, review. Views do the joining. |
 | `usecases/` | Every write, one folder each. `types.ts` spells out what staff fill in and the zod check with its messages; `index.ts` saves it. |
 

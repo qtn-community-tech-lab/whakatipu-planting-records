@@ -24,7 +24,7 @@ export async function speciesTotals(supabase: Db) {
 /** One species page: the species, its totals and every line it appears on. Null when there is no such species. */
 export async function getSpecies(supabase: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
-    supabase.from("species").select("*").eq("slug", slug).maybeSingle().throwOnError(),
+    supabase.from("species").select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note").eq("slug", slug).maybeSingle().throwOnError(),
     supabase.from("totals_by_species")
       .select("plants, plants_resolved, plants_needs_review, sites")
       .eq("species", slug).maybeSingle().throwOnError(),

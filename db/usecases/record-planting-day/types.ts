@@ -1,6 +1,7 @@
 /** What staff fill in to record a planting day. Change a field or a message here. */
 import { z } from "zod";
-import type { EventType } from "@/db/types";
+/** What kind of planting. Unknown (null) for every event from the workbook. */
+export type EventType = "establishment" | "infill" | "replacement";
 
 /** One species on the day. quantity null = not counted yet, never 0. */
 export type PlantingLine = {
