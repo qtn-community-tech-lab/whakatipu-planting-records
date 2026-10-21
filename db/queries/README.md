@@ -1,6 +1,6 @@
 # Queries
 
-For: anyone building a screen on the planting database. Every read and write the app makes lives in this folder.
+For: anyone building a screen on the planting database. Every read the app makes lives in this folder; writes are in `../usecases/`.
 
 *Status: 22 October 2026. A code-only demo: no page calls these yet, and the database they read does not exist yet.*
 
@@ -9,15 +9,13 @@ For: anyone building a screen on the planting database. Every read and write the
 The app talks to Supabase directly. There is no backend of our own in between.
 
 - **Reads** are one flat query against a table or a view. Views do the joining in the database, so no screen writes a join.
-- **Writes** are one update or insert. The access rules decide who may make them. The edit-trail trigger records who did.
-- **Saving a planting day** is the one database function, `save_planting_day`, because an event and its lines must land together.
 
 | File | Covers |
 |---|---|
-| `species.ts` | the register, a species page with totals and history, edits, retiring |
-| `places.ts` | areas with their pins, the areas of one site, top sites, pins |
-| `plantings.ts` | lines by any filter, one event, season totals, saving a planting day, editing one line |
-| `review.ts` | open questions, recording a ruling, resolving a line |
+| `species.ts` | the register, a species page with totals and history |
+| `places.ts` | areas with their pins, the areas of one site, top sites |
+| `plantings.ts` | lines by any filter, one event, season totals |
+| `review.ts` | open questions |
 
 ## Calling them
 
@@ -37,23 +35,7 @@ export default async function SpeciesPage({ params }: { params: Promise<{ slug: 
 }
 ```
 
-A form writes through a server action:
-
-```ts
-// app/species/[slug]/actions.ts
-"use server";
-import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
-import { updateSpecies } from "@/db/queries/species";
-
-export async function saveSpecies(slug: string, changes: { common_name: string }) {
-  const saved = await updateSpecies(await createClient(), slug, changes);
-  if (!saved) return { error: "Species not found." };
-  revalidatePath(`/species/${slug}`);
-}
-```
-
-"Not found" is the page's wording. The database returns nothing for a row that is missing, retired or not yours to change, and the page decides what to say.
+A form writes through a use case: see `../usecases/README.md`.
 
 ## Rules
 

@@ -1,4 +1,4 @@
-/** Sites, areas and pins. The area_list view does the joining, so every read is flat. */
+/** Sites, areas and pins. The area_list view does the joining, so every read is flat. Moving a pin: db/usecases/place-pin. */
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /** Every area with its site and pin. For the map and the sites list. */
@@ -32,29 +32,4 @@ export async function topSites(supabase: SupabaseClient, limit = 5) {
     .limit(limit)
     .throwOnError();
   return data;
-}
-
-/** Move a pin, or set its radius. */
-export async function updatePin(
-  supabase: SupabaseClient,
-  slug: string,
-  changes: { latitude?: number; longitude?: number; radius_m?: number | null },
-) {
-  const { data } = await supabase
-    .from("site_locations")
-    .update(changes)
-    .eq("slug", slug)
-    .select()
-    .maybeSingle()
-    .throwOnError();
-  return data;
-}
-
-/** Retire a pin. Nothing is ever deleted. */
-export async function retirePin(supabase: SupabaseClient, slug: string) {
-  await supabase
-    .from("site_locations")
-    .update({ deactivated_at: new Date().toISOString() })
-    .eq("slug", slug)
-    .throwOnError();
 }

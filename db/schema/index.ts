@@ -1,6 +1,6 @@
 /**
  * WRT database: one declaration for the tables, their rules, the access rules and
- * the zod schemas (see db/zod.ts).
+ * the form checks (see the types.ts in each db/usecases folder).
  *
  *   legacy schema  the old: the workbook's generated CSVs, as they are
  *   public schema  the new: sites, species, planting events and lines, built on the old

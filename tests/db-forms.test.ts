@@ -2,7 +2,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { contentFiles } from "@/db/content";
-import { plantingDayForm, siteLocationInsert } from "@/db/zod";
+import { plantingDayForm } from "@/db/usecases/record-planting-day";
+import { pinChanges } from "@/db/usecases/place-pin";
 
 describe("content files match their zod schemas", () => {
   for (const [file, schema] of Object.entries(contentFiles)) {
@@ -42,9 +43,8 @@ describe("planting day form", () => {
 
 describe("pins", () => {
   it("rejects a radius of zero and an impossible latitude", () => {
-    const pin = { slug: "test-pin", siteId: 1, label: "Test", latitude: -45, longitude: 168.7, accuracy: "surveyed" as const };
-    expect(siteLocationInsert.safeParse({ ...pin, radiusM: 120 }).success).toBe(true);
-    expect(siteLocationInsert.safeParse({ ...pin, radiusM: 0 }).success).toBe(false);
-    expect(siteLocationInsert.safeParse({ ...pin, latitude: -95 }).success).toBe(false);
+    expect(pinChanges.safeParse({ latitude: -45, longitude: 168.7, radiusM: 120 }).success).toBe(true);
+    expect(pinChanges.safeParse({ radiusM: 0 }).success).toBe(false);
+    expect(pinChanges.safeParse({ latitude: -95 }).success).toBe(false);
   });
 });

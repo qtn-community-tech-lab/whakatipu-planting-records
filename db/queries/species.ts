@@ -1,7 +1,4 @@
-/**
- * Species: read, change, retire. Each call is one flat query to Supabase.
- * Who may change a row is the access rules' job; who changed it is the edit-trail trigger's.
- */
+/** Species reads. Each call is one flat query to Supabase. Changes: db/usecases/edit-species. */
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 /** The register, A to Z. */
@@ -37,36 +34,4 @@ export async function getSpecies(supabase: SupabaseClient, slug: string) {
   ]);
   if (!species.data) return null;
   return { species: species.data, totals: totals.data, history: history.data };
-}
-
-/** The columns staff may change on a species. */
-export interface SpeciesChanges {
-  common_name?: string | null;
-  maori_name?: string | null;
-  suggested_spelling?: string | null;
-  over_5m?: boolean | null;
-  threatened?: boolean | null;
-  threatened_te_kakano?: boolean;
-  register_note?: string | null;
-}
-
-/** Save changes. Returns the saved row, or null when the species is missing or not the caller's to change. */
-export async function updateSpecies(supabase: SupabaseClient, slug: string, changes: SpeciesChanges) {
-  const { data } = await supabase
-    .from("species")
-    .update(changes)
-    .eq("slug", slug)
-    .select()
-    .maybeSingle()
-    .throwOnError();
-  return data;
-}
-
-/** Retire a species. Nothing is ever deleted; its history stays. */
-export async function retireSpecies(supabase: SupabaseClient, slug: string) {
-  await supabase
-    .from("species")
-    .update({ deactivated_at: new Date().toISOString() })
-    .eq("slug", slug)
-    .throwOnError();
 }

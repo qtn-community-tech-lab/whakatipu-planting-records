@@ -42,7 +42,7 @@ Example: Whitechapel Reserve, Autumn 2019 is one event with 25 lines and 1,005 p
 | Signed out: published records and the species list only | Access rules (RLS) |
 | Staff read and write everything; nobody deletes, they deactivate | Access rules + `deactivated_at` |
 | Who changed what, and when | `created_by` default + trigger on every editable table |
-| Forms: real dates, each species once, at least one species | zod (`db/zod.ts`, generated from the tables) |
+| Forms: real dates, each species once, at least one species | zod (`db/usecases/*/types.ts`, one file per form) |
 | Content files are well formed; CC BY photos credit the author | zod (`db/content.ts`), checked by the import and by tests |
 
 ## Commands

@@ -11,8 +11,8 @@ One hosted Supabase project would hold the planting history and take new plantin
 | Folder | What is in it |
 |---|---|
 | `schema/` | Every table, view and access rule, written in TypeScript |
-| `queries/` | Every read and write the app would make, one small function each. See `queries/README.md` |
-| `zod.ts` | Form checks for the tables, including the planting-day form |
+| `queries/` | Every read the app would make, one small function each. See `queries/README.md` |
+| `usecases/` | Every write, one folder each: what staff fill in (`types.ts`) and the save (`index.ts`). See `usecases/README.md` |
 | `content.ts` | Checks the map pin, species profile and photo files before the import uses them |
 | `../scripts/import-history.ts` | Loads the 5,449 records and builds the new layer from them |
 
@@ -41,4 +41,4 @@ History and new planting days share the same tables. A history event has a seaso
 1. Write the schema as one plain SQL file, including `is_staff()`, the edit-trail trigger and `save_planting_day`.
 2. Create the Supabase project and run that file in its SQL editor.
 3. Load the history with the import.
-4. Move pages from the CSV files to `db/queries/`, one at a time.
+4. Move pages from the CSV files to `db/queries/` and forms to `db/usecases/`, one at a time.
