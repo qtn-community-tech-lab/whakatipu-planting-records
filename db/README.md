@@ -1,6 +1,6 @@
 # Database
 
-For: whoever sets up the Supabase project or changes the schema. Everyone else only needs the two values in the root README.
+For: whoever sets up the Supabase project or changes the schema. Everyone else only needs the project URL and publishable key in `.env.local`.
 
 *Status: 22 October 2026. Schema, import, queries and the save function are written and tested on real Postgres. No hosted project exists yet.*
 
