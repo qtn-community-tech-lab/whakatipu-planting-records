@@ -39,7 +39,7 @@ A form writes through a use case: see `../usecases/README.md`.
 
 ## Rules
 
-- One query per function, flat. If a screen needs two tables, add a view in `db/schema/views.ts`.
+- One query per function, flat. If a screen needs two tables, add a view to the SQL file and its row type to `db/types.ts`.
 - Every total keeps its split: `plants`, `plants_resolved`, `plants_needs_review`.
 - Nothing is deleted. Retiring sets `deactivated_at`.
 - An unknown count is `null`, never 0.
@@ -48,5 +48,5 @@ A form writes through a use case: see `../usecases/README.md`.
 
 1. Create the hosted project and set the two `NEXT_PUBLIC_SUPABASE_*` values from `.env.example`.
 2. Run the schema SQL and the import.
-3. Generate types with `npx supabase gen types typescript --project-id <ref>` and pass them to the clients, so column names are checked.
+3. Replace `db/types.ts` with `npx supabase gen types typescript --project-id <ref>`; the clients already take it.
 4. Move pages from the CSV repository to these queries one at a time.

@@ -1,8 +1,8 @@
 /** Species reads. Each call is one flat query to Supabase. Changes: db/usecases/edit-species. */
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Db } from "@/db/types";
 
 /** The register, A to Z. */
-export async function listSpecies(supabase: SupabaseClient) {
+export async function listSpecies(supabase: Db) {
   const { data } = await supabase
     .from("species")
     .select("slug, scientific_name, common_name, maori_name, status, threatened")
@@ -12,7 +12,7 @@ export async function listSpecies(supabase: SupabaseClient) {
 }
 
 /** Species with planting history, most recorded first, with the needs-review split. */
-export async function speciesTotals(supabase: SupabaseClient) {
+export async function speciesTotals(supabase: Db) {
   const { data } = await supabase
     .from("totals_by_species")
     .select("species, maori_name, scientific_name, plants, plants_resolved, plants_needs_review, sites")
@@ -22,7 +22,7 @@ export async function speciesTotals(supabase: SupabaseClient) {
 }
 
 /** One species page: the species, its totals and every line it appears on. Null when there is no such species. */
-export async function getSpecies(supabase: SupabaseClient, slug: string) {
+export async function getSpecies(supabase: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
     supabase.from("species").select("*").eq("slug", slug).maybeSingle().throwOnError(),
     supabase.from("totals_by_species")

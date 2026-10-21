@@ -1,8 +1,8 @@
 /** The questions WRT still has to answer. Answering one: db/usecases/answer-review-question. */
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Db } from "@/db/types";
 
 /** Every question with lines still waiting on it, biggest first. A line can sit under two questions, so don't add the rows up. */
-export async function openQuestions(supabase: SupabaseClient) {
+export async function openQuestions(supabase: Db) {
   const { data } = await supabase
     .from("totals_by_review_topic")
     .select("topic, label, question, decision, plants_needs_review, lines_needs_review")

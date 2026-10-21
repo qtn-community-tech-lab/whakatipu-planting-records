@@ -3,9 +3,9 @@
  * here; the check below and the save in index.ts follow this file.
  */
 import { z } from "zod";
-import { eventType } from "@/db/schema/enums";
+import type { EventType } from "@/db/types";
 
-export type EventType = (typeof eventType.enumValues)[number];
+const eventTypes = ["establishment", "infill", "replacement"] as const satisfies readonly EventType[];
 
 /** One species on the day. quantity null = not counted yet, never 0. */
 export interface PlantingLine {
@@ -33,7 +33,7 @@ export const plantingDayForm = z.object({
   siteAreaId: z.number().int().positive(),
   seasonId: z.number().int().positive(),
   plantingDate: z.iso.date("Pick the planting date"),
-  eventType: z.enum(eventType.enumValues).nullish(),
+  eventType: z.enum(eventTypes).nullish(),
   notes: z.string().optional(),
   isPublic: z.boolean().optional(),
   lines: z.array(plantingLine).min(1, "Add at least one species"),

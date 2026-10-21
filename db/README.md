@@ -2,7 +2,7 @@
 
 For: developers looking at how the app could move from the CSV files onto Supabase.
 
-*Status: 22 October 2026. A code-only demo. The schema is written in TypeScript and the queries are written, but there is no SQL yet and no Supabase project. One plain SQL file comes next.*
+*Status: 22 October 2026. A code-only demo. The app side is written: the shape of the data, the reads and the writes. There is no SQL yet, no import and no Supabase project. One plain SQL file comes next.*
 
 ## Purpose
 
@@ -10,11 +10,10 @@ One hosted Supabase project would hold the planting history and take new plantin
 
 | Folder | What is in it |
 |---|---|
-| `schema/` | Every table, view and access rule, written in TypeScript |
+| `types.ts` | The tables, views and function the app touches, as one `Database` type the Supabase client checks column names against |
 | `queries/` | Every read the app would make, one small function each. See `queries/README.md` |
 | `usecases/` | Every write, one folder each: what staff fill in (`types.ts`) and the save (`index.ts`). See `usecases/README.md` |
-| `content.ts` | Checks the map pin, species profile and photo files before the import uses them |
-| `../scripts/import-history.ts` | Loads the 5,449 records and builds the new layer from them |
+| `content.ts` | Checks the map pin, species profile and photo files the import will load |
 
 ## Two layers
 
@@ -38,7 +37,7 @@ History and new planting days share the same tables. A history event has a seaso
 
 ## Next
 
-1. Write the schema as one plain SQL file, including `is_staff()`, the edit-trail trigger and `save_planting_day`.
-2. Create the Supabase project and run that file in its SQL editor.
-3. Load the history with the import.
+1. Write the schema as one plain SQL file: the tables in `types.ts`, the views, `is_staff()`, the edit-trail trigger and `save_planting_day`. The Drizzle version of all of it is in git history at 3751999 (`db/schema/`), views and access rules included.
+2. Create the Supabase project, run that file in its SQL editor, and replace `types.ts` with `supabase gen types`.
+3. Write the import against the Supabase client with the service key. The Drizzle version is at 3751999 (`scripts/import-history.ts`): it holds the area-slug and contested-group rules worth keeping.
 4. Move pages from the CSV files to `db/queries/` and forms to `db/usecases/`, one at a time.

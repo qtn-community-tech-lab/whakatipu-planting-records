@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "vitest run",
-    "db:import": "tsx scripts/import-history.ts"
+    "test": "vitest run"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.303",
@@ -19,11 +18,9 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "drizzle-orm": "^0.45.3",
     "lucide-react": "^1.52.0",
     "maplibre-gl": "^6.13.0",
     "next": "16.3.8",
-    "postgres": "^3.4.9",
     "radix-ui": "^1.6.7",
     "react": "19.2.8",
     "react-dom": "19.2.8",

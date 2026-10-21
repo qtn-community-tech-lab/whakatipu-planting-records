@@ -1,6 +1,6 @@
 # 07 · WRT database: the old layer and the new one
 
-*Status, 22 October 2026: the demo pull request keeps the schema as TypeScript but has no generated migrations and no `drizzle-kit`. The `db:generate` and `db:migrate` steps below describe the earlier setup. One plain SQL file replaces them next.*
+*Status, 22 October 2026: the demo pull request has dropped Drizzle. The app talks to Supabase through `@supabase/ssr` only, and `db/types.ts` describes the tables and views by hand until `supabase gen types` replaces it. The Drizzle schema, migrations and import described below are in git history at 3751999; one plain SQL file replaces them next.*
 
 19 October 2026. Third draft. The schema is now declared once, in TypeScript with Drizzle (`db/schema/`). Migrations, row types and zod schemas are all generated from that declaration. Supabase provides the database, sign-in and access rules.
 

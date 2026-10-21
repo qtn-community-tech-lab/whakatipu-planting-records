@@ -2,11 +2,11 @@
  * Planting events and their lines, read from the line_details view, one flat row
  * per species. Recording and correcting a day: db/usecases/record-planting-day.
  */
-import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Db } from "@/db/types";
 
 /** Lines matching any mix of site, area, species, season and year, oldest season first. */
 export async function findLines(
-  supabase: SupabaseClient,
+  supabase: Db,
   filter: { site?: string; area?: string; species?: string; season?: string; year?: number },
 ) {
   let query = supabase
@@ -20,7 +20,7 @@ export async function findLines(
 }
 
 /** One planting event: every line in it, one row per species. */
-export async function eventLines(supabase: SupabaseClient, eventId: number) {
+export async function eventLines(supabase: Db, eventId: number) {
   const { data } = await supabase
     .from("line_details")
     .select("line_id, season_label, planting_date, site_name, area_name, maori_name, scientific_name, quantity, needs_review")
@@ -31,7 +31,7 @@ export async function eventLines(supabase: SupabaseClient, eventId: number) {
 }
 
 /** Totals by season, with the needs-review split. */
-export async function seasonTotals(supabase: SupabaseClient) {
+export async function seasonTotals(supabase: Db) {
   const { data } = await supabase
     .from("totals_by_season")
     .select("season, season_label, plants, plants_resolved, plants_needs_review, sites, species")
