@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/names";
+import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/shared/names";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { SplitBar } from "@/components/wrt/quantity";
+import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
 

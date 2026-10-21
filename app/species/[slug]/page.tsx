@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
-import { Card, CardLink, Rule } from "@/components/wrt/page";
-import { SplitKey } from "@/components/wrt/quantity";
-import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/charts";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
-import { PlaceName, hrefs } from "@/components/wrt/names";
+import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { SplitKey } from "@/components/wrt/shared/quantity";
+import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
+import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
+import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
@@ -47,7 +48,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
     .filter((n): n is string => !!n && n !== sp.displayName);
   const aliases = [...new Set(sp.aliases)].filter(Boolean);
   const reviewRows = records.filter((r) => r.record.needsReview);
-  const reviewSorted = [...reviewRows].sort((a, b) => b.record.quantity - a.record.quantity).slice(0, REVIEW_ROWS_SHOWN);
+  const reviewSorted = needsReviewByPlants(reviewRows).slice(0, REVIEW_ROWS_SHOWN);
   const siteCount = places.length;
   const ranked = [...(await getWrt().speciesList())].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),

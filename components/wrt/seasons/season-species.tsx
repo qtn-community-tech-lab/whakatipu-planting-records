@@ -3,11 +3,11 @@
  * compact list of sites with their most recorded species. The full species
  * list for a site lives on that site's page.
  */
-import type { RecordView } from "@/lib/wrt/queries";
+import { speciesBySite, byTotalDesc, type RecordView } from "@/lib/wrt/queries";
 import type { Season } from "@/lib/wrt/types";
-import { hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/shared/names";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
-import { SiteRows, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { SiteRows } from "@/components/wrt/sites/site-rows";
 
 function seasonQuery(season: Season) {
   return { year: season.year, season: season.name };
@@ -26,7 +26,7 @@ export function SeasonSpeciesGrid({ season, records }: { season: Season; records
 
 /** Each site in the season with its few most recorded species. */
 export function SeasonSiteSpecies({ season, records }: { season: Season; records: RecordView[] }) {
-  const groups = [...speciesBySite(records).values()].sort((a, b) => b.split.total - a.split.total);
+  const groups = [...speciesBySite(records).values()].sort(byTotalDesc);
   const max = Math.max(1, ...groups.map((g) => g.split.total));
   return (
     <SiteRows

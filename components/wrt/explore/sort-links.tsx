@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { SORT_KEYS, SORT_LABELS, type RecordsView, recordsHref } from "./filters";
-import "./explore.css";
 
 /** "Sort by" as a row of links. The current sort is aria-current. */
 export function SortLinks({ view }: { view: RecordsView }) {

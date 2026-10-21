@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
+import { type RawParams, first } from "@/lib/wrt/params";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
-import { splitOf } from "@/lib/wrt/queries";
+import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
-import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, CardLink, Rule } from "@/components/wrt/page";
-import { hrefs } from "@/components/wrt/names";
-import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
-import { SeasonColumns, YearTable } from "@/components/wrt/charts";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
+import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { hrefs } from "@/components/wrt/shared/names";
+import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
+import { SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
+import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { ChipLinks } from "@/components/wrt/sites/filter-chips";
 import { YearView } from "@/components/wrt/sites/year-view";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
-import { SiteRows, partHref, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 
 type Props = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<RawParams>;
 };
 
 const REVIEW_CAP = 25;
@@ -45,11 +46,11 @@ export default async function SitePage({ params, searchParams }: Props) {
   if (!d || !d.split.records) notFound();
 
   const { place, split, span } = d;
-  const yearParam = Number(Array.isArray(sp.year) ? sp.year[0] : sp.year);
+  const yearParam = Number(first(sp.year));
   const year = d.years.some((y) => y.year === yearParam) ? yearParam : undefined;
 
   const classes = place.siteClasses.map((c) => SITE_CLASS_LABELS[c]).join(" and ");
-  const spanText = span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
+  const spanText = spanLabel(span);
   const eyebrow = place.isScheme ? `Order scheme, not a place · ${spanText}` : `${classes} site · ${spanText}`;
   const title = place.isScheme
     ? `${formatNumber(split.total)} recorded plants through ${place.name} since ${span.first.label}`
@@ -65,9 +66,7 @@ export default async function SitePage({ params, searchParams }: Props) {
   const flaggedSplit = splitOf(flagged.map((r) => r.record));
   const flaggedSeasons = [...new Set(flagged.map((r) => r.season.label))];
 
-  const needsReview = d.records
-    .filter((r) => r.record.needsReview)
-    .sort((a, b) => b.record.quantity - a.record.quantity);
+  const needsReview = needsReviewByPlants(d.records);
   const reviewRows = needsReview.slice(0, REVIEW_CAP);
   const reviewHidden = needsReview.length - reviewRows.length;
 
@@ -176,7 +175,6 @@ export default async function SitePage({ params, searchParams }: Props) {
         </div>
       </Card>
 
-
       {year !== undefined && <YearView place={place} year={year} rows={d.records} />}
 
       {d.parcels.length > 1 && (
@@ -199,7 +197,7 @@ export default async function SitePage({ params, searchParams }: Props) {
                 species,
                 meta: (
                   <>
-                    {p.span.first.slug === p.span.last.slug ? p.span.first.label : `${p.span.first.label} → ${p.span.last.label}`}
+                    {spanLabel(p.span)}
                     {" · "}
                     {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {species.length} species
                   </>

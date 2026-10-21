@@ -4,25 +4,12 @@
  * a site in one year), largest first.
  */
 import Link from "next/link";
-import type { RecordView } from "@/lib/wrt/queries";
+import { addToSplit, byTotalDesc, emptySplit, type RecordView } from "@/lib/wrt/queries";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
-import { SplitBar } from "@/components/wrt/quantity";
-import { SpeciesAvatar } from "@/components/wrt/overview/overview-hero";
+import { SplitBar } from "@/components/wrt/shared/quantity";
+import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
-export const emptySplit = (): QuantitySplit => ({ total: 0, resolved: 0, needsReview: 0, records: 0, recordsNeedingReview: 0 });
-
-export function addRecord(split: QuantitySplit, v: RecordView) {
-  const q = v.record.quantity;
-  split.total += q;
-  split.records += 1;
-  if (v.record.needsReview) {
-    split.needsReview += q;
-    split.recordsNeedingReview += 1;
-  } else {
-    split.resolved += q;
-  }
-}
 
 export function SpeciesTiles({
   records, hrefFor, spread, cap = 18,
@@ -37,11 +24,11 @@ export function SpeciesTiles({
   const bySpecies = new Map<string, { species: Species; split: QuantitySplit; spread: Set<string> }>();
   for (const v of records) {
     const t = bySpecies.get(v.species.slug) ?? { species: v.species, split: emptySplit(), spread: new Set<string>() };
-    addRecord(t.split, v);
+    addToSplit(t.split, v.record);
     t.spread.add(spread === "sites" ? v.place.slug : v.season.slug);
     bySpecies.set(v.species.slug, t);
   }
-  const rows = [...bySpecies.values()].sort((a, b) => b.split.total - a.split.total);
+  const rows = [...bySpecies.values()].sort(byTotalDesc);
   const max = Math.max(1, ...rows.map((r) => r.split.total));
   const unit = spread === "sites" ? "site" : "season";
 

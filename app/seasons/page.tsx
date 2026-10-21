@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Rule } from "@/components/wrt/page";
-import { SplitKey } from "@/components/wrt/quantity";
-import { SeasonColumns } from "@/components/wrt/charts";
+import { PageHead, Rule } from "@/components/wrt/shared/page";
+import { SplitKey } from "@/components/wrt/shared/quantity";
+import { SeasonColumns } from "@/components/wrt/shared/charts";
 import { MissingSeasonRow, SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
-import type { SiteSpecies } from "@/components/wrt/sites/site-rows";
-import { addRecord, emptySplit } from "@/components/wrt/species/species-tiles";
+
+import { type SiteSpecies, byTotalDesc, addToSplit, emptySplit } from "@/lib/wrt/queries";
 
 export const metadata: Metadata = {
   title: "Planting seasons",
@@ -26,16 +26,16 @@ export default async function SeasonsPage() {
     for (const v of records.rows) {
       const m = trees.get(v.season.slug) ?? new Map<string, SiteSpecies>();
       const e = m.get(v.species.slug) ?? { species: v.species, split: emptySplit() };
-      addRecord(e.split, v);
+      addToSplit(e.split, v.record);
       m.set(v.species.slug, e);
       trees.set(v.season.slug, m);
       const sm = sites.get(v.season.slug) ?? new Map<string, TopSite>();
       const se = sm.get(v.place.slug) ?? { slug: v.place.slug, name: v.place.name, split: emptySplit() };
-      addRecord(se.split, v);
+      addToSplit(se.split, v.record);
       sm.set(v.place.slug, se);
       sites.set(v.season.slug, sm);
     }
-    const top3 = <T extends { split: { total: number } }>(m: Map<string, T>) => [...m.values()].sort((a, b) => b.split.total - a.split.total).slice(0, 3);
+    const top3 = <T extends { split: { total: number } }>(m: Map<string, T>) => [...m.values()].sort(byTotalDesc).slice(0, 3);
     for (const [slug, m] of trees) topBySeason.set(slug, top3(m));
     for (const [slug, m] of sites) sitesBySeason.set(slug, top3(m));
   }

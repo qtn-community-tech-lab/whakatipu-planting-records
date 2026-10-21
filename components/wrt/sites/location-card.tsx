@@ -1,4 +1,4 @@
-import { Card, EmptyState } from "@/components/wrt/page";
+import { Card, EmptyState } from "@/components/wrt/shared/page";
 import { RegionMap } from "@/components/wrt/sites/region-map";
 import { locationsForSites } from "@/lib/wrt/site-locations";
 import type { PlantingRecord } from "@/lib/wrt/types";

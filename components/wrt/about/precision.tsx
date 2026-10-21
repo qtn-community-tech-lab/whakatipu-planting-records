@@ -6,7 +6,7 @@ import type { Ranked } from "@/lib/wrt/queries";
 import type { Confidence, Precision } from "@/lib/wrt/types";
 import { CONFIDENCE_LABELS, PRECISION_LABELS } from "@/lib/wrt/review-themes";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { RankedBars, type RankedItem } from "@/components/wrt/charts";
+import { RankedBars, type RankedItem } from "@/components/wrt/shared/charts";
 
 const PRECISION_ORDER: Precision[] = ["subsite", "site", "scheme", "area", "unknown"];
 const CONFIDENCE_ORDER: Confidence[] = ["high", "medium", "low"];

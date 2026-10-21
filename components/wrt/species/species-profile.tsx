@@ -1,6 +1,5 @@
 import { getSpeciesProfile, type SpeciesProfile } from "@/lib/wrt/species-profiles";
-import { Card } from "@/components/wrt/page";
-import "./species-profile.css";
+import { Card } from "@/components/wrt/shared/page";
 import { SpeciesReferenceStatus } from "./species-reference-status";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 

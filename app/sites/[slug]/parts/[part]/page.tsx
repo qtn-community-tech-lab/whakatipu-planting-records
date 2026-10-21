@@ -3,16 +3,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import type { PlaceDetail, SeasonPoint } from "@/lib/wrt/queries";
-import { splitOf } from "@/lib/wrt/queries";
-import { formatNumber, slugify } from "@/lib/wrt/text";
-import { Card, CardLink, PageHead, Rule } from "@/components/wrt/page";
-import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
-import { SeasonColumns } from "@/components/wrt/charts";
-import { RecordsTable } from "@/components/wrt/records";
-import { hrefs } from "@/components/wrt/names";
+import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
+import { spanLabel, formatNumber, slugify } from "@/lib/wrt/text";
+import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
+import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
+import { SeasonColumns } from "@/components/wrt/shared/charts";
+import { RecordsTable } from "@/components/wrt/shared/records";
+import { hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
-import { SiteRows, partHref, speciesBySite } from "@/components/wrt/sites/site-rows";
+import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 
 type Props = { params: Promise<{ slug: string; part: string }> };
@@ -53,7 +53,7 @@ export default async function PartPage({ params }: Props) {
   const recs = d.records.filter((r) => r.record.parcelId === parcel.id);
   const split = splitOf(recs.map((r) => r.record));
   const span = p.span;
-  const spanText = span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
+  const spanText = spanLabel(span);
   const recordsFor = (extra: Record<string, string | number | undefined> = {}) =>
     hrefs.records({ place: place.slug, parcel: parcel.id, ...extra });
 
@@ -62,7 +62,7 @@ export default async function PartPage({ params }: Props) {
     split: splitOf(recs.filter((r) => r.season.slug === season.slug).map((r) => r.record)),
   }));
   const speciesCount = new Set(recs.map((r) => r.species.slug)).size;
-  const needsReview = recs.filter((r) => r.record.needsReview).sort((a, b) => b.record.quantity - a.record.quantity);
+  const needsReview = needsReviewByPlants(recs);
   const aliases = [...new Set(parcel.aliases)].filter((a) => a && a !== parcel.name);
 
   const siblings = d.parcels.filter((x) => x.item.id !== parcel.id);

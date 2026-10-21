@@ -5,7 +5,7 @@
 import type { ReactNode } from "react";
 import type { Species } from "@/lib/wrt/types";
 import { Badge } from "@/components/ui/badge";
-import { ThreatenedBadge, threatenedState } from "@/components/wrt/names";
+import { ThreatenedBadge, threatenedState } from "@/components/wrt/shared/names";
 
 /** Proper nouns that keep their capital when a name sits mid-sentence. */
 const KEEP_CAPITAL = [/^Hall/, /^Coronation/, /^Hector/];

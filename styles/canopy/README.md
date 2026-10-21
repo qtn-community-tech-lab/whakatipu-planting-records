@@ -5,28 +5,14 @@ Canopy is the visual language for the **Whakatipu Reforestation Trust (WRT)** nu
 **Source:** extracted from the "Wakatipu Reforestation prototype" project — `Canopy Sidebar.dc.html`, `Canopy Topbar.dc.html`, `Canopy v3 Plan / Grow / Plant.dc.html`. Every value here is copied from those files, not rounded.
 
 ## Quick start
-```html
-<link rel="stylesheet" href="canopy-ds/styles.css">
-<body class="cn-app"> … <button class="cn-btn cn-btn--primary">Record activity</button>
-```
-- **Any stack:** link `styles.css` and use the `cn-*` classes (see `components/components.css`).
-- **React:** import from `components/<group>/<Name>.jsx`; props are in the sibling `.d.ts`.
-- **Tailwind / Figma / Style Dictionary:** `tokens.json` has every token as flat key/values.
+In this app the five CSS files below are `@import`ed from `app/globals.css`, in order, before `styles/app.css`; `<body class="cn-app">` is set in `app/layout.tsx`. Use the `cn-*` classes from `components.css`. Nothing in the repo reads `tokens.json`; it mirrors the CSS for Figma or Style Dictionary.
 - Use **semantic aliases** (`--surface-card`, `--text-muted`, `--action-primary`) in product code; base values (`--cn-green-800`) only when defining new aliases.
 
-## Index
-- `styles.css` — entry point (imports only)
-- `tokens/` — `fonts.css`, `colors.css`, `typography.css`, `spacing.css` (spacing, radii, layout, control heights), `effects.css` (shadows, borders, bars, motion)
-- `tokens.json` — same tokens as JSON
-- `components/components.css` — framework-agnostic classes
-- `components/core` — Button, CloseButton, Badge, Tag, Delta
-- `components/navigation` — Sidebar, Topbar, ChipGroup
-- `components/forms` — Segmented, Field, TextInput, Popover
-- `components/data` — Card, StatTile, StageTile, ProgressBar, SpeciesName, DataTable, ListRow, PhotoSlot
-- `components/feedback` — Callout, Banner, Stepper, Sheet, Modal, ConfirmDialog
-- `guidelines/` — specimen cards (colour, type, radii, elevation, spacing, layout)
-- `ui_kits/app-shell/index.html` — sidebar + topbar + Overview starting point
-- `SKILL.md` — Agent Skill wrapper for Claude Code
+## Index (this repo keeps only the CSS, vendored unchanged)
+- `colors.css`, `typography.css`, `spacing.css` (spacing, radii, layout, control heights), `effects.css` (shadows, borders, bars, motion) — tokens
+- `components.css` — framework-agnostic `cn-*` classes; much of it is unused here and is kept so the file can be re-vendored
+- `tokens.json` — the same tokens as flat JSON
+- App-specific rules live outside this folder in `styles/app.css`, `explore.css`, `records-explore.css` and `species-profile*.css`
 
 ## Content fundamentals
 - **Plain, operational NZ English.** "Pricked out", "potted up", "planting-ready", "bought in". Sentence case everywhere — headings, buttons, badges, table heads.

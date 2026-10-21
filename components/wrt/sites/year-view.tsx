@@ -4,12 +4,12 @@
  */
 import Link from "next/link";
 import type { RecordView } from "@/lib/wrt/queries";
-import { splitOf } from "@/lib/wrt/queries";
-import type { Place, QuantitySplit, Species } from "@/lib/wrt/types";
+import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
+import type { Place, QuantitySplit, SeasonName, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
-import { Card, CardLink } from "@/components/wrt/page";
-import { hrefs } from "@/components/wrt/names";
-import { QuantityFigure, SplitKey } from "@/components/wrt/quantity";
+import { Card, CardLink } from "@/components/wrt/shared/page";
+import { hrefs } from "@/components/wrt/shared/names";
+import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 
 export function YearView({ place, year, rows }: { place: Place; year: number; rows: RecordView[] }) {
@@ -23,8 +23,8 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
   }
   const ranked = [...bySpecies.values()]
     .map((e) => ({ species: e.species, split: splitOf(e.list.map((r) => r.record)) }))
-    .sort((a, b) => b.split.total - a.split.total);
-  const season = (name: "Autumn" | "Spring"): QuantitySplit =>
+    .sort(byTotalDesc);
+  const season = (name: SeasonName): QuantitySplit =>
     splitOf(recs.filter((r) => r.record.seasonName === name).map((r) => r.record));
   const autumn = season("Autumn");
   const spring = season("Spring");

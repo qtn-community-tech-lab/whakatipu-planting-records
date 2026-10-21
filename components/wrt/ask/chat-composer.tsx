@@ -10,8 +10,8 @@
  * brings back the last question.
  */
 import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import type { Scope } from "@/lib/chat-tools";
-import { scopeWhen } from "@/components/wrt/chat-scope";
+import type { Scope } from "@/lib/wrt/chat-tools";
+import { scopeWhen } from "@/components/wrt/ask/chat-scope";
 
 type Status = "ready" | "submitted" | "streaming" | "error";
 type ScopeKey = "place" | "species" | "when";

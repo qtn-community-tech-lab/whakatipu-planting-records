@@ -24,7 +24,7 @@
 .exp-seg .cn-seg__opt { padding: 0 14px; white-space: nowrap; position: relative; }
 .exp-seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .exp-seg label.cn-seg__opt:has(input:checked),
-.cn-seg a.cn-seg__opt[aria-current="true"] { background: var(--action-primary); color: #fff; }
+.cn-seg a.cn-seg__opt[aria-current="true"] { background: var(--action-primary); color: var(--cn-white); }
 .exp-seg label.cn-seg__opt:has(input:focus-visible),
 .cn-seg a.cn-seg__opt:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 .cn-seg a.cn-seg__opt { color: var(--text-body); text-decoration: none; padding: 0 14px; white-space: nowrap; }
@@ -44,11 +44,9 @@ a.exp-chip span[aria-hidden] { font-weight: 800; opacity: .7; }
 /* Pager */
 .exp-pager__btn { text-decoration: none; }
 .exp-pager__btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
-.cn-app a.cn-btn--primary { color: #fff; }
-.cn-app a.cn-btn--secondary, .cn-app a.cn-btn--soft { color: var(--text-strong); }
 
 /* By-species summary: scrolls inside its card when long */
-.exp-scroll { max-height: 440px; overflow: auto; }
+.exp-scroll { max-height: 520px; overflow: auto; }
 .exp-scroll .wrt-table th { z-index: 1; }
 
 /* Search results */
@@ -59,14 +57,11 @@ a.exp-result:focus-visible { outline: 2px solid var(--border-focus); outline-off
 .exp-result__main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .exp-searchform { display: flex; gap: 10px; align-items: center; }
 .exp-searchform .cn-search { flex: 1; width: auto; min-width: 0; height: 42px; }
-.exp-scroll { max-height: 520px; }
 .exp-scroll .wrt-table tfoot td { position: sticky; bottom: 0; background: var(--surface-card); box-shadow: inset 0 1px 0 var(--border-card); }
 @media (max-width: 560px) {
   .exp-sum th, .exp-sum td { padding-inline: 5px; }
   .exp-sum th { white-space: normal; vertical-align: bottom; }
   .exp-sum td:first-child { width: 36%; }
-}
-@media (max-width: 560px) {
   .exp-sum .cn-num { white-space: normal; }
   .exp-sum .cn-num span.whitespace-nowrap { white-space: normal; text-align: right; max-width: 64px; }
 }

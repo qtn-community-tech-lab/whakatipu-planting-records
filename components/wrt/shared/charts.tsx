@@ -91,8 +91,12 @@ export interface RankedItem {
 }
 
 /** Ranked horizontal bars (sites, species). Bars are relative to the largest item. */
-export function RankedBars({ items, max }: { items: RankedItem[]; max?: number }) {
+/** Home page: a fixed value column so the bars line up from row to row. */
+const ALIGNED_ROW = "wrt-ranked__row !grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_6.75rem] max-sm:!grid-cols-[minmax(0,1fr)_auto]";
+
+export function RankedBars({ items, max, aligned = false }: { items: RankedItem[]; max?: number; aligned?: boolean }) {
   const m = max ?? Math.max(1, ...items.map((i) => i.split.total));
+  const row = aligned ? ALIGNED_ROW : "wrt-ranked__row";
   return (
     <div className="wrt-ranked">
       {items.map((it) => {
@@ -109,11 +113,11 @@ export function RankedBars({ items, max }: { items: RankedItem[]; max?: number }
           </>
         );
         return it.href ? (
-          <Link key={it.key} href={it.href} className="wrt-ranked__row">
+          <Link key={it.key} href={it.href} className={row}>
             {inner}
           </Link>
         ) : (
-          <div key={it.key} className="wrt-ranked__row">
+          <div key={it.key} className={row}>
             {inner}
           </div>
         );

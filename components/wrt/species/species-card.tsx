@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
-import { hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/shared/names";
 import { getSpeciesPhotos, type SpeciesPhoto } from "@/lib/wrt/species-photos";
 import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { SpeciesMarkers } from "./species-meta";

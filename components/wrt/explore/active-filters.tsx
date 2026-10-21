@@ -2,7 +2,6 @@ import type { Lookups } from "@/lib/wrt/queries";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import Link from "next/link";
 import { type ParamKey, type RecordsView, recordsHref } from "./filters";
-import "./explore.css";
 
 /** Each active filter as a soft chip that is a link removing just that filter. */
 export function ActiveFilters({ view, lookups }: { view: RecordsView; lookups: Lookups }) {

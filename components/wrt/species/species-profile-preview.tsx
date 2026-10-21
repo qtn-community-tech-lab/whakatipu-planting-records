@@ -1,27 +1,5 @@
 import Link from "next/link";
 import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
-import "./species-profile-preview.css";
-import { SpeciesReferenceStatus } from "./species-reference-status";
-
-/** Names and a short introduction directly in the species listing. */
-export function SpeciesProfilePreview({ speciesId, slug }: { speciesId: string; slug: string }) {
-  const profile = getSpeciesProfile(speciesId);
-  if (!profile) return <SpeciesReferenceStatus speciesId={speciesId} />;
-
-  return (
-    <div className="wrt-profile-preview">
-      <dl className="wrt-profile-preview__names">
-        <div><dt>Common name</dt><dd>{profile.commonName ?? "Not recorded in the sources checked."}</dd></div>
-        <div><dt>Māori {profile.maoriNames.length > 1 ? "names" : "name"}</dt>
-          <dd>{profile.maoriNames.length ? profile.maoriNames.join(" · ") : "Not recorded in the sources checked."}</dd>
-        </div>
-      </dl>
-      <p>{profile.summary}</p>
-      <SpeciesReferenceStatus speciesId={speciesId} />
-      <SpeciesProfileSources speciesId={speciesId} slug={slug} />
-    </div>
-  );
-}
 
 /** Source and identity notes also fit the compact species rows. */
 export function SpeciesProfileSources({ speciesId, slug, includeLookFor = true }: { speciesId: string; slug: string; includeLookFor?: boolean }) {

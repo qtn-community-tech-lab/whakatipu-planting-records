@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { needsReviewByPlants } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
-import { PageHead, Card, CardLink, Rule } from "@/components/wrt/page";
-import { QuantityFigure, SplitKey, plants } from "@/components/wrt/quantity";
-import { RankedBars, SeasonColumns } from "@/components/wrt/charts";
-import { hrefs } from "@/components/wrt/names";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/records";
+import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { QuantityFigure, SplitKey, plants } from "@/components/wrt/shared/quantity";
+import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
+import { hrefs } from "@/components/wrt/shared/names";
+import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
@@ -55,9 +56,7 @@ export default async function SeasonPage({ params }: Props) {
     ? [...new Set(d.records.filter((v) => v.record.needsReview && v.record.notes.some((n) => n.theme === "slope-hill-2024")).map((v) => v.record.parcelName))]
     : [];
 
-  const reviewRows = d.records
-    .filter((v) => v.record.needsReview)
-    .sort((a, b) => b.record.quantity - a.record.quantity);
+  const reviewRows = needsReviewByPlants(d.records);
 
   // The answer to "What went in during <season>?" in one sentence.
   const topSites = d.places.slice(0, 3).map((p) => `${p.item.name} (${formatNumber(p.split.total)})`);

@@ -5,7 +5,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export interface ChipLink {
+interface ChipLink {
   key: string;
   label: string;
   href: string;

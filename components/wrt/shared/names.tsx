@@ -2,8 +2,8 @@
  * Names and labels. IDs are never rendered: users see names.
  */
 import Link from "next/link";
-import type { Confidence, Place, Precision, SiteClass, Species } from "@/lib/wrt/types";
-import { CONFIDENCE_LABELS, PRECISION_LABELS, SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
+import type { Confidence, Place, Precision, Species } from "@/lib/wrt/types";
+import { CONFIDENCE_LABELS, PRECISION_LABELS } from "@/lib/wrt/review-themes";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -55,11 +55,6 @@ export function PlaceName({ place, link = false }: { place: Place; link?: boolea
   );
 }
 
-export function SiteClassBadge({ siteClass }: { siteClass: SiteClass }) {
-  const tone = siteClass === "keystone" ? "brand" : siteClass === "school" ? "info" : siteClass === "community" ? "ok" : "soft";
-  return <Badge tone={tone}>{SITE_CLASS_LABELS[siteClass]}</Badge>;
-}
-
 export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
   const tone = confidence === "high" ? "ok" : confidence === "medium" ? "soft" : "risk";
   return <Badge tone={tone}>{CONFIDENCE_LABELS[confidence]}</Badge>;
@@ -67,15 +62,6 @@ export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
 
 export function PrecisionBadge({ precision }: { precision: Precision }) {
   return <Badge tone="soft" title={PRECISION_LABELS[precision].meaning}>{PRECISION_LABELS[precision].label}</Badge>;
-}
-
-export function ReviewBadge({ count, plants }: { count?: number; plants?: number }) {
-  if (count !== undefined && count === 0) return null;
-  return (
-    <Badge tone="review">
-      {plants !== undefined ? `${plants.toLocaleString("en-NZ")} need review` : count && count > 1 ? `${count} need review` : "Needs review"}
-    </Badge>
-  );
 }
 
 /** Link target for every threatened mark: the About the data section that explains it. */

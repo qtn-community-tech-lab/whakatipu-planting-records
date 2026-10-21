@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
+import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getWrt } from "@/lib/wrt/server";
 import type { QuantitySplit } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, EmptyState } from "@/components/wrt/page";
-import { QuantityCell, SplitBar } from "@/components/wrt/quantity";
-import { PlaceName, SpeciesName, hrefs } from "@/components/wrt/names";
-import "@/components/wrt/explore/explore.css";
+import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
+import { QuantityCell, SplitBar } from "@/components/wrt/shared/quantity";
+import { PlaceName, SpeciesName, hrefs } from "@/components/wrt/shared/names";
 
-type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
+type Props = { searchParams: Promise<RawParams> };
 
-function queryOf(raw: Record<string, string | string[] | undefined>) {
-  const v = Array.isArray(raw.q) ? raw.q[0] : raw.q;
+function queryOf(raw: RawParams) {
+  const v = first(raw.q);
   return (v ?? "").replace(/\s+/g, " ").trim().slice(0, 80);
 }
 

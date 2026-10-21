@@ -46,7 +46,8 @@ export function groupSplits<K>(records: PlantingRecord[], key: (r: PlantingRecor
   return m;
 }
 
-const byTotalDesc = <T extends { split: QuantitySplit }>(a: T, b: T) => b.split.total - a.split.total;
+/** Largest first. Shared by every ranked list in the app. */
+export const byTotalDesc = <T extends { split: { total: number } }>(a: T, b: T) => b.split.total - a.split.total;
 
 // ---------------------------------------------------------------- result types
 
@@ -87,6 +88,35 @@ export interface RecordView {
   species: Species;
   place: Place;
   season: Season;
+}
+
+/** The rows WRT still has to rule on, largest first: the "needs review" card on every detail page. */
+export function needsReviewByPlants(rows: RecordView[]): RecordView[] {
+  return rows.filter((v) => v.record.needsReview).sort((a, b) => b.record.quantity - a.record.quantity);
+}
+
+export interface SiteSpecies {
+  species: Species;
+  split: QuantitySplit;
+}
+
+/** Group records by site, each with its species ranked by recorded plants. */
+export function speciesBySite(records: RecordView[]) {
+  const byPlace = new Map<string, { place: Place; split: QuantitySplit; species: Map<string, SiteSpecies> }>();
+  for (const v of records) {
+    const p = byPlace.get(v.place.slug) ?? { place: v.place, split: emptySplit(), species: new Map() };
+    addToSplit(p.split, v.record);
+    const s = p.species.get(v.species.slug) ?? { species: v.species, split: emptySplit() };
+    addToSplit(s.split, v.record);
+    p.species.set(v.species.slug, s);
+    byPlace.set(v.place.slug, p);
+  }
+  return new Map(
+    [...byPlace].map(([slug, p]) => [
+      slug,
+      { place: p.place, split: p.split, species: [...p.species.values()].sort(byTotalDesc) },
+    ]),
+  );
 }
 
 export interface PlaceSummary extends Ranked<Place> {

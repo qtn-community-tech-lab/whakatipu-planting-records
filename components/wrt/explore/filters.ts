@@ -10,7 +10,7 @@
 import type { Lookups, RecordFilter, ReviewFilter } from "@/lib/wrt/queries";
 import type { ReviewTheme, SeasonName } from "@/lib/wrt/types";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import { hrefs } from "@/components/wrt/names";
+import { hrefs } from "@/components/wrt/shared/names";
 
 export const PAGE_SIZE = 50;
 
@@ -33,7 +33,8 @@ export interface RecordsView {
   ignored: { param: string; value: string }[];
 }
 
-export type RawParams = Record<string, string | string[] | undefined>;
+export type { RawParams } from "@/lib/wrt/params";
+import type { RawParams } from "@/lib/wrt/params";
 
 /** Param names that the form owns. Empty values for these are redirected away. */
 export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "review", "theme", "q", "page", "sort"] as const;
@@ -100,7 +101,7 @@ export function hasFilters(f: RecordFilter): boolean {
 }
 
 /** Query params for a view. Defaults are left out so URLs stay short. */
-export function viewParams(view: RecordsView, over: Partial<Record<ParamKey, string | number | undefined>> = {}) {
+function viewParams(view: RecordsView, over: Partial<Record<ParamKey, string | number | undefined>> = {}) {
   const f = view.filter;
   const base: Record<string, string | number | undefined> = {
     place: f.place,

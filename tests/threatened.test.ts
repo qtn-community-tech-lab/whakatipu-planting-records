@@ -1,8 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CsvWrtRepository } from "@/lib/wrt/csv/csv-repository";
-import { createQueries } from "@/lib/wrt/queries";
-
-const q = createQueries(new CsvWrtRepository());
+import { q, repo } from "./helpers";
 
 describe("threatened marks (raised on About the data)", () => {
   it("keeps WRT's two lists separate and shows where they disagree", async () => {
@@ -23,12 +20,12 @@ describe("threatened marks (raised on About the data)", () => {
   });
 
   it("keeps the plain threatened field equal to the Plants Out Master mark", async () => {
-    const species = await new CsvWrtRepository().listSpecies();
+    const species = await repo.listSpecies();
     for (const s of species) expect(s.threatened === true).toBe(s.threatenedMarks.plantsOutMaster);
   });
 
   it("does not show the '#' marker inside alias spellings", async () => {
-    const species = await new CsvWrtRepository().listSpecies();
+    const species = await repo.listSpecies();
     expect(species.flatMap((s) => s.aliases).filter((a) => a.startsWith("#"))).toEqual([]);
   });
 });
