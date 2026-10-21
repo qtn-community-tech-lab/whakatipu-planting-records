@@ -16,6 +16,8 @@
   "dependencies": {
     "@ai-sdk/react": "^3.0.303",
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.3",
     "ai": "^6.0.196",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -34,6 +36,7 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "@tailwindcss/postcss": "^4",
     "@types/geojson": "^7946.0.16",
     "@types/node": "^22.20.5",

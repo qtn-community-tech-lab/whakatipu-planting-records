@@ -4,7 +4,7 @@
  * security_invoker: the reader's own access rules apply.
  */
 import { sql } from "drizzle-orm";
-import { bigint, boolean, date, integer, pgView, smallint, text } from "drizzle-orm/pg-core";
+import { bigint, boolean, date, doublePrecision, integer, pgView, smallint, text } from "drizzle-orm/pg-core";
 import { eventSource, siteClass } from "./enums";
 
 const active = sql.raw(`l.deactivated_at is null and e.deactivated_at is null`);
@@ -71,6 +71,20 @@ export const totalsBySeason = pgView("totals_by_season", {
   select se.slug as season, se.label as season_label, se.sort_order as season_order, ${split},
     count(distinct si.id) as sites, count(distinct sp.id) as species
   ${joins} where ${active} group by se.id`);
+
+/** Every active area with its site and its own pin, one flat row each. For the map and area lists. */
+export const areaList = pgView("area_list", {
+  area: text(), areaName: text(), wrtNumber: text(), siteClass: siteClass(),
+  site: text(), siteName: text(), isScheme: boolean(),
+  latitude: doublePrecision(), longitude: doublePrecision(), radiusM: integer(),
+}).with({ securityInvoker: true }).as(sql`
+  select a.slug as area, a.name as area_name, a.wrt_number, a.site_class,
+    si.slug as site, si.name as site_name, si.is_scheme,
+    pin.latitude, pin.longitude, pin.radius_m
+  from public.site_areas a
+  join public.sites si on si.id = a.site_id
+  left join public.site_locations pin on pin.site_area_id = a.id and pin.deactivated_at is null
+  where a.deactivated_at is null and si.deactivated_at is null`);
 
 /** What is waiting on WRT, by question. A line can sit under two topics: rows overlap, don't add them. */
 export const totalsByReviewTopic = pgView("totals_by_review_topic", {

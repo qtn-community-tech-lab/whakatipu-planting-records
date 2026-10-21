@@ -22,6 +22,20 @@
       "when": 1792382377340,
       "tag": "0002_edit_trail",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792612994200,
+      "tag": "0003_area_list",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792612994802,
+      "tag": "0004_save_planting_day",
+      "breakpoints": true
     }
   ]
 }
