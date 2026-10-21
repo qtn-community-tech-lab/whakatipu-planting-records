@@ -1,32 +1,29 @@
-/**
- * What staff may change on a species. Names and flags only: the slug and the
- * register's scientific spelling stay as the register has them.
- */
+/** What staff may change on a species: names and flags. The slug and the register's spelling stay. */
 import { z } from "zod";
 
-export interface SpeciesChanges {
-  commonName?: string | null;
+export type SpeciesChanges = {
+  common_name?: string | null;
   /** Shown first in the app. */
-  maoriName?: string | null;
+  maori_name?: string | null;
   /** Usual botanical spelling, where it differs from the register's. */
-  suggestedSpelling?: string | null;
+  suggested_spelling?: string | null;
   /** Trees That Count flag. Null = not stated. */
-  over5m?: boolean | null;
+  over_5m?: boolean | null;
   /** "T" in the Plants Out Master. */
   threatened?: boolean | null;
   /** "#" in the Te Kakano list. */
-  threatenedTeKakano?: boolean;
-  registerNote?: string | null;
-}
+  threatened_te_kakano?: boolean;
+  register_note?: string | null;
+};
 
 const text = z.string().trim().nullish();
 
 export const speciesChanges = z.object({
-  commonName: text,
-  maoriName: text,
-  suggestedSpelling: text,
-  over5m: z.boolean().nullish(),
+  common_name: text,
+  maori_name: text,
+  suggested_spelling: text,
+  over_5m: z.boolean().nullish(),
   threatened: z.boolean().nullish(),
-  threatenedTeKakano: z.boolean().optional(),
-  registerNote: text,
+  threatened_te_kakano: z.boolean().optional(),
+  register_note: text,
 }).strict() satisfies z.ZodType<SpeciesChanges>;

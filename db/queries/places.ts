@@ -1,25 +1,13 @@
-/** Sites, areas and pins. The area_list view does the joining, so every read is flat. Moving a pin: db/usecases/place-pin. */
+/** Sites, areas and pins. The area_list view does the joining, so every read is flat. */
 import type { Db } from "@/db/types";
 
-/** Every area with its site and pin. For the map and the sites list. */
-export async function listAreas(supabase: Db) {
-  const { data } = await supabase
+/** Every area with its site and pin, or just one site's areas. For the map and the sites list. */
+export async function listAreas(supabase: Db, site?: string) {
+  let query = supabase
     .from("area_list")
-    .select("area, area_name, wrt_number, site_class, site, site_name, is_scheme, latitude, longitude, radius_m")
-    .order("site_name")
-    .order("area_name")
-    .throwOnError();
-  return data;
-}
-
-/** The areas of one site. */
-export async function areasOfSite(supabase: Db, site: string) {
-  const { data } = await supabase
-    .from("area_list")
-    .select("area, area_name, wrt_number, site_class, latitude, longitude, radius_m")
-    .eq("site", site)
-    .order("area_name")
-    .throwOnError();
+    .select("area, area_name, wrt_number, site_class, site, site_name, is_scheme, latitude, longitude, radius_m");
+  if (site) query = query.eq("site", site);
+  const { data } = await query.order("site_name").order("area_name").throwOnError();
   return data;
 }
 

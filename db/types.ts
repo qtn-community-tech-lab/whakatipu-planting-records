@@ -8,6 +8,7 @@
  * The rules the database keeps (checks, access rules, edit trail) are in README.md.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { PlantingDay } from "./usecases/record-planting-day/types";
 
 export type SiteClass = "keystone" | "community" | "school";
 export type SpeciesStatus = "core" | "appended" | "contested" | "seedlog_only";
@@ -19,15 +20,15 @@ export type EventSource = "workbook" | "app";
 export type LocationAccuracy = "historic-event" | "landmark" | "surveyed";
 
 /** Who created and last changed a row, and whether it is retired. Rows are never deleted. */
-interface EditTrail {
+type EditTrail = {
   created_at: string;
   created_by: string | null;
   updated_at: string;
   updated_by: string | null;
   deactivated_at: string | null;
-}
+};
 
-export interface Species extends EditTrail {
+export type Species = EditTrail & {
   id: number;
   slug: string;
   scientific_name: string;
@@ -42,10 +43,10 @@ export interface Species extends EditTrail {
   needs_decision: boolean;
   register_note: string | null;
   register_code: string | null;
-}
+};
 
 /** A map pin, with a radius wide enough to cover private land. One per site, or one per area. */
-export interface SiteLocation extends EditTrail {
+export type SiteLocation = EditTrail & {
   id: number;
   slug: string;
   site_id: number;
@@ -61,20 +62,20 @@ export interface SiteLocation extends EditTrail {
   coordinate_source_url: string | null;
   coordinate_method: string | null;
   checked_on: string | null;
-}
+};
 
 /** How many of one species went in on one event. quantity null = unknown, never 0. */
-export interface PlantingLine extends EditTrail {
+export type PlantingLine = EditTrail & {
   id: number;
   event_id: number;
   species_id: number;
   quantity: number | null;
   needs_review: boolean;
   legacy_code: string | null;
-}
+};
 
 /** A question WRT needs to answer once, and the answer when it comes. */
-export interface ReviewTopic extends EditTrail {
+export type ReviewTopic = EditTrail & {
   id: number;
   slug: string;
   label: string;
@@ -82,19 +83,19 @@ export interface ReviewTopic extends EditTrail {
   decision: string | null;
   decided_on: string | null;
   decided_by: string | null;
-}
+};
 
 /** Every total keeps the split the app insists on: plants = resolved + needs review. */
-interface Split {
+type Split = {
   plants: number;
   plants_resolved: number;
   plants_needs_review: number;
   lines: number;
   lines_needs_review: number;
-}
+};
 
 /** One row per active line, with its event, season, site, area and species joined in. */
-export interface LineDetails {
+export type LineDetails = {
   line_id: number; event_id: number; legacy_code: string | null; source: EventSource;
   season: string; season_label: string; year: number; season_order: number; planting_date: string | null;
   site: string; site_name: string; is_scheme: boolean;
@@ -102,38 +103,36 @@ export interface LineDetails {
   species: string; scientific_name: string; common_name: string | null; maori_name: string | null;
   over_5m: boolean | null; threatened: boolean | null; contested_group: string | null;
   quantity: number | null; needs_review: boolean;
-}
+};
 
-export interface TotalsBySite extends Split {
+export type TotalsBySite = Split & {
   site: string; site_name: string; is_scheme: boolean; species: number;
   first_season_order: number; last_season_order: number;
-}
+};
 
-export interface TotalsBySpecies extends Split {
+export type TotalsBySpecies = Split & {
   species: string; scientific_name: string; common_name: string | null; maori_name: string | null; sites: number;
-}
+};
 
-export interface TotalsBySeason extends Split {
+export type TotalsBySeason = Split & {
   season: string; season_label: string; season_order: number; sites: number; species: number;
-}
+};
 
 /** Every active area with its site and its own pin, one flat row each. */
-export interface AreaList {
+export type AreaList = {
   area: string; area_name: string; wrt_number: string | null; site_class: SiteClass | null;
   site: string; site_name: string; is_scheme: boolean;
   latitude: number | null; longitude: number | null; radius_m: number | null;
-}
+};
 
 /** What is waiting on WRT, by question. A line can sit under two topics: rows overlap, don't add them. */
-export interface TotalsByReviewTopic {
+export type TotalsByReviewTopic = {
   topic: string; label: string; question: string; decision: string | null;
   plants_needs_review: number; lines_needs_review: number;
-}
+};
 
-// supabase-js wants plain object types, not interfaces: a mapped copy gives each row an index signature.
-type Plain<T> = { [K in keyof T]: T[K] };
-type Table<Row> = { Row: Plain<Row>; Insert: Partial<Plain<Row>>; Update: Partial<Plain<Row>>; Relationships: [] };
-type View<Row> = { Row: Plain<Row>; Relationships: [] };
+type Table<Row> = { Row: Row; Insert: Partial<Row>; Update: Partial<Row>; Relationships: [] };
+type View<Row> = { Row: Row; Relationships: [] };
 
 export type Database = {
   public: {
@@ -152,17 +151,9 @@ export type Database = {
       totals_by_review_topic: View<TotalsByReviewTopic>;
     };
     Functions: {
-      /** Saves an event and its lines together. Returns the new event's id. */
-      save_planting_day: {
-        Args: {
-          p_site_area_id: number; p_season_id: number; p_planting_date: string; p_event_type: EventType | null;
-          p_notes: string; p_is_public: boolean; p_lines: { species_id: number; quantity: number | null }[];
-        };
-        Returns: number;
-      };
+      /** Saves an event and its lines together, from the form as it is. Returns the new event's id. */
+      save_planting_day: { Args: { day: PlantingDay }; Returns: number };
     };
-    Enums: { site_class: SiteClass; species_status: SpeciesStatus; event_type: EventType; event_source: EventSource; location_accuracy: LocationAccuracy };
-    CompositeTypes: Record<string, never>;
   };
 };
 

@@ -1,4 +1,4 @@
-/** Species reads. Each call is one flat query to Supabase. Changes: db/usecases/edit-species. */
+/** Species reads. Each call is one flat query to Supabase. */
 import type { Db } from "@/db/types";
 
 /** The register, A to Z. */

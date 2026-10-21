@@ -1,4 +1,4 @@
-/** The questions WRT still has to answer. Answering one: db/usecases/answer-review-question. */
+/** The questions WRT still has to answer. */
 import type { Db } from "@/db/types";
 
 /** Every question with lines still waiting on it, biggest first. A line can sit under two questions, so don't add the rows up. */

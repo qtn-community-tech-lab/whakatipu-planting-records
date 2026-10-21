@@ -9,7 +9,6 @@ The app talks to Supabase directly through `@supabase/ssr`, as the signed-in per
 | `types.ts` | The tables, views and function the app touches, as one `Database` type. Column names are checked against it. `supabase gen types` replaces it later. |
 | `queries/` | Every read, one small flat function each: species, places, plantings, review. Views do the joining. |
 | `usecases/` | Every write, one folder each. `types.ts` spells out what staff fill in and the zod check with its messages; `index.ts` saves it. |
-| `content.ts` | Checks the pin, species profile and photo files in `data/` that the import will load. |
 
 ## Calling them
 
@@ -28,7 +27,7 @@ The database returns nothing for a row that is missing, retired or not yours to 
 - A total always keeps its split: `plants`, `plants_resolved`, `plants_needs_review`.
 - Nothing is deleted. Retiring sets `deactivated_at`.
 - An unknown count is `null`, never 0.
-- Saving a planting day is the one database function, `save_planting_day`, so an event and its lines land together.
+- Saving a planting day is the one database function, `save_planting_day`, so an event and its lines land together. It takes the form as one argument, `day`.
 
 ## Next
 

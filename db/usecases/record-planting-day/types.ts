@@ -1,43 +1,38 @@
-/**
- * What staff fill in to record a planting day. Change a field or a message
- * here; the check below and the save in index.ts follow this file.
- */
+/** What staff fill in to record a planting day. Change a field or a message here. */
 import { z } from "zod";
 import type { EventType } from "@/db/types";
 
-const eventTypes = ["establishment", "infill", "replacement"] as const satisfies readonly EventType[];
-
 /** One species on the day. quantity null = not counted yet, never 0. */
-export interface PlantingLine {
-  speciesId: number;
+export type PlantingLine = {
+  species_id: number;
   quantity: number | null;
-}
+};
 
-export interface PlantingDayForm {
-  siteAreaId: number;
-  seasonId: number;
+export type PlantingDay = {
+  site_area_id: number;
+  season_id: number;
   /** ISO date, "2026-09-19". History has no date; a new day must. */
-  plantingDate: string;
-  eventType?: EventType | null;
+  planting_date: string;
+  event_type?: EventType | null;
   notes?: string;
-  isPublic?: boolean;
+  is_public?: boolean;
   lines: PlantingLine[];
-}
+};
 
 export const plantingLine = z.object({
-  speciesId: z.number().int().positive(),
+  species_id: z.number().int().positive(),
   quantity: z.number().int().min(0, "Can't be negative").nullable(),
 }) satisfies z.ZodType<PlantingLine>;
 
-export const plantingDayForm = z.object({
-  siteAreaId: z.number().int().positive(),
-  seasonId: z.number().int().positive(),
-  plantingDate: z.iso.date("Pick the planting date"),
-  eventType: z.enum(eventTypes).nullish(),
+export const plantingDay = z.object({
+  site_area_id: z.number().int().positive(),
+  season_id: z.number().int().positive(),
+  planting_date: z.iso.date("Pick the planting date"),
+  event_type: z.enum(["establishment", "infill", "replacement"] satisfies EventType[]).nullish(),
   notes: z.string().optional(),
-  isPublic: z.boolean().optional(),
+  is_public: z.boolean().optional(),
   lines: z.array(plantingLine).min(1, "Add at least one species"),
-}).refine((e) => new Set(e.lines.map((l) => l.speciesId)).size === e.lines.length, {
+}).refine((d) => new Set(d.lines.map((l) => l.species_id)).size === d.lines.length, {
   message: "Add each species once",
   path: ["lines"],
-}) satisfies z.ZodType<PlantingDayForm>;
+}) satisfies z.ZodType<PlantingDay>;
