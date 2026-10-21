@@ -2,7 +2,7 @@
 
 For: anyone building a screen on the planting database. Every read and write the app makes lives in this folder.
 
-*Status: written 22 October 2026. Not yet wired into pages: the app still reads the CSVs until a hosted project is set up and the import has run.*
+*Status: 22 October 2026. A code-only demo: no page calls these yet, and the database they read does not exist yet.*
 
 ## Purpose
 
@@ -65,6 +65,6 @@ export async function saveSpecies(slug: string, changes: { common_name: string }
 ## Next
 
 1. Create the hosted project and set the two `NEXT_PUBLIC_SUPABASE_*` values from `.env.example`.
-2. Run the migrations and the import.
+2. Run the schema SQL and the import.
 3. Generate types with `npx supabase gen types typescript --project-id <ref>` and pass them to the clients, so column names are checked.
 4. Move pages from the CSV repository to these queries one at a time.
