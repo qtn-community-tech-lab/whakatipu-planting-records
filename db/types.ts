@@ -61,3 +61,6 @@ export type Database = {
 
 /** The client every query and use case takes, from lib/supabase/server.ts or browser.ts. */
 export type Db = SupabaseClient<Database>;
+
+/** The update that retires a row. Nothing is ever deleted. */
+export const retired = () => ({ deactivated_at: new Date().toISOString() });

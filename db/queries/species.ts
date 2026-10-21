@@ -1,9 +1,10 @@
-/** Species reads. Each call is one flat query to Supabase. */
+/** Species: the register and one species page. */
 import type { Db } from "@/db/types";
+import { lines, speciesTotals } from "./views";
 
-/** The register, A to Z. */
-export async function listSpecies(supabase: Db) {
-  const { data } = await supabase
+/** The register, A to Z, history or not. */
+export async function listSpecies(db: Db) {
+  const { data } = await db
     .from("species")
     .select("slug, scientific_name, common_name, maori_name, status, threatened")
     .order("scientific_name")
@@ -11,26 +12,30 @@ export async function listSpecies(supabase: Db) {
   return data;
 }
 
-/** Species with planting history, most recorded first, with the needs-review split. */
-export async function speciesTotals(supabase: Db) {
-  const { data } = await supabase
-    .from("totals_by_species")
-    .select("species, maori_name, scientific_name, plants, plants_resolved, plants_needs_review, sites")
-    .order("plants", { ascending: false })
+/** Species with planting history, most recorded first. */
+export async function rankSpecies(db: Db) {
+  const { data } = await speciesTotals(db)
     .throwOnError();
   return data;
 }
 
 /** One species page: the species, its totals and every line it appears on. Null when there is no such species. */
-export async function getSpecies(supabase: Db, slug: string) {
+export async function getSpecies(db: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
-    supabase.from("species").select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note").eq("slug", slug).maybeSingle().throwOnError(),
-    supabase.from("totals_by_species")
-      .select("plants, plants_resolved, plants_needs_review, sites")
-      .eq("species", slug).maybeSingle().throwOnError(),
-    supabase.from("line_details")
-      .select("event_id, season_label, site_name, area_name, quantity, needs_review")
-      .eq("species", slug).order("season_order", { ascending: false }).throwOnError(),
+    db
+      .from("species")
+      .select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note")
+      .eq("slug", slug)
+      .maybeSingle()
+      .throwOnError(),
+    speciesTotals(db)
+      .eq("species", slug)
+      .maybeSingle()
+      .throwOnError(),
+    // shortcut: unpaged, the largest species has 279 lines; page it like findLines if one passes 1,000.
+    lines(db)
+      .eq("species", slug)
+      .throwOnError(),
   ]);
   if (!species.data) return null;
   return { species: species.data, totals: totals.data, history: history.data };

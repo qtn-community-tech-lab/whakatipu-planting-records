@@ -7,7 +7,7 @@ The app talks to Supabase directly through `@supabase/ssr`, as the signed-in per
 | Path | Holds |
 |---|---|
 | `types.ts` | Only the columns the app reads and writes, as one `Database` type the client checks names against. Writable columns come from the use cases. `supabase gen types` replaces it later. |
-| `queries/` | Every read, one small flat function each: species, places, plantings, review. Views do the joining. |
+| `queries/` | Every read. `views.ts` has one base query per view (its columns and order); `sites.ts`, `species.ts`, `plantings.ts` and `review.ts` add a filter or a limit on top. |
 | `usecases/` | Every write, one folder each. `types.ts` spells out what staff fill in and the zod check with its messages; `index.ts` saves it. |
 
 ## Calling them
@@ -22,11 +22,25 @@ if (parsed.success) await updateSpecies(await createClient(), slug, parsed.data)
 
 The database returns nothing for a row that is missing, retired or not yours to change; the page decides what to say.
 
+## Words
+
+| Word | Means | Was also called |
+|---|---|---|
+| site | A place people plant: Lake Hayes, Whitechapel | place |
+| area | A part of a site as WRT registers it, with its site number. Screens say "part" | parcel, part |
+| pin | A site's or an area's map marker, with an optional radius | location, site_location |
+| season | Autumn or Spring of one year | |
+| event | One area, one season, and for new ones one day | planting day |
+| line | How many of one species went in on one event | record |
+| split | plants = resolved + needing review. Every total keeps it | |
+
 ## Rules
 
+- Queries stack one call per line, like parameters, starting with `.from` under `db`. The linter enforces every line after the first; `npx eslint --fix db` fixes them.
 - A total always keeps its split: `plants`, `plants_resolved`, `plants_needs_review`.
 - Nothing is deleted. Retiring sets `deactivated_at`.
 - An unknown count is `null`, never 0.
+- Supabase returns at most 1,000 rows a request, so unbounded reads page: `findLines` takes a page number.
 - Saving a planting day is the one database function, `save_planting_day`, so an event and its lines land together. It takes the form as one argument, `day`.
 
 ## Next
