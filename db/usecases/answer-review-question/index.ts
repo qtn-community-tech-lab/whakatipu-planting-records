@@ -1,26 +1,18 @@
-/** Record WRT's answer to a review question, then resolve the lines it covers one at a time. */
+/**
+ * Answer a review question. WRT's ruling is written and every note filed under
+ * that question is resolved in one call. A line leaves review only when no other
+ * question on it is still open, so answering one never clears another.
+ */
 import type { Db } from "@/db/types";
-import type { ReviewDecision } from "./types";
+import { reviewDecision } from "./types";
 
 export * from "./types";
 
-/** Returns the saved question, or null when it is missing or not the caller's to change. */
-export async function recordDecision(db: Db, topic: string, decision: ReviewDecision) {
+/** Returns how many lines left review, or null when there is no such question. Throws on a ruling the form would reject. */
+export async function answerQuestion(db: Db, topic: string, input: unknown) {
+  const decision = reviewDecision.parse(input);
   const { data } = await db
-    .from("review_topics")
-    .update(decision)
-    .eq("slug", topic)
-    .select()
-    .maybeSingle()
+    .rpc("answer_review_question", { topic, decision })
     .throwOnError();
   return data;
-}
-
-/** After a ruling, mark one line resolved. */
-export async function resolveLine(db: Db, lineId: number) {
-  await db
-    .from("planting_lines")
-    .update({ needs_review: false })
-    .eq("id", lineId)
-    .throwOnError();
 }

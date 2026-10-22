@@ -33,14 +33,15 @@ export const areas = (db: Db) =>
     .order("site_name")
     .order("area_name");
 
-/** Every planting line, oldest season first. */
+/** Every planting line, oldest season first. line_id last, so pages never skip or repeat a row. */
 export const lines = (db: Db) =>
   db
     .from("line_details")
     .select("line_id, event_id, season_label, planting_date, site_name, area_name, maori_name, scientific_name, quantity, needs_review, legacy_code")
     .order("season_order")
     .order("area_name")
-    .order("scientific_name");
+    .order("scientific_name")
+    .order("line_id");
 
 /** Every review question with its open lines, biggest first. A line can sit under two: don't add rows up. */
 export const reviewTotals = (db: Db) =>

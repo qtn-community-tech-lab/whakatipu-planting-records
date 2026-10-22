@@ -23,6 +23,7 @@ export type LineDetails = {
   season: string; season_label: string; season_order: number; year: number; planting_date: string | null;
   site: string; site_name: string; area: string; area_name: string;
   species: string; scientific_name: string; maori_name: string | null;
+  /** Worked out in the view: true while any ruling or confirm note on the line is unresolved. */
   quantity: number | null; needs_review: boolean;
 };
 
@@ -33,8 +34,7 @@ export type Database = {
         slug: string; scientific_name: string; status: "core" | "appended" | "contested" | "seedlog_only" | null;
       }>;
       site_locations: Table<Required<PinChanges> & Retired & { slug: string }>;
-      planting_lines: Table<PlantingLine & Retired & { id: number; event_id: number; needs_review: boolean }>;
-      review_topics: Table<ReviewDecision & { slug: string }>;
+      planting_lines: Table<PlantingLine & Retired & { id: number; event_id: number }>;
     };
     Views: {
       line_details: View<LineDetails>;
@@ -55,6 +55,12 @@ export type Database = {
     Functions: {
       /** Saves an event and its lines together. Returns the new event's id. */
       save_planting_day: { Args: { day: PlantingDay }; Returns: number };
+      /**
+       * Writes WRT's ruling on a question and resolves that question's notes, in one go.
+       * A line leaves review only when no other question on it is still open.
+       * Returns how many lines left review, or null when there is no such question.
+       */
+      answer_review_question: { Args: { topic: string; decision: ReviewDecision }; Returns: number | null };
     };
   };
 };

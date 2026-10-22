@@ -2,11 +2,12 @@
 import type { Db } from "@/db/types";
 import { lines, speciesTotals } from "./views";
 
-/** The register, A to Z, history or not. */
+/** The register, A to Z, history or not. Retired species are left out. */
 export async function listSpecies(db: Db) {
   const { data } = await db
     .from("species")
     .select("slug, scientific_name, common_name, maori_name, status, threatened")
+    .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
   return data;
@@ -19,12 +20,12 @@ export async function rankSpecies(db: Db) {
   return data;
 }
 
-/** One species page: the species, its totals and every line it appears on. Null when there is no such species. */
+/** One species page: the species, its totals and every line it appears on. A retired species still opens, with deactivated_at set, so staff can see it. Null when there is no such species. */
 export async function getSpecies(db: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
     db
       .from("species")
-      .select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note")
+      .select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note, deactivated_at")
       .eq("slug", slug)
       .maybeSingle()
       .throwOnError(),
