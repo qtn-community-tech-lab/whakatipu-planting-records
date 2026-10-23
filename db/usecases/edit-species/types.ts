@@ -2,7 +2,7 @@
 import { z } from "zod";
 
 export type SpeciesChanges = {
-  common_name?: string | null;
+  common_name?: string;
   /** Shown first in the app. */
   maori_name?: string | null;
   /** Usual botanical spelling, where it differs from the register's. */
@@ -19,7 +19,7 @@ export type SpeciesChanges = {
 const text = z.string().trim().nullish();
 
 export const speciesChanges = z.object({
-  common_name: text,
+  common_name: z.string().trim().optional(),
   maori_name: text,
   suggested_spelling: text,
   over_5m: z.boolean().nullish(),

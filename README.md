@@ -14,7 +14,13 @@ npm test           # vitest: parser, validation, repository and query invariants
 npm run build && npm start
 ```
 
-Node 20.9+ (tested on 22). No database or accounts. Planting data loads from local CSVs; reference photos require internet access.
+Node 20.9+ (tested on 22). The current explorer runs without a database or accounts. Planting data loads from local CSVs; reference photos require internet access.
+
+## Supabase development
+
+Follow the [Supabase setup and migration guide](docs/supabase-setup.md) to start a new local project, apply the migration, configure `.env.local`, create the first staff account and generate database types. It also covers applying migrations to a fresh hosted Supabase project. The [database reference](db/README.md) explains the schema and access rules.
+
+Creating the database does not import the CSV history or switch the running pages to Supabase; that integration is still to come.
 
 ## Deployment
 
@@ -66,6 +72,8 @@ app/** and components/**               pages and components; none of them know t
 
 **Swapping in a database:** write `DbWrtRepository implements WrtRepository`, construct it in `lib/wrt/server.ts`.
 Nothing in `app/` or `components/` changes. `tests/` holds the invariants it must still pass.
+
+The [Supabase schema and migration](db/README.md) extend the WRT target schema for direct client access, with staff RLS, reporting views and nullable dates for historical backfill. The database layer is not connected to the running pages yet; applying the migration does not import the CSVs.
 
 Set `WRT_DATA_DIR` to read the CSVs from somewhere else.
 

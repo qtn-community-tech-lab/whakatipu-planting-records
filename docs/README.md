@@ -15,6 +15,7 @@ Documentation for the Wakatipu Reforestation Trust (WRT) nursery and planting so
 
 ## Application reference guides
 
+- [Supabase setup and migrations](supabase-setup.md): create a local project, apply and verify the schema, configure the app, prepare staff access and deploy to a fresh hosted project.
 - [Species photo guide](species-photo-guide.md): shared names, identification profiles, photo sources, attribution and future offline use.
 - [Species coverage audit and remaining work](species-photo-guide.md#coverage-audit-and-remaining-work): the reviewed 95-entry coverage, nine batches of five, photo-to-species checks, remaining identity/image/name gaps and the 69 register-only entries.
 

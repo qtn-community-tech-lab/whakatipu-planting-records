@@ -1,14 +1,72 @@
 # Database
 
-For: developers looking at how the app could move from the CSV files onto Supabase. A code-only demo, 22 October 2026: no SQL, no import, no Supabase project yet. The design and what was checked are in the pull request.
+The schema is defined in [`../supabase/migrations/20261023000000_create_planting_records.sql`](../supabase/migrations/20261023000000_create_planting_records.sql). It extends the target WRT schema's seven domain tables and 16-character text IDs for direct Supabase access. This is an initial migration for a **new** database; do not run it over the other repo's existing domain tables. An existing project needs a separate ALTER migration after checking its applied migration history.
 
-The app talks to Supabase directly through `@supabase/ssr`, as the signed-in person, so the database's access rules decide what they can read and change. There is no server of our own.
+The database layer talks to Supabase through `@supabase/ssr`, as the signed-in person. PostgreSQL grants and row-level security decide what they can read and change. The running pages still use `CsvWrtRepository`; this migration does not connect them to Supabase or import any data.
 
 | Path | Holds |
 |---|---|
-| `types.ts` | Only the columns the app reads and writes, as one `Database` type the client checks names against. Writable columns come from the use cases. `supabase gen types` replaces it later. |
+| `types.ts` | Supabase JSON row/insert/update types for every migration table, view and public function. Independent of form types, so unknown historical dates are permitted. Replace with `supabase gen types` after provisioning. |
+| `enums.ts` | Runtime database enum values used by form validation; keep in sync with the SQL migration. |
+| `ids.ts` | Shared `domainId` Zod schema and `DomainId` type, plus `generateUniqueID` and the seven domain prefixes. |
 | `queries/` | Every read. `views.ts` has one base query per view (its columns and order); `sites.ts`, `species.ts`, `plantings.ts` and `review.ts` add a filter or a limit on top. |
 | `usecases/` | Every write, one folder each. `types.ts` spells out what staff fill in and the zod check with its messages; `index.ts` saves it. |
+
+## Schema
+
+```mermaid
+erDiagram
+  users ||--o{ sites : audits
+  sites ||--o{ planting_areas : contains
+  sites ||--o{ planting_events : hosts
+  locations |o--o| sites : locates
+  locations |o--o| planting_areas : locates
+  planting_areas |o--o{ planting_events : scopes
+  seasons ||--o{ planting_events : groups
+  planting_events ||--o{ planting_event_species : records
+  species ||--o{ planting_event_species : identifies
+  planting_event_species ||--o{ line_notes : explains
+  review_topics ||--o{ line_notes : groups
+```
+
+The seven target tables are `users`, `locations`, `sites`, `planting_areas`, `species`, `planting_events` and `planting_event_species`. Added tables are `seasons`, `review_topics` and `line_notes`. Slugs are URL keys, separate from IDs. New IDs default to 16 URL-safe characters; supplied target IDs are also accepted. An area's site must match its event's site, enforced by a composite foreign key.
+
+Supply a prefixed ID on insert using `ids.ts`:
+
+```ts
+import { generateUniqueID, IdPrefixes } from "@/db/ids";
+
+const speciesId = generateUniqueID(IdPrefixes.SPECIES);
+// Example: "spc_6n8k2j4m9q0r" (4 prefix characters + 12 random characters).
+```
+
+Each call creates a new random ID. Generate once when creating the record, pass it as the insert's `id`, and reuse the stored ID for edits and references. The helper uses Web Crypto and works in browsers and Node.js. Inserts that omit `id` still use the SQL default, which generates an unprefixed ID.
+
+Use `domainId` from `@/db/ids` for every ID or foreign-key field in a use case's Zod schema, for example `species_id: domainId` or `planting_area_id: domainId.nullish()`. `DomainId` is its inferred TypeScript type. The schema checks the shared 16-character SQL rule, accepting both prefixed IDs and existing database-generated IDs. Use cases also parse standalone ID arguments before querying Supabase. URL slugs and the Supabase Auth UUID are separate formats.
+
+Clients use Supabase table, view and function types directly; the former HTTP request/response contracts and Kysely types are not dependencies. The `planting_event_type` PostgreSQL enum retains the domain values from the former API: `establishment`, `infill`, `replacement`. It is exposed through `Database["public"]["Enums"]`, with runtime values in `enums.ts` for form validation. Other finite-value columns retain their existing CHECK constraints; the attached API contract supplies no additional column enums.
+
+- `planting_events.planting_date` and `event_type` are nullable. A historical event has a known `season_id` and `source = 'workbook'`; its exact day and type stay null. There is no fabricated first day of a season. The `season` text column retains the target's original/free-text label; reporting joins the structured `seasons` row.
+- The planting-day form and `save_planting_day` RPC still require a real date for new entries. Historical backfill inserts directly into the tables using trusted operator/service credentials and an explicit domain audit actor.
+- Quantities may be null for unknown counts. Non-null quantities must be non-negative safe integers. Aggregates reject totals above JavaScript's safe integer range. An all-unknown group's known plant total is zero; its individual line quantities remain null.
+- History lines retain `legacy_code`, `precision`, `confidence` and a `provenance` JSON object. Store the source file, sheet, cell, original season/site/species strings in that object. Review explanations belong in `line_notes`, including their original `raw` text.
+- Locations store GeoJSON Points as `[longitude, latitude]`, plus an optional radius and source metadata. `area_list` falls back to the site's pin when the area has none.
+
+## Access and edit trail
+
+An administrator creates domain `users` rows and links `auth_user_id` to Supabase Auth. Only an active row with `is_staff = true` permits edits. Signing in alone does not grant staff access. Clients cannot create accounts or change `is_staff`; use the SQL editor or trusted operator tooling.
+
+Staff can read retired/unpublished table rows, insert and update domain data. Anonymous and non-staff readers can read only active published data and active seasons. Events require a published site and, when present, a published area; lines also require a published active species. Account data, note text, review decisions and review topics remain staff-only (a signed-in person can read their own account). Published lines expose their provenance, as the explorer already does through its source expander.
+
+All reporting views use `security_invoker = true`, so the caller's table RLS applies. A private helper exposes only the line's review boolean to the views, ensuring a public reader's totals retain the review split even though they cannot read the notes. The review-topic view returns no rows to public readers. See [Supabase's RLS guidance](https://supabase.com/docs/guides/database/postgres/row-level-security).
+
+Triggers set the real domain audit actor from `auth.uid()`, preserve creation fields and IDs on update, stamp edit times and keep the first retirement timestamp. Operator imports without an Auth session must supply `created_by` and `updated_by`. No application role receives DELETE permission. The two write RPCs run with the caller's permissions and atomically save an event with its lines or resolve a review topic's notes.
+
+## Apply and verify
+
+Follow the [Supabase setup and migration guide](../docs/supabase-setup.md) for prerequisites, first local startup, applying and checking migrations, local environment variables, staff-account setup, generated types and hosted deployment. Keep setup commands in that guide so there is one maintained sequence to follow.
+
+`npm test` checks CSV/domain behavior and form validation. Verify the migration, grants/RLS, triggers, views and RPCs against a local Supabase database before deployment; the unit suite does not exercise PostgreSQL or hosted Supabase behavior.
 
 ## Calling them
 
@@ -30,7 +88,7 @@ Every use case parses its own input and throws on anything its form would reject
 | area | A part of a site as WRT registers it, with its site number. Screens say "part" | parcel, part |
 | pin | A site's or an area's map marker, with an optional radius | location, site_location |
 | season | Autumn or Spring of one year | |
-| event | One area, one season, and for new ones one day | planting day |
+| event | One site, optionally one area, one season, and for new forms one day | planting day |
 | line | How many of one species went in on one event | record |
 | split | plants = resolved + needing review. Every total keeps it | |
 
@@ -43,13 +101,12 @@ Every use case parses its own input and throws on anything its form would reject
 - `needs_review` is never written. Views work it out from the line's notes: a line needs review while any ruling or confirm note on it is unresolved. Answering a question resolves its notes, not its lines.
 - An unknown count is `null`, never 0.
 - Supabase returns at most 1,000 rows a request, so unbounded reads page: `findLines` takes a page number.
-- Saving a planting day is the one database function, `save_planting_day`, so an event and its lines land together. It takes the form as one argument, `day`.
+- Saving a planting day calls `save_planting_day`, so an event and its lines land together. Answering a question calls `answer_review_question`, so the decision and note resolutions land together.
 
 ## Next
 
-1. One plain SQL file: the tables and views in `types.ts`, `is_staff()`, the edit-trail trigger, `save_planting_day` and `answer_review_question`. Notes get a `resolved_at`; `needs_review` moves from a stored column on lines to the views. Views filter `deactivated_at is null`; the staff access rules on tables don't. The Drizzle version of the rest, with the access rules, is at commit 3751999 in `db/schema/`.
-2. Create the project, run the file, replace `types.ts` with `supabase gen types`. Then flip the direction: each use case's type `satisfies` the generated `Update` type, instead of `types.ts` importing from the use cases. The generated `Insert` types also check required columns, which `Partial<Row>` here does not.
-3. Session refresh: `@supabase/ssr` needs `proxy.ts` (Next 16's name for middleware) to refresh the sign-in on each request, or server components start seeing expired sessions.
-4. Creating a pin and restoring a retired row. Today `place-pin` only moves and retires a pin, and nothing sets `deactivated_at` back to null.
-5. The import, against the Supabase client with the service key. The Drizzle version at 3751999 (`scripts/import-history.ts`) holds the area-slug and contested-group rules worth keeping.
-6. Move pages to `queries/` and forms to `usecases/`, one at a time.
+1. Provision the project, apply the migration, bootstrap staff and adopt generated types.
+2. Build a repeatable historical import using the service key. Preserve source values, uncertainty and review notes. The old Drizzle import at 3751999 contains useful mapping rules but uses the superseded numeric schema.
+3. Implement sign-in and session refresh (`proxy.ts` in Next 16) before wiring authenticated pages.
+4. Creating a pin and restoring retired rows need dedicated flows; today `place-pin` only moves/retires a location and the edit trigger preserves retirement.
+5. Move pages to database queries and forms to use cases, or implement a database `WrtRepository` for the existing query layer. Reference profiles/photos and reconciliation still come from local files.

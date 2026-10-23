@@ -11,7 +11,8 @@ export const PAGE_SIZE = 100;
 export async function findLines(db: Db, filter: LineFilter, page = 0) {
   let query = lines(db);
   for (const [column, value] of Object.entries(filter)) {
-    if (value !== undefined) query = query.eq(column as keyof LineFilter, value);
+    if (value === null) query = query.is(column as keyof LineFilter, null);
+    else if (value !== undefined) query = query.eq(column as keyof LineFilter, value);
   }
   const { data } = await query
     .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
