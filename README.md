@@ -20,6 +20,14 @@ Node 20.9+ (tested on 22). The current explorer runs without a database or accou
 
 Follow the [Supabase setup and migration guide](docs/supabase-setup.md) to start a new local project, apply the migration, configure `.env.local`, create the first staff account and generate database types. It also covers applying migrations to a fresh hosted Supabase project. The [database reference](db/README.md) explains the schema and access rules.
 
+After setup, start Docker and run both Supabase and the app with one command:
+
+```sh
+npm run dev:local
+```
+
+This starts Supabase, applies pending local migrations, then runs the app at `http://localhost:3000`. Press Ctrl+C to stop the app; run `supabase stop` to stop the database services. `npm run dev` starts the app on its own.
+
 Creating the database does not import the CSV history or switch the running pages to Supabase; that integration is still to come.
 
 ## Deployment

@@ -25,13 +25,13 @@ The examples use the globally installed `supabase` command. No additional npm de
 
 ## 2. Create and start the local project
 
-This repo already contains `supabase/migrations/20261023000000_create_planting_records.sql`. On your first checkout, create the local configuration:
+This repo includes `supabase/config.toml` and `supabase/migrations/20261023000000_create_planting_records.sql`, so a fresh checkout is already initialized. Only if `supabase/config.toml` is missing, create it with:
 
 ```sh
 supabase init
 ```
 
-Skip `init` if `supabase/config.toml` already exists. Keep the existing migration. Commit the generated `config.toml` and `supabase/.gitignore` so teammates can reuse the configuration.
+Keep the existing migration. If you generate new configuration, commit `config.toml` and `supabase/.gitignore` so teammates can reuse it.
 
 Start Supabase and apply any pending migrations:
 
@@ -108,7 +108,15 @@ Compare it with `db/types.ts` before adopting it. Preserve the `Db`, `LineDetail
 
 ## Daily development
 
-Use `supabase start` to resume and `supabase stop` when finished; stopping normally retains local data. After pulling new migrations, run `supabase migration up --local`.
+Start your container runtime, then run:
+
+```sh
+npm run dev:local
+```
+
+This runs three steps in order: `supabase start`, `supabase migration up --local`, then `npm run dev`. The app starts only after Supabase and migrations succeed. Open `http://localhost:3000` for the app; Supabase Studio normally runs at `http://127.0.0.1:54323`. Connection settings still come from `.env.local` as described in step 3.
+
+Press Ctrl+C to stop Next.js. Supabase runs in background containers; run `supabase stop` to stop them and retain local data. To run just one service, use `npm run dev` for the app or `supabase start` for Supabase. The Supabase CLI command itself does not launch Next.js.
 
 For the next schema change:
 

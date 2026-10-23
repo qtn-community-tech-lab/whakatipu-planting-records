@@ -31,6 +31,20 @@ create table public.users (
   check (updated_at >= created_at)
 );
 
+insert into public.users (id, created_by, updated_by, email, display_name)
+values (
+  'usr_000000000001', 'usr_000000000001', 'usr_000000000001',
+  'bayly.james@gmail.com', 'James Bayly'
+),
+(
+  'usr_000000000002', 'usr_000000000001', 'usr_000000000001',
+  'ktgcreative@gmail.com', 'Kyle Grattan'
+),
+(
+  'usr_000000000003', 'usr_000000000001', 'usr_000000000001',
+  'dre.cavalcanti@gmail.com', 'Andre Cavalcanti'
+);
+
 create table public.locations (
   id text primary key default private.new_id() check (char_length(id) = 16),
   geometry jsonb not null,
