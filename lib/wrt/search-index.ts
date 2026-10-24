@@ -6,5 +6,5 @@
 export interface SearchIndex {
   places: { slug: string; name: string; keys: string[]; total: number; isScheme: boolean }[];
   species: { slug: string; name: string; scientific: string; isScientific: boolean; keys: string[]; total: number }[];
-  seasons: { slug: string; label: string; year: number; total: number }[];
+  seasons: { slug: string; label: string; total: number }[];
 }

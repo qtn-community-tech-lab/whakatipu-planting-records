@@ -23,10 +23,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // The CSVs are read from disk at runtime; ship them with the server build.
-  outputFileTracingIncludes: {
-    "/**": ["./docs/planning/prototype/*.csv"],
-  },
   allowedDevOrigins: ["http://localhost:3000", "127.0.0.1"],
 };
 

@@ -23,8 +23,8 @@ function readScope(raw: unknown): Scope {
     place: named(s.place),
     part: text(s.part),
     species: named(s.species),
-    season: s.season === "Autumn" || s.season === "Spring" ? s.season : undefined,
-    year: typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 2015 && s.year <= 2026 ? s.year : undefined,
+    season: typeof s.season === "string" ? s.season : undefined,
+    year: typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 1 && s.year <= 9999 ? s.year : undefined,
   };
 }
 

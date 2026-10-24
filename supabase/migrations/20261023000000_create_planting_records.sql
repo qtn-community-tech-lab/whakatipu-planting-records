@@ -68,7 +68,6 @@ create table public.sites (
   description text not null default '',
   location_id text unique references public.locations(id) on delete restrict,
   is_scheme boolean not null default false,
-  is_public boolean not null default false,
   created_by text not null references public.users(id) on delete restrict,
   created_at timestamptz not null default now(),
   updated_by text not null references public.users(id) on delete restrict,
@@ -87,7 +86,6 @@ create table public.planting_areas (
   site_class text check (site_class in ('keystone', 'community', 'school')),
   aliases text[] not null default '{}',
   location_id text unique references public.locations(id) on delete restrict,
-  is_public boolean not null default false,
   created_by text not null references public.users(id) on delete restrict,
   created_at timestamptz not null default now(),
   updated_by text not null references public.users(id) on delete restrict,
@@ -107,13 +105,25 @@ create table public.species (
   aliases text[] not null default '{}',
   description text not null default '',
   image_url text not null default '',
-  is_public boolean not null default false,
   maori_name text,
   over_5m boolean,
   threatened boolean,
   threatened_te_kakano boolean not null default false,
   register_note text,
   register_code text unique,
+  created_by text not null references public.users(id) on delete restrict,
+  created_at timestamptz not null default now(),
+  updated_by text not null references public.users(id) on delete restrict,
+  updated_at timestamptz not null default now(),
+  deactivated_at timestamptz,
+  check (updated_at >= created_at)
+);
+
+-- Reference labels can exist before any planting history is imported.
+-- Events may still use free text; the catalogue is not an allowed-value list.
+create table public.seasons (
+  id text primary key default private.new_id() check (char_length(id) = 16),
+  name text not null unique check (name = btrim(name) and name <> ''),
   created_by text not null references public.users(id) on delete restrict,
   created_at timestamptz not null default now(),
   updated_by text not null references public.users(id) on delete restrict,
@@ -133,7 +143,6 @@ create table public.planting_events (
   source text not null default 'app' check (source in ('app', 'workbook')),
   notes text not null default '',
   image_url text not null default '',
-  is_public boolean not null default false,
   created_by text not null references public.users(id) on delete restrict,
   created_at timestamptz not null default now(),
   updated_by text not null references public.users(id) on delete restrict,
@@ -205,7 +214,7 @@ $$;
 do $$
 declare t text;
 begin
-  foreach t in array array['users', 'locations', 'sites', 'planting_areas', 'species',
+  foreach t in array array['users', 'locations', 'sites', 'planting_areas', 'species', 'seasons',
     'planting_events', 'planting_event_species'] loop
     execute format('create trigger track_edit before insert or update on public.%I for each row execute function private.track_edit()', t);
     execute format('alter table public.%I enable row level security', t);
@@ -223,26 +232,26 @@ end;
 $$;
 
 create policy own_account on public.users for select to authenticated using (auth_user_id = (select auth.uid()));
-create policy published_sites on public.sites for select to anon, authenticated
-  using (is_public and deactivated_at is null);
-create policy published_areas on public.planting_areas for select to anon, authenticated
-  using (is_public and deactivated_at is null and exists (
-    select 1 from public.sites s where s.id = site_id and s.is_public and s.deactivated_at is null));
-create policy published_species on public.species for select to anon, authenticated
-  using (is_public and deactivated_at is null);
-create policy published_events on public.planting_events for select to anon, authenticated
-  using (is_public and deactivated_at is null
-    and exists (select 1 from public.sites s where s.id = site_id and s.is_public and s.deactivated_at is null)
-    and (planting_area_id is null or exists (select 1 from public.planting_areas a
-      where a.id = planting_area_id and a.is_public and a.deactivated_at is null)));
-create policy published_lines on public.planting_event_species for select to anon, authenticated
+create policy active_sites on public.sites for select to anon, authenticated
+  using (deactivated_at is null);
+create policy active_areas on public.planting_areas for select to anon, authenticated
+  using (deactivated_at is null and exists (
+    select 1 from public.sites s where s.id = site_id and s.deactivated_at is null));
+create policy active_species on public.species for select to anon, authenticated
+  using (deactivated_at is null);
+create policy active_seasons on public.seasons for select to anon, authenticated
+  using (deactivated_at is null);
+create policy active_events on public.planting_events for select to anon, authenticated
   using (deactivated_at is null
-    and exists (select 1 from public.planting_events e where e.id = planting_event_id)
-    and exists (select 1 from public.species sp where sp.id = species_id and sp.is_public and sp.deactivated_at is null));
-create policy published_locations on public.locations for select to anon, authenticated
-  using (deactivated_at is null and (
-    exists (select 1 from public.sites s where s.location_id = locations.id and s.is_public and s.deactivated_at is null)
-    or exists (select 1 from public.planting_areas a where a.location_id = locations.id and a.is_public and a.deactivated_at is null)));
+    and exists (select 1 from public.sites s where s.id = site_id and s.deactivated_at is null)
+    and (planting_area_id is null or exists (select 1 from public.planting_areas a
+      where a.id = planting_area_id and a.deactivated_at is null)));
+create policy active_lines on public.planting_event_species for select to anon, authenticated
+  using (deactivated_at is null
+    and exists (select 1 from public.planting_events e where e.id = planting_event_id and e.deactivated_at is null)
+    and exists (select 1 from public.species sp where sp.id = species_id and sp.deactivated_at is null));
+create policy active_locations on public.locations for select to anon, authenticated
+  using (deactivated_at is null);
 
 create function private.safe_total(value numeric) returns bigint
 language plpgsql immutable set search_path = '' as $$
@@ -327,10 +336,10 @@ begin
     where not exists (select 1 from public.species where id = l ->> 'species_id' and deactivated_at is null)) then
     raise exception 'Choose active species' using errcode = '23514';
   end if;
-  insert into public.planting_events(site_id, planting_area_id, season, planting_date, event_type, notes, is_public)
+  insert into public.planting_events(site_id, planting_area_id, season, planting_date, event_type, notes)
   values (day ->> 'site_id', day ->> 'planting_area_id', btrim(day ->> 'season'),
     (day ->> 'planting_date')::date, (day ->> 'event_type')::public.planting_event_type,
-    coalesce(day ->> 'notes', ''), coalesce((day ->> 'is_public')::boolean, false))
+    coalesce(day ->> 'notes', ''))
   returning id into event_id;
   insert into public.planting_event_species(planting_event_id, species_id, quantity)
   select event_id, l ->> 'species_id', (l ->> 'quantity')::bigint from jsonb_array_elements(day -> 'lines') l;

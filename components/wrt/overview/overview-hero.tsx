@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { QuantitySplit, Species } from "@/lib/wrt/types";
+import type { Quantity, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { SplitBar } from "@/components/wrt/shared/quantity";
+import { formatNumber } from "@/lib/wrt/text";
+import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
 import { hrefs } from "@/components/wrt/shared/names";
@@ -24,7 +23,7 @@ interface Stat {
 export function OverviewHero({
   split, eyebrow, placeCount, speciesCount, seasonCount, topSpecies,
 }: {
-  split: QuantitySplit;
+  split: Quantity;
   eyebrow: string;
   placeCount: number;
   speciesCount: number;
@@ -38,7 +37,7 @@ export function OverviewHero({
     { href: "/records", icon: "records", label: "Records", value: formatNumber(split.records) },
   ];
   const pictured = topSpecies
-    .map((s, i) => ({ s, rank: i + 1, photo: getSpeciesPhoto(s.item.id) }))
+    .map((s, i) => ({ s, rank: i + 1, photo: s.item.imageUrl }))
     .filter((x) => x.photo)
     .slice(0, 2);
 
@@ -54,23 +53,14 @@ export function OverviewHero({
           </span>
         </h1>
         <p className="wrt-ohero__lead">
-          WRT’s planting history in one place for the first time. Every figure is a recorded plant from the allocation
-          sheets, not a verified planting.
+          WRT’s sites, species and planting history in one place. Figures reflect the saved planting records.
         </p>
 
         <div className="wrt-ohero__figure">
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-ohero__split">
-            {formatNumber(split.resolved)} resolved
-            {split.recordsNeedingReview > 0 && (
-              <>
-                {" · "}
-                <Link href={hrefs.records({ review: "needs-review" })} className="wrt-shero__amber wrt-ohero__review">
-                  {formatNumber(split.needsReview)} ({formatShare(split.needsReview, split.total)}) on{" "}
-                  {formatNumber(split.recordsNeedingReview)} records WRT still has to rule on →
-                </Link>
-              </>
-            )}
+            <SplitLine split={split} />
+
           </p>
         </div>
 
@@ -97,11 +87,10 @@ export function OverviewHero({
             {pictured.map(({ s, rank, photo }) => (
               <li key={s.item.slug} className="wrt-ohero__tile">
                 <Image
-                  src={photo!.src}
-                  width={photo!.width}
-                  height={photo!.height}
+                  src={photo}
+                  width={640}
+                  height={480}
                   sizes="(max-width: 960px) 50vw, 18vw"
-                  style={{ objectPosition: photo!.focalPoint }}
                   alt=""
                   className="wrt-ohero__img"
                   unoptimized
@@ -115,7 +104,7 @@ export function OverviewHero({
                   <span className="wrt-ohero__tile-count tabular-nums">{formatNumber(s.split.total)} recorded</span>
                 </Link>
                 <span className="wrt-ohero__tile-credit">
-                  {photo!.author} · <a href={photo!.licenseUrl}>{photo!.license}</a>
+                  <Link href={`${hrefs.species(s.item.slug)}#about-species`}>Photo credits &amp; sources</Link>
                 </span>
               </li>
             ))}

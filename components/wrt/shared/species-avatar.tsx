@@ -1,15 +1,13 @@
 import Image from "next/image";
 import type { Species } from "@/lib/wrt/types";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
 
 /** Small round picture for a species in a ranked list: its photo, or its initial. */
 export function SpeciesAvatar({ species }: { species: Species }) {
-  const photo = getSpeciesPhoto(species.id);
   const initial = (species.displayIsScientific ? species.scientificName : species.displayName).charAt(0).toUpperCase();
   return (
     <span className="wrt-avatar" aria-hidden="true">
-      {photo ? (
-        <Image src={photo.src} width={photo.width} height={photo.height} alt="" sizes="40px" style={{ objectPosition: photo.focalPoint }} unoptimized />
+      {species.imageUrl ? (
+        <Image src={species.imageUrl} width={80} height={80} alt="" sizes="40px" unoptimized />
       ) : (
         <span className="wrt-avatar__initial">{initial}</span>
       )}

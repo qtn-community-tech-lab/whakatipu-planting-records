@@ -1,9 +1,9 @@
 import { Card, EmptyState } from "@/components/wrt/shared/page";
 import { RegionMap } from "@/components/wrt/sites/region-map";
 import { locationsForSites } from "@/lib/wrt/site-locations";
-import type { PlantingRecord } from "@/lib/wrt/types";
+import type { Place, PlantingRecord } from "@/lib/wrt/types";
 
-export function LocationCard({ sites, records, siteName }: { sites: { slug: string; name: string }[]; records: PlantingRecord[]; siteName?: string }) {
+export function LocationCard({ sites, records, siteName }: { sites: Place[]; records: PlantingRecord[]; siteName?: string }) {
   const locations = locationsForSites(sites, records);
   const mappedSites = new Set(locations.map((location) => location.siteSlug)).size;
   return (
@@ -13,9 +13,8 @@ export function LocationCard({ sites, records, siteName }: { sites: { slug: stri
           {!siteName && `${mappedSites} of ${sites.length} listed sites have reference locations. `}
           Points show approximate landmarks or historic planting-day locations, not planting boundaries.
           {locations.length > mappedSites && " Some sites have several reference points."}
-          {" Marker labels show recorded plants in the current view; separate markers use their part’s count."}
+          {" Marker labels show recorded plants in the current view; each record is counted at its assigned site or area pin."}
           {locations.some((location) => location.countScope === "part") && " Unmapped parts are not included in marker totals."}
-          {locations.some((location) => location.split.needsReview > 0) && " An amber dot marks counts that include records needing review."}
         </>
       ) : undefined}>
       {locations.length ? (

@@ -7,9 +7,7 @@
  *
  * Server and client safe: no data access.
  */
-import type { Lookups, RecordFilter, ReviewFilter } from "@/lib/wrt/queries";
-import type { ReviewTheme, SeasonName } from "@/lib/wrt/types";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
+import type { Lookups, RecordFilter } from "@/lib/wrt/queries";
 import { hrefs } from "@/components/wrt/shared/names";
 
 export const PAGE_SIZE = 50;
@@ -37,11 +35,8 @@ export type { RawParams } from "@/lib/wrt/params";
 import type { RawParams } from "@/lib/wrt/params";
 
 /** Param names that the form owns. Empty values for these are redirected away. */
-export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "review", "theme", "q", "page", "sort"] as const;
+export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "q", "page", "sort"] as const;
 export type ParamKey = (typeof PARAM_KEYS)[number];
-
-const REVIEW_VALUES: ReviewFilter[] = ["all", "needs-review", "resolved"];
-const SEASONS: SeasonName[] = ["Autumn", "Spring"];
 
 function first(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v;
@@ -61,7 +56,7 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
 
   const parcel = first(raw.parcel)?.trim();
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
-  if (parcel && selectedPlace?.parcels.some((p) => p.id === parcel)) filter.parcel = parcel;
+  if (parcel && selectedPlace?.parcels.some((p) => p.slug === parcel)) filter.parcel = parcel;
   else reject("part of site", parcel);
 
   const species = first(raw.species)?.trim();
@@ -72,16 +67,14 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
   if (yearRaw && /^\d{4}$/.test(yearRaw) && lookups.years.includes(Number(yearRaw))) filter.year = Number(yearRaw);
   else reject("year", yearRaw);
 
-  const season = first(raw.season)?.trim();
-  if (season && (SEASONS as string[]).includes(season)) filter.season = season as SeasonName;
-  else reject("season", season);
+  const seasonKey = first(raw.seasonKey);
+  const season = seasonKey?.startsWith("label-") ? seasonKey.slice(6) : first(raw.season);
+  if (season !== undefined && lookups.seasons.some((s) => s.name === season)) filter.season = season;
+  else if (season !== undefined) ignored.push({ param: "season", value: season.slice(0, 40) || "(blank)" });
+  if (seasonKey && !seasonKey.startsWith("label-")) reject("season", seasonKey);
 
-  const review = first(raw.review)?.trim();
-  if (review && review !== "all" && (REVIEW_VALUES as string[]).includes(review)) filter.review = review as ReviewFilter;
-
-  const theme = first(raw.theme)?.trim();
-  if (theme && Object.prototype.hasOwnProperty.call(REVIEW_THEMES, theme)) filter.theme = theme as ReviewTheme;
-  else reject("review question", theme);
+  // Retired filters must not silently broaden an old bookmarked export.
+  for (const key of ["review", "theme"]) reject("retired filter", first(raw[key]));
 
   const q = first(raw.q)?.replace(/\s+/g, " ").trim().slice(0, 80);
   if (q) filter.q = q;
@@ -97,7 +90,7 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
 
 /** True when any filter (not sort or page) is set. */
 export function hasFilters(f: RecordFilter): boolean {
-  return Boolean(f.place || f.parcel || f.species || f.year || f.season || f.review || f.theme || f.q);
+  return Boolean(f.place || f.parcel || f.species || f.year || f.season !== undefined || f.q);
 }
 
 /** Query params for a view. Defaults are left out so URLs stay short. */
@@ -109,8 +102,6 @@ function viewParams(view: RecordsView, over: Partial<Record<ParamKey, string | n
     species: f.species,
     year: f.year,
     season: f.season,
-    review: f.review,
-    theme: f.theme,
     q: f.q,
     sort: view.sort === "season" ? undefined : view.sort,
     page: view.page > 1 ? view.page : undefined,
@@ -132,7 +123,7 @@ export function recordsHref(view: RecordsView, over: Partial<Record<ParamKey, st
 export function exportHref(view: RecordsView) {
   const params = viewParams({ ...view, sort: "season", page: 1, ignored: [] });
   const sp = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
+  for (const [k, v] of Object.entries(params)) if (v !== undefined && (v !== "" || k === "season")) sp.set(k, String(v));
   const s = sp.toString();
   return s ? `/records/export?${s}` : "/records/export";
 }

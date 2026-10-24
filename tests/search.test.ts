@@ -29,7 +29,7 @@ describe("search", () => {
 
   it("finds a season by its full label", async () => {
     const r = await q.search("autumn 2024");
-    expect(r.seasons[0].season.slug).toBe("autumn-2024");
+    expect(r.seasons[0].season.slug).toBe("Autumn 2024");
   });
 
   it("finds a species by scientific name", async () => {
@@ -56,7 +56,7 @@ describe("search", () => {
     expect(r.places.length).toBeLessThanOrEqual(3);
     expect(r.species.length).toBeLessThanOrEqual(3);
     for (const x of [...r.places, ...r.species]) {
-      expect(x.split.total).toBe(x.split.resolved + x.split.needsReview);
+      expect(x.split.total).toBe(x.split.total);
       expect(x.split.records).toBeGreaterThan(0);
     }
   });

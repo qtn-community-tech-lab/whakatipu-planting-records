@@ -1,6 +1,6 @@
 import type { RecordView } from "@/lib/wrt/queries";
 import { addToSplit, emptySplit } from "@/lib/wrt/queries";
-import type { QuantitySplit, Season } from "@/lib/wrt/types";
+import type { Quantity, Season } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { QuantityCell } from "@/components/wrt/shared/quantity";
 import { SpeciesName } from "@/components/wrt/shared/names";
@@ -8,13 +8,13 @@ import { SpeciesName } from "@/components/wrt/shared/names";
 /**
  * "By species": the direct answer to "What did we plant at Whitechapel in 2019?".
  * One row per species, optionally broken down by the supplied seasons, then
- * the total with its needs-review part beside it. An empty season list gives
+ * the total with unknown counts beside it. An empty season list gives
  * compact totals across all matching seasons for a sublocation.
  */
 export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons: Season[] }) {
-  type Row = { species: RecordView["species"]; bySeason: Map<string, QuantitySplit>; total: QuantitySplit };
+  type Row = { species: RecordView["species"]; bySeason: Map<string, Quantity>; total: Quantity };
   const byId = new Map<string, Row>();
-  const totals = new Map<string, QuantitySplit>(seasons.map((s) => [s.slug, emptySplit()]));
+  const totals = new Map<string, Quantity>(seasons.map((s) => [s.slug, emptySplit()]));
   const grand = emptySplit();
   for (const v of rows) {
     let row = byId.get(v.species.id);
@@ -46,7 +46,7 @@ export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons:
         </thead>
         <tbody>
           {list.map((r) => (
-            <tr key={r.species.id} className={r.total.needsReview ? "is-review" : undefined}>
+            <tr key={r.species.id} >
               <td><SpeciesName species={r.species} link /></td>
               {seasons.map((s) => {
                 const c = r.bySeason.get(s.slug);

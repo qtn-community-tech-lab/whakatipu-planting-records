@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
-import { SplitKey } from "@/components/wrt/shared/quantity";
+
 import { SeasonColumns } from "@/components/wrt/shared/charts";
-import { MissingSeasonRow, SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
+import { SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
 
 import { type SiteSpecies, byTotalDesc, addToSplit, emptySplit } from "@/lib/wrt/queries";
 
 export const metadata: Metadata = {
   title: "Planting seasons",
-  description: "Every autumn and spring planting season in the WRT history, with recorded plants, sites, species and the check against the workbook's own totals.",
+  description: "Planting records grouped by exact saved season label, with recorded plants, sites and species.",
 };
 
 export default async function SeasonsPage() {
   const wrt = getWrt();
-  const [seasons, overview, records, showReview] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records(), reviewShown()]);
+  const [seasons, overview, records] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records()]);
   // Most recorded species in each season, largest first.
   // Top trees and top sites in each season, largest first.
   const topBySeason = new Map<string, SiteSpecies[]>();
@@ -42,27 +42,16 @@ export default async function SeasonsPage() {
 
   const total = overview.split;
 
-  const first = seasons[0].season;
-  const last = seasons[seasons.length - 1].season;
-  const matching = seasons.filter((s) => s.reconciliation?.difference === 0).length;
-  const checked = seasons.filter((s) => s.reconciliation).length;
   const median = medianSites(seasons);
-
-  // The Slope Hill 2024 columns dominate the chart; say so, with the numbers from the data.
-  const slope = overview.themes.find((t) => t.theme === "slope-hill-2024");
-  const slopeSeasons = seasons.filter((s) => s.season.year === 2024).map((s) => s.season.label);
-
-  // The workbook ends on an autumn: show the spring after it as "not in yet".
-  const missingSpring = last.name === "Autumn" ? `Spring ${last.year}` : null;
 
   return (
     <>
       <PageHead
         eyebrow="Planting seasons"
-        title={<>{formatNumber(total.total)} recorded plants across {seasons.length} planting seasons, {first.label} to {last.label}</>}
+        title={<>{formatNumber(total.total)} recorded plants across {seasons.length} planting seasons, saved in the database</>}
         lead={
           <>
-            Each autumn and spring is one planting season. Open a season to see which sites and species went into it.
+            Each saved label is one season, grouped across years. Open a season to see which sites and species went into it.
           </>
         }
       />
@@ -71,28 +60,23 @@ export default async function SeasonsPage() {
       <section className="flex flex-col gap-3" aria-labelledby="by-season">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
           <h2 id="by-season" className="wrt-section-title">Recorded plants by season</h2>
-          <SplitKey spring />
+
         </div>
-        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
-        {slope && slopeSeasons.length > 0 && (
-          <Rule>
-            {slopeSeasons.join(" and ")} stand out because they include the Slope Hill 2024 columns ({formatNumber(slope.split.needsReview)} recorded plants,
-            WRT decision 4 still open).
-          </Rule>
-        )}
+        <SeasonColumns points={seasons} caption="Recorded plants by saved season label." />
+
       </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="by-year">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <h2 id="by-year" className="wrt-section-title">Season by season</h2>
           <span className="wrt-muted">
-            {matching} of {checked} seasons match the workbook&rsquo;s own total
+            Seasons grouped by label
           </span>
         </div>
-        <p className="wrt-muted m-0">Newest first. Select a season to see every site and species in it.</p>
+        <p className="wrt-muted m-0">Alphabetical by label. Select a season to see every site and species in it.</p>
         <ol className="wrt-srows">
-          {missingSpring && <MissingSeasonRow label={missingSpring} />}
-          {[...seasons].reverse().map((s) => (
+
+          {seasons.map((s) => (
             <SeasonRow
               key={s.season.slug}
               s={s}
@@ -103,7 +87,7 @@ export default async function SeasonsPage() {
           ))}
         </ol>
         <Rule>
-          Each season&rsquo;s generated total is checked against the TOTAL cell in the workbook&rsquo;s own MASTER sheet. A season only shows a badge when the two differ.
+          Totals sum known saved quantities. Unknown counts are shown separately.
         </Rule>
       </section>
     </>

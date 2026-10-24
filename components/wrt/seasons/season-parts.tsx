@@ -5,32 +5,10 @@ import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
-import type { QuantitySplit, ReconciliationRow } from "@/lib/wrt/types";
+import type { Quantity } from "@/lib/wrt/types";
 import type { SiteSpecies, SeasonSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
-import { Badge } from "@/components/ui/badge";
 import { hrefs } from "@/components/wrt/shared/names";
-
-/** Spoken sentence behind the badge: generated vs the workbook's own TOTAL cell. */
-export function reconSentence(r: ReconciliationRow) {
-  return r.difference === 0
-    ? `Generated ${formatNumber(r.generated)} = workbook ${formatNumber(r.stated)} (${r.statedCell})`
-    : `Generated ${formatNumber(r.generated)}, workbook states ${formatNumber(r.stated)} (${r.statedCell})`;
-}
-
-/** Reconciliation marker: does our total match the workbook's own TOTAL cell? */
-export function ReconBadge({ recon }: { recon: ReconciliationRow | null }) {
-  if (!recon) return <Badge tone="soft">No workbook total to check</Badge>;
-  if (recon.difference === 0) {
-    return <Badge tone="ok" title={reconSentence(recon)}>✓ Matches workbook total</Badge>;
-  }
-  const d = recon.difference;
-  return (
-    <Badge tone="review" title={reconSentence(recon)}>
-      Differs from workbook by {d < 0 ? "−" : "+"}{formatNumber(Math.abs(d))}
-    </Badge>
-  );
-}
 
 /** Median site count, used to flag seasons that recorded far fewer sites than usual. */
 export function medianSites(seasons: SeasonSummary[]) {
@@ -41,7 +19,7 @@ export function medianSites(seasons: SeasonSummary[]) {
 export interface TopSite {
   slug: string;
   name: string;
-  split: QuantitySplit;
+  split: Quantity;
 }
 
 /**
@@ -52,8 +30,7 @@ export interface TopSite {
 export function SeasonRow({
   s, fewSites, trees = [], sites = [],
 }: { s: SeasonSummary; fewSites: boolean; trees?: SiteSpecies[]; sites?: TopSite[] }) {
-  const recon = s.reconciliation;
-  const q = { year: s.season.year, season: s.season.name };
+  const q = { season: s.season.name };
   return (
     <li className="wrt-srow" data-season={s.season.name.toLowerCase()}>
       <div className="wrt-srow__main">
@@ -63,19 +40,12 @@ export function SeasonRow({
         <div className="wrt-scard2__figure">
           <b className="tabular-nums">{formatNumber(s.split.total)}</b>
           <span>recorded plants</span>
-          {s.split.needsReview * 2 > s.split.total && (
-            <span className="wrt-scard__unsure" title={`${formatNumber(s.split.needsReview)} still need a WRT ruling`}>mostly unconfirmed</span>
-          )}
+
         </div>
         <dl className="wrt-scard__facts">
           <div><dt>Sites</dt><dd>{formatNumber(s.placeCount)}</dd></div>
           <div><dt>Species</dt><dd>{formatNumber(s.speciesCount)}</dd></div>
-          {recon && recon.difference !== 0 && (
-            <div title={reconSentence(recon)}>
-              <dt>Workbook</dt>
-              <dd>{`${recon.difference < 0 ? "−" : "+"}${formatNumber(Math.abs(recon.difference))}`}</dd>
-            </div>
-          )}
+
         </dl>
         {fewSites && <span className="wrt-scard2__note">Only {s.placeCount} site{s.placeCount === 1 ? "" : "s"} recorded</span>}
       </div>

@@ -12,15 +12,12 @@ import { Fragment, type ReactNode } from "react";
 import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
 import { hrefs } from "@/components/wrt/shared/names";
 import { Card } from "@/components/wrt/shared/page";
-import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { SeasonRow } from "@/components/wrt/seasons/season-parts";
 import { SiteRows, partHref, type SiteRowData } from "@/components/wrt/sites/site-rows";
 import type { ChatMessage } from "@/lib/wrt/chat-tools";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
 import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
-import type { QuantitySplit } from "@/lib/wrt/types";
+import type { Quantity } from "@/lib/wrt/types";
 
 type Part = ChatMessage["parts"][number];
 type Out<N extends string> = Extract<Part, { type: `tool-${N}`; state: "output-available" }>["output"];
@@ -60,13 +57,12 @@ export function ToolPart({ part, onAsk }: { part: Part; onAsk: (q: string) => vo
     case "tool-season": return part.output.found ? <SeasonCard o={part.output} /> : null;
     case "tool-records": return <RecordsCard o={part.output} />;
     case "tool-list": return <ListCard o={part.output} />;
-    case "tool-data_quality": return <QualityCard o={part.output} />;
     default: return null;
   }
 }
 
 /** A Sites-page row for one place, without species chips. */
-function placeRow(slug: string, name: string, split: QuantitySplit, meta: ReactNode, records: Record<string, string | number | undefined>): SiteRowData {
+function placeRow(slug: string, name: string, split: Quantity, meta: ReactNode, records: Record<string, string | number | undefined>): SiteRowData {
   return {
     key: slug, name, href: hrefs.place(slug), split, species: [], meta,
     totalHref: hrefs.records(records), moreHref: hrefs.place(slug), speciesHref: (s) => hrefs.species(s.slug),
@@ -162,7 +158,7 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
   const row: SiteRowData = {
     key: o.place.slug, name: o.place.name, href: hrefs.place(o.place.slug), isScheme: o.place.isScheme, split: o.split,
     species: o.species.map((r) => ({ species: r.item, split: r.split })),
-    meta: `${o.span.first.label} → ${o.span.last.label} · ${o.span.seasonsActive} seasons · ${o.species.length} species`
+    meta: `${(o.span?.seasonsActive ?? 0)} seasons · ${o.species.length} species`
       + (o.parcels.length > 1 ? ` · ${o.parcels.length} parts` : ""),
     totalHref: hrefs.records({ place: o.place.slug }), moreHref: hrefs.place(o.place.slug),
     speciesHref: speciesAtHref(o.place.slug),
@@ -180,11 +176,11 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
             max={Math.max(1, ...o.parts.map((p) => p.split.total))}
             top={3}
             rows={o.parts.map((p) => {
-              const href = partHref(o.place.slug, p.name);
+              const href = partHref(o.place.slug, p.slug);
               return {
                 key: p.name, name: p.name, href, split: p.split, species: p.species,
                 meta: spanLabel(p.span)
-                  + ` · ${p.span.seasonsActive} ${p.span.seasonsActive === 1 ? "season" : "seasons"} · ${p.speciesCount} species`,
+                  + ` · ${(p.span?.seasonsActive ?? 0)} ${(p.span?.seasonsActive ?? 0) === 1 ? "season" : "seasons"} · ${p.speciesCount} species`,
                 totalHref: href, moreHref: href, speciesHref: speciesAtHref(o.place.slug, p.name),
               };
             })}
@@ -196,28 +192,15 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
 }
 
 /** A reference photo. Its caption and credit stay hidden until it's hovered, focused or tapped. */
-function Photo({ photo, alt, sizes }: { photo: SpeciesPhoto; alt: string; sizes: string }) {
-  return (
-    <figure className="wrt-chat__photo" tabIndex={0}>
-      <Image src={photo.src} width={photo.width} height={photo.height} sizes={sizes} unoptimized
-        style={{ objectPosition: photo.focalPoint }} alt={alt} className="wrt-chat__photo-img" />
-      <figcaption className="wrt-chat__photo-credit">
-        {photo.caption}
-        <br />
-        Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-        <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-      </figcaption>
-    </figure>
-  );
+function Photo({ photo, sizes, alt }: { photo: string; sizes: string; alt: string }) {
+  return <figure className="wrt-chat__photo"><a href={photo} target="_blank" rel="noreferrer"><Image src={photo} width={640} height={480} sizes={sizes} alt={alt} unoptimized /></a><figcaption>Photo credits and sources are in the species description.</figcaption></figure>;
 }
 
 /** Names, flags, profile, totals. Shared by the chat card and the sidebar. */
 function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
   const here = o.here;
-  if (!o.span) return null;
   const sp = o.species;
-  const { first, last } = o.span;
-  const years = first.year === last.year ? `${first.year}` : `${first.year}–${last.year}`;
+  const seasonCount = o.span?.seasonsActive ?? 0;
   const name = <span className={sp.displayIsScientific ? "wrt-scard__common italic" : "wrt-scard__common"}>{sp.displayName}</span>;
   return (
     <div className="wrt-scard__body">
@@ -231,17 +214,16 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
       {here && (
         <p className="wrt-chat__plant-here">
           <strong>{here.split.total ? `${formatNumber(here.split.total)} recorded` : "None recorded"}</strong> at {here.label}
-          {here.split.needsReview > 0 && <span className="wrt-scard__review"> · {formatNumber(here.split.needsReview)} need review</span>}
           {here.first && ` · ${here.first === here.last ? here.first : `${here.first} → ${here.last}`}`}
+
         </p>
       )}
       {!inChat && here && here.seasons.length > 1 && (
-        // The sidebar spells out each season at this site; the chat card keeps to first → last.
         <div className="wrt-pills wrt-chat__seasons">
           {here.seasons.map((x) => <span key={x.label} className="cn-chip">{x.label} <b className="tabular-nums">{formatNumber(x.total)}</b></span>)}
         </div>
       )}
-      {o.profile && <p className="wrt-chat__plant-summary">{o.profile.summary}</p>}
+      {sp.description && <p className="wrt-chat__plant-summary">{sp.description.split("\n\n")[0]}</p>}
 
       {/* The same facts strip as the species page rows. */}
       <dl className="wrt-scard__facts">
@@ -249,11 +231,11 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
           <dt>Recorded</dt>
           <dd className="tabular-nums">
             {formatNumber(o.split.total)}
-            {o.split.needsReview * 2 > o.split.total && <span className="wrt-scard__unsure">mostly unconfirmed</span>}
+
           </dd>
         </div>
         <div><dt>Sites</dt><dd>{o.places.length}</dd></div>
-        <div><dt>Seasons</dt><dd>{years}</dd></div>
+        <div><dt>Seasons</dt><dd>{seasonCount}</dd></div>
       </dl>
 
       {inChat && o.places.length > 0 && (
@@ -276,13 +258,12 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
  * site being asked about, its totals and top three sites. The whole card opens the full guide in the sidebar.
  */
 function PlantCard({ o }: { o: Found<"species"> }) {
-  if (!o.span) return null;
-  const photo = o.photos[0];
+  const photo = o.species.imageUrl;
   return (
     <article className="wrt-scard wrt-chat__plant">
       <div className="wrt-scard__media">
         {photo
-          ? <Photo photo={photo} sizes="200px" alt={`Reference photo of ${o.species.displayName}: ${photo.caption}`} />
+          ? <Photo photo={photo} sizes="200px" alt={`Reference photo of ${o.species.displayName}`} />
           : <span className="wrt-chat__plant-initial" aria-hidden="true">{o.species.displayName.charAt(0)}</span>}
         <span className="wrt-scard__rank" title={`Number ${o.rank} by recorded plants`}>{o.rank}</span>
       </div>
@@ -293,15 +274,12 @@ function PlantCard({ o }: { o: Found<"species"> }) {
 
 /** The sidebar's species view: photos together (one big, two small), the guide, then where it was recorded. */
 export function SpeciesCard({ o }: { o: Found<"species"> }) {
-  if (!o.span) return null;
-  const [big, ...small] = o.photos;
-  const alt = (p: SpeciesPhoto) => `Reference photo of ${o.species.displayName}: ${p.caption}`;
+  const big = o.species.imageUrl;
   return (
     <div className="wrt-chat__guide">
       {big && (
         <div className="wrt-chat__gallery">
-          <Photo photo={big} sizes="560px" alt={alt(big)} />
-          {small.slice(0, 2).map((p) => <Photo key={p.src} photo={p} sizes="280px" alt={alt(p)} />)}
+          <Photo photo={big} sizes="560px" alt={`Reference photo of ${o.species.displayName}`} />
         </div>
       )}
       <PlantBody o={o} />
@@ -318,18 +296,14 @@ export function SpeciesCard({ o }: { o: Found<"species"> }) {
   );
 }
 
-/** Seasons page: the season row with top trees (photos) and top sites (pins). */
+/** Seasons page: the season row with top trees and top sites. */
 function SeasonCard({ o }: { o: Found<"season"> }) {
-  return (
-    <ol className="wrt-srows">
-      <SeasonRow
-        s={{ season: o.season, split: o.split, placeCount: o.places.length, speciesCount: o.species.length, reconciliation: o.reconciliation }}
-        fewSites={false}
-        trees={o.species.slice(0, 3).map((r) => ({ species: r.item, split: r.split }))}
-        sites={o.places.slice(0, 3).map((r) => ({ slug: r.item.slug, name: r.item.name, split: r.split }))}
-      />
-    </ol>
-  );
+  return <ol className="wrt-srows"><SeasonRow
+    s={{ season: o.season, split: o.split, placeCount: o.places.length, speciesCount: o.species.length }}
+    fewSites={false}
+    trees={o.species.slice(0, 3).map((r) => ({ species: r.item, split: r.split }))}
+    sites={o.places.slice(0, 3).map((r) => ({ slug: r.item.slug, name: r.item.name, split: r.split }))}
+  /></ol>;
 }
 
 /** Totals for a filter: species as photo chips, places as site rows, seasons as bars. */
@@ -356,27 +330,14 @@ function RecordsCard({ o }: { o: Out<"records"> }) {
       </Card>
     );
   }
-  // "When": one site-style row (what · seasons · total), then a chip per season if there was more than one.
-  // Kept to one row so several in a row ("when were they introduced?") stay a short list.
   const row: SiteRowData = {
     key: "when", name: o.label, href: all, split: o.split, species: [],
     meta: [when, `${o.split.records} ${o.split.records === 1 ? "record" : "records"}`].filter(Boolean).join(" · "),
     totalHref: all, moreHref: all, speciesHref: (s) => hrefs.species(s.slug),
   };
-  return (
-    <Card>
-      <SiteRows rows={[row]} max={o.split.total} />
-      {o.groups.length > 1 && (
-        <div className="wrt-pills wrt-chat__seasons">
-          {o.groups.map((g) => (
-            <span key={g.slug} className="cn-chip" title={g.split.needsReview ? `${formatNumber(g.split.needsReview)} need review` : undefined}>
-              {g.name} <b className="tabular-nums">{formatNumber(g.split.total)}</b>
-            </span>
-          ))}
-        </div>
-      )}
-    </Card>
-  );
+  return <Card><SiteRows rows={[row]} max={o.split.total} />
+    {o.groups.length > 1 && <div className="wrt-pills wrt-chat__seasons">{o.groups.map((g) => <span key={g.slug} className="cn-chip">{g.name} <b className="tabular-nums">{formatNumber(g.split.total)}</b></span>)}</div>}
+  </Card>;
 }
 
 function ListCard({ o }: { o: Out<"list"> }) {
@@ -397,18 +358,6 @@ function ListCard({ o }: { o: Out<"list"> }) {
         label: "first" in r ? `${r.name} · ${r.first} → ${r.last}` : r.name,
         split: r.split,
         href: o.kind === "species" ? hrefs.species(r.slug) : hrefs.season(r.slug),
-      }))} />
-    </Card>
-  );
-}
-
-function QualityCard({ o }: { o: Out<"data_quality"> }) {
-  return (
-    <Card title="Waiting on a WRT ruling" foot="Reasons overlap, so they don't add up to the total.">
-      <QuantityFigure split={o.split} size="md" />
-      <RankedBars items={o.themes.map((t) => ({
-        key: t.theme, label: REVIEW_THEMES[t.theme].label, split: t.split,
-        href: hrefs.records({ review: "needs-review", theme: t.theme }),
       }))} />
     </Card>
   );

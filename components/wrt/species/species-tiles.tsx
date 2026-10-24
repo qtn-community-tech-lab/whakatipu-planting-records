@@ -5,11 +5,10 @@
  */
 import Link from "next/link";
 import { addToSplit, byTotalDesc, emptySplit, type RecordView } from "@/lib/wrt/queries";
-import type { QuantitySplit, Species } from "@/lib/wrt/types";
+import type { Quantity, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
-
 
 export function SpeciesTiles({
   records, hrefFor, spread, cap = 18,
@@ -21,7 +20,7 @@ export function SpeciesTiles({
   spread: "sites" | "seasons";
   cap?: number;
 }) {
-  const bySpecies = new Map<string, { species: Species; split: QuantitySplit; spread: Set<string> }>();
+  const bySpecies = new Map<string, { species: Species; split: Quantity; spread: Set<string> }>();
   for (const v of records) {
     const t = bySpecies.get(v.species.slug) ?? { species: v.species, split: emptySplit(), spread: new Set<string>() };
     addToSplit(t.split, v.record);
@@ -44,9 +43,7 @@ export function SpeciesTiles({
       </span>
       <span className="wrt-tile__num">
         <b className="tabular-nums">{formatNumber(r.split.total)}</b>
-        {r.split.needsReview > 0 && (
-          <span className="wrt-tile__review tabular-nums">{formatNumber(r.split.needsReview)} need review</span>
-        )}
+
       </span>
       <span className="wrt-tile__foot">
         <SplitBar split={r.split} max={max} size="sm" />

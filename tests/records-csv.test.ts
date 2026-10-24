@@ -18,9 +18,9 @@ describe("csvField", () => {
 
 describe("recordsToCsv", () => {
   it("starts with a BOM and writes one CRLF line per record plus the header", async () => {
-    const { rows } = await q.records({ year: 2019 });
+    const { rows } = await q.records({ season: "Autumn 2019" });
     const csv = recordsToCsv(rows);
-    expect(csv.startsWith("\ufeffSeason,Year,Site,")).toBe(true);
+    expect(csv.startsWith("\ufeffSeason,Year,Planting date,Site,")).toBe(true);
     expect(csv.split("\r\n").filter(Boolean)).toHaveLength(rows.length + 1);
   });
   it("names the file from the filter", () => {

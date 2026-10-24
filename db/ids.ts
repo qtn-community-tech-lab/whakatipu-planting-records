@@ -13,6 +13,7 @@ export const IdPrefixes = {
   SITE: "sit",
   PLANTING_AREA: "are",
   SPECIES: "spc",
+  SEASON: "sea",
   PLANTING_EVENT: "pev",
   PLANTING_EVENT_SPECIES: "pes",
 } as const;

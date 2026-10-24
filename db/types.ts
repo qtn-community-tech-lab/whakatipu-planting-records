@@ -44,7 +44,6 @@ type SpeciesRow = Audit & {
   aliases: string[];
   description: string;
   image_url: string;
-  is_public: boolean;
   maori_name: string | null;
   over_5m: boolean | null;
   threatened: boolean | null;
@@ -58,7 +57,6 @@ type SiteRow = Audit & {
   description: string;
   location_id: string | null;
   is_scheme: boolean;
-  is_public: boolean;
 };
 type AreaRow = Audit & {
   site_id: string;
@@ -69,7 +67,6 @@ type AreaRow = Audit & {
   site_class: SiteClass;
   aliases: string[];
   location_id: string | null;
-  is_public: boolean;
 };
 type LocationRow = Audit & {
   geometry: { type: "Point"; coordinates: [number, number] };
@@ -90,7 +87,6 @@ export type PlantingEventRow = Audit & {
   source: "app" | "workbook";
   notes: string;
   image_url: string;
-  is_public: boolean;
 };
 type PlantingEventSpeciesRow = Audit & {
   planting_event_id: string;
@@ -116,6 +112,7 @@ export type Database = {
       sites: Table<SiteRow, "slug" | "name">;
       planting_areas: Table<AreaRow, "site_id" | "slug" | "name">;
       species: Table<SpeciesRow, "slug" | "scientific_name">;
+      seasons: Table<Audit & { name: string }, "name">;
       planting_events: Table<PlantingEventRow, "site_id", never, [
         { foreignKeyName: "planting_events_site_id_fkey"; columns: ["site_id"]; isOneToOne: false; referencedRelation: "sites"; referencedColumns: ["id"] },
         { foreignKeyName: "planting_events_planting_area_id_site_id_fkey"; columns: ["planting_area_id", "site_id"]; isOneToOne: false; referencedRelation: "planting_areas"; referencedColumns: ["id", "site_id"] },

@@ -1,5 +1,5 @@
 /**
- * The seam between storage and the rest of the app.
+ * Historical source-artifact reader, used by validation tests only.
  *
  * V0: CsvWrtRepository reads the transformed CSVs in docs/planning/prototype.
  * Later: a database repository implements this same interface and nothing

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { Lookups, PlaceSummary } from "@/lib/wrt/queries";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { type RecordsView, hasFilters } from "./filters";
 import { AutoSubmit } from "./auto-submit";
 
@@ -29,8 +28,8 @@ function Segmented({
  * so the result is a linkable URL and works without JavaScript.
  */
 export function RecordsFilter({
-  view, lookups, places, showReview = true,
-}: { view: RecordsView; lookups: Lookups; places: PlaceSummary[]; /** False when records needing review are switched off. */ showReview?: boolean }) {
+  view, lookups, places,
+}: { view: RecordsView; lookups: Lookups; places: PlaceSummary[] }) {
   const f = view.filter;
   const sites = places.map((p) => p.item).sort((a, b) => a.name.localeCompare(b.name));
 
@@ -56,7 +55,7 @@ export function RecordsFilter({
           <label className="cn-field__label" htmlFor="exp-parcel">Part of site</label>
           <select id="exp-parcel" name="parcel" className="wrt-select" defaultValue={f.parcel ?? ""} disabled={!selectedPlace}>
             <option value="">{selectedPlace ? "All parts of this site" : "Choose a site first"}</option>
-            {selectedPlace?.parcels.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+            {selectedPlace?.parcels.map((p) => <option key={p.id} value={p.slug}>{p.name}</option>)}
           </select>
         </div>
         <div className="cn-field">
@@ -79,15 +78,7 @@ export function RecordsFilter({
             ))}
           </select>
         </div>
-        {showReview && <div className="cn-field">
-          <label className="cn-field__label" htmlFor="exp-theme">Review question</label>
-          <select id="exp-theme" name="theme" className="wrt-select" defaultValue={f.theme ?? ""}>
-            <option value="">Any</option>
-            {(Object.keys(REVIEW_THEMES) as (keyof typeof REVIEW_THEMES)[]).map((t) => (
-              <option key={t} value={t}>{REVIEW_THEMES[t].label}</option>
-            ))}
-          </select>
-        </div>}
+
       </div>
 
       <div className="exp-form__row">
@@ -99,17 +90,10 @@ export function RecordsFilter({
           />
         </div>
         <Segmented
-          name="season" label="Planting season" value={f.season ?? ""}
-          options={[{ value: "", label: "All" }, { value: "Autumn", label: "Autumn" }, { value: "Spring", label: "Spring" }]}
+          name="seasonKey" label="Planting season" value={f.season === undefined ? "" : `label-${f.season}`}
+          options={[{ value: "", label: "All" }, ...lookups.seasons.map((s) => ({ value: `label-${s.name}`, label: s.label }))]}
         />
-        {showReview && <Segmented
-          name="review" label="Review status" value={f.review ?? ""}
-          options={[
-            { value: "", label: "All" },
-            { value: "resolved", label: "Resolved" },
-            { value: "needs-review", label: "Needs review" },
-          ]}
-        />}
+
         {view.sort !== "season" && <input type="hidden" name="sort" value={view.sort} />}
         <div className="exp-form__actions">
           <button type="submit" className="cn-btn cn-btn--primary cn-btn--md">Apply</button>

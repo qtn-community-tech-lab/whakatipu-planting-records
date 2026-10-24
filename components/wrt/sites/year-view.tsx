@@ -1,15 +1,15 @@
 /**
  * "What went in during <year>" for one site: the species recorded that year,
- * with the resolved / needs-review split kept on every row.
+ * using only events with a saved planting date.
  */
 import Link from "next/link";
 import type { RecordView } from "@/lib/wrt/queries";
 import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
-import type { Place, QuantitySplit, SeasonName, Species } from "@/lib/wrt/types";
+import type { Place, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
-import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
+import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 
 export function YearView({ place, year, rows }: { place: Place; year: number; rows: RecordView[] }) {
@@ -24,10 +24,7 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
   const ranked = [...bySpecies.values()]
     .map((e) => ({ species: e.species, split: splitOf(e.list.map((r) => r.record)) }))
     .sort(byTotalDesc);
-  const season = (name: SeasonName): QuantitySplit =>
-    splitOf(recs.filter((r) => r.record.seasonName === name).map((r) => r.record));
-  const autumn = season("Autumn");
-  const spring = season("Spring");
+  const seasonTotals = [...new Set(recs.map((r) => r.season.name))].map((name) => ({ name, total: splitOf(recs.filter((r) => r.season.name === name).map((r) => r.record)) }));
   const q = (extra: Record<string, string | number | undefined> = {}) =>
     hrefs.records({ place: place.slug, year, ...extra });
 
@@ -35,33 +32,18 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
     <Card
       id="year-view"
       title={`${formatNumber(ranked.length)} species recorded at ${place.name} in ${year}`}
-      action={<SplitKey />}
+
       foot="Each tile opens that species’ records for this site and year, with the source cell."
     >
       <div className="flex flex-col gap-4">
         <QuantityFigure split={total} size="md" />
         <p className="m-0 flex flex-wrap gap-x-5 gap-y-1 [font:600_13px/1.4_var(--font-sans)] text-[var(--text-body)]">
-          {autumn.records > 0 && (
-            <span>
-              <Link href={q({ season: "Autumn" })} className="cn-link">Autumn {year}</Link>: {formatNumber(autumn.total)}
-              {autumn.needsReview > 0 && <span className="wrt-review text-[var(--cn-behind-fg)]"> ({formatNumber(autumn.needsReview)} need review)</span>}
-            </span>
-          )}
-          {spring.records > 0 && (
-            <span>
-              <Link href={q({ season: "Spring" })} className="cn-link">Spring {year}</Link>: {formatNumber(spring.total)}
-              {spring.needsReview > 0 && <span className="text-[var(--cn-behind-fg)]"> ({formatNumber(spring.needsReview)} need review)</span>}
-            </span>
-          )}
+          {seasonTotals.map((s) => <span key={s.name}><Link href={q({ season: s.name })} className="cn-link">{s.name || "Season not recorded"}</Link>: {formatNumber(s.total.total)}</span>)}
         </p>
         <SpeciesTiles records={recs} spread="seasons" hrefFor={(sp) => q({ species: sp.slug })} cap={12} />
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <CardLink href={q()}>All {formatNumber(total.records)} records for {year}</CardLink>
-          {total.recordsNeedingReview > 0 && (
-            <CardLink href={q({ review: "needs-review" })}>
-              {formatNumber(total.recordsNeedingReview)} record{total.recordsNeedingReview === 1 ? "" : "s"} needing review
-            </CardLink>
-          )}
+
         </div>
       </div>
     </Card>

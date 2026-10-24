@@ -10,7 +10,7 @@ import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows } from "@/components/wrt/sites/site-rows";
 
 function seasonQuery(season: Season) {
-  return { year: season.year, season: season.name };
+  return { season: season.name };
 }
 
 /** Every species recorded in the season, largest first. */
@@ -39,7 +39,7 @@ export function SeasonSiteSpecies({ season, records }: { season: Season; records
         split: g.split,
         species: g.species,
         totalHref: hrefs.records({ ...seasonQuery(season), place: g.place.slug }),
-        moreHref: g.place.isScheme ? hrefs.place(g.place.slug) : `${hrefs.place(g.place.slug)}?year=${season.year}#year-view`,
+        moreHref: hrefs.place(g.place.slug),
         speciesHref: (s) => hrefs.records({ ...seasonQuery(season), place: g.place.slug, species: s.slug }),
       }))}
     />

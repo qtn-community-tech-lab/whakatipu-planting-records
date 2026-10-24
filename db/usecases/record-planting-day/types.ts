@@ -20,7 +20,6 @@ export type PlantingDay = {
   /** Unknown for history; valid values come from the database enum. */
   event_type?: Database["public"]["Enums"]["planting_event_type"] | null;
   notes?: string;
-  is_public?: boolean;
   lines: PlantingLine[];
 };
 
@@ -36,7 +35,6 @@ export const plantingDay = z.object({
   planting_date: z.iso.date("Pick the planting date"),
   event_type: z.enum(plantingEventTypes).nullish(),
   notes: z.string().optional(),
-  is_public: z.boolean().optional(),
   lines: z.array(plantingLine).min(1, "Add at least one species"),
 }).refine((d) => new Set(d.lines.map((l) => l.species_id)).size === d.lines.length, {
   message: "Add each species once",

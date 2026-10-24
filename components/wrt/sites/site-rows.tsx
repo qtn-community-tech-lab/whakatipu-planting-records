@@ -6,16 +6,16 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SiteSpecies } from "@/lib/wrt/queries";
-import type { QuantitySplit, Species } from "@/lib/wrt/types";
-import { formatNumber, slugify } from "@/lib/wrt/text";
+import type { Quantity, Species } from "@/lib/wrt/types";
+import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
 const TOP_PER_SITE = 3;
 
 /** Address of one part (parcel) of a site, by its readable name. */
-export function partHref(placeSlug: string, parcelName: string) {
-  return `/sites/${placeSlug}/parts/${slugify(parcelName)}`;
+export function partHref(placeSlug: string, areaSlug: string) {
+  return `/sites/${placeSlug}/parts/${encodeURIComponent(areaSlug)}`;
 }
 
 export interface SiteRowData {
@@ -24,7 +24,7 @@ export interface SiteRowData {
   /** Where the name links: the site or part page. */
   href: string;
   isScheme?: boolean;
-  split: QuantitySplit;
+  split: Quantity;
   species: SiteSpecies[];
   /** Small facts under the name: class badges, seasons, parcels. */
   meta?: ReactNode;
@@ -54,7 +54,7 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
               <SplitBar split={r.split} max={max} size="sm" className="wrt-sitesp__bar" />
               <Link href={r.totalHref} className="wrt-sitesp__total">
                 <b className="tabular-nums">{formatNumber(r.split.total)}</b>
-                {r.split.needsReview > 0 && <span className="tabular-nums">{formatNumber(r.split.needsReview)} need review</span>}
+                {r.split.unknown > 0 && <span>{r.split.unknown} unknown counts</span>}
               </Link>
             </div>
             {top.length > 0 && (
@@ -65,7 +65,6 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
                     key={s.species.slug}
                     href={r.speciesHref(s.species)}
                     className="wrt-mini"
-                    data-review={s.split.needsReview > 0 || undefined}
                   >
                     <SpeciesAvatar species={s.species} />
                     <span className={s.species.displayIsScientific ? "italic" : undefined}>{s.species.displayName}</span>

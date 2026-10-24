@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import type { SearchIndex } from "@/lib/wrt/search-index";
+import { hrefs } from "@/components/wrt/shared/names";
 import { formatNumber, matchScore, searchKey } from "@/lib/wrt/text";
 
 const LIMIT = 6;
@@ -43,7 +44,7 @@ export function GlobalSearch({ index }: { index: SearchIndex }) {
       .slice(0, LIMIT);
     const qk = searchKey(query);
     const seasons = index.seasons
-      .filter((s) => searchKey(s.label).startsWith(qk) || String(s.year) === qk || searchKey(s.label) === qk)
+      .filter((s) => searchKey(s.label).startsWith(qk) || searchKey(s.label) === qk)
       .slice(0, 4);
     return { places, species, seasons };
   }, [q, index]);
@@ -116,7 +117,7 @@ export function GlobalSearch({ index }: { index: SearchIndex }) {
             {results && results.seasons.length > 0 && (
               <CommandGroup heading="Seasons">
                 {results.seasons.map((s) => (
-                  <CommandItem key={s.slug} value={`season-${s.slug}`} onSelect={() => go(`/seasons/${s.slug}`)}>
+                  <CommandItem key={s.slug} value={`season-${s.slug}`} onSelect={() => go(hrefs.season(s.slug))}>
                     <span className="cn-species__common">{s.label}</span>
                     <span className="wrt-muted whitespace-nowrap">{formatNumber(s.total)}</span>
                   </CommandItem>

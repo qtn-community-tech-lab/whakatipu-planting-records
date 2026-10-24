@@ -28,8 +28,8 @@ function scopeOfPart(p: ChatMessage["parts"][number]): Scope | null {
         species: { slug: p.output.species.slug, name: p.output.species.displayName },
       };
     }
-    case "tool-season": return p.output.found ? { season: p.output.season.name, year: p.output.season.year } : null;
-    case "tool-list": case "tool-data_quality": return {};
+    case "tool-season": return p.output.found ? { season: p.output.season.name } : null;
+    case "tool-list": return {};
     default: return null;
   }
 }

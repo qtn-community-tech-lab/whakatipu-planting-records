@@ -2,7 +2,7 @@
 
 Use this guide to create a fresh local Supabase project for this repository, then optionally apply its schema to a fresh hosted project. Run all shell commands from the repository root, beside `package.json`.
 
-The migration creates the schema, access rules, views and database functions. It does not import the CSV history or switch the app's pages to Supabase. The current explorer still reads CSV files.
+The migration creates the schema, access rules, views and database functions. It does not import the CSV history. The explorer reads Supabase at request time; the reference seed provides catalogues and map locations, with no planting history.
 
 ## 1. Install the tools
 
@@ -44,13 +44,13 @@ supabase status
 
 The first start downloads container images and may apply the migration automatically. If `migration up` reports that the database is already up to date, that is expected. Check that version `20261023000000` is applied in the local migration list. These commands target your local stack.
 
-Open the Studio URL printed by `supabase status` (normally `http://127.0.0.1:54323`). The public schema should contain 7 tables, including `sites`, `species` and `planting_events`, plus four reporting views. The seed adds reference data; planting events and species counts start empty.
+Open the Studio URL printed by `supabase status` (normally `http://127.0.0.1:54323`). The public schema should contain 8 tables, including `sites`, `species`, `seasons` and `planting_events`, plus four reporting views. The seed adds reference data; planting events and species counts start empty.
 
 ## Seed the reference data
 
-`supabase/seed.sql` populates 95 species, 29 sites, 50 reference locations and 50 planting areas (36 mapped parcels and 14 defaults) from the JSON catalogues in `data/`. It uses `usr_000000000001` for both audit fields. Supabase loads it automatically during a fresh start or `supabase db reset --local` (reset deletes local data).
+`supabase/seed.sql` populates 95 species, 29 sites, 50 reference locations and 50 planting areas (36 mapped parcels and 14 defaults) from the JSON catalogues in `data/`, plus the 23 unique season labels in `docs/planning/prototype/planting_history.csv` (Autumn 2015 through Autumn 2026). It uses `usr_000000000001` for both audit fields. Supabase loads it automatically during a fresh start or `supabase db reset --local` (reset deletes local data).
 
-This is a one-time snapshot of the JSON catalogues. Maintain `supabase/seed.sql` directly; later JSON edits do not change the seed. The audit user `usr_000000000001` must exist before loading it.
+This is a one-time snapshot of the JSON catalogues and historical season labels. Maintain `supabase/seed.sql` directly; later JSON edits do not change the seed. It creates the domain audit user `usr_000000000001` before inserting reference data if that user is missing. This placeholder has no Auth identity or staff access; an existing user with that ID is preserved.
 
 The seed uses stable IDs and skips existing rows, preserving subsequent staff edits when run again. Locations keep GeoJSON coordinates in longitude/latitude order and retain coordinate-source metadata. Site-wide references become site pins. Explicit `parcelIds` entries create mapped planting areas; each site without a mapped area receives one default area sharing its name, description and location. Default areas have no invented WRT number. Mapped area names come from the JSON labels, and site names are derived from the site slugs. The JSON does not include site classes or height/threat flags, so the seed leaves those fields at their schema defaults. Species include the first catalogue photo, with its licence and attribution retained in the description. No planting events or quantities are seeded.
 
@@ -75,7 +75,7 @@ Use the URL reported by your CLI if it differs from the example. Older CLI versi
 npm run dev
 ```
 
-Open `http://localhost:3000`. Restart Next.js after changing environment variables. The Supabase clients now have connection settings; the pages will continue displaying CSV data until the database integration is wired in.
+Open `http://localhost:3000`. Restart Next.js after changing environment variables. Pages now read the configured Supabase database. After loading the reference seed, sites, species, areas and all 23 catalogue seasons are browsable. Seasons have zero recorded plants until planting data is saved or imported; records remain empty.
 
 ## 4. Prepare the first staff account
 
@@ -90,10 +90,15 @@ insert into public.users (
 values (
   'usr_000000000001', 'staff@example.org', 'WRT staff',
   '<auth-user-uuid>', true, 'usr_000000000001', 'usr_000000000001'
-);
+)
+on conflict (id) do update set
+  email = excluded.email,
+  display_name = excluded.display_name,
+  auth_user_id = excluded.auth_user_id,
+  is_staff = excluded.is_staff;
 ```
 
-The first domain user references itself as its audit actor. Later operator inserts can reference that user. Staff permissions require an active domain user linked to the Auth UUID with `is_staff = true`; signing in alone grants no editing rights. The app's sign-in and session-refresh flow still needs implementation.
+This creates the first domain user or links the seed's placeholder to the Auth identity. The user references itself as its audit actor. Later operator inserts can reference that user. Staff permissions require an active domain user linked to the Auth UUID with `is_staff = true`; signing in alone grants no editing rights. The app's sign-in and session-refresh flow still needs implementation.
 
 ## 5. Check the schema and generate types
 
@@ -104,7 +109,7 @@ supabase db lint --local
 npm test
 ```
 
-The app tests cover CSV/domain behavior and form validation. They do not test database permissions or RPC execution. Use a signed-in staff Supabase client to check writes and an anonymous client to check published reads; Studio's SQL editor uses privileged access and does not demonstrate client permissions.
+The app tests cover CSV/domain behavior and form validation. They do not test database permissions or RPC execution. Use a signed-in staff Supabase client to check writes and an anonymous client to check public reads; Studio's SQL editor uses privileged access and does not demonstrate client permissions.
 
 Generate database types into a separate file for review:
 

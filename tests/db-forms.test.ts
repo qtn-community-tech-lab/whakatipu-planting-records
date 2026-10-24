@@ -18,7 +18,7 @@ describe("shared domain IDs", () => {
 describe("planting day form", () => {
   const valid = {
     site_id: "site000000000001", planting_area_id: "area000000000001", season: "winter", planting_date: "2026-09-19", event_type: "infill" as const,
-    notes: "", is_public: false, lines: [{ species_id: "species000000001", quantity: 40 }, { species_id: "species000000002", quantity: null }],
+    notes: "", lines: [{ species_id: "species000000001", quantity: 40 }, { species_id: "species000000002", quantity: null }],
   };
 
   it("accepts a real day, including a species not yet counted", () => {

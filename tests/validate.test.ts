@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { checkColumns, REQUIRED_COLUMNS, toSiteClass, validateHistoryRow, yn } from "@/lib/wrt/csv/validate";
 import { parseCsv } from "@/lib/wrt/csv/parse";
-import type { DataIssue } from "@/lib/wrt/types";
+import type { DataIssue } from "@/lib/wrt/csv/types";
 
 function row(over: Record<string, string> = {}): Record<string, string> {
   return {

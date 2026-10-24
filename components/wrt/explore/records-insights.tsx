@@ -7,14 +7,13 @@ import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import type { ReactNode } from "react";
 import type { Lookups, RecordView, SeasonPoint } from "@/lib/wrt/queries";
-import type { QuantitySplit, ReviewTheme } from "@/lib/wrt/types";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
+import type { Quantity } from "@/lib/wrt/types";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
-import { SplitBar, SplitKey } from "@/components/wrt/shared/quantity";
+import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
-import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
+import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { addToSplit, emptySplit, byTotalDesc } from "@/lib/wrt/queries";
 import { type RecordsView, recordsHref } from "./filters";
@@ -27,16 +26,15 @@ interface Item {
   sub?: string;
   italic?: boolean;
   avatar: ReactNode;
-  split: QuantitySplit;
+  split: Quantity;
   /** Narrow the records to this item. */
   href: string;
   /** The item's own page. */
   page?: string;
 }
 
-
 function group<T>(rows: RecordView[], keyOf: (v: RecordView) => string, init: (v: RecordView) => T) {
-  const m = new Map<string, { meta: T; split: QuantitySplit }>();
+  const m = new Map<string, { meta: T; split: Quantity }>();
   for (const v of rows) {
     const k = keyOf(v);
     const e = m.get(k) ?? { meta: init(v), split: emptySplit() };
@@ -64,7 +62,7 @@ function RankedList({ items, total, unit }: { items: Item[]; total: number; unit
               <span className="rx-item__bar"><SplitBar split={it.split} max={max} size="sm" /></span>
               <span className="rx-item__num">
                 <b className="tabular-nums">{formatNumber(it.split.total)}</b>
-                {it.split.needsReview > 0 && <span className="tabular-nums">{formatNumber(it.split.needsReview)} review</span>}
+
               </span>
             </Link>
             {it.page && (
@@ -102,22 +100,21 @@ export function RecordsInsights({
   rows: RecordView[];
   view: RecordsView;
   lookups: Lookups;
-  /** Every season, in order. */
   seasons: SeasonPoint["season"][];
 }) {
   const f = view.filter;
   const place = f.place ? lookups.places.find((p) => p.slug === f.place) : undefined;
 
   // ---- over time
-  const bySeason = new Map<string, QuantitySplit>();
+  const bySeason = new Map<string, Quantity>();
   for (const v of rows) {
-    const s = bySeason.get(v.season.slug) ?? emptySplit();
-    addToSplit(s, v.record);
-    bySeason.set(v.season.slug, s);
+    const total = bySeason.get(v.season.slug) ?? emptySplit();
+    addToSplit(total, v.record);
+    bySeason.set(v.season.slug, total);
   }
   const points: SeasonPoint[] = seasons.map((season) => ({ season, split: bySeason.get(season.slug) ?? emptySplit() }));
   const activePoints = points.filter((p) => p.split.records > 0);
-  const busiest = activePoints.reduce<SeasonPoint | null>((a, b) => (!a || b.split.total > a.split.total ? b : a), null);
+  const busiest = activePoints.reduce<SeasonPoint | null>((a, b) => !a || b.split.total > a.split.total ? b : a, null);
   const first = activePoints[0]?.season;
   const last = activePoints[activePoints.length - 1]?.season;
   const singleSeason = !!(f.year && f.season);
@@ -136,13 +133,13 @@ export function RecordsInsights({
         page: hrefs.place(meta.slug),
       }))
     : showParts
-      ? group(rows, (v) => v.record.parcelId, (v) => ({ id: v.record.parcelId, name: v.record.parcelName })).map(({ meta, split }) => ({
+      ? group(rows.filter((v) => v.record.parcelId !== null), (v) => v.record.parcelId!, (v) => ({ id: v.record.parcelId!, slug: v.place.parcels.find((p) => p.id === v.record.parcelId)!.slug, name: v.record.parcelName })).map(({ meta, split }) => ({
           key: meta.id,
           name: meta.name,
           avatar: <Pin className="rx-pin" />,
           split,
-          href: recordsHref(view, { parcel: meta.id }),
-          page: partHref(place!.slug, meta.name),
+          href: recordsHref(view, { parcel: meta.slug }),
+          page: partHref(place!.slug, meta.slug),
         }))
       : [];
   if (showParts && sites.length < 2) sites = [];
@@ -162,60 +159,19 @@ export function RecordsInsights({
       }))
     : [];
 
-  // ---- open questions in these records
-  const themes = new Map<ReviewTheme, QuantitySplit>();
-  if (!f.theme) {
-    for (const v of rows) {
-      if (!v.record.needsReview) continue;
-      const seen = new Set<ReviewTheme>();
-      for (const n of v.record.notes) {
-        if (n.kind === "fyi" || seen.has(n.theme)) continue;
-        seen.add(n.theme);
-        const t = themes.get(n.theme) ?? emptySplit();
-        addToSplit(t, v.record);
-        themes.set(n.theme, t);
-      }
-    }
-  }
-  const themeRows = [...themes.entries()].sort((a, b) => b[1].needsReview - a[1].needsReview);
-  const themeMax = Math.max(1, ...themeRows.map(([, s]) => s.needsReview));
-
-  // ---- timeline rows: sites, else parts, else species
   const tlBy: "site" | "part" | "species" = showSites && sites.length > 1 ? "site" : showParts ? "part" : "species";
   const tlUseful = !singleSeason && activePoints.length > 1 && (tlBy !== "species" || trees.length > 1);
-
-  const narrowSeason = (s: SeasonPoint["season"]) => recordsHref(view, { year: s.year, season: s.name });
+  const narrowSeason = (season: SeasonPoint["season"]) => recordsHref(view, { season: season.name });
 
   return (
     <div className="rx">
       {!singleSeason && activePoints.length > 0 && (
-        <Panel title="Over time" action={<SplitKey spring />} className="rx-panel--wide">
+        <Panel title="Over time" className="rx-panel--wide">
           <div className="rx-facts">
-            {busiest && (
-              <Link href={narrowSeason(busiest.season)} className="rx-fact">
-                <span className="rx-fact__k">Busiest season</span>
-                <b>{busiest.season.label}</b>
-                <span className="tabular-nums">{formatNumber(busiest.split.total)} recorded</span>
-              </Link>
-            )}
-            <div className="rx-fact">
-              <span className="rx-fact__k">Seasons with records</span>
-              <b className="tabular-nums">
-                {activePoints.length} <span className="rx-fact__of">of {seasons.length}</span>
-              </b>
-              <span>{first && last ? spanLabel({ first, last }) : ""}</span>
-            </div>
-            <div className="rx-fact rx-fact--review">
-              <span className="rx-fact__k">Needs review</span>
-              <b className="tabular-nums rx-fact__amber">{formatShare(rows.reduce((n, v) => n + (v.record.needsReview ? v.record.quantity : 0), 0), rows.reduce((n, v) => n + v.record.quantity, 0))}</b>
-              <span>of recorded plants here</span>
-            </div>
+            {busiest && <Link href={narrowSeason(busiest.season)} className="rx-fact"><span className="rx-fact__k">Busiest season</span><b>{busiest.season.label}</b><span className="tabular-nums">{formatNumber(busiest.split.total)} recorded</span></Link>}
+            <div className="rx-fact"><span className="rx-fact__k">Seasons with records</span><b className="tabular-nums">{activePoints.length} <span className="rx-fact__of">of {seasons.length}</span></b><span>{first && last ? spanLabel({ first, last }) : ""}</span></div>
           </div>
-          <SeasonColumns
-            points={points}
-            hrefFor={(p) => narrowSeason(p.season)}
-            caption="Recorded plants by season. Select a column to narrow the records to that season."
-          />
+          <SeasonColumns points={points} hrefFor={(p) => narrowSeason(p.season)} caption="Recorded plants by season. Select a column to narrow the records to that season." />
         </Panel>
       )}
 
@@ -238,57 +194,10 @@ export function RecordsInsights({
       )}
 
       {tlUseful && (
-        <Panel
-          title={tlBy === "site" ? "Which sites, and when" : tlBy === "part" ? "Which parts, and when" : "What went in, and when"}
-          className="rx-panel--wide"
-        >
-          <PlantingTimeline
-            records={rows}
-            seasons={seasons}
-            rowsBy={tlBy}
-            cap={12}
-            rowHref={(r) =>
-              r.placeSlug
-                ? recordsHref(view, { place: r.placeSlug })
-                : r.parcelId
-                  ? recordsHref(view, { parcel: r.parcelId })
-                  : r.species
-                    ? recordsHref(view, { species: r.species.slug })
-                    : recordsHref(view)
-            }
-            hrefFor={(r, s) =>
-              recordsHref(view, {
-                year: s.year,
-                season: s.name,
-                ...(r.placeSlug ? { place: r.placeSlug } : {}),
-                ...(r.parcelId ? { parcel: r.parcelId } : {}),
-                ...(r.species ? { species: r.species.slug } : {}),
-              })
-            }
-          />
-        </Panel>
-      )}
-
-      {themeRows.length > 0 && (
-        <Panel
-          title="Open questions in these records"
-          action={<Link className="rx-panel__link" href={recordsHref(view, { review: "needs-review" })}>Only records needing review →</Link>}
-          className="rx-panel--wide"
-        >
-          <ul className="rx-qs">
-            {themeRows.map(([theme, s]) => (
-              <li key={theme}>
-                <Link href={recordsHref(view, { review: "needs-review", theme })} className="rx-q">
-                  <span className="rx-q__title">{REVIEW_THEMES[theme].label}</span>
-                  <span className="rx-q__text">{REVIEW_THEMES[theme].question}</span>
-                  <span className="rx-q__bar"><i style={{ width: `${Math.max(3, (s.needsReview / themeMax) * 100)}%` }} /></span>
-                  <span className="rx-q__n tabular-nums">
-                    {formatNumber(s.needsReview)} plants · {formatNumber(s.recordsNeedingReview)} record{s.recordsNeedingReview === 1 ? "" : "s"}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <Panel title={tlBy === "site" ? "Which sites, and when" : tlBy === "part" ? "Which parts, and when" : "What went in, and when"} className="rx-panel--wide">
+          <PlantingTimeline records={rows} seasons={seasons} rowsBy={tlBy} cap={12}
+            rowHref={(r) => r.placeSlug ? recordsHref(view, { place: r.placeSlug }) : r.areaSlug ? recordsHref(view, { parcel: r.areaSlug }) : r.species ? recordsHref(view, { species: r.species.slug }) : recordsHref(view)}
+            hrefFor={(r, season) => recordsHref(view, { season: season.name, ...(r.placeSlug ? { place: r.placeSlug } : {}), ...(r.areaSlug ? { parcel: r.areaSlug } : {}), ...(r.species ? { species: r.species.slug } : {}) })} />
         </Panel>
       )}
     </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { getWrt } from "@/lib/wrt/server";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
@@ -10,7 +10,6 @@ import { GlobalSearch } from "@/components/wrt/shell/global-search";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
 import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
-import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
 import type { NavCounts } from "@/components/wrt/shell/nav";
 import { formatNumber } from "@/lib/wrt/text";
 
@@ -20,11 +19,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [overview, index, showReview, everything] = await Promise.all([
-    getWrt().overview(), buildSearchIndex(), reviewShown(), getWrtAll().overview(),
-  ]);
-  const left = everything.split;
-  const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
+  const overview = await getWrt().overview();
+  const index = buildSearchIndex(overview);
   const counts: NavCounts = {
     sites: formatNumber(overview.placeCount),
     species: formatNumber(overview.speciesCount),
@@ -32,14 +28,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     records: formatNumber(overview.split.records),
   };
   const rings: RingSeason[] = overview.seasons.map((p) => ({
-    slug: p.season.slug,
-    label: p.season.label,
-    autumn: p.season.name === "Autumn",
-    total: p.split.total,
-    needsReview: p.split.needsReview,
+    slug: p.season.slug, label: p.season.label, total: p.split.total,
   }));
   return (
-    <html lang="en-NZ" data-review={showReview ? "shown" : "hidden"}>
+    <html lang="en-NZ">
       <body className="cn-app">
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 cn-btn cn-btn--primary cn-btn--sm">
           Skip to content
@@ -74,26 +66,17 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <header className="wrt-topbar">
               <Crumb />
               <GlobalSearch index={index} />
-              <ReviewSwitch shown={showReview} />
               <span className="cn-topbar__date !ml-0 hidden xl:inline-flex whitespace-nowrap" title="Seasons covered by the records">
-                {range}
+                {overview.seasons.length} seasons
               </span>
+
             </header>
             <ViewTransition default="wrt-page-fade">
               <main id="main" className="wrt-main">
                 <div className="wrt-notice" role="note">
                   <span className="wrt-notice__icon" aria-hidden="true">i</span>
                   <p className="wrt-notice__text">
-                    <b>Recorded plants, not verified plantings.</b>{" "}
-                    Figures come from nursery allocation sheets, not from counts in the ground.{" "}
-                    {showReview ? (
-                      <><span className="wrt-notice__amber">Amber</span> marks plants on records WRT still has to rule on.</>
-                    ) : (
-                      <>
-                        Showing confirmed records only: {formatNumber(left.needsReview)} plants on{" "}
-                        {formatNumber(left.recordsNeedingReview)} records WRT still has to rule on are left out.
-                      </>
-                    )}
+                    <b>Planting records.</b> Figures reflect saved records. Unknown counts are shown separately.
                   </p>
                   <Link href="/about-the-data" className="wrt-notice__link">How to read these numbers →</Link>
                 </div>

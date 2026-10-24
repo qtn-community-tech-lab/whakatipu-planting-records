@@ -1,20 +1,11 @@
-import "server-only";
-import { getWrt } from "./server";
+import type { Overview } from "./queries";
 import type { SearchIndex } from "./search-index";
 
-export async function buildSearchIndex(): Promise<SearchIndex> {
-  const wrt = getWrt();
-  const [places, species, seasons] = await Promise.all([wrt.places(), wrt.speciesList(), wrt.seasons()]);
+/** The layout already has these catalogue totals; no second database read. */
+export function buildSearchIndex(overview: Overview): SearchIndex {
   return {
-    places: places.map((p) => ({
-      slug: p.item.slug, name: p.item.name, keys: p.item.searchKeys, total: p.split.total, isScheme: p.item.isScheme,
-    })),
-    species: species.map((s) => ({
-      slug: s.item.slug, name: s.item.displayName, scientific: s.item.scientificName,
-      isScientific: s.item.displayIsScientific, keys: s.item.searchKeys, total: s.split.total,
-    })),
-    seasons: seasons.filter((s) => s.split.records).map((s) => ({
-      slug: s.season.slug, label: s.season.label, year: s.season.year, total: s.split.total,
-    })),
+    places: overview.places.map(({ item: p, split }) => ({ slug: p.slug, name: p.name, keys: p.searchKeys, total: split.total, isScheme: p.isScheme })),
+    species: overview.species.map(({ item: s, split }) => ({ slug: s.slug, name: s.displayName, scientific: s.scientificName, isScientific: s.displayIsScientific, keys: s.searchKeys, total: split.total })),
+    seasons: overview.seasons.map(({ season: s, split }) => ({ slug: s.slug, label: s.label, total: split.total })),
   };
 }

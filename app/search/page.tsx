@@ -3,7 +3,7 @@ import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getWrt } from "@/lib/wrt/server";
-import type { QuantitySplit } from "@/lib/wrt/types";
+import type { Quantity } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
 import { QuantityCell, SplitBar } from "@/components/wrt/shared/quantity";
@@ -21,7 +21,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return { title: q ? `Search: ${q}` : "Search" };
 }
 
-function Result({ href, children, split, note }: { href: string; children: ReactNode; split: QuantitySplit; note: string }) {
+function Result({ href, children, split, note }: { href: string; children: ReactNode; split: Quantity; note: string }) {
   return (
     <Link href={href} className="exp-result">
       <span className="exp-result__main">

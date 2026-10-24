@@ -1,14 +1,13 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { hrefs } from "@/components/wrt/shared/names";
 import { formatNumber } from "@/lib/wrt/text";
 
 export interface RingSeason {
   slug: string;
   label: string;
-  autumn: boolean;
   total: number;
-  needsReview: number;
 }
 
 const SIZE = 200;
@@ -18,12 +17,7 @@ const PITH = 7;
 const GAP = 1.2;
 const MIN_W = 1.6;
 
-/**
- * Every season as a tree ring: Autumn 2015 at the pith, the latest season at
- * the bark. Ring width grows with recorded plants (square-root scale so one
- * huge season cannot swallow the rest). Each ring keeps the split: the green
- * arc is resolved, the amber arc is plants on records WRT still has to rule on.
- */
+/** One ring per saved season label, ordered alphabetically. */
 export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -40,14 +34,15 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
       const inner = PITH + GAP + widths.slice(0, i).reduce((a, b) => a + b + GAP, 0);
       const mid = inner + w / 2;
       const circ = 2 * Math.PI * mid;
-      const share = s.total > 0 ? (s.total - s.needsReview) / s.total : 1;
+      const share = 1;
       return { ...s, i, w, mid, circ, resolvedLen: circ * share };
     });
   }, [seasons]);
 
-  const current = rings.find((r) => pathname === `/seasons/${r.slug}`)?.i ?? null;
+  const current = rings.find((r) => pathname === hrefs.season(r.slug))?.i ?? null;
   const focus = hover ?? current;
   const shown = focus !== null ? rings[focus] : null;
+  if (!seasons.length) return null;
   const first = seasons[0]?.label;
   const last = seasons[seasons.length - 1]?.label;
 
@@ -67,12 +62,10 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
             <g
               key={r.slug}
               className="wrt-rings__ring"
-              data-autumn={r.autumn || undefined}
               data-empty={r.total === 0 || undefined}
               data-on={focus === r.i || undefined}
               style={{ "--i": r.i } as React.CSSProperties}
             >
-              <circle className="wrt-rings__review" cx={C} cy={C} r={r.mid} strokeWidth={r.w} />
               <circle
                 className="wrt-rings__resolved"
                 cx={C}
@@ -89,7 +82,7 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
                 r={r.mid}
                 strokeWidth={r.w + GAP}
                 onMouseEnter={() => setHover(r.i)}
-                onClick={() => router.push(`/seasons/${r.slug}`)}
+                onClick={() => router.push(hrefs.season(r.slug))}
               />
             </g>
           ))}
@@ -101,18 +94,13 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
             <b>{shown.label}</b>
             <span>
               {shown.total === 0 ? "Nothing recorded" : `${formatNumber(shown.total)} recorded`}
-              {shown.needsReview > 0 && (
-                <>
-                  {" · "}
-                  <span className="wrt-rings__amber">{formatNumber(shown.needsReview)} need review</span>
-                </>
-              )}
+
             </span>
           </>
         ) : (
           <>
             <b>{first} → {last}</b>
-            <span>The first season is in the centre. Hover a ring for its numbers.</span>
+            <span>Seasons are ordered alphabetically. Hover a ring for its numbers.</span>
           </>
         )}
       </div>

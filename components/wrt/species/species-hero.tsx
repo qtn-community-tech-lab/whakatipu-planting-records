@@ -1,44 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/shared/names";
-import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { SplitBar } from "@/components/wrt/shared/quantity";
-import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
+import type { Quantity, Species } from "@/lib/wrt/types";
+import { formatNumber } from "@/lib/wrt/text";
+import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
+import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 
-function Mosaic({ photos, name }: { photos: readonly SpeciesPhoto[]; name: string }) {
-  const shown = photos.slice(0, 3);
-  return (
-    <div className="wrt-shero__mosaic" data-count={shown.length}>
-      {shown.map((photo, i) => (
-        <figure key={photo.src} className="wrt-shero__photo">
-          <a href={photo.src} target="_blank" rel="noreferrer" aria-label={`Open full reference photo ${i + 1} of ${name}`}>
-            <Image
-              src={photo.src}
-              width={photo.width}
-              height={photo.height}
-              sizes={i === 0 ? "(max-width: 960px) 100vw, 40vw" : "(max-width: 960px) 50vw, 20vw"}
-              style={{ objectPosition: photo.focalPoint }}
-              alt={photo.caption}
-              className="wrt-shero__img"
-              unoptimized
-              priority={i === 0}
-            />
-          </a>
-          <figcaption className="wrt-shero__credit">
-            <span className="wrt-shero__caption">{photo.caption}</span>
-            <span>
-              {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-              <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-            </span>
-          </figcaption>
-        </figure>
-      ))}
-    </div>
-  );
+function Mosaic({ imageUrl, name }: { imageUrl: string; name: string }) {
+  return <div className="wrt-shero__mosaic" data-count={1}>
+    <figure className="wrt-shero__photo">
+      <a href={imageUrl} target="_blank" rel="noreferrer" aria-label={`Open reference photo of ${name}`}>
+        <Image src={imageUrl} width={1200} height={900} sizes="(max-width: 960px) 100vw, 40vw" alt={name} className="wrt-shero__img" unoptimized priority />
+      </a>
+      <figcaption className="wrt-shero__credit"><a href="#about-species">Photo credits and sources in the species description</a></figcaption>
+    </figure>
+  </div>;
 }
 
 /**
@@ -47,26 +25,19 @@ function Mosaic({ photos, name }: { photos: readonly SpeciesPhoto[]; name: strin
  * species' own tree rings when there are none) fill the right side.
  */
 export function SpeciesHero({
-  species: sp, split, span, seasons, siteCount, rank, rankOf, photos, otherNames,
+  species: sp, split, span, seasons, siteCount, rank, rankOf, otherNames,
 }: {
   species: Species;
-  split: QuantitySplit;
-  span: Span;
+  split: Quantity;
+  span: Span | null;
   seasons: SeasonPoint[];
   siteCount: number;
   rank: number;
   rankOf: number;
-  photos: readonly SpeciesPhoto[];
   otherNames: string[];
 }) {
-  const rings: RingSeason[] = seasons.map((p) => ({
-    slug: p.season.slug,
-    label: p.season.label,
-    autumn: p.season.name === "Autumn",
-    total: p.split.total,
-    needsReview: p.split.needsReview,
-  }));
-  const hasPhotos = photos.length > 0;
+  const rings: RingSeason[] = seasons.map((p) => ({ slug: p.season.slug, label: p.season.label, total: p.split.total }));
+  const hasPhotos = !!sp.imageUrl;
 
   return (
     <section className="wrt-shero" data-photos={hasPhotos || undefined} aria-labelledby="species-title">
@@ -88,7 +59,7 @@ export function SpeciesHero({
               {threatenedState(sp) === "both" ? "Marked threatened · basis unknown" : "Marked threatened in one WRT list"}
             </Link>
           )}
-          {sp.needsDecision && <span className="wrt-shero__tag wrt-shero__tag--review">Name needs a ruling</span>}
+
         </div>
 
         <div className="wrt-shero__names">
@@ -96,11 +67,7 @@ export function SpeciesHero({
             {sp.displayName}
           </h1>
           {!sp.displayIsScientific && <p className="wrt-shero__latin">{sp.scientificName}</p>}
-          {sp.suggestedSpelling && (
-            <p className="wrt-shero__aside">
-              Usual spelling: <i>{sp.suggestedSpelling}</i>. WRT’s lists use <i>{sp.scientificName}</i>.
-            </p>
-          )}
+
           {otherNames.length > 0 && <p className="wrt-shero__aside">Also recorded as {otherNames.join(" · ")}</p>}
         </div>
 
@@ -111,16 +78,8 @@ export function SpeciesHero({
           </div>
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-shero__split">
-            {formatNumber(split.resolved)} resolved
-            {split.needsReview > 0 && (
-              <>
-                {" · "}
-                <span className="wrt-shero__amber">
-                  {formatNumber(split.needsReview)} on {formatNumber(split.recordsNeedingReview)} record
-                  {split.recordsNeedingReview === 1 ? "" : "s"} needing review ({formatShare(split.needsReview, split.total)})
-                </span>
-              </>
-            )}
+            <SplitLine split={split} />
+
           </p>
         </div>
 
@@ -131,28 +90,24 @@ export function SpeciesHero({
           </div>
           <div className="wrt-shero__stat">
             <dt><NavGlyph name="seasons" /> Seasons</dt>
-            <dd className="tabular-nums">
-              {span.seasonsActive}
-              <span className="wrt-shero__of"> of {seasons.length}</span>
-            </dd>
+            <dd className="tabular-nums">{span?.seasonsActive ?? 0}<span className="wrt-shero__of"> of {seasons.length}</span></dd>
           </div>
           <div className="wrt-shero__stat">
             <dt><NavGlyph name="records" /> Records</dt>
             <dd className="tabular-nums">{formatNumber(split.records)}</dd>
           </div>
         </dl>
-        <p className="wrt-shero__span">
-          {span.seasonsActive === 1 ? `Recorded in ${span.first.label} only.` : `${span.first.label} → ${span.last.label}`}
-        </p>
+        <p className="wrt-shero__span">{span ? `${span.seasonsActive} saved season labels` : "No planting history yet"}</p>
+
       </div>
 
       <div className="wrt-shero__media" id="photos">
         {hasPhotos ? (
           <>
-            <Mosaic photos={photos} name={sp.displayName} />
+            <Mosaic imageUrl={sp.imageUrl} name={sp.displayName} />
             <p className="wrt-shero__note">
               Reference photos from other places, not WRT sites. Young plants may look different.{" "}
-              <a href={photos[0].articleUrl}>{photos[0].articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
+              <Link href="/species/photos">Species reference guide</Link>
             </p>
           </>
         ) : (

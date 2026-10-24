@@ -1,10 +1,10 @@
 /**
  * Two small "how is this made up" lists for the home page: plants by site
- * class and by record precision. Both keep the resolved / needs-review split.
+ * class and by saved record precision.
  */
 import type { Ranked } from "@/lib/wrt/queries";
 import type { Precision, SiteClass } from "@/lib/wrt/types";
-import { PRECISION_LABELS, SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
+import { PRECISION_LABELS, SITE_CLASS_LABELS } from "@/lib/wrt/labels";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
 import { RankedBars, type RankedItem } from "@/components/wrt/shared/charts";
 
@@ -12,7 +12,7 @@ const CLASS_NOTE: Record<SiteClass, string> = {
   keystone: "Large restoration sites",
   community: "Parks and community land",
   school: "School grounds",
-  unknown: "Order scheme, not a place",
+  unknown: "Site class not recorded",
 };
 
 function Label({ title, note }: { title: string; note: string }) {

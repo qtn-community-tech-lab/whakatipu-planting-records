@@ -11,6 +11,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Next, PlaceCard, SpeciesCard, Steps, ToolPart, nextQuestions, placeNext, speciesNext } from "@/components/wrt/ask/chat-cards";
 import { ChatDev, useDev } from "@/components/wrt/ask/chat-dev";
 import { Composer } from "@/components/wrt/ask/chat-composer";
+import { seasonLabelFromPath } from "@/lib/wrt/text";
 import { scopeOf, scopeWhere } from "@/components/wrt/ask/chat-scope";
 import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 import { openDetail } from "./actions";
@@ -72,14 +73,14 @@ export default function AskPage() {
     if (!href || e.metaKey || e.ctrlKey || e.shiftKey) return;
     // A part of a site ("Gorge Rd Wetlands") or a season column is asked about in the chat.
     const part = href.match(/^\/sites\/([a-z0-9-]+)\/parts\/([a-z0-9-]+)$/);
-    const season = href.match(/^\/seasons\/(autumn|spring)-(\d{4})$/);
+    const season = href.match(/^\/seasons\/(label-.*)$/);
     if (part || season) {
       e.preventDefault();
       setSide(null);
       if (part) return ask(`What's recorded at ${unslug(part[2])} in ${unslug(part[1])}?`);
       const w = scopeWhere(scope);
       const sp = scope.species?.name;
-      return ask(`What was recorded${sp ? ` of ${sp}` : ""}${w ? ` at ${w}` : ""} in ${season![1][0].toUpperCase()}${season![1].slice(1)} ${season![2]}?`);
+      return ask(`What was recorded${sp ? ` of ${sp}` : ""}${w ? ` at ${w}` : ""} in ${seasonLabelFromPath(season![1])}?`);
     }
     const m = href.match(/^\/(sites|species)\/([a-z0-9-]+)(?:\?(.*))?$/);
     if (!m || (e.target as HTMLElement).closest("[data-full-page]")) return;

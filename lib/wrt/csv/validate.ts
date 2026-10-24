@@ -4,7 +4,7 @@
  * on the "About the data" page.
  */
 import type { CsvTable } from "./parse";
-import type { Confidence, DataIssue, Precision, SeasonName, SiteClass } from "../types";
+import type { Confidence, DataIssue, Precision, SeasonName, SiteClass } from "./types";
 
 export const REQUIRED_COLUMNS = {
   planting_history: [

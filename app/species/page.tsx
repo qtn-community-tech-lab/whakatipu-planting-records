@@ -8,15 +8,11 @@ import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
 import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
-import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
 
 export const metadata: Metadata = { title: "Species" };
-
 
 function pick<T extends { key: string }>(list: readonly T[], v: string | undefined, fallback: T["key"]): T["key"] {
   return list.some((o) => o.key === v) ? (v as T["key"]) : fallback;
@@ -26,7 +22,6 @@ function matches(show: ShowKey, r: SpeciesSummary) {
   const s = r.item;
   if (show === "over5m") return s.over5m === true;
   if (show === "threatened") return s.threatenedMarks.plantsOutMaster || s.threatenedMarks.teKakano;
-  if (show === "contested") return s.needsDecision;
   return true;
 }
 
@@ -58,7 +53,6 @@ const SHORT: Record<ShowKey, string> = {
   all: "All",
   over5m: "Over 5 m",
   threatened: "Marked threatened",
-  contested: "Name needs a ruling",
 };
 
 export default async function SpeciesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
@@ -68,11 +62,6 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
 
   const all = await getWrt().speciesList();
-  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
-  const referenceGapCount = all.filter((r) => {
-    const review = getSpeciesReferenceReview(r.item.id);
-    return review && review.status !== "confirmed";
-  }).length;
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
@@ -85,7 +74,6 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
     [...all].sort((a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName)).map((r, i) => [r.item.slug, i + 1]),
   );
   const counts = Object.fromEntries(SHOWS.map((o) => [o.key, all.filter((r) => matches(o.key, r)).length]));
-  const contested = counts.contested;
   const filtered = show !== "all" || !!q;
 
   return (
@@ -94,18 +82,8 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
         title={`${formatNumber(all.length)} species`}
         lead={
           <>
-            {formatNumber(allSplit.total)} recorded plants since Autumn 2015.
-            {" "}{guideCount} species have reference photos and identification notes.
-            {referenceGapCount > 0 && <> {referenceGapCount} reference sets have gaps or unresolved identities.</>}
-            {contested > 0 && (
-              <>
-                {" "}
-                <Link href={href(sort, "contested", "", view)} className="cn-link">
-                  {formatNumber(contested)} {contested === 1 ? "name needs" : "names need"} a WRT ruling
-                </Link>{" "}
-                before their records can be merged.
-              </>
-            )}
+            {formatNumber(allSplit.total)} recorded plants across the saved catalogue.
+
           </>
         }
         aside={
@@ -200,8 +178,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
         )}
       </section>
       <Rule>
-        Species are listed as WRT typed them, with te reo Māori names shown with macrons. Two names that may be the same species
-        are kept apart until WRT rules. Photos are Wiki references from other places; they do not confirm plants at a WRT site.
+        Species are listed as WRT typed them, with te reo Māori names shown with macrons.  Photos are Wiki references from other places; they do not confirm plants at a WRT site.
         Species without a photo show one ring per season they were recorded in.
       </Rule>
     </>

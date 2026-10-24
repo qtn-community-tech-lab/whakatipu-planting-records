@@ -1,82 +1,17 @@
-/**
- * The /records/export CSV: one line per record in the same order the pages
- * use, UTF-8 with BOM so macrons survive Excel, CRLF line ends.
- */
+/** UTF-8 CSV, preserving unknown values as empty cells and formula-safe text. */
 import type { RecordFilter, RecordView } from "./queries";
-import { PRECISION_LABELS } from "./review-themes";
-
-const HEADERS = [
-  "Season",
-  "Year",
-  "Site",
-  "Parcel",
-  "Species (common name)",
-  "Botanical name",
-  "Recorded plants",
-  "Needs review",
-  "Review notes",
-  "Confidence",
-  "Precision",
-  "Source workbook",
-  "Sheet",
-  "Cell",
-  "Season as typed",
-  "Site as typed",
-  "Species as typed",
-  "source_record",
-];
-
-/** Quote for CSV, and defuse spreadsheet formulas in text that starts with = + @. */
-export function csvField(v: string | number | null | undefined): string {
-  let s = v === null || v === undefined ? "" : String(v);
-  if (/^[=+@\t\r]/.test(s)) s = `'${s}`;
-  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+import { slugify } from "./text";
+export function csvField(value: string | number | null | undefined): string {
+  let text = value === null || value === undefined ? "" : String(value);
+  if (/^[=+@\t\r-]/.test(text)) text = `'${text}`;
+  return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
-
 export function recordsToCsv(rows: RecordView[]): string {
-  const sorted = [...rows].sort(
-    (a, b) =>
-      a.season.order - b.season.order ||
-      a.place.name.localeCompare(b.place.name) ||
-      a.record.parcelName.localeCompare(b.record.parcelName) ||
-      a.species.displayName.localeCompare(b.species.displayName),
-  );
-
-  const lines = [HEADERS.map(csvField).join(",")];
-  for (const { record: r, species, place, season } of sorted) {
-    const p = r.provenance;
-    lines.push(
-      [
-        season.name,
-        r.year,
-        place.name,
-        r.parcelName,
-        species.displayIsScientific ? "" : species.displayName,
-        species.scientificName,
-        r.hasQuantity ? r.quantity : "",
-        r.needsReview ? "Yes" : "No",
-        r.notes.map((n) => `${n.kind === "ruling" ? "WRT ruling" : n.kind === "confirm" ? "To confirm" : "Mapping note"}: ${n.text}`).join(" | "),
-        r.confidence,
-        PRECISION_LABELS[r.precision].label,
-        p.sourceFile.split("/").pop() ?? p.sourceFile,
-        p.sourceSheet,
-        p.sourceCell,
-        p.seasonLabelOriginal,
-        p.siteOriginal,
-        p.speciesOriginal,
-        r.id,
-      ]
-        .map(csvField)
-        .join(","),
-    );
-  }
-
-  return "\ufeff" + lines.join("\r\n") + "\r\n";
+  const header = ["Season", "Year", "Planting date", "Site", "Area", "Species (common name)", "Botanical name", "Recorded plants", "Notes", "Precision", "Source", "Source workbook", "Sheet", "Cell", "Season as typed", "Site as typed", "Species as typed", "source_record"];
+  const sorted = [...rows].sort((a, b) => a.season.order - b.season.order || a.place.name.localeCompare(b.place.name) || a.record.parcelName.localeCompare(b.record.parcelName) || a.species.displayName.localeCompare(b.species.displayName) || a.record.id.localeCompare(b.record.id));
+  const values = sorted.map(({ record: r, species, place }) => [r.seasonName, r.year, r.plantingDate, place.name, r.parcelName, species.displayIsScientific ? "" : species.displayName, species.scientificName, r.quantity, r.notes, r.precision, r.source, r.provenance.sourceFile, r.provenance.sourceSheet, r.provenance.sourceCell, r.provenance.seasonLabelOriginal, r.provenance.siteOriginal, r.provenance.speciesOriginal, r.id]);
+  return "\ufeff" + [header, ...values].map((row) => row.map(csvField).join(",")).join("\r\n") + "\r\n";
 }
-
-/** wrt-recorded-plants-<place>-<species>-<season>-<year>.csv, with only the parts of the filter that are set. */
 export function csvFilename(filter: RecordFilter): string {
-  return ["wrt-recorded-plants", filter.place, filter.species, filter.season?.toLowerCase(), filter.year]
-    .filter(Boolean)
-    .join("-");
+  return ["wrt-recorded-plants", filter.place, filter.species, filter.season, filter.year].filter((v) => v !== undefined && v !== "").map((v) => slugify(String(v))).filter(Boolean).join("-");
 }

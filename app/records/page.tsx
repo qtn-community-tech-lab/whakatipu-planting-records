@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
+import { getWrt } from "@/lib/wrt/server";
+
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 import { RecordsTable } from "@/components/wrt/shared/records";
+import { hrefs } from "@/components/wrt/shared/names";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
@@ -28,14 +29,14 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const f = view.filter;
   const bits: string[] = [];
   if (f.place) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.name ?? "");
-  if (f.parcel) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.parcels.find((p) => p.id === f.parcel)?.name ?? "");
+  if (f.parcel) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.parcels.find((p) => p.slug === f.parcel)?.name ?? "");
   if (f.year) bits.push(String(f.year));
   return { title: bits.filter(Boolean).length ? `Records · ${bits.filter(Boolean).join(" · ")}` : "Records" };
 }
 
 function sortRows(rows: RecordView[], sort: RecordsView["sort"]): RecordView[] {
   const bySeason = (a: RecordView, b: RecordView) => a.season.order - b.season.order;
-  const byPlants = (a: RecordView, b: RecordView) => b.record.quantity - a.record.quantity;
+  const byPlants = (a: RecordView, b: RecordView) => (b.record.quantity ?? -1) - (a.record.quantity ?? -1);
   const bySite = (a: RecordView, b: RecordView) =>
     a.place.name.localeCompare(b.place.name) || a.record.parcelName.localeCompare(b.record.parcelName);
   const bySpecies = (a: RecordView, b: RecordView) => a.species.displayName.localeCompare(b.species.displayName);
@@ -58,14 +59,14 @@ export default async function RecordsPage({ searchParams }: Props) {
   const raw = await searchParams;
 
   // A GET form sends empty fields (?place=&year=…). Redirect to the clean URL so the link is shareable.
-  if (PARAM_KEYS.some((k) => first(raw[k]) === "")) {
+  if (PARAM_KEYS.some((k) => k !== "season" && first(raw[k]) === "")) {
     const wrt0 = getWrt();
     const v = parseRecordParams(raw, await wrt0.lookups());
     redirect(recordsHref(v));
   }
 
   const wrt = getWrt();
-  const [lookups, places, allSeasons, showReview] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown()]);
+  const [lookups, places, allSeasons ] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons()]);
   const parsed = parseRecordParams(raw, lookups);
   const result = await wrt.records(parsed.filter);
   const { filter, split } = result;
@@ -85,7 +86,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   const filtered = hasFilters(filter);
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
   const selectedPart = filter.parcel && selectedPlace && selectedPlace.parcels.length > 1
-    ? selectedPlace.parcels.find((p) => p.id === filter.parcel)
+    ? selectedPlace.parcels.find((p) => p.slug === filter.parcel)
     : undefined;
 
   const hide: ("season" | "site" | "species")[] = [];
@@ -93,12 +94,11 @@ export default async function RecordsPage({ searchParams }: Props) {
   if (filter.species) hide.push("species");
   if (filter.year && filter.season) hide.push("season");
 
-
   // Pages that tell the bigger story behind this filter.
   const contextLinks: { href: string; kind: string; label: string }[] = [];
-  if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.name), kind: "Part of site", label: selectedPart.name });
+  if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.slug), kind: "Part of site", label: selectedPart.name });
   if (selectedPlace) contextLinks.push({ href: `/sites/${selectedPlace.slug}${filter.year ? `?year=${filter.year}#year-view` : ""}`, kind: "Site", label: selectedPlace.name });
-  if (filter.year && filter.season) contextLinks.push({ href: `/seasons/${filter.season.toLowerCase()}-${filter.year}`, kind: "Season", label: `${filter.season} ${filter.year}` });
+  if (filter.season !== undefined) contextLinks.push({ href: hrefs.season(filter.season), kind: "Season", label: filter.season || "Season not recorded" });
   const selectedSpecies = filter.species ? lookups.species.find((s) => s.slug === filter.species) : undefined;
   if (selectedSpecies) contextLinks.push({ href: `/species/${selectedSpecies.slug}`, kind: "Species", label: selectedSpecies.displayName });
 
@@ -107,7 +107,7 @@ export default async function RecordsPage({ searchParams }: Props) {
       <PageHead
         back={
           selectedPart && selectedPlace
-            ? { href: partHref(selectedPlace.slug, selectedPart.name), label: selectedPart.name }
+            ? { href: partHref(selectedPlace.slug, selectedPart.slug), label: selectedPart.name }
             : selectedPlace
               ? { href: `/sites/${selectedPlace.slug}`, label: selectedPlace.name }
               : undefined
@@ -148,12 +148,6 @@ export default async function RecordsPage({ searchParams }: Props) {
         </p>
       )}
 
-      {filter.theme && (
-        <p className="cn-callout cn-callout--note cn-callout--sm m-0">
-          <span><b>{REVIEW_THEMES[filter.theme].label}.</b> {REVIEW_THEMES[filter.theme].question}</span>
-        </p>
-      )}
-
       <section className="rx-bar" aria-label="Filters">
         <div className="rx-bar__chips">
           {filtered ? (
@@ -162,26 +156,11 @@ export default async function RecordsPage({ searchParams }: Props) {
             <span className="rx-bar__none">All {formatNumber(total)} records<span className="rx-bar__hint"> · select anything below to narrow them</span></span>
           )}
         </div>
-        {showReview && <nav className="rx-bar__review" aria-label="Review status">
-          {([
-            ["all", "All", undefined],
-            ["needs-review", "Needs review", "needs-review"],
-            ["resolved", "Resolved", "resolved"],
-          ] as const).map(([key, label, value]) => (
-            <Link
-              key={key}
-              href={recordsHref(view, { review: value, ...(value !== "needs-review" ? { theme: undefined } : {}) })}
-              className="rx-bar__opt"
-              aria-current={(filter.review ?? "all") === key ? "true" : undefined}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>}
+
         <details className="rx-bar__more">
           <summary>{filtered ? "Change filters" : "Filter"}</summary>
           <div className="rx-bar__form">
-            <RecordsFilter view={view} lookups={lookups} places={places} showReview={showReview} />
+            <RecordsFilter view={view} lookups={lookups} places={places} />
             <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
           </div>
         </details>
@@ -189,9 +168,7 @@ export default async function RecordsPage({ searchParams }: Props) {
 
       {total === 0 ? (
         <EmptyState title="No records match these filters">
-          {!showReview && (filter.theme || filter.review === "needs-review")
-            ? "Records needing review are switched off. Turn on “Needs review” in the top bar to see them."
-            : filtered
+          {filtered
             ? "Try removing one of the filters above, or clear them all. Names are matched without macrons, so “manuka” finds Mānuka."
             : "There are no records to show."}
         </EmptyState>
@@ -216,7 +193,6 @@ export default async function RecordsPage({ searchParams }: Props) {
             <RecordsTable
               rows={pageRows}
               hide={hide}
-              focusTheme={filter.theme}
               caption={`Records ${from} to ${to} of ${total}, sorted by ${view.sort}`}
             />
             <div className="px-2.5">

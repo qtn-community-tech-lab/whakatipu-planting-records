@@ -110,7 +110,8 @@ export function matchScore(query: string, keys: string[]): number {
 
 /** en-NZ number formatting: 7,020. */
 /** "Autumn 2019 → Spring 2024", or just the one season when first and last are the same. */
-export function spanLabel(span: { first: { slug: string; label: string }; last: { slug: string; label: string } }): string {
+export function spanLabel(span: { first: { slug: string; label: string }; last: { slug: string; label: string } } | null): string {
+  if (!span) return "No planting history yet";
   return span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
 }
 
@@ -124,4 +125,12 @@ export function formatShare(part: number, whole: number): string {
   const pct = (part / whole) * 100;
   if (pct > 0 && pct < 1) return "<1%";
   return `${Math.round(pct)}%`;
+}
+
+/** Escape saved labels without percent-encoded slashes, which Next rejects in route segments. */
+export const seasonPathKey = (label: string) => `label-${encodeURIComponent(label).replace(/~/g, "%7E").replace(/%/g, "~")}`;
+export function seasonLabelFromPath(key: string): string | null {
+  if (!key.startsWith("label-")) return null;
+  try { return decodeURIComponent(key.slice(6).replace(/~/g, "%")); }
+  catch { return null; }
 }

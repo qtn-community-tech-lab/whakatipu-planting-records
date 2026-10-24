@@ -1,9 +1,8 @@
 # WRT restoration history explorer (V0)
 
-A read-only web app that lets Whakatipu Reforestation Trust staff and volunteers explore every recorded
-planting season since Autumn 2015 by **site, species, year and season**, without opening an old spreadsheet.
+A read-only explorer of Whakatipu Reforestation Trust’s saved sites, species, planting areas and planting records.
 
-5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species.
+The reference seed contains 95 species, 29 sites, 50 locations, 50 planting areas and 23 season labels (Autumn 2015–Autumn 2026). It contains no planting events or quantities; catalogues remain browsable before history is imported.
 
 ## Run it
 
@@ -14,13 +13,28 @@ npm test           # vitest: parser, validation, repository and query invariants
 npm run build && npm start
 ```
 
-Node 20.9+ (tested on 22). The current explorer runs without a database or accounts. Planting data loads from local CSVs; reference photos require internet access.
+Node 20.9+ (tested on 22). Configure the Supabase URL and publishable key in `.env.local` using `.env.example`. Public reads do not require sign-in; database RLS controls access.
 
 ## Supabase development
 
 Follow the [Supabase setup and migration guide](docs/supabase-setup.md) to start a new local project, apply the migration, configure `.env.local`, create the first staff account and generate database types. It also covers applying migrations to a fresh hosted Supabase project. The [database reference](db/README.md) explains the schema and access rules.
 
-After setup, start Docker and run both Supabase and the app with one command:
+For a new checkout, copy the environment example:
+
+```sh
+cp .env.example .env.local
+```
+
+If `.env.local` already exists, edit it instead. After starting local Supabase using the setup guide, run `supabase status` and copy its API URL and publishable key (or `anon` key) into `.env.local`:
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-local-publishable-or-anon-key>
+```
+
+Use the URL printed by the CLI if it differs. Use the public key, never the service-role key. Restart Next.js after changing these values.
+
+With Docker running and setup complete, start both Supabase and the app with one command:
 
 ```sh
 npm run dev:local
@@ -28,7 +42,11 @@ npm run dev:local
 
 This starts Supabase, applies pending local migrations, then runs the app at `http://localhost:3000`. Press Ctrl+C to stop the app; run `supabase stop` to stop the database services. `npm run dev` starts the app on its own.
 
-Creating the database does not import the CSV history or switch the running pages to Supabase; that integration is still to come.
+`dev:local` does not select the local connection automatically: the app uses the configured environment variables. If `.env.local` points to a hosted project, the app connects to that project even while local Supabase is running.
+
+During development, browser-side Supabase database responses are logged in the browser console with their method, query, status and returned data. Server-side calls are not logged or forwarded to the browser. This logging is disabled in production and does not log Auth responses or request headers.
+
+Pages read Supabase directly through the existing server client. Load the reference seed separately as described in the setup guide; historical CSV records are not automatically imported.
 
 ## Deployment
 
@@ -36,54 +54,27 @@ The source is in the private [GitHub repository](https://github.com/ktgcreative/
 The [Vercel project](https://vercel.com/ktgcreatives-projects/wtr-app-tree-reforestation) is connected to it;
 pushes to the existing production branch `z` trigger a deployment.
 
-Vercel uses the Next.js preset and `npm run build`. No environment variables or database are required.
-Leave `WRT_DATA_DIR` unset: `next.config.ts` includes the tracked prototype CSVs in the server functions.
-`.vercelignore` excludes local build output and research material from CLI uploads while retaining those CSVs.
+Vercel uses the Next.js preset and `npm run build`. Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for the target database. Reads run at request time with no application cache.
 
 ## Pages
 
 | Route | Answers |
 |---|---|
-| `/` | The whole history at a glance: season by season, top sites and species, open questions for WRT |
+| `/` | The whole history at a glance: season by season, top sites and species |
 | `/sites`, `/sites/[slug]` | What went in at a site, year by year, with its parcels. `?year=2019` lists that year's species |
 | `/species`, `/species/[slug]` | Every species: where and when it was recorded, the spellings found in WRT's files |
-| `/seasons`, `/seasons/[slug]` | What went in during a season, checked against the workbook's own total |
-| `/records` | Filter every record by site, species, year, season, review status or question; CSV export |
+| `/seasons`, `/seasons/[slug]` | What went in during a season, grouped by its exact saved label across years |
+| `/records` | Filter every record by site, species, year or season; CSV export |
 | `/search?q=` | Sites, species and seasons. Ignores macrons and tolerates typos ("kowhia", "white chapel") |
-| `/about-the-data` | How to read every number: recorded vs verified, open rulings, precision, reconciliation |
+| `/about-the-data` | How to read every number: saved quantities, unknown counts, dates and provenance |
 
-## How to read the numbers (product rules, enforced in code)
+## Data access
 
-1. **Recorded plants, not verified plantings.** The history was filled from allocation sheets. The UI never says "planted N".
-2. **Every aggregate keeps the split.** All totals are a `QuantitySplit` (`resolved` + `needsReview`). 667 records carrying
-   44,290 plants still need a WRT ruling or confirmation; they show in amber everywhere.
-3. **Precision is what it is.** Site + species + season + quantity. No dates, event types, volunteers, photos or coordinates are invented.
-4. **IDs are plumbing.** `SP-…`, site numbers and record IDs are join keys only. Review notes are shown with species names
-   (`ReviewNote.text`); the original note is kept in `ReviewNote.raw`.
-5. **Provenance on every record.** The "Source" expander shows the original strings, workbook, sheet and cell.
+`getWrt()` in `lib/wrt/server.ts` uses the existing server Supabase client and `db/queries/explorer.ts`. Reads page through active catalogue rows and joined planting lines, respecting the caller’s RLS. `lib/wrt/queries.ts` supplies the existing page, export and chat summaries. No CSV/JSON fallback or application caching is used.
 
-## Architecture
+Saved quantities are authoritative. Totals sum known counts and show the number of unknown counts separately. Unknown dates remain null; years come only from planting dates. Seasons are grouped by exact saved text. Internal IDs are used for joins, while pages display names and use saved site, species and area slugs.
 
-```text
-docs/planning/prototype/*.csv          (generated by docs/planning/scripts; the original spreadsheets are never read)
-   ↓
-lib/wrt/csv/parse.ts + validate.ts     parser + row validators (errors stop the load, warnings are reported)
-   ↓
-lib/wrt/csv/csv-repository.ts          CsvWrtRepository implements WrtRepository (lib/wrt/repository.ts)
-   ↓
-lib/wrt/queries.ts                     domain/query layer: every aggregate is a QuantitySplit
-   ↓
-lib/wrt/server.ts → getWrt()           the only place a repository is constructed
-   ↓
-app/** and components/**               pages and components; none of them know the data is CSV
-```
-
-**Swapping in a database:** write `DbWrtRepository implements WrtRepository`, construct it in `lib/wrt/server.ts`.
-Nothing in `app/` or `components/` changes. `tests/` holds the invariants it must still pass.
-
-The [Supabase schema and migration](db/README.md) extend the WRT target schema for direct client access, with staff RLS, reporting views and nullable dates for historical backfill. The database layer is not connected to the running pages yet; applying the migration does not import the CSVs.
-
-Set `WRT_DATA_DIR` to read the CSVs from somewhere else.
+The CSV parser, historical repository and JSON research catalogues remain available for source-artifact validation tests. They are not runtime data sources. Source provenance is shown when an imported record has it.
 
 ## Design system
 
@@ -92,19 +83,10 @@ source of truth for colour, type, radius, spacing and components. `styles/app.cs
 Canopy tokens. shadcn components (`components/ui/`) are restyled onto Canopy, and Canopy is icon-free, so there is no
 icon library. Plus Jakarta Sans is self-hosted from npm (`@fontsource-variable/plus-jakarta-sans`).
 
-`lib/wrt/display-names.ts` restores macrons (the species register has none) and fixes a few common-name typos for
-display only. Delete it once the species register has its own display-name column.
+## Reference maps and species guide
 
-## Known limits of V0
+Map points come from saved site and planting-area locations. An area uses its site’s pin when it has none, and shared pins are grouped without duplicating quantities. Sites without pins remain browsable.
 
-- Numbers will move when WRT rules on the open questions (Slope Hill 2024, contested species pairs, Paper4Trees, site numbers).
-- History only: no current stock, seed lots, potting or allocations.
-- Spring 2026 is not in the MASTER workbook yet.
+The species guide uses saved descriptions and one saved image per species. Source links and image credits are retained in the descriptions. The JSON catalogues in `data/` document the original reference snapshot; maintain `supabase/seed.sql` directly.
 
-## Site reference maps
-
-The Sites map and individual site pages show approximate public reference locations across 29 historical site groups (50 points). The October 2026 expansion researched the next 20 groups, mapped 18 of them and added KingsView School; Skippers–DOC and Kingston remain unresolved. See [location research and omissions](docs/site-location-research.md). `data/site-locations.json` keeps these points separate from the CSV planting ledger, with explicit latitude/longitude, location and coordinate source URLs, derivation notes and a checked date. Points come from WRT's historic event map, council geometry or public landmarks; they do not claim historical planting boundaries. The sub-location audit added 12 references within existing groups, improved the Lake Hayes South and Pavilion points, and separated seven previously aggregated marker counts. Lake Hayes, Jardine Park, Arthurs Point, Feehly Hill, Arrowtown, Frankton and the dispersed Gorge Road group have multiple points. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. Whole-site references use the group count; references for identified parts use distinct registered parcel IDs so quantities are not duplicated or assigned to unmapped parts. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
-
-## Species photo guide
-
-Open **Species → Top 20 photo guide** for hosted reference photos of the twenty most planted species. Each species has three photos; thumbnails appear in the main Species list, and the full set appears on its detail page, with photographer credits, licences and source links. See [the source and maintenance notes](docs/species-photo-guide.md).
+The explorer does not include editing, stock, seed lots or survival tracking. Historical planting records require a separate import.

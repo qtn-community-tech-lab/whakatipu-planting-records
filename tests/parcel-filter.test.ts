@@ -6,11 +6,10 @@ describe("exact site-part filtering", () => {
   it("opens Gorge Rd Wetlands alone, retaining its unresolved location notes", async () => {
     const site = (await q.place("gorge-road-area"))!;
     const wetlands = site.parcels.find((p) => p.item.name.includes("Wetlands"))!;
-    const result = await q.records({ place: site.place.slug, parcel: wetlands.item.id });
+    const result = await q.records({ place: site.place.slug, parcel: wetlands.item.slug });
     expect(result.split).toEqual(wetlands.split);
     expect(result.rows).toHaveLength(4);
     expect(result.split.total).toBe(35);
-    expect(result.split.needsReview).toBe(35);
     expect(new Set(result.rows.map((r) => r.species.scientificName))).toEqual(new Set([
       "Carex secta", "Olearia bullata", "Austroderia richardii", "Phormium tenax",
     ]));
@@ -21,7 +20,7 @@ describe("exact site-part filtering", () => {
     for (const place of await q.places()) {
       const detail = (await q.place(place.item.slug))!;
       for (const parcel of detail.parcels) {
-        const result = await q.records({ place: place.item.slug, parcel: parcel.item.id });
+        const result = await q.records({ place: place.item.slug, parcel: parcel.item.slug });
         expect(result.split).toEqual(parcel.split);
         expect(result.rows.map((r) => r.record.id).sort()).toEqual(
           detail.records.filter((r) => r.record.parcelId === parcel.item.id).map((r) => r.record.id).sort(),
@@ -33,19 +32,18 @@ describe("exact site-part filtering", () => {
 
   it("requires the parent site and intersects with other record filters", async () => {
     const site = (await q.place("gorge-road-area"))!;
-    const parcel = site.parcels.find((p) => p.item.name.includes("Wetlands"))!.item.id;
+    const parcel = site.parcels.find((p) => p.item.name.includes("Wetlands"))!.item.slug;
     expect((await q.records({ parcel })).rows).toHaveLength(0);
     expect((await q.records({ place: site.place.slug, parcel: "missing-part" })).rows).toHaveLength(0);
-    const result = await q.records({ place: site.place.slug, parcel, species: "carex-secta", season: "Spring", year: 2016 });
+    const result = await q.records({ place: site.place.slug, parcel, species: "carex-secta", season: "Spring 2016" });
     expect(result.rows).toHaveLength(1);
     expect(result.split.total).toBe(13);
-    expect((await q.records({ place: site.place.slug, parcel, review: "resolved" })).rows).toHaveLength(0);
   });
 
   it("validates part URLs and preserves them in sorting, paging and CSV links", async () => {
     const lookups = await q.lookups();
     const site = lookups.places.find((p) => p.slug === "gorge-road-area")!;
-    const parcel = site.parcels.find((p) => p.name.includes("Wetlands"))!.id;
+    const parcel = site.parcels.find((p) => p.name.includes("Wetlands"))!.slug;
     const view = parseRecordParams({ place: site.slug, parcel, page: "3" }, lookups);
     expect(view.ignored).toEqual([]);
     expect(view.filter.parcel).toBe(parcel);

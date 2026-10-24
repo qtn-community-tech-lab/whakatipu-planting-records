@@ -2,7 +2,7 @@
  * Plain-English labels for review themes and site classes.
  * Client-safe: no data access here.
  */
-import type { Confidence, Precision, ReviewTheme, SiteClass } from "./types";
+import type { Confidence, Precision, ReviewTheme, SiteClass } from "./csv/types";
 
 export const REVIEW_THEMES: Record<ReviewTheme, { label: string; question: string }> = {
   "slope-hill-2024": {

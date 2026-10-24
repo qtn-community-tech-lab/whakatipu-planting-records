@@ -8,11 +8,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { parseCsv, type CsvTable } from "./parse";
 import { checkColumns, toSiteClass, validateHistoryRow, yn, type HistoryRow, type SourceName } from "./validate";
-import type { SourceInfo, WrtRepository } from "../repository";
+import type { SourceInfo, WrtRepository } from "./repository";
 import type {
   DataIssue, Parcel, Place, PlantingRecord, ReconciliationRow, ReviewNote, ReviewNoteKind,
   ReviewTheme, Season, SeasonName, SiteClass, Species,
-} from "../types";
+} from "./types";
 import { cleanLabel, searchKey, slugify } from "../text";
 import { primaryName, withMacrons } from "../display-names";
 

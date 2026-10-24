@@ -28,7 +28,6 @@ describe("the UI never sees IDs", () => {
     walk(await q.speciesList(), "speciesList", bad);
     walk(await q.seasons(), "seasons", bad);
     walk(await q.lookups(), "lookups", bad);
-    walk(await q.dataQuality(), "dataQuality", bad);
     walk(await q.search("a", 50), "search:a", bad);
     expect(bad).toEqual([]);
   });

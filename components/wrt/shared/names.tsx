@@ -2,18 +2,19 @@
  * Names and labels. IDs are never rendered: users see names.
  */
 import Link from "next/link";
-import type { Confidence, Place, Precision, Species } from "@/lib/wrt/types";
-import { CONFIDENCE_LABELS, PRECISION_LABELS } from "@/lib/wrt/review-themes";
+import type { Place, Precision, Species } from "@/lib/wrt/types";
+import { PRECISION_LABELS } from "@/lib/wrt/labels";
 import { Badge } from "@/components/ui/badge";
+import { seasonPathKey } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 
 export const hrefs = {
   place: (slug: string) => `/sites/${slug}`,
   species: (slug: string) => `/species/${slug}`,
-  season: (slug: string) => `/seasons/${slug}`,
+  season: (slug: string) => `/seasons/${seasonPathKey(slug)}`,
   records: (params: Record<string, string | number | undefined>) => {
     const sp = new URLSearchParams();
-    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
+    for (const [k, v] of Object.entries(params)) if (v !== undefined && (v !== "" || k === "season")) sp.set(k, String(v));
     const s = sp.toString();
     return s ? `/records?${s}` : "/records";
   },
@@ -55,11 +56,6 @@ export function PlaceName({ place, link = false }: { place: Place; link?: boolea
   );
 }
 
-export function ConfidenceBadge({ confidence }: { confidence: Confidence }) {
-  const tone = confidence === "high" ? "ok" : confidence === "medium" ? "soft" : "risk";
-  return <Badge tone={tone}>{CONFIDENCE_LABELS[confidence]}</Badge>;
-}
-
 export function PrecisionBadge({ precision }: { precision: Precision }) {
   return <Badge tone="soft" title={PRECISION_LABELS[precision].meaning}>{PRECISION_LABELS[precision].label}</Badge>;
 }
@@ -86,7 +82,7 @@ export function ThreatenedBadge({ species }: { species: Species }) {
   if (!state) return null;
   return (
     <Link href={THREATENED_HREF} title={THREATENED_TITLE} className="!no-underline">
-      <Badge tone={state === "both" ? "risk" : "review"}>
+      <Badge tone="soft">
         {state === "both" ? "Marked threatened · basis unknown" : "Marked threatened in one WRT list"}
       </Badge>
     </Link>

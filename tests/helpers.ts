@@ -1,20 +1,21 @@
 import { CsvWrtRepository } from "@/lib/wrt/csv/csv-repository";
 import { createQueries } from "@/lib/wrt/queries";
-import type { QuantitySplit } from "@/lib/wrt/types";
+import { slugify } from "@/lib/wrt/text";
+import type { ExplorerData, Quantity } from "@/lib/wrt/types";
 
-/** One repository + query layer over the real CSVs, shared by every test file. */
+/** Source-artifact tests keep validating the original files; runtime never imports this. */
 export const repo = new CsvWrtRepository();
-export const q = createQueries(repo);
-
-/** A split must always add up. */
-export function expectCoherentSplit(s: QuantitySplit, where = "split") {
-  if (s.total !== s.resolved + s.needsReview) {
-    throw new Error(`${where}: total ${s.total} !== resolved ${s.resolved} + needsReview ${s.needsReview}`);
-  }
-  if (s.records < s.recordsNeedingReview) {
-    throw new Error(`${where}: records ${s.records} < recordsNeedingReview ${s.recordsNeedingReview}`);
-  }
-  for (const k of Object.keys(s) as (keyof QuantitySplit)[]) {
-    if (!Number.isFinite(s[k]) || s[k] < 0) throw new Error(`${where}: ${k} is ${s[k]}`);
-  }
+export async function historicalFixture(): Promise<ExplorerData> {
+  const [species, places, records] = await Promise.all([repo.listSpecies(), repo.listPlaces(), repo.listRecords()]);
+  const seasonLabels = new Map((await repo.listSeasons()).map((s) => [s.slug, s.label]));
+  return {
+    seasons: [...seasonLabels.values()],
+    species: species.filter((s) => records.some((r) => r.speciesId === s.id)).map((s) => ({ ...s, description: "", imageUrl: "" })),
+    places: places.map((p) => ({ ...p, description: "", location: null, parcels: p.parcels.map((a) => ({ ...a, slug: `${slugify(a.name)}-${slugify(a.id)}`, description: "", location: null })) })),
+    records: records.map((r) => ({ ...r, seasonSlug: seasonLabels.get(r.seasonSlug)!, seasonName: seasonLabels.get(r.seasonSlug)!, quantity: r.hasQuantity ? r.quantity : null, year: null, plantingDate: null, notes: "", source: "workbook" })),
+  };
+}
+export const q = createQueries(historicalFixture);
+export function expectCoherentSplit(s: Quantity) {
+  if (!Number.isSafeInteger(s.total) || s.total < 0 || s.records < s.unknown) throw new Error("Invalid aggregate");
 }

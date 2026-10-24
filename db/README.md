@@ -1,15 +1,15 @@
 # Database
 
-The schema is defined in [`../supabase/migrations/20261023000000_create_planting_records.sql`](../supabase/migrations/20261023000000_create_planting_records.sql). This single initial migration creates a **new** database with seven domain tables and 16-character text IDs for direct Supabase access. Saved records are the source of truth; there is no review status, confidence assessment or approval workflow.
+The schema is defined in [`../supabase/migrations/20261023000000_create_planting_records.sql`](../supabase/migrations/20261023000000_create_planting_records.sql). This single initial migration creates a **new** database with eight domain tables and 16-character text IDs for direct Supabase access. Saved records are the source of truth; there is no review status, confidence assessment or approval workflow.
 
-The database layer talks to Supabase through `@supabase/ssr`, as the signed-in person. PostgreSQL grants and row-level security decide what they can read and change. The running pages still use `CsvWrtRepository`; this migration does not connect them to Supabase or import any data.
+The database layer talks to Supabase through `@supabase/ssr`, as the signed-in person. PostgreSQL grants and row-level security decide what they can read and change. Running pages use `getWrt()` and `queries/explorer.ts` to read active catalogues and joined planting lines through the existing server client, without caching. The migration itself does not import historical data.
 
 | Path | Holds |
 |---|---|
 | `types.ts` | Supabase JSON row/insert/update types for every migration table, view and public function. Independent of form types, so unknown historical dates are permitted. Replace with `supabase gen types` after provisioning. |
 | `enums.ts` | Runtime database enum values used by form validation; keep in sync with the SQL migration. |
-| `ids.ts` | Shared `domainId` Zod schema and `DomainId` type, plus `generateUniqueID` and the seven domain prefixes. |
-| `queries/` | Every read. `views.ts` has one base query per view (its columns and order); `sites.ts`, `species.ts` and `plantings.ts` add a filter or a limit on top. |
+| `ids.ts` | Shared `domainId` Zod schema and `DomainId` type, plus `generateUniqueID` and the eight domain prefixes. |
+| `queries/` | Every read. `explorer.ts` pages and maps active rows for the UI. `views.ts` has one base query per view (its columns and order); `sites.ts`, `species.ts` and `plantings.ts` add a filter or a limit on top. |
 | `usecases/` | Every write, one folder each. `types.ts` spells out what staff fill in and the zod check with its messages; `index.ts` saves it. |
 
 ## Schema
@@ -17,6 +17,7 @@ The database layer talks to Supabase through `@supabase/ssr`, as the signed-in p
 ```mermaid
 erDiagram
   users ||--o{ sites : audits
+  users ||--o{ seasons : audits
   sites ||--o{ planting_areas : contains
   sites ||--o{ planting_events : hosts
   locations |o--o| sites : locates
@@ -26,7 +27,7 @@ erDiagram
   species ||--o{ planting_event_species : identifies
 ```
 
-The seven target tables are `users`, `locations`, `sites`, `planting_areas`, `species`, `planting_events` and `planting_event_species`. Slugs are URL keys, separate from IDs. New IDs default to 16 URL-safe characters; supplied target IDs are also accepted. An area's site must match its event's site, enforced by a composite foreign key.
+The eight target tables are `users`, `locations`, `sites`, `planting_areas`, `species`, `seasons`, `planting_events` and `planting_event_species`. Slugs are URL keys, separate from IDs. New IDs default to 16 URL-safe characters; supplied target IDs are also accepted. An area's site must match its event's site, enforced by a composite foreign key.
 
 Supply a prefixed ID on insert using `ids.ts`:
 
@@ -43,7 +44,7 @@ Use `domainId` from `@/db/ids` for every ID or foreign-key field in a use case's
 
 Clients use Supabase table, view and function types directly; the former HTTP request/response contracts and Kysely types are not dependencies. The `planting_event_type` PostgreSQL enum retains the domain values from the former API: `establishment`, `infill`, `replacement`. It is exposed through `Database["public"]["Enums"]`, with runtime values in `enums.ts` for form validation. Other finite-value columns retain their existing CHECK constraints; the attached API contract supplies no additional column enums.
 
-- `planting_events.season` is plain text, such as `summer` or `winter`, with no season table, foreign key or allowed-value list. New planting-day forms require a nonblank label. Historical imports can retain a label including its year when no exact date is known. Reporting groups exact labels alphabetically.
+- `planting_events.season` is plain text, such as `summer` or `winter`, with no foreign key or allowed-value list. The separate `seasons` catalogue stores unique, nonblank labels with the same audit and retirement rules as other catalogues. The explorer combines active catalogue labels with saved event labels, so catalogue seasons remain browsable before history is imported. New planting-day forms require a nonblank label. Historical imports can retain a label including its year when no exact date is known. Reporting groups exact labels alphabetically.
 - `planting_events.planting_date` and `event_type` are nullable. Historical backfill uses `source = 'workbook'`; its exact day and type stay null. There is no fabricated first day of a season.
 - The planting-day form and `save_planting_day` RPC still require a real date for new entries. Historical backfill inserts directly into the tables using trusted operator/service credentials and an explicit domain audit actor.
 - Quantities may be null for unknown counts. Non-null quantities must be non-negative safe integers. Aggregates reject totals above JavaScript's safe integer range. An all-unknown group's known plant total is zero; its individual line quantities remain null.
@@ -52,13 +53,13 @@ Clients use Supabase table, view and function types directly; the former HTTP re
 
 ## Reference seed
 
-[`../supabase/seed.sql`](../supabase/seed.sql) is a one-time snapshot of the species profiles, photos and site locations in `data/`. Maintain this SQL file directly. It seeds 95 species, 29 sites, 50 locations and 50 planting areas (36 mapped parcels and 14 defaults), with `usr_000000000001` as the audit actor. Stable IDs and `ON CONFLICT DO NOTHING` preserve existing rows on reruns. The seed contains no planting events or quantities. See [the setup guide](../docs/supabase-setup.md#seed-the-reference-data) for loading details.
+[`../supabase/seed.sql`](../supabase/seed.sql) is a one-time snapshot of the species profiles, photos and site locations in `data/`, plus historical season labels. Maintain this SQL file directly. It seeds 95 species, 29 sites, 50 locations, 50 planting areas (36 mapped parcels and 14 defaults) and 23 distinct season labels from `docs/planning/prototype/planting_history.csv`, with `usr_000000000001` as the audit actor. It creates that domain user if missing, without an Auth identity or staff access. Stable IDs and `ON CONFLICT DO NOTHING` preserve existing rows on reruns. The seed contains no planting events or quantities. See [the setup guide](../docs/supabase-setup.md#seed-the-reference-data) for loading details.
 
 ## Access and edit trail
 
 An administrator creates domain `users` rows and links `auth_user_id` to Supabase Auth. Only an active row with `is_staff = true` permits edits. Signing in alone does not grant staff access. Clients cannot create accounts or change `is_staff`; use the SQL editor or trusted operator tooling.
 
-Staff can read retired/unpublished table rows, insert and update domain data. Anonymous and non-staff readers can read only active published data. Events require a published site and, when present, a published area; lines also require a published active species. Account data remains staff-only (a signed-in person can read their own account). Published lines expose their provenance, as the explorer already does through its source expander.
+All active catalogues, locations and planting records are publicly readable. Events require an active site and, when present, an active area; lines also require an active event and species. Staff can read retired table rows, insert and update domain data. Account data remains staff-only (a signed-in person can read their own account). Public planting lines include their provenance, as the explorer already shows through its source expander.
 
 All reporting views use `security_invoker = true`, so the caller's table RLS applies. Totals sum the saved quantities into a single `plants` value. See [Supabase's RLS guidance](https://supabase.com/docs/guides/database/postgres/row-level-security).
 
@@ -109,4 +110,4 @@ Every use case parses its own input and throws on anything its form would reject
 2. Build a repeatable historical import using the service key. Preserve source values and provenance. The old Drizzle import at 3751999 contains useful mapping rules but uses the superseded numeric schema.
 3. Implement sign-in and session refresh (`proxy.ts` in Next 16) before wiring authenticated pages.
 4. Creating a pin and restoring retired rows need dedicated flows; today `place-pin` only moves/retires a location and the edit trigger preserves retirement.
-5. Move pages to database queries and forms to use cases, or implement a database `WrtRepository` for the existing query layer. Reference profiles/photos and reconciliation still come from local files.
+5. Wire staff forms to the existing write use cases when editing is added.
