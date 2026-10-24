@@ -13,7 +13,8 @@ export type PlantingLine = {
 export type PlantingDay = {
   site_id: DomainId;
   planting_area_id?: DomainId | null;
-  season_id: DomainId;
+  /** Free text, for example "summer" or "winter". */
+  season: string;
   /** ISO date, "2026-09-19". History has no date; a new day must. */
   planting_date: string;
   /** Unknown for history; valid values come from the database enum. */
@@ -31,7 +32,7 @@ export const plantingLine = z.object({
 export const plantingDay = z.object({
   site_id: domainId,
   planting_area_id: domainId.nullish(),
-  season_id: domainId,
+  season: z.string().trim().min(1, "Enter a season"),
   planting_date: z.iso.date("Pick the planting date"),
   event_type: z.enum(plantingEventTypes).nullish(),
   notes: z.string().optional(),

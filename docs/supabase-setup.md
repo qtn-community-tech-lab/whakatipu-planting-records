@@ -44,7 +44,15 @@ supabase status
 
 The first start downloads container images and may apply the migration automatically. If `migration up` reports that the database is already up to date, that is expected. Check that version `20261023000000` is applied in the local migration list. These commands target your local stack.
 
-Open the Studio URL printed by `supabase status` (normally `http://127.0.0.1:54323`). The public schema should contain 10 tables, including `sites`, `species` and `planting_events`, plus six reporting views. The domain tables start empty.
+Open the Studio URL printed by `supabase status` (normally `http://127.0.0.1:54323`). The public schema should contain 7 tables, including `sites`, `species` and `planting_events`, plus four reporting views. The seed adds reference data; planting events and species counts start empty.
+
+## Seed the reference data
+
+`supabase/seed.sql` populates 95 species, 29 sites, 50 reference locations and 50 planting areas (36 mapped parcels and 14 defaults) from the JSON catalogues in `data/`. It uses `usr_000000000001` for both audit fields. Supabase loads it automatically during a fresh start or `supabase db reset --local` (reset deletes local data).
+
+This is a one-time snapshot of the JSON catalogues. Maintain `supabase/seed.sql` directly; later JSON edits do not change the seed. The audit user `usr_000000000001` must exist before loading it.
+
+The seed uses stable IDs and skips existing rows, preserving subsequent staff edits when run again. Locations keep GeoJSON coordinates in longitude/latitude order and retain coordinate-source metadata. Site-wide references become site pins. Explicit `parcelIds` entries create mapped planting areas; each site without a mapped area receives one default area sharing its name, description and location. Default areas have no invented WRT number. Mapped area names come from the JSON labels, and site names are derived from the site slugs. The JSON does not include site classes or height/threat flags, so the seed leaves those fields at their schema defaults. Species include the first catalogue photo, with its licence and attribution retained in the description. No planting events or quantities are seeded.
 
 ## 3. Configure the app's local connection
 
@@ -104,7 +112,7 @@ Generate database types into a separate file for review:
 supabase gen types typescript --local --schema public > db/types.generated.ts
 ```
 
-Compare it with `db/types.ts` before adopting it. Preserve the `Db`, `LineDetails` and `retired` exports in a separate helper module when replacing the handwritten types. Historical `planting_date`, `event_type` and `quantity` must remain nullable.
+Compare it with `db/types.ts` before adopting it. Preserve the `Db` and `retired` exports in a separate helper module when replacing the handwritten types. Historical `planting_date`, `event_type` and `quantity` must remain nullable.
 
 ## Daily development
 

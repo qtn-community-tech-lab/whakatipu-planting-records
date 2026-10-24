@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import type { Db } from "@/db/types";
 import { plantingEventTypes } from "@/db/enums";
 import { domainId, generateUniqueID, IdPrefixes } from "@/db/ids";
-import { answerQuestion } from "@/db/usecases/answer-review-question";
 import { updateSpecies } from "@/db/usecases/edit-species";
 import { pinChanges, retirePin, updatePin } from "@/db/usecases/place-pin";
 import { addLine, plantingDay, retireLine, savePlantingDay, setQuantity } from "@/db/usecases/record-planting-day";
@@ -18,7 +17,7 @@ describe("shared domain IDs", () => {
 
 describe("planting day form", () => {
   const valid = {
-    site_id: "site000000000001", planting_area_id: "area000000000001", season_id: "season0000000001", planting_date: "2026-09-19", event_type: "infill" as const,
+    site_id: "site000000000001", planting_area_id: "area000000000001", season: "winter", planting_date: "2026-09-19", event_type: "infill" as const,
     notes: "", is_public: false, lines: [{ species_id: "species000000001", quantity: 40 }, { species_id: "species000000002", quantity: null }],
   };
 
@@ -31,6 +30,15 @@ describe("planting day form", () => {
       expect(plantingDay.safeParse({ ...valid, event_type }).success).toBe(true);
     }
     expect(plantingDay.safeParse({ ...valid, event_type: "allocation" }).success).toBe(false);
+  });
+
+  it("accepts free-text seasons and rejects an empty label", () => {
+    for (const season of ["summer", "winter", "wet season", "Autumn 2015"]) {
+      expect(plantingDay.parse({ ...valid, season }).season).toBe(season);
+    }
+    expect(plantingDay.parse({ ...valid, season: " summer " }).season).toBe("summer");
+    expect(plantingDay.safeParse({ ...valid, season: " " }).success).toBe(false);
+    expect(plantingDay.safeParse({ ...valid, season: undefined }).success).toBe(false);
   });
 
   it("needs a real date", () => {
@@ -50,7 +58,7 @@ describe("planting day form", () => {
     expect(plantingDay.safeParse({ ...valid, lines: [] }).success).toBe(false);
   });
 
-  it.each(["site_id", "planting_area_id", "season_id"])("rejects an invalid %s before saving", (field) => {
+  it.each(["site_id", "planting_area_id"])("rejects an invalid %s before saving", (field) => {
     const result = plantingDay.safeParse({ ...valid, [field]: "short" });
     expect(result.success).toBe(false);
     expect(result.error?.issues[0]?.path).toEqual([field]);
@@ -76,7 +84,7 @@ describe("use cases check their own input", () => {
   const untouched = new Proxy({}, { get: () => { throw new Error("database touched"); } }) as Db;
 
   it("rejects a bad planting day, line or count", async () => {
-    await expect(savePlantingDay(untouched, { site_id: "site000000000001", season_id: "season0000000001", planting_date: "2026-09-19", lines: [] }))
+    await expect(savePlantingDay(untouched, { site_id: "site000000000001", season: "winter", planting_date: "2026-09-19", lines: [] }))
       .rejects.toThrow("Add at least one species");
     await expect(addLine(untouched, "event00000000001", { species_id: "species000000001", quantity: -1 })).rejects.toThrow("Can't be negative");
     await expect(setQuantity(untouched, "line000000000001", "lots")).rejects.toThrow();
@@ -94,10 +102,5 @@ describe("use cases check their own input", () => {
       .rejects.toThrow("ID must be 16 characters");
     await expect(setQuantity(untouched, "short", 1)).rejects.toThrow("ID must be 16 characters");
     await expect(retireLine(untouched, "short")).rejects.toThrow("ID must be 16 characters");
-  });
-
-  it("rejects a ruling with no words", async () => {
-    await expect(answerQuestion(untouched, "slope-hill-2024", { decision: " ", decided_on: "2026-10-22", decided_by: "WRT" }))
-      .rejects.toThrow("Write WRT's ruling");
   });
 });

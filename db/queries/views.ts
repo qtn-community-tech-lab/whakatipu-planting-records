@@ -8,22 +8,22 @@ import type { Db } from "@/db/types";
 export const siteTotals = (db: Db) =>
   db
     .from("totals_by_site")
-    .select("site, site_name, plants, plants_resolved, plants_needs_review, species")
+    .select("site, site_name, plants, species")
     .order("plants", { ascending: false });
 
 /** Every species with planting history, most recorded first. */
 export const speciesTotals = (db: Db) =>
   db
     .from("totals_by_species")
-    .select("species, maori_name, scientific_name, plants, plants_resolved, plants_needs_review, sites")
+    .select("species, maori_name, scientific_name, plants, sites")
     .order("plants", { ascending: false });
 
-/** Every season in order, empty ones included. */
+/** Recorded season labels, alphabetically. */
 export const seasonTotals = (db: Db) =>
   db
     .from("totals_by_season")
-    .select("season, season_label, plants, plants_resolved, plants_needs_review, sites, species")
-    .order("season_order");
+    .select("season, plants, sites, species")
+    .order("season");
 
 /** Every area with its site and pin, by site then area. */
 export const areas = (db: Db) =>
@@ -33,19 +33,15 @@ export const areas = (db: Db) =>
     .order("site_name")
     .order("area_name");
 
-/** Every planting line, oldest season first. line_id last, so pages never skip or repeat a row. */
+/** Active planting lines with their event and species, ordered for stable pagination. */
 export const lines = (db: Db) =>
   db
-    .from("line_details")
-    .select("line_id, event_id, season_label, planting_date, site_name, area_name, maori_name, scientific_name, quantity, needs_review, legacy_code")
-    .order("season_order")
-    .order("area_name")
-    .order("scientific_name")
-    .order("line_id");
-
-/** Every review question with its open lines, biggest first. A line can sit under two: don't add rows up. */
-export const reviewTotals = (db: Db) =>
-  db
-    .from("totals_by_review_topic")
-    .select("topic, label, question, decision, plants_needs_review, lines_needs_review")
-    .order("plants_needs_review", { ascending: false });
+    .from("planting_event_species")
+    .select("*, event:planting_events!inner(*, site:sites!inner(slug, name, deactivated_at), area:planting_areas(slug, name, deactivated_at)), species:species!inner(slug, scientific_name, maori_name, deactivated_at)")
+    .is("deactivated_at", null)
+    .is("event.deactivated_at", null)
+    .is("event.site.deactivated_at", null)
+    .is("event.area.deactivated_at", null)
+    .or("planting_area_id.is.null,area.not.is.null", { referencedTable: "event" })
+    .is("species.deactivated_at", null)
+    .order("id");

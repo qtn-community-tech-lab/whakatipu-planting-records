@@ -6,7 +6,7 @@ import { lines, speciesTotals } from "./views";
 export async function listSpecies(db: Db) {
   const { data } = await db
     .from("species")
-    .select("slug, scientific_name, common_name, maori_name, status, threatened")
+    .select("slug, scientific_name, common_name, maori_name, threatened")
     .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
@@ -25,7 +25,7 @@ export async function getSpecies(db: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
     db
       .from("species")
-      .select("slug, scientific_name, common_name, maori_name, suggested_spelling, status, over_5m, threatened, threatened_te_kakano, register_note, deactivated_at")
+      .select("slug, scientific_name, common_name, maori_name, over_5m, threatened, threatened_te_kakano, register_note, deactivated_at")
       .eq("slug", slug)
       .maybeSingle()
       .throwOnError(),
@@ -35,7 +35,7 @@ export async function getSpecies(db: Db, slug: string) {
       .throwOnError(),
     // shortcut: unpaged, the largest species has 279 lines; page it like findLines if one passes 1,000.
     lines(db)
-      .eq("species", slug)
+      .eq("species.slug", slug)
       .throwOnError(),
   ]);
   if (!species.data) return null;

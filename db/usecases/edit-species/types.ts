@@ -5,8 +5,6 @@ export type SpeciesChanges = {
   common_name?: string;
   /** Shown first in the app. */
   maori_name?: string | null;
-  /** Usual botanical spelling, where it differs from the register's. */
-  suggested_spelling?: string | null;
   /** Trees That Count flag. Null = not stated. */
   over_5m?: boolean | null;
   /** "T" in the Plants Out Master. */
@@ -21,7 +19,6 @@ const text = z.string().trim().nullish();
 export const speciesChanges = z.object({
   common_name: z.string().trim().optional(),
   maori_name: text,
-  suggested_spelling: text,
   over_5m: z.boolean().nullish(),
   threatened: z.boolean().nullish(),
   threatened_te_kakano: z.boolean().optional(),
