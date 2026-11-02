@@ -11,7 +11,6 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
 | `checks/schema_check.sql` | Checks everything the migrations create, that nothing still has an old name, and the imported row counts and season totals, and lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 16 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
-| `import/workbook_history.sql` | The workbook history: 39 sites, 78 areas (50 with pins), 164 species, 5,449 lines and 1,377 review notes. Generated, don't edit by hand |
 
 ## Where they have run
 
@@ -28,13 +27,15 @@ The check has not been run yet. It needs a staff account, and sign-in isn't set 
 
 ## The workbook import
 
-`import/workbook_history.sql` is built from `docs/planning/prototype/*.csv` and `data/*.json`:
+`scripts/import-workbook.ts` loads the history from `docs/planning/prototype/*.csv`: 39 sites, 78 areas, 164 species, 5,449 lines and 1,377 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
 
 ```bash
-npx tsx scripts/build-workbook-import.ts
+npx tsx scripts/import-workbook.ts
 ```
 
-Run it after the two migrations, in SQL Editor or with psql. It ends by listing each season against the workbook's TOTAL cell; every difference should be 0. Running it again is safe: rows match on slug or spreadsheet code, staff edits to descriptions, pins, profiles and photos are kept, notes a person wrote are kept, and lines that leave the CSV are retired, not deleted.
+That is a dry run: it lists what would be added or changed and writes nothing. Add `--write` to make the changes. It then reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
+
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and retires lines that leave the CSV.
 
 ## Running them on a new project
 
