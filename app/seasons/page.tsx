@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
-import { getQuestionTotals } from "@/db/queries/review";
 import { reviewShown } from "@/lib/wrt/server";
 import type { SeasonSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
@@ -37,9 +36,7 @@ function toSummary(r: SeasonTotals, showReview: boolean): SeasonSummary {
 }
 
 export default async function SeasonsPage() {
-  const [rows, leaders, slope, showReview] = await Promise.all([
-    listSeasons(), listSeasonLeaders(), getQuestionTotals("slope-hill-2024"), reviewShown(),
-  ]);
+  const [rows, leaders, showReview] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown()]);
   // Only seasons with planting lines, as in the workbook.
   const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSummary(r, showReview));
 
@@ -65,8 +62,11 @@ export default async function SeasonsPage() {
   const checked = seasons.filter((s) => s.reconciliation).length;
   const median = medianSites(seasons);
 
-  // The Slope Hill 2024 columns dominate the chart; say so, with the numbers from the data.
+  // The Slope Hill restoration makes 2024 tower over the rest; say so, with its plants from the database.
   const slopeSeasons = seasons.filter((s) => s.season.year === 2024).map((s) => s.season.label);
+  const slopeHill2024 = leaders.sites
+    .filter((r) => r.site === "slope-hill" && r.season?.endsWith("-2024"))
+    .reduce((n, r) => n + (r.plants ?? 0), 0);
 
   // The workbook ends on an autumn: show the spring after it as "not in yet".
   const missingSpring = last.name === "Autumn" ? `Spring ${last.year}` : null;
@@ -90,10 +90,10 @@ export default async function SeasonsPage() {
           <SplitKey spring />
         </div>
         <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
-        {showReview && slope && slopeSeasons.length > 0 && (
+        {slopeHill2024 > 0 && (
           <Rule>
-            {slopeSeasons.join(" and ")} stand out because they include the Slope Hill 2024 columns ({formatNumber(slope.plants ?? 0)} recorded plants,
-            WRT decision 4 still open).
+            {slopeSeasons.join(" and ")} stand out because of the Slope Hill restoration: {formatNumber(slopeHill2024)} recorded plants there,
+            including 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation.
           </Rule>
         )}
       </section>

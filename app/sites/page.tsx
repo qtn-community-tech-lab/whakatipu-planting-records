@@ -100,7 +100,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
             such as Lake Hayes Pavilion. Recorded plants are kept against parcels and added up to the site. Bars are scaled to
             the largest site.
             {rows.some((r) => r.item.slug === "slope-hill") &&
-              " Slope Hill’s bar is mostly amber: 29,000 recorded plants in Autumn and Spring 2024 (7,000 Coronation, 22,000 HGF) are flagged by WRT (decision 4) and not yet ruled on."}
+              " Slope Hill’s bar is long because of its 2024 restoration: 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation."}
           </>
         }
       >

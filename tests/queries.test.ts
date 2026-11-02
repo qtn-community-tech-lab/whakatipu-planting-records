@@ -27,7 +27,7 @@ function expectAllCoherent(result: unknown, label: string) {
 describe("overview", () => {
   it("matches the known totals", async () => {
     const o = await q.overview();
-    expect(o.split).toEqual({ total: 140068, resolved: 95778, needsReview: 44290, records: 5449, recordsNeedingReview: 667 });
+    expect(o.split).toEqual({ total: 140068, resolved: 124778, needsReview: 15290, records: 5449, recordsNeedingReview: 629 });
     expect(o.seasons).toHaveLength(23);
     expect(o.firstSeason.label).toBe("Autumn 2015");
     expect(o.lastSeason.label).toBe("Autumn 2026");
@@ -70,10 +70,9 @@ describe("overview", () => {
     }
   });
 
-  it("puts Slope Hill 2024 at 29,000 recorded plants", async () => {
+  it("no longer lists Slope Hill 2024 as a question: WRT ruled it real", async () => {
     const o = await q.overview();
-    const t = o.themes.find((x) => x.theme === "slope-hill-2024");
-    expect(t?.split.needsReview).toBe(29000);
+    expect(o.themes.find((x) => x.theme === "slope-hill-2024")).toBeUndefined();
   });
 });
 
@@ -213,8 +212,8 @@ describe("records()", () => {
     const b = await q.records({ review: "resolved" });
     expect(a.split.records + b.split.records).toBe(all.split.records);
     expect(a.split.total + b.split.total).toBe(all.split.total);
-    expect(a.split.records).toBe(667);
-    expect(a.split.total).toBe(44290);
+    expect(a.split.records).toBe(629);
+    expect(a.split.total).toBe(15290);
     expect(a.split.resolved).toBe(0);
     expect(b.split.needsReview).toBe(0);
   });
@@ -240,8 +239,8 @@ describe("records()", () => {
   });
 
   it("filters by review theme to flagged records only", async () => {
-    const r = await q.records({ theme: "slope-hill-2024" });
-    expect(r.split.total).toBe(29000);
+    const r = await q.records({ theme: "order-scheme" });
+    expect(r.split.total).toBe(1457);
     expect(r.rows.every((v) => v.record.needsReview)).toBe(true);
   });
 
@@ -336,9 +335,11 @@ describe("chat golden questions", () => {
     expect((await q.season("autumn-2026"))?.places).toHaveLength(11);
   });
 
-  it("the Slope Hill 2024 columns hold 29,000 plants", async () => {
-    const t = (await q.overview()).themes.find((x) => x.theme === "slope-hill-2024");
-    expect(t?.split.total).toBe(29000);
+  it("the Slope Hill 2024 columns hold 29,000 confirmed plants", async () => {
+    const slope = (await q.records()).rows.filter((v) => v.record.notes.some((n) => n.text.startsWith("decision 4 ruled")));
+    expect(slope).toHaveLength(38);
+    expect(slope.reduce((n, v) => n + v.record.quantity, 0)).toBe(29000);
+    expect(slope.every((v) => !v.record.needsReview)).toBe(true);
   });
 });
 
