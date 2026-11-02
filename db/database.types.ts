@@ -84,6 +84,13 @@ export type Database = {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
+            referencedRelation: "season_sites";
+            referencedColumns: ["site"];
+          },
+          {
+            foreignKeyName: "areas_site_fkey";
+            columns: ["site"];
+            isOneToOne: false;
             referencedRelation: "sites";
             referencedColumns: ["slug"];
           },
@@ -257,6 +264,13 @@ export type Database = {
             columns: ["species"];
             isOneToOne: false;
             referencedRelation: "line_details";
+            referencedColumns: ["species"];
+          },
+          {
+            foreignKeyName: "planting_lines_species_fkey";
+            columns: ["species"];
+            isOneToOne: false;
+            referencedRelation: "season_species";
             referencedColumns: ["species"];
           },
           {
@@ -665,6 +679,31 @@ export type Database = {
         ComputedFields: never;
         Relationships: [];
       };
+      season_sites: {
+        Row: {
+          plants: number | null;
+          rank: number | null;
+          season: string | null;
+          site: string | null;
+          site_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      season_species: {
+        Row: {
+          common_name: string | null;
+          maori_name: string | null;
+          plants: number | null;
+          rank: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          season: string | null;
+          species: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
       totals_by_area: {
         Row: {
           area: string | null;
@@ -683,9 +722,28 @@ export type Database = {
         ComputedFields: never;
         Relationships: [];
       };
-      totals_by_season: {
+      totals_by_question: {
         Row: {
           lines: number | null;
+          plants: number | null;
+          question: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "notes_question_fkey";
+            columns: ["question"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["slug"];
+          },
+        ];
+      };
+      totals_by_season: {
+        Row: {
+          half: Database["public"]["Enums"]["season_half"] | null;
+          lines: number | null;
+          lines_needs_review: number | null;
           plants: number | null;
           plants_confirmed: number | null;
           plants_needs_review: number | null;
@@ -694,7 +752,9 @@ export type Database = {
           season_order: number | null;
           sites: number | null;
           species: number | null;
+          workbook_cell: string | null;
           workbook_total: number | null;
+          year: number | null;
         };
         ComputedFields: never;
         Relationships: [];

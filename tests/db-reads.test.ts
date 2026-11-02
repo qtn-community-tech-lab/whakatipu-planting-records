@@ -16,8 +16,8 @@ vi.mock("@/db/client", () => ({
 
 const { listSites, topSites, listAreaTotals, listAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, rankSpecies, getSpecies } = await import("@/db/queries/species");
-const { findLines, listSeasons, PAGE_SIZE } = await import("@/db/queries/plantings");
-const { listOpenQuestions } = await import("@/db/queries/review");
+const { findLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
+const { listOpenQuestions, getQuestionTotals } = await import("@/db/queries/review");
 
 /** All plants in the workbook history. */
 const ALL_PLANTS = 140_068;
@@ -65,6 +65,23 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
     expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
     const [season] = await listSeasons();
     expect((await findLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
+  });
+
+  it("ranks the top species and sites in each season", async () => {
+    const { species, sites } = await listSeasonLeaders(3);
+    for (const rows of [species, sites]) {
+      const perSeason = Map.groupBy(rows, (r) => r.season);
+      expect(perSeason.size).toBe(23);
+      for (const top of perSeason.values()) {
+        expect(top.map((r) => r.rank)).toEqual([1, 2, 3].slice(0, top.length));
+        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (top[i - 1].plants ?? 0))).toBe(true);
+      }
+    }
+  });
+
+  it("totals the plants still waiting on a question", async () => {
+    expect(await getQuestionTotals("slope-hill-2024")).toEqual({ question: "slope-hill-2024", lines: 38, plants: 29_000 });
+    expect(await getQuestionTotals("no-such-question")).toBeNull();
   });
 
   it("lists the questions WRT still has to answer", async () => {

@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
-import type { QuantitySplit, ReconciliationRow } from "@/lib/wrt/types";
-import type { SiteSpecies, SeasonSummary } from "@/lib/wrt/queries";
+import type { QuantitySplit, ReconciliationRow, Species } from "@/lib/wrt/types";
+import type { SeasonSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { Badge } from "@/components/ui/badge";
 import { hrefs } from "@/components/wrt/shared/names";
@@ -41,7 +41,13 @@ export function medianSites(seasons: SeasonSummary[]) {
 export interface TopSite {
   slug: string;
   name: string;
-  split: QuantitySplit;
+  split: Pick<QuantitySplit, "total">;
+}
+
+/** A season's top species: just what the row shows. */
+export interface TopSpecies {
+  species: Pick<Species, "id" | "slug" | "scientificName" | "displayName" | "displayIsScientific">;
+  split: Pick<QuantitySplit, "total">;
 }
 
 /**
@@ -51,7 +57,7 @@ export interface TopSite {
  */
 export function SeasonRow({
   s, fewSites, trees = [], sites = [],
-}: { s: SeasonSummary; fewSites: boolean; trees?: SiteSpecies[]; sites?: TopSite[] }) {
+}: { s: SeasonSummary; fewSites: boolean; trees?: TopSpecies[]; sites?: TopSite[] }) {
   const recon = s.reconciliation;
   const q = { year: s.season.year, season: s.season.name };
   return (
