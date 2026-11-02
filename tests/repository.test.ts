@@ -8,10 +8,10 @@ describe("repository invariants on the real CSVs", () => {
     expect(recs.reduce((a, r) => a + r.quantity, 0)).toBe(140068);
   });
 
-  it("has 667 records needing review carrying 44,290 plants", async () => {
+  it("has 629 records needing review carrying 15,290 plants", async () => {
     const flagged = (await repo.listRecords()).filter((r) => r.needsReview);
-    expect(flagged).toHaveLength(667);
-    expect(flagged.reduce((a, r) => a + r.quantity, 0)).toBe(44290);
+    expect(flagged).toHaveLength(629);
+    expect(flagged.reduce((a, r) => a + r.quantity, 0)).toBe(15290);
   });
 
   it("covers 23 seasons from Autumn 2015 to Autumn 2026, in order", async () => {

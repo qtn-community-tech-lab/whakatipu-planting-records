@@ -64,7 +64,10 @@ FAULT_PAIRS = {("13C", "11"): "Slope Hill carries Bush Creek's ID (13C)",
                ("!!A", "11A"): "ID typed as an error text (!!A)",
                ("9E", "9F"): "Akarua Corner typed 9E; the register gives 9E to Green Cabs",
                ("13A", "13D"): "Derby St typed 13A; the register gives 13A to Bush Creek Preschool"}
-# The two 2024 Slope Hill columns (21% of all plants): WRT decision 4.
+# Faults whose site is known (Slope Hill Coronation is 11A), so the typo is only a note.
+SETTLED_FAULTS = {("!!A", "11A")}
+# The two 2024 Slope Hill columns (21% of all plants): WRT decision 4, ruled real.
+DECISION4_RULED = "decision 4 ruled: the 2024 Slope Hill columns are real plantings (22,000 trees funded by the Hilton Global Foundation, 7,000 donated by Trees That Count for the coronation)"
 DECISION4_SITES = {"Slope Hill HGF", "Slope Hill Coronation"}
 DECISION4_YEAR = 2024
 SCHEME_WORDS = ("paper4trees", "p4t", "paper for trees", "paper 4 trees")
@@ -277,7 +280,7 @@ def resolve_site(raw_header, rid, year, sites, stems, by_pid, register):
                 items.append(("RULING", "new or unclear site with no WRT site number: %s" % (row["note"] or "site identity to confirm")))
             elif (rid, pid) in FAULT_PAIRS:
                 tier = "rule-documented-id-fault"
-                items.append(("CONFIRM", "row-5 ID %s vs register %s: %s" % (rid, pid, FAULT_PAIRS[(rid, pid)])))
+                items.append(("FYI" if (rid, pid) in SETTLED_FAULTS else "CONFIRM", "row-5 ID %s vs register %s: %s" % (rid, pid, FAULT_PAIRS[(rid, pid)])))
             else:
                 tier = "review-uncertain"
                 items.append(("RULING", "site identity uncertain: %s" % (row["note"] or "see 04d")))
@@ -298,7 +301,7 @@ def resolve_site(raw_header, rid, year, sites, stems, by_pid, register):
                 tier = "auto-id-agrees"
             elif (rid, pid) in FAULT_PAIRS:
                 tier = "rule-documented-id-fault"
-                items.append(("CONFIRM", "row-5 ID %s vs register %s: %s" % (rid, pid, FAULT_PAIRS[(rid, pid)])))
+                items.append(("FYI" if (rid, pid) in SETTLED_FAULTS else "CONFIRM", "row-5 ID %s vs register %s: %s" % (rid, pid, FAULT_PAIRS[(rid, pid)])))
             else:
                 tier = "review-id-conflict"
                 items.append(("RULING", "row-5 ID %s disagrees with register ID %s for this header" % (rid, pid)))
@@ -411,7 +414,7 @@ def main():
             if r > LAST_NUMBERED_ROW:
                 items.append(("FYI", "species row 106 is below the numbered list and outside the PY107 grand-total range"))
             if yr == DECISION4_YEAR and si["name"] in DECISION4_SITES and numeric:
-                items.append(("RULING", "decision 4: are the two 2024 Slope Hill columns real plantings? (29,000 plants, 21% of all-time total)"))
+                items.append(("FYI", DECISION4_RULED))
             kinds = {k for k, _ in items}
             needs = "Y" if kinds & {"RULING", "CONFIRM"} else "N"
             if si["tier"].startswith("review") or si["tier"] == "scheme-not-a-place" or not numeric:
@@ -465,7 +468,7 @@ def main():
         sample = next((site_info[j] for j in v["cols"]), None)
         sitems = list(sample["items"])
         if nm in DECISION4_SITES:
-            sitems.append(("RULING", "decision 4 applies to this site's %s records" % DECISION4_YEAR))
+            sitems.append(("FYI", "decision 4 ruled: this site's %s records are real plantings" % DECISION4_YEAR))
         txt = "; ".join(dict.fromkeys(t for kk, t in sitems))
         needs = "Y" if any(kk in ("RULING", "CONFIRM") for kk, _ in sitems) else "N"
         conf = ("low" if tier in ("review-not-found", "scheme-not-a-place", "review-uncertain") else

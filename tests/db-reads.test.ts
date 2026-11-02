@@ -82,7 +82,8 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
   });
 
   it("totals the plants still waiting on a question", async () => {
-    expect(await readQuestionTotals("slope-hill-2024")).toEqual({ question: "slope-hill-2024", lines: 38, plants: 29_000 });
+    expect(await readQuestionTotals("order-scheme")).toEqual({ question: "order-scheme", lines: 160, plants: 1_457 });
+    expect(await readQuestionTotals("slope-hill-2024")).toBeNull();
     expect(await readQuestionTotals("no-such-question")).toBeNull();
   });
 
