@@ -70,7 +70,8 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
 
   it("ranks the top species and sites in each season", async () => {
     const { species, sites } = await listSeasonLeaders(3);
-    for (const rows of [species, sites]) {
+    const ranked: { season: string | null; plants: number | null; rank: number | null }[][] = [species, sites];
+    for (const rows of ranked) {
       const perSeason = Map.groupBy(rows, (r) => r.season);
       expect(perSeason.size).toBe(23);
       for (const top of perSeason.values()) {
