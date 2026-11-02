@@ -42,8 +42,30 @@ export const speciesTotals = (db: Db) =>
 export const seasonTotals = (db: Db) =>
   db
     .from("totals_by_season")
-    .select("season, season_label, workbook_total, plants, plants_confirmed, plants_needs_review, lines, sites, species")
+    .select("season, season_label, season_order, year, half, workbook_total, workbook_cell, plants, plants_confirmed, plants_needs_review, lines, lines_needs_review, sites, species")
     .order("season_order");
+
+/** Species in each season, most planted first. */
+export const seasonSpecies = (db: Db) =>
+  db
+    .from("season_species")
+    .select("season, species, register_code, scientific_name, common_name, maori_name, plants, rank")
+    .order("season")
+    .order("rank");
+
+/** Sites in each season, most planted first. */
+export const seasonSites = (db: Db) =>
+  db
+    .from("season_sites")
+    .select("season, site, site_name, plants, rank")
+    .order("season")
+    .order("rank");
+
+/** Plants still waiting on each question. */
+export const questionTotals = (db: Db) =>
+  db
+    .from("totals_by_question")
+    .select("question, lines, plants");
 
 /** Every planting line, oldest season first. line_id last, so pages never skip or repeat a row. */
 export const lines = (db: Db) =>
