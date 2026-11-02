@@ -1,5 +1,5 @@
 -- WRT planting database: did the whole SQL run?
--- Paste into Supabase > SQL Editor after both migrations (and the import).
+-- Paste into Supabase > SQL Editor after the migrations (and the import).
 -- It only reads. Every row should say PASS.
 
 with expected (part, item, want, got) as (
@@ -32,14 +32,21 @@ with expected (part, item, want, got) as (
   union all select 'access rules', 'functions (is_staff, touch_row, guard_retired, guard_history)', 4,
     (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname = 'public' and p.proname in ('is_staff', 'touch_row', 'guard_retired', 'guard_history'))
-  union all select 'access rules', 'row rules (policies)', 23,
+  union all select 'access rules', 'row rules (policies)', 31,
     (select count(*)::int from pg_policies where schemaname = 'public')
   union all select 'access rules', 'guard triggers (retired 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_retired', 'guard_history'))
-  union all select 'access rules', 'signed out can read no table or view', 0,
+  union all select 'public reads', 'signed out can read 8 tables (not users) and 5 views', 13,
+    (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
+      where n.nspname = 'public' and c.relkind in ('r', 'v') and c.relname <> 'users'
+        and has_table_privilege('anon', c.oid, 'select'))
+  union all select 'public reads', 'signed out cannot read users', 0,
+    (select has_table_privilege('anon', 'public.users', 'select')::int)
+  union all select 'public reads', 'signed out can write to nothing', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind in ('r', 'v')
-        and has_table_privilege('anon', c.oid, 'select'))
+        and (has_table_privilege('anon', c.oid, 'insert') or has_table_privilege('anon', c.oid, 'update')
+          or has_table_privilege('anon', c.oid, 'delete')))
   union all select 'access rules', 'signed in can delete from no table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'

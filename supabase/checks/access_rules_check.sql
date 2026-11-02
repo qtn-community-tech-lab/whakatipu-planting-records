@@ -1,5 +1,5 @@
 -- WRT planting database: access-rule check.
--- Run in Supabase > SQL Editor after rls.sql. It acts as signed out, as a volunteer
+-- Run in Supabase > SQL Editor after the migrations. It acts as signed out, as a volunteer
 -- and as your staff account, tries each thing, and lists PASS or FAIL.
 -- It changes nothing: the one test site it adds is removed at the end.
 
@@ -17,8 +17,8 @@ end $f$;
 
 -- Signed out ---------------------------------------------------------------
 set role anon;
-select pg_temp.try(1, 'Signed out', 'read sites',          'blocked', 'select 1 from public.sites');
-select pg_temp.try(2, 'Signed out', 'read season totals',  'blocked', 'select 1 from public.totals_by_season');
+select pg_temp.try(1, 'Signed out', 'read sites',          'allowed', 'select 1 from public.sites');
+select pg_temp.try(2, 'Signed out', 'read season totals',  'allowed', 'select 1 from public.totals_by_season');
 select pg_temp.try(3, 'Signed out', 'add a site',          'blocked', $$insert into public.sites (slug, name) values ('rls-check', 'x')$$);
 reset role;
 

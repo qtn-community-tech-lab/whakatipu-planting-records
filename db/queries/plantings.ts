@@ -1,17 +1,18 @@
 /** Planting lines and season totals. */
-import type { Db, LineDetails } from "@/db/types";
+import { db } from "@/db/client";
+import type { Tables } from "@/db/types";
 import { lines, seasonTotals } from "./views";
 
-type LineFilter = Partial<Pick<LineDetails, "event_id" | "site" | "area" | "species" | "season" | "year">>;
+type LineFilter = Partial<Pick<Tables<"line_details">, "planting_id" | "site" | "area" | "species" | "season" | "year">>;
 
 /** Lines per page. Supabase returns at most 1,000 rows a request, so every unbounded read pages. */
 export const PAGE_SIZE = 100;
 
-/** One page of lines matching any mix of event, site, area, species, season and year. Page 0 is first. */
-export async function findLines(db: Db, filter: LineFilter, page = 0) {
-  let query = lines(db);
+/** One page of lines matching any mix of planting, site, area, species, season and year. Page 0 is first. */
+export async function findLines(filter: LineFilter, page = 0) {
+  let query = lines(await db());
   for (const [column, value] of Object.entries(filter)) {
-    if (value !== undefined) query = query.eq(column as keyof LineFilter, value);
+    if (value !== undefined && value !== null) query = query.eq(column as keyof LineFilter, value);
   }
   const { data } = await query
     .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
@@ -19,9 +20,9 @@ export async function findLines(db: Db, filter: LineFilter, page = 0) {
   return data;
 }
 
-/** Every season in order, with the needs-review split. */
-export async function listSeasons(db: Db) {
-  const { data } = await seasonTotals(db)
+/** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
+export async function listSeasons() {
+  const { data } = await seasonTotals(await db())
     .throwOnError();
   return data;
 }

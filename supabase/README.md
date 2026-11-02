@@ -7,7 +7,8 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | File | What it does |
 |---|---|
 | `migrations/20261102000000_schema.sql` | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027 |
-| `migrations/20261102000100_access_rules.sql` | Access rules: signed out sees nothing, signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app |
+| `migrations/20261102000100_access_rules.sql` | Access rules: signed out sees nothing (opened up by public_reads), signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app |
+| `migrations/20261103000000_public_reads.sql` | Public reads: signed-out visitors read live rows of every table except users, and every totals view. Nobody signed out writes |
 | `checks/schema_check.sql` | Checks everything both migrations create, and the imported row counts and season totals, and lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 16 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
 
@@ -44,10 +45,11 @@ Paste each migration into SQL Editor in order, or with the database connection s
 ```bash
 psql "$DATABASE_URL" -f supabase/migrations/20261102000000_schema.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261102000100_access_rules.sql
+psql "$DATABASE_URL" -f supabase/migrations/20261103000000_public_reads.sql
 ```
 
 Each file runs as one transaction, so a failure leaves nothing half-made.
 
 ## Checking it all ran
 
-Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 5 views, 5 indexes, the 25 seasons, 4 functions, 23 row rules, 16 triggers and the table privileges. After the import, it also checks the row counts and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
+Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 5 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers and the table privileges, including what signed-out visitors can read. After the import, it also checks the row counts and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
