@@ -9,6 +9,7 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | `migrations/20261102000000_schema.sql` | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027 |
 | `migrations/20261102000100_access_rules.sql` | Access rules: signed out sees nothing, signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app |
 | `checks/access_rules_check.sql` | Tries 16 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
+| `import/workbook_history.sql` | The workbook history: 39 sites, 78 areas (50 with pins), 164 species, 5,449 lines and 1,377 review notes. Generated, don't edit by hand |
 
 ## Where they have run
 
@@ -20,8 +21,17 @@ The check has not been run yet. It needs a staff account, and sign-in isn't set 
 
 ## Not here yet
 
-- The spreadsheet history (5,449 planting lines) and the reference data (sites, areas, species). Both come from an import script.
 - Sign-in. Until then, only the SQL Editor and the secret key reach the data.
+
+## The workbook import
+
+`import/workbook_history.sql` is built from `docs/planning/prototype/*.csv` and `data/*.json`:
+
+```bash
+npx tsx scripts/build-workbook-import.ts
+```
+
+Run it after the two migrations, in SQL Editor or with psql. It ends by listing each season against the workbook's TOTAL cell; every difference should be 0. Running it again is safe: rows match on slug or spreadsheet code, staff edits to descriptions, pins, profiles and photos are kept, notes a person wrote are kept, and lines that leave the CSV are retired, not deleted.
 
 ## Running them on a new project
 
@@ -30,6 +40,7 @@ Paste each migration into SQL Editor in order, or with the database connection s
 ```bash
 psql "$DATABASE_URL" -f supabase/migrations/20261102000000_schema.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261102000100_access_rules.sql
+psql "$DATABASE_URL" -f supabase/import/workbook_history.sql
 ```
 
 Each file runs as one transaction, so a failure leaves nothing half-made.
