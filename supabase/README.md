@@ -16,6 +16,7 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | Date | Project | Run |
 |---|---|---|
 | 2 November 2026 | hosted Supabase project | schema, then access rules, pasted into SQL Editor |
+| 2 November 2026 | hosted Supabase project | `checks/schema_check.sql` after the import: all 23 rows PASS |
 
 The check has not been run yet. It needs a staff account, and sign-in isn't set up.
 
