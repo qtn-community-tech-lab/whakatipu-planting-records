@@ -17,7 +17,7 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | Date | Project | Run |
 |---|---|---|
 | 2 November 2026 | hosted Supabase project | schema, then access rules, pasted into SQL Editor |
-| 2 November 2026 | hosted Supabase project | `checks/schema_check.sql` after the import: all 23 rows PASS |
+| 2 November 2026 | hosted Supabase project | `scripts/import-workbook.ts --write`: 39 sites, 78 areas, 164 species, 360 plantings, 5,449 lines, 1,377 notes. All 23 seasons match the workbook TOTAL cells |
 
 The check has not been run yet. It needs a staff account, and sign-in isn't set up.
 
