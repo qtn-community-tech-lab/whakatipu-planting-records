@@ -60,7 +60,8 @@ export function toRecordView(r: LineRow): RecordView {
       quantity: r.quantity ?? 0, hasQuantity: r.quantity !== null,
       precision: (r.precision ?? "unknown") as Precision, confidence: (r.confidence ?? "high") as Confidence,
       needsReview: r.needs_review === true,
-      notes: notes.map((n) => ({ kind: n.kind, theme: n.question as ReviewTheme, text: n.text, raw: n.text })),
+      // The import merges a line's notes on one question into one, a line each: split them back.
+      notes: notes.flatMap((n) => n.text.split("\n").map((text) => ({ kind: n.kind, theme: n.question as ReviewTheme, text, raw: text }))),
       provenance: {
         sourceFile: r.source_file ?? "", sourceSheet: r.source_sheet ?? "", sourceCell: r.source_cell ?? "",
         seasonLabelOriginal: r.season_original ?? season.label, siteOriginal: r.site_original ?? "", speciesOriginal: r.species_original ?? "",
@@ -99,7 +100,10 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
 export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
-  const views = lines.map(toRecordView).filter((v) => showReview || !v.record.needsReview);
+  // Workbook order (line ids follow it), so ties rank the same as on the CSV pages.
+  const views = [...lines].sort((a, b) => a.line_id! - b.line_id!)
+    .map(toRecordView)
+    .filter((v) => showReview || !v.record.needsReview);
   return {
     season: seasons[at].season,
     previous: seasons[at - 1]?.season ?? null,
