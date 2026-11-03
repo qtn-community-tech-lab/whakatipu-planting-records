@@ -55,12 +55,12 @@ select
   l.site_original,
   l.species_original,
   sp.register_code,
-  sp.threatened_te_kakano,
   coalesce((
     select jsonb_agg(jsonb_build_object('question', n.question, 'kind', n.kind, 'text', n.text) order by n.id)
     from public.notes n
     where n.line = l.id and n.resolved_at is null and n.retired_at is null
-  ), '[]'::jsonb) as notes
+  ), '[]'::jsonb) as notes,
+  sp.threatened_te_kakano
 from public.planting_lines l
 join public.plantings p on p.id   = l.planting
 join public.seasons  se on se.id  = p.season
