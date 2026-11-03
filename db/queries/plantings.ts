@@ -20,6 +20,14 @@ export async function findLines(filter: LineFilter, page = 0) {
   return data;
 }
 
+/** Every line in one season, in one request: the largest season has 410. */
+export async function listSeasonLines(season: string) {
+  const { data } = await lines(await db())
+    .eq("season", season)
+    .throwOnError();
+  return data;
+}
+
 /** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
 export async function listSeasons() {
   const { data } = await seasonTotals(await db())

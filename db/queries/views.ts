@@ -68,7 +68,7 @@ export const questionTotals = (db: Db) =>
 export const lines = (db: Db) =>
   db
     .from("line_details")
-    .select("line_id, planting_id, season, season_label, planted_on, site, site_name, area, area_name, species, scientific_name, maori_name, quantity, needs_review, legacy_code")
+    .select("line_id, planting_id, legacy_code, season, season_label, season_order, year, planted_on, site, site_name, is_scheme, area, area_name, class, species, scientific_name, common_name, maori_name, threatened, threatened_te_kakano, contested_group, register_code, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
     .order("season_order")
     .order("area_name")
     .order("scientific_name")

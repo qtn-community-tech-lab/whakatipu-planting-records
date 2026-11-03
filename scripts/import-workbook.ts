@@ -67,12 +67,18 @@ const questions: Row[] = Object.entries(REVIEW_THEMES).map(([slug, t]) => ({ slu
 const seasonTotals = data.reconciliation.filter((r) => r.kind === "season")
   .map((r) => ({ label: r.label, workbook_total: r.stated, workbook_cell: r.statedCell || null }));
 
+/** Where each line came from in the workbook, kept on the line. */
+const PROVENANCE = "source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original";
+
 // Lines, and one note per line per question (same-question notes merged, strongest kind kept).
 const RANK: Record<ReviewNoteKind, number> = { ruling: 0, confirm: 1, fyi: 2 };
 const lines = data.records.map((r) => ({
   legacy_code: r.id, area: areaOf.get(`${r.placeSlug}|${r.parcelId}`)!, season: r.seasonSlug,
   species: byId.get(r.speciesId)!.slug, quantity: r.hasQuantity ? r.quantity : null, // "TBC" is unknown, never 0
-  source_cell: r.provenance.sourceCell,
+  source_cell: r.provenance.sourceCell, precision: r.precision, confidence: r.confidence,
+  source_file: r.provenance.sourceFile, source_sheet: r.provenance.sourceSheet,
+  season_original: r.provenance.seasonLabelOriginal, site_original: r.provenance.siteOriginal,
+  species_original: r.provenance.speciesOriginal,
 }));
 const notes = data.records.flatMap((r) => {
   const merged = new Map<string, { kind: ReviewNoteKind; text: string[] }>();
@@ -168,11 +174,12 @@ async function main() {
   const plantingId = new Map(plantings.map((p) => [plantingKey(p.area, p.season), p.id]));
 
   // Lines, matched on their spreadsheet code. Unknown plantings only exist in a dry run.
-  const haveLines = await readAll("planting_lines", "id, planting, species, quantity, legacy_code, source_cell, retired_at", "id")
+  const haveLines = await readAll("planting_lines", `id, planting, species, quantity, legacy_code, ${PROVENANCE}, retired_at`, "id")
     .then((rows) => rows.filter((l) => l.legacy_code !== null));
   const wantLines: Row[] = lines.map((l) => ({
     legacy_code: l.legacy_code, planting: plantingId.get(plantingKey(l.area, seasonId.get(l.season))) ?? -1,
-    species: l.species, quantity: l.quantity, source_cell: l.source_cell, retired_at: null,
+    species: l.species, quantity: l.quantity, retired_at: null,
+    ...Object.fromEntries(PROVENANCE.split(", ").map((c) => [c, l[c as keyof typeof l]])),
   }));
   const lineDiff = diff(wantLines, haveLines, "legacy_code");
   const codes = new Set(lines.map((l) => l.legacy_code));

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
 import { reviewShown } from "@/lib/wrt/server";
-import type { SeasonSummary } from "@/lib/wrt/queries";
+import { toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -13,32 +13,10 @@ export const metadata: Metadata = {
   description: "Every autumn and spring planting season in the WRT history, with recorded plants, sites, species and the check against the workbook's own totals.",
 };
 
-type SeasonTotals = Awaited<ReturnType<typeof listSeasons>>[number];
-
-/** One season row from Supabase, in the shape the season components take. */
-function toSummary(r: SeasonTotals, showReview: boolean): SeasonSummary {
-  const plants = r.plants ?? 0;
-  const confirmed = r.plants_confirmed ?? 0;
-  const lines = r.lines ?? 0;
-  const linesReview = r.lines_needs_review ?? 0;
-  return {
-    season: { slug: r.season!, label: r.season_label!, year: r.year!, name: r.half === "autumn" ? "Autumn" : "Spring", order: r.season_order! },
-    split: showReview
-      ? { total: plants, resolved: confirmed, needsReview: r.plants_needs_review ?? 0, records: lines, recordsNeedingReview: linesReview }
-      : { total: confirmed, resolved: confirmed, needsReview: 0, records: lines - linesReview, recordsNeedingReview: 0 },
-    placeCount: r.sites ?? 0,
-    speciesCount: r.species ?? 0,
-    reconciliation: r.workbook_total === null ? null : {
-      kind: "season", label: r.season_label!, generated: plants, stated: r.workbook_total,
-      difference: plants - r.workbook_total, statedCell: r.workbook_cell ?? "", records: lines, cause: null,
-    },
-  };
-}
-
 export default async function SeasonsPage() {
   const [rows, leaders, showReview] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown()]);
   // Only seasons with planting lines, as in the workbook.
-  const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSummary(r, showReview));
+  const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
 
   // Top trees and top sites in each season, largest first, ranked by the database.
   const topBySeason = new Map<string, TopSpecies[]>();
