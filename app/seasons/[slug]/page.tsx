@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { reviewShown } from "@/lib/wrt/server";
+import { listSeasonLines, listSeasons } from "@/db/queries/plantings";
+import { toSeasonDetail, toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
@@ -18,14 +20,16 @@ type Props = { params: Promise<{ slug: string }> };
 
 const RECORDS_CAP = 12;
 
-export async function generateStaticParams() {
-  const seasons = await getWrt().seasons();
-  return seasons.map((s) => ({ slug: s.season.slug }));
+/** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
+async function loadSeason(slug: string) {
+  const [rows, lines, showReview] = await Promise.all([listSeasons(), listSeasonLines(slug), reviewShown()]);
+  const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
+  return { all, d: toSeasonDetail(slug, all, lines, showReview), showReview };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const d = await getWrt().season(slug);
+  const { d } = await loadSeason(slug);
   if (!d) return { title: "Season not found" };
   return {
     title: `${d.season.label}: ${formatNumber(d.split.total)} recorded plants`,
@@ -39,8 +43,7 @@ function list(items: string[]) {
 
 export default async function SeasonPage({ params }: Props) {
   const { slug } = await params;
-  const wrt = getWrt();
-  const [d, all, showReview] = await Promise.all([wrt.season(slug), wrt.seasons(), reviewShown()]);
+  const { d, all, showReview } = await loadSeason(slug);
   if (!d) notFound();
 
   const { season, split, reconciliation: recon } = d;
