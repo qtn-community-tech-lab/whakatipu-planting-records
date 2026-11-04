@@ -225,12 +225,14 @@ export class SupabaseWrtRepository implements WrtRepository {
     return this.loaded.data;
   }
 
-  async listSeasons() { return (await this.data()).seasons; }
-  async listSpecies() { return (await this.data()).species; }
-  async listPlaces() { return (await this.data()).places; }
-  async listRecords() { return (await this.data()).records; }
-  async listReconciliation() { return (await this.data()).reconciliation; }
+  private read = <K extends keyof Loaded>(key: K) => async () => (await this.data())[key];
+
+  listSeasons = this.read("seasons");
+  listSpecies = this.read("species");
+  listPlaces = this.read("places");
+  listRecords = this.read("records");
+  listReconciliation = this.read("reconciliation");
+  getSourceInfo = this.read("info");
   /** Supabase checks each row as it is written, so there are no load problems to report. */
   async listDataIssues(): Promise<DataIssue[]> { return []; }
-  async getSourceInfo() { return (await this.data()).info; }
 }
