@@ -14,7 +14,15 @@ npm test           # vitest: parser, validation, repository and query invariants
 npm run build && npm start
 ```
 
-Node 20.9+ (tested on 22). No database or accounts. Planting data loads from local CSVs; reference photos require internet access.
+Node 20.9+ (tested on 22). No accounts or setup: planting data is read live from the hosted Supabase project, using the
+read-only key committed in `.env`. That key reads everything and can't change anything; the database's access rules
+refuse every write. Reference photos also need internet access.
+
+To work from the CSV files in `docs/planning/prototype` instead, set `WRT_DATA_SOURCE=csv` (in `.env`, or in your own
+`.env.local` to leave the committed default alone). A badge at the top of every page shows which one you're reading:
+**Data: Supabase** or **Data: CSV files**.
+
+Only the import scripts write, with the secret key in your own `.env.local` (never committed). See `supabase/README.md`.
 
 ## Deployment
 
@@ -22,7 +30,8 @@ The source is in the private [GitHub repository](https://github.com/ktgcreative/
 The [Vercel project](https://vercel.com/ktgcreatives-projects/wtr-app-tree-reforestation) is connected to it;
 pushes to the existing production branch `z` trigger a deployment.
 
-Vercel uses the Next.js preset and `npm run build`. No environment variables or database are required.
+Vercel uses the Next.js preset and `npm run build`. No environment variables need setting: the build reads the
+Supabase URL and read-only key from the committed `.env`.
 Leave `WRT_DATA_DIR` unset: `next.config.ts` includes the tracked prototype CSVs in the server functions.
 `.vercelignore` excludes local build output and research material from CLI uploads while retaining those CSVs.
 

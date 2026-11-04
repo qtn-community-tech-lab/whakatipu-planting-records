@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { dataSource, getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { DataSourceBadge } from "@/components/wrt/shell/data-source-badge";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
@@ -75,6 +76,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
               <Crumb />
               <GlobalSearch index={index} />
               <ReviewSwitch shown={showReview} />
+              <DataSourceBadge source={dataSource()} />
               <span className="cn-topbar__date !ml-0 hidden xl:inline-flex whitespace-nowrap" title="Seasons covered by the records">
                 {range}
               </span>
