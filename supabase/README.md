@@ -36,16 +36,17 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 `scripts/import-workbook.ts` loads the history from `docs/planning/prototype/*.csv`: 39 sites, 78 areas, 164 species, 5,449 lines and 1,339 review notes (1,377 before the Slope Hill 2024 ruling on 3 November cleared 38). It needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
 
 ```bash
-npx tsx scripts/import-workbook.ts
+npm run import-workbook              # dry run: lists what would change, writes nothing
+npm run import-workbook -- --write   # makes the changes
 ```
 
-That is a dry run: it lists what would be added or changed and writes nothing. Add `--write` to make the changes. It then reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
+`tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
 Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and retires lines that leave the CSV.
 
 ## The map pins
 
-`scripts/import-pins.ts` copies the researched pins in `data/site-locations.json` onto their areas: latitude, longitude, the link the coordinates came from, and the date they were checked. Run it the same way, dry run first, then `--write`.
+`scripts/import-pins.ts` copies the researched pins in `data/site-locations.json` onto their areas: latitude, longitude, the link the coordinates came from, and the date they were checked. Run it the same way: `npm run import-pins` for a dry run, then `npm run import-pins -- --write`.
 
 A pin with a WRT number goes on that area of its site. A pin for a whole site goes on the site's area only when the site has just one. It fills empty pins only, so a pin someone has set or moved is never changed.
 

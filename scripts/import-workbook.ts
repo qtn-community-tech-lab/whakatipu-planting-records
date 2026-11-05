@@ -1,8 +1,8 @@
 /**
  * Import the workbook history (docs/planning/prototype/*.csv) into Supabase.
  *
- *   npx tsx scripts/import-workbook.ts           # dry run: shows what would change, writes nothing
- *   npx tsx scripts/import-workbook.ts --write   # makes the changes, then checks the totals
+ *   npm run import-workbook              # dry run: shows what would change, writes nothing
+ *   npm run import-workbook -- --write   # makes the changes, then checks the totals
  *
  * Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local. The secret key
  * passes the access rules, so keep it out of the app and out of git.

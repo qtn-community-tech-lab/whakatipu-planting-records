@@ -1,8 +1,8 @@
 /**
  * Copy the researched map pins (data/site-locations.json) onto their areas in Supabase.
  *
- *   npx tsx scripts/import-pins.ts           # dry run: shows what would change, writes nothing
- *   npx tsx scripts/import-pins.ts --write   # sets the pins
+ *   npm run import-pins              # dry run: shows what would change, writes nothing
+ *   npm run import-pins -- --write   # sets the pins
  *
  * Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local, like the workbook import.
  *
