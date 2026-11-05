@@ -3,7 +3,7 @@ import { db } from "@/db/client";
 import { questions, questionTotals } from "./views";
 
 /** Plants and lines still waiting on one question, or null when none are. */
-export async function getQuestionTotals(slug: string) {
+export async function readQuestionTotals(slug: string) {
   const { data } = await questionTotals(await db())
     .eq("question", slug)
     .maybeSingle()
