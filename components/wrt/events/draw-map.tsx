@@ -110,6 +110,29 @@ function FocusOn({ focus, polygon }: { focus: MapFocus; polygon: GeoJSON.Polygon
   return null;
 }
 
+/**
+ * Start the attribution collapsed (a small ⓘ button that expands on tap).
+ *
+ * MapLibre's compact attribution opens expanded (class
+ * "maplibregl-compact-show") and only collapses on the first map *drag*. On
+ * this map the first gesture is tapping corners, not dragging, so on a phone
+ * the credits box sat over the bottom of the drawing area. Once the map is
+ * first idle (style, imagery and labels loaded, so the attribution text is
+ * final), collapse it the same way MapLibre's own drag handler does.
+ * Collapsing only once means it stays open if the user taps to expand it.
+ */
+function CollapsedAttribution() {
+  const { map, isLoaded } = useMap();
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    const collapse = () =>
+      map.getContainer().querySelector(".maplibregl-ctrl-attrib.maplibregl-compact")?.classList.remove("maplibregl-compact-show");
+    map.once("idle", collapse);
+    return () => { map.off("idle", collapse); };
+  }, [map, isLoaded]);
+  return null;
+}
+
 /** The terra-draw instance, bound to the MapLibre map for the life of the form. */
 function Drawing({
   polygon, onChange, onModeChange, drawRef,
@@ -240,6 +263,7 @@ export function DrawMap({
         <Map center={REGION.center} zoom={REGION.zoom} theme="light" doubleClickZoom={false}>
           <ReferenceLayers satellite={satellite} others={others} />
           <FocusOn focus={focus} polygon={polygon} />
+          <CollapsedAttribution />
           <Drawing polygon={polygon} onChange={onChange} onModeChange={setMode} drawRef={drawRef} />
           <MapControls showLocate showFullscreen />
         </Map>

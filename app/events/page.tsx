@@ -6,6 +6,7 @@ import { formatHectares } from "@/lib/wrt/events/geo";
 import { eventViews } from "@/lib/wrt/events/views";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
+import { DataTable } from "@/components/wrt/shared/data-table";
 import { PrototypeNotice } from "@/components/wrt/events/prototype-notice";
 
 export const metadata: Metadata = {
@@ -52,35 +53,39 @@ export default async function EventsPage({ searchParams }: PageProps<"/events">)
         </EmptyState>
       ) : (
         <Card variant="table">
-          <div className="ev-table" role="table" aria-label="Planting events">
-            <div className="cn-table__row cn-table__row--head ev-table__row" role="row">
-              <span role="columnheader">Date</span>
-              <span role="columnheader">Site</span>
-              <span role="columnheader">Season</span>
-              <span role="columnheader">Species</span>
-              <span role="columnheader" className="cn-num">Plants</span>
-              <span role="columnheader" className="cn-num">Area</span>
-              <span role="columnheader"><span className="sr-only">Actions</span></span>
-            </div>
-            {views.map((v) => (
-              <div key={v.event.id} className="cn-table__row cn-table__row--divided ev-table__row" role="row">
-                <span role="cell" className="whitespace-nowrap">{v.dateLabel}</span>
-                <span role="cell" className="min-w-0">
-                  <Link href={`/sites/${v.event.placeSlug}`} className="cn-link">{v.siteName}</Link>
-                  {v.partName && <span className="wrt-muted block truncate">{v.partName}</span>}
-                </span>
-                <span role="cell">{v.seasonLabel}</span>
-                <span role="cell" className="min-w-0 truncate" title={v.species.map((s) => s.name).join(", ")}>
-                  {v.species.length === 1 ? v.species[0].name : `${v.species[0].name} + ${v.species.length - 1} more`}
-                </span>
-                <span role="cell" className="cn-num cn-num--strong">{formatNumber(v.totalPlants)}</span>
-                <span role="cell" className="cn-num">{formatHectares(v.areaM2)}</span>
-                <span role="cell" className="text-right">
-                  <Link href={`/events/${v.event.id}/edit`} className="cn-link">Edit<span className="sr-only"> {v.dateLabel} at {v.siteName}</span></Link>
-                </span>
-              </div>
-            ))}
-          </div>
+          <DataTable
+            caption="Planting events, newest first"
+            rows={views}
+            rowKey={(v) => v.event.id}
+            minWidth={720}
+            columns={[
+              { key: "date", header: "Date", cell: (v) => v.dateLabel, nowrap: true },
+              {
+                key: "site", header: "Site",
+                cell: (v) => (
+                  <>
+                    <Link href={`/sites/${v.event.placeSlug}`} className="cn-link">{v.siteName}</Link>
+                    {v.partName && <span className="wrt-muted block">{v.partName}</span>}
+                  </>
+                ),
+              },
+              { key: "season", header: "Season", cell: (v) => v.seasonLabel, nowrap: true },
+              {
+                key: "species", header: "Species",
+                cell: (v) => (v.species.length === 1 ? v.species[0].name : `${v.species[0].name} + ${v.species.length - 1} more`),
+              },
+              { key: "plants", header: "Plants", cell: (v) => formatNumber(v.totalPlants), numeric: true, strong: true },
+              { key: "area", header: "Area", cell: (v) => formatHectares(v.areaM2), numeric: true },
+              {
+                key: "edit", header: "Actions", hideHeader: true, className: "text-right",
+                cell: (v) => (
+                  <Link href={`/events/${v.event.id}/edit`} className="cn-link">
+                    Edit<span className="sr-only"> {v.dateLabel} at {v.siteName}</span>
+                  </Link>
+                ),
+              },
+            ]}
+          />
         </Card>
       )}
       <Rule>Plants are what was entered on the form. Areas are calculated from the drawn shape.</Rule>

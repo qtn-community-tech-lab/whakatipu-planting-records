@@ -124,7 +124,14 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 }
 
 /* ---------------------------------------------------------------- tables */
-.wrt-table-wrap { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+/*
+ * position: relative makes the wrapper the containing block for anything
+ * absolutely positioned inside the table, such as .sr-only text in a cell.
+ * Without it that text escapes the scroll area. It then sits at the table's
+ * far edge and widens the whole page on mobile, so the page scrolls instead
+ * of the table.
+ */
+.wrt-table-wrap { position: relative; overflow-x: auto; overscroll-behavior-x: contain; margin: 0 -4px; padding: 0 4px; }
 .wrt-table { width: 100%; border-collapse: collapse; font: var(--type-cell); color: var(--text-strong); }
 .wrt-table th {
   text-align: left; font: var(--type-table-head); color: var(--text-muted); padding: 10px; white-space: nowrap;

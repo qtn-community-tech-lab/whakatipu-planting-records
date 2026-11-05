@@ -31,8 +31,7 @@
 .ev-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(transparent, var(--surface-app) 40%); }
 .ev-delete { color: var(--cn-risk-fg); }
 
-/* List */
-.ev-table__row { grid-template-columns: 130px minmax(0, 1.2fr) 110px minmax(0, 1.4fr) 80px 80px 60px; }
+/* List: uses the shared DataTable (components/wrt/shared/data-table.tsx). */
 
 @media (max-width: 760px) {
   .ev-grid, .ev-grid--3 { grid-template-columns: minmax(0, 1fr); }
@@ -40,9 +39,6 @@
   .ev-line__remove { grid-column: 1 / -1; margin-top: 0; justify-self: start; }
   .ev-map__frame { height: 58vh; }
   .ev-actions .cn-btn { flex: 1; }
-  .ev-table__row { grid-template-columns: minmax(0, 1fr) auto; }
-  .ev-table__row > :nth-child(3), .ev-table__row > :nth-child(4), .ev-table__row > :nth-child(6) { display: none; }
-  .ev-table__row > :nth-child(5) { text-align: right; }
 }
 @media (pointer: coarse) {
   .ev-form .cn-btn--sm { min-height: 44px; }
