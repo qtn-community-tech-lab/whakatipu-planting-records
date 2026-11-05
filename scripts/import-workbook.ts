@@ -221,16 +221,19 @@ async function main() {
   console.log(`  (CSV: ${sites.length} sites, ${areas.length} areas, ${species.length} species, ${lines.length} lines, ${notes.length} notes)`);
 
   if (write) {
-    // Read the totals back from the database and compare with the workbook's own TOTAL cells.
-    const totals = check(await db.from("totals_by_season").select("season_label, plants, workbook_total").order("season_order"), "read totals") as Row[];
+    // Read the totals back from the database and compare with the workbook's own TOTAL cells, as the CSV states them.
+    // A season the database doesn't return counts as a mismatch, so none can be skipped quietly.
+    const totals = check(await db.from("totals_by_season").select("season_label, plants").order("season_order"), "read totals") as Row[];
+    const plantsOf = new Map(totals.map((t) => [t.season_label, t.plants]));
     let off = 0;
     console.log("\nSeason        database   workbook   difference");
-    for (const t of totals.filter((x) => x.workbook_total !== null)) {
-      const d = Number(t.plants) - Number(t.workbook_total);
-      if (d) off++;
-      console.log(`  ${String(t.season_label).padEnd(12)}${String(t.plants).padStart(9)}${String(t.workbook_total).padStart(11)}${String(d).padStart(13)}`);
+    for (const t of seasonTotals) {
+      const got = plantsOf.get(t.label);
+      const d = got == null ? null : Number(got) - Number(t.workbook_total);
+      if (d !== 0) off++;
+      console.log(`  ${String(t.label).padEnd(12)}${String(got ?? "missing").padStart(9)}${String(t.workbook_total).padStart(11)}${String(d ?? "-").padStart(13)}`);
     }
-    console.log(off ? `\n${off} season(s) do not match the workbook.` : "\nEvery season matches the workbook.");
+    console.log(off ? `\n${off} of ${seasonTotals.length} season(s) do not match the workbook.` : `\nAll ${seasonTotals.length} seasons match the workbook.`);
     if (off) process.exitCode = 1;
   }
 }
