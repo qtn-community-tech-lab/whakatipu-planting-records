@@ -75,6 +75,7 @@ Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It c
 A migration can be tried on a local Supabase in Docker before it goes near the hosted project:
 
 ```bash
+npx supabase@2.121.0 init           # once: writes supabase/config.toml, which isn't committed
 npx supabase@2.121.0 start          # first run downloads the images
 npx supabase@2.121.0 db reset       # applies every file in migrations/, in order
 npx supabase@2.121.0 status -o env  # the local URL and keys
