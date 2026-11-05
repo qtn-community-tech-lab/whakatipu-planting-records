@@ -14,6 +14,7 @@ export type Database = {
           class: Database["public"]["Enums"]["site_class"] | null;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           description: string;
           lat: number | null;
           lng: number | null;
@@ -21,7 +22,6 @@ export type Database = {
           pin_checked_on: string | null;
           pin_source_url: string | null;
           radius_m: number | null;
-          deactivated_at: string | null;
           site: string;
           slug: string;
           updated_at: string;
@@ -33,6 +33,7 @@ export type Database = {
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -40,7 +41,6 @@ export type Database = {
           pin_checked_on?: string | null;
           pin_source_url?: string | null;
           radius_m?: number | null;
-          deactivated_at?: string | null;
           site: string;
           slug: string;
           updated_at?: string;
@@ -51,6 +51,7 @@ export type Database = {
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -58,7 +59,6 @@ export type Database = {
           pin_checked_on?: string | null;
           pin_source_url?: string | null;
           radius_m?: number | null;
-          deactivated_at?: string | null;
           site?: string;
           slug?: string;
           updated_at?: string;
@@ -121,12 +121,12 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           id: number;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
           question: string;
           resolved_at: string | null;
-          deactivated_at: string | null;
           text: string;
           updated_at: string;
           updated_by: string | null;
@@ -135,12 +135,12 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
           question: string;
           resolved_at?: string | null;
-          deactivated_at?: string | null;
           text?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -148,12 +148,12 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           kind?: Database["public"]["Enums"]["note_kind"];
           line?: number;
           question?: string;
           resolved_at?: string | null;
-          deactivated_at?: string | null;
           text?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -201,10 +201,10 @@ export type Database = {
           area: string;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           id: number;
           notes: string;
           planted_on: string | null;
-          deactivated_at: string | null;
           season: number;
           source: Database["public"]["Enums"]["planting_source"];
           type: Database["public"]["Enums"]["planting_type"] | null;
@@ -216,10 +216,10 @@ export type Database = {
           area: string;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           notes?: string;
           planted_on?: string | null;
-          deactivated_at?: string | null;
           season: number;
           source?: Database["public"]["Enums"]["planting_source"];
           type?: Database["public"]["Enums"]["planting_type"] | null;
@@ -230,10 +230,10 @@ export type Database = {
           area?: string;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           notes?: string;
           planted_on?: string | null;
-          deactivated_at?: string | null;
           season?: number;
           source?: Database["public"]["Enums"]["planting_source"];
           type?: Database["public"]["Enums"]["planting_type"] | null;
@@ -304,12 +304,12 @@ export type Database = {
           confidence: string | null;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           id: number;
           legacy_code: string | null;
           planting_event: number;
           precision: string | null;
           quantity: number | null;
-          deactivated_at: string | null;
           season_original: string | null;
           site_original: string | null;
           source_cell: string | null;
@@ -325,12 +325,12 @@ export type Database = {
           confidence?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event: number;
           precision?: string | null;
           quantity?: number | null;
-          deactivated_at?: string | null;
           season_original?: string | null;
           site_original?: string | null;
           source_cell?: string | null;
@@ -345,12 +345,12 @@ export type Database = {
           confidence?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event?: number;
           precision?: string | null;
           quantity?: number | null;
-          deactivated_at?: string | null;
           season_original?: string | null;
           site_original?: string | null;
           source_cell?: string | null;
@@ -424,8 +424,8 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
-          question: string;
           deactivated_at: string | null;
+          question: string;
           ruled_by: string | null;
           ruled_on: string | null;
           ruling: string | null;
@@ -437,8 +437,8 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
-          question: string;
           deactivated_at?: string | null;
+          question: string;
           ruled_by?: string | null;
           ruled_on?: string | null;
           ruling?: string | null;
@@ -449,8 +449,8 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
-          question?: string;
           deactivated_at?: string | null;
+          question?: string;
           ruled_by?: string | null;
           ruled_on?: string | null;
           ruling?: string | null;
@@ -510,10 +510,10 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           description: string;
           is_scheme: boolean;
           name: string;
-          deactivated_at: string | null;
           slug: string;
           updated_at: string;
           updated_by: string | null;
@@ -522,10 +522,10 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           is_scheme?: boolean;
           name: string;
-          deactivated_at?: string | null;
           slug: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -533,10 +533,10 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           is_scheme?: boolean;
           name?: string;
-          deactivated_at?: string | null;
           slug?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -564,6 +564,7 @@ export type Database = {
           contested_group: string | null;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           maori_name: string | null;
           needs_decision: boolean;
           over_5m: boolean | null;
@@ -571,7 +572,6 @@ export type Database = {
           profile: NonNullable<Json>;
           register_code: string | null;
           register_note: string | null;
-          deactivated_at: string | null;
           scientific_name: string;
           slug: string;
           status: Database["public"]["Enums"]["species_status"] | null;
@@ -587,6 +587,7 @@ export type Database = {
           contested_group?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
@@ -594,7 +595,6 @@ export type Database = {
           profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
-          deactivated_at?: string | null;
           scientific_name: string;
           slug: string;
           status?: Database["public"]["Enums"]["species_status"] | null;
@@ -609,6 +609,7 @@ export type Database = {
           contested_group?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
@@ -616,7 +617,6 @@ export type Database = {
           profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
-          deactivated_at?: string | null;
           scientific_name?: string;
           slug?: string;
           status?: Database["public"]["Enums"]["species_status"] | null;
@@ -646,25 +646,25 @@ export type Database = {
       users: {
         Row: {
           created_at: string;
+          deactivated_at: string | null;
           id: string;
           is_staff: boolean;
           name: string;
-          deactivated_at: string | null;
         };
         ComputedFields: never;
         Insert: {
           created_at?: string;
+          deactivated_at?: string | null;
           id: string;
           is_staff?: boolean;
           name: string;
-          deactivated_at?: string | null;
         };
         Update: {
           created_at?: string;
+          deactivated_at?: string | null;
           id?: string;
           is_staff?: boolean;
           name?: string;
-          deactivated_at?: string | null;
         };
         Relationships: [];
       };

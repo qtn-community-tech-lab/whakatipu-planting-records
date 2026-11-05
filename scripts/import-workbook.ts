@@ -217,7 +217,7 @@ async function main() {
 
   // ------------------------------------------------------------------ 3. report
   console.log(write ? "Written:" : "Dry run, nothing written. Would change:");
-  for (const [table, added, changed] of report) console.log(`  ${table.padEnd(26)} +${added} new, ${changed} changed`);
+  for (const [table, added, changed] of report) console.log(`  ${table.padEnd(30)} +${added} new, ${changed} changed`);
   console.log(`  (CSV: ${sites.length} sites, ${areas.length} areas, ${species.length} species, ${lines.length} lines, ${notes.length} notes)`);
 
   if (write) {
