@@ -30,7 +30,7 @@ describe.skipIf(!live)("live planting lines keep their provenance", { timeout: 6
 // The update sets a plain column: setting an identity id is refused for a different reason (428C9).
 const TABLES: [table: string, column: string, none: string | number][] = [
   ["sites", "slug", "no-such-row"], ["areas", "slug", "no-such-row"], ["species", "slug", "no-such-row"],
-  ["questions", "slug", "no-such-row"], ["seasons", "id", -1], ["plantings", "id", -1],
+  ["questions", "slug", "no-such-row"], ["seasons", "id", -1], ["planting_events", "id", -1],
   ["planting_lines", "id", -1], ["notes", "id", -1],
 ];
 
@@ -38,7 +38,7 @@ describe.skipIf(!live)("the public key is read-only", { timeout: 60_000 }, () =>
   it.each(TABLES)("cannot add to, change or delete from %s", async (table, column, none) => {
     const c = db();
     expect((await c.from(table).insert({})).error?.code, "insert").toBe("42501");
-    const change = table === "seasons" ? { label: "x" } : { retired_at: null };
+    const change = table === "seasons" ? { label: "x" } : { deactivated_at: null };
     expect((await c.from(table).update(change).eq(column, none)).error?.code, "update").toBe("42501");
     expect((await c.from(table).delete().eq(column, none)).error?.code, "delete").toBe("42501");
   });

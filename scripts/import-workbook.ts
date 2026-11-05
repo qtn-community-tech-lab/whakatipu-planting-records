@@ -9,7 +9,7 @@
  *
  * Safe to run again: rows match on slug, or spreadsheet code for lines, and only
  * differences are written. It never touches descriptions, pins, profiles, photos or
- * rulings, keeps notes a person wrote, and retires lines that leave the CSV.
+ * rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
  */
 import { createClient } from "@supabase/supabase-js";
 import { DEFAULT_DATA_DIR, loadFromDirectory } from "../lib/wrt/csv/csv-repository";
@@ -154,9 +154,9 @@ async function main() {
     check(await db.from("seasons").update({ workbook_total: t.workbook_total, workbook_cell: t.workbook_cell }).eq("label", t.label), "write seasons");
   }
 
-  // Plantings: one "workbook" planting per area per season.
+  // Planting events: one "workbook" event per area per season.
   const plantingKey = (area: unknown, season: unknown) => `${area}|${season}`;
-  let plantings = await readAll<{ id: number; area: string; season: number; source: string }>("plantings", "id, area, season, source", "id")
+  let plantings = await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id")
     .then((rows) => rows.filter((p) => p.source === "workbook"));
   const wantPlantings = [...new Map(lines.map((l) => {
     const season = seasonId.get(l.season);
@@ -165,30 +165,30 @@ async function main() {
   })).values()];
   const havePlantings = new Set(plantings.map((p) => plantingKey(p.area, p.season)));
   const newPlantings = wantPlantings.filter((p) => !havePlantings.has(plantingKey(p.area, p.season)));
-  report.push(["plantings", newPlantings.length, 0]);
+  report.push(["planting_events", newPlantings.length, 0]);
   if (write && newPlantings.length) {
-    await inBatches(newPlantings, (b) => db.from("plantings").insert(b), "write plantings");
-    plantings = (await readAll<{ id: number; area: string; season: number; source: string }>("plantings", "id, area, season, source", "id"))
+    await inBatches(newPlantings, (b) => db.from("planting_events").insert(b), "write planting_events");
+    plantings = (await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id"))
       .filter((p) => p.source === "workbook");
   }
   const plantingId = new Map(plantings.map((p) => [plantingKey(p.area, p.season), p.id]));
 
-  // Lines, matched on their spreadsheet code. Unknown plantings only exist in a dry run.
-  const haveLines = await readAll("planting_lines", `id, planting, species, quantity, legacy_code, ${PROVENANCE}, retired_at`, "id")
+  // Lines, matched on their spreadsheet code. Unknown planting events only exist in a dry run.
+  const haveLines = await readAll("planting_lines", `id, planting_event, species, quantity, legacy_code, ${PROVENANCE}, deactivated_at`, "id")
     .then((rows) => rows.filter((l) => l.legacy_code !== null));
   const wantLines: Row[] = lines.map((l) => ({
-    legacy_code: l.legacy_code, planting: plantingId.get(plantingKey(l.area, seasonId.get(l.season))) ?? -1,
-    species: l.species, quantity: l.quantity, retired_at: null,
+    legacy_code: l.legacy_code, planting_event: plantingId.get(plantingKey(l.area, seasonId.get(l.season))) ?? -1,
+    species: l.species, quantity: l.quantity, deactivated_at: null,
     ...Object.fromEntries(PROVENANCE.split(", ").map((c) => [c, l[c as keyof typeof l]])),
   }));
   const lineDiff = diff(wantLines, haveLines, "legacy_code");
   const codes = new Set(lines.map((l) => l.legacy_code));
-  const toRetire = haveLines.filter((l) => l.retired_at === null && !codes.has(l.legacy_code as string));
-  report.push(["planting_lines", lineDiff.added.length, lineDiff.changed.length], ["planting_lines (retired)", 0, toRetire.length]);
+  const toDeactivate = haveLines.filter((l) => l.deactivated_at === null && !codes.has(l.legacy_code as string));
+  report.push(["planting_lines", lineDiff.added.length, lineDiff.changed.length], ["planting_lines (deactivated)", 0, toDeactivate.length]);
   if (write) {
     await inBatches(lineDiff.all, (b) => db.from("planting_lines").upsert(b, { onConflict: "legacy_code" }), "write planting_lines");
-    await inBatches(toRetire.map((l) => l.id as number), (ids) =>
-      db.from("planting_lines").update({ retired_at: new Date().toISOString() }).in("id", ids), "retire planting_lines");
+    await inBatches(toDeactivate.map((l) => l.id as number), (ids) =>
+      db.from("planting_lines").update({ deactivated_at: new Date().toISOString() }).in("id", ids), "deactivate planting_lines");
   }
 
   // Notes: the import's own notes (no author, not resolved) follow the CSV; anything else is kept.

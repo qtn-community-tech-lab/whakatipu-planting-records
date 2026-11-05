@@ -6,12 +6,13 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 
 | File | What it does |
 |---|---|
-| `migrations/20261102000000_schema.sql` | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027 |
+| `migrations/20261102000000_schema.sql` | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users; `naming.sql` renames two of them), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027 |
 | `migrations/20261102000100_access_rules.sql` | Access rules: signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app |
 | `migrations/20261103000000_public_reads.sql` | Signed-out visitors read live rows and the totals views, the same as a signed-in volunteer. They can't write, and can't see `users` |
 | `migrations/20261104000000_seasons_page.sql` | Adds year, half, workbook cell and review counts to the season totals, and the views `season_species`, `season_sites` and `totals_by_question` |
 | `migrations/20261105000000_line_records.sql` | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details` |
-| `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
+| `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes |
+| `checks/schema_check.sql` | Checks everything the migrations create, that nothing still has an old name, the imported row counts and pins, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
 
 ## Where they have run
@@ -60,10 +61,23 @@ psql "$DATABASE_URL" -f supabase/migrations/20261102000100_access_rules.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261103000000_public_reads.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261104000000_seasons_page.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261105000000_line_records.sql
+psql "$DATABASE_URL" -f supabase/migrations/20261106000000_naming.sql
 ```
 
 Each file runs as one transaction, so a failure leaves nothing half-made.
 
 ## Checking it all ran
 
-Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 8 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers, the table privileges, and that signed-out visitors can't write or see `users`. After the import, it also checks the row counts, that every line has its workbook file, sheet and cell, and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
+Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 8 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers, the table privileges, that signed-out visitors can't write or see `users`, and that no column, function, trigger, index or constraint still has a name `naming.sql` replaced. After the imports, it also checks the row counts, the 50 map pins, that every line has its workbook file, sheet and cell, and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
+
+## Testing on a local copy
+
+A migration can be tried on a local Supabase in Docker before it goes near the hosted project:
+
+```bash
+npx supabase@2.121.0 start          # first run downloads the images
+npx supabase@2.121.0 db reset       # applies every file in migrations/, in order
+npx supabase@2.121.0 status -o env  # the local URL and keys
+```
+
+Point the imports, tests and app at it by setting `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321` and the local keys on the command line; values set there win over `.env.local`. Check it with `psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -f supabase/checks/schema_check.sql`, and stop it with `npx supabase@2.121.0 stop`.

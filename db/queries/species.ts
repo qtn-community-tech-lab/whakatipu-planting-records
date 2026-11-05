@@ -2,12 +2,12 @@
 import { db } from "@/db/client";
 import { lines, speciesTotals } from "./views";
 
-/** The register, A to Z, history or not. Retired species are left out. */
+/** The register, A to Z, history or not. Deactivated species are left out. */
 export async function listSpecies() {
   const { data } = await (await db())
     .from("species")
     .select("slug, scientific_name, common_name, maori_name, status, threatened")
-    .is("retired_at", null)
+    .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
   return data;
@@ -26,7 +26,7 @@ export async function readSpecies(slug: string) {
   const [species, totals, history] = await Promise.all([
     client
       .from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, register_note, profile, photos, retired_at")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, register_note, profile, photos, deactivated_at")
       .eq("slug", slug)
       .maybeSingle()
       .throwOnError(),

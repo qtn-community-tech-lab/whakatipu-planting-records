@@ -24,7 +24,7 @@ export const areaPins = (db: Db) =>
   db
     .from("areas")
     .select("slug, name, wrt_number, class, site, lat, lng, radius_m")
-    .is("retired_at", null)
+    .is("deactivated_at", null)
     .order("site")
     .order("name");
 
@@ -79,8 +79,8 @@ export const questions = (db: Db) =>
   db
     .from("questions")
     .select("slug, question, ruling, ruled_on, notes(count)")
-    .is("retired_at", null)
+    .is("deactivated_at", null)
     .is("notes.resolved_at", null)
-    .is("notes.retired_at", null)
+    .is("notes.deactivated_at", null)
     .in("notes.kind", ["ruling", "confirm"])
     .order("slug");

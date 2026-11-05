@@ -14,7 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 import pins from "../data/site-locations.json";
 
 type Area = {
-  slug: string; site: string; wrt_number: string | null; retired_at: string | null;
+  slug: string; site: string; wrt_number: string | null; deactivated_at: string | null;
   lat: number | null; lng: number | null; pin_source_url: string | null; pin_checked_on: string | null;
 };
 type Pin = (typeof pins)[number] & { parcelIds?: string[] };
@@ -28,9 +28,9 @@ async function main() {
   const db = createClient(url, key, { auth: { persistSession: false } });
 
   const { data, error } = await db.from("areas")
-    .select("slug, site, wrt_number, retired_at, lat, lng, pin_source_url, pin_checked_on");
+    .select("slug, site, wrt_number, deactivated_at, lat, lng, pin_source_url, pin_checked_on");
   if (error) throw new Error(`read areas: ${error.message}`);
-  const areas = (data as Area[]).filter((a) => a.retired_at === null);
+  const areas = (data as Area[]).filter((a) => a.deactivated_at === null);
 
   const set: { area: Area; pin: Pin }[] = [];
   const same: string[] = [], kept: string[] = [], skipped: string[] = [];
