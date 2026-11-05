@@ -1,4 +1,4 @@
-export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "ask" | "about";
+export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "events" | "ask" | "about";
 export type NavCountKey = "sites" | "species" | "seasons" | "records";
 export type NavCounts = Partial<Record<NavCountKey, string>>;
 
@@ -15,6 +15,8 @@ export const NAV_MAIN: readonly NavItem[] = [
   { href: "/species", label: "Species", icon: "species", count: "species" },
   { href: "/seasons", label: "Seasons", icon: "seasons", count: "seasons" },
   { href: "/records", label: "Records", icon: "records", count: "records" },
+  // Prototype data entry (lib/wrt/events). The list of saved events is linked from the form page.
+  { href: "/events/new", label: "New planting event", icon: "events" },
   { href: "/ask", label: "Ask", icon: "ask" },
 ];
 

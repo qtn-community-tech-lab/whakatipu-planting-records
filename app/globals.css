@@ -18,6 +18,7 @@
 @import "../styles/records-explore.css";
 @import "../styles/species-profile.css";
 @import "../styles/species-profile-preview.css";
+@import "../styles/events.css";
 
 @custom-variant dark (&:is(.dark *));
 

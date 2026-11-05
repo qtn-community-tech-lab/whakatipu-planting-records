@@ -1,0 +1,49 @@
+/*
+ * Planting-event pages (/events, /events/new, /events/[id]/edit).
+ * Built only from Canopy tokens and classes, like styles/app.css.
+ */
+.ev-form { display: flex; flex-direction: column; gap: 16px; }
+.ev-section { gap: 16px; }
+.ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.ev-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ev-form .wrt-select { width: 100%; }
+.ev-notes { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
+.ev-file { font: var(--type-small); color: var(--text-muted); }
+
+/* Validation */
+.ev-error { font: 600 12px/1.3 var(--font-sans); color: var(--cn-risk-fg); }
+.ev-invalid, .ev-form [aria-invalid="true"]:is(input, select, textarea, button) { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
+
+/* Species lines */
+.ev-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.ev-line { display: grid; grid-template-columns: minmax(0, 1fr) 140px auto; gap: 12px; align-items: start; }
+.ev-line__remove { margin-top: 22px; }
+.ev-species-trigger { width: 100%; height: auto; min-height: var(--h-input); padding-block: 8px; text-align: left; display: flex; align-items: center; cursor: pointer; }
+
+/* Map */
+.ev-map { display: flex; flex-direction: column; gap: 10px; }
+.ev-map__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+.ev-map__seg { width: 220px; }
+.ev-map__frame { position: relative; height: min(62vh, 560px); min-height: 340px; border-radius: var(--radius-tile); overflow: hidden; border: 1px solid var(--border-card); }
+.ev-map__help { font: var(--type-small); color: var(--text-body); }
+
+/* Actions */
+.ev-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(transparent, var(--surface-app) 40%); }
+.ev-delete { color: var(--cn-risk-fg); }
+
+/* List */
+.ev-table__row { grid-template-columns: 130px minmax(0, 1.2fr) 110px minmax(0, 1.4fr) 80px 80px 60px; }
+
+@media (max-width: 760px) {
+  .ev-grid, .ev-grid--3 { grid-template-columns: minmax(0, 1fr); }
+  .ev-line { grid-template-columns: minmax(0, 1fr) 96px; }
+  .ev-line__remove { grid-column: 1 / -1; margin-top: 0; justify-self: start; }
+  .ev-map__frame { height: 58vh; }
+  .ev-actions .cn-btn { flex: 1; }
+  .ev-table__row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ev-table__row > :nth-child(3), .ev-table__row > :nth-child(4), .ev-table__row > :nth-child(6) { display: none; }
+  .ev-table__row > :nth-child(5) { text-align: right; }
+}
+@media (pointer: coarse) {
+  .ev-form .cn-btn--sm { min-height: 44px; }
+}
