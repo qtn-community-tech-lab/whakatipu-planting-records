@@ -32,14 +32,10 @@ with expected (part, item, want, got) as (
   union all select 'access rules', 'functions (is_staff, touch_row, guard_deactivated, guard_history)', 4,
     (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname = 'public' and p.proname in ('is_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
-  union all select 'access rules', 'row rules (policies)', 23,
+  union all select 'access rules', 'row rules (policies: 23 here, 8 from public_reads)', 31,
     (select count(*)::int from pg_policies where schemaname = 'public')
   union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
-  union all select 'access rules', 'signed out can read no table or view', 0,
-    (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
-      where n.nspname = 'public' and c.relkind in ('r', 'v')
-        and has_table_privilege('anon', c.oid, 'select'))
   union all select 'access rules', 'signed in can delete from no table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'
@@ -48,6 +44,18 @@ with expected (part, item, want, got) as (
     (select count(*)::int from (values ('public.seasons'), ('public.users')) v (t)
       where has_table_privilege('authenticated', v.t, 'insert')
          or has_table_privilege('authenticated', v.t, 'update'))
+  -- Public reads file: signed out reads, never writes, never sees users ----
+  union all select 'public reads', 'signed out can write no table', 0,
+    (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
+      where n.nspname = 'public' and c.relkind = 'r'
+        and (has_table_privilege('anon', c.oid, 'insert')
+          or has_table_privilege('anon', c.oid, 'update')
+          or has_table_privilege('anon', c.oid, 'delete')))
+  union all select 'public reads', 'signed out cannot read users', 0,
+    (select has_table_privilege('anon', 'public.users', 'select')::int)
+  union all select 'seasons page', 'views (season_species, season_sites, totals_by_question)', 3,
+    (select count(*)::int from pg_views where schemaname = 'public' and viewname in
+      ('season_species', 'season_sites', 'totals_by_question'))
 
   -- Naming file: nothing still has an old name ----------------------------
   union all select 'naming', 'deactivated_at columns (users and the 7 history tables)', 8,
@@ -75,7 +83,10 @@ with expected (part, item, want, got) as (
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)
   union all select 'import', 'planting events', 360, (select count(*)::int from public.planting_events where source = 'workbook')
   union all select 'import', 'planting lines', 5449, (select count(*)::int from public.planting_lines where legacy_code is not null)
-  union all select 'import', 'review notes', 1377, (select count(*)::int from public.notes)
+  union all select 'import', 'planting lines missing their workbook file, sheet or cell', 0,
+    (select count(*)::int from public.planting_lines where legacy_code is not null
+      and (source_file is null or source_sheet is null or source_cell is null))
+  union all select 'import', 'review notes (1,377 until the Slope Hill 2024 ruling on 3 Nov)', 1339, (select count(*)::int from public.notes)
   union all select 'import', 'season TOTAL cells filled', 23,
     (select count(*)::int from public.seasons where workbook_total is not null)
   union all select 'import', 'seasons that differ from their TOTAL cell', 0,

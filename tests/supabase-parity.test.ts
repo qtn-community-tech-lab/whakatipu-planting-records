@@ -1,14 +1,13 @@
 /**
  * Every page's figures from Supabase match the CSV version. Runs against the
- * Supabase project in .env.local as a signed-out visitor; skipped without one.
+ * Supabase project (tests/live-env.ts) as a signed-out visitor; skipped without one.
  */
 import { describe, expect, it } from "vitest";
+import { live as ready } from "./live-env";
 import { CsvWrtRepository } from "@/lib/wrt/csv/csv-repository";
 import { createQueries } from "@/lib/wrt/queries";
 import { SupabaseWrtRepository } from "@/db/repository";
 
-try { process.loadEnvFile(".env.local"); } catch {}
-const ready = !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 const csv = createQueries(new CsvWrtRepository());
 const db = createQueries(new SupabaseWrtRepository());
