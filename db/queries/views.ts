@@ -4,6 +4,9 @@
  */
 import type { Db } from "@/db/types";
 
+/** Rows per page. Supabase returns at most 1,000 rows a request, so every unbounded read pages. */
+export const PAGE_SIZE = 1000;
+
 /** Every site with its totals, most recorded first. */
 export const siteTotals = (db: Db) =>
   db

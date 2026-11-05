@@ -62,12 +62,13 @@ with expected (part, item, want, got) as (
     (select count(*)::int from information_schema.columns
       where table_schema = 'public' and column_name = 'deactivated_at'
         and table_name in (select tablename from pg_tables where schemaname = 'public'))
-  union all select 'naming', 'columns, functions, triggers, indexes or constraints with an old name', 0,
+  union all select 'naming', 'columns, functions, triggers, indexes, sequences or constraints with an old name', 0,
     (select count(*)::int from (
        select column_name::text as name from information_schema.columns
          where table_schema = 'public' and column_name in ('retired_at', 'planting')
        union all select proname::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-         where n.nspname = 'public' and (proname like '%retired%' or prosrc like '%retired_at%' or prosrc like '%''plantings''%')
+         where n.nspname = 'public' and (proname like '%retired%' or prosrc like '%retired_at%' or prosrc like '%plantings%')
+       union all select sequencename::text from pg_sequences where schemaname = 'public' and sequencename like '%plantings%'
        union all select tgname::text from pg_trigger where not tgisinternal and tgname like '%retired%'
        union all select indexname::text from pg_indexes where schemaname = 'public' and indexname like '%plantings%'
        union all select conname::text from pg_constraint c join pg_namespace n on n.oid = c.connamespace

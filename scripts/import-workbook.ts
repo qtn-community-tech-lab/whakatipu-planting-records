@@ -155,29 +155,29 @@ async function main() {
   }
 
   // Planting events: one "workbook" event per area per season.
-  const plantingKey = (area: unknown, season: unknown) => `${area}|${season}`;
-  let plantings = await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id")
+  const eventKey = (area: unknown, season: unknown) => `${area}|${season}`;
+  let events = await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id")
     .then((rows) => rows.filter((p) => p.source === "workbook"));
-  const wantPlantings = [...new Map(lines.map((l) => {
+  const wantEvents = [...new Map(lines.map((l) => {
     const season = seasonId.get(l.season);
     if (season === undefined) throw new Error(`${l.legacy_code}: season ${l.season} is not in the seasons table`);
-    return [plantingKey(l.area, season), { area: l.area, season, source: "workbook" }];
+    return [eventKey(l.area, season), { area: l.area, season, source: "workbook" }];
   })).values()];
-  const havePlantings = new Set(plantings.map((p) => plantingKey(p.area, p.season)));
-  const newPlantings = wantPlantings.filter((p) => !havePlantings.has(plantingKey(p.area, p.season)));
-  report.push(["planting_events", newPlantings.length, 0]);
-  if (write && newPlantings.length) {
-    await inBatches(newPlantings, (b) => db.from("planting_events").insert(b), "write planting_events");
-    plantings = (await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id"))
+  const haveEvents = new Set(events.map((p) => eventKey(p.area, p.season)));
+  const newEvents = wantEvents.filter((p) => !haveEvents.has(eventKey(p.area, p.season)));
+  report.push(["planting_events", newEvents.length, 0]);
+  if (write && newEvents.length) {
+    await inBatches(newEvents, (b) => db.from("planting_events").insert(b), "write planting_events");
+    events = (await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id"))
       .filter((p) => p.source === "workbook");
   }
-  const plantingId = new Map(plantings.map((p) => [plantingKey(p.area, p.season), p.id]));
+  const eventId = new Map(events.map((p) => [eventKey(p.area, p.season), p.id]));
 
   // Lines, matched on their spreadsheet code. Unknown planting events only exist in a dry run.
   const haveLines = await readAll("planting_lines", `id, planting_event, species, quantity, legacy_code, ${PROVENANCE}, deactivated_at`, "id")
     .then((rows) => rows.filter((l) => l.legacy_code !== null));
   const wantLines: Row[] = lines.map((l) => ({
-    legacy_code: l.legacy_code, planting_event: plantingId.get(plantingKey(l.area, seasonId.get(l.season))) ?? -1,
+    legacy_code: l.legacy_code, planting_event: eventId.get(eventKey(l.area, seasonId.get(l.season))) ?? -1,
     species: l.species, quantity: l.quantity, deactivated_at: null,
     ...Object.fromEntries(PROVENANCE.split(", ").map((c) => [c, l[c as keyof typeof l]])),
   }));

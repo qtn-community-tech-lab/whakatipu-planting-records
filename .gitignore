@@ -53,4 +53,3 @@ supabase/.temp/
 /supabase/config.toml
 /supabase/.gitignore
 /supabase/.branches
-/supabase/.temp

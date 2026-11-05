@@ -43,7 +43,7 @@ npm run import-workbook -- --write   # makes the changes
 
 `tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
-Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and retires lines that leave the CSV.
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
 
 ## The map pins
 
@@ -68,7 +68,7 @@ Each file runs as one transaction, so a failure leaves nothing half-made.
 
 ## Checking it all ran
 
-Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 8 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers, the table privileges, that signed-out visitors can't write or see `users`, and that no column, function, trigger, index or constraint still has a name `naming.sql` replaced. After the imports, it also checks the row counts, the 50 map pins, that every line has its workbook file, sheet and cell, and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
+Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 8 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers, the table privileges, that signed-out visitors can't write or see `users`, and that no column, function, trigger, index, sequence or constraint still has a name `naming.sql` replaced. After the imports, it also checks the row counts, the 50 map pins, that every line has its workbook file, sheet and cell, and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
 
 ## Testing on a local copy
 
