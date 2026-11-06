@@ -30,12 +30,13 @@ The check has not been run yet. It needs a staff account, and sign-in isn't set 
 `scripts/import-workbook.ts` loads the history from `docs/planning/prototype/*.csv`: 39 sites, 78 areas, 164 species, 5,449 lines and 1,377 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
 
 ```bash
-npx tsx scripts/import-workbook.ts
+npm run import-workbook              # dry run: lists what would change, writes nothing
+npm run import-workbook -- --write   # makes the changes
 ```
 
-That is a dry run: it lists what would be added or changed and writes nothing. Add `--write` to make the changes. It then reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
+`tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
-Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and retires lines that leave the CSV.
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
 
 ## Running them on a new project
 
