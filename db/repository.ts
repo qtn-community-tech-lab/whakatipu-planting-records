@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
 import type { Database, Db } from "@/db/types";
+import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
 import type {
   Confidence, DataIssue, Parcel, Place, PlantingRecord, Precision, ReconciliationRow,
@@ -17,8 +18,6 @@ import { searchKey } from "@/lib/wrt/text";
 
 /** Reads are kept for 5 minutes, like every other Supabase read. */
 const KEEP_MS = 5 * 60 * 1000;
-/** Supabase returns at most 1,000 rows a request. */
-const PAGE = 1000;
 
 /**
  * The workbook's grand-total and exception checks: a fixed audit of the old
@@ -47,15 +46,15 @@ type Loaded = {
 /** Every line, oldest first, a page at a time. */
 async function allLines(db: Db) {
   const out = [];
-  for (let from = 0; ; from += PAGE) {
+  for (let from = 0; ; from += PAGE_SIZE) {
     const { data } = await db
       .from("line_details")
       .select("line_id, legacy_code, season, area, area_name, class, species, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
       .order("line_id")
-      .range(from, from + PAGE - 1)
+      .range(from, from + PAGE_SIZE - 1)
       .throwOnError();
     out.push(...data);
-    if (data.length < PAGE) return out;
+    if (data.length < PAGE_SIZE) return out;
   }
 }
 
@@ -64,9 +63,9 @@ async function load(db: Db): Promise<Loaded> {
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note")
-      .is("retired_at", null).throwOnError(),
-    db.from("sites").select("slug, name, is_scheme").is("retired_at", null).throwOnError(),
-    db.from("areas").select("slug, site, name, wrt_number, class").is("retired_at", null).throwOnError(),
+      .is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, is_scheme").is("deactivated_at", null).throwOnError(),
+    db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
   ]);
