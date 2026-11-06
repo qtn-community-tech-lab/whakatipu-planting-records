@@ -1,6 +1,7 @@
 -- WRT planting database: clearer names, from James Bayly's review of #4.
--- Run once in Supabase > SQL Editor, after line_records.sql. Deploy the app that
--- reads the new names at the same time: the old app reads plantings and retired_at.
+-- Run once in Supabase > SQL Editor, after every other migration: its date sorts it
+-- last, and on the hosted project that means after line_records.sql. Deploy the app
+-- that reads the new names at the same time: the old app reads plantings and retired_at.
 --
 --   plantings ............... planting_events (a planting line is something else)
 --   planting_lines.planting . planting_lines.planting_event
