@@ -14,14 +14,14 @@ export async function listSpecies(db: Db) {
 }
 
 /** Species with planting history, most recorded first. */
-export async function rankSpecies(db: Db) {
+export async function listSpeciesTotals(db: Db) {
   const { data } = await speciesTotals(db)
     .throwOnError();
   return data;
 }
 
 /** One species page: the species, its totals and every line it appears on. A retired species still opens, with deactivated_at set, so staff can see it. Null when there is no such species. */
-export async function getSpecies(db: Db, slug: string) {
+export async function readSpecies(db: Db, slug: string) {
   const [species, totals, history] = await Promise.all([
     db
       .from("species")
@@ -33,7 +33,7 @@ export async function getSpecies(db: Db, slug: string) {
       .eq("species", slug)
       .maybeSingle()
       .throwOnError(),
-    // shortcut: unpaged, the largest species has 279 lines; page it like findLines if one passes 1,000.
+    // shortcut: unpaged, the largest species has 279 lines; page it like findPlantingLines if one passes 1,000.
     lines(db)
       .eq("species", slug)
       .throwOnError(),
