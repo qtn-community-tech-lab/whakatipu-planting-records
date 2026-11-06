@@ -8,7 +8,7 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Supabase queries: one chained call per line, listed like parameters.
   {
-    files: ["db/queries/**/*.ts", "db/usecases/*/index.ts"],
+    files: ["db/queries/**/*.ts"],
     plugins: { "@stylistic": stylistic },
     rules: {
       "@stylistic/newline-per-chained-call": ["error", { ignoreChainWithDepth: 1 }],

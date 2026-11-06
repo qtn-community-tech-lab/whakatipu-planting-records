@@ -1,17 +1,13 @@
 /**
- * The columns the app reads and writes, so the Supabase client checks every name.
- * Writable columns come from each use case's types.ts. Hand-written for the demo;
- * `npx supabase gen types typescript --project-id <ref>` replaces this file later.
+ * The columns the app reads, so the Supabase client checks every name.
+ * Hand-written for the demo; `npx supabase gen types typescript --project-id <ref>`
+ * replaces this file later. Writes come in their own pull request.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { ReviewDecision } from "./usecases/answer-review-question/types";
-import type { SpeciesChanges } from "./usecases/edit-species/types";
-import type { PinChanges } from "./usecases/place-pin/types";
-import type { PlantingDay, PlantingLine } from "./usecases/record-planting-day/types";
 
 type SiteClass = "keystone" | "community" | "school" | null;
-/** Rows are never deleted; retiring sets this. */
-type Retired = { deactivated_at: string | null };
+/** Rows are never deleted; deactivating sets this. */
+type Deactivated = { deactivated_at: string | null };
 /** Every total keeps its split: plants = resolved + needing review. */
 type Split = { plants: number; plants_resolved: number; plants_needs_review: number };
 
@@ -30,11 +26,13 @@ export type LineDetails = {
 export type Database = {
   public: {
     Tables: {
-      species: Table<Required<SpeciesChanges> & Retired & {
+      species: Table<Deactivated & {
         slug: string; scientific_name: string; status: "core" | "appended" | "contested" | "seedlog_only" | null;
+        common_name: string | null; maori_name: string | null; suggested_spelling: string | null;
+        over_5m: boolean | null; threatened: boolean | null; threatened_te_kakano: boolean; register_note: string | null;
       }>;
-      site_locations: Table<Required<PinChanges> & Retired & { slug: string }>;
-      planting_lines: Table<PlantingLine & Retired & { id: number; event_id: number }>;
+      site_locations: Table<Deactivated & { slug: string; latitude: number; longitude: number; radius_m: number | null }>;
+      planting_lines: Table<Deactivated & { id: number; event_id: number; species_id: number; quantity: number | null }>;
     };
     Views: {
       line_details: View<LineDetails>;
@@ -52,21 +50,10 @@ export type Database = {
         plants_needs_review: number; lines_needs_review: number;
       }>;
     };
-    Functions: {
-      /** Saves an event and its lines together. Returns the new event's id. */
-      save_planting_day: { Args: { day: PlantingDay }; Returns: number };
-      /**
-       * Writes WRT's ruling on a question and resolves that question's notes, in one go.
-       * A line leaves review only when no other question on it is still open.
-       * Returns how many lines left review, or null when there is no such question.
-       */
-      answer_review_question: { Args: { topic: string; decision: ReviewDecision }; Returns: number | null };
-    };
+    Functions: Record<string, never>;
   };
 };
 
-/** The client every query and use case takes, from lib/supabase/server.ts or browser.ts. */
+/** The client every query takes, from lib/supabase/server.ts or browser.ts. */
 export type Db = SupabaseClient<Database>;
 
-/** The update that retires a row. Nothing is ever deleted. */
-export const retired = () => ({ deactivated_at: new Date().toISOString() });

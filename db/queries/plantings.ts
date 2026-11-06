@@ -5,10 +5,10 @@ import { lines, seasonTotals } from "./views";
 type LineFilter = Partial<Pick<LineDetails, "event_id" | "site" | "area" | "species" | "season" | "year">>;
 
 /** Lines per page. Supabase returns at most 1,000 rows a request, so every unbounded read pages. */
-export const PAGE_SIZE = 100;
+export const PAGE_SIZE = 1000;
 
 /** One page of lines matching any mix of event, site, area, species, season and year. Page 0 is first. */
-export async function findLines(db: Db, filter: LineFilter, page = 0) {
+export async function findPlantingLines(db: Db, filter: LineFilter, page = 0) {
   let query = lines(db);
   for (const [column, value] of Object.entries(filter)) {
     if (value !== undefined) query = query.eq(column as keyof LineFilter, value);
