@@ -1,5 +1,5 @@
 -- WRT planting database: access-rule check.
--- Run in Supabase > SQL Editor after rls.sql. It acts as signed out, as a volunteer
+-- Run in Supabase > SQL Editor after all four migrations. It acts as signed out, as a volunteer
 -- and as your staff account, tries each thing, and lists PASS or FAIL.
 -- It changes nothing: the one test site it adds is removed at the end.
 
@@ -30,21 +30,21 @@ select pg_temp.try(4, 'Volunteer', 'read seasons',         'allowed', 'select 1 
 select pg_temp.try(5, 'Volunteer', 'read season totals',   'allowed', 'select 1 from public.totals_by_season');
 select pg_temp.try(6, 'Volunteer', 'add a site',           'blocked', $$insert into public.sites (slug, name) values ('rls-check', 'x')$$);
 select pg_temp.try(7, 'Volunteer', 'change a season',      'blocked', $$update public.seasons set label = 'x'$$);
-select pg_temp.try(8, 'Volunteer', 'delete a planting',    'blocked', 'delete from public.plantings');
+select pg_temp.try(8, 'Volunteer', 'delete a planting event', 'blocked', 'delete from public.planting_events');
 select pg_temp.try(9, 'Volunteer', 'make themselves staff','blocked', 'update public.users set is_staff = true');
 reset role;
 
 -- Staff: the first live staff row in users -------------------------------
 select set_config('request.jwt.claims', coalesce(
   (select json_build_object('sub', id, 'role', 'authenticated')::text
-     from public.users where is_staff and retired_at is null limit 1),
+     from public.users where is_staff and deactivated_at is null limit 1),
   '{"sub":"00000000-0000-0000-0000-0000000000bb","role":"authenticated"}'), false);
 set role authenticated;
 select pg_temp.try(10, 'Staff', 'add a site',              'allowed', $$insert into public.sites (slug, name) values ('rls-check', 'RLS check')$$);
-select pg_temp.try(11, 'Staff', 'retire it',               'allowed', $$update public.sites set retired_at = now() where slug = 'rls-check'$$);
-select pg_temp.try(12, 'Staff', 'un-retire it',            'blocked', $$update public.sites set retired_at = null where slug = 'rls-check'$$);
+select pg_temp.try(11, 'Staff', 'deactivate it',           'allowed', $$update public.sites set deactivated_at = now() where slug = 'rls-check'$$);
+select pg_temp.try(12, 'Staff', 'reactivate it',           'blocked', $$update public.sites set deactivated_at = null where slug = 'rls-check'$$);
 select pg_temp.try(13, 'Staff', 'delete it',               'blocked', $$delete from public.sites where slug = 'rls-check'$$);
-select pg_temp.try(14, 'Staff', 'add a spreadsheet planting', 'blocked', $$insert into public.plantings (area, season, source) values ('nowhere', 0, 'workbook')$$);
+select pg_temp.try(14, 'Staff', 'add a spreadsheet planting event', 'blocked', $$insert into public.planting_events (area, season, source) values ('nowhere', 0, 'workbook')$$);
 select pg_temp.try(15, 'Staff', 'make someone staff',      'blocked', 'update public.users set is_staff = true');
 select pg_temp.try(16, 'Staff', 'change a season',         'blocked', $$update public.seasons set label = 'x'$$);
 reset role;
