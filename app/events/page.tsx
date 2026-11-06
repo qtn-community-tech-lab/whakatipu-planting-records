@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { connection } from "next/server";
 import { getEventStore } from "@/lib/wrt/events/server";
-import { formatHectares } from "@/lib/wrt/events/geo";
 import { eventViews } from "@/lib/wrt/events/views";
 import { formatNumber } from "@/lib/wrt/text";
-import { Card, EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
-import { DataTable } from "@/components/wrt/shared/data-table";
+import { PageHead, Rule } from "@/components/wrt/shared/page";
 import { PrototypeNotice } from "@/components/wrt/events/prototype-notice";
+import { EventsTable } from "@/components/wrt/events/events-table";
 
 export const metadata: Metadata = {
   title: "Planting events",
@@ -47,47 +46,7 @@ export default async function EventsPage({ searchParams }: PageProps<"/events">)
       <PrototypeNotice />
       {notice && <div className="cn-callout cn-callout--sm" role="status">{notice}</div>}
 
-      {views.length === 0 ? (
-        <EmptyState title="Nothing recorded yet">
-          Use <Link href="/events/new" className="cn-link">New planting event</Link> to record a planting: choose the site, draw the area and list what went in.
-        </EmptyState>
-      ) : (
-        <Card variant="table">
-          <DataTable
-            caption="Planting events, newest first"
-            rows={views}
-            rowKey={(v) => v.event.id}
-            minWidth={720}
-            columns={[
-              { key: "date", header: "Date", cell: (v) => v.dateLabel, nowrap: true },
-              {
-                key: "site", header: "Site",
-                cell: (v) => (
-                  <>
-                    <Link href={`/sites/${v.event.placeSlug}`} className="cn-link">{v.siteName}</Link>
-                    {v.partName && <span className="wrt-muted block">{v.partName}</span>}
-                  </>
-                ),
-              },
-              { key: "season", header: "Season", cell: (v) => v.seasonLabel, nowrap: true },
-              {
-                key: "species", header: "Species",
-                cell: (v) => (v.species.length === 1 ? v.species[0].name : `${v.species[0].name} + ${v.species.length - 1} more`),
-              },
-              { key: "plants", header: "Plants", cell: (v) => formatNumber(v.totalPlants), numeric: true, strong: true },
-              { key: "area", header: "Area", cell: (v) => formatHectares(v.areaM2), numeric: true },
-              {
-                key: "edit", header: "Actions", hideHeader: true, className: "text-right",
-                cell: (v) => (
-                  <Link href={`/events/${v.event.id}/edit`} className="cn-link">
-                    Edit<span className="sr-only"> {v.dateLabel} at {v.siteName}</span>
-                  </Link>
-                ),
-              },
-            ]}
-          />
-        </Card>
-      )}
+      <EventsTable views={views} />
       <Rule>Plants are what was entered on the form. Areas are calculated from the drawn shape.</Rule>
     </>
   );
