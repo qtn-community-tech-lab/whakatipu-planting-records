@@ -10,6 +10,9 @@
  *   area drawn  → "select" mode: drag corners to adjust, tap a midpoint to
  *                 add one; "Redraw" clears it and starts again
  * Every finished or edited shape is reported up through onChange as GeoJSON.
+ *
+ * The map stays inside the Whakatipu area and lets the page scroll past it
+ * (lib/wrt/map-region.ts), except while a shape is being edited (GesturesFor).
  */
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type * as GeoJSON from "geojson";
@@ -20,6 +23,7 @@ import {
 import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter";
 import { Map, MapControls, useMap } from "@/components/ui/map";
 import { formatHectares, polygonAreaM2 } from "@/lib/wrt/events/geo";
+import { PIN_BOUNDS, REGION_MAP_OPTIONS } from "@/lib/wrt/map-region";
 
 /** Another event at the same site, drawn faintly for reference. */
 export interface OtherArea {
@@ -33,8 +37,6 @@ export type MapFocus =
   | { kind: "bounds"; bounds: [[number, number], [number, number]] }
   | { kind: "region" };
 
-/** Wakatipu basin: where the map starts when a site has no reference location. */
-const REGION = { center: [168.75, -45.01] as [number, number], zoom: 10 };
 
 // ponytail: Esri World Imagery is free to view with attribution; switch to LINZ
 // aerial basemaps (needs a free API key) if WRT wants NZ-sourced imagery.
@@ -104,7 +106,7 @@ function FocusOn({ focus, polygon }: { focus: MapFocus; polygon: GeoJSON.Polygon
       return;
     }
     if (focus.kind === "bounds") map.fitBounds(focus.bounds, { padding: 80, maxZoom: 16, duration });
-    else map.easeTo({ ...REGION, duration });
+    else map.fitBounds(PIN_BOUNDS, { padding: 24, duration });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, isLoaded, key]);
   return null;
@@ -130,6 +132,23 @@ function CollapsedAttribution() {
     map.once("idle", collapse);
     return () => { map.off("idle", collapse); };
   }, [map, isLoaded]);
+  return null;
+}
+
+/**
+ * Cooperative gestures (REGION_MAP_OPTIONS) let one finger scroll the page past
+ * the map, and two fingers move it. That suits finding the site and tapping
+ * corners, but adjusting a drawn shape means dragging a corner with one
+ * finger, which would scroll the page instead. So they are switched off while
+ * a shape is being edited, and back on while drawing.
+ */
+function GesturesFor({ mode }: { mode: "draw" | "edit" }) {
+  const { map, isLoaded } = useMap();
+  useEffect(() => {
+    if (!map || !isLoaded) return;
+    if (mode === "edit") map.cooperativeGestures.disable();
+    else map.cooperativeGestures.enable();
+  }, [map, isLoaded, mode]);
   return null;
 }
 
@@ -260,10 +279,11 @@ export function DrawMap({
         )}
       </div>
       <div className={invalid ? "ev-map__frame ev-invalid" : "ev-map__frame"}>
-        <Map center={REGION.center} zoom={REGION.zoom} theme="light" doubleClickZoom={false}>
+        <Map {...REGION_MAP_OPTIONS} theme="light" doubleClickZoom={false}>
           <ReferenceLayers satellite={satellite} others={others} />
           <FocusOn focus={focus} polygon={polygon} />
           <CollapsedAttribution />
+          <GesturesFor mode={mode} />
           <Drawing polygon={polygon} onChange={onChange} onModeChange={setMode} drawRef={drawRef} />
           <MapControls showLocate showFullscreen />
         </Map>
