@@ -1,15 +1,14 @@
 /** Planting lines and season totals. */
 import { db } from "@/db/client";
 import type { Tables } from "@/db/types";
-import { lines, seasonSites, seasonSpecies, seasonTotals } from "./views";
+import { lines, PAGE_SIZE, seasonSites, seasonSpecies, seasonTotals } from "./views";
+
+export { PAGE_SIZE };
 
 type LineFilter = Partial<Pick<Tables<"line_details">, "planting_id" | "site" | "area" | "species" | "season" | "year">>;
 
-/** Lines per page. Supabase returns at most 1,000 rows a request, so every unbounded read pages. */
-export const PAGE_SIZE = 100;
-
 /** One page of lines matching any mix of planting, site, area, species, season and year. Page 0 is first. */
-export async function findLines(filter: LineFilter, page = 0) {
+export async function findPlantingLines(filter: LineFilter, page = 0) {
   let query = lines(await db());
   for (const [column, value] of Object.entries(filter)) {
     if (value !== undefined && value !== null) query = query.eq(column as keyof LineFilter, value);
@@ -21,7 +20,7 @@ export async function findLines(filter: LineFilter, page = 0) {
 }
 
 /** Every line in one season, in one request: the largest season has 410. */
-export async function listSeasonLines(season: string) {
+export async function listSeasonPlantingLines(season: string) {
   const { data } = await lines(await db())
     .eq("season", season)
     .throwOnError();

@@ -5,9 +5,9 @@
 import { byTotalDesc, emptySplit, addToSplit, splitOf } from "@/lib/wrt/queries";
 import type { RecordView, Ranked, SeasonDetail, SeasonSummary, ThemeSummary } from "@/lib/wrt/queries";
 import type { Confidence, Place, Precision, ReviewNoteKind, ReviewTheme, Season, SiteClass, Species } from "@/lib/wrt/types";
-import type { listSeasonLines, listSeasons } from "./queries/plantings";
+import type { listSeasonPlantingLines, listSeasons } from "./queries/plantings";
 
-type LineRow = Awaited<ReturnType<typeof listSeasonLines>>[number];
+type LineRow = Awaited<ReturnType<typeof listSeasonPlantingLines>>[number];
 type SeasonRow = Awaited<ReturnType<typeof listSeasons>>[number];
 
 function toSeason(slug: string, label: string, year: number, order: number): Season {
