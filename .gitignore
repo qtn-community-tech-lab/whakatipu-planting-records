@@ -48,3 +48,8 @@ next-env.d.ts
 
 # Supabase CLI cache
 supabase/.temp/
+
+# Local Supabase (supabase init), not committed
+/supabase/config.toml
+/supabase/.gitignore
+/supabase/.branches

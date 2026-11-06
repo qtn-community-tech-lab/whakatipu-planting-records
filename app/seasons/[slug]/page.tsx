@@ -3,7 +3,7 @@ import { needsReviewByPlants } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { reviewShown } from "@/lib/wrt/server";
-import { listSeasonLines, listSeasons } from "@/db/queries/plantings";
+import { listSeasonPlantingLines, listSeasons } from "@/db/queries/plantings";
 import { toSeasonDetail, toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
@@ -22,7 +22,7 @@ const RECORDS_CAP = 12;
 
 /** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
 async function loadSeason(slug: string) {
-  const [rows, lines, showReview] = await Promise.all([listSeasons(), listSeasonLines(slug), reviewShown()]);
+  const [rows, lines, showReview] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown()]);
   const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
   return { all, d: toSeasonDetail(slug, all, lines, showReview), showReview };
 }
