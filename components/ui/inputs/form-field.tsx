@@ -45,7 +45,7 @@ export function FormField({
   const hintId = `${id}-hint`;
   const errorId = `${id}-error`;
   const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ") || undefined;
-  const text = <>{label}{optional && <span className="wrt-muted"> (optional)</span>}</>;
+  const text = <>{label}{optional && <span className="wrt-field-optional"> (optional)</span>}</>;
 
   return (
     <Field className={fieldClassName}>
