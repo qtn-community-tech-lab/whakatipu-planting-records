@@ -8,7 +8,7 @@ import { PrototypeNotice } from "@/components/wrt/events/prototype-notice";
 
 export const metadata: Metadata = {
   title: "New planting event",
-  description: "Record a planting: the site, the planted area on the map, the date and season, and each species planted.",
+  description: "Record a planting: the site, the date and season, and each species planted.",
 };
 
 export default async function NewEventPage() {
@@ -19,11 +19,10 @@ export default async function NewEventPage() {
       <PageHead
         eyebrow="Planting events"
         title="New planting event"
-        lead="Choose the site, draw the planted area on the map, then list each species and how many went in."
+        lead="Choose the site and the date, then list each species and how many went in."
       />
       <PrototypeNotice />
-      {/* No saved areas to show on the map until events are stored. */}
-      <EventForm options={options} today={todayInNz()} areas={[]} />
+      <EventForm options={options} today={todayInNz()} />
     </>
   );
 }

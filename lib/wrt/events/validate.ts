@@ -1,7 +1,8 @@
 /**
- * One validator for planting events, used by the form (to show errors as the
- * user types) and by the Server Actions (the real gate: Server Actions are
- * public POST endpoints, so everything from the browser is untrusted).
+ * One validator for planting events. The form uses it to show errors as the
+ * user types. Once events are saved, the server must run it again before
+ * storing anything: Server Actions are public POST endpoints, so everything
+ * from the browser is untrusted.
  *
  * Two layers:
  *   1. eventInputSchema — shape and value rules (zod). No data needed.
@@ -54,7 +55,8 @@ export const eventInputSchema = z.object({
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
-  polygon: z.custom<unknown>((v) => v != null, { error: "Draw the planted area on the map." }).pipe(polygon),
+  // Optional until the map PR adds drawing; a drawn area is still checked in full.
+  polygon: polygon.nullable(),
   species: z.array(z.object({
     speciesId: z.string().min(1, { error: "Choose a species." }).max(80),
     quantity: z.number({ error: "Enter how many were planted." })
@@ -117,7 +119,7 @@ export function validateEventInput(raw: unknown, lookups: EventLookups, today: s
     value: {
       ...v,
       // Drop any altitude so stored shapes are always [lon, lat].
-      polygon: { type: "Polygon", coordinates: [v.polygon.coordinates[0].map((p) => [p[0], p[1]])] },
+      polygon: v.polygon && { type: "Polygon", coordinates: [v.polygon.coordinates[0].map((p) => [p[0], p[1]])] },
       notes: v.notes?.trim() || null,
     },
   };

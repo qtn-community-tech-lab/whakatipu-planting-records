@@ -7,20 +7,13 @@
 .ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .ev-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-/* Validation: the map frame (fields are styled in app.css, "Form fields") */
-.ev-invalid { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
-
 /* Species lines */
 .ev-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .ev-line { display: grid; grid-template-columns: minmax(0, 1fr) 140px auto; gap: 12px; align-items: start; }
 .ev-line__remove { margin-top: 22px; }
 
-/* Map */
-.ev-map { display: flex; flex-direction: column; gap: 10px; }
-.ev-map__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-.ev-map__seg { width: 220px; }
-.ev-map__frame { position: relative; height: min(62vh, 560px); min-height: 340px; border-radius: var(--radius-tile); overflow: hidden; border: 1px solid var(--border-card); }
-.ev-map__help { font: var(--type-small); color: var(--text-body); }
+/* Planted area: a placeholder until the map PR */
+.ev-placeholder { margin: 0; padding: 20px 16px; border: var(--border-dashed-empty); border-radius: var(--radius-tile); font: var(--type-small); color: var(--text-muted); text-align: center; }
 
 /* Actions */
 .ev-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(transparent, var(--surface-app) 40%); }
@@ -29,7 +22,6 @@
   .ev-grid, .ev-grid--3 { grid-template-columns: minmax(0, 1fr); }
   .ev-line { grid-template-columns: minmax(0, 1fr) 96px; }
   .ev-line__remove { grid-column: 1 / -1; margin-top: 0; justify-self: start; }
-  .ev-map__frame { height: 58vh; }
   .ev-actions .cn-btn { flex: 1; }
 }
 @media (pointer: coarse) {

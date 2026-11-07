@@ -3,7 +3,8 @@
  * The "New planting event" form. Nothing is saved yet: submitting checks
  * every field and says whether the details are ready.
  *
- * Fields: site → optional part of site → map (draw one area) → planting date →
+ * Fields: site → optional part of site → planted area (a placeholder until the
+ * map PR) → planting date →
  * season and year (suggested from the date, editable) → species lines with
  * quantities → photo (disabled until storage exists) → notes.
  *
@@ -17,16 +18,14 @@ import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { EVENT_SEASONS, type EventSeason } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { formatNumber } from "@/lib/wrt/text";
-import { DrawMap } from "./draw-map";
 import { SitePartPicker, SitePicker } from "./site-picker";
 import { SpeciesPicker } from "./species-picker";
-import { useEventForm, type ExistingArea } from "./use-event-form";
+import { useEventForm } from "./use-event-form";
 
 export function EventForm(props: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
-  areas: ExistingArea[];
 }) {
   const { options, today } = props;
   const formRef = useRef<HTMLFormElement>(null);
@@ -57,15 +56,8 @@ export function EventForm(props: {
           />
         </div>
 
-        <FormField label="Planted area" group error={err("polygon") ?? err("polygon.coordinates")}>
-          {(control, labelId) => (
-            <div
-              role="group" aria-labelledby={labelId} aria-describedby={control["aria-describedby"]}
-              data-invalid={control["aria-invalid"]} tabIndex={control["aria-invalid"] ? -1 : undefined}
-            >
-              <DrawMap polygon={form.polygon} onChange={form.setPolygon} focus={form.focus} others={form.others} invalid={!!control["aria-invalid"]} />
-            </div>
-          )}
+        <FormField label="Planted area" group>
+          {() => <p className="ev-placeholder">Coming in the next PR: you’ll draw the planted area on a map here.</p>}
         </FormField>
       </section>
 

@@ -7,13 +7,10 @@
  * field is right, marks the form as checked.
  */
 import { useMemo, useState, type RefObject } from "react";
-import type * as GeoJSON from "geojson";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
 import type { EventSeason } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
-import { locationBounds, siteLocations } from "@/lib/wrt/site-locations";
-import type { MapFocus, OtherArea } from "./draw-map";
 
 export interface Line {
   /** Stable React key for the row (not stored). */
@@ -23,20 +20,14 @@ export interface Line {
   quantity: string;
 }
 
-/** Saved areas at any site, labelled; the map shows the ones at the chosen site. */
-export interface ExistingArea extends OtherArea {
-  placeSlug: string;
-}
-
 const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
 export function useEventForm({
-  options, today, areas, formRef,
+  options, today, formRef,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
-  areas: ExistingArea[];
   /** The form element, used only on submit to focus the first problem. */
   formRef: RefObject<HTMLFormElement | null>;
 }) {
@@ -44,7 +35,6 @@ export function useEventForm({
 
   const [placeSlug, setPlaceSlug] = useState("");
   const [parcelId, setParcelId] = useState<string | null>(null);
-  const [polygon, setPolygon] = useState<GeoJSON.Polygon | null>(null);
   const [plantedOn, setPlantedOn] = useState(today);
   const [season, setSeason] = useState<EventSeason>(suggested.season);
   const [seasonYear, setSeasonYear] = useState(String(suggested.seasonYear));
@@ -71,7 +61,7 @@ export function useEventForm({
     plantedOn,
     season,
     seasonYear: seasonYear.trim() === "" ? null : Number(seasonYear),
-    polygon,
+    polygon: null, // drawn on the map once the map PR lands
     species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity) })),
     notes: notes.trim() || null,
   });
@@ -82,29 +72,16 @@ export function useEventForm({
     return r.ok ? {} : r.errors;
   })() : {};
 
-  const focus: MapFocus = useMemo(() => {
-    const atSite = siteLocations.filter((l) => l.siteSlug === placeSlug);
-    const atPart = parcelId ? atSite.filter((l) => l.parcelIds?.includes(parcelId)) : [];
-    const bounds = locationBounds(atPart.length ? atPart : atSite);
-    return bounds ? { kind: "bounds", bounds } : { kind: "region" };
-  }, [placeSlug, parcelId]);
-
-  const others = useMemo(
-    () => areas.filter((a) => a.placeSlug === placeSlug),
-    [areas, placeSlug],
-  );
-
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
 
   return {
-    site, focus, others, total, errors, checked,
+    site, total, errors, checked,
     /** The message for one field path (e.g. "species.0.quantity"), if it has one. */
     err: (path: string): string | undefined => errors[path],
 
     placeSlug,
     chooseSite(slug: string) { setPlaceSlug(slug); setParcelId(null); },
     parcelId, setParcelId,
-    polygon, setPolygon,
 
     plantedOn,
     changeDate(value: string) {
@@ -142,7 +119,7 @@ export function useEventForm({
       if (!check.ok) {
         // Move focus to the first problem so keyboard and screen-reader users land on it.
         requestAnimationFrame(() =>
-          formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [data-invalid='true']")?.focus());
+          formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus());
       }
     },
   };

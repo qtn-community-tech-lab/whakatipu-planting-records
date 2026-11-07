@@ -42,6 +42,11 @@ describe("validateEventInput", () => {
     expect(r.ok && r.value.notes).toBeNull();
   });
 
+  it("accepts an event with no area drawn (the map comes in a later PR)", () => {
+    const r = validateEventInput(valid({ polygon: null }), lookups, TODAY);
+    expect(r.ok && r.value.polygon).toBeNull();
+  });
+
   const cases: [string, Record<string, unknown>, string][] = [
     ["unknown site", { placeSlug: "nowhere" }, "placeSlug"],
     ["malformed slug", { placeSlug: "Not A Slug!" }, "placeSlug"],
@@ -54,7 +59,6 @@ describe("validateEventInput", () => {
     ["fractional quantity", { species: [{ speciesId: "__a__", quantity: 2.5 }] }, "species.0.quantity"],
     ["unknown species", { species: [{ speciesId: "SP-NOPE", quantity: 3 }] }, "species.0.speciesId"],
     ["duplicate species", { species: [{ speciesId: "__a__", quantity: 3 }, { speciesId: "__a__", quantity: 4 }] }, "species.1.speciesId"],
-    ["missing polygon", { polygon: null }, "polygon"],
     ["too few corners", { polygon: { type: "Polygon", coordinates: [[[168.8, -44.98], [168.81, -44.98], [168.8, -44.98]]] } }, "polygon"],
     ["open ring", { polygon: { type: "Polygon", coordinates: [[[168.8, -44.98], [168.81, -44.98], [168.81, -44.99], [168.8, -44.99]]] } }, "polygon"],
     ["bow tie", { polygon: { type: "Polygon", coordinates: [[[0, 0], [1, 1], [1, 0], [0, 1], [0, 0]]] } }, "polygon"],

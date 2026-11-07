@@ -7,8 +7,7 @@
  * or shapes. A planting event is captured at the time: a real date, a drawn
  * area, and four possible seasons. The two are deliberately kept apart until
  * WRT decides how Summer and Winter plantings roll up into the Autumn/Spring
- * reporting. Until then events are exported (CSV + GeoJSON) and are NOT added
- * to any historical total.
+ * reporting. Until then events are NOT added to any historical total.
  */
 import type * as GeoJSON from "geojson";
 
@@ -36,8 +35,11 @@ export interface PlantingEventInput {
   season: EventSeason;
   /** The year the season belongs to (December counts toward the next year's Summer). */
   seasonYear: number;
-  /** Exactly one polygon per event, WGS84 longitude/latitude. Overlaps with other events are allowed. */
-  polygon: GeoJSON.Polygon;
+  /**
+   * At most one polygon per event, WGS84 longitude/latitude. Overlaps with
+   * other events are allowed. Null until the map PR adds drawing.
+   */
+  polygon: GeoJSON.Polygon | null;
   species: EventSpecies[];
   notes: string | null;
 }
