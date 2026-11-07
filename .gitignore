@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local agent dev servers
 /.next-*/
+
+# Supabase CLI cache
+supabase/.temp/

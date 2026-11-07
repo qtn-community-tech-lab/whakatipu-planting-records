@@ -1,11 +1,12 @@
 /** The questions WRT still has to answer. */
-import type { Db } from "@/db/types";
-import { reviewTotals } from "./views";
+import { db } from "@/db/client";
+import { questions } from "./views";
 
-/** Every question with lines still waiting on it, biggest first. */
-export async function listOpenQuestions(db: Db) {
-  const { data } = await reviewTotals(db)
-    .gt("lines_needs_review", 0)
+/** Every question with lines still waiting on it, and how many open notes it has. */
+export async function listOpenQuestions() {
+  const { data } = await questions(await db())
     .throwOnError();
-  return data;
+  return data
+    .map(({ notes, ...question }) => ({ ...question, openNotes: notes[0]?.count ?? 0 }))
+    .filter((question) => question.openNotes > 0);
 }
