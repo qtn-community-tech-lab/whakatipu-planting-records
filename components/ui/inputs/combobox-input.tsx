@@ -17,7 +17,7 @@ import { FormField, type FieldProps } from "./form-field";
  */
 export function ComboboxInput<Item>({
   label, hint, error, optional, fieldClassName,
-  items, value, onChange, getValue, getLabel, rank, renderItem, placeholder, clearLabel, empty,
+  items, value, onChange, getValue, getLabel, rank, renderItem, placeholder, clearLabel, empty, disabled,
 }: FieldProps & {
   items: readonly Item[];
   /** The chosen item's value, or "" for none. */
@@ -34,6 +34,8 @@ export function ComboboxInput<Item>({
   clearLabel?: string;
   /** What to say when nothing matches. */
   empty?: (query: string) => ReactNode;
+  /** Greys the field out; the placeholder should say why. */
+  disabled?: boolean;
 }) {
   const [query, setQuery] = useState("");
   const selected = items.find((item) => getValue(item) === value);
@@ -54,6 +56,7 @@ export function ComboboxInput<Item>({
           isItemEqualToValue={(a: Item, b: Item) => getValue(a) === getValue(b)}
           onInputValueChange={setQuery}
           autoHighlight
+          disabled={disabled}
         >
           <ComboboxControl {...control} placeholder={placeholder} clearLabel={clearLabel} />
           <ComboboxContent>

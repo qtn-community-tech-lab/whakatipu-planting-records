@@ -18,6 +18,7 @@ import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { formatNumber } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 import { DrawMap } from "./draw-map";
+import { SitePartPicker, SitePicker } from "./site-picker";
 import { SpeciesPicker } from "./species-picker";
 import { useEventForm, type ExistingArea } from "./use-event-form";
 
@@ -35,7 +36,6 @@ export function EventForm(props: {
   const { err, site } = form;
   const uid = useId();
   const heading = (name: string) => `${uid}-${name}`;
-  const siteParts = site && site.parts.length > 1 ? site.parts : [];
 
   return (
     <form ref={formRef} className="ev-form" onSubmit={form.submit} noValidate aria-label={event ? "Edit planting event" : "New planting event"}>
@@ -48,17 +48,11 @@ export function EventForm(props: {
       <section className="cn-card ev-section" aria-labelledby={heading("where")}>
         <h2 id={heading("where")} className="cn-card__title">Where</h2>
         <div className="ev-grid">
-          <SelectInput label="Site" value={form.placeSlug} error={err("placeSlug")} onChange={(e) => form.chooseSite(e.target.value)}>
-            <option value="">Choose a site</option>
-            {options.sites.map((s) => <option key={s.slug} value={s.slug}>{s.name}</option>)}
-          </SelectInput>
-          <SelectInput
-            label="Part of site" optional value={form.parcelId ?? ""} disabled={siteParts.length === 0} error={err("parcelId")}
-            onChange={(e) => form.setParcelId(e.target.value || null)}
-          >
-            <option value="">{!site ? "Choose a site first" : siteParts.length === 0 ? "This site has one part" : "The site as a whole"}</option>
-            {siteParts.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-          </SelectInput>
+          <SitePicker label="Site" sites={options.sites} value={form.placeSlug} error={err("placeSlug")} onChange={form.chooseSite} />
+          <SitePartPicker
+            label="Part of site" optional site={site} value={form.parcelId} error={err("parcelId")}
+            onChange={form.setParcelId}
+          />
         </div>
 
         <FormField label="Planted area" group error={err("polygon") ?? err("polygon.coordinates")}>

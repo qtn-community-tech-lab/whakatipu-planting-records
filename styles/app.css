@@ -196,6 +196,8 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 /* Combobox (components/ui/combobox.tsx): type in the field, list opens underneath */
 .wrt-combobox { position: relative; display: flex; align-items: center; }
 .wrt-combobox__input { padding-right: 68px; font-weight: 600; }
+.wrt-combobox:has(.wrt-combobox__input:disabled) { opacity: .45; cursor: not-allowed; }
+.wrt-combobox:has(.wrt-combobox__input:disabled) * { cursor: inherit; }
 .wrt-combobox__actions { position: absolute; right: 6px; display: flex; align-items: center; gap: 2px; }
 .wrt-combobox__button {
   width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: var(--radius-pill);

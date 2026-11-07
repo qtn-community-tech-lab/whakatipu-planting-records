@@ -2,12 +2,12 @@
 /**
  * Species chooser for one line of the planting-event form: the shared
  * ComboboxInput with the species list. Search matches the topbar search
- * (matchScore: ignores macrons, tolerates typos), so "kowhia" finds Kōwhai.
+ * (rankMatches: ignores macrons, tolerates typos), so "kowhia" finds Kōwhai.
  * Species already on other lines are left out.
  */
 import { ComboboxInput, type FieldProps } from "@/components/ui/inputs";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
-import { matchScore } from "@/lib/wrt/text";
+import { rankMatches } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 
 export function SpeciesName({ s }: { s: SpeciesOption }) {
@@ -23,17 +23,6 @@ const getValue = (s: SpeciesOption) => s.id;
 const getLabel = (s: SpeciesOption) => s.name;
 const renderItem = (s: SpeciesOption) => <SpeciesName s={s} />;
 const noMatch = (q: string) => `No species matches “${q}”.`;
-
-/** Best match first; with nothing typed, the whole list in its usual order. */
-function rankSpecies(items: readonly SpeciesOption[], query: string): SpeciesOption[] {
-  const q = query.trim();
-  if (!q) return [...items];
-  return items
-    .map((s) => ({ s, score: matchScore(q, s.keys) }))
-    .filter((r) => r.score > 0)
-    .sort((a, b) => b.score - a.score || a.s.name.localeCompare(b.s.name))
-    .map((r) => r.s);
-}
 
 export function SpeciesPicker({
   species, value, taken, onChange, ...field
@@ -53,7 +42,7 @@ export function SpeciesPicker({
       onChange={onChange}
       getValue={getValue}
       getLabel={getLabel}
-      rank={(items, q) => rankSpecies(items.filter((s) => !taken.has(s.id) || s.id === value), q)}
+      rank={(items, q) => rankMatches(items.filter((s) => !taken.has(s.id) || s.id === value), q)}
       renderItem={renderItem}
       placeholder="Search species"
       clearLabel="Clear species"

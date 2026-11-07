@@ -7,22 +7,29 @@
  */
 import "server-only";
 import { getWrtAll } from "../server";
+import { searchKey } from "../text";
 import type { EventLookups } from "./validate";
 
-export interface SiteOption {
-  slug: string;
+/** Macron-free search keys, matched with rankMatches in the browser. */
+type SearchKeys = { keys: string[] };
+
+export interface SitePartOption extends SearchKeys {
+  id: string;
   name: string;
-  parts: { id: string; name: string }[];
 }
 
-export interface SpeciesOption {
+export interface SiteOption extends SearchKeys {
+  slug: string;
+  name: string;
+  parts: SitePartOption[];
+}
+
+export interface SpeciesOption extends SearchKeys {
   id: string;
   /** Display name (Māori, common, then scientific), with macrons. */
   name: string;
   scientific: string;
   isScientific: boolean;
-  /** Macron-free search keys, matched with matchScore in the browser. */
-  keys: string[];
 }
 
 export interface EventFormOptions {
@@ -42,7 +49,8 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
       .map((p) => ({
         slug: p.slug,
         name: p.name,
-        parts: p.parcels.map((x) => ({ id: x.id, name: x.name })).sort((a, b) => a.name.localeCompare(b.name)),
+        keys: p.searchKeys,
+        parts: p.parcels.map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] })).sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species
