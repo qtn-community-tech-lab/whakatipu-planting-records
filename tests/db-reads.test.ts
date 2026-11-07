@@ -14,9 +14,9 @@ vi.mock("@/db/client", () => ({
   db: async () => createClient<Database>(url!, key!, { auth: { persistSession: false } }),
 }));
 
-const { listSites, topSites, listAreaTotals, listAreaPins } = await import("@/db/queries/sites");
-const { listSpecies, rankSpecies, getSpecies } = await import("@/db/queries/species");
-const { findLines, listSeasons, PAGE_SIZE } = await import("@/db/queries/plantings");
+const { listSites, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
+const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
+const { findPlantingLines, listSeasons, PAGE_SIZE } = await import("@/db/queries/plantings");
 const { listOpenQuestions } = await import("@/db/queries/review");
 
 /** All plants in the workbook history. */
@@ -28,27 +28,27 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
     const sites = await listSites();
     expect(sites.length).toBeGreaterThan(0);
     expect(sum(sites)).toBe(ALL_PLANTS);
-    expect(await topSites(3)).toEqual(sites.slice(0, 3));
+    expect(await listSites(3)).toEqual(sites.slice(0, 3));
   });
 
   it("lists areas with totals and pins", async () => {
-    expect(sum(await listAreaTotals())).toBe(ALL_PLANTS);
-    expect((await listAreaPins()).length).toBe(78);
+    expect(sum(await listPlantingAreaTotals())).toBe(ALL_PLANTS);
+    expect((await listPlantingAreaPins()).length).toBe(78);
     const [site] = await listSites();
-    expect((await listAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
+    expect((await listPlantingAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
   });
 
   it("lists the species register and ranks species by plants", async () => {
     expect((await listSpecies()).length).toBe(164);
-    expect(sum(await rankSpecies())).toBe(ALL_PLANTS);
+    expect(sum(await listSpeciesTotals())).toBe(ALL_PLANTS);
   });
 
   it("opens one species with its totals and lines", async () => {
-    const [top] = await rankSpecies();
-    const page = await getSpecies(top.species!);
+    const [top] = await listSpeciesTotals();
+    const page = await readSpecies(top.species!);
     expect(page?.totals?.plants).toBe(top.plants);
     expect(page?.history.length).toBe(top.lines);
-    expect(await getSpecies("no-such-species")).toBeNull();
+    expect(await readSpecies("no-such-species")).toBeNull();
   });
 
   it("lists every season, each matching its workbook TOTAL cell", async () => {
@@ -59,12 +59,12 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
   });
 
   it("pages through lines without skipping or repeating", async () => {
-    const first = await findLines({}, 0);
-    const second = await findLines({}, 1);
+    const first = await findPlantingLines({}, 0);
+    const second = await findPlantingLines({}, 1);
     expect(first.length).toBe(PAGE_SIZE);
     expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
     const [season] = await listSeasons();
-    expect((await findLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
+    expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
   });
 
   it("lists the questions WRT still has to answer", async () => {

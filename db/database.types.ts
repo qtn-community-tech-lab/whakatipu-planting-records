@@ -14,6 +14,7 @@ export type Database = {
           class: Database["public"]["Enums"]["site_class"] | null;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           description: string;
           lat: number | null;
           lng: number | null;
@@ -21,7 +22,6 @@ export type Database = {
           pin_checked_on: string | null;
           pin_source_url: string | null;
           radius_m: number | null;
-          retired_at: string | null;
           site: string;
           slug: string;
           updated_at: string;
@@ -33,6 +33,7 @@ export type Database = {
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -40,7 +41,6 @@ export type Database = {
           pin_checked_on?: string | null;
           pin_source_url?: string | null;
           radius_m?: number | null;
-          retired_at?: string | null;
           site: string;
           slug: string;
           updated_at?: string;
@@ -51,6 +51,7 @@ export type Database = {
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -58,7 +59,6 @@ export type Database = {
           pin_checked_on?: string | null;
           pin_source_url?: string | null;
           radius_m?: number | null;
-          retired_at?: string | null;
           site?: string;
           slug?: string;
           updated_at?: string;
@@ -114,12 +114,12 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           id: number;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
           question: string;
           resolved_at: string | null;
-          retired_at: string | null;
           text: string;
           updated_at: string;
           updated_by: string | null;
@@ -128,12 +128,12 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
           question: string;
           resolved_at?: string | null;
-          retired_at?: string | null;
           text?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -141,12 +141,12 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           kind?: Database["public"]["Enums"]["note_kind"];
           line?: number;
           question?: string;
           resolved_at?: string | null;
-          retired_at?: string | null;
           text?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -189,15 +189,118 @@ export type Database = {
           },
         ];
       };
+      planting_events: {
+        Row: {
+          area: string;
+          created_at: string;
+          created_by: string | null;
+          deactivated_at: string | null;
+          id: number;
+          notes: string;
+          planted_on: string | null;
+          season: number;
+          source: Database["public"]["Enums"]["planting_source"];
+          type: Database["public"]["Enums"]["planting_type"] | null;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        ComputedFields: never;
+        Insert: {
+          area: string;
+          created_at?: string;
+          created_by?: string | null;
+          deactivated_at?: string | null;
+          id?: never;
+          notes?: string;
+          planted_on?: string | null;
+          season: number;
+          source?: Database["public"]["Enums"]["planting_source"];
+          type?: Database["public"]["Enums"]["planting_type"] | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          area?: string;
+          created_at?: string;
+          created_by?: string | null;
+          deactivated_at?: string | null;
+          id?: never;
+          notes?: string;
+          planted_on?: string | null;
+          season?: number;
+          source?: Database["public"]["Enums"]["planting_source"];
+          type?: Database["public"]["Enums"]["planting_type"] | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "planting_events_area_fkey";
+            columns: ["area"];
+            isOneToOne: false;
+            referencedRelation: "areas";
+            referencedColumns: ["slug"];
+          },
+          {
+            foreignKeyName: "planting_events_area_fkey";
+            columns: ["area"];
+            isOneToOne: false;
+            referencedRelation: "line_details";
+            referencedColumns: ["area"];
+          },
+          {
+            foreignKeyName: "planting_events_area_fkey";
+            columns: ["area"];
+            isOneToOne: false;
+            referencedRelation: "totals_by_area";
+            referencedColumns: ["area"];
+          },
+          {
+            foreignKeyName: "planting_events_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "planting_events_season_fkey";
+            columns: ["season"];
+            isOneToOne: false;
+            referencedRelation: "line_details";
+            referencedColumns: ["season_order"];
+          },
+          {
+            foreignKeyName: "planting_events_season_fkey";
+            columns: ["season"];
+            isOneToOne: false;
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "planting_events_season_fkey";
+            columns: ["season"];
+            isOneToOne: false;
+            referencedRelation: "totals_by_season";
+            referencedColumns: ["season_order"];
+          },
+          {
+            foreignKeyName: "planting_events_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       planting_lines: {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           id: number;
           legacy_code: string | null;
-          planting: number;
+          planting_event: number;
           quantity: number | null;
-          retired_at: string | null;
           source_cell: string | null;
           species: string;
           updated_at: string;
@@ -207,11 +310,11 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
-          planting: number;
+          planting_event: number;
           quantity?: number | null;
-          retired_at?: string | null;
           source_cell?: string | null;
           species: string;
           updated_at?: string;
@@ -220,11 +323,11 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
-          planting?: number;
+          planting_event?: number;
           quantity?: number | null;
-          retired_at?: string | null;
           source_cell?: string | null;
           species?: string;
           updated_at?: string;
@@ -239,17 +342,17 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "planting_lines_planting_fkey";
-            columns: ["planting"];
+            foreignKeyName: "planting_lines_planting_event_fkey";
+            columns: ["planting_event"];
             isOneToOne: false;
             referencedRelation: "line_details";
             referencedColumns: ["planting_id"];
           },
           {
-            foreignKeyName: "planting_lines_planting_fkey";
-            columns: ["planting"];
+            foreignKeyName: "planting_lines_planting_event_fkey";
+            columns: ["planting_event"];
             isOneToOne: false;
-            referencedRelation: "plantings";
+            referencedRelation: "planting_events";
             referencedColumns: ["id"];
           },
           {
@@ -282,115 +385,12 @@ export type Database = {
           },
         ];
       };
-      plantings: {
-        Row: {
-          area: string;
-          created_at: string;
-          created_by: string | null;
-          id: number;
-          notes: string;
-          planted_on: string | null;
-          retired_at: string | null;
-          season: number;
-          source: Database["public"]["Enums"]["planting_source"];
-          type: Database["public"]["Enums"]["planting_type"] | null;
-          updated_at: string;
-          updated_by: string | null;
-        };
-        ComputedFields: never;
-        Insert: {
-          area: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: never;
-          notes?: string;
-          planted_on?: string | null;
-          retired_at?: string | null;
-          season: number;
-          source?: Database["public"]["Enums"]["planting_source"];
-          type?: Database["public"]["Enums"]["planting_type"] | null;
-          updated_at?: string;
-          updated_by?: string | null;
-        };
-        Update: {
-          area?: string;
-          created_at?: string;
-          created_by?: string | null;
-          id?: never;
-          notes?: string;
-          planted_on?: string | null;
-          retired_at?: string | null;
-          season?: number;
-          source?: Database["public"]["Enums"]["planting_source"];
-          type?: Database["public"]["Enums"]["planting_type"] | null;
-          updated_at?: string;
-          updated_by?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "plantings_area_fkey";
-            columns: ["area"];
-            isOneToOne: false;
-            referencedRelation: "areas";
-            referencedColumns: ["slug"];
-          },
-          {
-            foreignKeyName: "plantings_area_fkey";
-            columns: ["area"];
-            isOneToOne: false;
-            referencedRelation: "line_details";
-            referencedColumns: ["area"];
-          },
-          {
-            foreignKeyName: "plantings_area_fkey";
-            columns: ["area"];
-            isOneToOne: false;
-            referencedRelation: "totals_by_area";
-            referencedColumns: ["area"];
-          },
-          {
-            foreignKeyName: "plantings_created_by_fkey";
-            columns: ["created_by"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "plantings_season_fkey";
-            columns: ["season"];
-            isOneToOne: false;
-            referencedRelation: "line_details";
-            referencedColumns: ["season_order"];
-          },
-          {
-            foreignKeyName: "plantings_season_fkey";
-            columns: ["season"];
-            isOneToOne: false;
-            referencedRelation: "seasons";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "plantings_season_fkey";
-            columns: ["season"];
-            isOneToOne: false;
-            referencedRelation: "totals_by_season";
-            referencedColumns: ["season_order"];
-          },
-          {
-            foreignKeyName: "plantings_updated_by_fkey";
-            columns: ["updated_by"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
       questions: {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           question: string;
-          retired_at: string | null;
           ruled_by: string | null;
           ruled_on: string | null;
           ruling: string | null;
@@ -402,8 +402,8 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           question: string;
-          retired_at?: string | null;
           ruled_by?: string | null;
           ruled_on?: string | null;
           ruling?: string | null;
@@ -414,8 +414,8 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           question?: string;
-          retired_at?: string | null;
           ruled_by?: string | null;
           ruled_on?: string | null;
           ruling?: string | null;
@@ -475,10 +475,10 @@ export type Database = {
         Row: {
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           description: string;
           is_scheme: boolean;
           name: string;
-          retired_at: string | null;
           slug: string;
           updated_at: string;
           updated_by: string | null;
@@ -487,10 +487,10 @@ export type Database = {
         Insert: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           is_scheme?: boolean;
           name: string;
-          retired_at?: string | null;
           slug: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -498,10 +498,10 @@ export type Database = {
         Update: {
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           description?: string;
           is_scheme?: boolean;
           name?: string;
-          retired_at?: string | null;
           slug?: string;
           updated_at?: string;
           updated_by?: string | null;
@@ -529,6 +529,7 @@ export type Database = {
           contested_group: string | null;
           created_at: string;
           created_by: string | null;
+          deactivated_at: string | null;
           maori_name: string | null;
           needs_decision: boolean;
           over_5m: boolean | null;
@@ -536,7 +537,6 @@ export type Database = {
           profile: NonNullable<Json>;
           register_code: string | null;
           register_note: string | null;
-          retired_at: string | null;
           scientific_name: string;
           slug: string;
           status: Database["public"]["Enums"]["species_status"] | null;
@@ -552,6 +552,7 @@ export type Database = {
           contested_group?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
@@ -559,7 +560,6 @@ export type Database = {
           profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
-          retired_at?: string | null;
           scientific_name: string;
           slug: string;
           status?: Database["public"]["Enums"]["species_status"] | null;
@@ -574,6 +574,7 @@ export type Database = {
           contested_group?: string | null;
           created_at?: string;
           created_by?: string | null;
+          deactivated_at?: string | null;
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
@@ -581,7 +582,6 @@ export type Database = {
           profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
-          retired_at?: string | null;
           scientific_name?: string;
           slug?: string;
           status?: Database["public"]["Enums"]["species_status"] | null;
@@ -611,25 +611,25 @@ export type Database = {
       users: {
         Row: {
           created_at: string;
+          deactivated_at: string | null;
           id: string;
           is_staff: boolean;
           name: string;
-          retired_at: string | null;
         };
         ComputedFields: never;
         Insert: {
           created_at?: string;
+          deactivated_at?: string | null;
           id: string;
           is_staff?: boolean;
           name: string;
-          retired_at?: string | null;
         };
         Update: {
           created_at?: string;
+          deactivated_at?: string | null;
           id?: string;
           is_staff?: boolean;
           name?: string;
-          retired_at?: string | null;
         };
         Relationships: [];
       };
