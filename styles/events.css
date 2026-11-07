@@ -6,13 +6,9 @@
 .ev-section { gap: 16px; }
 .ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .ev-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.ev-form .wrt-select { width: 100%; }
-.ev-notes { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
-.ev-file { font: var(--type-small); color: var(--text-muted); }
 
-/* Validation */
-.ev-error { font: 600 12px/1.3 var(--font-sans); color: var(--cn-risk-fg); }
-.ev-invalid, .ev-form [aria-invalid="true"]:is(input, select, textarea, button) { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
+/* Validation: the map frame and species picker (fields are styled in app.css, "Form fields") */
+.ev-invalid { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
 
 /* Species lines */
 .ev-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }

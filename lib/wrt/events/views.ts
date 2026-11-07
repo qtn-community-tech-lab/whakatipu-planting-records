@@ -3,7 +3,7 @@
  * CSV export. One place to turn ids into what people read.
  */
 import "server-only";
-import type { ExistingArea } from "@/components/wrt/events/event-form";
+import type { ExistingArea } from "@/components/wrt/events/use-event-form";
 import { eventFormOptions } from "./form-options";
 import { getEventStore } from "./server";
 import { polygonAreaM2 } from "./geo";

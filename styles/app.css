@@ -186,6 +186,13 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
+/* Form fields (components/ui/field.tsx and components/ui/inputs) */
+.cn-field > .wrt-select { width: 100%; }
+.wrt-textarea { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
+.cn-input[type="file"] { height: auto; padding: 0; background: none; font: var(--type-small); color: var(--text-muted); }
+.wrt-field-error { font: 600 12px/1.3 var(--font-sans); color: var(--cn-risk-fg); }
+.cn-field :is(input, select, textarea, button)[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
+
 /* Public reference locations are distinct from planting quantities and review flags. */
 .wrt-location-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
 .wrt-location-picker label { color: var(--text-muted); font: var(--type-small); }
