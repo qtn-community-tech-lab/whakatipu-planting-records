@@ -9,6 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "import-workbook": "tsx scripts/import-workbook.ts",
+    "import-pins": "tsx scripts/import-pins.ts",
     "supabase:start": "npx --yes supabase@2.121.0 start && npm run db:migrate",
     "supabase:stop": "npx --yes supabase@2.121.0 stop",
     "db:migrate": "npx --yes supabase@2.121.0 migration up --local",

@@ -1,14 +1,12 @@
 /**
- * Runs every read query against the Supabase project in .env.local, as a signed-out
+ * Runs every read query against the Supabase project (tests/live-env.ts), as a signed-out
  * visitor with the publishable key. Skipped when there is no project to read.
  */
 import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/types";
 
-try { process.loadEnvFile(".env.local"); } catch {}
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+import { key, live, url } from "./live-env";
 
 vi.mock("@/db/client", () => ({
   db: async () => createClient<Database>(url!, key!, { auth: { persistSession: false } }),
@@ -23,7 +21,7 @@ const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/rev
 const ALL_PLANTS = 140_068;
 const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.plants ?? 0), 0);
 
-describe.skipIf(!url || !key)("read queries against Supabase", () => {
+describe.skipIf(!live)("read queries against Supabase", () => {
   it("lists sites, and their plants add up to the whole history", async () => {
     const sites = await listSites();
     expect(sites.length).toBeGreaterThan(0);
