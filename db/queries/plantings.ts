@@ -1,7 +1,9 @@
 /** Planting lines and season totals. */
 import { db } from "@/db/client";
 import type { Tables } from "@/db/types";
-import { lines, PAGE_SIZE, seasonTotals } from "./views";
+import { lines, PAGE_SIZE, seasonSites, seasonSpecies, seasonTotals } from "./views";
+
+export { PAGE_SIZE };
 
 type LineFilter = Partial<Pick<Tables<"line_details">, "planting_id" | "site" | "area" | "species" | "season" | "year">>;
 
@@ -17,9 +19,31 @@ export async function findPlantingLines(filter: LineFilter, page = 0) {
   return data;
 }
 
+/** Every line in one season, in one request: the largest season has 410. */
+export async function listSeasonPlantingLines(season: string) {
+  const { data } = await lines(await db())
+    .eq("season", season)
+    .throwOnError();
+  return data;
+}
+
 /** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
 export async function listSeasons() {
   const { data } = await seasonTotals(await db())
     .throwOnError();
   return data;
+}
+
+/** The most planted species and sites in every season, `limit` of each. */
+export async function listSeasonLeaders(limit = 3) {
+  const client = await db();
+  const [species, sites] = await Promise.all([
+    seasonSpecies(client)
+      .lte("rank", limit)
+      .throwOnError(),
+    seasonSites(client)
+      .lte("rank", limit)
+      .throwOnError(),
+  ]);
+  return { species: species.data, sites: sites.data };
 }

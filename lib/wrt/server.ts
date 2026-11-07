@@ -1,12 +1,12 @@
 /**
  * Server-only entry point. Pages call `getWrt()`; nothing else in the UI
- * knows which repository is behind it. Swap CsvWrtRepository for a database
- * repository here and nothing above changes.
+ * knows which repository is behind it. Every page reads Supabase through
+ * SupabaseWrtRepository; the CSV one is kept only for the comparison test.
  */
 import "server-only";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
-import { CsvWrtRepository, DEFAULT_DATA_DIR } from "./csv/csv-repository";
+import { SupabaseWrtRepository } from "@/db/repository";
 import { createQueries, type WrtQueries } from "./queries";
 import type { WrtRepository } from "./repository";
 import { REVIEW_COOKIE, REVIEW_HIDDEN, confirmedOnly } from "./review-scope";
@@ -16,7 +16,7 @@ let queries: WrtQueries | null = null;
 let allQueries: WrtQueries | null = null;
 
 export function getRepository(): WrtRepository {
-  if (!repo) repo = new CsvWrtRepository(process.env.WRT_DATA_DIR || DEFAULT_DATA_DIR);
+  if (!repo) repo = new SupabaseWrtRepository();
   return repo;
 }
 

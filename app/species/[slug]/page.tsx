@@ -53,6 +53,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const ranked = [...(await getWrt().speciesList())].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
   );
+  const planted = new Set(ranked.map((r) => r.item.slug));
   const at = ranked.findIndex((r) => r.item.slug === sp.slug);
   const rank = at + 1;
   const prev = at > 0 ? ranked[at - 1] : null;
@@ -79,16 +80,18 @@ export default async function SpeciesDetailPage({ params }: Props) {
             <span className="[font:500_14px/1.45_var(--font-sans)]">
               WRT has not yet ruled whether{" "}
               <b><InlineName species={sp} /></b> and{" "}
-              {contested.map((c, i) => (
-                <span key={c.slug}>
-                  {i > 0 && (i === contested.length - 1 ? " and " : ", ")}
-                  {(
-                    <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">
-                      {c.displayIsScientific ? <i>{c.scientificName}</i> : <>{c.displayName} (<i>{c.scientificName}</i>)</>}
-                    </Link>
-                  )}
-                </span>
-              ))}{" "}
+              {contested.map((c, i) => {
+                const name = c.displayIsScientific ? <i>{c.scientificName}</i> : <>{c.displayName} (<i>{c.scientificName}</i>)</>;
+                return (
+                  <span key={c.slug}>
+                    {i > 0 && (i === contested.length - 1 ? " and " : ", ")}
+                    {/* A species with no plantings has no page: name it without a link. */}
+                    {planted.has(c.slug) ? (
+                      <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
+                    ) : name}
+                  </span>
+                );
+              })}{" "}
               are one species line or two. Each is kept as typed until WRT rules, and the numbers are not merged.
             </span>
           </div>

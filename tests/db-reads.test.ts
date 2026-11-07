@@ -5,7 +5,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/types";
-import { PAGE_SIZE } from "@/db/queries/views";
 
 try { process.loadEnvFile(".env.local"); } catch {}
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -17,8 +16,8 @@ vi.mock("@/db/client", () => ({
 
 const { listSites, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
-const { findPlantingLines, listSeasons } = await import("@/db/queries/plantings");
-const { listOpenQuestions } = await import("@/db/queries/review");
+const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
+const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
 
 /** All plants in the workbook history. */
 const ALL_PLANTS = 140_068;
@@ -66,6 +65,25 @@ describe.skipIf(!url || !key)("read queries against Supabase", () => {
     expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
     const [season] = await listSeasons();
     expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
+  });
+
+  it("ranks the top species and sites in each season", async () => {
+    const { species, sites } = await listSeasonLeaders(3);
+    const ranked: { season: string | null; plants: number | null; rank: number | null }[][] = [species, sites];
+    for (const rows of ranked) {
+      const perSeason = Map.groupBy(rows, (r) => r.season);
+      expect(perSeason.size).toBe(23);
+      for (const top of perSeason.values()) {
+        expect(top.map((r) => r.rank)).toEqual([1, 2, 3].slice(0, top.length));
+        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (top[i - 1].plants ?? 0))).toBe(true);
+      }
+    }
+  });
+
+  it("totals the plants still waiting on a question", async () => {
+    expect(await readQuestionTotals("order-scheme")).toEqual({ question: "order-scheme", lines: 160, plants: 1_457 });
+    expect(await readQuestionTotals("slope-hill-2024")).toBeNull();
+    expect(await readQuestionTotals("no-such-question")).toBeNull();
   });
 
   it("lists the questions WRT still has to answer", async () => {

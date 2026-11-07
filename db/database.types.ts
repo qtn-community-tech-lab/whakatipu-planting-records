@@ -84,6 +84,13 @@ export type Database = {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
+            referencedRelation: "season_sites";
+            referencedColumns: ["site"];
+          },
+          {
+            foreignKeyName: "areas_site_fkey";
+            columns: ["site"];
+            isOneToOne: false;
             referencedRelation: "sites";
             referencedColumns: ["slug"];
           },
@@ -294,42 +301,63 @@ export type Database = {
       };
       planting_lines: {
         Row: {
+          confidence: string | null;
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
           id: number;
           legacy_code: string | null;
           planting_event: number;
+          precision: string | null;
           quantity: number | null;
+          season_original: string | null;
+          site_original: string | null;
           source_cell: string | null;
+          source_file: string | null;
+          source_sheet: string | null;
           species: string;
+          species_original: string | null;
           updated_at: string;
           updated_by: string | null;
         };
         ComputedFields: never;
         Insert: {
+          confidence?: string | null;
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event: number;
+          precision?: string | null;
           quantity?: number | null;
+          season_original?: string | null;
+          site_original?: string | null;
           source_cell?: string | null;
+          source_file?: string | null;
+          source_sheet?: string | null;
           species: string;
+          species_original?: string | null;
           updated_at?: string;
           updated_by?: string | null;
         };
         Update: {
+          confidence?: string | null;
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event?: number;
+          precision?: string | null;
           quantity?: number | null;
+          season_original?: string | null;
+          site_original?: string | null;
           source_cell?: string | null;
+          source_file?: string | null;
+          source_sheet?: string | null;
           species?: string;
+          species_original?: string | null;
           updated_at?: string;
           updated_by?: string | null;
         };
@@ -360,6 +388,13 @@ export type Database = {
             columns: ["species"];
             isOneToOne: false;
             referencedRelation: "line_details";
+            referencedColumns: ["species"];
+          },
+          {
+            foreignKeyName: "planting_lines_species_fkey";
+            columns: ["species"];
+            isOneToOne: false;
+            referencedRelation: "season_species";
             referencedColumns: ["species"];
           },
           {
@@ -641,26 +676,62 @@ export type Database = {
           area_name: string | null;
           class: Database["public"]["Enums"]["site_class"] | null;
           common_name: string | null;
+          confidence: string | null;
           contested_group: string | null;
           is_scheme: boolean | null;
           legacy_code: string | null;
           line_id: number | null;
           maori_name: string | null;
           needs_review: boolean | null;
+          notes: Json | null;
           planted_on: string | null;
           planting_id: number | null;
+          precision: string | null;
           quantity: number | null;
+          register_code: string | null;
           scientific_name: string | null;
           season: string | null;
           season_label: string | null;
           season_order: number | null;
+          season_original: string | null;
           site: string | null;
           site_name: string | null;
+          site_original: string | null;
           source: Database["public"]["Enums"]["planting_source"] | null;
+          source_cell: string | null;
+          source_file: string | null;
+          source_sheet: string | null;
           species: string | null;
+          species_original: string | null;
           threatened: boolean | null;
+          threatened_te_kakano: boolean | null;
           wrt_number: string | null;
           year: number | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      season_sites: {
+        Row: {
+          plants: number | null;
+          rank: number | null;
+          season: string | null;
+          site: string | null;
+          site_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      season_species: {
+        Row: {
+          common_name: string | null;
+          maori_name: string | null;
+          plants: number | null;
+          rank: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          season: string | null;
+          species: string | null;
         };
         ComputedFields: never;
         Relationships: [];
@@ -683,9 +754,28 @@ export type Database = {
         ComputedFields: never;
         Relationships: [];
       };
-      totals_by_season: {
+      totals_by_question: {
         Row: {
           lines: number | null;
+          plants: number | null;
+          question: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [
+          {
+            foreignKeyName: "notes_question_fkey";
+            columns: ["question"];
+            isOneToOne: false;
+            referencedRelation: "questions";
+            referencedColumns: ["slug"];
+          },
+        ];
+      };
+      totals_by_season: {
+        Row: {
+          half: Database["public"]["Enums"]["season_half"] | null;
+          lines: number | null;
+          lines_needs_review: number | null;
           plants: number | null;
           plants_confirmed: number | null;
           plants_needs_review: number | null;
@@ -694,7 +784,9 @@ export type Database = {
           season_order: number | null;
           sites: number | null;
           species: number | null;
+          workbook_cell: string | null;
           workbook_total: number | null;
+          year: number | null;
         };
         ComputedFields: never;
         Relationships: [];
