@@ -3,15 +3,14 @@
  * State, validation and submit for the planting-event form. The markup lives
  * in event-form.tsx; this hook holds what the form knows and does.
  *
- * Validation runs here with the same validator the server uses, so most
- * mistakes show before submitting; the Server Action re-checks everything.
+ * Nothing is saved yet: submit runs the shared validator and, when every
+ * field is right, marks the form as checked.
  */
-import { useMemo, useState, useTransition, type RefObject } from "react";
+import { useMemo, useState, type RefObject } from "react";
 import type * as GeoJSON from "geojson";
-import { saveEvent } from "@/app/events/actions";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import type { EventSeason, PlantingEvent } from "@/lib/wrt/events/types";
+import type { EventSeason } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
 import { locationBounds, siteLocations } from "@/lib/wrt/site-locations";
 import type { MapFocus, OtherArea } from "./draw-map";
@@ -32,34 +31,31 @@ export interface ExistingArea extends OtherArea {
 const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
 export function useEventForm({
-  options, event, today, areas, formRef,
+  options, today, areas, formRef,
 }: {
   options: EventFormOptions;
-  /** The event being edited, or null for a new one. */
-  event: PlantingEvent | null;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
   areas: ExistingArea[];
   /** The form element, used only on submit to focus the first problem. */
   formRef: RefObject<HTMLFormElement | null>;
 }) {
-  const suggested = seasonFromDate(event?.plantedOn ?? today)!;
+  const suggested = seasonFromDate(today)!;
 
-  const [placeSlug, setPlaceSlug] = useState(event?.placeSlug ?? "");
-  const [parcelId, setParcelId] = useState<string | null>(event?.parcelId ?? null);
-  const [polygon, setPolygon] = useState<GeoJSON.Polygon | null>(event?.polygon ?? null);
-  const [plantedOn, setPlantedOn] = useState(event?.plantedOn ?? today);
-  const [season, setSeason] = useState<EventSeason>(event?.season ?? suggested.season);
-  const [seasonYear, setSeasonYear] = useState(String(event?.seasonYear ?? suggested.seasonYear));
+  const [placeSlug, setPlaceSlug] = useState("");
+  const [parcelId, setParcelId] = useState<string | null>(null);
+  const [polygon, setPolygon] = useState<GeoJSON.Polygon | null>(null);
+  const [plantedOn, setPlantedOn] = useState(today);
+  const [season, setSeason] = useState<EventSeason>(suggested.season);
+  const [seasonYear, setSeasonYear] = useState(String(suggested.seasonYear));
   // Once the user picks a season themselves, changing the date stops overwriting it.
-  const [seasonChosen, setSeasonChosen] = useState(event !== null);
-  const [lines, setLines] = useState<Line[]>(() =>
-    event ? event.species.map((s, i) => ({ key: i, speciesId: s.speciesId, quantity: String(s.quantity) })) : [{ key: 0, speciesId: "", quantity: "" }]);
-  const [nextKey, setNextKey] = useState(lines.length);
-  const [notes, setNotes] = useState(event?.notes ?? "");
-  const [serverErrors, setServerErrors] = useState<FieldErrors>({});
+  const [seasonChosen, setSeasonChosen] = useState(false);
+  const [lines, setLines] = useState<Line[]>([{ key: 0, speciesId: "", quantity: "" }]);
+  const [nextKey, setNextKey] = useState(1);
+  const [notes, setNotes] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [pending, startTransition] = useTransition();
+  // True after a submit that passed every check (nothing is saved).
+  const [checked, setChecked] = useState(false);
 
   const site = options.sites.find((s) => s.slug === placeSlug);
 
@@ -81,11 +77,10 @@ export function useEventForm({
   });
 
   // After the first submit attempt, errors update live as the user fixes them.
-  const liveErrors = submitted ? (() => {
+  const errors: FieldErrors = submitted ? (() => {
     const r = validateEventInput(payload(), lookups, today);
     return r.ok ? {} : r.errors;
   })() : {};
-  const errors: FieldErrors = { ...liveErrors, ...(serverErrors.form ? { form: serverErrors.form } : {}) };
 
   const focus: MapFocus = useMemo(() => {
     const atSite = siteLocations.filter((l) => l.siteSlug === placeSlug);
@@ -95,14 +90,14 @@ export function useEventForm({
   }, [placeSlug, parcelId]);
 
   const others = useMemo(
-    () => areas.filter((a) => a.placeSlug === placeSlug && a.id !== event?.id),
-    [areas, placeSlug, event?.id],
+    () => areas.filter((a) => a.placeSlug === placeSlug),
+    [areas, placeSlug],
   );
 
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
 
   return {
-    site, focus, others, total, pending, errors,
+    site, focus, others, total, errors, checked,
     /** The message for one field path (e.g. "species.0.quantity"), if it has one. */
     err: (path: string): string | undefined => errors[path],
 
@@ -142,19 +137,13 @@ export function useEventForm({
     submit(e: React.FormEvent) {
       e.preventDefault();
       setSubmitted(true);
-      setServerErrors({});
       const check = validateEventInput(payload(), lookups, today);
+      setChecked(check.ok);
       if (!check.ok) {
         // Move focus to the first problem so keyboard and screen-reader users land on it.
         requestAnimationFrame(() =>
           formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [data-invalid='true']")?.focus());
-        return;
       }
-      startTransition(async () => {
-        // On success the action redirects to the list, so a return value means errors.
-        const result = await saveEvent(event?.id ?? null, payload());
-        if (result && !result.ok) setServerErrors(result.errors);
-      });
     },
   };
 }

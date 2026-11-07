@@ -1,5 +1,5 @@
 /*
- * Planting-event pages (/events, /events/new, /events/[id]/edit).
+ * The planting-event form (/events/new).
  * Built only from Canopy tokens and classes, like styles/app.css.
  */
 .ev-form { display: flex; flex-direction: column; gap: 16px; }
@@ -24,9 +24,6 @@
 
 /* Actions */
 .ev-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(transparent, var(--surface-app) 40%); }
-.ev-delete { color: var(--cn-risk-fg); }
-
-/* List: uses the shared DataTable (components/wrt/shared/data-table.tsx). */
 
 @media (max-width: 760px) {
   .ev-grid, .ev-grid--3 { grid-template-columns: minmax(0, 1fr); }

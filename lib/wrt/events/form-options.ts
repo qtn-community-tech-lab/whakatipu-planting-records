@@ -8,7 +8,6 @@
 import "server-only";
 import { getWrtAll } from "../server";
 import { searchKey } from "../text";
-import type { EventLookups } from "./validate";
 
 /** Macron-free search keys, matched with rankMatches in the browser. */
 type SearchKeys = { keys: string[] };
@@ -63,10 +62,4 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
   };
-}
-
-/** The reference data validateEventInput checks against (same source as the form). */
-export async function eventLookups(): Promise<EventLookups> {
-  const { places, species } = await getWrtAll().lookups();
-  return { places, species };
 }

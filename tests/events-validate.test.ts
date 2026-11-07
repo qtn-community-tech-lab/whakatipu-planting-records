@@ -2,7 +2,6 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { validateEventInput, type EventLookups } from "@/lib/wrt/events/validate";
 import { polygonAreaM2, ringSelfIntersects } from "@/lib/wrt/events/geo";
 import { q } from "./helpers";
-import { sampleInput } from "./event-store-contract";
 
 const TODAY = "2026-11-01";
 let lookups: EventLookups;
@@ -20,8 +19,17 @@ beforeAll(async () => {
   [speciesA, speciesB] = l.species.map((s) => s.id);
 });
 
-const valid = (over: Record<string, unknown> = {}) =>
-  ({ ...sampleInput({ placeSlug: site.slug, species: [{ speciesId: speciesA, quantity: 40 }] }), ...over });
+const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => ({
+  placeSlug: site.slug,
+  parcelId: null,
+  plantedOn: "2026-05-10",
+  season: "Autumn",
+  seasonYear: 2026,
+  polygon: { type: "Polygon", coordinates: [[[168.8, -44.98], [168.81, -44.98], [168.81, -44.99], [168.8, -44.98]]] },
+  species: [{ speciesId: speciesA, quantity: 40 }],
+  notes: null,
+  ...over,
+});
 
 describe("validateEventInput", () => {
   it("accepts a well-formed event (with or without a parcel)", () => {

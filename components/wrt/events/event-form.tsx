@@ -1,6 +1,7 @@
 "use client";
 /**
- * The planting-event form, for both "New planting event" and "Edit".
+ * The "New planting event" form. Nothing is saved yet: submitting checks
+ * every field and says whether the details are ready.
  *
  * Fields: site → optional part of site → map (draw one area) → planting date →
  * season and year (suggested from the date, editable) → species lines with
@@ -13,10 +14,9 @@ import { useId, useRef } from "react";
 import { FormField, SelectInput, TextareaInput, TextInput } from "@/components/ui/inputs";
 import { FieldError } from "@/components/ui/field";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
-import { EVENT_SEASONS, type EventSeason, type PlantingEvent } from "@/lib/wrt/events/types";
+import { EVENT_SEASONS, type EventSeason } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { formatNumber } from "@/lib/wrt/text";
-import { cn } from "@/lib/utils";
 import { DrawMap } from "./draw-map";
 import { SitePartPicker, SitePicker } from "./site-picker";
 import { SpeciesPicker } from "./species-picker";
@@ -24,13 +24,11 @@ import { useEventForm, type ExistingArea } from "./use-event-form";
 
 export function EventForm(props: {
   options: EventFormOptions;
-  /** The event being edited, or null for a new one. */
-  event: PlantingEvent | null;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
   areas: ExistingArea[];
 }) {
-  const { options, event, today } = props;
+  const { options, today } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const form = useEventForm({ ...props, formRef });
   const { err, site } = form;
@@ -38,10 +36,14 @@ export function EventForm(props: {
   const heading = (name: string) => `${uid}-${name}`;
 
   return (
-    <form ref={formRef} className="ev-form" onSubmit={form.submit} noValidate aria-label={event ? "Edit planting event" : "New planting event"}>
-      {Object.keys(form.errors).length > 0 && (
+    <form ref={formRef} className="ev-form" onSubmit={form.submit} noValidate aria-label="New planting event">
+      {Object.keys(form.errors).length > 0 ? (
         <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">
-          {form.errors.form ?? "Some details need fixing before this can be saved. They are marked below."}
+          {form.errors.form ?? "Some details need fixing. They are marked below."}
+        </div>
+      ) : form.checked && (
+        <div className="cn-callout cn-callout--sm" role="status">
+          All details look right. Nothing is saved in this prototype.
         </div>
       )}
 
@@ -139,9 +141,9 @@ export function EventForm(props: {
         />
       </section>
 
-      <div className={cn("ev-actions", form.pending && "opacity-70")}>
-        <button type="submit" className="cn-btn cn-btn--primary" disabled={form.pending}>
-          {form.pending ? "Saving…" : event ? "Save changes" : form.total ? `Record ${formatNumber(form.total)} plants` : "Record planting event"}
+      <div className="ev-actions">
+        <button type="submit" className="cn-btn cn-btn--primary">
+          {form.total ? `Record ${formatNumber(form.total)} plants` : "Record planting event"}
         </button>
       </div>
     </form>
