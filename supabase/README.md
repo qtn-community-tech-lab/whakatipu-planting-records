@@ -39,17 +39,42 @@ npm run import-workbook -- --write   # makes the changes
 
 Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
 
-## Running them on a new project
+## Running locally
 
-Paste each migration into SQL Editor in order, or with the database connection string:
+With Docker running, start Supabase from the repository root:
 
 ```bash
-psql "$DATABASE_URL" -f supabase/migrations/20261102000000_schema.sql
-psql "$DATABASE_URL" -f supabase/migrations/20261102000100_access_rules.sql
-psql "$DATABASE_URL" -f supabase/migrations/20261106000000_naming.sql
+npm run supabase:start
 ```
 
-Each file runs as one transaction, so a failure leaves nothing half-made.
+This uses the pinned Supabase CLI and the checked-in `config.toml`, with project ID `wrt-planting-app`. On a fresh local database, plain `supabase start` also applies every file in `supabase/migrations/` in timestamp order. The npm command additionally runs `migration up --local` to apply pending migrations to an existing database. Supabase records applied versions, so subsequent runs skip them and keep existing data. Each migration runs as one transaction; a failure rolls back that file and stops the command.
+
+To apply new migrations while Supabase is already running, or stop it:
+
+```bash
+npm run db:migrate
+npm run supabase:stop
+```
+
+Use `npm run supabase:start` for routine startup so pending migrations are always applied. Plain `supabase start` can reuse an existing database without applying new migrations. There is no automatic database reset in this flow.
+
+Workbook history is a separate import. Before running `npm run import-workbook -- --write`, point `.env.local` at the **local** URL and secret/service-role key shown by the CLI. Starting Supabase creates the schema and seasons, but does not import the workbook.
+
+If a stack started under the previous project ID is still occupying the local ports, stop it first, preserving its data:
+
+```bash
+supabase stop --project-id whakatipu-planting-records
+```
+
+## Running them on a hosted project
+
+Hosted migrations deploy automatically through the Supabase GitHub integration. With **Deploy to production** enabled for the configured production branch, pushing or merging to that branch applies pending files from `supabase/migrations/` in timestamp order. Supabase tracks applied versions and skips migrations that have already run. No manual SQL Editor step, `db push`, or separate GitHub Action is needed for routine deployments.
+
+Commit new migration files with the application changes that need them. Local startup only changes the local database; hosted migrations are applied by the Supabase integration when the production branch deploys.
+
+The original hosted migrations were pasted into SQL Editor, so their versions may be missing from Supabase's migration history. If they have not already been reconciled, compare `migration list --linked` with the actual schema and use `migration repair --linked --status applied VERSION` only for migrations confirmed to have run before the first automated deployment. Do not replay the initial schema migration over existing tables.
+
+See the [Supabase GitHub integration guide](https://supabase.com/docs/guides/deployment/branching/github-integration) and [CLI migration reference](https://supabase.com/docs/reference/cli/supabase-migration-up).
 
 ## Checking it all ran
 

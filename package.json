@@ -1,5 +1,5 @@
 {
-  "name": "wtr-app-tree-reforestation",
+  "name": "wrt-planting-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,10 @@
     "lint": "eslint",
     "test": "vitest run",
     "import-workbook": "tsx scripts/import-workbook.ts",
-    "db:types": "npx --yes supabase@2.121.0 gen types typescript --project-id knlzslvuimjguqkxtneb --schema public > db/database.types.ts && npx --yes prettier@3.9.10 --write db/database.types.ts"
+    "supabase:start": "npx --yes supabase@2.121.0 start && npm run db:migrate",
+    "supabase:stop": "npx --yes supabase@2.121.0 stop",
+    "db:migrate": "npx --yes supabase@2.121.0 migration up --local",
+    "db:types": "npx --yes supabase@2.121.0 gen types typescript --project-id tjyigjsadcepjumrshnb --schema public > db/database.types.ts && npx --yes prettier@3.9.10 --write db/database.types.ts"
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.303",
