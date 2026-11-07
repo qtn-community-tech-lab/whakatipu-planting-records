@@ -1,12 +1,11 @@
 "use client";
 /**
- * Searchable species chooser for one line of the planting-event form.
- * Same matching as the topbar search (matchScore: ignores macrons, tolerates
- * typos), so "kowhia" finds Kōwhai. Species already on other lines are hidden.
+ * Species chooser for one line of the planting-event form: the shared
+ * ComboboxInput with the species list. Search matches the topbar search
+ * (matchScore: ignores macrons, tolerates typos), so "kowhia" finds Kōwhai.
+ * Species already on other lines are left out.
  */
-import { useMemo, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { ComboboxInput, type FieldProps } from "@/components/ui/inputs";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
 import { matchScore } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
@@ -20,62 +19,45 @@ export function SpeciesName({ s }: { s: SpeciesOption }) {
   );
 }
 
+const getValue = (s: SpeciesOption) => s.id;
+const getLabel = (s: SpeciesOption) => s.name;
+const renderItem = (s: SpeciesOption) => <SpeciesName s={s} />;
+const noMatch = (q: string) => `No species matches “${q}”.`;
+
+/** Best match first; with nothing typed, the whole list in its usual order. */
+function rankSpecies(items: readonly SpeciesOption[], query: string): SpeciesOption[] {
+  const q = query.trim();
+  if (!q) return [...items];
+  return items
+    .map((s) => ({ s, score: matchScore(q, s.keys) }))
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.s.name.localeCompare(b.s.name))
+    .map((r) => r.s);
+}
+
 export function SpeciesPicker({
-  id, species, value, taken, onChange, invalid, describedBy,
-}: {
-  id: string;
+  species, value, taken, onChange, ...field
+}: FieldProps & {
   species: SpeciesOption[];
   /** Selected species id, or "" for none yet. */
   value: string;
-  /** Ids chosen on other lines (hidden from the list). */
+  /** Ids chosen on other lines (left out of the list). */
   taken: ReadonlySet<string>;
   onChange: (speciesId: string) => void;
-  invalid?: boolean;
-  /** Id of the line's error message. */
-  describedBy?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const [q, setQ] = useState("");
-  const selected = species.find((s) => s.id === value);
-
-  const results = useMemo(() => {
-    const available = species.filter((s) => !taken.has(s.id) || s.id === value);
-    const query = q.trim();
-    if (!query) return available;
-    return available
-      .map((s) => ({ s, score: matchScore(query, s.keys) }))
-      .filter((r) => r.score > 0)
-      .sort((a, b) => b.score - a.score || a.s.name.localeCompare(b.s.name))
-      .map((r) => r.s);
-  }, [species, taken, value, q]);
-
   return (
-    <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) setQ(""); }}>
-      <PopoverTrigger asChild>
-        <button
-          id={id}
-          type="button"
-          className={cn("wrt-select ev-species-trigger", invalid && "ev-invalid")}
-          data-invalid={invalid || undefined}
-          aria-describedby={describedBy}
-          aria-haspopup="listbox"
-        >
-          {selected ? <SpeciesName s={selected} /> : <span className="text-[var(--text-placeholder)]">Choose a species</span>}
-        </button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[min(380px,calc(100vw-32px))] p-1.5">
-        <Command shouldFilter={false} loop>
-          <CommandInput value={q} onValueChange={setQ} placeholder="Search by any name" className="!w-full mb-1" autoFocus />
-          <CommandList>
-            <CommandEmpty>No species matches “{q}”.</CommandEmpty>
-            {results.map((s) => (
-              <CommandItem key={s.id} value={s.id} onSelect={() => { onChange(s.id); setOpen(false); setQ(""); }}>
-                <SpeciesName s={s} />
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <ComboboxInput
+      {...field}
+      items={species}
+      value={value}
+      onChange={onChange}
+      getValue={getValue}
+      getLabel={getLabel}
+      rank={(items, q) => rankSpecies(items.filter((s) => !taken.has(s.id) || s.id === value), q)}
+      renderItem={renderItem}
+      placeholder="Search species"
+      clearLabel="Clear species"
+      empty={noMatch}
+    />
   );
 }

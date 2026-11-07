@@ -8,3 +8,4 @@ export { FormField, type ControlProps, type FieldProps } from "./form-field";
 export { TextInput } from "./text-input";
 export { TextareaInput } from "./textarea-input";
 export { SelectInput } from "./select-input";
+export { ComboboxInput } from "./combobox-input";

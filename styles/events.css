@@ -7,14 +7,13 @@
 .ev-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .ev-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-/* Validation: the map frame and species picker (fields are styled in app.css, "Form fields") */
+/* Validation: the map frame (fields are styled in app.css, "Form fields") */
 .ev-invalid { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
 
 /* Species lines */
 .ev-lines { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
 .ev-line { display: grid; grid-template-columns: minmax(0, 1fr) 140px auto; gap: 12px; align-items: start; }
 .ev-line__remove { margin-top: 22px; }
-.ev-species-trigger { width: 100%; height: auto; min-height: var(--h-input); padding-block: 8px; text-align: left; display: flex; align-items: center; cursor: pointer; }
 
 /* Map */
 .ev-map { display: flex; flex-direction: column; gap: 10px; }

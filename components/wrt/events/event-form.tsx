@@ -102,15 +102,11 @@ export function EventForm(props: {
         <ol className="ev-lines">
           {form.lines.map((l, i) => (
             <li key={l.key} className="ev-line">
-              <FormField label="Species" fieldClassName="ev-line__species" error={err(`species.${i}.speciesId`)}>
-                {(control) => (
-                  <SpeciesPicker
-                    id={control.id} species={options.species} value={l.speciesId} taken={form.taken(l.key)}
-                    invalid={!!control["aria-invalid"]} describedBy={control["aria-describedby"]}
-                    onChange={(speciesId) => form.updateLine(l.key, { speciesId })}
-                  />
-                )}
-              </FormField>
+              <SpeciesPicker
+                label="Species" fieldClassName="ev-line__species" error={err(`species.${i}.speciesId`)}
+                species={options.species} value={l.speciesId} taken={form.taken(l.key)}
+                onChange={(speciesId) => form.updateLine(l.key, { speciesId })}
+              />
               <TextInput
                 label="Quantity" fieldClassName="ev-line__qty" className="tabular-nums"
                 type="number" inputMode="numeric" min={1} step={1} placeholder="0" value={l.quantity}
