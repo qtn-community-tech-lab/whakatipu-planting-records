@@ -5,7 +5,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/types";
-import { PAGE_SIZE } from "@/db/queries/views";
 
 try { process.loadEnvFile(".env.local"); } catch {}
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -17,7 +16,7 @@ vi.mock("@/db/client", () => ({
 
 const { listSites, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
-const { findPlantingLines, listSeasons, listSeasonLeaders } = await import("@/db/queries/plantings");
+const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
 const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
 
 /** All plants in the workbook history. */

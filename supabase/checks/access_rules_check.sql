@@ -1,5 +1,5 @@
 -- WRT planting database: access-rule check.
--- Run in Supabase > SQL Editor after all four migrations. It acts as signed out, as a volunteer
+-- Run in Supabase > SQL Editor after all six migrations. It acts as signed out, as a volunteer
 -- and as your staff account, tries each thing, and lists PASS or FAIL.
 -- It changes nothing: the one test site it adds is removed at the end.
 

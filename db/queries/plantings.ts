@@ -20,7 +20,7 @@ export async function findPlantingLines(filter: LineFilter, page = 0) {
 }
 
 /** Every line in one season, in one request: the largest season has 410. */
-export async function listSeasonLines(season: string) {
+export async function listSeasonPlantingLines(season: string) {
   const { data } = await lines(await db())
     .eq("season", season)
     .throwOnError();
