@@ -1,22 +1,35 @@
 /**
  * Server-only entry point. Pages call `getWrt()`; nothing else in the UI
- * knows which repository is behind it. Every page reads Supabase through
- * SupabaseWrtRepository; the CSV one is kept only for the comparison test.
+ * knows which repository is behind it. WRT_DATA_SOURCE in .env picks it:
+ * "supabase" (the default) reads live data, "csv" reads the files in
+ * docs/planning/prototype. Every page shows which one it is reading.
  */
 import "server-only";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
 import { SupabaseWrtRepository } from "@/db/repository";
+import { CsvWrtRepository, DEFAULT_DATA_DIR } from "./csv/csv-repository";
 import { createQueries, type WrtQueries } from "./queries";
 import type { WrtRepository } from "./repository";
 import { REVIEW_COOKIE, REVIEW_HIDDEN, confirmedOnly } from "./review-scope";
+
+export type DataSource = "supabase" | "csv";
+
+/** Where every page reads from. Supabase unless WRT_DATA_SOURCE says "csv". */
+export function dataSource(): DataSource {
+  return process.env.WRT_DATA_SOURCE?.trim().toLowerCase() === "csv" ? "csv" : "supabase";
+}
 
 let repo: WrtRepository | null = null;
 let queries: WrtQueries | null = null;
 let allQueries: WrtQueries | null = null;
 
 export function getRepository(): WrtRepository {
-  if (!repo) repo = new SupabaseWrtRepository();
+  if (!repo) {
+    repo = dataSource() === "csv"
+      ? new CsvWrtRepository(process.env.WRT_DATA_DIR || DEFAULT_DATA_DIR)
+      : new SupabaseWrtRepository();
+  }
   return repo;
 }
 
