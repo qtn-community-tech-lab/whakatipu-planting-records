@@ -17,7 +17,6 @@ export const NAV_MAIN: readonly NavItem[] = [
   { href: "/records", label: "Records", icon: "records", count: "records" },
   // Prototype data entry (lib/wrt/events). The list of saved events is linked from the form page.
   { href: "/events/new", label: "New planting event", icon: "events" },
-  { href: "/ask", label: "Ask", icon: "ask" },
 ];
 
 export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];
