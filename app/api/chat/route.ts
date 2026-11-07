@@ -24,7 +24,7 @@ function readScope(raw: unknown): Scope {
     part: text(s.part),
     species: named(s.species),
     season: s.season === "Autumn" || s.season === "Spring" ? s.season : undefined,
-    year: typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 2015 && s.year <= 2026 ? s.year : undefined,
+    year: typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 2000 && s.year <= 9999 ? s.year : undefined,
   };
 }
 

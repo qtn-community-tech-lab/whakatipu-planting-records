@@ -102,7 +102,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
 
       <Card
         title="Recorded plants by season"
-        foot={`Autumn 2015 → Autumn 2026, ${seasons.length} seasons. Select a column to open that season.`}
+        foot={`${seasons.length} planting seasons. Select a column to open that season.`}
       >
         <div className="mb-3"><SplitKey spring /></div>
         <SeasonColumns points={seasons} caption={`Recorded ${midSentence(sp.displayName)} plants by season`} />

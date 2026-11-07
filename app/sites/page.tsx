@@ -16,7 +16,7 @@ import { LocationCard } from "@/components/wrt/sites/location-card";
 
 export const metadata: Metadata = {
   title: "Sites",
-  description: "Every site with recorded plants since Autumn 2015, with seasons active, species and recorded plants.",
+  description: "Explore sites by seasons active, species and recorded plants.",
 };
 
 const CLASSES = ["keystone", "community", "school"] as const;
@@ -96,11 +96,8 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
       <Card
         foot={
           <>
-            A site is the place people know, such as Lake Hayes. A parcel is one of WRT’s registered sub-sites inside it,
-            such as Lake Hayes Pavilion. Recorded plants are kept against parcels and added up to the site. Bars are scaled to
-            the largest site.
-            {rows.some((r) => r.item.slug === "slope-hill") &&
-              " Slope Hill’s bar is long because of its 2024 restoration: 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation."}
+            A site is the place people know. A parcel is one of WRT’s registered sub-sites inside it.
+            Recorded plants are kept against parcels and added up to the site.
           </>
         }
       >

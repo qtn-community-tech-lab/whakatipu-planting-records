@@ -10,7 +10,7 @@ import { OpenQuestions } from "@/components/wrt/overview/open-questions";
 import { SpeciesName, hrefs } from "@/components/wrt/shared/names";
 import { ClassBreakdown, PrecisionBreakdown } from "@/components/wrt/overview/breakdowns";
 import { StartHere, type StartQuestion } from "@/components/wrt/overview/start-here";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
+import { formatNumber } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
   title: "Restoration history",
@@ -18,10 +18,9 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const wrt = getWrt();
-  const [o, places, seasons, showReview] = await Promise.all([wrt.overview(), wrt.places(), wrt.seasons(), reviewShown()]);
+  const [o, showReview] = await Promise.all([wrt.overview(), reviewShown()]);
 
   const { split } = o;
-  const slopeHill = o.themes.find((t) => t.theme === "slope-hill-2024");
   const topPlaces = o.places.slice(0, 8);
   const topSpecies = o.species.slice(0, 8);
 
@@ -32,26 +31,20 @@ export default async function Home() {
   const sortedTotals = withPlants.map((p) => p.split.total).sort((a, b) => a - b);
   const median = sortedTotals[Math.floor(sortedTotals.length / 2)];
 
-  // Starting questions: only link to things that exist in the data.
-  const wc = places.find((p) => p.item.slug === "whitechapel");
-  const autumn24 = seasons.find((s) => s.season.slug === "autumn-2024");
-  const questions: StartQuestion[] = [];
-  if (wc) {
-    questions.push({
-      href: hrefs.records({ place: wc.item.slug, year: 2019 }),
-      question: "What went in at Whitechapel in 2019",
+  const questions: StartQuestion[] = [
+    {
+      href: hrefs.records({}),
+      question: "What went where",
       icon: "sites",
-      answer: "Every species recorded there that year, with the source cell behind each row.",
-    });
-  }
-  if (autumn24) {
-    questions.push({
-      href: hrefs.season(autumn24.season.slug),
-      question: "What went in during Autumn 2024",
+      answer: "Explore every recorded species, site and season, with the source cell behind each row.",
+    },
+    {
+      href: "/seasons",
+      question: "What went in each season",
       icon: "seasons",
-      answer: `${formatNumber(autumn24.split.total)} recorded plants across ${autumn24.placeCount} sites, with the Slope Hill columns flagged.`,
-    });
-  }
+      answer: "Compare recorded plants across seasons and open one to see its sites and species.",
+    },
+  ];
 
   return (
     <>
@@ -94,19 +87,6 @@ export default async function Home() {
         <div className="pt-2">
           <SeasonColumns points={o.seasons} caption="Recorded plants by season. Each column links to that season." />
         </div>
-        {slopeHill && (
-          <Link
-            href={hrefs.records({ review: "needs-review", theme: "slope-hill-2024" })}
-            className="wrt-ohero-note"
-          >
-            <span className="wrt-ohero-note__dot" aria-hidden="true" />
-            <span>
-              <b>Why 2024 towers over the rest:</b> Slope Hill 2024 adds {formatNumber(slopeHill.split.needsReview)} flagged
-              recorded plants, {formatShare(slopeHill.split.needsReview, split.total)} of everything on record.
-            </span>
-            <span className="wrt-ohero-note__go">See the records →</span>
-          </Link>
-        )}
       </Card>
 
       {showReview && (

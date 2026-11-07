@@ -17,7 +17,7 @@ import { formatNumber } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
   title: { default: "Restoration history · Whakatipu Reforestation Trust", template: "%s · WRT restoration history" },
-  description: "Explore every recorded WRT planting season since Autumn 2015 by site, species, year and season.",
+  description: "Explore the WRT planting history by site, species, year and season.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -83,22 +83,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             </header>
             <ViewTransition default="wrt-page-fade">
               <main id="main" className="wrt-main">
-                <div className="wrt-notice" role="note">
-                  <span className="wrt-notice__icon" aria-hidden="true">i</span>
-                  <p className="wrt-notice__text">
-                    <b>Recorded plants, not verified plantings.</b>{" "}
-                    Figures come from nursery allocation sheets, not from counts in the ground.{" "}
-                    {showReview ? (
-                      <><span className="wrt-notice__amber">Amber</span> marks plants on records WRT still has to rule on.</>
-                    ) : (
-                      <>
-                        Showing confirmed records only: {formatNumber(left.needsReview)} plants on{" "}
-                        {formatNumber(left.recordsNeedingReview)} records WRT still has to rule on are left out.
-                      </>
-                    )}
-                  </p>
-                  <Link href="/about-the-data" className="wrt-notice__link">How to read these numbers →</Link>
-                </div>
                 {children}
               </main>
             </ViewTransition>

@@ -52,7 +52,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <PageHead eyebrow="Search" title="Search sites, species and seasons" />
         <Card>
           <SearchForm q="" />
-          <p className="wrt-muted m-0">Try a site such as Whitechapel, a species such as mānuka, or a season such as Autumn 2024. Spellings are matched without macrons.</p>
+          <p className="wrt-muted m-0">Search by site name, species name, or season and year. Spellings are matched without macrons.</p>
         </Card>
       </>
     );
