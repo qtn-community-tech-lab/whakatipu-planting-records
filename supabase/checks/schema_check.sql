@@ -1,5 +1,5 @@
 -- WRT planting database: did the whole SQL run?
--- Paste into Supabase > SQL Editor after all three migrations (and the import).
+-- Paste into Supabase > SQL Editor after all four migrations (and the import).
 -- It only reads. Every row should say PASS.
 
 with expected (part, item, want, got) as (

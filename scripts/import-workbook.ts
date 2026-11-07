@@ -99,7 +99,7 @@ async function main() {
   if (!url || !key) throw new Error("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local");
   const db = createClient(url, key, { auth: { persistSession: false } });
 
-  function check<T>(res: { data: T | null; error: { message: string } | null }, what: string): T {
+  function check<T>(res: { data?: T | null; error: { message: string } | null }, what: string): T {
     if (res.error) throw new Error(`${what}: ${res.error.message}`);
     return res.data as T;
   }

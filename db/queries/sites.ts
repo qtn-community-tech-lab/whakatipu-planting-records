@@ -1,17 +1,24 @@
 /** Sites and their areas. */
-import type { Db } from "@/db/types";
-import { areas, siteTotals } from "./views";
+import { db } from "@/db/client";
+import { areaPins, areaTotals, siteTotals } from "./views";
 
-/** Every site with recorded plants, most first. Pass a limit for the few most planted, as on the home page. */
-export async function listSites(db: Db, limit?: number) {
-  const query = siteTotals(db);
-  const { data } = await (limit ? query.limit(limit) : query).throwOnError();
+/** Every site with recorded plants, most first, or just the `limit` most planted. */
+export async function listSites(limit?: number) {
+  const query = siteTotals(await db());
+  const { data } = await (limit === undefined ? query : query.limit(limit)).throwOnError();
+  return data;
+}
+
+/** Every area with its totals, or just one site's. */
+export async function listPlantingAreaTotals(site?: string) {
+  const query = areaTotals(await db());
+  const { data } = await (site ? query.eq("site", site) : query).throwOnError();
   return data;
 }
 
 /** Every area with its pin, or just one site's. For the map. */
-export async function listPlantingAreas(db: Db, site?: string) {
-  const query = areas(db);
+export async function listPlantingAreaPins(site?: string) {
+  const query = areaPins(await db());
   const { data } = await (site ? query.eq("site", site) : query).throwOnError();
   return data;
 }
