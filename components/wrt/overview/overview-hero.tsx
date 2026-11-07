@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 import Image from "next/image";
 import Link from "next/link";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
@@ -10,7 +11,7 @@ import type { NavIcon } from "@/components/wrt/shell/nav";
 import { hrefs } from "@/components/wrt/shared/names";
 
 interface Stat {
-  href: string;
+  href: AppRoute;
   icon: NavIcon;
   label: string;
   value: string;

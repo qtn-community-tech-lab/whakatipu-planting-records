@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 import Image from "next/image";
 import Link from "next/link";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
@@ -23,7 +24,7 @@ export function SpeciesPhotoFigure({ photo }: { photo: SpeciesPhoto }) {
 }
 
 /** Compact reference used alongside a species name in the main list. */
-export function SpeciesPhotoThumbnail({ photo, href }: { photo: SpeciesPhoto; href: string }) {
+export function SpeciesPhotoThumbnail({ photo, href }: { photo: SpeciesPhoto; href: AppRoute }) {
   return (
     <Link href={href} className="wrt-photo-thumb"
       aria-label={`View reference photos of ${photo.scientificName}`}

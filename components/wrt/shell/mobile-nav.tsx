@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SidebarFootNav, SidebarNav } from "./sidebar-nav";
 import type { NavCounts } from "./nav";
 
-export function MobileNav({ counts }: { counts?: NavCounts }) {
+export function MobileNav({ counts }: { counts?: NavCounts | undefined }) {
   const [open, setOpen] = useState(false);
   return (
     <Sheet open={open} onOpenChange={setOpen}>

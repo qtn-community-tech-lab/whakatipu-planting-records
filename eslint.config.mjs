@@ -6,6 +6,13 @@ import stylistic from "@stylistic/eslint-plugin";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "error",
+      "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports", fixStyle: "inline-type-imports" }],
+    },
+  },
   // Supabase queries: one chained call per line, listed like parameters.
   {
     files: ["db/queries/**/*.ts"],

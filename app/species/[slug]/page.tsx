@@ -16,7 +16,7 @@ import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<PageProps<"/species/[slug]">>;
 
 const PLACES_SHOWN = 15;
 const REVIEW_ROWS_SHOWN = 8;

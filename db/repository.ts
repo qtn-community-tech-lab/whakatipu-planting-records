@@ -187,8 +187,8 @@ async function load(db: Db): Promise<Loaded> {
   const audit: ReconciliationRow[] = parseCsv(readFileSync(WORKBOOK_AUDIT, "utf8")).rows
     .filter((x) => x.item !== "season")
     .map((x) => ({
-      kind: x.item === "grand" ? "grand" : "exception", label: x.label, generated: Number(x.generated) || 0,
-      stated: Number(x.stated) || 0, difference: Number(x.difference) || 0, statedCell: x.stated_cell,
+      kind: x.item === "grand" ? "grand" : "exception", label: x.label ?? "", generated: Number(x.generated) || 0,
+      stated: Number(x.stated) || 0, difference: Number(x.difference) || 0, statedCell: x.stated_cell ?? "",
       records: Number(x.records) || 0, cause: x.cause?.trim() || null,
     }));
 

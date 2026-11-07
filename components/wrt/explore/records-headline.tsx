@@ -41,7 +41,7 @@ export function recordsHeadline(
       {when && <> in {when}</>}
       {review && <> {review}</>}
       {f.q && <> matching “{f.q}”</>}
-      {none && <> since {lookups.seasons[0].label}</>}
+      {none && lookups.seasons[0] && <> since {lookups.seasons[0].label}</>}
     </>
   );
 }

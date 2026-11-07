@@ -125,7 +125,9 @@ async function resolveSpecies(v: string) {
   if ((await wrt.speciesList()).some((s) => s.item.slug === v)) return { slug: v };
   const { species } = await wrt.search(v, 5);
   const exact = species.find((s) => [s.item.displayName, s.item.scientificName].some((x) => searchKey(x) === searchKey(v)));
-  if (exact || species.length === 1) return { slug: (exact ?? species[0]).item.slug };
+  const single = species.length === 1 ? species[0] : undefined;
+  const match = exact ?? single;
+  if (match) return { slug: match.item.slug };
   return species.length ? { choices: species.map((s) => ({ slug: s.item.slug, name: s.item.displayName, scientific: s.item.scientificName })) } : null;
 }
 
@@ -137,7 +139,7 @@ export async function speciesAt(slug: string, place?: string | null, part?: stri
   const d = await speciesDetail(slug);
   if (!d.found || !place) return lean({ ...d, here: null });
   const parcel = part ? await parcelId(place, part) : undefined;
-  const { split, rows } = await getWrt().records({ place, parcel, species: slug });
+  const { split, rows } = await getWrt().records({ place, ...(parcel ? { parcel } : {}), species: slug });
   const season = new Map(rows.map((v) => [v.season.slug, v.season]));
   const seasons = [...groupSplits(rows.map((v) => v.record), (r) => r.seasonSlug)]
     .map(([k, s]) => ({ label: season.get(k)!.label, order: season.get(k)!.order, total: s.total }))
@@ -244,7 +246,10 @@ export const tools = {
       const sp = filter.species ? await resolveSpecies(filter.species) : null;
       if (sp && "slug" in sp) filter.species = sp.slug;
       // ponytail: the parcel id reaches the model in `filter`; the prompt says never to show ids
-      if (part && filter.place) filter.parcel = await parcelId(filter.place, part);
+      if (part && filter.place) {
+        const parcel = await parcelId(filter.place, part);
+        if (parcel) filter.parcel = parcel;
+      }
       const all = await getWrt().records(filter);
       // Plant traits and site classes aren't in RecordFilter, so they narrow the rows here.
       const rows = all.rows.filter((v) => (!trait || v.species[trait] === true) && (!siteClass || v.record.siteClass === siteClass));

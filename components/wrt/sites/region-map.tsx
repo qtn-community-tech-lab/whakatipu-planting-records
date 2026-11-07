@@ -7,7 +7,7 @@ import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl
 import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
-function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation }) {
+function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation | undefined }) {
   const { map, isLoaded } = useMap();
   useEffect(() => {
     if (!map || !isLoaded) return;
@@ -23,7 +23,7 @@ function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; se
   return null;
 }
 
-function LocationMarkers({ locations, selectedId, onSelect }: { locations: MappedSiteLocation[]; selectedId?: string; onSelect: (id: string) => void }) {
+function LocationMarkers({ locations, selectedId, onSelect }: { locations: MappedSiteLocation[]; selectedId?: string | undefined; onSelect: (id: string) => void }) {
   const { map, isLoaded } = useMap();
   const [groups, setGroups] = useState<number[][]>(() => locations.map((_, index) => [index]));
   useEffect(() => {
@@ -45,8 +45,9 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   }, [map, isLoaded, locations]);
 
   return groups.map((indexes) => {
-    const members = indexes.map((index) => locations[index]).filter(Boolean);
-    if (!members.length) return null;
+    const members = indexes.map((index) => locations[index]).filter((point) => point !== undefined);
+    const first = members[0];
+    if (!first) return null;
     const clustered = members.length > 1;
     const total = members.reduce((sum, point) => sum + point.split.total, 0);
     const needsReview = members.reduce((sum, point) => sum + point.split.needsReview, 0);
@@ -56,11 +57,11 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
       <MapMarker key={members.map((point) => point.id).join("/")} longitude={longitude} latitude={latitude}>
         <MarkerContent>
           <button type="button" className={`wrt-location-marker${clustered ? " wrt-location-marker--group" : ""}`}
-            aria-pressed={!clustered && members[0].id === selectedId}
-            aria-label={clustered ? `Zoom to ${members.length} nearby locations: ${members.map((point) => point.label).join(", ")}` : `Show ${members[0].label}`}
+            aria-pressed={!clustered && first.id === selectedId}
+            aria-label={clustered ? `Zoom to ${members.length} nearby locations: ${members.map((point) => point.label).join(", ")}` : `Show ${first.label}`}
             title={`${formatNumber(total)} recorded plants${needsReview ? `; ${formatNumber(needsReview)} needing review` : ""}`}
             onClick={() => {
-              if (!clustered) { onSelect(members[0].id); return; }
+              if (!clustered) { onSelect(first.id); return; }
               const bounds = locationBounds(members);
               if (bounds && map) map.fitBounds(bounds, { padding: 80, maxZoom: 17,
                 duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 450 });
@@ -75,7 +76,7 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   });
 }
 
-export function RegionMap({ locations, siteName }: { locations: MappedSiteLocation[]; siteName?: string }) {
+export function RegionMap({ locations, siteName }: { locations: MappedSiteLocation[]; siteName?: string | undefined }) {
   const selectId = useId();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = locations.find((location) => location.id === selectedId);

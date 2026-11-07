@@ -34,8 +34,11 @@ export default async function SeasonsPage() {
 
   const total = { total: seasons.reduce((n, s) => n + s.split.total, 0) };
 
-  const first = seasons[0].season;
-  const last = seasons[seasons.length - 1].season;
+  const first = seasons[0]?.season;
+  const last = seasons.at(-1)?.season;
+  if (!first || !last) {
+    return <PageHead title="No planting seasons recorded" />;
+  }
   const matching = seasons.filter((s) => s.reconciliation?.difference === 0).length;
   const checked = seasons.filter((s) => s.reconciliation).length;
   const median = medianSites(seasons);
@@ -91,8 +94,8 @@ export default async function SeasonsPage() {
               key={s.season.slug}
               s={s}
               fewSites={s.placeCount < median * 0.6}
-              trees={topBySeason.get(s.season.slug)}
-              sites={sitesBySeason.get(s.season.slug)}
+              trees={topBySeason.get(s.season.slug) ?? []}
+              sites={sitesBySeason.get(s.season.slug) ?? []}
             />
           ))}
         </ol>

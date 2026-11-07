@@ -30,7 +30,7 @@ export default async function Home() {
   const busiest = withPlants.reduce((a, b) => (b.split.total > a.split.total ? b : a));
   const quietest = withPlants.reduce((a, b) => (b.split.total < a.split.total ? b : a));
   const sortedTotals = withPlants.map((p) => p.split.total).sort((a, b) => a - b);
-  const median = sortedTotals[Math.floor(sortedTotals.length / 2)];
+  const median = sortedTotals[Math.floor(sortedTotals.length / 2)] ?? 0;
 
   // Starting questions: only link to things that exist in the data.
   const wc = places.find((p) => p.item.slug === "whitechapel");

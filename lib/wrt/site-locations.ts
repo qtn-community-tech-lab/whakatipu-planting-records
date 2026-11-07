@@ -65,7 +65,9 @@ export function groupNearbyLocations(points: readonly { x: number; y: number }[]
     const group = [start];
     for (const index of group) {
       for (const other of remaining) {
-        if (Math.hypot(points[index].x - points[other].x, points[index].y - points[other].y) < radius) {
+        const point = points[index];
+        const candidate = points[other];
+        if (point && candidate && Math.hypot(point.x - candidate.x, point.y - candidate.y) < radius) {
           group.push(other);
           remaining.delete(other);
         }

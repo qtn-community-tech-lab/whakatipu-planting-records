@@ -1,9 +1,10 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "ask" | "about";
 export type NavCountKey = "sites" | "species" | "seasons" | "records";
 export type NavCounts = Partial<Record<NavCountKey, string>>;
 
 export interface NavItem {
-  href: string;
+  href: AppRoute;
   label: string;
   icon: NavIcon;
   count?: NavCountKey;
@@ -20,6 +21,6 @@ export const NAV_MAIN: readonly NavItem[] = [
 
 export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];
 
-export function isActive(pathname: string, href: string) {
+export function isActive(pathname: string, href: AppRoute) {
   return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 }
