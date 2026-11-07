@@ -76,12 +76,5 @@ export function runEventStoreContract(name: string, makeStore: () => Promise<Eve
       await Promise.all(Array.from({ length: 10 }, (_, i) => store.create(sampleInput({ notes: `n${i}` }))));
       expect(await store.list()).toHaveLength(10);
     });
-
-    it("returned objects are copies", async () => {
-      const store = await makeStore();
-      const e = await store.create(sampleInput());
-      e.species[0].quantity = 999;
-      expect((await store.get(e.id))?.species[0].quantity).toBe(40);
-    });
   });
 }

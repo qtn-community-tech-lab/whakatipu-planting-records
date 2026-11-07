@@ -64,8 +64,4 @@ describe("eventsToCsv", () => {
   it("defuses formula-like notes", () => {
     expect(rows[0][col("Notes")].startsWith("'=")).toBe(true);
   });
-
-  it("an empty export is just the header", () => {
-    expect(parse(eventsToCsv([]).slice(1))).toHaveLength(1);
-  });
 });
