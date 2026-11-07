@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { repo } from "./helpers";
+import { repo, workbook } from "./helpers";
 
-describe("repository invariants on the real CSVs", () => {
+describe("workbook import invariants", () => {
   it("loads 5,449 records totalling 140,068 recorded plants", async () => {
     const recs = await repo.listRecords();
     expect(recs).toHaveLength(5449);
@@ -89,7 +89,7 @@ describe("repository invariants on the real CSVs", () => {
   });
 
   it("loaded with no errors", async () => {
-    const issues = await repo.listDataIssues();
+    const issues = workbook.issues;
     expect(issues.filter((i) => i.severity === "error")).toEqual([]);
   });
 
@@ -98,13 +98,6 @@ describe("repository invariants on the real CSVs", () => {
       expect(["site", "subsite", "area", "scheme", "unknown"]).toContain(r.precision);
       expect(["high", "medium", "low"]).toContain(r.confidence);
     }
-  });
-
-  it("reports the source files it read, with row counts", async () => {
-    const info = await repo.getSourceInfo();
-    const history = info.files.find((f) => f.name === "planting_history.csv");
-    expect(history?.rows).toBe(5449);
-    expect(info.description).toMatch(/never opens the original spreadsheets/i);
   });
 });
 
@@ -131,7 +124,7 @@ describe("reconciliation", () => {
   });
 
   it("explains every grand total that disagrees with the records", async () => {
-    const recon = await repo.listReconciliation();
+    const recon = workbook.reconciliation;
     const grand = recon.filter((r) => r.kind === "grand");
     expect(grand.map((r) => r.stated).sort((a, b) => a - b)).toEqual([135413, 137273, 139948, 140049, 140068]);
     for (const r of grand) {

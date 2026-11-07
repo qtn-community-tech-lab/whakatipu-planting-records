@@ -6,7 +6,7 @@ import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { ReviewThemeList } from "@/components/wrt/shared/records";
 import { hrefs } from "@/components/wrt/shared/names";
 import { ConfidenceList, PrecisionList } from "@/components/wrt/about/precision";
-import { GrandReconciliationTable, SeasonReconciliationTable } from "@/components/wrt/about/reconciliation";
+import { SeasonReconciliationTable } from "@/components/wrt/about/reconciliation";
 import { ThreatenedLink, ThreatenedQuestions, ThreatenedTable } from "@/components/wrt/about/threatened";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
 
@@ -32,10 +32,7 @@ export default async function AboutTheData() {
   const { split } = dq;
 
   const seasonRows = dq.reconciliation.filter((r) => r.kind === "season");
-  const grandRows = dq.reconciliation.filter((r) => r.kind === "grand");
-  const exceptionRows = dq.reconciliation.filter((r) => r.kind === "exception");
   const seasonsMatching = seasonRows.filter((r) => r.difference === 0).length;
-  const grandDisagree = grandRows.filter((r) => r.difference !== 0);
   const seasonsMatchAll = seasonRows.length > 0 && seasonsMatching === seasonRows.length;
 
   const themeSum = dq.themes.reduce((a, t) => a + t.split.needsReview, 0);
@@ -47,7 +44,6 @@ export default async function AboutTheData() {
   const markedBoth = marked.filter((r) => r.agreed).length;
   const markedPo = marked.filter((r) => r.item.threatenedMarks.plantsOutMaster).length;
   const markedTe = marked.filter((r) => r.item.threatenedMarks.teKakano).length;
-  const warnings = dq.issues.sample;
 
   return (
     <>
@@ -235,31 +231,6 @@ export default async function AboutTheData() {
           </p>
         </div>
         <SeasonReconciliationTable rows={seasonRows} />
-
-        <div className="pt-6">
-          <h3 className="wrt-section-title pb-1">
-            Why the workbook’s grand totals differ from {formatNumber(split.total)}
-          </h3>
-          <div className="wrt-prose pb-3">
-            <p className="!m-0">
-              The workbook states its all-time total in several places and they do not agree with each other.{" "}
-              {grandDisagree.length > 0 ? (
-                <>
-                  {grandDisagree.map((r) => formatNumber(r.stated)).join(", ")} appear in different cells. The records
-                  add to {formatNumber(split.total)}, and each gap has a cause that can be traced.
-                </>
-              ) : (
-                <>They all agree with the records.</>
-              )}
-            </p>
-          </div>
-          <GrandReconciliationTable rows={grandRows} recordsTotal={split.total} />
-          {exceptionRows.map((r) => (
-            <p key={r.label} className="wrt-rule mt-3 mb-0 max-w-[72ch]">
-              <strong className="text-[var(--text-strong)]">One cell is not a number.</strong> {r.cause}
-            </p>
-          ))}
-        </div>
       </Card>
 
       <Card id="source" title="Where the data comes from">
@@ -276,12 +247,12 @@ export default async function AboutTheData() {
               .
             </p>
             <p className="!m-0">
-              The original spreadsheets are never read by the app. It reads only the transformed files listed here, so
-              what you see can always be traced back to a cell, but not edited from here.
+              The app reads the Supabase database. The workbook history was imported separately, and every record
+              keeps the source cell it came from.
             </p>
           </div>
-          <div className="flex flex-col gap-2" role="list" aria-label="Files read, with row counts">
-            {dq.source.files.map((f) => (
+          <div className="flex flex-col gap-2" role="list" aria-label="Database tables read, with row counts">
+            {dq.source.tables.map((f) => (
               <div key={f.name} className="cn-kv" role="listitem">
                 <span className="min-w-0 break-words text-[13px] font-semibold">{f.name}</span>
                 <b className="whitespace-nowrap tabular-nums">{formatNumber(f.rows)} rows</b>
@@ -316,28 +287,9 @@ export default async function AboutTheData() {
         </div>
       </Card>
 
-      <div className="flex flex-col gap-2 pb-2">
-        <Rule>
-          Data load: {dq.issues.errors === 0 ? "no errors" : `${formatNumber(dq.issues.errors)} errors`}
-          {" · "}
-          {dq.issues.warnings === 0 ? "no warnings" : `${formatNumber(dq.issues.warnings)} warning${dq.issues.warnings === 1 ? "" : "s"}`}
-          {" · "}
-          {formatNumber(overview.placeCount)} sites, {formatNumber(overview.speciesCount)} species, {overview.seasons.length} seasons loaded.
-        </Rule>
-        {dq.issues.warnings > 0 && warnings.length > 0 && (
-          <details className="wrt-prov">
-            <summary>Load warnings</summary>
-            <ul className="m-0 mt-2 flex list-none flex-col gap-1 rounded-[var(--radius-field)] bg-[var(--surface-soft)] p-3 text-[var(--text-body)]">
-              {warnings.map((w, i) => (
-                <li key={i} className="break-words">{w}</li>
-              ))}
-              {dq.issues.warnings > warnings.length && (
-                <li className="text-[var(--text-muted)]">Showing the first {warnings.length} of {formatNumber(dq.issues.warnings)}.</li>
-              )}
-            </ul>
-          </details>
-        )}
-      </div>
+      <Rule>
+        {formatNumber(overview.placeCount)} sites, {formatNumber(overview.speciesCount)} species, {overview.seasons.length} seasons loaded.
+      </Rule>
     </>
   );
 }

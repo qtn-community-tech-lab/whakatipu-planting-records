@@ -277,11 +277,10 @@ describe("dataQuality()", () => {
     expect(dq.byConfidence.reduce((a, r) => a + r.split.total, 0)).toBe(140068);
   });
 
-  it("reports load health and the reconciliation rows", async () => {
+  it("reports database sources and season reconciliation rows", async () => {
     const dq = await q.dataQuality();
-    expect(dq.issues.errors).toBe(0);
     expect(dq.reconciliation.filter((r) => r.kind === "season")).toHaveLength(23);
-    expect(dq.source.files.length).toBeGreaterThan(0);
+    expect(dq.source.tables.length).toBeGreaterThan(0);
   });
 });
 

@@ -1,6 +1,5 @@
 /**
- * Supabase rows in the shapes the existing pages and components take, so a page
- * can switch from the CSV files to the database without changing its markup.
+ * Supabase rows in the shapes used by the pages and components.
  */
 import { byTotalDesc, emptySplit, addToSplit, splitOf } from "@/lib/wrt/queries";
 import type { RecordView, Ranked, SeasonDetail, SeasonSummary, ThemeSummary } from "@/lib/wrt/queries";
@@ -95,12 +94,12 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
 
 /**
  * One season's page from its totals and lines. Seasons are those with lines, in order.
- * With the review switch off, lines still waiting on WRT are left out, as on the CSV pages.
+ * With the review switch off, lines still waiting on WRT are left out.
  */
 export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
-  // Workbook order (line ids follow it), so ties rank the same as on the CSV pages.
+  // Workbook order (line ids follow it), for consistent ranking when totals tie.
   const views = [...lines].sort((a, b) => a.line_id! - b.line_id!)
     .map(toRecordView)
     .filter((v) => showReview || !v.record.needsReview);

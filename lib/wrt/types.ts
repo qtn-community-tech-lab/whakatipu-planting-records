@@ -1,8 +1,7 @@
 /**
  * Domain types for the WRT historical restoration explorer.
  *
- * Nothing in this file knows where the data comes from. The CSV repository
- * (lib/wrt/csv) builds these; a database repository will build the same ones.
+ * These shapes are shared by Supabase reads, the query layer and import tooling.
  *
  * Vocabulary
  * - "Recorded plants": every quantity in the history. The historical MASTER was
@@ -176,7 +175,7 @@ export interface PlantingRecord {
   provenance: Provenance;
 }
 
-/** Generated vs workbook-stated totals (history_reconciliation.csv). */
+/** Recorded totals compared with the workbook’s stated totals. */
 export interface ReconciliationRow {
   kind: "season" | "grand" | "exception";
   label: string;
@@ -186,12 +185,4 @@ export interface ReconciliationRow {
   statedCell: string;
   records: number;
   cause: string | null;
-}
-
-/** A problem found while loading the source data. */
-export interface DataIssue {
-  file: string;
-  line: number;
-  message: string;
-  severity: "error" | "warning";
 }

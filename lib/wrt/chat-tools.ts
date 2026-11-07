@@ -312,7 +312,7 @@ export const tools = {
     inputSchema: z.object({}),
     execute: async () => {
       const d = await getWrt().dataQuality();
-      return { split: d.split, themes: d.themes, reconciliation: d.reconciliation.filter((r) => r.kind !== "season") };
+      return { split: d.split, themes: d.themes, reconciliation: d.reconciliation };
     },
   }),
 };
