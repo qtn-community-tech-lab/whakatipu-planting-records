@@ -1,0 +1,237 @@
+/**
+ * The planting history from Supabase, in the shapes every page already takes.
+ * lib/wrt/server.ts plugs this in where the CSV files used to be, so every page
+ * reads Supabase without changing its markup. Moving pages onto views comes later.
+ */
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { createClient } from "@supabase/supabase-js";
+import type { Database, Db } from "@/db/types";
+import { PAGE_SIZE } from "@/db/queries/views";
+import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
+import type {
+  Confidence, DataIssue, Parcel, Place, PlantingRecord, Precision, ReconciliationRow,
+  ReviewNoteKind, ReviewTheme, Season, SiteClass, Species,
+} from "@/lib/wrt/types";
+import { parseCsv } from "@/lib/wrt/csv/parse";
+import { searchKey } from "@/lib/wrt/text";
+
+/** Reads are kept for 5 minutes, like every other Supabase read. */
+const KEEP_MS = 5 * 60 * 1000;
+
+/**
+ * The workbook's grand-total and exception checks: a fixed audit of the old
+ * spreadsheet, not planting data, so they stay in this file. Season checks come from Supabase.
+ */
+const WORKBOOK_AUDIT = path.join(process.cwd(), "docs", "planning", "prototype", "history_reconciliation.csv");
+
+/** Supabase as a signed-out visitor: the planting history is public to read. */
+export function publicDb(): Db {
+  return createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    { auth: { persistSession: false } },
+  );
+}
+
+type Loaded = {
+  seasons: Season[];
+  species: Species[];
+  places: Place[];
+  records: PlantingRecord[];
+  reconciliation: ReconciliationRow[];
+  info: SourceInfo;
+};
+
+/** Every line, oldest first, a page at a time. */
+async function allLines(db: Db) {
+  const out = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data } = await db
+      .from("line_details")
+      .select("line_id, legacy_code, season, area, area_name, class, species, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
+      .order("line_id")
+      .range(from, from + PAGE_SIZE - 1)
+      .throwOnError();
+    out.push(...data);
+    if (data.length < PAGE_SIZE) return out;
+  }
+}
+
+async function load(db: Db): Promise<Loaded> {
+  const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
+    db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
+    db.from("species")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note")
+      .is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, is_scheme").is("deactivated_at", null).throwOnError(),
+    db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
+    allLines(db),
+    db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
+  ]);
+
+  // Seasons with lines only, numbered from 0, as the workbook has them.
+  const withLines = new Set(lines.map((l) => l.season));
+  const seasons: Season[] = seasonRows.data
+    .filter((s) => withLines.has(s.slug))
+    .map((s, order) => ({ slug: s.slug, label: s.label, year: s.year, name: s.half === "autumn" ? "Autumn" : "Spring", order }));
+  const seasonBySlug = new Map(seasons.map((s) => [s.slug, s]));
+
+  // Species: the register code is the join key the photos and profiles use.
+  const spellings = new Map<string, Set<string>>();
+  for (const l of lines) {
+    if (l.species_original) spellings.set(l.species!, (spellings.get(l.species!) ?? new Set()).add(l.species_original));
+  }
+  const idOf = (slug: string, code: string | null) => code ?? slug;
+  const species: Species[] = speciesRows.data.map((s) => {
+    const displayName = s.maori_name ?? s.common_name ?? s.scientific_name;
+    const aliases = [...(spellings.get(s.slug) ?? [])].filter((a) => a !== s.scientific_name);
+    const keys = new Set([s.scientific_name, s.suggested_spelling ?? "", s.common_name ?? "", s.maori_name ?? "", ...aliases].map(searchKey));
+    keys.delete("");
+    return {
+      id: idOf(s.slug, s.register_code),
+      slug: s.slug,
+      scientificName: s.scientific_name,
+      suggestedSpelling: s.suggested_spelling,
+      commonName: s.common_name,
+      maoriName: s.maori_name,
+      displayName,
+      displayIsScientific: displayName === s.scientific_name,
+      status: s.status ?? "unknown",
+      over5m: s.over_5m,
+      threatened: s.threatened,
+      threatenedMarks: { plantsOutMaster: s.threatened === true, teKakano: s.threatened_te_kakano },
+      needsDecision: s.needs_decision,
+      contestedWith: s.contested_group
+        ? speciesRows.data.filter((o) => o.contested_group === s.contested_group && o.slug !== s.slug).map((o) => idOf(o.slug, o.register_code))
+        : [],
+      aliases,
+      searchKeys: [...keys],
+      note: s.register_note,
+    };
+  });
+  const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));
+
+  // Parts keep WRT's own number as their id, so links and map pins match the CSV version.
+  const areaBySlug = new Map(areaRows.data.map((a) => [a.slug, a]));
+  const partId = (slug: string) => areaBySlug.get(slug)?.wrt_number ?? slug;
+
+  const records: PlantingRecord[] = lines.map((l) => {
+    const season = seasonBySlug.get(l.season!)!;
+    const notes = (l.notes as { question: string; kind: ReviewNoteKind; text: string }[] | null) ?? [];
+    return {
+      id: l.legacy_code ?? `line-${l.line_id}`,
+      seasonSlug: season.slug,
+      year: season.year,
+      seasonName: season.name,
+      placeSlug: areaBySlug.get(l.area!)!.site,
+      parcelId: partId(l.area!),
+      parcelName: l.area_name!,
+      siteClass: (l.class ?? "unknown") as SiteClass,
+      speciesId: speciesIdBySlug.get(l.species!)!,
+      quantity: l.quantity ?? 0,
+      hasQuantity: l.quantity !== null,
+      precision: (l.precision ?? "unknown") as Precision,
+      confidence: (l.confidence ?? "high") as Confidence,
+      needsReview: l.needs_review === true,
+      // The import keeps one note per question, a line each: split them back.
+      notes: notes.flatMap((n) => n.text.split("\n").map((text) => ({ kind: n.kind, theme: n.question as ReviewTheme, text, raw: text }))),
+      provenance: {
+        sourceFile: l.source_file ?? "",
+        sourceSheet: l.source_sheet ?? "",
+        sourceCell: l.source_cell ?? "",
+        seasonLabelOriginal: l.season_original ?? season.label,
+        siteOriginal: l.site_original ?? "",
+        speciesOriginal: l.species_original ?? "",
+      },
+    };
+  });
+  records.sort((a, b) => seasonBySlug.get(a.seasonSlug)!.order - seasonBySlug.get(b.seasonSlug)!.order || a.id.localeCompare(b.id));
+
+  // Places: each site with the parts that have lines, classes by plants, header spellings as aliases.
+  const places: Place[] = siteRows.data
+    .map((site) => {
+      const parcels = new Map<string, Parcel>();
+      const plantsByClass = new Map<SiteClass, number>();
+      for (const l of lines) {
+        const area = areaBySlug.get(l.area!)!;
+        if (area.site !== site.slug) continue;
+        const siteClass = (area.class ?? "unknown") as SiteClass;
+        const parcel = parcels.get(area.slug) ?? { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] };
+        if (l.site_original && !parcel.aliases.includes(l.site_original)) parcel.aliases.push(l.site_original);
+        parcels.set(area.slug, parcel);
+        plantsByClass.set(siteClass, (plantsByClass.get(siteClass) ?? 0) + (l.quantity ?? 0));
+      }
+      const parts = [...parcels.values()].sort((a, b) => a.name.localeCompare(b.name));
+      const keys = new Set([site.name, ...parts.flatMap((p) => [p.name, ...p.aliases])].map(searchKey));
+      keys.delete("");
+      return {
+        slug: site.slug,
+        name: site.name,
+        siteClasses: [...plantsByClass].sort((a, b) => b[1] - a[1]).map(([c]) => c),
+        isScheme: site.is_scheme,
+        parcels: parts,
+        searchKeys: [...keys],
+      };
+    })
+    .filter((p) => p.parcels.length > 0)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Each season against its workbook TOTAL cell, then the workbook's own audit rows.
+  const seasonChecks: ReconciliationRow[] = seasonTotals.data
+    .filter((s) => s.workbook_total !== null)
+    .map((s) => ({
+      kind: "season", label: s.season_label!, generated: s.plants ?? 0, stated: s.workbook_total!,
+      difference: (s.plants ?? 0) - s.workbook_total!, statedCell: s.workbook_cell ?? "", records: s.lines ?? 0, cause: null,
+    }));
+  const audit: ReconciliationRow[] = parseCsv(readFileSync(WORKBOOK_AUDIT, "utf8")).rows
+    .filter((x) => x.item !== "season")
+    .map((x) => ({
+      kind: x.item === "grand" ? "grand" : "exception", label: x.label, generated: Number(x.generated) || 0,
+      stated: Number(x.stated) || 0, difference: Number(x.difference) || 0, statedCell: x.stated_cell,
+      records: Number(x.records) || 0, cause: x.cause?.trim() || null,
+    }));
+
+  return {
+    seasons, species, places, records,
+    reconciliation: [...seasonChecks, ...audit],
+    info: {
+      description:
+        "Read from the Trust's Supabase database, imported from the MASTER sheet of WRT's Plants Out Master workbook: one line per species, site and season.",
+      files: [
+        { name: "seasons", rows: seasons.length },
+        { name: "species", rows: species.length },
+        { name: "sites", rows: places.length },
+        { name: "areas", rows: areaRows.data.length },
+        { name: "planting lines", rows: records.length },
+      ],
+      loadedAt: new Date().toISOString(),
+    },
+  };
+}
+
+export class SupabaseWrtRepository implements WrtRepository {
+  private loaded: { at: number; data: Promise<Loaded> } | null = null;
+  constructor(private readonly db: () => Db = publicDb) {}
+
+  private data(): Promise<Loaded> {
+    if (!this.loaded || Date.now() - this.loaded.at > KEEP_MS) {
+      const data = load(this.db());
+      // A failed read is not kept: the next page tries again.
+      data.catch(() => { this.loaded = null; });
+      this.loaded = { at: Date.now(), data };
+    }
+    return this.loaded.data;
+  }
+
+  private read = <K extends keyof Loaded>(key: K) => async () => (await this.data())[key];
+
+  listSeasons = this.read("seasons");
+  listSpecies = this.read("species");
+  listPlaces = this.read("places");
+  listRecords = this.read("records");
+  listReconciliation = this.read("reconciliation");
+  getSourceInfo = this.read("info");
+  /** Supabase checks each row as it is written, so there are no load problems to report. */
+  async listDataIssues(): Promise<DataIssue[]> { return []; }
+}

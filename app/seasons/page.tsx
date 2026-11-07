@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
+import { reviewShown } from "@/lib/wrt/server";
+import { toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
-import { MissingSeasonRow, SeasonRow, medianSites, type TopSite } from "@/components/wrt/seasons/season-parts";
-
-import { type SiteSpecies, byTotalDesc, addToSplit, emptySplit } from "@/lib/wrt/queries";
+import { MissingSeasonRow, SeasonRow, medianSites, type TopSite, type TopSpecies } from "@/components/wrt/seasons/season-parts";
 
 export const metadata: Metadata = {
   title: "Planting seasons",
@@ -14,33 +14,25 @@ export const metadata: Metadata = {
 };
 
 export default async function SeasonsPage() {
-  const wrt = getWrt();
-  const [seasons, overview, records, showReview] = await Promise.all([wrt.seasons(), wrt.overview(), wrt.records(), reviewShown()]);
-  // Most recorded species in each season, largest first.
-  // Top trees and top sites in each season, largest first.
-  const topBySeason = new Map<string, SiteSpecies[]>();
+  const [rows, leaders, showReview] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown()]);
+  // Only seasons with planting lines, as in the workbook.
+  const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
+
+  // Top trees and top sites in each season, largest first, ranked by the database.
+  const topBySeason = new Map<string, TopSpecies[]>();
+  for (const r of leaders.species) {
+    const scientificName = r.scientific_name!;
+    const displayName = r.maori_name ?? r.common_name ?? scientificName;
+    const tree = { species: { id: r.register_code ?? "", slug: r.species!, scientificName, displayName, displayIsScientific: displayName === scientificName }, split: { total: r.plants ?? 0 } };
+    topBySeason.set(r.season!, [...(topBySeason.get(r.season!) ?? []), tree]);
+  }
   const sitesBySeason = new Map<string, TopSite[]>();
-  {
-    const trees = new Map<string, Map<string, SiteSpecies>>();
-    const sites = new Map<string, Map<string, TopSite>>();
-    for (const v of records.rows) {
-      const m = trees.get(v.season.slug) ?? new Map<string, SiteSpecies>();
-      const e = m.get(v.species.slug) ?? { species: v.species, split: emptySplit() };
-      addToSplit(e.split, v.record);
-      m.set(v.species.slug, e);
-      trees.set(v.season.slug, m);
-      const sm = sites.get(v.season.slug) ?? new Map<string, TopSite>();
-      const se = sm.get(v.place.slug) ?? { slug: v.place.slug, name: v.place.name, split: emptySplit() };
-      addToSplit(se.split, v.record);
-      sm.set(v.place.slug, se);
-      sites.set(v.season.slug, sm);
-    }
-    const top3 = <T extends { split: { total: number } }>(m: Map<string, T>) => [...m.values()].sort(byTotalDesc).slice(0, 3);
-    for (const [slug, m] of trees) topBySeason.set(slug, top3(m));
-    for (const [slug, m] of sites) sitesBySeason.set(slug, top3(m));
+  for (const r of leaders.sites) {
+    const site = { slug: r.site!, name: r.site_name!, split: { total: r.plants ?? 0 } };
+    sitesBySeason.set(r.season!, [...(sitesBySeason.get(r.season!) ?? []), site]);
   }
 
-  const total = overview.split;
+  const total = { total: seasons.reduce((n, s) => n + s.split.total, 0) };
 
   const first = seasons[0].season;
   const last = seasons[seasons.length - 1].season;
@@ -48,9 +40,11 @@ export default async function SeasonsPage() {
   const checked = seasons.filter((s) => s.reconciliation).length;
   const median = medianSites(seasons);
 
-  // The Slope Hill 2024 columns dominate the chart; say so, with the numbers from the data.
-  const slope = overview.themes.find((t) => t.theme === "slope-hill-2024");
+  // The Slope Hill restoration makes 2024 tower over the rest; say so, with its plants from the database.
   const slopeSeasons = seasons.filter((s) => s.season.year === 2024).map((s) => s.season.label);
+  const slopeHill2024 = leaders.sites
+    .filter((r) => r.site === "slope-hill" && r.season?.endsWith("-2024"))
+    .reduce((n, r) => n + (r.plants ?? 0), 0);
 
   // The workbook ends on an autumn: show the spring after it as "not in yet".
   const missingSpring = last.name === "Autumn" ? `Spring ${last.year}` : null;
@@ -74,10 +68,10 @@ export default async function SeasonsPage() {
           <SplitKey spring />
         </div>
         <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
-        {slope && slopeSeasons.length > 0 && (
+        {slopeHill2024 > 0 && (
           <Rule>
-            {slopeSeasons.join(" and ")} stand out because they include the Slope Hill 2024 columns ({formatNumber(slope.split.needsReview)} recorded plants,
-            WRT decision 4 still open).
+            {slopeSeasons.join(" and ")} stand out because of the Slope Hill restoration: {formatNumber(slopeHill2024)} recorded plants there,
+            including 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation.
           </Rule>
         )}
       </section>

@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -45,3 +46,6 @@ next-env.d.ts
 
 # planting events saved locally until Supabase is connected (lib/wrt/events/json-event-store.ts)
 /data/local/
+
+# Supabase CLI cache
+supabase/.temp/
