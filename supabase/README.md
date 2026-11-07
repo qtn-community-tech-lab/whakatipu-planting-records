@@ -17,14 +17,26 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | Date | Project | Run |
 |---|---|---|
 | 2 November 2026 | hosted Supabase project | schema, then access rules, pasted into SQL Editor |
-| 2 November 2026 | hosted Supabase project | `checks/schema_check.sql` after the import: all 23 rows PASS |
+| 2 November 2026 | hosted Supabase project | `scripts/import-workbook.ts --write`: 39 sites, 78 areas, 164 species, 360 plantings, 5,449 lines, 1,377 notes. All 23 seasons match the workbook TOTAL cells |
 
 The check has not been run yet. It needs a staff account, and sign-in isn't set up.
 
 ## Not here yet
 
-- The spreadsheet history (5,449 planting lines) and the reference data (sites, areas, species). Both come from an import script.
 - Sign-in. Until then, only the SQL Editor and the secret key reach the data.
+
+## The workbook import
+
+`scripts/import-workbook.ts` loads the history from `docs/planning/prototype/*.csv`: 39 sites, 78 areas, 164 species, 5,449 lines and 1,377 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
+
+```bash
+npm run import-workbook              # dry run: lists what would change, writes nothing
+npm run import-workbook -- --write   # makes the changes
+```
+
+`tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
+
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
 
 ## Running them on a new project
 
@@ -34,6 +46,7 @@ Paste each migration into SQL Editor in order, or with the database connection s
 psql "$DATABASE_URL" -f supabase/migrations/20261102000000_schema.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261102000100_access_rules.sql
 psql "$DATABASE_URL" -f supabase/migrations/20261106000000_naming.sql
+psql "$DATABASE_URL" -f supabase/import/workbook_history.sql
 ```
 
 Each file runs as one transaction, so a failure leaves nothing half-made.
