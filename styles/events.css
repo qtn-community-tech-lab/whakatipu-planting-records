@@ -15,14 +15,43 @@
 /* Planted area: a placeholder until the map PR */
 .ev-placeholder { margin: 0; padding: 20px 16px; border: var(--border-dashed-empty); border-radius: var(--radius-tile); font: var(--type-small); color: var(--text-muted); text-align: center; }
 
+/* Steps: indicator and the current step's heading */
+.ev-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ev-steps__link { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 4px 12px 4px 4px; border: 0; border-radius: var(--radius-pill); background: none; font: var(--type-label); color: var(--text-muted); }
+.ev-steps__n { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--surface-soft); color: var(--text-body); }
+.ev-steps__item--current .ev-steps__link { background: var(--surface-card); color: var(--text-strong); }
+.ev-steps__item--current .ev-steps__n { background: var(--action-primary); color: var(--surface-card); }
+.ev-steps__item--reached .ev-steps__link { color: var(--text-brand); cursor: pointer; }
+.ev-steps__item--reached .ev-steps__link:hover { background: var(--surface-soft); }
+.ev-steps__link:focus-visible, .ev-step-title:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.ev-step-title { margin: 0; display: flex; flex-direction: column; gap: 2px; font: var(--type-section); color: var(--text-strong); }
+.ev-step-title__count { font: var(--type-eyebrow); color: var(--text-eyebrow); }
+
+/* Check and submit, and the "Not saved" preview */
+.ev-summary { display: flex; flex-direction: column; gap: 20px; }
+.ev-summary__group { display: flex; flex-direction: column; gap: 8px; }
+.ev-summary__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ev-summary__list { margin: 0; display: flex; flex-direction: column; }
+.ev-summary__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 12px; padding: 8px 0; border-top: 1px solid var(--border-card); }
+.ev-summary__row dt { font: var(--type-label); color: var(--text-muted); }
+.ev-summary__row dd { margin: 0; font: var(--type-body); color: var(--text-strong); overflow-wrap: anywhere; }
+.ev-summary__total dd { font: var(--type-body-strong); }
+
 /* Actions */
 .ev-actions { display: flex; justify-content: flex-end; gap: 12px; position: sticky; bottom: 0; padding: 12px 0; background: linear-gradient(transparent, var(--surface-app) 40%); }
+.ev-actions--static { position: static; padding-bottom: 0; background: none; }
 
 @media (max-width: 760px) {
   .ev-grid, .ev-grid--3 { grid-template-columns: minmax(0, 1fr); }
   .ev-line { grid-template-columns: minmax(0, 1fr) 96px; }
   .ev-line__remove { grid-column: 1 / -1; margin-top: 0; justify-self: start; }
   .ev-actions .cn-btn { flex: 1; }
+  /* Steps on one line: other steps show just their number; screen readers still hear the title. */
+  .ev-steps { flex-wrap: nowrap; gap: 4px; }
+  .ev-steps__item:not(.ev-steps__item--current) .ev-steps__link { padding-right: 4px; }
+  .ev-steps__item:not(.ev-steps__item--current) .ev-steps__title {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
 }
 @media (pointer: coarse) {
   .ev-form .cn-btn--sm { min-height: 44px; }

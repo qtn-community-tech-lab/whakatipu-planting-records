@@ -3,13 +3,15 @@
  * State, validation and submit for the planting-event form. The markup lives
  * in event-form.tsx; this hook holds what the form knows and does.
  *
- * Nothing is saved yet: submit runs the shared validator and, when every
- * field is right, marks the form as checked.
+ * Three steps (lib/wrt/events/steps.ts). Next checks only the current step's
+ * fields; Submit on the last step checks everything and, when it all passes,
+ * shows a "Not saved" preview. Nothing is saved yet.
  */
 import { useMemo, useState, type RefObject } from "react";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import type { EventSeason } from "@/lib/wrt/events/types";
+import { errorsForStep, firstStepWithError, LAST_STEP } from "@/lib/wrt/events/steps";
+import type { EventSeason, PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
 
 export interface Line {
@@ -20,16 +22,23 @@ export interface Line {
   quantity: string;
 }
 
+export type EventFormState = ReturnType<typeof useEventForm>;
+
 const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
+/** Focus an element once React has drawn the change that reveals it. */
+const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
+
 export function useEventForm({
-  options, today, formRef,
+  options, today, formRef, headingRef,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
-  /** The form element, used only on submit to focus the first problem. */
+  /** The form element, used to focus the first problem. */
   formRef: RefObject<HTMLFormElement | null>;
+  /** The current step's heading, focused when the step changes. */
+  headingRef: RefObject<HTMLHeadingElement | null>;
 }) {
   const suggested = seasonFromDate(today)!;
 
@@ -43,9 +52,14 @@ export function useEventForm({
   const [lines, setLines] = useState<Line[]>([{ key: 0, speciesId: "", quantity: "" }]);
   const [nextKey, setNextKey] = useState(1);
   const [notes, setNotes] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  // True after a submit that passed every check (nothing is saved).
-  const [checked, setChecked] = useState(false);
+
+  const [step, setStep] = useState(0);
+  // The furthest step reached: steps up to it can be revisited from the indicator.
+  const [furthest, setFurthest] = useState(0);
+  // Steps whose fields have been checked; their errors then update live as the user fixes them.
+  const [checkedSteps, setCheckedSteps] = useState<ReadonlySet<number>>(new Set());
+  // The checked event once Submit passes: shown as the "Not saved" preview.
+  const [preview, setPreview] = useState<PlantingEventInput | null>(null);
 
   const site = options.sites.find((s) => s.slug === placeSlug);
 
@@ -55,7 +69,8 @@ export function useEventForm({
     species: options.species,
   }), [options]);
 
-  const payload = () => ({
+  // Checked on every change (cheap); errors are shown only for checked steps.
+  const result = validateEventInput({
     placeSlug,
     parcelId,
     plantedOn,
@@ -64,20 +79,58 @@ export function useEventForm({
     polygon: null, // drawn on the map once the map PR lands
     species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity) })),
     notes: notes.trim() || null,
-  });
-
-  // After the first submit attempt, errors update live as the user fixes them.
-  const errors: FieldErrors = submitted ? (() => {
-    const r = validateEventInput(payload(), lookups, today);
-    return r.ok ? {} : r.errors;
-  })() : {};
+  }, lookups, today);
+  const allErrors: FieldErrors = result.ok ? {} : result.errors;
+  const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step) : {};
 
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
 
+  const markChecked = (s: number) => setCheckedSteps((prev) => new Set(prev).add(s));
+  const show = (s: number) => { setStep(s); setFurthest((f) => Math.max(f, s)); };
+  const focusFirstProblem = () => focusSoon(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']"));
+
+  /** Go to a step and move focus to its heading. */
+  function goTo(s: number) {
+    show(s);
+    focusSoon(() => headingRef.current);
+  }
+
+  /** Check the current step; move on when its fields are right. */
+  function next() {
+    markChecked(step);
+    if (Object.keys(errorsForStep(allErrors, step)).length) focusFirstProblem();
+    else goTo(step + 1);
+  }
+
+  /** Check everything; show the preview, or go to the first step with a problem. */
+  function finish() {
+    if (result.ok) {
+      setPreview(result.value);
+      return;
+    }
+    const s = firstStepWithError(result.errors) ?? 0;
+    markChecked(s);
+    show(s);
+    focusFirstProblem();
+  }
+
   return {
-    site, total, errors, checked,
+    site, total, errors,
     /** The message for one field path (e.g. "species.0.quantity"), if it has one. */
     err: (path: string): string | undefined => errors[path],
+
+    step, furthest, goTo,
+    back() { goTo(step - 1); },
+    /** The checked event for "Check and submit", or null while something needs fixing. */
+    checkedEvent: result.ok ? result.value : null,
+    /** Go to the first step with a problem (or the preview, if there is none). */
+    showFirstProblem: finish,
+    preview,
+    /** Leave the preview and return to the last step, values kept. */
+    closePreview() {
+      setPreview(null);
+      focusSoon(() => headingRef.current);
+    },
 
     placeSlug,
     chooseSite(slug: string) { setPlaceSlug(slug); setParcelId(null); },
@@ -111,16 +164,11 @@ export function useEventForm({
 
     notes, setNotes,
 
+    /** Enter or the main button: Next on the first steps, Submit on the last. */
     submit(e: React.FormEvent) {
       e.preventDefault();
-      setSubmitted(true);
-      const check = validateEventInput(payload(), lookups, today);
-      setChecked(check.ok);
-      if (!check.ok) {
-        // Move focus to the first problem so keyboard and screen-reader users land on it.
-        requestAnimationFrame(() =>
-          formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']")?.focus());
-      }
+      if (step < LAST_STEP) next();
+      else finish();
     },
   };
 }
