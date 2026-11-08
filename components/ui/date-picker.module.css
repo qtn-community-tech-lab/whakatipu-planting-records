@@ -1,0 +1,13 @@
+.content {
+  padding: 10px 12px; border-radius: 18px; background: #fff; color: var(--cn-green-900);
+  box-shadow: 0 16px 40px rgba(21, 38, 28, 0.25);
+  font: 500 14px var(--font-sans);
+}
+/* react-day-picker sets its defaults on .rdp-root, so the theme goes there too */
+.content :global(.rdp-root) {
+  --rdp-accent-color: var(--cn-green-800);
+  --rdp-accent-background-color: #e7eee5;
+  --rdp-day-height: 40px; --rdp-day-width: 40px;
+  --rdp-day_button-height: 38px; --rdp-day_button-width: 38px;
+}
+.content :global(.rdp-selected .rdp-day_button) { background: var(--cn-green-800); color: #fff; }
