@@ -4,7 +4,7 @@
  * how much has been planted there, to pick from. With a site, PlaceOverview: its (or the chosen
  * part's) most planted trees and its last few seasons, kept short. "Add new planting event" then opens the form.
  */
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
@@ -17,12 +17,14 @@ import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import f from "@/components/wrt/events/map-event-form.module.css";
 import s from "./record-sheet.module.css";
 
-export function PlaceOverview({ slug, parcelId, partName, onStart }: {
+export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
   slug: string;
   /** The chosen part: its own trees and seasons, when it has any recorded. */
   parcelId: string | null;
   partName?: string;
   onStart: () => void;
+  /** Back to the index of every site. */
+  onBack: () => void;
 }) {
   const key = `${slug}/${parcelId ?? ""}`;
   const [loaded, setLoaded] = useState<{ key: string; data: PlacePlantings | null } | null>(null);
@@ -37,6 +39,7 @@ export function PlaceOverview({ slug, parcelId, partName, onStart }: {
 
   return (
     <Frame onStart={onStart} busy={o === undefined}>
+      <button type="button" className={s.ovBack} onClick={onBack}><ArrowLeft size={16} strokeWidth={2.4} />All locations</button>
         {o === undefined ? <p className={f.empty}>Loading what&apos;s been planted here…</p> : !o || o.trees.length === 0 ? (
           <p className={f.empty}>Nothing recorded here yet.</p>
         ) : (
