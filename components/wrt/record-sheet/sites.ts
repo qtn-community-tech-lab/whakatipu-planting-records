@@ -1,19 +1,25 @@
 import { siteLocations } from "@/lib/wrt/site-locations";
 import type { LngLat } from "./geometry";
 
-/** One clickable pin on the map: a site's reference point from data/site-locations.json. */
+/** One clickable pin on the map: a site's (or one part's) reference point from data/site-locations.json. */
 export interface SitePin {
   slug: string;
-  name: string;
+  /** The part this pin marks, or null for the site as a whole. */
+  parcelId: string | null;
+  /** "Lake Hayes · Lake Hayes Pavilion", or just the site's name. */
+  label: string;
   at: LngLat;
 }
 
 /** The pins of the sites the form knows (order schemes have no place, so no pin). */
-export function sitePins(sites: readonly { slug: string; name: string }[]): SitePin[] {
-  const names = new Map(sites.map((x) => [x.slug, x.name]));
+export function sitePins(sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[]): SitePin[] {
+  const bySlug = new Map(sites.map((x) => [x.slug, x]));
   return siteLocations.flatMap((l) => {
-    const name = names.get(l.siteSlug);
-    return name ? [{ slug: l.siteSlug, name, at: [l.longitude, l.latitude] as LngLat }] : [];
+    const site = bySlug.get(l.siteSlug);
+    if (!site) return [];
+    const parcelId = l.parcelIds?.length === 1 ? l.parcelIds[0] : null;
+    const part = parcelId ? site.parts.find((p) => p.id === parcelId) : undefined;
+    return [{ slug: l.siteSlug, parcelId: part ? parcelId : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [l.longitude, l.latitude] as LngLat }];
   });
 }
 
@@ -24,14 +30,13 @@ export function pinFor(siteSlug: string, parcelId: string | null = null): LngLat
   return l ? [l.longitude, l.latitude] : null;
 }
 
-/** The site whose pin is closest to `at` (flat-earth distance is fine at this scale). */
-export function nearestSite(pins: readonly SitePin[], at: LngLat): string | null {
-  const k = Math.cos((at[1] * Math.PI) / 180);
-  let best: SitePin | null = null;
-  let bestD = Infinity;
-  for (const p of pins) {
-    const d = ((p.at[0] - at[0]) * k) ** 2 + (p.at[1] - at[1]) ** 2;
-    if (d < bestD) { bestD = d; best = p; }
+/** The pin closest to `at`, and how far it is in km (flat-earth maths is fine at this scale). */
+export function nearestPin(pins: readonly SitePin[], at: LngLat): { pin: SitePin; km: number } | null {
+  const k = Math.cos((at[1] * Math.PI) / 180) * 111.32;
+  let best: { pin: SitePin; km: number } | null = null;
+  for (const pin of pins) {
+    const km = Math.hypot((pin.at[0] - at[0]) * k, (pin.at[1] - at[1]) * 110.57);
+    if (!best || km < best.km) best = { pin, km };
   }
-  return best?.slug ?? null;
+  return best;
 }

@@ -1,8 +1,8 @@
 "use client";
 /**
  * The map's choreography: fly in to the starting site (or fit every site's
- * pin), then report that the form can open. Pins pick a site; showSite
- * highlights the chosen one and flies to it.
+ * pin), then report that the form can open. useCamera then keeps the chosen
+ * site or new location centred above the form.
  */
 import type * as maplibregl from "maplibre-gl";
 import { useEffect, useRef, useState, type RefObject } from "react";
@@ -22,7 +22,7 @@ const FLY = 2400;
 const PINS_AT = 0.62;
 const OPEN_AT = FLY_DELAY + FLY + 120;
 /** How close to fly in on a chosen site. */
-const SITE_ZOOM = 16;
+const SITE_ZOOM = 15;
 
 export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery, onPick }: {
   pins: SitePin[];
@@ -33,7 +33,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   /** The media query for the side panel; read once, when the camera is aimed. */
   wideQuery: string;
   /** A pin was clicked. */
-  onPick: (slug: string) => void;
+  onPick: (pin: SitePin) => void;
 }) {
   const map = useRef<maplibregl.Map | null>(null);
   const [phase, setPhase] = useState<Phase>("flying");
@@ -46,7 +46,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     const all = pins.map((p) => p.at);
     const m = createMap(container.current!, centreOf(all));
     map.current = m;
-    const markers = pins.map((p) => pinMarker(p, pinClass, (slug) => pick.current(slug)));
+    const markers = pins.map((p) => pinMarker(p, pinClass, (pin) => pick.current(pin)));
     const timers: number[] = [];
     const later = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
 
@@ -81,26 +81,31 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
 }
 
 /**
- * Re-centre when the form opens, moves between snaps, or switches side and bottom. With a new
- * location dropped, aim at it too: this easeTo would otherwise cancel the flight to it part-way.
+ * The one camera move once the form is open: centre `focus` (the chosen site's pin, or a new
+ * location) in the part of the map the form leaves. A new focus flies there at site zoom; the
+ * sheet changing snap only shifts the padding. One move, so a sheet change never cancels a flight.
  */
-export function useMapPadding(map: RefObject<maplibregl.Map | null>, open: boolean, wide: boolean, snap: Snap, spot: LngLat | null) {
+export function useCamera(map: RefObject<maplibregl.Map | null>, open: boolean, wide: boolean, snap: Snap, focus: LngLat | null) {
+  const last = useRef<LngLat | null>(null);
   useEffect(() => {
     const m = map.current;
     if (!open || !m) return;
-    m.easeTo({ padding: paddingFor(wide, snap), ...(spot ? { center: spot } : {}), duration: 500, easing: bezier(0.32, 0.72, 0, 1) });
-  }, [map, open, wide, snap, spot]);
+    const moved = !!focus && focus !== last.current;
+    last.current = focus;
+    m.flyTo({
+      padding: paddingFor(wide, snap),
+      ...(focus ? { center: focus } : {}),
+      ...(moved ? { zoom: SITE_ZOOM } : {}),
+      duration: moved ? 1400 : 500, curve: 1.2, essential: true,
+    });
+  }, [map, open, wide, snap, focus]);
 }
 
-/** Highlight the chosen site's pins and fly to it: to a new location if one is dropped, else its (part's) pin. */
-export function showSite(map: RefObject<maplibregl.Map | null>, siteSlug: string, parcelId: string | null, spot: LngLat | null) {
-  const m = map.current;
-  if (!m) return;
-  m.getContainer().querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
+/** Light up the chosen site's pins. */
+export function highlightSite(map: RefObject<maplibregl.Map | null>, siteSlug: string) {
+  map.current?.getContainer().querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
     el.toggleAttribute("data-on", el.dataset.site === siteSlug);
   });
-  const pin = spot ?? pinFor(siteSlug, parcelId);
-  if (pin) m.flyTo({ center: pin, zoom: SITE_ZOOM, duration: 1600, essential: true });
 }
 
 /** The map's centre: with padding set, the middle of the part the form leaves. */

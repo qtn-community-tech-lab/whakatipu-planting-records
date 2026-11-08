@@ -39,12 +39,14 @@ interface MapEventFormProps {
   suggestions: SpeciesSuggestion[];
   /** Tells the host which step is showing, so it can size the panel and move the map. */
   onStepChange?: (step: number) => void;
-  /** A site picked outside the form (a pin on the map): the form switches to it. */
-  picked?: { slug: string } | null;
+  /** A site (and part) picked outside the form, from a pin on the map: the form switches to it. */
+  picked?: { slug: string; parcelId: string | null } | null;
   /** Tells the host when the site or part changes, so the map can move its pin. */
   onPlaceChange?: (placeSlug: string, parcelId: string | null) => void;
   /** A new location dropped on the map, [longitude, latitude]. Shown in the form; not saved yet. */
   spot?: [number, number] | null;
+  /** The pin nearest the new location; `matched` when it was close enough to fill in the site. */
+  spotNear?: { label: string; km: number; matched: boolean } | null;
   /** Start dropping a new location on the map, and take it off again. */
   onAddSpot?: () => void;
   onRemoveSpot?: () => void;
@@ -57,7 +59,7 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, onAddSpot, onRemoveSpot, onDrawArea, onStartAnother }: MapEventFormProps & {
+function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, onDrawArea, onStartAnother }: MapEventFormProps & {
   onStartAnother: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -73,6 +75,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
     if (!picked || picked === applied.current) return;
     applied.current = picked;
     form.chooseSite(picked.slug);
+    if (picked.parcelId) form.setParcelId(picked.parcelId);
   });
 
   if (form.preview) {
@@ -112,7 +115,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} spot={spot ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} onDrawArea={onDrawArea} />}
+        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} spot={spot ?? null} spotNear={spotNear ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} onDrawArea={onDrawArea} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
@@ -184,14 +187,17 @@ function Steps({ form }: { form: EventFormState }) {
   );
 }
 
-function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemoveSpot, onDrawArea }: {
+function WhereWhen({ form, options, today, plantedArea, spot, spotNear, onAddSpot, onRemoveSpot, onDrawArea }: {
   form: EventFormState; options: EventFormOptions; today: string; plantedArea: ReactNode;
-  spot: [number, number] | null; onAddSpot?: () => void; onRemoveSpot?: () => void; onDrawArea?: () => void;
+  spot: [number, number] | null; spotNear: { label: string; km: number; matched: boolean } | null;
+  onAddSpot?: () => void; onRemoveSpot?: () => void; onDrawArea?: () => void;
 }) {
   const { err } = form;
   // A chosen site shows as a card; the pickers show until there is one, on an error, or after Change.
   const [changing, setChanging] = useState(false);
-  const editingSite = changing || !form.site || !!err("placeSlug") || !!err("parcelId");
+  // A new location away from every site isn't filed under one: the pickers open to choose.
+  const unmatched = !!spot && !!spotNear && !spotNear.matched;
+  const editingSite = changing || unmatched || !form.site || !!err("placeSlug") || !!err("parcelId");
   const part = form.site?.parts.find((p) => p.id === form.parcelId);
   const dateRef = useRef<HTMLInputElement>(null);
 
@@ -225,6 +231,13 @@ function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemov
             <span className={s.cardText}>
               <b>New location</b>
               <span>{spotLabel(spot)}</span>
+              {spotNear && (
+                <span className={cn(!spotNear.matched && s.spotFar)}>
+                  {spotNear.matched
+                    ? `At ${spotNear.label} · ${kmLabel(spotNear.km)} from its pin`
+                    : `Not at a known site. Nearest: ${spotNear.label}, ${kmLabel(spotNear.km)}. Choose the site above.`}
+                </span>
+              )}
             </span>
             {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move</button>}
             {onRemoveSpot && <button type="button" className={s.link} onClick={onRemoveSpot}>Remove</button>}
@@ -462,4 +475,8 @@ function Preview({ summary, location, onBack, onStartAnother }: {
 /** "44.97360° S, 168.85460° E" */
 function spotLabel([lng, lat]: [number, number]) {
   return `${Math.abs(lat).toFixed(5)}° ${lat < 0 ? "S" : "N"}, ${Math.abs(lng).toFixed(5)}° ${lng < 0 ? "W" : "E"}`;
+}
+
+function kmLabel(km: number) {
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
 }

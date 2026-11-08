@@ -17,29 +17,22 @@
 .screen > .map { position: absolute; inset: 0; }
 .map :global(.maplibregl-ctrl-attrib) { font-size: 9px; background: rgba(253, 252, 249, 0.6); }
 
-/* top pill: back, the chosen site, concept tag */
+/* the session header, one slim row: a round back button and one pill naming the site */
 .top {
-  position: absolute; z-index: 3; left: 16px; top: calc(16px + env(safe-area-inset-top));
-  display: flex; align-items: center; gap: 14px;
-  padding: 10px 12px 10px 10px; border-radius: 999px;
+  position: absolute; z-index: 3; left: 16px; right: 16px; top: calc(12px + env(safe-area-inset-top));
+  display: flex; align-items: center; gap: 10px;
+}
+.exit, .session, .tool {
   background: rgba(21, 38, 28, 0.9); color: #f3f6ee; backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  max-width: calc(100% - 32px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
 }
-.top > span:nth-child(2) { display: flex; flex-direction: column; min-width: 0; }
-.exit {
-  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-  display: grid; place-items: center;
-  background: var(--cn-lime-300); color: var(--cn-green-900);
-  font: 700 20px/1 var(--font-sans); text-decoration: none;
+.exit { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; background: var(--cn-lime-300); color: var(--cn-green-900); }
+.session {
+  min-width: 0; min-height: 44px; padding: 0 18px; border-radius: 999px;
+  display: flex; align-items: center; gap: 8px; font: 500 15px var(--font-sans); white-space: nowrap;
 }
-.title { font: 700 18px/1.2 var(--font-sans); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sub { font: 500 12.5px/1.3 var(--font-sans); color: rgba(243, 246, 238, 0.7); }
-.concept {
-  font: 500 11px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--cn-lime-300); border: 1.5px solid rgba(214, 234, 140, 0.5); border-radius: 999px; padding: 6px 10px;
-}
-@media (max-width: 767px) { .concept { display: none; } }
+.session b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.session > span { color: rgba(243, 246, 238, 0.7); }
 
 /* site pins: every site, the chosen one bigger and lime, with a pulse */
 .pin { width: 18px; height: 18px; padding: 0; border-radius: 50%; border: 3px solid #fff; background: var(--cn-green-800); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35); cursor: pointer; position: relative; }
@@ -52,28 +45,28 @@
 /* a new location dropped on the map: a lime teardrop pin */
 .spot { width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--cn-lime-300); border: 3px solid var(--cn-green-900); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); margin-bottom: 6px; }
 
-/* map tools: new location now, draw area next */
-.tools { position: absolute; z-index: 3; left: 16px; bottom: 24px; display: flex; gap: 8px; }
-.tool { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: rgba(21, 38, 28, 0.92); color: #f3f6ee; font: 600 14px var(--font-sans); cursor: pointer; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25); }
-.tool:hover:not(:disabled) { background: var(--cn-green-800); }
+/* map tools under the header: smaller chips, like filters */
+.tools { position: absolute; z-index: 3; left: 16px; top: calc(66px + env(safe-area-inset-top)); display: flex; gap: 8px; }
+.tool { display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 0 14px; border: 0; border-radius: 999px; font: 600 14px var(--font-sans); cursor: pointer; }
+.tool:hover { background: var(--cn-green-800); }
 .soon { padding: 2px 7px; border-radius: 999px; background: rgba(214, 234, 140, 0.18); color: var(--cn-lime-300); font: 700 10.5px/1.3 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
 /* while placing: a cross over the centre of the visible map, what to do, and a way out */
 .cross { position: absolute; z-index: 2; width: 64px; height: 64px; transform: translate(-50%, -50%); pointer-events: none; }
 .cross::before, .cross::after { content: ""; position: absolute; background: #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
 .cross::before { left: 50%; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; }
 .cross::after { top: 50%; left: 0; right: 0; height: 3px; margin-top: -1.5px; }
-.hint { position: absolute; z-index: 3; left: 50%; top: 88px; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 18px; border-radius: 999px; background: var(--cn-lime-300); color: var(--cn-green-900); font: 700 14.5px var(--font-sans); white-space: nowrap; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+.hint { position: absolute; z-index: 3; left: 50%; top: 66px; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 18px; border-radius: 999px; background: var(--cn-lime-300); color: var(--cn-green-900); font: 700 14.5px var(--font-sans); white-space: nowrap; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
 .hint .hintMain { background: var(--cn-green-800); }
 .hint button { min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--cn-green-900); color: #f3f6ee; font: 600 13.5px var(--font-sans); cursor: pointer; }
-/* phones: the drawer covers the bottom, so the tools sit under the top bar */
+/* phones: the placing hint takes the tools' place under the header */
 @media (max-width: 767px) {
-  .tools { bottom: auto; top: calc(84px + env(safe-area-inset-top)); left: 14px; }
-  .hint { top: calc(84px + env(safe-area-inset-top)); left: 14px; right: 14px; transform: none; justify-content: flex-end; flex-wrap: wrap; white-space: normal; border-radius: 22px; padding: 8px; }
+  .hint { top: calc(66px + env(safe-area-inset-top)); left: 14px; right: 14px; transform: none; justify-content: flex-end; flex-wrap: wrap; white-space: normal; border-radius: 22px; padding: 8px; }
 }
-/* wide screens: the form panel is on the left (572px with its inset), so the pill,
+/* wide screens: the form panel is on the left (572px with its inset), so the header,
    the tools and the placing hint sit in the map beside it */
 @media (min-width: 768px) {
   .top, .tools { left: 588px; }
+  .top { right: auto; }
   .hint { left: calc(50% + 286px); }
 }
 @media (prefers-reduced-motion: reduce) { .pin[data-on]::after { animation: none; } }

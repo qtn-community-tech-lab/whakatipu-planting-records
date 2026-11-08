@@ -21,12 +21,14 @@ import { STEP } from "@/lib/wrt/events/steps";
 import { FormPanel, type Snap } from "@/components/wrt/shared/form-panel";
 import type { LngLat } from "./geometry";
 import { paddingFor } from "./layout";
-import { nearestSite, sitePins } from "./sites";
+import { nearestPin, pinFor, sitePins, type SitePin } from "./sites";
 import { TopBar } from "./top-bar";
-import { mapCentre, showSite, useMapPadding, useRecordMap, useSpotMarker } from "./use-record-map";
+import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
 import s from "./record-sheet.module.css";
 
 const WIDE = "(min-width: 768px)";
+/** A new location this close to a site's (or part's) pin counts as that site. */
+const NEAR_KM = 1.5;
 
 export interface RecordSheetProps {
   /** Site slug to start at, or "" to start with every site in view. */
@@ -48,17 +50,25 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [pins] = useState(() => sitePins(options.sites));
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `place`.
-  const [picked, setPicked] = useState<{ slug: string } | null>(null);
+  const [picked, setPicked] = useState<{ slug: string; parcelId: string | null } | null>(null);
   const [place, setPlace] = useState(initialSite);
   const placeName = options.sites.find((x) => x.slug === place)?.name ?? "Choose a site";
 
-  const { map, phase } = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: (slug) => setPicked({ slug }) });
+  const { map, phase } = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
   const open = phase === "open";
+
+  // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
+  function pickPin(pin: SitePin) {
+    setPicked({ slug: pin.slug, parcelId: pin.parcelId });
+    setSnap("mid");
+  }
 
   // A new location: a cross sits in the middle of the map you can see (above the phone sheet,
   // beside the desktop panel); move the map under it and place the pin. The nearest site is chosen.
   const [placing, setPlacing] = useState(false);
   const [spot, setSpot] = useState<LngLat | null>(null);
+  // The pin nearest the new location: within NEAR_KM it fills in the site (and part); further, the form asks.
+  const [spotNear, setSpotNear] = useState<{ label: string; km: number; matched: boolean } | null>(null);
   const startPlacing = useCallback(() => {
     setPlacing(true);
     setSnap((at) => (at === "full" ? "mid" : at)); // the map has to show
@@ -68,8 +78,10 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     setPlacing(false);
     if (!at) return;
     setSpot(at);
-    const near = nearestSite(pins, at);
-    if (near) setPicked({ slug: near });
+    const near = nearestPin(pins, at);
+    const matched = !!near && near.km <= NEAR_KM;
+    setSpotNear(near && { label: near.pin.label, km: near.km, matched });
+    if (matched) setPicked({ slug: near.pin.slug, parcelId: near.pin.parcelId });
   }
   // "Draw area", for now: drop the phone sheet so the map shows. Drawing comes in the next PR.
   const showMap = () => setSnap("peek");
@@ -81,11 +93,14 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
   };
   useSpotMarker(map, spot, s.spot);
-  useMapPadding(map, open, wide, snap, spot);
+  // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
+  const [focus, setFocus] = useState<LngLat | null>(null);
+  useCamera(map, open, wide, snap, focus);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
     setPlace(placeSlug);
-    showSite(map, placeSlug, parcelId, spot);
+    highlightSite(map, placeSlug);
+    setFocus(spot ?? pinFor(placeSlug, parcelId));
   }, [map, spot]);
 
   const onStepChange = useCallback((step: number) => {
@@ -122,7 +137,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
         <MapEventForm
           options={options} today={today} initialPlace={initialSite} picked={picked}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
-          spot={spot} onAddSpot={startPlacing} onRemoveSpot={() => setSpot(null)} onDrawArea={showMap}
+          spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={() => { setSpot(null); setSpotNear(null); }} onDrawArea={showMap}
         />
       </FormPanel>
     </div>

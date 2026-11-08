@@ -33,14 +33,14 @@ export function createMap(container: HTMLElement, start: LngLat): maplibregl.Map
 }
 
 /** A site's pin: a real button, so it can be reached and chosen from the keyboard too. */
-export function pinMarker(pin: SitePin, className: string, onPick: (slug: string) => void) {
+export function pinMarker(pin: SitePin, className: string, onPick: (pin: SitePin) => void) {
   const el = document.createElement("button");
   el.type = "button";
   el.className = className;
   el.dataset.site = pin.slug;
-  el.setAttribute("aria-label", `Choose ${pin.name}`);
-  el.title = pin.name;
-  el.addEventListener("click", () => onPick(pin.slug));
+  el.setAttribute("aria-label", `Choose ${pin.label}`);
+  el.title = pin.label;
+  el.addEventListener("click", () => onPick(pin));
   return new maplibregl.Marker({ element: el }).setLngLat(pin.at);
 }
 

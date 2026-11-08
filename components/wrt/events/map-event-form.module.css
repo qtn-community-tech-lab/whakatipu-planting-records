@@ -154,3 +154,4 @@ button.stepLink { cursor: pointer; }
 .addRow > span.soon { justify-self: start; }
 .soon { padding: 3px 8px; border-radius: 999px; background: var(--surface-soft, #e7eee5); font: 700 11px/1.2 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-eyebrow); }
 .spotCard { border-color: var(--cn-lime-300); background: #fbfdf1; }
+.cardText .spotFar { color: var(--text-risk, #9a3f17); font-weight: 600; }
