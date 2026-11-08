@@ -100,6 +100,7 @@ button.stepLink { cursor: pointer; }
 
 /* the preview's one line under its title */
 .context { margin: 0; font: 500 13.5px/1.4 var(--font-sans); color: var(--text-muted); }
+.head > .context { margin-top: -8px; }
 .inlineLink { border: 0; background: none; padding: 4px 2px; min-height: 32px; font: 600 13.5px var(--font-sans); color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
 /* step 2: search on top, pinned while the list scrolls */
@@ -146,9 +147,11 @@ button.stepLink { cursor: pointer; }
 .areaPlaceholder span { font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }
 
 /* step 1: a new location placed from the map's + */
-.spotCard { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px 6px; border-color: var(--cn-lime-300); background: #fbfdf1; }
+.spotCard { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px 12px; border-color: var(--cn-lime-300); background: #fbfdf1; }
 .spotHead { display: flex; align-items: center; gap: 14px; }
-.spotActions { display: flex; justify-content: flex-end; }
+.spotActions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.spotCancel { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px 0 10px; border: 1px solid var(--border-card, #e6e8df); border-radius: 999px; background: #fff; color: var(--text-strong); font: 600 14px var(--font-sans); cursor: pointer; }
+.spotCancel:hover { background: #f3f5ef; }
 /* a new location near the site, or a sublocation of it */
 .segmentTwo { flex: none; grid-template-columns: 1fr 1fr; }
 .segmentTwo .segmentItem { padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -170,6 +173,10 @@ button.stepLink { cursor: pointer; }
 /* the part, chosen in a small popover on the site card */
 .siteLink { align-self: flex-start; display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font: 600 12.5px var(--font-sans); color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; }
 .siteLink:hover { color: var(--cn-green-800); }
+button.siteLink { padding: 0; border: 0; background: none; cursor: pointer; }
+.pinMoved { margin-top: 4px; font: 600 12.5px/1.4 var(--font-sans); color: var(--cn-green-800); }
+.pinMoved button + button { margin-left: 12px; }
+.pinMoved button { padding: 0; border: 0; background: none; font: inherit; color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .partTrigger { align-self: flex-start; max-width: 100%; display: inline-flex; align-items: center; text-align: left; gap: 4px; min-height: 32px; margin: -4px 0 -6px -8px; padding: 0 8px; border: 0; border-radius: 10px; background: none; font: 600 13.5px/1.2 var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
 .partTrigger:hover, .partTrigger[data-state="open"] { background: #eef2e8; }
 .partList { z-index: 60; width: min(340px, calc(100vw - 32px)); max-height: min(360px, 60vh); overflow-y: auto; padding: 6px; border-radius: 16px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); box-shadow: 0 16px 40px rgba(21, 38, 28, 0.22); }

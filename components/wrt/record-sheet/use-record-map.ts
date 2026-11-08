@@ -29,10 +29,17 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   // The latest handler, so clicks never call a stale one and the map isn't rebuilt when it changes.
   const pick = useRef(onPick);
   useEffect(() => { pick.current = onPick; });
+  // The latest pins: a moved pin redraws its marker without rebuilding the map.
+  const pinsNow = useRef(pins);
+  const redraw = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    pinsNow.current = pins;
+    redraw.current?.();
+  }, [pins]);
 
   // No fly-in: the map starts on the site (or every site's pin), with the sheet at its bar.
   useEffect(() => {
-    const all = boundsOf(pins.map((p) => p.at));
+    const all = boundsOf(pinsNow.current.map((p) => p.at));
     const m = createMap(container.current!, all.getCenter());
     map.current = m;
     m.on("load", () => {
@@ -48,6 +55,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     let markers: maplibregl.Marker[] = [];
     let drawn = "";
     function drawPins() {
+      const pins = pinsNow.current;
       const groups = groupNearbyLocations(pins.map((p) => m.project(p.at)));
       const key = JSON.stringify(groups);
       if (key !== drawn) {
@@ -68,11 +76,13 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     }
     m.on("moveend", drawPins);
     m.on("resize", drawPins);
+    redraw.current = () => { drawn = ""; drawPins(); };
     return () => {
+      redraw.current = null;
       m.remove();
       map.current = null;
     };
-  }, [pins, initialSite, container, pinClass, wideQuery]);
+  }, [initialSite, container, pinClass, wideQuery]);
 
   return map;
 }

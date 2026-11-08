@@ -11,7 +11,7 @@
  *    species. The host widens the panel for this step (onStepChange).
  * 3. Check and submit: a flat summary, then notes, then Submit.
  */
-import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, Search } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
@@ -61,6 +61,10 @@ interface MapEventFormProps {
   onSpotInfo?: (info: SpotInfo) => void;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the parts list. */
   totals?: PlantTotals;
+  /** The chosen site's pin was in the wrong place and has been moved (not saved yet); move it, or put it back. */
+  pinMoved?: boolean;
+  onMovePin?: () => void;
+  onUndoPin?: () => void;
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
@@ -78,7 +82,7 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onChooseSite, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = { name: "", asPart: false }, onSpotInfo, totals = {}, onStartAnother }: MapEventFormProps & {
+function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onChooseSite, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = { name: "", asPart: false }, onSpotInfo, totals = {}, pinMoved = false, onMovePin, onUndoPin, onStartAnother }: MapEventFormProps & {
   onStartAnother: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -86,7 +90,11 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   const form = useEventForm({ options, today, formRef, headingRef, initialPlace });
   const { step } = form;
   // How the summary describes a new location: no coordinates, just what it is to the site.
-  const location = !spot ? null : `${spotInfo.asPart ? "New sublocation" : "New location"}${spotInfo.name.trim() ? `: ${spotInfo.name.trim()}` : ""}`;
+  const location = spot
+    ? `${spotInfo.asPart ? "New sublocation" : "New location"}${spotInfo.name.trim() ? `: ${spotInfo.name.trim()}` : ""}`
+    : pinMoved ? "Site's pin moved (not saved yet)" : null;
+
+  const place = spot ? spotInfo.name.trim() || "a new location" : form.site?.name;
 
   useEffect(() => { onStepChange?.(form.preview ? LAST_STEP : step); }, [step, form.preview, onStepChange]);
   // Always, even with no site: the host shows the site in the header and title, so it must never keep an old one.
@@ -112,13 +120,19 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
       <header className={s.head}>
         <Steps form={form} />
         <div className={s.titleRow}>
-          <h2 ref={headingRef} tabIndex={-1} className={s.title}>{EVENT_STEPS[step].title}</h2>
+          {/* Step 1 says what this is: a new event at the place picked on the map, not just a form. */}
+          <h2 ref={headingRef} tabIndex={-1} className={s.title}>{step === STEP.whereWhen ? "New planting event" : EVENT_STEPS[step].title}</h2>
           {step === STEP.whatPlanted && (
             <span className={s.total} aria-live="polite">
               <b>{formatNumber(form.total)}</b> plants · {form.lines.filter((l) => l.speciesId).length} species
             </span>
           )}
         </div>
+        {step === STEP.whereWhen && (
+          <p className={s.context}>
+            {place ? `At ${place}. First, where and when.` : "Choose where it was planted, then when."}
+          </p>
+        )}
       </header>
 
       <div className={s.scroll}>
@@ -128,7 +142,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} onChooseSite={onChooseSite} spot={spot ?? null} spotNear={spotNear ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} spotInfo={spotInfo} onSpotInfo={onSpotInfo} totals={totals} />}
+        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} onChooseSite={onChooseSite} spot={spot ?? null} spotNear={spotNear ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} spotInfo={spotInfo} onSpotInfo={onSpotInfo} totals={totals} pinMoved={pinMoved} onMovePin={onMovePin} onUndoPin={onUndoPin} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
@@ -198,13 +212,13 @@ function Steps({ form }: { form: EventFormState }) {
   );
 }
 
-function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo, onSpotInfo, totals }: {
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo, onSpotInfo, totals, pinMoved, onMovePin, onUndoPin }: {
   form: EventFormState; options: EventFormOptions; today: string; plantedArea: ReactNode; onChooseSite?: () => void;
   spot: [number, number] | null; spotNear: { label: string; km: number; matched: boolean } | null;
   onAddSpot?: () => void; onRemoveSpot?: () => void;
   spotInfo: SpotInfo; onSpotInfo?: (info: SpotInfo) => void;
   totals: PlantTotals;
-}) {
+} & Pick<MapEventFormProps, "pinMoved" | "onMovePin" | "onUndoPin">) {
   const { err } = form;
   // The site is shown and changed in the panel's title (the host's chooser). Here: a prompt
   // when there's none yet, a problem with it, or a new location away from every site.
@@ -238,6 +252,12 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
               >
                 {partName && form.site.parts.length > 1 ? "Part details" : "Site details"}<ArrowUpRight size={14} strokeWidth={2.4} />
               </Link>
+            )}
+            {/* Some pins are in the wrong place: move this one on the map. Not saved yet. */}
+            {form.site && onMovePin && (
+              pinMoved
+                ? <span className={s.pinMoved}>Pin moved, not saved yet. <button type="button" onClick={onMovePin}>Move again</button> <button type="button" onClick={onUndoPin}>Undo</button></span>
+                : <button type="button" className={s.siteLink} onClick={onMovePin}>Pin in the wrong place? Move it</button>
             )}
           </span>
           <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
@@ -290,9 +310,10 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
                 </button>
               </div>
             )}
+            {/* Back out plainly: the form goes back to the site as it was. */}
             <div className={s.spotActions}>
-              {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move</button>}
-              {onRemoveSpot && <button type="button" className={s.link} onClick={onRemoveSpot}>Remove</button>}
+              {onRemoveSpot && <button type="button" className={s.spotCancel} onClick={onRemoveSpot}><X size={16} strokeWidth={2.6} />Cancel new location</button>}
+              {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move pin</button>}
             </div>
           </div>
         )}
@@ -524,7 +545,7 @@ function Summary({ summary, location, onChange }: {
     <div className={s.summary}>
       {group("Where and when", STEP.whereWhen, <>
         {row("Site", summary.part === WHOLE_SITE ? summary.site : `${summary.site} · ${summary.part}`)}
-        {location && row("New location", location)}
+        {location && row("Location", location)}
         {row("Date", summary.date)}
         {row("Season", summary.season)}
       </>)}

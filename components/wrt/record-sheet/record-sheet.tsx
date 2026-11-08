@@ -15,11 +15,12 @@
  *   mini-map            the still map shown in the full-screen form
  * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
  */
-import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { MapEventForm, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
@@ -53,12 +54,17 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
   // Phones start with the sheet at its bar, so the map shows first.
   const [snap, setSnap] = useState<Snap>("peek");
-  const [pins] = useState(() => sitePins(options.sites, totals));
+  const [basePins] = useState(() => sitePins(options.sites, totals));
+  // Pins moved because they were in the wrong place, keyed by where they were ("lng,lat"). Not saved yet.
+  const [moved, setMoved] = useState<Record<string, LngLat>>({});
+  const pins = useMemo(() => basePins.map((p) => (moved[p.at.join()] ? { ...p, at: moved[p.at.join()] } : p)), [basePins, moved]);
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `place`.
   const [picked, setPicked] = useState<{ slug: string; parcelId: string | null } | null>(null);
   const [place, setPlace] = useState(initialSite);
   const [parcel, setParcel] = useState<string | null>(null);
+  // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
+  const [focus, setFocus] = useState<LngLat | null>(null);
   const placeSite = options.sites.find((x) => x.slug === place);
   const placeName = placeSite?.name ?? "Choose a site";
   const partName = placeSite ? placeSite.parts.find((p) => p.id === parcel)?.name ?? "The site as a whole" : undefined;
@@ -81,7 +87,8 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
 
   // A new location: a cross sits in the middle of the map you can see (above the phone sheet,
   // beside the desktop panel); move the map under it and place the pin. The nearest site is chosen.
-  const [placing, setPlacing] = useState(false);
+  // "new": dropping a new location. "move": moving the chosen site's pin, which is in the wrong place.
+  const [placing, setPlacing] = useState<false | "new" | "move">(false);
   const [spot, setSpot] = useState<LngLat | null>(null);
   // The pin nearest the new location: within NEAR_KM it fills in the site (and part); further, the form asks.
   const [spotNear, setSpotNear] = useState<{ label: string; km: number; matched: boolean } | null>(null);
@@ -98,15 +105,41 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     ? { title: spotInfo.name.trim() || "New location", sub: !placeSite ? "Not at a known site yet" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${placeSite.name}` }
     : { title: placeName, sub: partName };
   const startPlacing = useCallback(() => {
-    setPlacing(true);
+    setPlacing("new");
     setSnap("peek"); // the map has to show, like Draw area
   }, []);
+  // The same cross moves a site's pin: the map is already centred on it.
+  const startMoving = useCallback(() => {
+    setPlacing("move");
+    setSnap("peek");
+  }, []);
+  const placePin = place ? pinFor(place, parcel) : null;
+  const pinMoved = !!placePin && !!moved[placePin.join()];
+  function undoMove() {
+    if (!placePin) return;
+    setMoved((m) => {
+      const next = { ...m };
+      delete next[placePin.join()];
+      return next;
+    });
+    setFocus(placePin);
+  }
+  // Moving a site's pin changes more than this event, so it's asked first.
+  const [pendingMove, setPendingMove] = useState<LngLat | null>(null);
+  function movePin(at: LngLat) {
+    setPendingMove(null);
+    setPlacing(false);
+    setSnap("mid"); // up again, to see the moved pin
+    if (placePin) setMoved((m) => ({ ...m, [placePin.join()]: at }));
+    setFocus(at);
+  }
   function placeHere() {
     const at = mapCentre(map);
-    setPlacing(false);
     if (!at) return;
-    setSpot(at);
+    if (placing === "move") return setPendingMove(at);
+    setPlacing(false);
     setSnap("mid"); // up again, to name it
+    setSpot(at);
     const near = nearestPin(pins, at);
     const matched = !!near && near.km <= NEAR_KM;
     setSpotNear(near && { label: near.pin.label, km: near.km, matched });
@@ -123,16 +156,15 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
   };
   useSpotMarker(map, spot, s.spot);
-  // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
-  const [focus, setFocus] = useState<LngLat | null>(null);
   useCamera(map, wide, snap, focus);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
     setPlace(placeSlug);
     setParcel(parcelId);
     highlightSite(map, placeSlug);
-    setFocus(spot ?? pinFor(placeSlug, parcelId));
-  }, [map, spot]);
+    const at = pinFor(placeSlug, parcelId);
+    setFocus(spot ?? (at && (moved[at.join()] ?? at)));
+  }, [map, spot, moved]);
 
   const onStepChange = useCallback((step: number) => {
     // The species list needs the room: take the phone sheet full screen for it.
@@ -148,21 +180,33 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
           {/* On phones, just above the sheet while it's at its bar; under the header once it's pulled up. */}
           <p className={s.hint} role="status" style={!wide && snap === "peek" ? { top: "auto", bottom: SHEET_HEIGHT.peek + 12 } : undefined}>
-            Move the map to the spot
+            {placing === "move" ? "Line the cross up with the site" : "Move the map to the spot"}
             <button type="button" className={s.hintCancel} onClick={() => setPlacing(false)}>Cancel</button>
             <button type="button" className={s.hintMain} onClick={placeHere}>Place pin here</button>
           </p>
         </>
       ) : null}
-      <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
+      <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         <MapEventForm
           options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
+          pinMoved={pinMoved} onMovePin={startMoving} onUndoPin={undoMove}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
           plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
+      <ConfirmDialog
+        open={!!pendingMove} title={`Move the pin for ${partName && partName !== "The site as a whole" ? `${placeName} · ${partName}` : placeName}?`}
+        confirmLabel="Move pin" onConfirm={() => pendingMove && movePin(pendingMove)} onCancel={() => setPendingMove(null)}
+      >
+        <ul>
+          <li>The site&apos;s main location moves here, for every planting recorded at it, not just this one.</li>
+          <li>Drawn planting areas stay where they are.</li>
+          <li>Distances, and which site a new location counts as near, will use the new spot.</li>
+          <li>Not saved yet: this prototype can&apos;t store changes.</li>
+        </ul>
+      </ConfirmDialog>
       <SiteChooser open={choosing} sites={options.sites} totals={totals} value={{ slug: place, parcelId: parcel }} onChoose={chooseSite} onClose={() => setChoosing(false)} />
     </div>
   );
