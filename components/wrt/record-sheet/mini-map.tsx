@@ -9,28 +9,39 @@ import { boundsOf, SATELLITE } from "./map-scene";
 import type { LngLat } from "./sites";
 import s from "./record-sheet.module.css";
 
-export function MiniMap({ at, area, label, sub, isSpot, onOpen }: {
+/** The space the areas should fit in, px: less than the mini map, so the label doesn't cover them. */
+const FIT = { width: 280, height: 100 };
+
+/** The zoom that fits a box of [west, south, east, north] into FIT, from 12 to 17 (MapLibre counts zoom in 512px tiles). */
+function fitZoom([w, s, e, n]: [number, number, number, number]) {
+  const mercator = (lat: number) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360));
+  const byWidth = Math.log2((FIT.width * 360) / (512 * Math.max(e - w, 1e-6)));
+  const byHeight = Math.log2((FIT.height * 2 * Math.PI) / (512 * Math.max(mercator(n) - mercator(s), 1e-9)));
+  return Math.max(12, Math.min(17, byWidth, byHeight));
+}
+
+export function MiniMap({ at, areas = [], label, sub, isSpot, onOpen }: {
   at: LngLat; label: string; sub?: string;
-  /** The drawn planted area: shown, and the map centres on it. */
-  area?: readonly LngLat[] | null;
+  /** The drawn planted areas: shown, and the map fits them. */
+  areas?: readonly LngLat[][];
   /** A new location: the same teardrop pin as on the big map, not a site's dot. */
   isSpot: boolean;
   /** Phones: tapping it shows the big map. Without it (desktop, where the big map is beside), it's just a picture. */
   onOpen?: () => void;
 }) {
   const Box = onOpen ? "button" : "div";
-  const centre = area?.length ? boundsOf(area).getCenter().toArray() as LngLat : at;
+  const box = areas.length ? boundsOf(areas.flat()) : null;
   return (
     <Box
       className={s.mini} {...(onOpen ? { type: "button" as const, onClick: onOpen, "aria-label": `${label}: show on the map` } : { role: "img", "aria-label": `Map of ${label}` })}
     >
       <Map
         className={s.miniMap} theme="light" styles={{ light: SATELLITE, dark: SATELLITE }}
-        viewport={{ center: centre, zoom: area?.length ? 16 : 15 }} onViewportChange={() => {}} interactive={false} attributionControl={false}
+        viewport={box ? { center: box.getCenter().toArray() as LngLat, zoom: fitZoom(box.toArray().flat() as [number, number, number, number]) } : { center: at, zoom: 15 }} onViewportChange={() => {}} interactive={false} attributionControl={false}
       >
-        {area?.length ? (
+        {areas.length ? (
           <MapGeoJSON
-            id="planted-area" data={{ type: "Polygon", coordinates: [[...area, area[0]]] }}
+            id="planted-areas" data={{ type: "MultiPolygon", coordinates: areas.map((a) => [[...a, a[0]]]) }}
             fillPaint={{ "fill-color": "#d6ea8c", "fill-opacity": 0.35 }} linePaint={{ "line-color": "#d6ea8c", "line-width": 2.5 }}
           />
         ) : (

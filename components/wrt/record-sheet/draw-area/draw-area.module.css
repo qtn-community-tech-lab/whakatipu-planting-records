@@ -4,8 +4,10 @@
 .overlay { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
 .shape, .shapeClosed { fill: none; stroke: var(--cn-lime-300); stroke-width: 2.5; stroke-linejoin: round; }
 .shapeClosed { fill: rgba(214, 234, 140, 0.3); }
-/* the kept area, not being drawn: a quieter outline */
-.overlay:not([data-drawing]) .shapeClosed { fill: rgba(214, 234, 140, 0.22); stroke-width: 2; }
+/* kept areas, not being drawn: a quieter outline, numbered when there are several */
+.kept { fill: rgba(214, 234, 140, 0.22); stroke: var(--cn-lime-300); stroke-width: 2; stroke-linejoin: round; }
+.badge { fill: var(--cn-green-900); stroke: var(--cn-lime-300); stroke-width: 2; }
+.badgeText { fill: #f3f6ee; font: 800 13px var(--font-sans); text-anchor: middle; dominant-baseline: central; }
 .preview { fill: rgba(214, 234, 140, 0.14); }
 .ghost { fill: none; stroke: var(--cn-lime-300); stroke-width: 1.8; stroke-dasharray: 6 6; }
 .trace { fill: none; stroke: var(--cn-lime-300); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
@@ -31,26 +33,31 @@
 .bar > * { pointer-events: auto; }
 @media (min-width: 768px) { .bar { left: 584px; right: 12px; } }
 
-.kept, .pill, .methods {
+.keptBar, .pill, .methods {
   background: rgba(21, 38, 28, 0.92); color: #f3f6ee; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 /* read out, not shown */
 .sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* the kept area: its size, then Change, Redraw and Remove, each a labelled button */
-.kept { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 4px 4px 4px 16px; border-radius: 28px; }
-.keptSize { display: inline-flex; align-items: center; gap: 8px; margin-right: 6px; font: 700 15px var(--font-sans); font-variant-numeric: tabular-nums; }
-.keptSize svg { color: var(--cn-lime-300); }
-.kept button, .pill button {
+/* the kept areas: a button per area, then Add area */
+.keptBar { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 4px; padding: 4px; border-radius: 28px; }
+.keptBar button, .pill button {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0;
   min-height: 44px; min-width: 44px; padding: 0 14px; border: 0; border-radius: 999px;
   background: rgba(243, 246, 238, 0.14); color: #f3f6ee; font: 600 14px var(--font-sans); white-space: nowrap; cursor: pointer;
 }
-.kept button:hover, .pillBtn:hover:enabled, .pillCancel:hover { background: rgba(243, 246, 238, 0.24); }
+.keptBar button:hover, .pillBtn:hover:enabled, .pillCancel:hover { background: rgba(243, 246, 238, 0.24); }
+/* each area: its number and size; Add area in lime */
+.keptBar b { font-variant-numeric: tabular-nums; }
+.keptBar svg { color: var(--cn-lime-300); }
+.areaNo { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--cn-lime-300); color: var(--cn-green-900); font: 800 12px var(--font-sans); }
+.keptBar .addBtn { background: var(--cn-lime-300); color: var(--cn-green-900); }
+.keptBar .addBtn svg { color: inherit; }
+.keptBar .addBtn:hover { background: #c4dc6a; }
 /* Remove: a warm red that still reads on the dark bar */
-.kept .danger { color: #ffb4a6; }
-.kept .danger:hover { background: rgba(255, 140, 120, 0.18); }
+.pill .danger { color: #ffb4a6; }
+.pill .danger:hover { background: rgba(255, 140, 120, 0.18); }
 
 /* drawing: the guided pill. One row on wide screens; on phones the step reads on top and the buttons sit under it. */
 .pill { width: min(100%, 640px); box-sizing: border-box; display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 18px; border-radius: 30px; }
@@ -60,7 +67,7 @@
 .pill button:disabled { opacity: 0.45; cursor: default; }
 .pillCancel { padding: 0 !important; }
 .pill .pillGo { background: var(--cn-lime-300); color: var(--cn-green-900); padding: 0 18px; }
-.kept button:focus-visible, .pill button:focus-visible, .methods button:focus-visible { outline: 3px solid var(--cn-lime-300); outline-offset: 2px; }
+.keptBar button:focus-visible, .pill button:focus-visible, .methods button:focus-visible { outline: 3px solid var(--cn-lime-300); outline-offset: 2px; }
 
 /* before the first corner: tap corners or trace */
 .methods { display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; }

@@ -12,7 +12,7 @@ const EARTH_RADIUS_M = 6378137;
 const rad = (deg: number) => (deg * Math.PI) / 180;
 
 /** The area inside a ring of corners (not repeated at the end), in hectares, on the sphere. */
-export function hectares(ring: readonly LngLat[]): number {
+export function hectares(ring: readonly (readonly [number, number])[]): number {
   const n = ring.length;
   if (n < 3) return 0;
   let total = 0;

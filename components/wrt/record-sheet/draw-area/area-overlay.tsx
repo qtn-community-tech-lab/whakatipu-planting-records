@@ -1,8 +1,8 @@
 "use client";
 /**
- * The planted area over the big map, as SVG: the shape, the dashed line to the pointer, the line
- * being traced, and the corners and + handles you drag. Redrawn as the map moves. Only the
- * handles take the pointer; everything else lets the map have it.
+ * The planted areas over the big map, as SVG: each kept area with its number, and the one being
+ * drawn with its corners and + handles to drag, the dashed line to the pointer and the line being
+ * traced. Redrawn as the map moves. Only the handles take the pointer; the map gets the rest.
  */
 import type * as maplibregl from "maplibre-gl";
 import { useEffect, useState, type PointerEvent as ReactPointerEvent, type RefObject } from "react";
@@ -14,12 +14,10 @@ import s from "./draw-area.module.css";
 const MID_MIN_PX = 36;
 
 export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | null>; draw: DrawArea }) {
-  const drawing = !!draw.method;
-  const pts = drawing ? draw.shape.pts : draw.area ?? [];
-  const closed = drawing ? draw.shape.closed : true;
-  const shown = pts.length > 0 || !!draw.trace;
+  const { areas, draft, trace, cursor } = draw;
+  const shown = areas.length > 0 || !!draft;
 
-  // Redraw as the map moves, so the shape stays on its ground. Subscribed once there's a shape:
+  // Redraw as the map moves, so the shapes stay on their ground. Subscribed once there's a shape:
   // the map is made in the parent's effect, after this one first runs, so it isn't there on mount.
   const [, redraw] = useState(0);
   useEffect(() => {
@@ -37,15 +35,21 @@ export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | nul
   const px = (at: LngLat) => m.project(at);
   const path = (list: LngLat[], z: boolean) =>
     list.length ? `M${list.map((p) => { const q = px(p); return `${q.x.toFixed(1)} ${q.y.toFixed(1)}`; }).join("L")}${z ? "Z" : ""}` : "";
-  const canClose = drawing && !closed && pts.length >= 3;
-  // Corners can be dragged once there's a shape to fix; while tracing, only after the trace.
-  const canDrag = drawing && (closed || draw.method === "corners");
+  const middle = (list: LngLat[]) => {
+    const q = list.map(px);
+    return { x: q.reduce((t, p) => t + p.x, 0) / q.length, y: q.reduce((t, p) => t + p.y, 0) / q.length };
+  };
+
+  const pts = draft?.pts ?? [];
+  const canClose = !!draft && !draft.closed && pts.length >= 3;
+  // Corners can be dragged when tapping them, and once a trace is a shape.
+  const canDrag = !!draft && (draft.closed || draft.method === "corners");
 
   /** Drag a corner (`i`), or a + after corner `i` that becomes one. */
   function grab(e: ReactPointerEvent, i: number, isMid: boolean) {
     e.stopPropagation();
     e.preventDefault();
-    if (!isMid && i === 0 && canClose) return draw.close();
+    if (!isMid && i === 0 && canClose) return draw.change({ closed: true });
     const box = m!.getCanvasContainer().getBoundingClientRect();
     const at = (ev: PointerEvent): LngLat => {
       const p = m!.unproject([ev.clientX - box.left, ev.clientY - box.top]);
@@ -69,37 +73,51 @@ export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | nul
 
   const last = pts[pts.length - 1];
   return (
-    <svg className={s.overlay} data-drawing={drawing || undefined} aria-hidden="true">
-      {/* While drawing, the shape so far is lightly filled so its size shows before it's closed. */}
-      {canClose && <path className={s.preview} d={path(pts, true)} />}
-      <path className={closed ? s.shapeClosed : s.shape} d={path(pts, closed)} />
-      {drawing && !closed && last && draw.cursor && <path className={s.ghost} d={path([last, draw.cursor], false)} />}
-      {draw.trace && <path className={s.trace} d={path(draw.trace, false)} />}
-      {drawing && closed && pts.map((p, i) => {
-        const a = px(p), b = px(pts[(i + 1) % pts.length]);
-        if (Math.hypot(a.x - b.x, a.y - b.y) < MID_MIN_PX) return null;
+    <svg className={s.overlay} aria-hidden="true">
+      {/* The kept areas, numbered as in the bar. The one being changed is drawn as the draft instead. */}
+      {areas.map((a, i) => {
+        if (draft?.editing === i) return null;
+        const c = middle(a);
         return (
-          <g key={`m${i}`} className={s.mid} transform={`translate(${(a.x + b.x) / 2} ${(a.y + b.y) / 2})`} onPointerDown={(e) => grab(e, i, true)}>
-            <circle className={s.hit} r={16} />
-            <circle className={s.midDot} r={7} />
-            <path className={s.plus} d="M-3.5 0H3.5M0 -3.5V3.5" />
+          <g key={`a${i}`}>
+            <path className={s.kept} d={path(a, true)} />
+            {areas.length > 1 && <><circle className={s.badge} cx={c.x} cy={c.y} r={12} /><text className={s.badgeText} x={c.x} y={c.y}>{i + 1}</text></>}
           </g>
         );
       })}
-      {drawing && pts.map((p, i) => {
-        const q = px(p);
-        const first = i === 0 && canClose;
-        return (
-          <g
-            key={`v${i}`} className={first ? s.cornerClose : s.corner} transform={`translate(${q.x} ${q.y})`}
-            style={{ pointerEvents: canDrag || first ? "auto" : "none" }} onPointerDown={(e) => grab(e, i, false)}
-          >
-            {first && <circle className={s.ring} r={9} />}
-            <circle className={s.hit} r={20} />
-            <circle className={s.dot} r={7} />
-          </g>
-        );
-      })}
+      {draft && (
+        <>
+          {canClose && <path className={s.preview} d={path(pts, true)} />}
+          <path className={draft.closed ? s.shapeClosed : s.shape} d={path(pts, draft.closed)} />
+          {!draft.closed && last && cursor && <path className={s.ghost} d={path([last, cursor], false)} />}
+          {trace && <path className={s.trace} d={path(trace, false)} />}
+          {draft.closed && pts.map((p, i) => {
+            const a = px(p), b = px(pts[(i + 1) % pts.length]);
+            if (Math.hypot(a.x - b.x, a.y - b.y) < MID_MIN_PX) return null;
+            return (
+              <g key={`m${i}`} className={s.mid} transform={`translate(${(a.x + b.x) / 2} ${(a.y + b.y) / 2})`} onPointerDown={(e) => grab(e, i, true)}>
+                <circle className={s.hit} r={16} />
+                <circle className={s.midDot} r={7} />
+                <path className={s.plus} d="M-3.5 0H3.5M0 -3.5V3.5" />
+              </g>
+            );
+          })}
+          {pts.map((p, i) => {
+            const q = px(p);
+            const first = i === 0 && canClose;
+            return (
+              <g
+                key={`v${i}`} className={first ? s.cornerClose : s.corner} transform={`translate(${q.x} ${q.y})`}
+                style={{ pointerEvents: canDrag || first ? "auto" : "none" }} onPointerDown={(e) => grab(e, i, false)}
+              >
+                {first && <circle className={s.ring} r={9} />}
+                <circle className={s.hit} r={20} />
+                <circle className={s.dot} r={7} />
+              </g>
+            );
+          })}
+        </>
+      )}
     </svg>
   );
 }

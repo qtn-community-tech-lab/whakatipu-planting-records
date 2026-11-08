@@ -1,88 +1,93 @@
 "use client";
 /**
- * Drawing the planted area on the record sheet's map, two ways:
- *   corners  tap each corner; the first one pulses once you can close the shape
- *   trace    run a finger round the edge in one go; it's tidied into a few corners
- * Either way, once closed: drag a corner, or a + between two, to fix it. Done keeps it as the
- * event's planted area (not saved yet). The map still pans and zooms while drawing; while tracing,
- * one finger draws and two zoom.
+ * Drawing planted areas on the record sheet's map. An event can have several.
+ *
+ * There is one thing being drawn at a time, the draft, or none. A draft is:
+ *   method    "corners" (tap each corner) or "trace" (run a finger round the edge)
+ *   pts       its corners so far
+ *   closed    whether it's a shape yet
+ *   editing   which kept area it replaces, or null for a new one
+ * Every change to the draft goes through `change`, which keeps the old one for Undo.
+ * Done adds the draft to the kept areas (or replaces the one it was editing); Stop drops it.
+ * Nothing is saved yet.
  */
 import type * as maplibregl from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
 import { simplifyTrace, type LngLat } from "@/lib/wrt/areas/planted-area";
 
 export type DrawMethod = "corners" | "trace";
-export interface Shape { pts: LngLat[]; closed: boolean }
+export interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null }
 
-const EMPTY: Shape = { pts: [], closed: false };
 /** A tap this close to the first corner (in px) closes the shape. */
-export const CLOSE_PX = 18;
+const CLOSE_PX = 18;
 /** Trace points closer than this (in px) are skipped. */
 const TRACE_STEP_PX = 3;
 
-export function useDrawArea(map: RefObject<maplibregl.Map | null>) {
-  const [method, setMethod] = useState<DrawMethod | null>(null);
-  const [shape, setShapeState] = useState<Shape>(EMPTY);
-  // Earlier shapes, for Undo. A ref, so Undo reads it directly; `steps` re-renders the button.
-  const history = useRef<Shape[]>([]);
-  const [steps, setSteps] = useState(0);
-  const setHistory = useCallback((h: Shape[]) => { history.current = h; setSteps(h.length); }, []);
+export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKept?: (pts: LngLat[]) => void) {
+  // The latest handler, so Done never calls a stale one.
+  const kept = useRef(onKept);
+  useEffect(() => { kept.current = onKept; });
+  const [areas, setAreas] = useState<LngLat[][]>([]);
+  const [draft, setDraftState] = useState<Draft | null>(null);
   /** The line being traced, while the finger is down. */
   const [trace, setTrace] = useState<LngLat[] | null>(null);
   /** The pointer on desktop, for the dashed line to the next corner. */
   const [cursor, setCursor] = useState<LngLat | null>(null);
-  /** The planted area kept with Done. */
-  const [area, setArea] = useState<LngLat[] | null>(null);
 
-  // Map listeners read the latest shape without being re-added on every change.
-  const now = useRef(shape);
-  const setShape = useCallback((next: Shape) => { now.current = next; setShapeState(next); }, []);
-  /** Change the shape, keeping the old one for Undo. */
-  const commit = useCallback((next: Shape) => {
-    setHistory([...history.current.slice(-59), now.current]);
-    setShape(next);
-  }, [setShape, setHistory]);
+  // Map listeners and Undo read these directly, so they never see a stale draft.
+  const now = useRef<Draft | null>(null);
+  const history = useRef<Draft[]>([]);
+  const [steps, setSteps] = useState(0);
+  const setDraft = useCallback((next: Draft | null, past: Draft[]) => {
+    now.current = next;
+    history.current = past;
+    setDraftState(next);
+    setSteps(past.length);
+  }, []);
+  /** Change the draft, keeping the old one for Undo. */
+  const change = useCallback((edit: Partial<Draft>) => {
+    const d = now.current;
+    if (d) setDraft({ ...d, ...edit }, [...history.current.slice(-59), d]);
+  }, [setDraft]);
 
-  const undo = useCallback(() => {
-    const h = history.current;
-    if (!h.length) return;
-    setShape(h[h.length - 1]);
-    setHistory(h.slice(0, -1));
-  }, [setShape, setHistory]);
-
-  /** Start drawing: a new area, or (with `from`) fixing the kept one. */
-  const start = useCallback((how: DrawMethod, from: LngLat[] | null = null) => {
-    setMethod(how);
-    setShape(from ? { pts: from, closed: true } : EMPTY);
-    setHistory([]);
+  /** Draw a new area, or (with `editing`) change a kept one. */
+  const start = useCallback((editing: number | null = null) => {
+    const pts = editing === null ? [] : areas[editing] ?? [];
+    setDraft({ method: "corners", pts, closed: pts.length >= 3, editing }, []);
     setTrace(null);
-  }, [setShape, setHistory]);
-
-  /** Switch method before anything is drawn. */
-  const switchTo = useCallback((how: DrawMethod) => { setMethod(how); setShape(EMPTY); setHistory([]); }, [setShape, setHistory]);
-  const cancel = useCallback(() => { setMethod(null); setShape(EMPTY); setTrace(null); setCursor(null); }, [setShape]);
-  /** Clear the shape and draw it again (Undo brings it back). */
-  const redraw = useCallback(() => commit(EMPTY), [commit]);
-  const close = useCallback(() => {
-    if (now.current.pts.length >= 3 && !now.current.closed) commit({ ...now.current, closed: true });
-  }, [commit]);
+  }, [areas, setDraft]);
+  const stop = useCallback(() => { setDraft(null, []); setTrace(null); setCursor(null); }, [setDraft]);
+  const undo = useCallback(() => {
+    const past = history.current;
+    if (past.length) setDraft(past[past.length - 1], past.slice(0, -1));
+  }, [setDraft]);
   const done = useCallback(() => {
-    if (now.current.pts.length < 3) return;
-    setArea(now.current.pts);
-    cancel();
-  }, [cancel]);
+    const d = now.current;
+    if (!d || d.pts.length < 3) return;
+    setAreas((all) => (d.editing === null ? [...all, d.pts] : all.map((a, i) => (i === d.editing ? d.pts : a))));
+    stop();
+    kept.current?.(d.pts);
+  }, [stop]);
+  /** Take a kept area off: the one being changed, or by number. */
+  const remove = useCallback((i: number) => {
+    setAreas((all) => all.filter((_, j) => j !== i));
+    stop();
+  }, [stop]);
+
+  const method = draft?.method;
+  const closed = draft?.closed ?? true;
 
   // Corners: a tap on the map adds one, or closes the shape near the first.
   useEffect(() => {
     const m = map.current;
-    if (!m || method !== "corners" || shape.closed) return;
+    if (!m || method !== "corners" || closed) return;
     m.doubleClickZoom.disable(); // two quick taps are two corners
     m.getCanvas().style.cursor = "crosshair";
     const onClick = (e: maplibregl.MapMouseEvent) => {
-      const { pts } = now.current;
+      const pts = now.current?.pts ?? [];
       const first = pts[0] && m.project(pts[0]);
-      if (pts.length >= 3 && first && Math.hypot(first.x - e.point.x, first.y - e.point.y) < CLOSE_PX) return close();
-      commit({ pts: [...pts, [e.lngLat.lng, e.lngLat.lat]], closed: false });
+      if (pts.length >= 3 && first && Math.hypot(first.x - e.point.x, first.y - e.point.y) < CLOSE_PX) return change({ closed: true });
+      change({ pts: [...pts, [e.lngLat.lng, e.lngLat.lat]] });
     };
     const onMove = (e: maplibregl.MapMouseEvent) => {
       if ((e.originalEvent as PointerEvent).pointerType !== "touch") setCursor([e.lngLat.lng, e.lngLat.lat]);
@@ -99,15 +104,18 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>) {
       m.getCanvas().style.cursor = "";
       setCursor(null);
     };
-  }, [map, method, shape.closed, close, commit]);
+  }, [map, method, closed, change]);
 
   // Trace: one finger (or the mouse) draws instead of panning; a second finger stops it, to zoom.
   useEffect(() => {
     const m = map.current;
-    if (!m || method !== "trace" || shape.closed) return;
+    if (!m || method !== "trace" || closed) return;
     const box = m.getCanvasContainer();
     m.dragPan.disable();
     m.getCanvas().style.cursor = "crosshair";
+    // With drag-pan off, MapLibre's CSS lets the browser scroll on one finger, which cancels the
+    // trace after the first move. While tracing, the finger is ours.
+    m.getCanvas().style.touchAction = box.style.touchAction = "none";
     let id: number | null = null;
     let line: { px: { x: number; y: number }; at: LngLat }[] = [];
     const point = (e: PointerEvent) => {
@@ -136,7 +144,7 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>) {
       setTrace(null);
       const corners = line.length > 8 ? simplifyTrace(line.map((q) => q.px)).map((i) => line[i].at) : [];
       line = [];
-      if (corners.length >= 3) commit({ pts: corners, closed: true });
+      if (corners.length >= 3) change({ pts: corners, closed: true });
     };
     box.addEventListener("pointerdown", down);
     window.addEventListener("pointermove", move);
@@ -149,9 +157,10 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>) {
       window.removeEventListener("pointercancel", up);
       m.dragPan.enable();
       m.getCanvas().style.cursor = "";
+      m.getCanvas().style.touchAction = box.style.touchAction = "";
       setTrace(null);
     };
-  }, [map, method, shape.closed, commit]);
+  }, [map, method, closed, change]);
 
   // Keys on desktop: ⌘Z (or Backspace) undoes, Enter is Done, Esc stops drawing.
   useEffect(() => {
@@ -160,21 +169,33 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>) {
       if ((e.target as HTMLElement).closest("input, textarea, [contenteditable]")) return;
       if ((e.key === "z" && (e.metaKey || e.ctrlKey)) || e.key === "Backspace") { e.preventDefault(); undo(); }
       else if (e.key === "Enter") { e.preventDefault(); done(); }
-      else if (e.key === "Escape") cancel();
+      else if (e.key === "Escape") stop();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [method, undo, done, cancel]);
+  }, [method, undo, done, stop]);
 
   return {
-    method, shape, trace, cursor, area, canUndo: steps > 0,
-    start, switchTo, undo, close, redraw, done, cancel, removeArea: () => setArea(null),
+    areas, draft, trace, cursor, canUndo: steps > 0,
+    start, stop, undo, done, remove, change,
+    /** Before anything's drawn: switch between tapping corners and tracing. */
+    pickMethod: (how: DrawMethod) => now.current && setDraft({ ...now.current, method: how }, history.current),
+    /** Clear the draft's shape and draw it again (Undo brings it back). */
+    startAgain: () => change({ pts: [], closed: false }),
+    /** Take every area off, e.g. when leaving the event. */
+    clear: () => { setAreas([]); stop(); },
     /** Before dragging a corner: keep the shape for Undo. */
-    grab: () => commit(now.current),
-    /** Move corner `i` (no Undo step: grab took it). */
-    moveCorner: (i: number, at: LngLat) => setShape({ ...now.current, pts: now.current.pts.map((p, j) => (j === i ? at : p)) }),
+    grab: () => change({}),
+    /** Move corner `i` while dragging (no Undo step: grab took it). */
+    moveCorner: (i: number, at: LngLat) => {
+      const d = now.current;
+      if (d) setDraft({ ...d, pts: d.pts.map((p, j) => (j === i ? at : p)) }, history.current);
+    },
     /** Add a corner after corner `i`, at `at`, ready to drag. */
-    addCorner: (i: number, at: LngLat) => commit({ ...now.current, pts: [...now.current.pts.slice(0, i + 1), at, ...now.current.pts.slice(i + 1)] }),
+    addCorner: (i: number, at: LngLat) => {
+      const pts = now.current?.pts ?? [];
+      change({ pts: [...pts.slice(0, i + 1), at, ...pts.slice(i + 1)] });
+    },
   };
 }
 

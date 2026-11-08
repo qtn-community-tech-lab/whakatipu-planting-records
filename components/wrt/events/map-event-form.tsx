@@ -66,8 +66,8 @@ interface MapEventFormProps {
   pinMoved?: boolean;
   onMovePin?: () => void;
   onUndoPin?: () => void;
-  /** The planted area drawn on the map, if any (not saved yet), and drawing it (or changing it). */
-  area?: readonly [number, number][] | null;
+  /** The planted areas drawn on the map (not saved yet), and drawing another. */
+  areas?: readonly (readonly [number, number])[][];
   onDrawArea?: () => void;
   /** Kept mounted but out of sight, e.g. while the host shows the place first. */
   hidden?: boolean;
@@ -220,7 +220,7 @@ function Steps({ form }: { form: EventFormState }) {
 }
 
 /** Step 1: the date, then where: the site (or the new location's card), how to mark where exactly, and the mini map. */
-function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin, area, onDrawArea }: MapEventFormProps & { form: EventFormState }) {
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin, areas = [], onDrawArea }: MapEventFormProps & { form: EventFormState }) {
   const { err } = form;
   // A new location away from every site needs one chosen.
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
@@ -309,7 +309,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
         {!spot && form.site && (
           <div className={s.whereTools} role="group" aria-label="Mark where exactly">
             <button type="button" onClick={onAddSpot}><MapPinPlus size={20} strokeWidth={2} />New location</button>
-            <button type="button" onClick={onDrawArea} disabled={!onDrawArea}><Pentagon size={20} strokeWidth={2} />{area ? `Area ${formatHectares(hectares(area))}` : "Draw area"}</button>
+            <button type="button" onClick={onDrawArea} disabled={!onDrawArea}><Pentagon size={20} strokeWidth={2} />{areas.length ? `${areas.length === 1 ? "Area" : `${areas.length} areas`} ${formatHectares(areas.reduce((t, a) => t + hectares(a), 0))}` : "Draw area"}</button>
             <button type="button" disabled><SquareDashedMousePointer size={20} strokeWidth={2} />Choose area<span className={s.soon}>Next</span></button>
           </div>
         )}
