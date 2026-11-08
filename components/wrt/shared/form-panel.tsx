@@ -7,15 +7,16 @@
  * or use its button, to move between them. Place it inside a positioned
  * element and pass that element as `container`.
  */
+import { ChevronDown, ChevronUp, MapPin } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
 
 export type Snap = "peek" | "mid" | "full";
 /** How much of the sheet shows at peek and mid, in px; full is the whole container. */
-export const SHEET_HEIGHT = { peek: 104, mid: 560 } as const;
+export const SHEET_HEIGHT = { peek: 88, mid: 560 } as const;
 
-export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title, subtitle, onTitle, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -26,22 +27,28 @@ export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title,
   eyebrow: string;
   /** What it's about, e.g. the site's name. */
   title: string;
+  /** A line under the title, e.g. the part of the site. */
+  subtitle?: string;
+  /** Makes the title a chooser (pin, title, chevron), e.g. to change the site. */
+  onTitle?: () => void;
   children: ReactNode;
 }) {
+  const heading = <Heading title={title} subtitle={subtitle} onTitle={onTitle} />;
   if (wide) {
     return open ? (
       <aside className={s.side} aria-label={`${eyebrow}: ${title}`}>
         <span className={s.eyebrow}>{eyebrow}</span>
+        <div className={s.sideHeading}>{heading}</div>
         <div className={s.scroll}>{children}</div>
       </aside>
     ) : null;
   }
-  return <Sheet open={open} container={container} snap={snap} onSnap={onSnap} eyebrow={eyebrow} title={title}>{children}</Sheet>;
+  return <Sheet open={open} container={container} snap={snap} onSnap={onSnap} eyebrow={eyebrow} title={title} heading={heading}>{children}</Sheet>;
 }
 
-function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
+function Sheet({ open, container, snap, onSnap, eyebrow, title, heading, children }: {
   open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  eyebrow: string; title: string; children: ReactNode;
+  eyebrow: string; title: string; heading: ReactNode; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const spring = useRef<Spring | null>(null);
@@ -60,7 +67,7 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
 
   const yFor = (at: Snap) => (at === "full" ? 0 : Math.max(0, height - SHEET_HEIGHT[at]));
 
-  // One spring moves the sheet; it starts below the screen and springs in when the form opens.
+  // One spring moves the sheet.
   useEffect(() => {
     const el = sheet.current!;
     const sp = new Spring(window.innerHeight, (y) => { el.style.transform = `translate3d(0, ${y}px, 0)`; });
@@ -68,9 +75,15 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
     return () => sp.stop();
   }, []);
 
+  // The first placement is instant (no opening animation); every move after that springs.
+  const placed = useRef(false);
   useEffect(() => {
-    if (!height) return;
-    spring.current?.to(open ? (snap === "full" ? 0 : Math.max(0, height - SHEET_HEIGHT[snap])) : height, fling.current);
+    const sp = spring.current;
+    if (!height || !sp) return;
+    const target = open ? (snap === "full" ? 0 : Math.max(0, height - SHEET_HEIGHT[snap])) : height;
+    if (placed.current) sp.to(target, fling.current);
+    else sp.set(target);
+    placed.current = true;
     fling.current = 0;
   }, [open, snap, height]);
 
@@ -116,12 +129,11 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
     bar.addEventListener("pointercancel", up);
   }
 
-  // The bar's button: open the preview, go full screen, or back to the map.
-  const action = snap === "peek"
-    ? { label: "Open", to: "mid" as const, up: true }
-    : snap === "mid"
-      ? { label: "Full screen", to: "full" as const, up: true }
-      : { label: "Show map", to: "mid" as const, up: false };
+  // The bar's button: open from the bar, or back to the map from full screen. In between there's
+  // no button: the form takes the sheet full screen itself when it needs the room, and the bar drags.
+  const action = snap === "peek" ? { label: "Open", to: "mid" as const, up: true }
+    : snap === "full" ? { label: "Map", to: "mid" as const, up: false } // short, so the title keeps the room
+    : null;
 
   return (
     <section ref={sheet} className={s.sheet} data-snap={snap} aria-label={`${eyebrow}: ${title}`} hidden={!container}>
@@ -130,15 +142,14 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
       <div className={s.bar} onPointerDown={onPointerDown}>
         <span className={s.handle} aria-hidden="true" />
         <span className={s.barText}>
-          <span className={s.eyebrow}>{eyebrow}</span>
-          <b>{title}</b>
+          {heading}
         </span>
-        <button type="button" className={s.barButton} onClick={() => onSnap(action.to)} aria-expanded={snap !== "peek"}>
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d={action.up ? "M6 15l6-6 6 6" : "M6 9l6 6 6-6"} />
-          </svg>
-          {action.label}
-        </button>
+        {action && (
+          <button type="button" className={s.barButton} onClick={() => onSnap(action.to)} aria-expanded={snap !== "peek"} aria-label={snap === "full" ? "Show the map" : undefined}>
+            {action.up ? <ChevronUp size={16} strokeWidth={2.4} /> : <ChevronDown size={16} strokeWidth={2.4} />}
+            {action.label}
+          </button>
+        )}
       </div>
       {/* A field focused in the preview takes the sheet full screen, above the keyboard. */}
       <div
@@ -150,5 +161,25 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, children }: {
       </div>
       </div>
     </section>
+  );
+}
+
+/** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
+function Heading({ title, subtitle, onTitle }: { title: string; subtitle?: string; onTitle?: () => void }) {
+  const text = (
+    <span className={s.titleText}>
+      <b>{title}</b>
+      {subtitle && <span>{subtitle}</span>}
+    </span>
+  );
+  if (!onTitle) return text;
+  return (
+    <button type="button" className={s.titleButton} onClick={onTitle} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
+      <span className={s.titleIcon} aria-hidden="true">
+        <MapPin size={22} strokeWidth={2.2} />
+      </span>
+      {text}
+      <ChevronDown size={22} strokeWidth={2.4} />
+    </button>
   );
 }
