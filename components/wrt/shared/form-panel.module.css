@@ -12,8 +12,6 @@
   box-shadow: 0 24px 60px rgba(21, 38, 28, 0.35);
 }
 
-.eyebrow { flex-shrink: 0; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }
-.side > .eyebrow { padding-bottom: 6px; }
 
 /* The form fills what shows and scrolls inside it, so its own buttons can stay pinned at the bottom. */
 .scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }

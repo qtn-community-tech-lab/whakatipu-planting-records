@@ -16,15 +16,15 @@ export type Snap = "peek" | "mid" | "full";
 /** How much of the sheet shows at peek and mid, in px; full is the whole container. */
 export const SHEET_HEIGHT = { peek: 88, mid: 560 } as const;
 
-export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title, subtitle, onTitle, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
   container: HTMLElement | null;
   snap: Snap;
   onSnap: (snap: Snap) => void;
-  /** The small label at the top, e.g. "New planting event". */
-  eyebrow: string;
+  /** What the panel is, for screen readers (not shown), e.g. "New planting event". */
+  label: string;
   /** What it's about, e.g. the site's name. */
   title: string;
   /** A line under the title, e.g. the part of the site. */
@@ -36,19 +36,18 @@ export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title,
   const heading = <Heading title={title} subtitle={subtitle} onTitle={onTitle} />;
   if (wide) {
     return open ? (
-      <aside className={s.side} aria-label={`${eyebrow}: ${title}`}>
-        <span className={s.eyebrow}>{eyebrow}</span>
+      <aside className={s.side} aria-label={`${label}: ${title}`}>
         <div className={s.sideHeading}>{heading}</div>
         <div className={s.scroll}>{children}</div>
       </aside>
     ) : null;
   }
-  return <Sheet open={open} container={container} snap={snap} onSnap={onSnap} eyebrow={eyebrow} title={title} heading={heading}>{children}</Sheet>;
+  return <Sheet open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading}>{children}</Sheet>;
 }
 
-function Sheet({ open, container, snap, onSnap, eyebrow, title, heading, children }: {
+function Sheet({ open, container, snap, onSnap, label, title, heading, children }: {
   open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  eyebrow: string; title: string; heading: ReactNode; children: ReactNode;
+  label: string; title: string; heading: ReactNode; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const spring = useRef<Spring | null>(null);
@@ -136,7 +135,7 @@ function Sheet({ open, container, snap, onSnap, eyebrow, title, heading, childre
     : null;
 
   return (
-    <section ref={sheet} className={s.sheet} data-snap={snap} aria-label={`${eyebrow}: ${title}`} hidden={!container}>
+    <section ref={sheet} className={s.sheet} data-snap={snap} aria-label={`${label}: ${title}`} hidden={!container}>
       {/* Only the part that shows is laid out, so the form's own buttons stay on screen at each snap. */}
       <div className={s.visible} style={{ height: Math.max(0, height - yFor(snap)) }}>
       <div className={s.bar} onPointerDown={onPointerDown}>
