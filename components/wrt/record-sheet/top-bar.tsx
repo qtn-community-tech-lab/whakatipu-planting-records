@@ -7,7 +7,7 @@ import s from "./record-sheet.module.css";
 
 /**
  * The session header over the map: a back button, the site in the middle (tap it to change the
- * site, like the form's title), and a + menu for adding to the map: a new location, or (next) a
+ * site, like the form's title), and a + menu for adding to the map: a new location, or a
  * drawn area. It's the one place to add to the map.
  */
 export function TopBar({ siteName, exitHref, onChooseSite, onAddLocation, onDrawArea }: {
@@ -37,7 +37,7 @@ export function TopBar({ siteName, exitHref, onChooseSite, onAddLocation, onDraw
           </button>
           <button type="button" onClick={pick(onDrawArea)}>
             <Pentagon size={18} strokeWidth={2.2} />
-            Draw area <span className={s.soon}>Next</span>
+            Draw area
           </button>
         </PopoverContent>
       </Popover>

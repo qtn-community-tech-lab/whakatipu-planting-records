@@ -45,6 +45,8 @@
 /* site pins: the app's plant-count markers (styles/app.css); the chosen site's lime.
    MapLibre places markers with position: absolute and a transform: never set either on .pin or .spot itself */
 .pin[data-on] { z-index: 1; }
+/* while drawing an area, taps on the map add corners: the pins stay in sight but don't take them */
+.screen[data-drawing] .pin { pointer-events: none; opacity: 0.6; }
 .pin[data-on] button { background: var(--cn-lime-300); color: var(--cn-green-900); }
 
 /* a new location dropped on the map: a lime teardrop pin */

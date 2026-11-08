@@ -15,6 +15,7 @@
  *   site-chooser        the sites-and-parts dialog
  *   mini-map            the still map shown in the full-screen form
  *   place-overview      before the form: the index of sites, or what a tapped site has had planted
+ *   draw-area/          drawing the planted area, and the bar along the bottom of the map
  * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
  */
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
@@ -31,6 +32,7 @@ import { PlaceOverview, SiteIndex } from "./place-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
+import { AreaOverlay, DrawBar, useDrawArea } from "./draw-area";
 import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
 import s from "./record-sheet.module.css";
 
@@ -85,6 +87,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [formKey, setFormKey] = useState(0);
 
   const map = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
+  const draw = useDrawArea(map);
 
   // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
   function pickPin(pin: SitePin) {
@@ -113,6 +116,8 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     setLeaving(null);
     setStarted(false);
     removeSpot();
+    draw.cancel();
+    draw.removeArea();
     setFormKey((k) => k + 1);
     setPicked({ slug: pin.slug, parcelId: pin.parcelId });
     setSnap("mid");
@@ -124,16 +129,28 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     : { title: placeName, sub: partName };
   // Before an event is started: the chosen site's overview, or with none, the index of sites.
   const overview = !started && !spot;
+  const { cancel: stopDrawing, start: startDraw } = draw;
   const startPlacing = useCallback(() => {
+    stopDrawing();
     setStarted(true);
     setPlacing("new");
     setSnap("peek"); // the map has to show, like Draw area
-  }, []);
+  }, [stopDrawing]);
   // The same cross moves a site's pin: the map is already centred on it.
   const startMoving = useCallback(() => {
+    stopDrawing();
     setPlacing("move");
     setSnap("peek");
-  }, []);
+  }, [stopDrawing]);
+  // Drawing the planted area (a new one, or fixing the kept one): the phone sheet drops so the map shows.
+  const drawArea = useCallback((fix: boolean) => {
+    setPlacing(false);
+    setStarted(true);
+    setSnap("peek");
+    startDraw("corners", fix ? draw.area : null);
+  }, [startDraw, draw.area]);
+  const newArea = useCallback(() => drawArea(false), [drawArea]);
+  const fixArea = useCallback(() => drawArea(true), [drawArea]);
   function undoMove() {
     move(place, parcel, null);
     setFocus(pinFor(place, parcel));
@@ -160,7 +177,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     if (matched) setPicked({ slug: near.pin.slug, parcelId: near.pin.parcelId });
     else setChoosing(true); // not at a known site: say which it belongs to
   }
-  // "Draw area", for now: drop the phone sheet so the map shows. Drawing comes in the next PR.
+  // Phones: drop the sheet so the big map shows.
   const showMap = () => setSnap("peek");
 
   // The cross sits where the map's centre is: the middle of the padding the form leaves.
@@ -185,9 +202,10 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   }, []);
 
   return (
-    <div ref={setScreen} className={s.screen}>
+    <div ref={setScreen} className={s.screen} data-drawing={draw.method ? "" : undefined}>
       <div ref={mapEl} className={s.map} />
-      <TopBar siteName={spot || placeSite ? where.title : undefined} exitHref={exitHref} onChooseSite={changeSite} onAddLocation={startPlacing} onDrawArea={showMap} />
+      <AreaOverlay map={map} draw={draw} />
+      <TopBar siteName={spot || placeSite ? where.title : undefined} exitHref={exitHref} onChooseSite={changeSite} onAddLocation={startPlacing} onDrawArea={draw.area ? fixArea : newArea} />
       {placing ? (
         <>
           {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
@@ -198,7 +216,10 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
             <button type="button" className={s.hintMain} onClick={placeHere}>Place pin here</button>
           </p>
         </>
-      ) : null}
+      ) : (wide || snap === "peek") && (
+        // Phones: just above the sheet at its bar. Pulled up, the sheet covers the map, so no bar.
+        <DrawBar draw={draw} onNew={newArea} onEdit={fixArea} style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }} />
+      )}
       <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         {overview && (place
           ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} />
@@ -208,8 +229,9 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
           pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
+          area={draw.area} onDrawArea={draw.area ? fixArea : newArea}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
-          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
+          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} area={draw.area} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
       <ConfirmDialog

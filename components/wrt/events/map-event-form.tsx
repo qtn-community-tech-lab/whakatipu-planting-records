@@ -27,6 +27,7 @@ import { EVENT_SEASONS, type EventSeason } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { DatePicker } from "@/components/ui/date-picker";
 import { formatNumber, rankMatches } from "@/lib/wrt/text";
+import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
 import { cn } from "@/lib/utils";
 import { useEventForm, type EventFormState } from "./use-event-form";
 import s from "./map-event-form.module.css";
@@ -65,6 +66,9 @@ interface MapEventFormProps {
   pinMoved?: boolean;
   onMovePin?: () => void;
   onUndoPin?: () => void;
+  /** The planted area drawn on the map, if any (not saved yet), and drawing it (or changing it). */
+  area?: readonly [number, number][] | null;
+  onDrawArea?: () => void;
   /** Kept mounted but out of sight, e.g. while the host shows the place first. */
   hidden?: boolean;
 }
@@ -216,7 +220,7 @@ function Steps({ form }: { form: EventFormState }) {
 }
 
 /** Step 1: the date, then where: the site (or the new location's card), how to mark where exactly, and the mini map. */
-function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin }: MapEventFormProps & { form: EventFormState }) {
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin, area, onDrawArea }: MapEventFormProps & { form: EventFormState }) {
   const { err } = form;
   // A new location away from every site needs one chosen.
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
@@ -277,7 +281,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
               <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
             </div>
             {form.site ? (
-              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} />
+              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} onDrawArea={onDrawArea} />
             ) : (
               <span>Or click a pin on the map</span>
             )}
@@ -301,11 +305,11 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
             )}
           </div>
         )}
-        {/* Where exactly at the site: a pin now; drawing a new area, or picking one already drawn, come next. */}
+        {/* Where exactly at the site: a pin, or the planted area drawn on the map; picking one already drawn comes next. */}
         {!spot && form.site && (
           <div className={s.whereTools} role="group" aria-label="Mark where exactly">
             <button type="button" onClick={onAddSpot}><MapPinPlus size={20} strokeWidth={2} />New location</button>
-            <button type="button" disabled><Pentagon size={20} strokeWidth={2} />Draw area<span className={s.soon}>Next</span></button>
+            <button type="button" onClick={onDrawArea} disabled={!onDrawArea}><Pentagon size={20} strokeWidth={2} />{area ? `Area ${formatHectares(hectares(area))}` : "Draw area"}</button>
             <button type="button" disabled><SquareDashedMousePointer size={20} strokeWidth={2} />Choose area<span className={s.soon}>Next</span></button>
           </div>
         )}
@@ -367,10 +371,11 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
  * The part of this site, as a small popover: the site as a whole and each part, with what's been planted there.
  * Quicker than the full site chooser when only the part changes.
  */
-function PartPicker({ site, value, totals, onChoose, onAddSpot }: {
+function PartPicker({ site, value, totals, onChoose, onAddSpot, onDrawArea }: {
   site: { slug: string; parts: readonly { id: string; name: string }[] }; value: string | null;
   totals: PlantTotals; onChoose: (id: string | null) => void;
   onAddSpot?: () => void;
+  onDrawArea?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const options = [{ id: null, name: "The site as a whole" }, ...site.parts];
@@ -390,10 +395,10 @@ function PartPicker({ site, value, totals, onChoose, onAddSpot }: {
             {o.id === value && <Check size={18} strokeWidth={2.4} />}
           </button>
         ))}
-        {/* Somewhere not on the list: a new spot, or (next PR) its planting area drawn on the map. */}
+        {/* Somewhere not on the list: a new spot, or its planting area drawn on the map. */}
         <div className={s.partMore}>
           {onAddSpot && <button type="button" onClick={() => { setOpen(false); onAddSpot(); }}><Plus size={18} strokeWidth={2.2} />New location</button>}
-          <button type="button" disabled><Pentagon size={18} strokeWidth={2.2} />Draw out planting spots<span className={s.soon}>Next</span></button>
+          {onDrawArea && <button type="button" onClick={() => { setOpen(false); onDrawArea(); }}><Pentagon size={18} strokeWidth={2.2} />Draw out planting spots</button>}
         </div>
       </PopoverContent>
     </Popover>
