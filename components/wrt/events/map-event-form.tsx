@@ -11,10 +11,12 @@
  *    species. The host widens the panel for this step (onStepChange).
  * 3. Check and submit: a flat summary, then notes, then Submit.
  */
-import { ArrowRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, Search } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, Search } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { TextareaInput } from "@/components/ui/inputs";
+import { partHref } from "@/components/wrt/sites/site-rows";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { EventFormOptions, SpeciesOption } from "@/lib/wrt/events/form-options";
 import { formatPlantedOn } from "@/lib/wrt/events/season";
@@ -208,6 +210,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
   const siteProblem = err("placeSlug") ?? err("parcelId");
   const dateRef = useRef<HTMLInputElement>(null);
+  const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
   const seasonProblem = err("season") ?? err("seasonYear");
   const [seasonOpen, setSeasonOpen] = useState(form.seasonChosen);
 
@@ -225,6 +228,16 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
               <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} />
             ) : (
               <span>Or click a pin on the map</span>
+            )}
+            {form.site && (
+              // The site's (or part's) page, in a new tab so the form keeps what's entered.
+              // Parts only have pages when a site has more than one.
+              <Link
+                href={partName && form.site.parts.length > 1 ? partHref(form.site.slug, partName) : `/sites/${form.site.slug}`}
+                target="_blank" className={s.siteLink}
+              >
+                {partName && form.site.parts.length > 1 ? "Part details" : "Site details"}<ArrowUpRight size={14} strokeWidth={2.4} />
+              </Link>
             )}
           </span>
           <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
