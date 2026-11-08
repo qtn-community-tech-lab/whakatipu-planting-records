@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput as ComboboxControl, ComboboxItem, ComboboxList,
 } from "@/components/ui/combobox";
@@ -43,6 +43,23 @@ export function ComboboxInput<Item>({
   // should offer everything, not only the item whose name is in the field.
   const search = selected && query === getLabel(selected) ? "" : query;
 
+  // Close the list when the page (or a panel) scrolls, so it never floats away from its field.
+  // Scrolling the list itself keeps it open.
+  // shortcut: scrolls in the first 400ms are ignored, so a phone scrolling the field into view
+  // above its keyboard doesn't close it; revisit if a list ever needs to stay open while scrolling.
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const since = performance.now();
+    const close = (e: Event) => {
+      if (performance.now() - since < 400) return;
+      if (e.target instanceof Element && e.target.closest("[data-slot=combobox-content]")) return;
+      setOpen(false);
+    };
+    window.addEventListener("scroll", close, { capture: true, passive: true });
+    return () => window.removeEventListener("scroll", close, { capture: true });
+  }, [open]);
+
   return (
     <FormField label={label} hint={hint} error={error} optional={optional} fieldClassName={fieldClassName}>
       {(control) => (
@@ -57,6 +74,8 @@ export function ComboboxInput<Item>({
           onInputValueChange={setQuery}
           autoHighlight
           disabled={disabled}
+          open={open}
+          onOpenChange={setOpen}
         >
           <ComboboxControl {...control} placeholder={placeholder} clearLabel={clearLabel} />
           <ComboboxContent>
