@@ -107,10 +107,9 @@ button.stepLink { cursor: pointer; }
 .search input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: none; outline: none; font: 500 16px var(--font-sans); color: var(--text-strong); }
 .search input::-webkit-search-cancel-button { display: none; }
 .searchCamera { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 12px; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); cursor: pointer; }
-/* the photos taken, then + for another */
-.photos { display: flex; gap: 8px; overflow-x: auto; }
-.photos img, .photos button { flex-shrink: 0; width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
-.photos button { display: grid; place-items: center; border: 1.5px dashed #c9d3bf; background: none; color: var(--cn-green-800); cursor: pointer; }
+.searchCamera[aria-disabled="true"] { opacity: 0.55; cursor: help; }
+/* what a tap on the camera says, for now */
+.tip { margin: 0; align-self: flex-end; padding: 8px 12px; border-radius: 12px; background: var(--cn-green-900); color: #f3f6ee; font: 600 13px/1.3 var(--font-sans); }
 .searchClear { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-soft, #e7eee5); font: 600 18px/1 var(--font-sans); color: var(--text-strong); cursor: pointer; }
 .problem { margin: 0; padding: 10px 12px; border-radius: 12px; background: #fbefe8; font: 600 13.5px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
 .empty { margin: 0; padding: 12px 0; font: 400 14px var(--font-sans); color: var(--text-muted); }

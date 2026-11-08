@@ -36,11 +36,12 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     const m = createMap(container.current!, all.getCenter());
     map.current = m;
     m.on("load", () => {
+      // Before the first draw: the form chose the site before the map existed, so its highlight missed.
+      m.getContainer().dataset.chosenSite = initialSite;
       m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek"));
       const start = initialSite ? pinFor(initialSite) : null;
       // cameraForBounds adds the map's own padding (the form's space), so only a margin goes here.
       m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 });
-      m.getContainer().dataset.chosenSite = initialSite; // the form chose it before the pins existed
       drawPins();
     });
     // Pins close together on screen become one marker with their total; regrouped as the map moves.
@@ -49,19 +50,20 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     function drawPins() {
       const groups = groupNearbyLocations(pins.map((p) => m.project(p.at)));
       const key = JSON.stringify(groups);
-      if (key === drawn) return;
-      drawn = key;
-      markers.forEach((x) => x.remove());
-      markers = groups.map((g) => {
-        const members = g.map((i) => pins[i]);
-        return pinMarker(members, pinClass, () => {
-          if (members.length === 1) return pick.current(members[0]);
-          // Fit the group, but always zoom in some: on a phone one group can already fill the screen.
-          const box = boundsOf(members.map((p) => p.at));
-          const fit = m.cameraForBounds(box, { padding: 40 })?.zoom ?? 0;
-          m.easeTo({ center: box.getCenter(), zoom: Math.min(17, Math.max(fit, m.getZoom() + 1.5)) });
-        }).addTo(m);
-      });
+      if (key !== drawn) {
+        drawn = key;
+        markers.forEach((x) => x.remove());
+        markers = groups.map((g) => {
+          const members = g.map((i) => pins[i]);
+          return pinMarker(members, pinClass, () => {
+            if (members.length === 1) return pick.current(members[0]);
+            // Fit the group, but always zoom in some: on a phone one group can already fill the screen.
+            const box = boundsOf(members.map((p) => p.at));
+            const fit = m.cameraForBounds(box, { padding: 40 })?.zoom ?? 0;
+            m.easeTo({ center: box.getCenter(), zoom: Math.min(17, Math.max(fit, m.getZoom() + 1.5)) });
+          }).addTo(m);
+        });
+      }
       highlightSite(map, m.getContainer().dataset.chosenSite ?? "");
     }
     m.on("moveend", drawPins);

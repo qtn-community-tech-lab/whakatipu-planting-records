@@ -74,8 +74,6 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   const headingRef = useRef<HTMLHeadingElement>(null);
   const form = useEventForm({ options, today, formRef, headingRef, initialPlace });
   const { step } = form;
-  // Photos of what went in. shortcut: kept in this browser only, not saved; upload them once events are stored.
-  const [photos, setPhotos] = useState<string[]>([]);
   // How the summary describes a new location: no coordinates, just what it is to the site.
   const location = !spot ? null : `${spotInfo.asPart ? "A new part" : "A pin for the site"}${spotInfo.name.trim() ? `: ${spotInfo.name.trim()}` : ""}`;
 
@@ -92,7 +90,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   });
 
   if (form.preview) {
-    return <Preview summary={describeEvent(form.preview, options)} location={location} photos={photos} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Preview summary={describeEvent(form.preview, options)} location={location} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${EVENT_STEPS[step + 1].title}` : "Submit planting event";
@@ -120,7 +118,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
           </div>
         )}
         {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} onChooseSite={onChooseSite} spot={spot ?? null} spotNear={spotNear ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} spotInfo={spotInfo} onSpotInfo={onSpotInfo} totals={totals} />}
-        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} photos={photos} onPhotos={setPhotos} />}
+        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
             {plantedArea ?? (
@@ -132,7 +130,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
               </div>
             )}
             {form.checkedEvent
-              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} photos={photos} onChange={form.goTo} />
+              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} onChange={form.goTo} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -255,7 +253,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
                 {spotNear && (
                   <span className={cn(!spotNear.matched && s.spotFar)}>
                     {spotNear.matched
-                      ? (spotNear.km < 0.05 ? `At the ${spotNear.label} pin` : `${kmLabel(spotNear.km)} from the ${spotNear.label} pin`)
+                      ? `${spotNear.km < 0.05 ? "Right at" : `${kmLabel(spotNear.km)} from`} ${spotNear.label}`
                       : `Not at a known site. Nearest: ${spotNear.label}, ${kmLabel(spotNear.km)}.`}
                   </span>
                 )}
@@ -354,11 +352,16 @@ function PartPicker({ site, value, totals, onChoose }: {
   );
 }
 
-function WhatPlanted({ form, options, suggestions, photos, onPhotos }: {
+function WhatPlanted({ form, options, suggestions }: {
   form: EventFormState; options: EventFormOptions; suggestions: SpeciesSuggestion[];
-  photos: string[]; onPhotos: (next: string[]) => void;
 }) {
-  const photoRef = useRef<HTMLInputElement>(null);
+  // The camera is a placeholder for now: tapping it only says photos come later.
+  const [cameraTip, setCameraTip] = useState(false);
+  useEffect(() => {
+    if (!cameraTip) return;
+    const t = setTimeout(() => setCameraTip(false), 2500);
+    return () => clearTimeout(t);
+  }, [cameraTip]);
   const { err } = form;
   const [query, setQuery] = useState("");
   const byId = new Map(options.species.map((x) => [x.id, x]));
@@ -434,25 +437,20 @@ function WhatPlanted({ form, options, suggestions, photos, onPhotos }: {
           <input type="search" value={query} placeholder="Search species" onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
           {query
             ? <button type="button" className={s.searchClear} aria-label="Clear search" onClick={() => setQuery("")}>×</button>
-            : <button type="button" className={s.searchCamera} aria-label="Take a photo of what was planted" onClick={() => photoRef.current?.click()}><Camera size={20} strokeWidth={2} /></button>}
+            : (
+              <button
+                type="button" className={s.searchCamera} aria-disabled="true" title="Photos are coming next"
+                aria-label="Take a photo of what was planted (coming next)" onClick={() => setCameraTip(true)}
+              >
+                <Camera size={20} strokeWidth={2} />
+              </button>
+            )}
         </label>
-        {/* Opens the phone's back camera straight away (one photo per tap: `multiple` would make iPhones ask
-            library or camera first); a file picker on a computer. Visually hidden, not display: none, so every
-            phone browser lets the button open it. */}
-        <input
-          ref={photoRef} type="file" accept="image/*" capture="environment" className="sr-only" tabIndex={-1} aria-hidden="true"
-          onChange={(e) => { const f = e.target.files?.[0]; if (f) onPhotos([...photos, URL.createObjectURL(f)]); e.target.value = ""; }}
-        />
+        {cameraTip && <p className={s.tip} role="status">Photos of what was planted are coming next.</p>}
         {nothingYet && <p className={s.problem} role="alert">Enter how many went in for at least one species.</p>}
         {err("species") && <p className={s.problem} role="alert">{err("species")}</p>}
       </div>
 
-      {photos.length > 0 && (
-        <div className={s.photos}>
-          {photos.map((src, i) => <Image key={src} src={src} alt={`Photo ${i + 1} of what was planted`} width={64} height={64} unoptimized />)}
-          <button type="button" aria-label="Take another photo" onClick={() => photoRef.current?.click()}><Plus size={20} strokeWidth={2.2} /></button>
-        </div>
-      )}
 
       {shown.length > 0 && (
         <>
@@ -478,8 +476,8 @@ function WhatPlanted({ form, options, suggestions, photos, onPhotos }: {
 }
 
 /** The checked event as a flat list: what Check and submit and the preview both show. */
-function Summary({ summary, location, photos, onChange }: {
-  summary: EventSummary; location: string | null; photos: string[]; onChange?: (step: number) => void;
+function Summary({ summary, location, onChange }: {
+  summary: EventSummary; location: string | null; onChange?: (step: number) => void;
 }) {
   const group = (title: string, step: number, rows: ReactNode) => (
     <section className={s.sumGroup}>
@@ -506,7 +504,6 @@ function Summary({ summary, location, photos, onChange }: {
       {group("What was planted", STEP.whatPlanted, <>
         {summary.species.map((x) => <Fragment key={x.name}>{row(x.name, formatNumber(x.quantity))}</Fragment>)}
         {row("Total", `${formatNumber(summary.total)} plants`, true)}
-        {photos.length > 0 && row("Photos", `${photos.length} (not saved yet)`)}
       </>)}
       {!onChange && summary.notes && (
         <section className={s.sumGroup}>
@@ -519,8 +516,8 @@ function Summary({ summary, location, photos, onChange }: {
 }
 
 /** What Submit shows while nothing can be saved: the event, plainly marked "Not saved". */
-function Preview({ summary, location, photos, onBack, onStartAnother }: {
-  summary: EventSummary; location: string | null; photos: string[]; onBack: () => void; onStartAnother: () => void;
+function Preview({ summary, location, onBack, onStartAnother }: {
+  summary: EventSummary; location: string | null; onBack: () => void; onStartAnother: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
@@ -531,7 +528,7 @@ function Preview({ summary, location, photos, onBack, onStartAnother }: {
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>Planting event preview</h2>
         <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
       </header>
-      <div className={s.scroll}><Summary summary={summary} location={location} photos={photos} /></div>
+      <div className={s.scroll}><Summary summary={summary} location={location} /></div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>
