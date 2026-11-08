@@ -1,18 +1,18 @@
-/* FormPanel: a panel on the right (wide) or a spring sheet with three snaps (phones). */
+/* FormPanel: a panel on the left (wide) or a spring sheet with three snaps (phones). */
 .side, .sheet {
   color: var(--cn-green-900);
   /* forms inside fade sticky bars into --surface-app */
   --surface-app: #fdfcf9; background: var(--surface-app);
 }
 .side {
-  position: absolute; z-index: 4; top: 12px; bottom: 12px; right: 12px;
+  position: absolute; z-index: 4; top: 12px; bottom: 12px; left: 12px;
   width: 560px; max-width: calc(100% - 24px);
   display: flex; flex-direction: column;
   border-radius: 28px; padding: 22px 22px 0;
   box-shadow: 0 24px 60px rgba(21, 38, 28, 0.35);
   animation: side-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
-@keyframes side-in { from { transform: translateX(calc(100% + 24px)); } }
+@keyframes side-in { from { transform: translateX(calc(-100% - 24px)); } }
 @media (prefers-reduced-motion: reduce) { .side { animation: none; } }
 
 .eyebrow { flex-shrink: 0; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }

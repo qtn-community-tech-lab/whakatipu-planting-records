@@ -1,6 +1,6 @@
 "use client";
 /**
- * A form over a full-screen view (a map). Wide screens: a panel on the right
+ * A form over a full-screen view (a map). Wide screens: a panel on the left
  * that stays open. Phones: a sheet with a bouncy spring that rests in three
  * places: "peek" (a bar at the bottom), "mid" (a preview over the map) and
  * "full" (over the map entirely, its bar now a header). Drag or flick the bar,
