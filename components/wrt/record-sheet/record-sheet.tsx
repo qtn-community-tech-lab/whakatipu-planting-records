@@ -13,9 +13,8 @@
  *   use-pin-moves.ts    site pins moved because they were in the wrong place
  *   top-bar             back, the site, and the + menu
  *   site-chooser        the sites-and-parts dialog
- *   mini-map            the still map shown in the full-screen form
  *   place-overview      before the form: the index of sites, or what a tapped site has had planted
- * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
+ * Shared pieces: FormPanel (the form's panel), MiniMap and FigureList (components/wrt/shared).
  */
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
 import { MapEventForm, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
@@ -24,9 +23,9 @@ import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
+import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
 import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
-import { MiniMap } from "./mini-map";
 import { PlaceOverview, SiteIndex } from "./place-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
@@ -169,7 +168,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     left: pad.left + (screen.clientWidth - pad.left - pad.right) / 2,
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
   };
-  useSpotMarker(map, spot, s.spot);
+  useSpotMarker(map, spot, NEW_PIN_CLASS);
   useCamera(map, wide, snap, focus, pins);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
@@ -209,7 +208,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
           pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
-          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
+          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
       <ConfirmDialog
