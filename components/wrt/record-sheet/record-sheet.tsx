@@ -31,7 +31,7 @@ import { PlaceOverview, SiteIndex } from "./place-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
-import { AreaOverlay, DrawBar, useDrawArea } from "./draw-area";
+import { AreaOverlay, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
 import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
 import { boundsOf } from "./map-scene";
 import s from "./record-sheet.module.css";
@@ -109,23 +109,56 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [spotInfo, setSpotInfo] = useState<SpotInfo>({ name: "", asPart: false });
   // Where the last kept area is, so the camera stays on it when the place changes to match.
   const [areaAt, setAreaAt] = useState<LngLat | null>(null);
-  // A kept area belongs where it was drawn: the nearest site's (or part's) pin within NEAR_KM,
-  // as for a new location; further from every site, the chooser asks. The map centres on the area.
-  const areaKept = (pts: LngLat[]) => {
+  // An area drawn at another site than the event's: asked about before it's kept (the draft stays open).
+  const [areaElsewhere, setAreaElsewhere] = useState<{ pin: SitePin; at: LngLat } | null>(null);
+  // Before an area is kept, where it belongs, by the nearest site's (or part's) pin within NEAR_KM:
+  //   one at another site than the event's asks first (an event is at one site), as tapping that site's pin does;
+  //   otherwise the first area sets the event's site and part, and later ones keep them;
+  //   far from every site, the chooser opens if there's no site yet.
+  // The map centres on the area.
+  const keepArea: OnKeep = (pts, others) => {
     const at = boundsOf(pts).getCenter().toArray() as LngLat;
+    const near = nearestPin(pins, at);
+    const pin = near && near.km <= NEAR_KM ? near.pin : null;
+    if (pin && place && pin.slug !== place) {
+      setAreaElsewhere({ pin, at });
+      return false;
+    }
     setAreaAt(at);
     setFocus(at);
-    const near = nearestPin(pins, at);
-    if (near && near.km <= NEAR_KM) setPicked({ slug: near.pin.slug, parcelId: near.pin.parcelId });
-    else setChoosing(true);
+    if (pin && others === 0) setPicked({ slug: pin.slug, parcelId: pin.parcelId });
+    else if (!pin && !place) setChoosing(true);
+    return true;
   };
-  const draw = useDrawArea(map, areaKept);
+  const draw = useDrawArea(map, keepArea);
   function removeSpot() {
     setSpot(null);
     setSpotNear(null);
     setSpotInfo({ name: "", asPart: false });
   }
   // A fresh form (new key) at the other site, back on its overview.
+  // The area at another site starts a new event there: what was entered is cleared, the area kept.
+  function newEventForArea() {
+    if (!areaElsewhere) return;
+    const { pin, at } = areaElsewhere;
+    setAreaElsewhere(null);
+    removeSpot();
+    draw.clearKept();
+    setFormKey((k) => k + 1);
+    setPicked({ slug: pin.slug, parcelId: pin.parcelId });
+    setAreaAt(at);
+    setFocus(at);
+    draw.done(true);
+  }
+  // Phones: the sheet coming up covers the map, so a drawing ends first: a closed shape is kept
+  // (unless it's held to ask something; then the sheet stays down), an unfinished one dropped.
+  function snapTo(to: Snap) {
+    if (!wide && to !== "peek" && draw.draft) {
+      if (!draw.draft.closed) draw.stop();
+      else if (!draw.done()) return;
+    }
+    setSnap(to);
+  }
   function leaveFor(pin: SitePin) {
     setLeaving(null);
     setStarted(false);
@@ -230,9 +263,9 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
         </>
       ) : (wide || snap === "peek") && (
         // Phones: just above the sheet at its bar. Pulled up, the sheet covers the map, so no bar.
-        <DrawBar draw={draw} onAdd={newArea} style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }} />
+        <DrawBar draw={draw} onAdd={newArea} place={placeSite ? (parcel ? `${placeName} · ${partName}` : placeName) : undefined} onChangePlace={changeSite} style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }} />
       )}
-      <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
+      <FormPanel wide={wide} open container={screen} snap={snap} onSnap={snapTo} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         {overview && (place
           ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} onBack={() => setPicked({ slug: "", parcelId: null })} />
           : <SiteIndex sites={options.sites} totals={totals} onChoose={(slug) => chooseSite(slug, null)} onStart={() => setStarted(true)} />)}
@@ -241,7 +274,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
           pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
-          areas={draw.areas} onDrawArea={newArea}
+          areas={draw.areas} onDrawArea={newArea} onReset={() => { draw.clear(); setAreaAt(null); }}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
           plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
@@ -256,6 +289,13 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           <li>Distances, and which site a new location counts as near, will use the new spot.</li>
           <li>Not saved yet: this prototype can&apos;t store changes.</li>
         </ul>
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={!!areaElsewhere} title={`This area is at ${areaElsewhere?.pin.label}`}
+        confirmLabel="Start a new event there" cancelLabel="Keep drawing"
+        onConfirm={newEventForArea} onCancel={() => setAreaElsewhere(null)}
+      >
+        This planting event is at {placeName}, and an event is at one site. Starting a new event at {areaElsewhere?.pin.label} clears what you&apos;ve entered here and keeps this area.
       </ConfirmDialog>
       <ConfirmDialog
         open={!!leaving} title="Leave this planting event?" confirmLabel="Leave event" cancelLabel="Keep editing"

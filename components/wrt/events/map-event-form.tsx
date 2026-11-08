@@ -69,6 +69,8 @@ interface MapEventFormProps {
   /** The planted areas drawn on the map (not saved yet), and drawing another. */
   areas?: readonly (readonly [number, number])[][];
   onDrawArea?: () => void;
+  /** Start another was pressed: the form starts over, and the host clears what it holds for the event (its areas). */
+  onReset?: () => void;
   /** Kept mounted but out of sight, e.g. while the host shows the place first. */
   hidden?: boolean;
 }
@@ -86,7 +88,7 @@ export function plantsLine(x?: { plants: number; species: number }) {
 
 export function MapEventForm(props: MapEventFormProps) {
   const [round, setRound] = useState(0);
-  return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
+  return <Form key={round} {...props} onStartAnother={() => { setRound((r) => r + 1); props.onReset?.(); }} />;
 }
 
 function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
@@ -101,6 +103,11 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
     : pinMoved ? "Site's pin moved (not saved yet)" : null;
 
   const place = spot ? spotInfo.name.trim() || "a new location" : form.site?.name;
+  // The planted areas in a line: "1 area · 6.06 ha", "2 areas · 4.03 ha".
+  const areas = props.areas ?? [];
+  const areaLine = areas.length
+    ? `${areas.length === 1 ? "1 area" : `${areas.length} areas`} · ${formatHectares(areas.reduce((t, a) => t + hectares(a), 0))}`
+    : null;
 
   useEffect(() => { onStepChange?.(form.preview ? LAST_STEP : step); }, [step, form.preview, onStepChange]);
   // Always, even with no site: the host shows the site in the header and title, so it must never keep an old one.
@@ -116,7 +123,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
   });
 
   if (form.preview) {
-    return <Preview summary={describeEvent(form.preview, options)} location={location} plantedArea={plantedArea} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Preview summary={describeEvent(form.preview, options)} location={location} areaLine={areaLine} plantedArea={plantedArea} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${EVENT_STEPS[step + 1].title}` : "Submit planting event";
@@ -162,7 +169,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
               </div>
             )}
             {form.checkedEvent
-              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} onChange={form.goTo} />
+              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} areaLine={areaLine} onChange={form.goTo} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -528,8 +535,8 @@ function WhatPlanted({ form, options, suggestions }: {
 }
 
 /** The checked event as a flat list: what Check and submit and the preview both show. */
-function Summary({ summary, location, onChange }: {
-  summary: EventSummary; location: string | null; onChange?: (step: number) => void;
+function Summary({ summary, location, areaLine, onChange }: {
+  summary: EventSummary; location: string | null; areaLine?: string | null; onChange?: (step: number) => void;
 }) {
   const group = (title: string, step: number, rows: ReactNode) => (
     <section className={s.sumGroup}>
@@ -550,6 +557,7 @@ function Summary({ summary, location, onChange }: {
       {group("Where and when", STEP.whereWhen, <>
         {row("Site", summary.part === WHOLE_SITE ? summary.site : `${summary.site} · ${summary.part}`)}
         {location && row("Location", location)}
+        {areaLine && row("Planted area", areaLine)}
         {row("Date", summary.date)}
         {row("Season", summary.season)}
       </>)}
@@ -568,8 +576,8 @@ function Summary({ summary, location, onChange }: {
 }
 
 /** What Submit shows while nothing can be saved: the event, plainly marked "Not saved". */
-function Preview({ summary, location, plantedArea, onBack, onStartAnother }: {
-  summary: EventSummary; location: string | null; plantedArea?: ReactNode; onBack: () => void; onStartAnother: () => void;
+function Preview({ summary, location, areaLine, plantedArea, onBack, onStartAnother }: {
+  summary: EventSummary; location: string | null; areaLine: string | null; plantedArea?: ReactNode; onBack: () => void; onStartAnother: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
@@ -580,7 +588,7 @@ function Preview({ summary, location, plantedArea, onBack, onStartAnother }: {
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>Planting event preview</h2>
         <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
       </header>
-      <div className={s.scroll}>{plantedArea}<Summary summary={summary} location={location} /></div>
+      <div className={s.scroll}>{plantedArea}<Summary summary={summary} location={location} areaLine={areaLine} /></div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>

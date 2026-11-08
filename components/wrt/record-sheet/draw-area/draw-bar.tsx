@@ -21,8 +21,12 @@ const METHODS: { id: DrawMethod; label: string }[] = [
   { id: "trace", label: "Trace" },
 ];
 
-export function DrawBar({ draw, onAdd, style }: {
+export function DrawBar({ draw, onAdd, place, onChangePlace, style }: {
   draw: DrawArea;
+  /** Where the areas are: the event's site (and part), e.g. "Lake Hayes · Lake Hayes South / Roadside". */
+  place?: string;
+  /** Change it (the site chooser). */
+  onChangePlace: () => void;
   /** Draw another area (the host drops the phone sheet first). */
   onAdd: () => void;
   /** Where it sits: the host knows how tall the phone sheet is. */
@@ -42,11 +46,11 @@ export function DrawBar({ draw, onAdd, style }: {
   const wasDrawing = useRef(false);
   useEffect(() => {
     if (wasDrawing.current && !draft) {
-      setSaid(areas.length ? `${count(areas.length)}, ${total(areas)}` : "Stopped drawing");
+      setSaid(areas.length ? `${count(areas.length)}, ${total(areas)}${place ? `, at ${place}` : ""}` : "Stopped drawing");
       focusNext();
     }
     wasDrawing.current = !!draft;
-  }, [draft, areas]);
+  }, [draft, areas, place]);
 
   function remove(i: number) {
     setRemoving(null);
@@ -80,7 +84,7 @@ export function DrawBar({ draw, onAdd, style }: {
                   <RotateCcw size={16} strokeWidth={2.4} aria-hidden="true" />Start again
                 </button>
               )}
-              <button type="button" className={s.pillGo} onClick={draw.done} disabled={n < 3}>Done</button>
+              <button type="button" className={s.pillGo} onClick={() => draw.done()} disabled={n < 3}>Done</button>
               <button type="button" className={s.pillCancel} onClick={draw.stop} aria-label="Stop drawing, keep nothing new" title="Stop drawing">
                 <X size={18} strokeWidth={2.4} aria-hidden="true" />
               </button>
@@ -98,6 +102,7 @@ export function DrawBar({ draw, onAdd, style }: {
           )}
         </>
       ) : areas.length > 0 && (
+        <>
         <div className={s.keptBar} role="group" aria-label={`Planted areas: ${count(areas.length)}, ${total(areas)}`}>
           {areas.map((a, i) => (
             <button key={i} type="button" onClick={() => draw.start(i)} aria-label={`Change area ${i + 1}, ${formatHectares(hectares(a))}`}>
@@ -110,6 +115,13 @@ export function DrawBar({ draw, onAdd, style }: {
             <Plus size={16} strokeWidth={2.6} aria-hidden="true" />Add area
           </button>
         </div>
+        {/* Where the areas are, plainly: Done may have chosen the site or part from where they were drawn.
+            Last in the code, first on screen: the bar stacks upwards. */}
+        <p className={s.where}>
+          <span>{place ? <>At <b>{place}</b></> : "Not at a site yet"}</span>
+          <button type="button" onClick={onChangePlace}>{place ? "Change" : "Choose a site"}</button>
+        </p>
+        </>
       )}
       <ConfirmDialog
         open={removing !== null} title={`Remove area ${(removing ?? 0) + 1}?`} confirmLabel="Remove area"

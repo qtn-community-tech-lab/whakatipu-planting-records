@@ -9,7 +9,8 @@
  *   editing   which kept area it replaces, or null for a new one
  * Every change to the draft goes through `change`, which keeps the old one for Undo.
  * Done adds the draft to the kept areas (or replaces the one it was editing); Stop drops it.
- * Nothing is saved yet.
+ * Before Done keeps it, the host may hold it (onKeep returns false), e.g. to ask something first;
+ * the draft then stays open until Done(true) or Stop. Nothing is saved yet.
  */
 import type * as maplibregl from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
@@ -23,10 +24,13 @@ const CLOSE_PX = 18;
 /** Trace points closer than this (in px) are skipped. */
 const TRACE_STEP_PX = 3;
 
-export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKept?: (pts: LngLat[]) => void) {
+/** Asked before an area is kept: its corners, and how many other areas are kept. False holds it. */
+export type OnKeep = (pts: LngLat[], others: number) => boolean;
+
+export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKeep) {
   // The latest handler, so Done never calls a stale one.
-  const kept = useRef(onKept);
-  useEffect(() => { kept.current = onKept; });
+  const keep = useRef(onKeep);
+  useEffect(() => { keep.current = onKeep; });
   const [areas, setAreas] = useState<LngLat[][]>([]);
   const [draft, setDraftState] = useState<Draft | null>(null);
   /** The line being traced, while the finger is down. */
@@ -61,13 +65,16 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKept?: (pts
     const past = history.current;
     if (past.length) setDraft(past[past.length - 1], past.slice(0, -1));
   }, [setDraft]);
-  const done = useCallback(() => {
+  /** Keep the draft; true if it was kept. `asked`: the host has already said yes, so don't ask it again. */
+  const done = useCallback((asked = false) => {
     const d = now.current;
-    if (!d || d.pts.length < 3) return;
+    if (!d || d.pts.length < 3) return false;
+    const others = areas.length - (d.editing === null ? 0 : 1);
+    if (!asked && keep.current?.(d.pts, others) === false) return false;
     setAreas((all) => (d.editing === null ? [...all, d.pts] : all.map((a, i) => (i === d.editing ? d.pts : a))));
     stop();
-    kept.current?.(d.pts);
-  }, [stop]);
+    return true;
+  }, [areas, stop]);
   /** Take a kept area off: the one being changed, or by number. */
   const remove = useCallback((i: number) => {
     setAreas((all) => all.filter((_, j) => j !== i));
@@ -184,6 +191,8 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKept?: (pts
     startAgain: () => change({ pts: [], closed: false }),
     /** Take every area off, e.g. when leaving the event. */
     clear: () => { setAreas([]); stop(); },
+    /** Take the kept areas off but go on with the draft, e.g. when it starts a new event. */
+    clearKept: () => setAreas([]),
     /** Before dragging a corner: keep the shape for Undo. */
     grab: () => change({}),
     /** Move corner `i` while dragging (no Undo step: grab took it). */
