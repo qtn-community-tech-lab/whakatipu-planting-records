@@ -5,7 +5,6 @@
  * part's) most planted trees and its last few seasons, kept short. "Add new planting event" then opens the form.
  */
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { placePlantings, type PlacePlantings } from "@/app/playground/record-sheet/actions";
@@ -13,9 +12,10 @@ import { partHref } from "@/components/wrt/sites/site-rows";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber } from "@/lib/wrt/text";
 import type { PlantTotals } from "@/components/wrt/events/map-event-form";
+import { FigureList } from "@/components/wrt/shared/figure-list";
 // The form's own frame and Next button, so the overview sits exactly where the form will.
 import f from "@/components/wrt/events/map-event-form.module.css";
-import s from "./record-sheet.module.css";
+import s from "./place-overview.module.css";
 
 export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
   slug: string;
@@ -39,39 +39,21 @@ export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
 
   return (
     <Frame onStart={onStart} busy={o === undefined}>
-      <button type="button" className={s.ovBack} onClick={onBack}><ArrowLeft size={16} strokeWidth={2.4} />All locations</button>
+      <button type="button" className={s.back} onClick={onBack}><ArrowLeft size={16} strokeWidth={2.4} />All locations</button>
         {o === undefined ? <p className={f.empty}>Loading what&apos;s been planted here…</p> : !o || o.trees.length === 0 ? (
           <p className={f.empty}>Nothing recorded here yet.</p>
         ) : (
           <>
             {fellBack && <p className={f.context}>Nothing recorded at {partName} yet, so this is the whole site.</p>}
-            <section className={s.ov} aria-label="Most planted here">
-              <h3 className={f.groupTitle}>Most planted here</h3>
-              <ul className={s.ovList}>
-                {o.trees.map((t) => (
-                  <li key={t.id}>
-                    <span className={s.ovPhoto} aria-hidden="true">
-                      {t.photo
-                        ? <Image src={t.photo.src} alt="" fill sizes="32px" unoptimized style={{ objectFit: "cover", objectPosition: t.photo.focalPoint }} />
-                        : t.name.charAt(0)}
-                    </span>
-                    <span className={s.ovName}>{t.italic ? <i>{t.name}</i> : t.name}</span>
-                    <b>{formatNumber(t.here)}</b>
-                  </li>
-                ))}
-              </ul>
-            </section>
-            <section className={s.ov} aria-label="Recent seasons">
-              <h3 className={f.groupTitle}>Recent seasons</h3>
-              <ul className={s.ovList}>
-                {o.seasons.map((p) => (
-                  <li key={p.slug}><span className={s.ovName}>{p.label}</span><b>{formatNumber(p.plants)}</b></li>
-                ))}
-              </ul>
-              <Link href={parcelId && partName && !o.wholeSite ? partHref(slug, partName) : `/sites/${slug}`} target="_blank" className={s.ovMore}>
+            <FigureList
+              title="Most planted here"
+              rows={o.trees.map((x) => ({ key: x.id, name: x.name, italic: x.italic, photo: x.photo, figure: formatNumber(x.here) }))}
+            />
+            <FigureList title="Recent seasons" rows={o.seasons.map((x) => ({ key: x.slug, name: x.label, figure: formatNumber(x.plants) }))}>
+              <Link href={parcelId && partName && !o.wholeSite ? partHref(slug, partName) : `/sites/${slug}`} target="_blank" className={s.more}>
                 Every season on the {parcelId && !o.wholeSite ? "part" : "site"} page<ArrowUpRight size={14} strokeWidth={2.4} />
               </Link>
-            </section>
+            </FigureList>
           </>
         )}
     </Frame>
@@ -90,22 +72,13 @@ export function SiteIndex({ sites, totals, onChoose, onStart }: {
   const all = sorted.reduce((sum, x) => sum + plants(x.slug), 0);
   return (
     <Frame onStart={onStart}>
-        <section className={s.ov} aria-label="Sites">
-          <h3 className={f.groupTitle}>{sites.length} sites · {formatNumber(all)} plants</h3>
-          <ul className={s.ovList}>
-            {sorted.map((x) => (
-              <li key={x.slug}>
-                <button type="button" onClick={() => onChoose(x.slug)}>
-                  <span className={s.ovName}>
-                    {x.name}
-                    {x.parts.length > 1 && <small>{x.parts.length} parts</small>}
-                  </span>
-                  <b>{formatNumber(plants(x.slug))}</b>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
+      <FigureList
+        title={`${sites.length} sites · ${formatNumber(all)} plants`}
+        rows={sorted.map((x) => ({
+          key: x.slug, name: x.name, sub: x.parts.length > 1 ? `${x.parts.length} parts` : undefined,
+          figure: formatNumber(plants(x.slug)), onClick: () => onChoose(x.slug),
+        }))}
+      />
     </Frame>
   );
 }

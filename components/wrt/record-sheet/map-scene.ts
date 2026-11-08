@@ -6,20 +6,8 @@ import * as maplibregl from "maplibre-gl";
 // The app's map wrapper loads MapLibre's styles and sets its worker up; the mini map uses it too.
 import "@/components/ui/map";
 import { compactPlantCount } from "@/lib/wrt/site-locations";
+import { SATELLITE } from "@/components/wrt/shared/satellite";
 import type { LngLat, SitePin } from "./sites";
-
-
-/** Esri satellite imagery: the big map and the form's mini map. */
-export const SATELLITE: maplibregl.StyleSpecification = {
-  version: 8,
-  sources: {
-    imagery: {
-      type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
-      tileSize: 256, maxzoom: 19, attribution: "Esri, Maxar, Earthstar Geographics",
-    },
-  },
-  layers: [{ id: "imagery", type: "raster", source: "imagery" }],
-};
 
 /** The box round the points. */
 export const boundsOf = (points: readonly LngLat[]) => points.reduce((b, p) => b.extend(p), new maplibregl.LngLatBounds());

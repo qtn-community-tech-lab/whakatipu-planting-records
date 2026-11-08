@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { plantsLine, type PlantTotals } from "@/components/wrt/events/map-event-form";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { rankMatches } from "@/lib/wrt/text";
-import s from "./record-sheet.module.css";
+import s from "./site-chooser.module.css";
 
 export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
   open: boolean;

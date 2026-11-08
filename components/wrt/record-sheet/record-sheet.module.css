@@ -43,15 +43,11 @@
 .session b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
 
 /* site pins: the app's plant-count markers (styles/app.css); the chosen site's lime.
-   MapLibre places markers with position: absolute and a transform: never set either on .pin or .spot itself */
+   MapLibre places markers with position: absolute and a transform: never set either on .pin itself */
 .pin[data-on] { z-index: 1; }
 /* while drawing an area, taps on the map add corners: the pins stay in sight but don't take them */
 .screen[data-drawing] .pin { pointer-events: none; opacity: 0.6; }
 .pin[data-on] button { background: var(--cn-lime-300); color: var(--cn-green-900); }
-
-/* a new location dropped on the map: a lime teardrop pin */
-.spot { padding-bottom: 6px; }
-.spot::before { content: ""; display: block; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--cn-lime-300); border: 3px solid var(--cn-green-900); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }
 
 /* the + on the far side of the header: a menu for adding to the map */
 .add { position: relative; flex-shrink: 0; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
@@ -82,86 +78,3 @@
   .top { right: auto; }
   .hint { left: calc(50% + 286px); }
 }
-
-/* the site chooser: a full-width bottom sheet on phones that slides up, a centred card on wide screens */
-.chooser {
-  width: 100%; max-width: 100%; max-height: min(85dvh, 720px); margin: auto 0 0; padding: 0; border: 0;
-  border-radius: 28px 28px 0 0; background: #fdfcf9; color: var(--cn-green-900);
-  display: none; flex-direction: column; box-shadow: 0 -16px 44px rgba(0, 0, 0, 0.28);
-}
-.chooser[open] { display: flex; animation: chooser-up 360ms cubic-bezier(0.32, 0.72, 0, 1); }
-.chooser::backdrop { background: rgba(21, 38, 28, 0.45); }
-.chooser[open]::backdrop { animation: chooser-fade 240ms ease-out; }
-@keyframes chooser-up { from { transform: translateY(100%); } }
-@keyframes chooser-fade { from { opacity: 0; } }
-@media (min-width: 768px) {
-  .chooser { width: min(480px, calc(100% - 32px)); margin: auto; border-radius: 24px; }
-  .chooser[open] { animation-name: chooser-in; animation-duration: 260ms; }
-  @keyframes chooser-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
-}
-@media (prefers-reduced-motion: reduce) { .chooser[open], .chooser[open]::backdrop { animation: none; } }
-.chooserHead { display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 8px 22px; }
-.chooserHead h2 { margin: 0; font: 800 20px/1.2 var(--font-sans); }
-.chooserClose { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #e7eee5; font: 600 22px/1 var(--font-sans); color: var(--cn-green-900); cursor: pointer; }
-.chooserSearch { display: block; padding: 4px 18px 10px; }
-.chooserSearch input { width: 100%; min-height: 46px; box-sizing: border-box; padding: 0 14px; border: var(--border-input); border-radius: 14px; background: #fff; font: 500 16px var(--font-sans); color: var(--cn-green-900); }
-.chooserList ul { list-style: none; margin: 0; padding: 0; }
-.chooserList { overflow-y: auto; overscroll-behavior: contain; padding: 0 18px calc(18px + env(safe-area-inset-bottom)); }
-.chooserItem, .chooserRow { border-bottom: 1px solid #e6e8df; }
-.chooserHeader { margin: 0; display: flex; }
-.chooserTrigger { flex: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 60px; padding: 8px 4px; border: 0; background: none; text-align: left; color: var(--cn-green-900); cursor: pointer; }
-.chooserTrigger:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; border-radius: 10px; }
-.chooserTrigger svg { flex-shrink: 0; opacity: 0.6; transition: transform 200ms ease; }
-.chooserTrigger[data-state="open"] svg { transform: rotate(180deg); }
-.chooserText { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
-.chooserText b { font: 700 15.5px/1.25 var(--font-sans); }
-.chooserText span { font: 400 13px/1.3 var(--font-sans); color: #5d6a60; }
-/* Radix gives the content's height as a variable, so opening and closing can animate. */
-.chooserContent { overflow: hidden; }
-.chooserContent[data-state="open"] { animation: chooser-open 220ms cubic-bezier(0.32, 0.72, 0, 1); }
-.chooserContent[data-state="closed"] { animation: chooser-close 180ms ease-in; }
-@keyframes chooser-open { from { height: 0; opacity: 0; } to { height: var(--radix-accordion-content-height); opacity: 1; } }
-@keyframes chooser-close { from { height: var(--radix-accordion-content-height); opacity: 1; } to { height: 0; opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .chooserContent { animation: none !important; } }
-.chooserContent ul { padding: 0 0 10px 8px; }
-.choice { width: 100%; min-height: 46px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 12px; border: 0; border-radius: 12px; background: none; text-align: left; color: var(--cn-green-900); cursor: pointer; }
-.choice .chooserText b { font-weight: 600; font-size: 15px; }
-.chooserRow .choice { padding-left: 4px; min-height: 60px; }
-.chooserRow .choice .chooserText b { font-weight: 700; font-size: 15.5px; }
-.choice:hover { background: #eef2e8; }
-.choice[aria-pressed="true"] { background: #f2f6e6; color: var(--cn-green-800); }
-.choiceOn { flex-shrink: 0; font: 700 12px var(--font-sans); color: var(--cn-green-800); }
-.chooserEmpty { padding: 16px 0; font: 400 14px var(--font-sans); color: #5d6a60; }
-
-/* the mini map in the form: where the event is, at a glance */
-.mini { position: relative; display: block; flex-shrink: 0; width: 100%; height: 150px; padding: 0; border: 0; border-radius: 18px; overflow: hidden; cursor: pointer; background: #1b2a1f; }
-div.mini { cursor: default; } /* desktop: a picture, not a button */
-/* It appears when the sheet goes full screen: its space opens on the sheet's curve while the map
-   pops in with the sidebar's overshoot. */
-.mini { animation: mini-grow 380ms cubic-bezier(0.32, 0.72, 0, 1), mini-pop 560ms cubic-bezier(.34, 1.4, .5, 1); }
-@keyframes mini-grow { from { height: 0; margin-bottom: -12px; } }
-@keyframes mini-pop { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
-@media (prefers-reduced-motion: reduce) { .mini { animation: none; } }
-.miniMap { position: absolute !important; inset: 0; pointer-events: none; }
-.miniPin { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cn-lime-300); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
-.miniLabel { position: absolute; left: 10px; bottom: 10px; max-width: calc(100% - 20px); display: flex; flex-direction: column; gap: 1px; padding: 7px 12px; border-radius: 12px; background: rgba(21, 38, 28, 0.9); color: #f3f6ee; text-align: left; }
-.miniLabel b { font: 700 13.5px/1.2 var(--font-sans); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.miniLabel span { font: 500 12px/1.3 var(--font-sans); color: rgba(243, 246, 238, 0.75); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mini:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
-
-/* The place overview: two short lists, a name and a figure per row */
-.ov { display: flex; flex-direction: column; gap: 8px; }
-.ovList { margin: 0; padding: 0; list-style: none; }
-.ovList li { display: flex; align-items: center; gap: 12px; min-height: 44px; border-bottom: 1px solid var(--border-card, #e6e8df); }
-.ovList li:last-child { border-bottom: 0; }
-.ovList b { font: 700 15px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
-.ovName { flex: 1; min-width: 0; font: 500 15px/1.3 var(--font-sans); color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ovPhoto { position: relative; width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: #e7eee5; font: 800 13px/1 var(--font-sans); color: rgba(21, 38, 28, 0.5); }
-.ovMore { align-self: flex-start; display: inline-flex; align-items: center; gap: 3px; font: 600 13px var(--font-sans); color: var(--cn-green-800); text-decoration: none; }
-.ovMore:hover { text-decoration: underline; text-underline-offset: 3px; }
-/* The index of sites: each row a button to that site's overview */
-.ovList li > button { flex: 1; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
-.ovList li > button:hover .ovName { text-decoration: underline; text-underline-offset: 3px; }
-.ovName small { display: block; font: 400 12.5px/1.3 var(--font-sans); color: var(--text-muted); }
-.ovBack { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; margin: -6px 0 -10px -4px; padding: 0 10px 0 6px; border: 0; border-radius: 999px; background: none; font: 600 14px var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
-.ovBack:hover { background: #eef2e8; }
