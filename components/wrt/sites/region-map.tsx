@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
 import { formatNumber } from "@/lib/wrt/text";
+import { REGION_MAP_OPTIONS } from "@/lib/wrt/map-region";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
 function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation }) {
@@ -103,7 +104,7 @@ export function RegionMap({ locations, siteName }: { locations: MappedSiteLocati
       </div>
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
         role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
-        <Map center={[168.75, -45.01]} zoom={10} theme="light">
+        <Map {...REGION_MAP_OPTIONS} theme="light">
           <MapFocus locations={locations} selected={selected} />
           <MapControls showFullscreen />
           <LocationMarkers key={locations.map((location) => location.id).join("/")} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />

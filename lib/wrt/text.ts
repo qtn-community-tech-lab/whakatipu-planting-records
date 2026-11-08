@@ -108,6 +108,20 @@ export function matchScore(query: string, keys: string[]): number {
   return best;
 }
 
+/**
+ * Items matching a query, best match first (ties by name). With nothing typed,
+ * the whole list in its given order. Used by the form's searchable choosers.
+ */
+export function rankMatches<T extends { name: string; keys: string[] }>(items: readonly T[], query: string): T[] {
+  const q = query.trim();
+  if (!q) return [...items];
+  return items
+    .map((item) => ({ item, score: matchScore(q, item.keys) }))
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
+    .map((r) => r.item);
+}
+
 /** en-NZ number formatting: 7,020. */
 /** "Autumn 2019 → Spring 2024", or just the one season when first and last are the same. */
 export function spanLabel(span: { first: { slug: string; label: string }; last: { slug: string; label: string } }): string {
