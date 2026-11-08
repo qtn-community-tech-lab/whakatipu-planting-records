@@ -196,3 +196,17 @@ button.siteLink { padding: 0; border: 0; background: none; text-align: left; cur
 .partMore { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-card, #e6e8df); }
 .partMore button { min-height: 44px; font: 600 14px var(--font-sans); }
 .partMore button:disabled { color: var(--text-muted); cursor: default; }
+
+/* step 2 with drawn areas: a tab per area (its number, size and plants), then Add area */
+/* margin: the sticky search bar paints 18px of background above itself; keep the tabs clear of it */
+.areaTabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.areaTabs button { flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 14px 6px 8px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); color: var(--cn-green-900); text-align: left; cursor: pointer; }
+.areaTabs button > span:last-child { display: flex; flex-direction: column; line-height: 1.2; }
+.areaTabs b { font: 700 14px var(--font-sans); font-variant-numeric: tabular-nums; }
+.areaTabs small { font: 500 12px var(--font-sans); color: var(--text-muted); }
+.areaTabs [aria-selected="true"] { border-color: var(--cn-green-800); box-shadow: inset 0 0 0 1px var(--cn-green-800); background: #f2f6e6; }
+.areaTabs button:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.areaNo { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--cn-green-900); color: var(--cn-lime-300); font: 800 12px var(--font-sans); }
+.areaTabs .areaAdd { padding: 0 14px; border-style: dashed; color: var(--cn-green-800); font: 600 14px var(--font-sans); gap: 6px; }
+/* the check: each area's species under its own line */
+.sumArea { padding: 10px 0 4px; font: 700 13px var(--font-sans); color: var(--cn-green-800); }

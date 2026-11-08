@@ -66,9 +66,11 @@ interface MapEventFormProps {
   pinMoved?: boolean;
   onMovePin?: () => void;
   onUndoPin?: () => void;
-  /** The planted areas drawn on the map (not saved yet), and drawing another. */
-  areas?: readonly (readonly [number, number])[][];
+  /** The planted areas drawn on the map (not saved yet), in order, and drawing another. Plants are listed per area. */
+  areas?: readonly DrawnArea[];
   onDrawArea?: () => void;
+  /** Tells the host how many plants are listed in each area (by area id), for the map's area buttons. */
+  onAreaPlants?: (plants: Record<number, number>) => void;
   /** Start another was pressed: the form starts over, and the host clears what it holds for the event (its areas). */
   onReset?: () => void;
   /** Kept mounted but out of sight, e.g. while the host shows the place first. */
@@ -76,7 +78,11 @@ interface MapEventFormProps {
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
+/** A drawn planted area: `id` stays with it; its number on screen is its place in the list. */
+export interface DrawnArea { id: number; pts: readonly (readonly [number, number])[] }
+const areaHa = (a: DrawnArea) => formatHectares(hectares(a.pts));
 const NO_SPOT: SpotInfo = { name: "", asPart: false };
+const NO_AREAS: readonly DrawnArea[] = [];
 
 /** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
 export type PlantTotals = Record<string, { plants: number; species: number }>;
@@ -104,10 +110,23 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
 
   const place = spot ? spotInfo.name.trim() || "a new location" : form.site?.name;
   // The planted areas in a line: "1 area · 6.06 ha", "2 areas · 4.03 ha".
-  const areas = props.areas ?? [];
+  const areas = props.areas ?? NO_AREAS;
   const areaLine = areas.length
-    ? `${areas.length === 1 ? "1 area" : `${areas.length} areas`} · ${formatHectares(areas.reduce((t, a) => t + hectares(a), 0))}`
+    ? `${areas.length === 1 ? "1 area" : `${areas.length} areas`} · ${formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0))}`
     : null;
+  // Plants are listed per area: keep every line in an area that still exists (nothing typed is lost).
+  const areaIds = areas.map((a) => a.id).join();
+  const { keepAreas } = form;
+  useEffect(() => { keepAreas(areaIds ? areaIds.split(",").map(Number) : []); }, [areaIds, keepAreas]);
+  // How many plants are in each area, for the buttons on the map.
+  const { onAreaPlants } = props;
+  const plantsKey = form.lines.map((l) => `${l.area}:${l.quantity}`).join();
+  useEffect(() => {
+    const out: Record<number, number> = {};
+    for (const l of form.lines) if (l.area !== undefined && l.speciesId) out[l.area] = (out[l.area] ?? 0) + (Number(l.quantity) || 0);
+    onAreaPlants?.(out);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- plantsKey is what the lines say
+  }, [plantsKey, onAreaPlants]);
 
   useEffect(() => { onStepChange?.(form.preview ? LAST_STEP : step); }, [step, form.preview, onStepChange]);
   // Always, even with no site: the host shows the site in the header and title, so it must never keep an old one.
@@ -123,7 +142,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
   });
 
   if (form.preview) {
-    return <Preview summary={describeEvent(form.preview, options)} location={location} areaLine={areaLine} plantedArea={plantedArea} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Preview summary={describeEvent(form.preview, options)} location={location} areaLine={areaLine} areas={areas} plantedArea={plantedArea} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${EVENT_STEPS[step + 1].title}` : "Submit planting event";
@@ -157,7 +176,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
           </div>
         )}
         {step === STEP.whereWhen && <WhereWhen {...props} form={form} />}
-        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
+        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} areas={areas} onDrawArea={props.onDrawArea} />}
         {step === STEP.check && (
           <>
             {plantedArea ?? (
@@ -169,7 +188,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
               </div>
             )}
             {form.checkedEvent
-              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} areaLine={areaLine} onChange={form.goTo} />
+              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={location} areaLine={areaLine} areas={areas} onChange={form.goTo} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -227,7 +246,7 @@ function Steps({ form }: { form: EventFormState }) {
 }
 
 /** Step 1: the date, then where: the site (or the new location's card), how to mark where exactly, and the mini map. */
-function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin, areas = [], onDrawArea }: MapEventFormProps & { form: EventFormState }) {
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin, areas = NO_AREAS, onDrawArea }: MapEventFormProps & { form: EventFormState }) {
   const { err } = form;
   // A new location away from every site needs one chosen.
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
@@ -316,7 +335,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
         {!spot && form.site && (
           <div className={s.whereTools} role="group" aria-label="Mark where exactly">
             <button type="button" onClick={onAddSpot}><MapPinPlus size={20} strokeWidth={2} />New location</button>
-            <button type="button" onClick={onDrawArea} disabled={!onDrawArea}><Pentagon size={20} strokeWidth={2} />{areas.length ? `${areas.length === 1 ? "Area" : `${areas.length} areas`} ${formatHectares(areas.reduce((t, a) => t + hectares(a), 0))}` : "Draw area"}</button>
+            <button type="button" onClick={onDrawArea} disabled={!onDrawArea}><Pentagon size={20} strokeWidth={2} />{areas.length ? `${areas.length === 1 ? "Area" : `${areas.length} areas`} ${formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0))}` : "Draw area"}</button>
             <button type="button" disabled><SquareDashedMousePointer size={20} strokeWidth={2} />Choose area<span className={s.soon}>Next</span></button>
           </div>
         )}
@@ -412,9 +431,15 @@ function PartPicker({ site, value, totals, onChoose, onAddSpot, onDrawArea }: {
   );
 }
 
-function WhatPlanted({ form, options, suggestions }: {
+function WhatPlanted({ form, options, suggestions, areas, onDrawArea }: {
   form: EventFormState; options: EventFormOptions; suggestions: SpeciesSuggestion[];
+  /** With drawn areas, plants are listed per area: one tab each. */
+  areas: readonly DrawnArea[]; onDrawArea?: () => void;
 }) {
+  // The area being filled in (its id), or undefined when the event has no areas.
+  const [picked, setPicked] = useState<number | undefined>(undefined);
+  const area = areas.some((a) => a.id === picked) ? picked : areas[0]?.id;
+  const plantsIn = (id: number) => form.lines.reduce((t, l) => t + (l.area === id && l.speciesId ? Number(l.quantity) || 0 : 0), 0);
   // The camera is a placeholder for now: tapping it only says photos come later.
   const [cameraTip, setCameraTip] = useState(false);
   useEffect(() => {
@@ -426,13 +451,13 @@ function WhatPlanted({ form, options, suggestions }: {
   const [query, setQuery] = useState("");
   const byId = new Map(options.species.map((x) => [x.id, x]));
   const site = new Map(suggestions.map((x) => [x.speciesId, x]));
-  const lineOf = (id: string) => form.lines.findIndex((l) => l.speciesId === id);
+  const lineOf = (id: string) => form.lines.findIndex((l) => l.speciesId === id && l.area === area);
 
   // The site's species, then anything added from the search. Typing filters them in
   // place and brings in matches from the whole species list underneath.
   const listed = [
     ...suggestions.map((x) => byId.get(x.speciesId)).filter((x): x is SpeciesOption => !!x),
-    ...form.lines.map((l) => byId.get(l.speciesId)).filter((x): x is SpeciesOption => !!x && !site.has(x.id)),
+    ...form.lines.filter((l) => l.area === area).map((l) => byId.get(l.speciesId)).filter((x): x is SpeciesOption => !!x && !site.has(x.id)),
   ];
   const shown = query.trim() ? rankMatches(listed, query) : listed;
   const listedIds = new Set(listed.map((x) => x.id));
@@ -442,7 +467,7 @@ function WhatPlanted({ form, options, suggestions }: {
   const setPlanted = (speciesId: string, value: string) => {
     const i = lineOf(speciesId);
     if (i < 0) {
-      if (value.trim()) form.addSpecies(speciesId, value);
+      if (value.trim()) form.addSpecies(speciesId, value, area);
       return;
     }
     const l = form.lines[i];
@@ -490,6 +515,24 @@ function WhatPlanted({ form, options, suggestions }: {
 
   return (
     <section className={s.group} aria-label="Species and how many">
+      {areas.length > 0 && (
+        // One tab per drawn area: what was planted in each. The event's total adds them up.
+        <div className={s.areaTabs} role="tablist" aria-label="Planted areas">
+          {areas.map((a, i) => {
+            const n = plantsIn(a.id);
+            return (
+              <button
+                key={a.id} type="button" role="tab" aria-selected={a.id === area} onClick={() => setPicked(a.id)}
+                aria-label={`Area ${i + 1}, ${areaHa(a)}, ${n ? `${formatNumber(n)} plants` : "no plants yet"}`}
+              >
+                <span className={s.areaNo}>{i + 1}</span>
+                <span><b>{areaHa(a)}</b><small>{n ? `${formatNumber(n)} plants` : "No plants yet"}</small></span>
+              </button>
+            );
+          })}
+          {onDrawArea && <button type="button" className={s.areaAdd} onClick={onDrawArea}><Plus size={16} strokeWidth={2.6} aria-hidden="true" />Add area</button>}
+        </div>
+      )}
       <div className={s.searchBar}>
         <label className={s.search}>
           <Search size={18} strokeWidth={2.2} />
@@ -514,7 +557,10 @@ function WhatPlanted({ form, options, suggestions }: {
       {shown.length > 0 && (
         <>
           <div className={s.rowsHead} aria-hidden="true">
-            <span className={s.groupTitle}>{query.trim() ? "On this list" : "Planted here before"}</span>
+            <span className={s.groupTitle}>
+              {query.trim() ? "On this list" : "Planted here before"}
+              {area !== undefined && ` · area ${areas.findIndex((a) => a.id === area) + 1}`}
+            </span>
             <span>Here</span>
             <span>Planted</span>
           </div>
@@ -535,9 +581,13 @@ function WhatPlanted({ form, options, suggestions }: {
 }
 
 /** The checked event as a flat list: what Check and submit and the preview both show. */
-function Summary({ summary, location, areaLine, onChange }: {
-  summary: EventSummary; location: string | null; areaLine?: string | null; onChange?: (step: number) => void;
+function Summary({ summary, location, areaLine, areas = NO_AREAS, onChange }: {
+  summary: EventSummary; location: string | null; areaLine?: string | null; areas?: readonly DrawnArea[]; onChange?: (step: number) => void;
 }) {
+  // With areas, what was planted reads area by area: "Area 1 · 11.2 ha", its species, then the next.
+  const byArea = areas.length
+    ? areas.map((a, i) => ({ title: `Area ${i + 1} · ${areaHa(a)}`, species: summary.species.filter((x) => x.area === a.id) })).filter((g) => g.species.length)
+    : [{ title: null, species: summary.species }];
   const group = (title: string, step: number, rows: ReactNode) => (
     <section className={s.sumGroup}>
       <div className={s.sumHead}>
@@ -562,7 +612,12 @@ function Summary({ summary, location, areaLine, onChange }: {
         {row("Season", summary.season)}
       </>)}
       {group("What was planted", STEP.whatPlanted, <>
-        {summary.species.map((x) => <Fragment key={x.name}>{row(x.name, formatNumber(x.quantity))}</Fragment>)}
+        {byArea.map((g) => (
+          <Fragment key={g.title ?? "all"}>
+            {g.title && <div className={s.sumArea}>{g.title}</div>}
+            {g.species.map((x) => <Fragment key={x.name}>{row(x.name, formatNumber(x.quantity))}</Fragment>)}
+          </Fragment>
+        ))}
         {row("Total", `${formatNumber(summary.total)} plants`, true)}
       </>)}
       {!onChange && summary.notes && (
@@ -576,8 +631,8 @@ function Summary({ summary, location, areaLine, onChange }: {
 }
 
 /** What Submit shows while nothing can be saved: the event, plainly marked "Not saved". */
-function Preview({ summary, location, areaLine, plantedArea, onBack, onStartAnother }: {
-  summary: EventSummary; location: string | null; areaLine: string | null; plantedArea?: ReactNode; onBack: () => void; onStartAnother: () => void;
+function Preview({ summary, location, areaLine, areas, plantedArea, onBack, onStartAnother }: {
+  summary: EventSummary; location: string | null; areaLine: string | null; areas: readonly DrawnArea[]; plantedArea?: ReactNode; onBack: () => void; onStartAnother: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
@@ -588,7 +643,7 @@ function Preview({ summary, location, areaLine, plantedArea, onBack, onStartAnot
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>Planting event preview</h2>
         <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
       </header>
-      <div className={s.scroll}>{plantedArea}<Summary summary={summary} location={location} areaLine={areaLine} /></div>
+      <div className={s.scroll}>{plantedArea}<Summary summary={summary} location={location} areaLine={areaLine} areas={areas} /></div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>

@@ -20,6 +20,8 @@ export interface Line {
   speciesId: string;
   /** Kept as typed so a half-typed number is not reformatted under the cursor. */
   quantity: string;
+  /** The drawn area these plants went into (the record sheet's area id), or none. */
+  area?: number;
 }
 
 export type EventFormState = ReturnType<typeof useEventForm>;
@@ -79,7 +81,7 @@ export function useEventForm({
     season,
     seasonYear: seasonYear.trim() === "" ? null : Number(seasonYear),
     polygon: null, // drawn on the map once the map PR lands
-    species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity) })),
+    species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity), ...(l.area === undefined ? {} : { area: l.area }) })),
     notes: notes.trim() || null,
   }, lookups, today);
   const allErrors: FieldErrors = result.ok ? {} : result.errors;
@@ -153,8 +155,11 @@ export function useEventForm({
     changeSeasonYear(value: string) { setSeasonYear(value); setSeasonChosen(true); },
 
     lines,
-    /** Species already picked on other lines, so a species can't be listed twice. */
-    taken: (except: number) => new Set(lines.filter((l) => l.key !== except && l.speciesId).map((l) => l.speciesId)),
+    /** Species already picked on other lines (in the same area), so a species can't be listed twice. */
+    taken: (except: number) => {
+      const area = lines.find((l) => l.key === except)?.area;
+      return new Set(lines.filter((l) => l.key !== except && l.speciesId && l.area === area).map((l) => l.speciesId));
+    },
     updateLine(key: number, change: Partial<Line>) {
       setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...change } : l)));
     },
@@ -163,15 +168,34 @@ export function useEventForm({
       setLines((ls) => [...ls, { key: nextKey, speciesId: "", quantity: "" }]);
       setNextKey((k) => k + 1);
     },
-    /** Add a species in one go (the map view's species rows): fills the empty line if there is one. */
-    addSpecies(speciesId: string, quantity = "") {
+    /** Add a species in one go (the map view's species rows), in an area if given: fills the empty line if there is one. */
+    addSpecies(speciesId: string, quantity = "", area?: number) {
       setLines((ls) => {
-        if (ls.some((l) => l.speciesId === speciesId)) return ls;
+        if (ls.some((l) => l.speciesId === speciesId && l.area === area)) return ls;
         const empty = ls.find((l) => !l.speciesId);
-        if (empty) return ls.map((l) => (l === empty ? { ...l, speciesId, quantity } : l));
-        return [...ls, { key: nextKey, speciesId, quantity }];
+        if (empty) return ls.map((l) => (l === empty ? { ...l, speciesId, quantity, area } : l));
+        return [...ls, { key: nextKey, speciesId, quantity, area }];
       });
       setNextKey((k) => k + 1);
+    },
+    /**
+     * Keep the lines in step with the drawn areas (their ids, in order): a line whose area is gone,
+     * or that has none, moves to the first area, adding to that species there if it's already listed.
+     * With no areas, lines have none. Nothing typed is lost.
+     */
+    keepAreas(ids: readonly number[]) {
+      setLines((ls) => {
+        const target = (l: Line) => (ids.length === 0 ? undefined : l.area !== undefined && ids.includes(l.area) ? l.area : ids[0]);
+        if (ls.every((l) => l.area === target(l))) return ls;
+        const out: Line[] = [];
+        for (const l of ls) {
+          const area = target(l);
+          const same = l.speciesId ? out.find((o) => o.speciesId === l.speciesId && o.area === area) : undefined;
+          if (same) same.quantity = String((Number(same.quantity) || 0) + (Number(l.quantity) || 0));
+          else out.push({ ...l, area });
+        }
+        return out;
+      });
     },
 
     notes, setNotes,

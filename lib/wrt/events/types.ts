@@ -21,6 +21,8 @@ export interface EventSpecies {
   speciesId: string;
   /** Plants of this species planted at the event. Whole number, > 0. */
   quantity: number;
+  /** Which drawn area they went into (the record sheet's area id), when the event has areas. */
+  area?: number;
 }
 
 /** What the form submits, and what create/update accept. */

@@ -77,11 +77,11 @@ export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | nul
       {/* The kept areas, numbered as in the bar. The one being changed is drawn as the draft instead. */}
       {areas.map((a, i) => {
         if (draft?.editing === i) return null;
-        const c = middle(a);
+        const c = middle(a.pts);
         return (
-          <g key={`a${i}`}>
-            <path className={s.kept} d={path(a, true)} />
-            {areas.length > 1 && <><circle className={s.badge} cx={c.x} cy={c.y} r={12} /><text className={s.badgeText} x={c.x} y={c.y}>{i + 1}</text></>}
+          <g key={a.id}>
+            <path className={s.kept} d={path(a.pts, true)} />
+            {<><circle className={s.badge} cx={c.x} cy={c.y} r={12} /><text className={s.badgeText} x={c.x} y={c.y}>{i + 1}</text></>}
           </g>
         );
       })}

@@ -18,6 +18,8 @@ import { simplifyTrace, type LngLat } from "@/lib/wrt/areas/planted-area";
 
 export type DrawMethod = "corners" | "trace";
 export interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null }
+/** A kept area. `id` stays with it (plants are listed against it); its number on screen is its place in the list. */
+export interface Area { id: number; pts: LngLat[] }
 
 /** A tap this close to the first corner (in px) closes the shape. */
 const CLOSE_PX = 18;
@@ -31,7 +33,8 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
   // The latest handler, so Done never calls a stale one.
   const keep = useRef(onKeep);
   useEffect(() => { keep.current = onKeep; });
-  const [areas, setAreas] = useState<LngLat[][]>([]);
+  const [areas, setAreas] = useState<Area[]>([]);
+  const nextId = useRef(1);
   const [draft, setDraftState] = useState<Draft | null>(null);
   /** The line being traced, while the finger is down. */
   const [trace, setTrace] = useState<LngLat[] | null>(null);
@@ -56,7 +59,7 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
 
   /** Draw a new area, or (with `editing`) change a kept one. */
   const start = useCallback((editing: number | null = null) => {
-    const pts = editing === null ? [] : areas[editing] ?? [];
+    const pts = editing === null ? [] : areas[editing]?.pts ?? [];
     setDraft({ method: "corners", pts, closed: pts.length >= 3, editing }, []);
     setTrace(null);
   }, [areas, setDraft]);
@@ -71,7 +74,12 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
     if (!d || d.pts.length < 3) return false;
     const others = areas.length - (d.editing === null ? 0 : 1);
     if (!asked && keep.current?.(d.pts, others) === false) return false;
-    setAreas((all) => (d.editing === null ? [...all, d.pts] : all.map((a, i) => (i === d.editing ? d.pts : a))));
+    if (d.editing === null) {
+      const id = nextId.current++;
+      setAreas((all) => [...all, { id, pts: d.pts }]);
+    } else {
+      setAreas((all) => all.map((a, i) => (i === d.editing ? { ...a, pts: d.pts } : a)));
+    }
     stop();
     return true;
   }, [areas, stop]);

@@ -131,6 +131,8 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     return true;
   };
   const draw = useDrawArea(map, keepArea);
+  // Plants listed in each area (by area id), reported by the form, for the area buttons on the map.
+  const [areaPlants, setAreaPlants] = useState<Record<number, number>>({});
   function removeSpot() {
     setSpot(null);
     setSpotNear(null);
@@ -263,7 +265,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
         </>
       ) : (wide || snap === "peek") && (
         // Phones: just above the sheet at its bar. Pulled up, the sheet covers the map, so no bar.
-        <DrawBar draw={draw} onAdd={newArea} place={placeSite ? (parcel ? `${placeName} · ${partName}` : placeName) : undefined} onChangePlace={changeSite} style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }} />
+        <DrawBar draw={draw} onAdd={newArea} plants={areaPlants} place={placeSite ? (parcel ? `${placeName} · ${partName}` : placeName) : undefined} onChangePlace={changeSite} style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }} />
       )}
       <FormPanel wide={wide} open container={screen} snap={snap} onSnap={snapTo} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         {overview && (place
@@ -274,9 +276,9 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
           pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
-          areas={draw.areas} onDrawArea={newArea} onReset={() => { draw.clear(); setAreaAt(null); }}
+          areas={draw.areas} onDrawArea={newArea} onAreaPlants={setAreaPlants} onReset={() => { draw.clear(); setAreaAt(null); }}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
-          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
+          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
       <ConfirmDialog

@@ -4,16 +4,17 @@
  *   Drawing: one pill that says the next step, with Undo, Start again (or Remove, when changing
  *     a kept area), Done and Stop. Until the first corner goes down, a switch between tapping
  *     corners and tracing.
- *   Not drawing, with areas kept: a button per area (its number and size; tap to change it) and
- *     Add area.
+ *   Not drawing, with areas kept: where they are (with Change), a button per area (its number, size
+ *     and plants; tap to change its shape) and Add another area.
  *   Nothing kept: nothing. Drawing starts from the header's + menu or the form.
  * Every control is a labelled button, and each step is read out by screen readers.
  */
 import { Lasso, Pentagon, Plus, RotateCcw, Trash2, Undo2, X } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { formatHectares, hectares, type LngLat } from "@/lib/wrt/areas/planted-area";
-import type { DrawArea, DrawMethod } from "./use-draw-area";
+import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
+import { formatNumber } from "@/lib/wrt/text";
+import type { Area, DrawArea, DrawMethod } from "./use-draw-area";
 import s from "./draw-area.module.css";
 
 const METHODS: { id: DrawMethod; label: string }[] = [
@@ -21,8 +22,10 @@ const METHODS: { id: DrawMethod; label: string }[] = [
   { id: "trace", label: "Trace" },
 ];
 
-export function DrawBar({ draw, onAdd, place, onChangePlace, style }: {
+export function DrawBar({ draw, onAdd, place, onChangePlace, plants = {}, style }: {
   draw: DrawArea;
+  /** Plants entered for each area (by area id), from the form's "What was planted". */
+  plants?: Record<number, number>;
   /** Where the areas are: the event's site (and part), e.g. "Lake Hayes · Lake Hayes South / Roadside". */
   place?: string;
   /** Change it (the site chooser). */
@@ -104,21 +107,27 @@ export function DrawBar({ draw, onAdd, place, onChangePlace, style }: {
       ) : areas.length > 0 && (
         <>
         <div className={s.keptBar} role="group" aria-label={`Planted areas: ${count(areas.length)}, ${total(areas)}`}>
-          {areas.map((a, i) => (
-            <button key={i} type="button" onClick={() => draw.start(i)} aria-label={`Change area ${i + 1}, ${formatHectares(hectares(a))}`}>
-              <Pentagon size={15} strokeWidth={2.4} aria-hidden="true" />
-              {areas.length > 1 && <span className={s.areaNo}>{i + 1}</span>}
-              <b>{formatHectares(hectares(a))}</b>
-            </button>
-          ))}
-          <button type="button" className={s.addBtn} onClick={onAdd}>
-            <Plus size={16} strokeWidth={2.6} aria-hidden="true" />Add area
+          {areas.map((a, i) => {
+            const n = plants[a.id] ?? 0;
+            const said = `${formatHectares(hectares(a.pts))}, ${n ? `${formatNumber(n)} plants` : "no plants yet"}`;
+            return (
+              <button key={a.id} type="button" className={s.areaBtn} onClick={() => draw.start(i)} aria-label={`Area ${i + 1}, ${said}: change its shape`}>
+                <span className={s.areaNo}>{i + 1}</span>
+                <span className={s.areaText}>
+                  <b>{formatHectares(hectares(a.pts))}</b>
+                  <small>{n ? `${formatNumber(n)} plants` : "No plants yet"}</small>
+                </span>
+              </button>
+            );
+          })}
+          <button type="button" className={s.addBtn} onClick={onAdd} aria-label="Add another area">
+            <Plus size={18} strokeWidth={2.6} aria-hidden="true" /><span className={s.addLabel}>Add another area</span>
           </button>
         </div>
         {/* Where the areas are, plainly: Done may have chosen the site or part from where they were drawn.
             Last in the code, first on screen: the bar stacks upwards. */}
         <p className={s.where}>
-          <span>{place ? <>At <b>{place}</b></> : "Not at a site yet"}</span>
+          <span>{count(areas.length)} {place ? <>at <b>{place}</b></> : "· not at a site yet"}</span>
           <button type="button" onClick={onChangePlace}>{place ? "Change" : "Choose a site"}</button>
         </p>
         </>
@@ -134,7 +143,7 @@ export function DrawBar({ draw, onAdd, place, onChangePlace, style }: {
 }
 
 const count = (n: number) => `${n} planted ${n === 1 ? "area" : "areas"}`;
-const total = (areas: LngLat[][]) => formatHectares(areas.reduce((t, a) => t + hectares(a), 0));
+const total = (areas: Area[]) => formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0));
 
 /** What the pill says: the area once there is one (`lead`), then the next step. */
 function message(method: DrawMethod, n: number, closed: boolean, tracing: boolean, ha: string): { lead?: string; rest: string } {
