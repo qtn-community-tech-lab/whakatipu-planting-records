@@ -20,16 +20,15 @@ button.stepLink { cursor: pointer; }
 
 .titleRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .title { margin: 0; font: 800 28px/1.1 var(--font-sans); letter-spacing: -0.02em; color: var(--text-strong); }
-.total { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
-.total b { font: 800 26px/1 var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
-.total span { font: 400 12.5px/1.4 var(--font-sans); color: var(--text-muted); }
+/* step 2: the running total, one quiet line beside the title */
+.total { flex-shrink: 0; font: 500 13px/1.3 var(--font-sans); color: var(--text-muted); white-space: nowrap; }
+.total b { font: 700 15px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
 
 /* body scrolls; the tree grid sizes to the panel */
 .scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px; padding: 18px 2px 18px 0; container-type: inline-size; }
 
 .group { display: flex; flex-direction: column; gap: 12px; }
 .groupTitle { margin: 0; font: 700 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-eyebrow); }
-.fields { display: flex; flex-direction: column; gap: 12px; }
 
 /* the site, as confirmed by the map */
 .card { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 10px 14px 16px; border-radius: 18px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); }
@@ -38,9 +37,9 @@ button.stepLink { cursor: pointer; }
 .cardText b { font: 700 16.5px/1.2 var(--font-sans); color: var(--text-strong); }
 .cardText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
 .link { align-self: center; min-height: 44px; padding: 0 10px; border: 0; background: none; font: 600 14px var(--font-sans); color: var(--text-brand); cursor: pointer; }
-.fields .link { align-self: flex-end; }
 
 /* season: four options and the year */
+.seasonLink { align-self: flex-start; margin-top: -4px; }
 .seasonRow { display: flex; gap: 8px; align-items: stretch; }
 .segment { flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 4px; border-radius: 14px; background: var(--surface-soft, #e7eee5); }
 .segmentItem { min-height: 40px; border: 0; border-radius: 10px; background: none; font: 600 13.5px var(--font-sans); color: var(--text-body); cursor: pointer; }
@@ -72,7 +71,6 @@ button.stepLink { cursor: pointer; }
 .rowQty:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 1px; }
 .row[data-picked] .rowQty { border-color: var(--cn-green-800); }
 .row[data-invalid] .rowQty { border-color: var(--text-risk, #9a3f17); }
-.rowRemove { justify-self: end; min-height: 44px; border: 0; background: none; font: 600 13px var(--font-sans); color: var(--text-brand); cursor: pointer; }
 .rowError { grid-column: 2 / -1; padding-top: 4px; text-align: right; font: 600 12px/1.3 var(--font-sans); color: var(--text-risk, #9a3f17); }
 
 /* narrow (a phone): the "Here" column folds under the name */
@@ -97,12 +95,9 @@ button.stepLink { cursor: pointer; }
   .steps { display: none; }
   .head { gap: 6px; padding: 12px 0 10px; }
   .title { font-size: 19px; }
-  .total b { font-size: 20px; }
 }
 
 
-/* step 2: which planting this is, carried over from step 1 */
-.context { margin: -4px 0 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font: 500 13.5px/1.4 var(--font-sans); color: var(--text-muted); }
 .inlineLink { border: 0; background: none; padding: 4px 2px; min-height: 32px; font: 600 13.5px var(--font-sans); color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
 /* step 2: search on top, pinned while the list scrolls */
@@ -111,6 +106,11 @@ button.stepLink { cursor: pointer; }
 .search:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
 .search input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: none; outline: none; font: 500 16px var(--font-sans); color: var(--text-strong); }
 .search input::-webkit-search-cancel-button { display: none; }
+.searchCamera { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 12px; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); cursor: pointer; }
+/* the photos taken, then + for another */
+.photos { display: flex; gap: 8px; overflow-x: auto; }
+.photos img, .photos button { flex-shrink: 0; width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+.photos button { display: grid; place-items: center; border: 1.5px dashed #c9d3bf; background: none; color: var(--cn-green-800); cursor: pointer; }
 .searchClear { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-soft, #e7eee5); font: 600 18px/1 var(--font-sans); color: var(--text-strong); cursor: pointer; }
 .problem { margin: 0; padding: 10px 12px; border-radius: 12px; background: #fbefe8; font: 600 13.5px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
 .empty { margin: 0; padding: 12px 0; font: 400 14px var(--font-sans); color: var(--text-muted); }
@@ -133,6 +133,10 @@ button.stepLink { cursor: pointer; }
 
 /* step 1: the date as a card, its native input hidden inside (Change opens the picker) */
 .card:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
+.dateRow { position: relative; display: flex; align-items: center; gap: 10px; padding: 2px 0 2px 14px; border-radius: 14px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); color: var(--cn-green-800); }
+.dateText { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
+.dateText b { font: 600 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
+.dateText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
 .dateInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
 /* step 3: where the area's map snippet will go */
@@ -141,17 +145,31 @@ button.stepLink { cursor: pointer; }
 .areaPlaceholder b { font: 700 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
 .areaPlaceholder span { font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }
 
-/* step 1: add a new location (works now) and draw the area (next PR) */
-.addRow {
-  display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; text-align: left;
-  min-height: 56px; padding: 10px 16px; border-radius: 18px; border: 1.5px dashed #c9cfc0;
-  background: none; font: 700 15px/1.3 var(--font-sans); color: var(--text-brand); cursor: pointer;
-}
-.addRow svg { grid-row: 1 / 3; }
-.addRow > span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
-.addRow:hover:not(:disabled) { border-color: var(--cn-green-800); background: var(--surface-card, #fff); }
-.addRow:disabled { cursor: default; color: var(--text-muted); }
-.addRow > span.soon { justify-self: start; }
-.soon { padding: 3px 8px; border-radius: 999px; background: var(--surface-soft, #e7eee5); font: 700 11px/1.2 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-eyebrow); }
-.spotCard { border-color: var(--cn-lime-300); background: #fbfdf1; }
+/* step 1: a new location placed from the map's + */
+.spotCard { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px 6px; border-color: var(--cn-lime-300); background: #fbfdf1; }
+.spotHead { display: flex; align-items: center; gap: 14px; }
+.spotActions { display: flex; justify-content: flex-end; }
+/* a new location: a pin for the site, or a new part of it */
+.segmentTwo { flex: none; grid-template-columns: 1fr 1fr; }
+.segmentTwo .segmentItem { padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* the new location's name: reads as the card's title, with a pencil and a dashed line to show it can be typed in */
+.spotName { display: flex; align-items: center; gap: 6px; border-bottom: 1.5px dashed #c9d3bf; color: var(--text-muted); cursor: text; }
+.spotName:focus-within { border-bottom-style: solid; border-color: var(--cn-green-800); color: var(--cn-green-800); }
+.spotName input { flex: 1; min-width: 0; min-height: 32px; padding: 0; border: 0; background: none; outline: none; font: 700 16.5px/1.2 var(--font-sans); color: var(--text-strong); }
+.spotName input::placeholder { color: var(--text-strong); opacity: 0.55; }
+.choosePrompt { width: 100%; min-height: 48px; border: 0; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px 8px 16px; border-radius: 16px; background: #fbefe8; font: 600 14px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
 .cardText .spotFar { color: var(--text-risk, #9a3f17); font-weight: 600; }
+
+/* step 1: the site card, then New location and Draw area */
+.whereActions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.whereActions button { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--border-card, #e6e8df); border-radius: 14px; background: var(--surface-card, #fff); font: 600 14px var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
+.whereActions button:hover:enabled { background: #eef2e8; }
+.whereActions button:disabled { cursor: default; color: var(--text-muted); }
+.soon { padding: 2px 7px; border-radius: 999px; background: #e7eee5; font: 700 10.5px/1.3 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* the part, chosen in a small popover on the site card */
+.partTrigger { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; min-height: 32px; margin: -4px 0 -6px -8px; padding: 0 8px; border: 0; border-radius: 10px; background: none; font: 600 13.5px/1.2 var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
+.partTrigger:hover, .partTrigger[data-state="open"] { background: #eef2e8; }
+.partList { z-index: 60; width: min(340px, calc(100vw - 32px)); max-height: min(360px, 60vh); overflow-y: auto; padding: 6px; border-radius: 16px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); box-shadow: 0 16px 40px rgba(21, 38, 28, 0.22); }
+.partList button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px; border: 0; border-radius: 12px; background: none; text-align: left; color: var(--cn-green-800); cursor: pointer; }
+.partList button:hover, .partList button[aria-pressed="true"] { background: #eef2e8; }

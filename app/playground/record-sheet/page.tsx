@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
 import { RecordSheet } from "@/components/wrt/record-sheet";
+import { listPlantingAreaTotals, listSites } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
@@ -21,12 +22,18 @@ type Props = { searchParams: Promise<{ site?: string | string[] }> };
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, suggestions, { site }] = await Promise.all([eventFormOptions(), siteSpeciesSuggestions(), searchParams]);
+  const [options, suggestions, sites, areas, { site }] = await Promise.all([
+    eventFormOptions(), siteSpeciesSuggestions(), listSites(), listPlantingAreaTotals(), searchParams,
+  ]);
+  // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
+  const totals: Record<string, { plants: number; species: number }> = {};
+  for (const x of sites ?? []) if (x.site) totals[x.site] = { plants: x.plants ?? 0, species: x.species ?? 0 };
+  for (const x of areas ?? []) if (x.site && x.wrt_number) totals[`${x.site}/${x.wrt_number}`] = { plants: x.plants ?? 0, species: x.species ?? 0 };
   // Only a site the form knows; anything else starts with every site in view.
   const initialSite = options.sites.some((x) => x.slug === site) ? String(site) : "";
   return (
     <RecordSheet
-      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" suggestions={suggestions}
+      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" suggestions={suggestions} totals={totals}
     />
   );
 }

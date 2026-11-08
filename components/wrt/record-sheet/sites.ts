@@ -1,5 +1,6 @@
 import { siteLocations } from "@/lib/wrt/site-locations";
-import type { LngLat } from "./geometry";
+/** [longitude, latitude] */
+export type LngLat = [number, number];
 
 /** One clickable pin on the map: a site's (or one part's) reference point from data/site-locations.json. */
 export interface SitePin {
@@ -9,17 +10,25 @@ export interface SitePin {
   /** "Lake Hayes · Lake Hayes Pavilion", or just the site's name. */
   label: string;
   at: LngLat;
+  /** Plants recorded here: the part's (or parts') totals, or the whole site's. */
+  plants: number;
 }
 
 /** The pins of the sites the form knows (order schemes have no place, so no pin). */
-export function sitePins(sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[]): SitePin[] {
+export function sitePins(
+  sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[],
+  totals: Record<string, { plants: number }>,
+): SitePin[] {
   const bySlug = new Map(sites.map((x) => [x.slug, x]));
   return siteLocations.flatMap((l) => {
     const site = bySlug.get(l.siteSlug);
     if (!site) return [];
     const parcelId = l.parcelIds?.length === 1 ? l.parcelIds[0] : null;
     const part = parcelId ? site.parts.find((p) => p.id === parcelId) : undefined;
-    return [{ slug: l.siteSlug, parcelId: part ? parcelId : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [l.longitude, l.latitude] as LngLat }];
+    const plants = l.parcelIds
+      ? l.parcelIds.reduce((sum, p) => sum + (totals[`${l.siteSlug}/${p}`]?.plants ?? 0), 0)
+      : totals[l.siteSlug]?.plants ?? 0;
+    return [{ slug: l.siteSlug, parcelId: part ? parcelId : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [l.longitude, l.latitude] as LngLat, plants }];
   });
 }
 

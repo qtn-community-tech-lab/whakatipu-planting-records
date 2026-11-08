@@ -6,22 +6,25 @@
  * choosing a site in the form highlights its pin and flies there.
  *
  * This file only wires the parts together:
- *   geometry.ts / layout.ts   the maths: bounds, padding, snaps
- *   sites.ts                  the pins, from data/site-locations.json
- *   map-scene.ts              MapLibre: the map and the pins
- *   use-record-map.ts         the fly-in, and showing the chosen site
- *   top-bar                   the pill at the top left
+ *   layout.ts           the map padding the form leaves
+ *   sites.ts            the pins, from data/site-locations.json
+ *   map-scene.ts        MapLibre: the map and the pins
+ *   use-record-map.ts   starting the map, and keeping the chosen site in view
+ *   top-bar             back, the site, and the + menu
+ *   site-chooser        the sites-and-parts dialog
+ *   mini-map            the still map shown in the full-screen form
  * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
  */
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
-import { MapEventForm } from "@/components/wrt/events/map-event-form";
+import { MapEventForm, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
-import { FormPanel, type Snap } from "@/components/wrt/shared/form-panel";
-import type { LngLat } from "./geometry";
+import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
-import { nearestPin, pinFor, sitePins, type SitePin } from "./sites";
+import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
+import { MiniMap } from "./mini-map";
+import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
 import s from "./record-sheet.module.css";
@@ -40,22 +43,35 @@ export interface RecordSheetProps {
   exitHref: string;
   /** Each site's most planted species, by site slug, for step 2. */
   suggestions: Record<string, SpeciesSuggestion[]>;
+  /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
+  totals: Record<string, { plants: number; species: number }>;
 }
 
-export function RecordSheet({ initialSite, options, today, exitHref, suggestions }: RecordSheetProps) {
+export function RecordSheet({ initialSite, options, today, exitHref, suggestions, totals }: RecordSheetProps) {
   const wide = useMedia(WIDE);
   const mapEl = useRef<HTMLDivElement>(null);
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
-  const [snap, setSnap] = useState<Snap>("mid");
-  const [pins] = useState(() => sitePins(options.sites));
+  // Phones start with the sheet at its bar, so the map shows first.
+  const [snap, setSnap] = useState<Snap>("peek");
+  const [pins] = useState(() => sitePins(options.sites, totals));
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `place`.
   const [picked, setPicked] = useState<{ slug: string; parcelId: string | null } | null>(null);
   const [place, setPlace] = useState(initialSite);
-  const placeName = options.sites.find((x) => x.slug === place)?.name ?? "Choose a site";
+  const [parcel, setParcel] = useState<string | null>(null);
+  const placeSite = options.sites.find((x) => x.slug === place);
+  const placeName = placeSite?.name ?? "Choose a site";
+  const partName = placeSite ? placeSite.parts.find((p) => p.id === parcel)?.name ?? "The site as a whole" : undefined;
+  // The site title (and the form's "Choose a site") opens the chooser: sites with their parts.
+  const [choosing, setChoosing] = useState(false);
+  const changeSite = useCallback(() => setChoosing(true), []);
+  function chooseSite(slug: string, parcelId: string | null) {
+    setChoosing(false);
+    setPicked({ slug, parcelId });
+    setSnap((at) => (at === "peek" ? "mid" : at));
+  }
 
-  const { map, phase } = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
-  const open = phase === "open";
+  const map = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
 
   // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
   function pickPin(pin: SitePin) {
@@ -69,19 +85,33 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [spot, setSpot] = useState<LngLat | null>(null);
   // The pin nearest the new location: within NEAR_KM it fills in the site (and part); further, the form asks.
   const [spotNear, setSpotNear] = useState<{ label: string; km: number; matched: boolean } | null>(null);
+  // The new location's name, and whether it's a new part of the site or just a pin for it. Not saved yet.
+  const [spotInfo, setSpotInfo] = useState<SpotInfo>({ name: "", asPart: false });
+  function removeSpot() {
+    setSpot(null);
+    setSpotNear(null);
+    setSpotInfo({ name: "", asPart: false });
+  }
+  // What the header, the title and the mini map call this place. While a new location is being
+  // added, that's what it is: never just the site's name, so it can't be mistaken for the site itself.
+  const where = spot
+    ? { title: spotInfo.name.trim() || "New location", sub: !placeSite ? "Not at a known site yet" : `${spotInfo.asPart ? "New part of" : "A pin for"} ${placeSite.name}` }
+    : { title: placeName, sub: partName };
   const startPlacing = useCallback(() => {
     setPlacing(true);
-    setSnap((at) => (at === "full" ? "mid" : at)); // the map has to show
+    setSnap("peek"); // the map has to show, like Draw area
   }, []);
   function placeHere() {
     const at = mapCentre(map);
     setPlacing(false);
     if (!at) return;
     setSpot(at);
+    setSnap("mid"); // up again, to name it
     const near = nearestPin(pins, at);
     const matched = !!near && near.km <= NEAR_KM;
     setSpotNear(near && { label: near.pin.label, km: near.km, matched });
     if (matched) setPicked({ slug: near.pin.slug, parcelId: near.pin.parcelId });
+    else setChoosing(true); // not at a known site: say which it belongs to
   }
   // "Draw area", for now: drop the phone sheet so the map shows. Drawing comes in the next PR.
   const showMap = () => setSnap("peek");
@@ -95,10 +125,11 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   useSpotMarker(map, spot, s.spot);
   // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
   const [focus, setFocus] = useState<LngLat | null>(null);
-  useCamera(map, open, wide, snap, focus);
+  useCamera(map, wide, snap, focus);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
     setPlace(placeSlug);
+    setParcel(parcelId);
     highlightSite(map, placeSlug);
     setFocus(spot ?? pinFor(placeSlug, parcelId));
   }, [map, spot]);
@@ -111,35 +142,28 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   return (
     <div ref={setScreen} className={s.screen}>
       <div ref={mapEl} className={s.map} />
-      <TopBar siteName={placeName} exitHref={exitHref} />
+      <TopBar siteName={spot || placeSite ? where.title : undefined} exitHref={exitHref} onChooseSite={changeSite} onAddLocation={startPlacing} onDrawArea={showMap} />
       {placing ? (
         <>
           {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
-          <p className={s.hint} role="status">
+          {/* On phones, just above the sheet while it's at its bar; under the header once it's pulled up. */}
+          <p className={s.hint} role="status" style={!wide && snap === "peek" ? { top: "auto", bottom: SHEET_HEIGHT.peek + 12 } : undefined}>
             Move the map to the spot
+            <button type="button" className={s.hintCancel} onClick={() => setPlacing(false)}>Cancel</button>
             <button type="button" className={s.hintMain} onClick={placeHere}>Place pin here</button>
-            <button type="button" onClick={() => setPlacing(false)}>Cancel</button>
           </p>
         </>
-      ) : open && (
-        <div className={s.tools}>
-          <button type="button" className={s.tool} onClick={startPlacing}>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><path d="M12 7v5M9.5 9.5h5" /></svg>
-            New location
-          </button>
-          <button type="button" className={s.tool} onClick={showMap} title="Drawing the planted area comes in the next PR">
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l9-2 5 9-7 7-8-5z" /></svg>
-            Draw area <span className={s.soon}>Next</span>
-          </button>
-        </div>
-      )}
-      <FormPanel wide={wide} open={open} container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={placeName}>
+      ) : null}
+      <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         <MapEventForm
-          options={options} today={today} initialPlace={initialSite} picked={picked}
+          options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
-          spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={() => { setSpot(null); setSpotNear(null); }} onDrawArea={showMap}
+          spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
+          // Only when the phone sheet is full screen, covering the big map, does the form show a mini map.
+          plantedArea={focus && !wide && snap === "full" ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={showMap} /> : undefined}
         />
       </FormPanel>
+      <SiteChooser open={choosing} sites={options.sites} totals={totals} value={{ slug: place, parcelId: parcel }} onChoose={chooseSite} onClose={() => setChoosing(false)} />
     </div>
   );
 }

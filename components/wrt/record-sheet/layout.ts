@@ -14,8 +14,3 @@ export function paddingFor(wide: boolean, snap: Snap): Padding {
   // Full screen hides the map; keep the preview's padding under it, ready for coming back.
   return { top: 150, bottom: SHEET_HEIGHT[snap === "full" ? "mid" : snap] - 28, left: 0, right: 0 };
 }
-
-/** The same padding with a margin round it. */
-export function withMargin(p: Padding, margin: number): Padding {
-  return { top: p.top + margin, bottom: p.bottom + margin, left: p.left + margin, right: p.right + margin };
-}

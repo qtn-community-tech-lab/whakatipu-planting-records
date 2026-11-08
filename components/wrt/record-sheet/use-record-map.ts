@@ -1,32 +1,22 @@
 "use client";
 /**
- * The map's choreography: fly in to the starting site (or fit every site's
- * pin), then report that the form can open. useCamera then keeps the chosen
- * site or new location centred above the form.
+ * The map: start on the chosen site (or every site's pin), with a pin for each
+ * site. useCamera then keeps the chosen site or new location centred above the form.
  */
 import type * as maplibregl from "maplibre-gl";
-import { useEffect, useRef, useState, type RefObject } from "react";
-import { bezier, boundsOf, centreOf, type LngLat } from "./geometry";
+import { useEffect, useRef, type RefObject } from "react";
 import type { Snap } from "@/components/wrt/shared/form-panel";
-import { paddingFor, withMargin } from "./layout";
-import { createMap, pinMarker, spotMarker } from "./map-scene";
-import { pinFor, type SitePin } from "./sites";
+import { paddingFor } from "./layout";
+import { groupNearbyLocations } from "@/lib/wrt/site-locations";
+import { boundsOf, createMap, pinMarker, spotMarker } from "./map-scene";
+import { pinFor, type LngLat, type SitePin } from "./sites";
 
-/** flying → open (the form comes up). */
-export type Phase = "flying" | "open";
-
-const FLY_DELAY = 350;
-const FLY = 2400;
-/** The pins land this far into the flight; the form opens once the camera has landed
-    (re-centring it earlier would cancel the flight part-way). */
-const PINS_AT = 0.62;
-const OPEN_AT = FLY_DELAY + FLY + 120;
-/** How close to fly in on a chosen site. */
+/** How close to show a chosen site. */
 const SITE_ZOOM = 15;
 
 export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery, onPick }: {
   pins: SitePin[];
-  /** Site slug to fly in to, or "" to show every site. */
+  /** Site slug to start on, or "" to show every site. */
   initialSite: string;
   container: RefObject<HTMLDivElement | null>;
   pinClass: string;
@@ -36,60 +26,65 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   onPick: (pin: SitePin) => void;
 }) {
   const map = useRef<maplibregl.Map | null>(null);
-  const [phase, setPhase] = useState<Phase>("flying");
   // The latest handler, so clicks never call a stale one and the map isn't rebuilt when it changes.
   const pick = useRef(onPick);
   useEffect(() => { pick.current = onPick; });
 
+  // No fly-in: the map starts on the site (or every site's pin), with the sheet at its bar.
   useEffect(() => {
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const all = pins.map((p) => p.at);
-    const m = createMap(container.current!, centreOf(all));
+    const all = boundsOf(pins.map((p) => p.at));
+    const m = createMap(container.current!, all.getCenter());
     map.current = m;
-    const markers = pins.map((p) => pinMarker(p, pinClass, (pin) => pick.current(pin)));
-    const timers: number[] = [];
-    const later = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
-
     m.on("load", () => {
-      const padding = paddingFor(matchMedia(wideQuery).matches, "mid");
+      m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek"));
       const start = initialSite ? pinFor(initialSite) : null;
-      const fit = m.cameraForBounds(boundsOf(all), { padding: withMargin(padding, 40) });
-      const camera = start
-        ? { center: start, zoom: SITE_ZOOM, padding }
-        : { center: centreOf(all), zoom: fit?.zoom ?? 10, padding };
-
-      const showPins = () => markers.forEach((mk) => mk.addTo(m));
-      if (reduce) {
-        m.jumpTo(camera);
-        showPins();
-        setPhase("open");
-        return;
-      }
-      later(FLY_DELAY, () => m.flyTo({ ...camera, duration: FLY, curve: 1.35, easing: bezier(0.45, 0, 0.12, 1), essential: true }));
-      later(FLY_DELAY + FLY * PINS_AT, showPins);
-      later(OPEN_AT, () => setPhase("open"));
+      // cameraForBounds adds the map's own padding (the form's space), so only a margin goes here.
+      m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 });
+      m.getContainer().dataset.chosenSite = initialSite; // the form chose it before the pins existed
+      drawPins();
     });
-
+    // Pins close together on screen become one marker with their total; regrouped as the map moves.
+    let markers: maplibregl.Marker[] = [];
+    let drawn = "";
+    function drawPins() {
+      const groups = groupNearbyLocations(pins.map((p) => m.project(p.at)));
+      const key = JSON.stringify(groups);
+      if (key === drawn) return;
+      drawn = key;
+      markers.forEach((x) => x.remove());
+      markers = groups.map((g) => {
+        const members = g.map((i) => pins[i]);
+        return pinMarker(members, pinClass, () => {
+          if (members.length === 1) return pick.current(members[0]);
+          // Fit the group, but always zoom in some: on a phone one group can already fill the screen.
+          const box = boundsOf(members.map((p) => p.at));
+          const fit = m.cameraForBounds(box, { padding: 40 })?.zoom ?? 0;
+          m.easeTo({ center: box.getCenter(), zoom: Math.min(17, Math.max(fit, m.getZoom() + 1.5)) });
+        }).addTo(m);
+      });
+      highlightSite(map, m.getContainer().dataset.chosenSite ?? "");
+    }
+    m.on("moveend", drawPins);
+    m.on("resize", drawPins);
     return () => {
-      timers.forEach(clearTimeout);
       m.remove();
       map.current = null;
     };
   }, [pins, initialSite, container, pinClass, wideQuery]);
 
-  return { map, phase };
+  return map;
 }
 
 /**
- * The one camera move once the form is open: centre `focus` (the chosen site's pin, or a new
+ * The one camera move: centre `focus` (the chosen site's pin, or a new
  * location) in the part of the map the form leaves. A new focus flies there at site zoom; the
  * sheet changing snap only shifts the padding. One move, so a sheet change never cancels a flight.
  */
-export function useCamera(map: RefObject<maplibregl.Map | null>, open: boolean, wide: boolean, snap: Snap, focus: LngLat | null) {
+export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null) {
   const last = useRef<LngLat | null>(null);
   useEffect(() => {
     const m = map.current;
-    if (!open || !m) return;
+    if (!m) return;
     const moved = !!focus && focus !== last.current;
     last.current = focus;
     m.flyTo({
@@ -98,13 +93,16 @@ export function useCamera(map: RefObject<maplibregl.Map | null>, open: boolean, 
       ...(moved ? { zoom: SITE_ZOOM } : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
     });
-  }, [map, open, wide, snap, focus]);
+  }, [map, wide, snap, focus]);
 }
 
-/** Light up the chosen site's pins. */
+/** Light up the markers holding the chosen site's pins (and remember it, for when they regroup). */
 export function highlightSite(map: RefObject<maplibregl.Map | null>, siteSlug: string) {
-  map.current?.getContainer().querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
-    el.toggleAttribute("data-on", el.dataset.site === siteSlug);
+  const box = map.current?.getContainer();
+  if (!box) return;
+  box.dataset.chosenSite = siteSlug;
+  box.querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
+    el.toggleAttribute("data-on", !!siteSlug && el.dataset.site!.split(" ").includes(siteSlug));
   });
 }
 

@@ -1,29 +1,36 @@
 /**
  * The record sheet's map: satellite imagery and a pin for every site.
- * Everything that touches MapLibre directly lives here; the maths is in geometry.ts.
+ * Everything that touches MapLibre directly lives here.
  */
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import type { LngLat } from "./geometry";
-import type { SitePin } from "./sites";
+import { compactPlantCount } from "@/lib/wrt/site-locations";
+import type { LngLat, SitePin } from "./sites";
 
 // Same worker setup as components/ui/map.tsx.
 if (typeof window !== "undefined" && !maplibregl.getWorkerUrl()) {
   maplibregl.setWorkerUrl(`https://unpkg.com/maplibre-gl@${maplibregl.getVersion()}/dist/maplibre-gl-worker.mjs`);
 }
 
-const IMAGERY = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+/** Esri satellite imagery: the big map and the form's mini map. */
+export const SATELLITE: maplibregl.StyleSpecification = {
+  version: 8,
+  sources: {
+    imagery: {
+      type: "raster", tiles: ["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],
+      tileSize: 256, maxzoom: 19, attribution: "Esri, Maxar, Earthstar Geographics",
+    },
+  },
+  layers: [{ id: "imagery", type: "raster", source: "imagery" }],
+};
 
-export function createMap(container: HTMLElement, start: LngLat): maplibregl.Map {
+/** The box round the points. */
+export const boundsOf = (points: readonly LngLat[]) => points.reduce((b, p) => b.extend(p), new maplibregl.LngLatBounds());
+
+export function createMap(container: HTMLElement, start: maplibregl.LngLatLike): maplibregl.Map {
   return new maplibregl.Map({
     container,
-    style: {
-      version: 8,
-      sources: {
-        imagery: { type: "raster", tiles: [IMAGERY], tileSize: 256, maxzoom: 19, attribution: "Esri, Maxar, Earthstar Geographics" },
-      },
-      layers: [{ id: "imagery", type: "raster", source: "imagery" }],
-    },
+    style: SATELLITE,
     center: start,
     zoom: 10,
     attributionControl: { compact: false },
@@ -32,16 +39,31 @@ export function createMap(container: HTMLElement, start: LngLat): maplibregl.Map
   });
 }
 
-/** A site's pin: a real button, so it can be reached and chosen from the keyboard too. */
-export function pinMarker(pin: SitePin, className: string, onPick: (pin: SitePin) => void) {
-  const el = document.createElement("button");
-  el.type = "button";
+/**
+ * One pin, or several close together on screen: the app's plant-count marker (as on the sites map),
+ * a real button so it can be chosen from the keyboard too. The button sits inside the marker element,
+ * because MapLibre positions that element and the shared marker style would override it.
+ */
+export function pinMarker(members: SitePin[], className: string, onClick: () => void) {
+  const group = members.length > 1;
+  const el = document.createElement("div");
   el.className = className;
-  el.dataset.site = pin.slug;
-  el.setAttribute("aria-label", `Choose ${pin.label}`);
-  el.title = pin.label;
-  el.addEventListener("click", () => onPick(pin));
-  return new maplibregl.Marker({ element: el }).setLngLat(pin.at);
+  el.dataset.site = members.map((p) => p.slug).join(" ");
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = `wrt-location-marker${group ? " wrt-location-marker--group" : ""}`;
+  button.textContent = compactPlantCount(members.reduce((sum, p) => sum + p.plants, 0));
+  if (group) {
+    const places = document.createElement("span");
+    places.className = "wrt-location-marker__places";
+    places.textContent = `${members.length} places`;
+    button.append(places);
+  }
+  button.setAttribute("aria-label", group ? `Zoom to ${members.length} nearby places: ${members.map((p) => p.label).join(", ")}` : `Choose ${members[0].label}`);
+  button.title = members.map((p) => p.label).join(", ");
+  button.addEventListener("click", onClick);
+  el.append(button);
+  return new maplibregl.Marker({ element: el }).setLngLat(boundsOf(members.map((p) => p.at)).getCenter());
 }
 
 /** A new location dropped on the map (not a site yet), styled by `className`. */
