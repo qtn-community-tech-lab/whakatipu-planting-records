@@ -13,8 +13,11 @@ import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
 
 export type Snap = "peek" | "mid" | "full";
-/** How much of the sheet shows at peek and mid, in px; full is the whole container. */
-export const SHEET_HEIGHT = { peek: 88, mid: 560 } as const;
+/** How much of the sheet shows at peek, in px. */
+export const SHEET_HEIGHT = { peek: 88 } as const;
+/** How much of the sheet shows at peek and mid in a container this tall; full is all of it. Mid is half the screen, at most 560px. */
+export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
+  at === "peek" ? SHEET_HEIGHT.peek : Math.min(560, Math.round(containerHeight / 2));
 
 export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, children }: {
   wide: boolean;
@@ -64,7 +67,7 @@ function Sheet({ open, container, snap, onSnap, label, title, heading, children 
     return () => ro.disconnect();
   }, [container]);
 
-  const yFor = (at: Snap) => (at === "full" ? 0 : Math.max(0, height - SHEET_HEIGHT[at]));
+  const yFor = (at: Snap) => (at === "full" ? 0 : Math.max(0, height - sheetHeight(at, height)));
 
   // One spring moves the sheet.
   useEffect(() => {
@@ -79,7 +82,7 @@ function Sheet({ open, container, snap, onSnap, label, title, heading, children 
   useEffect(() => {
     const sp = spring.current;
     if (!height || !sp) return;
-    const target = open ? (snap === "full" ? 0 : Math.max(0, height - SHEET_HEIGHT[snap])) : height;
+    const target = open ? (snap === "full" ? 0 : Math.max(0, height - sheetHeight(snap, height))) : height;
     if (placed.current) sp.to(target, fling.current);
     else sp.set(target);
     placed.current = true;
