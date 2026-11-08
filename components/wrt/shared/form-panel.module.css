@@ -1,13 +1,13 @@
-/* FormPanel: a panel on the right (wide) or a snapping bottom drawer (phones). */
-.side, .bottom {
+/* FormPanel: a panel on the right (wide) or a spring sheet with three snaps (phones). */
+.side, .sheet {
   color: var(--cn-green-900);
   /* forms inside fade sticky bars into --surface-app */
   --surface-app: #fdfcf9; background: var(--surface-app);
-  display: flex; flex-direction: column;
 }
 .side {
   position: absolute; z-index: 4; top: 12px; bottom: 12px; right: 12px;
   width: 560px; max-width: calc(100% - 24px);
+  display: flex; flex-direction: column;
   border-radius: 28px; padding: 22px 22px 0;
   box-shadow: 0 24px 60px rgba(21, 38, 28, 0.35);
   animation: side-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
@@ -15,17 +15,33 @@
 @keyframes side-in { from { transform: translateX(calc(100% + 24px)); } }
 @media (prefers-reduced-motion: reduce) { .side { animation: none; } }
 
-/* vaul draws the drawer inside the container; !important beats its Tailwind classes. */
-.bottom {
-  position: absolute !important; border: 0 !important; background: var(--surface-app) !important;
-  height: 100% !important; max-height: none !important; margin-top: 0 !important;
-  border-radius: 32px 32px 0 0 !important; padding: 0 18px;
-  box-shadow: 0 -16px 44px rgba(0, 0, 0, 0.28);
-}
-.bottom > div:first-child { width: 40px; height: 5px; margin-top: 10px; background: #d4d8cc; }
-.sheetBody { display: flex; flex-direction: column; min-height: 0; flex-shrink: 0; transition: height 500ms cubic-bezier(0.32, 0.72, 0, 1); }
+.eyebrow { flex-shrink: 0; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }
+.side > .eyebrow { padding-bottom: 14px; }
 
-.eyebrow { flex-shrink: 0; padding-bottom: 14px; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }
-
-/* The form fills the panel and scrolls inside it, so its own buttons can stay pinned at the bottom. */
+/* The form fills what shows and scrolls inside it, so its own buttons can stay pinned at the bottom. */
 .scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
+
+/* phones: the sheet is the container's full height and slides; the spring sets its transform */
+.sheet {
+  position: absolute; z-index: 4; inset: 0;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -16px 44px rgba(0, 0, 0, 0.28);
+  transform: translate3d(0, 100vh, 0);
+  will-change: transform;
+  transition: border-radius 200ms ease;
+}
+/* Full screen: square corners, and the bar clears the status bar. */
+.sheet[data-snap="full"] { border-radius: 0; }
+.sheet[data-snap="full"] .bar { padding-top: calc(10px + env(safe-area-inset-top)); }
+.visible { display: flex; flex-direction: column; padding: 0 18px; }
+
+/* the bar: drag it, or use its button; at full screen it is the header */
+.bar { flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 10px 0 12px; touch-action: none; cursor: grab; border-bottom: 1px solid #e6e8df; }
+.bar:active { cursor: grabbing; }
+.handle { grid-column: 1 / -1; justify-self: center; width: 40px; height: 5px; margin-bottom: 10px; border-radius: 3px; background: #d4d8cc; }
+.sheet[data-snap="full"] .handle { display: none; }
+.barText { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.barText b { font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.barButton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: #e7eee5; color: var(--cn-green-800); font: 700 14px var(--font-sans); cursor: pointer; }
+.sheet[data-snap="peek"] .barButton { background: var(--cn-green-800); color: #fff; }
+.barButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }

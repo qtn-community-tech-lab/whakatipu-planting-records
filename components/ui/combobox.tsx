@@ -33,17 +33,9 @@ function ComboboxInput({
   );
 }
 
-/**
- * Where the list is portaled (default: <body>). Inside a drawer, provide the
- * drawer's element: vaul leaves <body> with pointer-events: none, so a list
- * outside the drawer can't be scrolled or clicked.
- */
-const ComboboxPortalContainer = React.createContext<HTMLElement | null>(null);
-
 function ComboboxContent({ className, sideOffset = 6, ...props }: ComboboxPrimitive.Popup.Props & Pick<ComboboxPrimitive.Positioner.Props, "sideOffset">) {
-  const container = React.useContext(ComboboxPortalContainer);
   return (
-    <ComboboxPrimitive.Portal container={container ?? undefined}>
+    <ComboboxPrimitive.Portal>
       <ComboboxPrimitive.Positioner side="bottom" align="start" sideOffset={sideOffset} className="wrt-combobox__positioner">
         <ComboboxPrimitive.Popup data-slot="combobox-content" className={cn("wrt-combobox__popup", className)} {...props} />
       </ComboboxPrimitive.Positioner>
@@ -63,4 +55,4 @@ function ComboboxEmpty({ className, ...props }: ComboboxPrimitive.Empty.Props) {
   return <ComboboxPrimitive.Empty data-slot="combobox-empty" className={cn("wrt-combobox__empty", className)} {...props} />;
 }
 
-export { Combobox, ComboboxPortalContainer, ComboboxInput, ComboboxContent, ComboboxList, ComboboxItem, ComboboxEmpty };
+export { Combobox, ComboboxInput, ComboboxContent, ComboboxList, ComboboxItem, ComboboxEmpty };
