@@ -7,7 +7,7 @@
 import type * as maplibregl from "maplibre-gl";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { bezier, boundsOf, centreOf, type LngLat } from "./geometry";
-import { MID, type Snap } from "@/components/wrt/shared/form-panel";
+import type { Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor, withMargin } from "./layout";
 import { createMap, pinMarker, spotMarker } from "./map-scene";
 import { pinFor, type SitePin } from "./sites";
@@ -51,7 +51,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     const later = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
 
     m.on("load", () => {
-      const padding = paddingFor(matchMedia(wideQuery).matches, MID);
+      const padding = paddingFor(matchMedia(wideQuery).matches, "mid");
       const start = initialSite ? pinFor(initialSite) : null;
       const fit = m.cameraForBounds(boundsOf(all), { padding: withMargin(padding, 40) });
       const camera = start

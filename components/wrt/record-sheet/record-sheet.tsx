@@ -18,7 +18,7 @@ import { MapEventForm } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
-import { FormPanel, MID, PEEK, TALL, type Snap } from "@/components/wrt/shared/form-panel";
+import { FormPanel, type Snap } from "@/components/wrt/shared/form-panel";
 import type { LngLat } from "./geometry";
 import { nearestSite, sitePins } from "./sites";
 import { TopBar } from "./top-bar";
@@ -43,7 +43,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const wide = useMedia(WIDE);
   const mapEl = useRef<HTMLDivElement>(null);
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
-  const [snap, setSnap] = useState<Snap>(MID);
+  const [snap, setSnap] = useState<Snap>("mid");
   const [pins] = useState(() => sitePins(options.sites));
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `place`.
@@ -59,16 +59,16 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [spot, setSpot] = useState<LngLat | null>(null);
   const startPlacing = useCallback(() => {
     setPlacing(true);
-    setSnap(PEEK); // phones: drop the drawer out of the way
+    setSnap("peek"); // phones: drop the sheet out of the way
   }, []);
   const stopPlacing = () => {
     setPlacing(false);
-    setSnap(MID);
+    setSnap("mid");
   };
   const onDrop = useCallback((at: LngLat) => {
     setSpot(at);
     setPlacing(false);
-    setSnap(MID);
+    setSnap("mid");
     const near = nearestSite(pins, at);
     if (near) setPicked({ slug: near });
   }, [pins]);
@@ -82,8 +82,8 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   }, [map, spot]);
 
   const onStepChange = useCallback((step: number) => {
-    // The species list needs the room: raise the phone drawer for it.
-    if (step === STEP.whatPlanted) setSnap(TALL);
+    // The species list needs the room: take the phone sheet full screen for it.
+    if (step === STEP.whatPlanted) setSnap("full");
   }, []);
 
   return (
@@ -107,7 +107,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           </button>
         </div>
       )}
-      <FormPanel wide={wide} open={open} container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={`New planting event at ${placeName}`}>
+      <FormPanel wide={wide} open={open} container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={placeName}>
         <MapEventForm
           options={options} today={today} initialPlace={initialSite} picked={picked}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
