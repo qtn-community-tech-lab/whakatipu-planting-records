@@ -5,7 +5,7 @@
  * between PEEK, MID and TALL. Place it inside a positioned element and pass
  * that element as `container`; the drawer is drawn inside it.
  */
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { ComboboxPortalContainer } from "@/components/ui/combobox";
 import s from "./form-panel.module.css";
@@ -30,6 +30,22 @@ export function FormPanel({ wide, open, container, snap, onSnap, eyebrow, title,
   children: ReactNode;
 }) {
   const [drawerEl, setDrawerEl] = useState<HTMLDivElement | null>(null);
+
+  // shortcut: vaul doesn't pass modal={false} on to Radix Dialog, which then freezes the page
+  // (body pointer-events: none) and hides everything outside the drawer (aria-hidden), so the
+  // map behind can't be used. Undo both once it opens; drop this when vaul forwards `modal`.
+  useEffect(() => {
+    if (wide || !open || !container) return;
+    const id = requestAnimationFrame(() => {
+      document.body.style.pointerEvents = "";
+      container.querySelectorAll("[data-aria-hidden]").forEach((el) => {
+        el.removeAttribute("aria-hidden");
+        el.removeAttribute("data-aria-hidden");
+      });
+    });
+    return () => cancelAnimationFrame(id);
+  }, [wide, open, container]);
+
   const body = (
     <div className={s.scroll} data-vaul-no-drag>
       {/* vaul leaves <body> with pointer-events: none, so dropdowns open their lists in the drawer. */}
