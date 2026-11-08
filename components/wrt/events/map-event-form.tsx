@@ -71,6 +71,8 @@ interface MapEventFormProps {
   onDrawArea?: () => void;
   /** Tells the host how many plants are listed in each area (by area id), for the map's area buttons. */
   onAreaPlants?: (plants: Record<number, number>) => void;
+  /** Tells the host which area's plants are being entered (its id), or null: the map shows that one. */
+  onAreaFocus?: (id: number | null) => void;
   /** Start another was pressed: the form starts over, and the host clears what it holds for the event (its areas). */
   onReset?: () => void;
   /** Kept mounted but out of sight, e.g. while the host shows the place first. */
@@ -176,7 +178,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
           </div>
         )}
         {step === STEP.whereWhen && <WhereWhen {...props} form={form} />}
-        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} areas={areas} onDrawArea={props.onDrawArea} />}
+        {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} areas={areas} onDrawArea={props.onDrawArea} onAreaFocus={props.onAreaFocus} />}
         {step === STEP.check && (
           <>
             {plantedArea ?? (
@@ -431,14 +433,19 @@ function PartPicker({ site, value, totals, onChoose, onAddSpot, onDrawArea }: {
   );
 }
 
-function WhatPlanted({ form, options, suggestions, areas, onDrawArea }: {
+function WhatPlanted({ form, options, suggestions, areas, onDrawArea, onAreaFocus }: {
   form: EventFormState; options: EventFormOptions; suggestions: SpeciesSuggestion[];
   /** With drawn areas, plants are listed per area: one tab each. */
-  areas: readonly DrawnArea[]; onDrawArea?: () => void;
+  areas: readonly DrawnArea[]; onDrawArea?: () => void; onAreaFocus?: (id: number | null) => void;
 }) {
   // The area being filled in (its id), or undefined when the event has no areas.
   const [picked, setPicked] = useState<number | undefined>(undefined);
   const area = areas.some((a) => a.id === picked) ? picked : areas[0]?.id;
+  // The map shows the area being filled in, so plants never go in the wrong one; leaving this step lets it go.
+  useEffect(() => {
+    onAreaFocus?.(area ?? null);
+    return () => onAreaFocus?.(null);
+  }, [area, onAreaFocus]);
   const plantsIn = (id: number) => form.lines.reduce((t, l) => t + (l.area === id && l.speciesId ? Number(l.quantity) || 0 : 0), 0);
   // The camera is a placeholder for now: tapping it only says photos come later.
   const [cameraTip, setCameraTip] = useState(false);

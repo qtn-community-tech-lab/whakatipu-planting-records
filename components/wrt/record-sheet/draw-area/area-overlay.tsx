@@ -13,24 +13,28 @@ import s from "./draw-area.module.css";
 /** Corners closer than this on screen (px) get no + between them. */
 const MID_MIN_PX = 36;
 
-export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | null>; draw: DrawArea }) {
+export function AreaOverlay({ map, draw, shown = null }: {
+  map: RefObject<maplibregl.Map | null>; draw: DrawArea;
+  /** One kept area to bring forward (its id): the map round it darkens a little and the others fade. */
+  shown?: number | null;
+}) {
   const { areas, draft, trace, cursor } = draw;
-  const shown = areas.length > 0 || !!draft;
+  const visible = areas.length > 0 || !!draft;
 
   // Redraw as the map moves, so the shapes stay on their ground. Subscribed once there's a shape:
   // the map is made in the parent's effect, after this one first runs, so it isn't there on mount.
   const [, redraw] = useState(0);
   useEffect(() => {
     const m = map.current;
-    if (!m || !shown) return;
+    if (!m || !visible) return;
     const tick = () => redraw((n) => n + 1);
     m.on("move", tick);
     m.on("resize", tick);
     return () => { m.off("move", tick); m.off("resize", tick); };
-  }, [map, shown]);
+  }, [map, visible]);
 
   const m = map.current;
-  if (!m || !shown) return null;
+  if (!m || !visible) return null;
 
   const px = (at: LngLat) => m.project(at);
   const path = (list: LngLat[], z: boolean) =>
@@ -72,14 +76,18 @@ export function AreaOverlay({ map, draw }: { map: RefObject<maplibregl.Map | nul
   }
 
   const last = pts[pts.length - 1];
+  // The shown area, while nothing is being drawn: everything outside it is darkened (a hole cut in a cover).
+  const focus = !draft ? areas.find((a) => a.id === shown) : undefined;
+  const box = m.getContainer();
   return (
     <svg className={s.overlay} aria-hidden="true">
+      {focus && <path className={s.dim} fillRule="evenodd" d={`M0 0H${box.clientWidth}V${box.clientHeight}H0Z ${path(focus.pts, true)}`} />}
       {/* The kept areas, numbered as in the bar. The one being changed is drawn as the draft instead. */}
       {areas.map((a, i) => {
         if (draft?.editing === i) return null;
         const c = middle(a.pts);
         return (
-          <g key={a.id}>
+          <g key={a.id} className={focus ? (a === focus ? s.focused : s.faded) : undefined}>
             <path className={s.kept} d={path(a.pts, true)} />
             {<><circle className={s.badge} cx={c.x} cy={c.y} r={12} /><text className={s.badgeText} x={c.x} y={c.y}>{i + 1}</text></>}
           </g>

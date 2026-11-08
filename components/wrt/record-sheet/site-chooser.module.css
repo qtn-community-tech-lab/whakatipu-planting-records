@@ -15,9 +15,16 @@
   @keyframes chooser-in { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
 }
 @media (prefers-reduced-motion: reduce) { .chooser[open], .chooser[open]::backdrop { animation: none; } }
-.chooserHead { display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 8px 22px; }
+.chooserHead { position: relative; display: flex; align-items: center; justify-content: space-between; padding: 18px 18px 8px 22px; }
+/* phones: a handle to drag the sheet down by, with room above the title; the header is the drag area */
+.chooserHandle { display: none; }
+@media (max-width: 767px) {
+  .chooser { transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1); }
+  .chooserHead { padding-top: 26px; touch-action: none; cursor: grab; }
+  .chooserHandle { display: block; position: absolute; top: 10px; left: 50%; width: 44px; height: 5px; margin-left: -22px; border-radius: 3px; background: #c9cfc0; }
+}
 .chooserHead h2 { margin: 0; font: 800 20px/1.2 var(--font-sans); }
-.chooserClose { width: 40px; height: 40px; border: 0; border-radius: 50%; background: #e7eee5; font: 600 22px/1 var(--font-sans); color: var(--cn-green-900); cursor: pointer; }
+.chooserClose { flex-shrink: 0; width: 44px; height: 44px; border: 0; border-radius: 50%; background: #e7eee5; font: 600 22px/1 var(--font-sans); color: var(--cn-green-900); cursor: pointer; }
 .chooserSearch { display: block; padding: 4px 18px 10px; }
 .chooserSearch input { width: 100%; min-height: 46px; box-sizing: border-box; padding: 0 14px; border: var(--border-input); border-radius: 14px; background: #fff; font: 500 16px var(--font-sans); color: var(--cn-green-900); }
 .chooserList ul { list-style: none; margin: 0; padding: 0; }

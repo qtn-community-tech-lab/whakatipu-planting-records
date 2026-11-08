@@ -3,7 +3,8 @@
  * Choose where: a search, then every site as an accordion (Radix, one open at a
  * time, animated) that opens to "The site as a whole" and its parts. A site with
  * no parts is a single row. A native <dialog>, so focus, Escape and the backdrop
- * come with it.
+ * come with it. On phones it's a bottom sheet with a handle: drag it (or the title) down to close,
+ * or tap the map above it.
  */
 import { ChevronDown } from "lucide-react";
 import { Accordion } from "radix-ui";
@@ -41,6 +42,24 @@ export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
   });
 
   const amount = (key: string) => plantsLine(totals[key]);
+
+  // Phones: drag the top of the sheet down to close it (past 90px), or let go to put it back.
+  const drag = useRef<{ y: number; id: number } | null>(null);
+  const [pull, setPull] = useState(0);
+  const grab = (e: React.PointerEvent) => {
+    if ((e.target as HTMLElement).closest("button")) return;
+    drag.current = { y: e.clientY, id: e.pointerId };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+  const move = (e: React.PointerEvent) => {
+    if (drag.current?.id === e.pointerId) setPull(Math.max(0, e.clientY - drag.current.y));
+  };
+  const drop = () => {
+    if (!drag.current) return;
+    drag.current = null;
+    if (pull > 90) onClose();
+    setPull(0);
+  };
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
@@ -88,8 +107,10 @@ export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
     <dialog
       ref={dialog} className={s.chooser} aria-labelledby="site-chooser-title"
       onClose={onClose} onClick={(e) => { if (e.target === dialog.current) onClose(); }}
+      style={pull ? { transform: `translateY(${pull}px)`, transition: "none" } : undefined}
     >
-      <header className={s.chooserHead}>
+      <header className={s.chooserHead} onPointerDown={grab} onPointerMove={move} onPointerUp={drop} onPointerCancel={drop}>
+        <span className={s.chooserHandle} aria-hidden="true" />
         <h2 id="site-chooser-title">Where was it planted?</h2>
         <button type="button" className={s.chooserClose} aria-label="Close" onClick={onClose}>×</button>
       </header>

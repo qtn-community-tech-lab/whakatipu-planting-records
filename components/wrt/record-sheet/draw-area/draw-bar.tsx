@@ -22,8 +22,10 @@ const METHODS: { id: DrawMethod; label: string }[] = [
   { id: "trace", label: "Trace" },
 ];
 
-export function DrawBar({ draw, onAdd, place, onChangePlace, plants = {}, style }: {
+export function DrawBar({ draw, onAdd, place, onChangePlace, plants = {}, shown = null, style }: {
   draw: DrawArea;
+  /** The area whose plants are being entered (its id): its button is lit. */
+  shown?: number | null;
   /** Plants entered for each area (by area id), from the form's "What was planted". */
   plants?: Record<number, number>;
   /** Where the areas are: the event's site (and part), e.g. "Lake Hayes · Lake Hayes South / Roadside". */
@@ -111,7 +113,7 @@ export function DrawBar({ draw, onAdd, place, onChangePlace, plants = {}, style 
             const n = plants[a.id] ?? 0;
             const said = `${formatHectares(hectares(a.pts))}, ${n ? `${formatNumber(n)} plants` : "no plants yet"}`;
             return (
-              <button key={a.id} type="button" className={s.areaBtn} onClick={() => draw.start(i)} aria-label={`Area ${i + 1}, ${said}: change its shape`}>
+              <button key={a.id} type="button" className={s.areaBtn} data-shown={a.id === shown || undefined} onClick={() => draw.start(i)} aria-label={`Area ${i + 1}, ${said}: change its shape`}>
                 <span className={s.areaNo}>{i + 1}</span>
                 <span className={s.areaText}>
                   <b>{formatHectares(hectares(a.pts))}</b>
