@@ -13,6 +13,7 @@
  *   top-bar             back, the site, and the + menu
  *   site-chooser        the sites-and-parts dialog
  *   mini-map            the still map shown in the full-screen form
+ *   place-overview      before the form: the index of sites, or what a tapped site has had planted
  * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
  */
 import { useCallback, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -25,6 +26,7 @@ import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form
 import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
 import { MiniMap } from "./mini-map";
+import { PlaceOverview, SiteIndex } from "./place-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
@@ -77,10 +79,17 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     setSnap((at) => (at === "peek" ? "mid" : at));
   }
 
+  // A tapped site first shows what's been planted there; "Add new planting event" opens the form.
+  const [started, setStarted] = useState(false);
+  const [leaving, setLeaving] = useState<SitePin | null>(null);
+  const [formKey, setFormKey] = useState(0);
+
   const map = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
 
   // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
   function pickPin(pin: SitePin) {
+    // Mid-event, another site's pin asks first: the event isn't finished.
+    if (started && pin.slug !== place) return setLeaving(pin);
     setPicked({ slug: pin.slug, parcelId: pin.parcelId });
     setSnap("mid");
   }
@@ -99,12 +108,24 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     setSpotNear(null);
     setSpotInfo({ name: "", asPart: false });
   }
+  // A fresh form (new key) at the other site, back on its overview.
+  function leaveFor(pin: SitePin) {
+    setLeaving(null);
+    setStarted(false);
+    removeSpot();
+    setFormKey((k) => k + 1);
+    setPicked({ slug: pin.slug, parcelId: pin.parcelId });
+    setSnap("mid");
+  }
   // What the header, the title and the mini map call this place. While a new location is being
   // added, that's what it is: never just the site's name, so it can't be mistaken for the site itself.
   const where = spot
     ? { title: spotInfo.name.trim() || "New location", sub: !placeSite ? "Not at a known site yet" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${placeSite.name}` }
     : { title: placeName, sub: partName };
+  // Before an event is started: the chosen site's overview, or with none, the index of sites.
+  const overview = !started && !spot;
   const startPlacing = useCallback(() => {
+    setStarted(true);
     setPlacing("new");
     setSnap("peek"); // the map has to show, like Draw area
   }, []);
@@ -150,7 +171,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const showMap = () => setSnap("peek");
 
   // The cross sits where the map's centre is: the middle of the padding the form leaves.
-  const pad = paddingFor(wide, snap);
+  const pad = paddingFor(wide, snap, screen?.clientHeight ?? 0);
   const cross = screen && {
     left: pad.left + (screen.clientWidth - pad.left - pad.right) / 2,
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
@@ -187,8 +208,11 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
         </>
       ) : null}
       <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
+        {overview && (place
+          ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} />
+          : <SiteIndex sites={options.sites} totals={totals} onChoose={(slug) => chooseSite(slug, null)} onStart={() => setStarted(true)} />)}
         <MapEventForm
-          options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
+          key={formKey} hidden={overview} options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
           pinMoved={pinMoved} onMovePin={startMoving} onUndoPin={undoMove}
@@ -206,6 +230,12 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           <li>Distances, and which site a new location counts as near, will use the new spot.</li>
           <li>Not saved yet: this prototype can&apos;t store changes.</li>
         </ul>
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={!!leaving} title="Leave this planting event?" confirmLabel="Leave event" cancelLabel="Keep editing"
+        onConfirm={() => leaving && leaveFor(leaving)} onCancel={() => setLeaving(null)}
+      >
+        It isn&apos;t finished. What you&apos;ve entered will be cleared, and you&apos;ll see {leaving?.label} instead.
       </ConfirmDialog>
       <SiteChooser open={choosing} sites={options.sites} totals={totals} value={{ slug: place, parcelId: parcel }} onChoose={chooseSite} onClose={() => setChoosing(false)} />
     </div>

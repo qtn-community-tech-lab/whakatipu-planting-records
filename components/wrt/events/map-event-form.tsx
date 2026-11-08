@@ -11,7 +11,7 @@
  *    species. The host widens the panel for this step (onStepChange).
  * 3. Check and submit: a flat summary, then notes, then Submit.
  */
-import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, Search, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, MapPinPlus, Pencil, Pentagon, Plus, Search, SquareDashedMousePointer, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
@@ -65,6 +65,8 @@ interface MapEventFormProps {
   pinMoved?: boolean;
   onMovePin?: () => void;
   onUndoPin?: () => void;
+  /** Kept mounted but out of sight, e.g. while the host shows the place first. */
+  hidden?: boolean;
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
@@ -82,7 +84,7 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onChooseSite, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = { name: "", asPart: false }, onSpotInfo, totals = {}, pinMoved = false, onMovePin, onUndoPin, onStartAnother }: MapEventFormProps & {
+function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onChooseSite, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = { name: "", asPart: false }, onSpotInfo, totals = {}, pinMoved = false, onMovePin, onUndoPin, hidden, onStartAnother }: MapEventFormProps & {
   onStartAnother: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -100,7 +102,8 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   // Always, even with no site: the host shows the site in the header and title, so it must never keep an old one.
   useEffect(() => { onPlaceChange?.(form.placeSlug, form.parcelId); }, [form.placeSlug, form.parcelId, onPlaceChange]);
   // Take up each new pick once, so choosing another site in the form afterwards isn't undone.
-  const applied = useRef(picked);
+  // Starts empty, so a fresh form (Start another, or a new key from the host) takes up the latest pick.
+  const applied = useRef<typeof picked>(null);
   useEffect(() => {
     if (!picked || picked === applied.current) return;
     applied.current = picked;
@@ -116,7 +119,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   const hasErrors = Object.keys(form.errors).length > 0;
 
   return (
-    <form ref={formRef} className={s.form} onSubmit={form.submit} noValidate aria-label="New planting event">
+    <form ref={formRef} className={s.form} onSubmit={form.submit} noValidate aria-label="New planting event" hidden={hidden}>
       <header className={s.head}>
         <Steps form={form} />
         <div className={s.titleRow}>
@@ -130,7 +133,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
         </div>
         {step === STEP.whereWhen && (
           <p className={s.context}>
-            {place ? `At ${place}. First, where and when.` : "Choose where it was planted, then when."}
+            {place ? `At ${place}.` : "Choose when and where it was planted."}
           </p>
         )}
       </header>
@@ -231,97 +234,8 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
 
   return (
     <>
-      {/* Where: the site, and the other two ways to set it (also in the title and the + menu over the map).
-          With a new location, its own card below says where instead. */}
-      {!spot && <section className={s.group} aria-label="Where">
-        <div className={s.card}>
-          <span className={s.cardIcon}><MapPin size={20} strokeWidth={2} /></span>
-          <span className={s.cardText}>
-            <b>{form.site?.name ?? "Choose a site"}</b>
-            {form.site ? (
-              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} />
-            ) : (
-              <span>Or click a pin on the map</span>
-            )}
-            {form.site && (
-              // The site's (or part's) page, in a new tab so the form keeps what's entered.
-              // Parts only have pages when a site has more than one.
-              <Link
-                href={partName && form.site.parts.length > 1 ? partHref(form.site.slug, partName) : `/sites/${form.site.slug}`}
-                target="_blank" className={s.siteLink}
-              >
-                {partName && form.site.parts.length > 1 ? "Part details" : "Site details"}<ArrowUpRight size={14} strokeWidth={2.4} />
-              </Link>
-            )}
-            {/* Some pins are in the wrong place: move this one on the map. Not saved yet. */}
-            {form.site && onMovePin && (
-              pinMoved
-                ? <span className={s.pinMoved}>Pin moved, not saved yet. <button type="button" onClick={onMovePin}>Move again</button> <button type="button" onClick={onUndoPin}>Undo</button></span>
-                : <button type="button" className={s.siteLink} onClick={onMovePin}>Pin in the wrong place? Move it</button>
-            )}
-          </span>
-          <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
-        </div>
-        <div className={s.whereActions}>
-          <button type="button" onClick={onAddSpot}><Plus size={18} strokeWidth={2.2} />New location</button>
-          {/* Drawing the planted area comes in the next PR. */}
-          <button type="button" disabled><Pentagon size={18} strokeWidth={2.2} />Draw area<span className={s.soon}>Next</span></button>
-        </div>
-      </section>}
-      {(siteProblem || unmatched || spot || plantedArea) && <section className={s.group} aria-label="Where">
-        {/* The site is chosen from the panel's title; only a problem with it is raised here. */}
-        {(siteProblem || unmatched) && (
-          // One line that says what's wrong and opens the chooser.
-          <div role={siteProblem ? "alert" : undefined}>
-            <button type="button" className={s.choosePrompt} onClick={onChooseSite}>
-              {siteProblem ?? "This new location isn't at a known site. Choose one."}
-              <ChevronRight size={18} strokeWidth={2.4} />
-            </button>
-          </div>
-        )}
-        {spot && (
-          // The new location replaces the site card: its name (type to change it), how near the site's pin it is,
-          // what it is to the site, and Move / Remove.
-          <div className={cn(s.card, s.spotCard)}>
-            <div className={s.spotHead}>
-              <span className={s.cardIcon} aria-hidden="true"><MapPin size={20} strokeWidth={2} /></span>
-              <span className={s.cardText}>
-                <label className={s.spotName}>
-                  <span className="sr-only">Name of the new location</span>
-                  <input value={spotInfo.name} placeholder="Name this place" onChange={(e) => onSpotInfo?.({ ...spotInfo, name: e.target.value })} autoComplete="off" />
-                  <Pencil size={16} strokeWidth={2.2} />
-                </label>
-                {spotNear && (
-                  <span className={cn(!spotNear.matched && s.spotFar)}>
-                    {spotNear.matched
-                      ? `${spotNear.km < 0.05 ? "Right at" : `${kmLabel(spotNear.km)} from`} ${spotNear.label}`
-                      : `Not at a known site. Nearest: ${spotNear.label}, ${kmLabel(spotNear.km)}.`}
-                  </span>
-                )}
-              </span>
-            </div>
-            {form.site && (
-              <div role="radiogroup" aria-label={`What this location is to ${form.site.name}`} className={cn(s.segment, s.segmentTwo)}>
-                <button type="button" role="radio" aria-checked={!spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: false })}>
-                  New location
-                </button>
-                <button type="button" role="radio" aria-checked={spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: true })}>
-                  New sublocation
-                </button>
-              </div>
-            )}
-            {/* Back out plainly: the form goes back to the site as it was. */}
-            <div className={s.spotActions}>
-              {onRemoveSpot && <button type="button" className={s.spotCancel} onClick={onRemoveSpot}><X size={16} strokeWidth={2.6} />Cancel new location</button>}
-              {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move pin</button>}
-            </div>
-          </div>
-        )}
-        {plantedArea}
-      </section>}
-
       <section className={s.group} aria-label="When">
-        {/* One small row, so it doesn't compete with where: the date, and the season it counts towards. */}
+        {/* First, one small row: the date, and the season it counts towards. */}
         <div className={s.dateRow}>
           <Calendar size={18} strokeWidth={2} />
           <span className={s.dateText}>
@@ -359,6 +273,99 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
         )}
         {seasonProblem && <p className={s.problem} role="alert">{seasonProblem}</p>}
       </section>
+
+      {/* Where: the site as plain text (the title and the + menu over the map change it too), or the new
+          location's card, then the mini map. The parts dropdown also offers a new location and drawing. */}
+      <section className={s.group} aria-label="Where">
+        {!spot && (
+          <div className={s.place}>
+            <div className={s.placeHead}>
+              <b>{form.site?.name ?? "Choose a site"}</b>
+              <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
+            </div>
+            {form.site ? (
+              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} />
+            ) : (
+              <span>Or click a pin on the map</span>
+            )}
+            {form.site && (
+              <span className={s.placeLinks}>
+                {/* The site's (or part's) page, in a new tab so the form keeps what's entered.
+                    Parts only have pages when a site has more than one. */}
+                <Link
+                  href={partName && form.site.parts.length > 1 ? partHref(form.site.slug, partName) : `/sites/${form.site.slug}`}
+                  target="_blank" className={s.siteLink}
+                >
+                  {partName && form.site.parts.length > 1 ? "Part details" : "Site details"}<ArrowUpRight size={14} strokeWidth={2.4} />
+                </Link>
+                {/* Some pins are in the wrong place: move this one on the map. Not saved yet. */}
+                {onMovePin && (
+                  pinMoved
+                    ? <span className={s.pinMoved}>Pin moved, not saved yet. <button type="button" onClick={onMovePin}>Move again</button> <button type="button" onClick={onUndoPin}>Undo</button></span>
+                    : <button type="button" className={s.siteLink} onClick={onMovePin}>Wrong pin? Move it</button>
+                )}
+              </span>
+            )}
+          </div>
+        )}
+        {/* Where exactly at the site: a pin now; drawing a new area, or picking one already drawn, come next. */}
+        {!spot && form.site && (
+          <div className={s.whereTools} role="group" aria-label="Mark where exactly">
+            <button type="button" onClick={onAddSpot}><MapPinPlus size={20} strokeWidth={2} />New location</button>
+            <button type="button" disabled><Pentagon size={20} strokeWidth={2} />Draw area<span className={s.soon}>Next</span></button>
+            <button type="button" disabled><SquareDashedMousePointer size={20} strokeWidth={2} />Choose area<span className={s.soon}>Next</span></button>
+          </div>
+        )}
+        {(siteProblem || unmatched) && (
+          // One line that says what's wrong and opens the chooser.
+          <div role={siteProblem ? "alert" : undefined}>
+            <button type="button" className={s.choosePrompt} onClick={onChooseSite}>
+              {siteProblem ?? "This new location isn't at a known site. Choose one."}
+              <ChevronRight size={18} strokeWidth={2.4} />
+            </button>
+          </div>
+        )}
+        {spot && (
+          // The new location replaces the site card: its name (type to change it), how near the site's pin it is,
+          // what it is to the site, and Cancel / Move pin.
+          <div className={cn(s.card, s.spotCard)}>
+            <div className={s.spotHead}>
+              <span className={s.cardIcon} aria-hidden="true"><MapPin size={20} strokeWidth={2} /></span>
+              <span className={s.cardText}>
+                <label className={s.spotName}>
+                  <span className="sr-only">Name of the new location</span>
+                  <input value={spotInfo.name} placeholder="Name this place" onChange={(e) => onSpotInfo?.({ ...spotInfo, name: e.target.value })} autoComplete="off" />
+                  <Pencil size={16} strokeWidth={2.2} />
+                </label>
+                {spotNear && (
+                  <span className={cn(!spotNear.matched && s.spotFar)}>
+                    {spotNear.matched
+                      ? `${spotNear.km < 0.05 ? "Right at" : `${kmLabel(spotNear.km)} from`} ${spotNear.label}`
+                      : `Not at a known site. Nearest: ${spotNear.label}, ${kmLabel(spotNear.km)}.`}
+                  </span>
+                )}
+              </span>
+            </div>
+            {form.site && (
+              <div role="radiogroup" aria-label={`What this location is to ${form.site.name}`} className={cn(s.segment, s.segmentTwo)}>
+                <button type="button" role="radio" aria-checked={!spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: false })}>
+                  New location
+                </button>
+                <button type="button" role="radio" aria-checked={spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: true })}>
+                  New sublocation
+                </button>
+              </div>
+            )}
+            {/* Back out plainly: the form goes back to the site as it was. */}
+            <div className={s.spotActions}>
+              {onRemoveSpot && <button type="button" className={s.spotCancel} onClick={onRemoveSpot}><X size={16} strokeWidth={2.6} />Cancel new location</button>}
+              {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move pin</button>}
+            </div>
+          </div>
+        )}
+        {plantedArea}
+      </section>
+
     </>
   );
 }

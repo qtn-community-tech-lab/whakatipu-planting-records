@@ -45,7 +45,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
     m.on("load", () => {
       // Before the first draw: the form chose the site before the map existed, so its highlight missed.
       m.getContainer().dataset.chosenSite = initialSite;
-      m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek"));
+      m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek", m.getContainer().clientHeight));
       const start = initialSite ? pinFor(initialSite) : null;
       // cameraForBounds adds the map's own padding (the form's space), so only a margin goes here.
       m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 });
@@ -100,7 +100,7 @@ export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, 
     const moved = !!focus && focus !== last.current;
     last.current = focus;
     m.flyTo({
-      padding: paddingFor(wide, snap),
+      padding: paddingFor(wide, snap, m.getContainer().clientHeight),
       ...(focus ? { center: focus } : {}),
       ...(moved ? { zoom: SITE_ZOOM } : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
