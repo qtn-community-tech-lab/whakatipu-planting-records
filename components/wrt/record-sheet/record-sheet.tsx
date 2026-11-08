@@ -199,7 +199,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
   };
   useSpotMarker(map, spot, s.spot);
-  useCamera(map, wide, snap, focus);
+  useCamera(map, wide, snap, focus, pins);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
     setPlace(placeSlug);
@@ -235,7 +235,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
       )}
       <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         {overview && (place
-          ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} />
+          ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} onBack={() => setPicked({ slug: "", parcelId: null })} />
           : <SiteIndex sites={options.sites} totals={totals} onChoose={(slug) => chooseSite(slug, null)} onStart={() => setStarted(true)} />)}
         <MapEventForm
           key={formKey} hidden={overview} options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}

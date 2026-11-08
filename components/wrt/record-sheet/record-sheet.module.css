@@ -163,3 +163,5 @@ div.mini { cursor: default; } /* desktop: a picture, not a button */
 .ovList li > button { flex: 1; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
 .ovList li > button:hover .ovName { text-decoration: underline; text-underline-offset: 3px; }
 .ovName small { display: block; font: 400 12.5px/1.3 var(--font-sans); color: var(--text-muted); }
+.ovBack { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; margin: -6px 0 -10px -4px; padding: 0 10px 0 6px; border: 0; border-radius: 999px; background: none; font: 600 14px var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
+.ovBack:hover { background: #eef2e8; }

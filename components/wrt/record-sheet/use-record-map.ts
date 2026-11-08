@@ -39,16 +39,14 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
 
   // No fly-in: the map starts on the site (or every site's pin), with the sheet at its bar.
   useEffect(() => {
-    const all = boundsOf(pinsNow.current.map((p) => p.at));
-    const m = createMap(container.current!, all.getCenter());
+    const m = createMap(container.current!, boundsOf(pinsNow.current.map((p) => p.at)).getCenter());
     map.current = m;
     m.on("load", () => {
       // Before the first draw: the form chose the site before the map existed, so its highlight missed.
       m.getContainer().dataset.chosenSite = initialSite;
       m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek", m.getContainer().clientHeight));
       const start = initialSite ? pinFor(initialSite) : null;
-      // cameraForBounds adds the map's own padding (the form's space), so only a margin goes here.
-      m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 });
+      m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : everyPin(m, pinsNow.current));
       drawPins();
     });
     // Pins close together on screen become one marker with their total; regrouped as the map moves.
@@ -87,25 +85,34 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   return map;
 }
 
+/** Every site's pin in view. cameraForBounds adds the map's own padding (the form's space), so only a margin goes here. */
+function everyPin(m: maplibregl.Map, pins: SitePin[]) {
+  const all = boundsOf(pins.map((p) => p.at));
+  return { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 };
+}
+
 /**
- * The one camera move: centre `focus` (the chosen site's pin, or a new
- * location) in the part of the map the form leaves. A new focus flies there at site zoom; the
- * sheet changing snap only shifts the padding. One move, so a sheet change never cancels a flight.
+ * The one camera move: centre `focus` (the chosen site's pin, or a new location) in the part of
+ * the map the form leaves. A new focus flies there at site zoom; losing it (back to every site)
+ * flies out to every pin; the sheet changing snap only shifts the padding. One move, so a sheet
+ * change never cancels a flight.
  */
-export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null) {
+export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null, pins: SitePin[]) {
   const last = useRef<LngLat | null>(null);
   useEffect(() => {
     const m = map.current;
     if (!m) return;
-    const moved = !!focus && focus !== last.current;
+    const moved = focus !== last.current;
+    const cleared = moved && !focus && !!last.current;
     last.current = focus;
     m.flyTo({
       padding: paddingFor(wide, snap, m.getContainer().clientHeight),
       ...(focus ? { center: focus } : {}),
-      ...(moved ? { zoom: SITE_ZOOM } : {}),
+      ...(focus && moved ? { zoom: SITE_ZOOM } : {}),
+      ...(cleared ? everyPin(m, pins) : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
     });
-  }, [map, wide, snap, focus]);
+  }, [map, wide, snap, focus, pins]);
 }
 
 /** Light up the markers holding the chosen site's pins (and remember it, for when they regroup). */
