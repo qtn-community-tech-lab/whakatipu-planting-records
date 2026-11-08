@@ -1,0 +1,31 @@
+/* FormPanel: a panel on the right (wide) or a snapping bottom drawer (phones). */
+.side, .bottom {
+  color: var(--cn-green-900);
+  /* forms inside fade sticky bars into --surface-app */
+  --surface-app: #fdfcf9; background: var(--surface-app);
+  display: flex; flex-direction: column;
+}
+.side {
+  position: absolute; z-index: 4; top: 12px; bottom: 12px; right: 12px;
+  width: 560px; max-width: calc(100% - 24px);
+  border-radius: 28px; padding: 22px 22px 0;
+  box-shadow: 0 24px 60px rgba(21, 38, 28, 0.35);
+  animation: side-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@keyframes side-in { from { transform: translateX(calc(100% + 24px)); } }
+@media (prefers-reduced-motion: reduce) { .side { animation: none; } }
+
+/* vaul draws the drawer inside the container; !important beats its Tailwind classes. */
+.bottom {
+  position: absolute !important; border: 0 !important; background: var(--surface-app) !important;
+  height: 100% !important; max-height: none !important; margin-top: 0 !important;
+  border-radius: 32px 32px 0 0 !important; padding: 0 18px;
+  box-shadow: 0 -16px 44px rgba(0, 0, 0, 0.28);
+}
+.bottom > div:first-child { width: 40px; height: 5px; margin-top: 10px; background: #d4d8cc; }
+.sheetBody { display: flex; flex-direction: column; min-height: 0; flex-shrink: 0; transition: height 500ms cubic-bezier(0.32, 0.72, 0, 1); }
+
+.eyebrow { flex-shrink: 0; padding-bottom: 14px; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }
+
+/* The form fills the panel and scrolls inside it, so its own buttons can stay pinned at the bottom. */
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
