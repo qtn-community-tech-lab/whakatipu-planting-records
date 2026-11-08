@@ -1,7 +1,7 @@
 "use client";
 /**
  * The record sheet: a full-screen satellite map with a pin for every site,
- * and the planting-event form over it (on the right on wide screens, in a
+ * and the planting-event form over it (on the left on wide screens, in a
  * bottom drawer on phones). Clicking a pin chooses that site in the form;
  * choosing a site in the form highlights its pin and flies there.
  *
@@ -20,9 +20,10 @@ import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
 import { FormPanel, type Snap } from "@/components/wrt/shared/form-panel";
 import type { LngLat } from "./geometry";
+import { paddingFor } from "./layout";
 import { nearestSite, sitePins } from "./sites";
 import { TopBar } from "./top-bar";
-import { showSite, useDropPin, useMapPadding, useRecordMap, useSpotMarker } from "./use-record-map";
+import { mapCentre, showSite, useMapPadding, useRecordMap, useSpotMarker } from "./use-record-map";
 import s from "./record-sheet.module.css";
 
 const WIDE = "(min-width: 768px)";
@@ -54,25 +55,31 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const { map, phase } = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: (slug) => setPicked({ slug }) });
   const open = phase === "open";
 
-  // A new location: tap the map to drop it; the nearest site is chosen for it.
+  // A new location: a cross sits in the middle of the map you can see (above the phone sheet,
+  // beside the desktop panel); move the map under it and place the pin. The nearest site is chosen.
   const [placing, setPlacing] = useState(false);
   const [spot, setSpot] = useState<LngLat | null>(null);
   const startPlacing = useCallback(() => {
     setPlacing(true);
-    setSnap("peek"); // phones: drop the sheet out of the way
+    setSnap((at) => (at === "full" ? "mid" : at)); // the map has to show
   }, []);
-  const stopPlacing = () => {
+  function placeHere() {
+    const at = mapCentre(map);
     setPlacing(false);
-    setSnap("mid");
-  };
-  const onDrop = useCallback((at: LngLat) => {
+    if (!at) return;
     setSpot(at);
-    setPlacing(false);
-    setSnap("mid");
     const near = nearestSite(pins, at);
     if (near) setPicked({ slug: near });
-  }, [pins]);
-  useDropPin(map, placing, onDrop);
+  }
+  // "Draw area", for now: drop the phone sheet so the map shows. Drawing comes in the next PR.
+  const showMap = () => setSnap("peek");
+
+  // The cross sits where the map's centre is: the middle of the padding the form leaves.
+  const pad = paddingFor(wide, snap);
+  const cross = screen && {
+    left: pad.left + (screen.clientWidth - pad.left - pad.right) / 2,
+    top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
+  };
   useSpotMarker(map, spot, s.spot);
   useMapPadding(map, open, wide, snap, spot);
 
@@ -91,17 +98,21 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
       <div ref={mapEl} className={s.map} />
       <TopBar siteName={placeName} exitHref={exitHref} />
       {placing ? (
-        <p className={s.hint} role="status">
-          Tap the map where you planted
-          <button type="button" onClick={stopPlacing}>Cancel</button>
-        </p>
+        <>
+          {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
+          <p className={s.hint} role="status">
+            Move the map to the spot
+            <button type="button" className={s.hintMain} onClick={placeHere}>Place pin here</button>
+            <button type="button" onClick={() => setPlacing(false)}>Cancel</button>
+          </p>
+        </>
       ) : open && (
         <div className={s.tools}>
           <button type="button" className={s.tool} onClick={startPlacing}>
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><path d="M12 7v5M9.5 9.5h5" /></svg>
             New location
           </button>
-          <button type="button" className={s.tool} disabled title="Drawing the planted area comes in the next PR">
+          <button type="button" className={s.tool} onClick={showMap} title="Drawing the planted area comes in the next PR">
             <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l9-2 5 9-7 7-8-5z" /></svg>
             Draw area <span className={s.soon}>Next</span>
           </button>
@@ -111,7 +122,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
         <MapEventForm
           options={options} today={today} initialPlace={initialSite} picked={picked}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
-          spot={spot} onAddSpot={startPlacing} onRemoveSpot={() => setSpot(null)}
+          spot={spot} onAddSpot={startPlacing} onRemoveSpot={() => setSpot(null)} onDrawArea={showMap}
         />
       </FormPanel>
     </div>

@@ -48,6 +48,8 @@ interface MapEventFormProps {
   /** Start dropping a new location on the map, and take it off again. */
   onAddSpot?: () => void;
   onRemoveSpot?: () => void;
+  /** "Draw the planted area": for now the host just shows the map (drawing comes next). */
+  onDrawArea?: () => void;
 }
 
 export function MapEventForm(props: MapEventFormProps) {
@@ -55,7 +57,7 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, onAddSpot, onRemoveSpot, onStartAnother }: MapEventFormProps & {
+function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, onAddSpot, onRemoveSpot, onDrawArea, onStartAnother }: MapEventFormProps & {
   onStartAnother: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -110,7 +112,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} spot={spot ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} />}
+        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} spot={spot ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} onDrawArea={onDrawArea} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
@@ -182,9 +184,9 @@ function Steps({ form }: { form: EventFormState }) {
   );
 }
 
-function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemoveSpot }: {
+function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemoveSpot, onDrawArea }: {
   form: EventFormState; options: EventFormOptions; today: string; plantedArea: ReactNode;
-  spot: [number, number] | null; onAddSpot?: () => void; onRemoveSpot?: () => void;
+  spot: [number, number] | null; onAddSpot?: () => void; onRemoveSpot?: () => void; onDrawArea?: () => void;
 }) {
   const { err } = form;
   // A chosen site shows as a card; the pickers show until there is one, on an error, or after Change.
@@ -231,11 +233,11 @@ function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemov
           <button type="button" className={s.addRow} onClick={onAddSpot}>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
             Add a new location
-            <span>Tap the map where you planted</span>
+            <span>Line it up on the map</span>
           </button>
         )}
         {plantedArea ?? (
-          <button type="button" className={s.addRow} disabled>
+          <button type="button" className={s.addRow} disabled={!onDrawArea} onClick={onDrawArea}>
             <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l9-2 5 9-7 7-8-5z" /></svg>
             Draw the planted area
             <span className={s.soon}>Next</span>

@@ -8,7 +8,7 @@ import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
 /**
  * /playground/record-sheet — concept for recording a planting on site. The
  * map fills the screen with a pin for every site, and the planting-event form
- * (the same three steps as /events/new) opens over it: a panel on the right on
+ * (the same three steps as /events/new) opens over it: a panel on the left on
  * wide screens, a drawer from the bottom on phones. `?site=<slug>` flies in to
  * that site first. Not linked from the nav.
  */

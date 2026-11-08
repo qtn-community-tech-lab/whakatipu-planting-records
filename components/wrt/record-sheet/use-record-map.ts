@@ -103,20 +103,10 @@ export function showSite(map: RefObject<maplibregl.Map | null>, siteSlug: string
   if (pin) m.flyTo({ center: pin, zoom: SITE_ZOOM, duration: 1600, essential: true });
 }
 
-/** While `placing`, the next tap on the map drops a new location there. */
-export function useDropPin(map: RefObject<maplibregl.Map | null>, placing: boolean, onDrop: (at: LngLat) => void) {
-  useEffect(() => {
-    const m = map.current;
-    if (!placing || !m) return;
-    const canvas = m.getCanvasContainer();
-    canvas.style.cursor = "crosshair";
-    const drop = (e: maplibregl.MapMouseEvent) => onDrop([e.lngLat.lng, e.lngLat.lat]);
-    m.once("click", drop);
-    return () => {
-      m.off("click", drop);
-      canvas.style.cursor = "";
-    };
-  }, [map, placing, onDrop]);
+/** The map's centre: with padding set, the middle of the part the form leaves. */
+export function mapCentre(map: RefObject<maplibregl.Map | null>): LngLat | null {
+  const c = map.current?.getCenter();
+  return c ? [c.lng, c.lat] : null;
 }
 
 /** The dropped new location's pin, kept in step with `at`. */
