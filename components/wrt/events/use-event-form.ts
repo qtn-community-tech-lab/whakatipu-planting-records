@@ -163,7 +163,7 @@ export function useEventForm({
       setLines((ls) => [...ls, { key: nextKey, speciesId: "", quantity: "" }]);
       setNextKey((k) => k + 1);
     },
-    /** Add a species in one go (the map view's tree tiles): fills the empty line if there is one. */
+    /** Add a species in one go (the map view's species rows): fills the empty line if there is one. */
     addSpecies(speciesId: string, quantity = "") {
       setLines((ls) => {
         if (ls.some((l) => l.speciesId === speciesId)) return ls;

@@ -3,14 +3,11 @@
  * Everything that touches MapLibre directly lives here.
  */
 import * as maplibregl from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css";
+// The app's map wrapper loads MapLibre's styles and sets its worker up; the mini map uses it too.
+import "@/components/ui/map";
 import { compactPlantCount } from "@/lib/wrt/site-locations";
 import type { LngLat, SitePin } from "./sites";
 
-// Same worker setup as components/ui/map.tsx.
-if (typeof window !== "undefined" && !maplibregl.getWorkerUrl()) {
-  maplibregl.setWorkerUrl(`https://unpkg.com/maplibre-gl@${maplibregl.getVersion()}/dist/maplibre-gl-worker.mjs`);
-}
 
 /** Esri satellite imagery: the big map and the form's mini map. */
 export const SATELLITE: maplibregl.StyleSpecification = {

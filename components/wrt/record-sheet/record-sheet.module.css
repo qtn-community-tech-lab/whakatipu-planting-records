@@ -52,10 +52,9 @@
 .spot::before { content: ""; display: block; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--cn-lime-300); border: 3px solid var(--cn-green-900); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }
 
 /* the + on the far side of the header: a menu for adding to the map */
-.addWrap { position: relative; flex-shrink: 0; }
-.add { position: relative; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
+.add { position: relative; flex-shrink: 0; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
 .add[aria-expanded="true"] { background: #c4dc6a; }
-.addMenu { position: absolute; right: 0; top: 48px; min-width: 220px; padding: 6px; border-radius: 18px; display: flex; flex-direction: column; }
+.addMenu { min-width: 220px; padding: 6px; border-radius: 18px; display: flex; flex-direction: column; }
 .addMenu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: none; color: inherit; font: 600 14.5px var(--font-sans); text-align: left; cursor: pointer; }
 .addMenu button:hover { background: rgba(243, 246, 238, 0.1); }
 .soon { padding: 2px 7px; border-radius: 999px; background: rgba(214, 234, 140, 0.18); color: var(--cn-lime-300); font: 700 10.5px/1.3 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
@@ -78,8 +77,6 @@
 @media (min-width: 768px) {
   .top { left: 588px; }
   .session { margin: 0; }
-  /* the menu opens rightwards, into the map, never under the form panel */
-  .addMenu { right: auto; left: 0; }
   .top { right: auto; }
   .hint { left: calc(50% + 286px); }
 }

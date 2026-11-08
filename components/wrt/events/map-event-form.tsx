@@ -70,6 +70,7 @@ interface MapEventFormProps {
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
+const NO_SPOT: SpotInfo = { name: "", asPart: false };
 
 /** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
 export type PlantTotals = Record<string, { plants: number; species: number }>;
@@ -84,9 +85,8 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onChooseSite, onStepChange, onPlaceChange, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = { name: "", asPart: false }, onSpotInfo, totals = {}, pinMoved = false, onMovePin, onUndoPin, hidden, onStartAnother }: MapEventFormProps & {
-  onStartAnother: () => void;
-}) {
+function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
+  const { options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, spotInfo = NO_SPOT, pinMoved, hidden, onStartAnother } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const form = useEventForm({ options, today, formRef, headingRef, initialPlace });
@@ -145,7 +145,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} onChooseSite={onChooseSite} spot={spot ?? null} spotNear={spotNear ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} spotInfo={spotInfo} onSpotInfo={onSpotInfo} totals={totals} pinMoved={pinMoved} onMovePin={onMovePin} onUndoPin={onUndoPin} />}
+        {step === STEP.whereWhen && <WhereWhen {...props} form={form} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
@@ -215,22 +215,15 @@ function Steps({ form }: { form: EventFormState }) {
   );
 }
 
-function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo, onSpotInfo, totals, pinMoved, onMovePin, onUndoPin }: {
-  form: EventFormState; options: EventFormOptions; today: string; plantedArea: ReactNode; onChooseSite?: () => void;
-  spot: [number, number] | null; spotNear: { label: string; km: number; matched: boolean } | null;
-  onAddSpot?: () => void; onRemoveSpot?: () => void;
-  spotInfo: SpotInfo; onSpotInfo?: (info: SpotInfo) => void;
-  totals: PlantTotals;
-} & Pick<MapEventFormProps, "pinMoved" | "onMovePin" | "onUndoPin">) {
+/** Step 1: the date, then where: the site (or the new location's card), how to mark where exactly, and the mini map. */
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, totals = {}, pinMoved, onMovePin, onUndoPin }: MapEventFormProps & { form: EventFormState }) {
   const { err } = form;
-  // The site is shown and changed in the panel's title (the host's chooser). Here: a prompt
-  // when there's none yet, a problem with it, or a new location away from every site.
+  // A new location away from every site needs one chosen.
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
   const siteProblem = err("placeSlug") ?? err("parcelId");
   const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
   const seasonProblem = err("season") ?? err("seasonYear");
   const [seasonOpen, setSeasonOpen] = useState(form.seasonChosen);
-
 
   return (
     <>
@@ -505,7 +498,6 @@ function WhatPlanted({ form, options, suggestions }: {
         {nothingYet && <p className={s.problem} role="alert">Enter how many went in for at least one species.</p>}
         {err("species") && <p className={s.problem} role="alert">{err("species")}</p>}
       </div>
-
 
       {shown.length > 0 && (
         <>

@@ -2,6 +2,7 @@
 import { ArrowLeft, ChevronDown, MapPin, Pentagon, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import s from "./record-sheet.module.css";
 
 /**
@@ -24,23 +25,22 @@ export function TopBar({ siteName, exitHref, onChooseSite, onAddLocation, onDraw
         <b>{siteName ?? "Choose a site"}</b>
         <ChevronDown size={16} strokeWidth={2.4} />
       </button>
-      <div className={s.addWrap} onKeyDown={(e) => { if (e.key === "Escape") setMenu(false); }}>
-        <button type="button" className={s.add} aria-label="Add to the map" aria-expanded={menu} onClick={() => setMenu((m) => !m)}>
+      <Popover open={menu} onOpenChange={setMenu}>
+        <PopoverTrigger className={s.add} aria-label="Add to the map">
           <Plus size={20} strokeWidth={2.6} />
-        </button>
-        {menu && (
-          <div className={s.addMenu}>
-            <button type="button" onClick={pick(onAddLocation)}>
-              <MapPin size={18} strokeWidth={2.2} />
-              New location
-            </button>
-            <button type="button" onClick={pick(onDrawArea)}>
-              <Pentagon size={18} strokeWidth={2.2} />
-              Draw area <span className={s.soon}>Next</span>
-            </button>
-          </div>
-        )}
-      </div>
+        </PopoverTrigger>
+        {/* Opens rightwards, into the map, so on desktop it never covers the form; on phones it shifts back on screen. */}
+        <PopoverContent align="start" sideOffset={8} collisionPadding={12} className={s.addMenu}>
+          <button type="button" onClick={pick(onAddLocation)}>
+            <MapPin size={18} strokeWidth={2.2} />
+            New location
+          </button>
+          <button type="button" onClick={pick(onDrawArea)}>
+            <Pentagon size={18} strokeWidth={2.2} />
+            Draw area <span className={s.soon}>Next</span>
+          </button>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

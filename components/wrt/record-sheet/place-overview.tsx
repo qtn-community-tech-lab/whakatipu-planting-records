@@ -7,13 +7,13 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { placePlantings, type PlacePlantings } from "@/app/playground/record-sheet/actions";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber } from "@/lib/wrt/text";
 import type { PlantTotals } from "@/components/wrt/events/map-event-form";
-// The form's frame, so the button sits where the form's Next does.
+// The form's own frame and Next button, so the overview sits exactly where the form will.
 import f from "@/components/wrt/events/map-event-form.module.css";
 import s from "./record-sheet.module.css";
 
@@ -36,8 +36,7 @@ export function PlaceOverview({ slug, parcelId, partName, onStart }: {
   const fellBack = !!parcelId && !!partName && !!o?.wholeSite;
 
   return (
-    <div className={f.form}>
-      <div className={f.scroll} aria-busy={o === undefined}>
+    <Frame onStart={onStart} busy={o === undefined}>
         {o === undefined ? <p className={f.empty}>Loading what&apos;s been planted here…</p> : !o || o.trees.length === 0 ? (
           <p className={f.empty}>Nothing recorded here yet.</p>
         ) : (
@@ -72,11 +71,7 @@ export function PlaceOverview({ slug, parcelId, partName, onStart }: {
             </section>
           </>
         )}
-      </div>
-      <footer className={f.foot}>
-        <button type="button" className={f.next} onClick={onStart}>Add new planting event<ArrowRight size={18} strokeWidth={2.2} /></button>
-      </footer>
-    </div>
+    </Frame>
   );
 }
 
@@ -91,8 +86,7 @@ export function SiteIndex({ sites, totals, onChoose, onStart }: {
   const sorted = [...sites].sort((a, b) => plants(b.slug) - plants(a.slug));
   const all = sorted.reduce((sum, x) => sum + plants(x.slug), 0);
   return (
-    <div className={f.form}>
-      <div className={f.scroll}>
+    <Frame onStart={onStart}>
         <section className={s.ov} aria-label="Sites">
           <h3 className={f.groupTitle}>{sites.length} sites · {formatNumber(all)} plants</h3>
           <ul className={s.ovList}>
@@ -109,7 +103,15 @@ export function SiteIndex({ sites, totals, onChoose, onStart }: {
             ))}
           </ul>
         </section>
-      </div>
+    </Frame>
+  );
+}
+
+/** The form's frame, with "Add new planting event" where the form's Next sits. */
+function Frame({ children, onStart, busy }: { children: ReactNode; onStart: () => void; busy?: boolean }) {
+  return (
+    <div className={f.form}>
+      <div className={f.scroll} aria-busy={busy}>{children}</div>
       <footer className={f.foot}>
         <button type="button" className={f.next} onClick={onStart}>Add new planting event<ArrowRight size={18} strokeWidth={2.2} /></button>
       </footer>
