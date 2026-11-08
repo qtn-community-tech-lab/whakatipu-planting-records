@@ -213,10 +213,10 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
           <span className={s.cardIcon}><MapPin size={20} strokeWidth={2} /></span>
           <span className={s.cardText}>
             <b>{form.site?.name ?? "Choose a site"}</b>
-            {form.site?.parts.length ? (
-              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} />
+            {form.site ? (
+              <PartPicker site={form.site} value={form.parcelId} totals={totals} onChoose={form.setParcelId} onAddSpot={onAddSpot} />
             ) : (
-              <span>{form.site ? "The site as a whole" : "Or click a pin on the map"}</span>
+              <span>Or click a pin on the map</span>
             )}
           </span>
           <button type="button" className={s.link} onClick={onChooseSite}>{form.site ? "Change" : "Choose"}</button>
@@ -324,9 +324,10 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
  * The part of this site, as a small popover: the site as a whole and each part, with what's been planted there.
  * Quicker than the full site chooser when only the part changes.
  */
-function PartPicker({ site, value, totals, onChoose }: {
+function PartPicker({ site, value, totals, onChoose, onAddSpot }: {
   site: { slug: string; parts: readonly { id: string; name: string }[] }; value: string | null;
   totals: Record<string, { plants: number; species: number }>; onChoose: (id: string | null) => void;
+  onAddSpot?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const options = [{ id: null, name: "The site as a whole" }, ...site.parts];
@@ -347,6 +348,11 @@ function PartPicker({ site, value, totals, onChoose }: {
             {o.id === value && <Check size={18} strokeWidth={2.4} />}
           </button>
         ))}
+        {/* Somewhere not on the list: a new spot, or (next PR) its planting area drawn on the map. */}
+        <div className={s.partMore}>
+          {onAddSpot && <button type="button" onClick={() => { setOpen(false); onAddSpot(); }}><Plus size={18} strokeWidth={2.2} />New location</button>}
+          <button type="button" disabled><Pentagon size={18} strokeWidth={2.2} />Draw out planting spots<span className={s.soon}>Next</span></button>
+        </div>
       </PopoverContent>
     </Popover>
   );

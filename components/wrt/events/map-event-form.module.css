@@ -171,4 +171,7 @@ button.stepLink { cursor: pointer; }
 .partTrigger:hover, .partTrigger[data-state="open"] { background: #eef2e8; }
 .partList { z-index: 60; width: min(340px, calc(100vw - 32px)); max-height: min(360px, 60vh); overflow-y: auto; padding: 6px; border-radius: 16px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); box-shadow: 0 16px 40px rgba(21, 38, 28, 0.22); }
 .partList button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px; border: 0; border-radius: 12px; background: none; text-align: left; color: var(--cn-green-800); cursor: pointer; }
-.partList button:hover, .partList button[aria-pressed="true"] { background: #eef2e8; }
+.partList button:hover:enabled, .partList button[aria-pressed="true"] { background: #eef2e8; }
+.partMore { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-card, #e6e8df); }
+.partMore button { min-height: 44px; font: 600 14px var(--font-sans); }
+.partMore button:disabled { color: var(--text-muted); cursor: default; }
