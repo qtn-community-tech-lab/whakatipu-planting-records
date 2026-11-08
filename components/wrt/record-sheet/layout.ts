@@ -5,9 +5,9 @@
 import { SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 
 /** The form panel's width plus its 12px inset, on the left (keep in step with .side in form-panel.module.css). */
-export const SIDE = 560 + 12;
+const SIDE = 560 + 12;
 
-export interface Padding { top: number; bottom: number; left: number; right: number }
+interface Padding { top: number; bottom: number; left: number; right: number }
 
 export function paddingFor(wide: boolean, snap: Snap): Padding {
   if (wide) return { top: 96, bottom: 24, left: SIDE, right: 24 };

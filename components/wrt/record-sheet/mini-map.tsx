@@ -12,10 +12,14 @@ export function MiniMap({ at, label, sub, isSpot, onOpen }: {
   at: LngLat; label: string; sub?: string;
   /** A new location: the same teardrop pin as on the big map, not a site's dot. */
   isSpot: boolean;
-  onOpen: () => void;
+  /** Phones: tapping it shows the big map. Without it (desktop, where the big map is beside), it's just a picture. */
+  onOpen?: () => void;
 }) {
+  const Box = onOpen ? "button" : "div";
   return (
-    <button type="button" className={s.mini} onClick={onOpen} aria-label={`${label}: show on the map`}>
+    <Box
+      className={s.mini} {...(onOpen ? { type: "button" as const, onClick: onOpen, "aria-label": `${label}: show on the map` } : { role: "img", "aria-label": `Map of ${label}` })}
+    >
       <Map
         className={s.miniMap} theme="light" styles={{ light: SATELLITE, dark: SATELLITE }}
         viewport={{ center: at, zoom: 15 }} onViewportChange={() => {}} interactive={false} attributionControl={false}
@@ -28,6 +32,6 @@ export function MiniMap({ at, label, sub, isSpot, onOpen }: {
         <b>{label}</b>
         {sub && <span>{sub}</span>}
       </span>
-    </button>
+    </Box>
   );
 }

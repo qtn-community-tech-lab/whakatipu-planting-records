@@ -34,7 +34,7 @@ interface MapEventFormProps {
   today: string;
   /** Site to start on ("" for none yet). */
   initialPlace: string;
-  /** A picture of where it is (the host's mini map): top of step 1 and of the check step. */
+  /** A picture of where it is (the host's mini map): in step 1, the check step and the preview. */
   plantedArea?: ReactNode;
   /** The chosen site's most planted species, for step 2. */
   suggestions: SpeciesSuggestion[];
@@ -57,10 +57,18 @@ interface MapEventFormProps {
   spotInfo?: SpotInfo;
   onSpotInfo?: (info: SpotInfo) => void;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the parts list. */
-  totals?: Record<string, { plants: number; species: number }>;
+  totals?: PlantTotals;
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
+
+/** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
+export type PlantTotals = Record<string, { plants: number; species: number }>;
+
+/** "1,280 plants · 30 species", or "No plants recorded yet". */
+export function plantsLine(x?: { plants: number; species: number }) {
+  return x?.plants ? `${formatNumber(x.plants)} plants · ${x.species} species` : "No plants recorded yet";
+}
 
 export function MapEventForm(props: MapEventFormProps) {
   const [round, setRound] = useState(0);
@@ -90,7 +98,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   });
 
   if (form.preview) {
-    return <Preview summary={describeEvent(form.preview, options)} location={location} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Preview summary={describeEvent(form.preview, options)} location={location} plantedArea={plantedArea} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${EVENT_STEPS[step + 1].title}` : "Submit planting event";
@@ -171,7 +179,7 @@ function Steps({ form }: { form: EventFormState }) {
             <span className={s.stepBar} />
             <span className={s.stepLabel}>
               <span className={s.stepN} aria-hidden="true">{state === "reached" && i < form.step ? "✓" : i + 1}</span>
-              <span className={s.stepTitle}>{st.title}</span>
+              <span>{st.title}</span>
             </span>
           </>
         );
@@ -192,7 +200,7 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
   spot: [number, number] | null; spotNear: { label: string; km: number; matched: boolean } | null;
   onAddSpot?: () => void; onRemoveSpot?: () => void;
   spotInfo: SpotInfo; onSpotInfo?: (info: SpotInfo) => void;
-  totals: Record<string, { plants: number; species: number }>;
+  totals: PlantTotals;
 }) {
   const { err } = form;
   // The site is shown and changed in the panel's title (the host's chooser). Here: a prompt
@@ -326,12 +334,11 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
  */
 function PartPicker({ site, value, totals, onChoose, onAddSpot }: {
   site: { slug: string; parts: readonly { id: string; name: string }[] }; value: string | null;
-  totals: Record<string, { plants: number; species: number }>; onChoose: (id: string | null) => void;
+  totals: PlantTotals; onChoose: (id: string | null) => void;
   onAddSpot?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const options = [{ id: null, name: "The site as a whole" }, ...site.parts];
-  const amount = (x?: { plants: number; species: number }) => x?.plants ? `${formatNumber(x.plants)} plants · ${x.species} species` : "No plants recorded yet";
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className={s.partTrigger}>
@@ -343,7 +350,7 @@ function PartPicker({ site, value, totals, onChoose, onAddSpot }: {
           <button key={o.id ?? "whole"} type="button" aria-pressed={o.id === value} onClick={() => { onChoose(o.id); setOpen(false); }}>
             <span className={s.cardText}>
               <b>{o.name}</b>
-              <span>{amount(totals[o.id ? `${site.slug}/${o.id}` : site.slug])}</span>
+              <span>{plantsLine(totals[o.id ? `${site.slug}/${o.id}` : site.slug])}</span>
             </span>
             {o.id === value && <Check size={18} strokeWidth={2.4} />}
           </button>
@@ -522,8 +529,8 @@ function Summary({ summary, location, onChange }: {
 }
 
 /** What Submit shows while nothing can be saved: the event, plainly marked "Not saved". */
-function Preview({ summary, location, onBack, onStartAnother }: {
-  summary: EventSummary; location: string | null; onBack: () => void; onStartAnother: () => void;
+function Preview({ summary, location, plantedArea, onBack, onStartAnother }: {
+  summary: EventSummary; location: string | null; plantedArea?: ReactNode; onBack: () => void; onStartAnother: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
@@ -534,7 +541,7 @@ function Preview({ summary, location, onBack, onStartAnother }: {
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>Planting event preview</h2>
         <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
       </header>
-      <div className={s.scroll}><Summary summary={summary} location={location} /></div>
+      <div className={s.scroll}>{plantedArea}<Summary summary={summary} location={location} /></div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { connection } from "next/server";
 import { RecordSheet } from "@/components/wrt/record-sheet";
 import { listPlantingAreaTotals, listSites } from "@/db/queries/sites";
@@ -26,7 +27,7 @@ export default async function Page({ searchParams }: Props) {
     eventFormOptions(), siteSpeciesSuggestions(), listSites(), listPlantingAreaTotals(), searchParams,
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
-  const totals: Record<string, { plants: number; species: number }> = {};
+  const totals: PlantTotals = {};
   for (const x of sites ?? []) if (x.site) totals[x.site] = { plants: x.plants ?? 0, species: x.species ?? 0 };
   for (const x of areas ?? []) if (x.site && x.wrt_number) totals[`${x.site}/${x.wrt_number}`] = { plants: x.plants ?? 0, species: x.species ?? 0 };
   // Only a site the form knows; anything else starts with every site in view.

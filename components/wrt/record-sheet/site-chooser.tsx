@@ -8,15 +8,16 @@
 import { ChevronDown } from "lucide-react";
 import { Accordion } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
+import { plantsLine, type PlantTotals } from "@/components/wrt/events/map-event-form";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
-import { formatNumber, rankMatches } from "@/lib/wrt/text";
+import { rankMatches } from "@/lib/wrt/text";
 import s from "./record-sheet.module.css";
 
 export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
   open: boolean;
   sites: readonly SiteOption[];
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
-  totals: Record<string, { plants: number; species: number }>;
+  totals: PlantTotals;
   /** The current choice, marked in the list. */
   value: { slug: string; parcelId: string | null };
   onChoose: (slug: string, parcelId: string | null) => void;
@@ -39,11 +40,7 @@ export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
     return siteHit || parts.length ? [{ site, parts }] : [];
   });
 
-  // "1,280 plants · 30 species", or "No plants recorded yet".
-  const amount = (key: string) => {
-    const x = totals[key];
-    return x?.plants ? `${formatNumber(x.plants)} plants · ${x.species} species` : "No plants recorded yet";
-  };
+  const amount = (key: string) => plantsLine(totals[key]);
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;

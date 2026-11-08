@@ -16,7 +16,7 @@
  * The form sits in the shared FormPanel (components/wrt/shared/form-panel).
  */
 import { useCallback, useRef, useState, useSyncExternalStore } from "react";
-import { MapEventForm, type SpotInfo } from "@/components/wrt/events/map-event-form";
+import { MapEventForm, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
@@ -44,7 +44,7 @@ export interface RecordSheetProps {
   /** Each site's most planted species, by site slug, for step 2. */
   suggestions: Record<string, SpeciesSuggestion[]>;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
-  totals: Record<string, { plants: number; species: number }>;
+  totals: PlantTotals;
 }
 
 export function RecordSheet({ initialSite, options, today, exitHref, suggestions, totals }: RecordSheetProps) {
@@ -159,8 +159,8 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
           options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
-          // Only when the phone sheet is full screen, covering the big map, does the form show a mini map.
-          plantedArea={focus && !wide && snap === "full" ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={showMap} /> : undefined}
+          // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
+          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isSpot={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
       <SiteChooser open={choosing} sites={options.sites} totals={totals} value={{ slug: place, parcelId: parcel }} onChoose={chooseSite} onClose={() => setChoosing(false)} />

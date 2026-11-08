@@ -98,6 +98,8 @@ button.stepLink { cursor: pointer; }
 }
 
 
+/* the preview's one line under its title */
+.context { margin: 0; font: 500 13.5px/1.4 var(--font-sans); color: var(--text-muted); }
 .inlineLink { border: 0; background: none; padding: 4px 2px; min-height: 32px; font: 600 13.5px var(--font-sans); color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
 /* step 2: search on top, pinned while the list scrolls */
