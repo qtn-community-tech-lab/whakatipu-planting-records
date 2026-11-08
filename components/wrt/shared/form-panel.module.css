@@ -10,13 +10,10 @@
   display: flex; flex-direction: column;
   border-radius: 28px; padding: 22px 22px 0;
   box-shadow: 0 24px 60px rgba(21, 38, 28, 0.35);
-  animation: side-in 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
-@keyframes side-in { from { transform: translateX(calc(-100% - 24px)); } }
-@media (prefers-reduced-motion: reduce) { .side { animation: none; } }
 
 .eyebrow { flex-shrink: 0; font: 500 12px/1 "JetBrains Mono", ui-monospace, monospace; letter-spacing: 0.14em; text-transform: uppercase; color: #5d6a60; }
-.side > .eyebrow { padding-bottom: 14px; }
+.side > .eyebrow { padding-bottom: 6px; }
 
 /* The form fills what shows and scrolls inside it, so its own buttons can stay pinned at the bottom. */
 .scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
@@ -41,7 +38,20 @@
 .handle { grid-column: 1 / -1; justify-self: center; width: 40px; height: 5px; margin-bottom: 10px; border-radius: 3px; background: #d4d8cc; }
 .sheet[data-snap="full"] .handle { display: none; }
 .barText { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.barText b { font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* the title: plain, or a chooser (pin, title and its line, chevron) */
+.titleText { min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.titleText b { font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.titleText span { font: 500 12.5px/1.3 var(--font-sans); color: #5d6a60; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.titleButton {
+  max-width: 100%; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-left: -8px; padding: 4px 10px 4px 8px;
+  border: 0; border-radius: 14px; background: none; color: var(--cn-green-800); cursor: pointer;
+}
+.titleButton:hover { background: #eef2e8; }
+.titleButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 1px; }
+.titleButton > svg { flex-shrink: 0; }
+/* the pin sits in a soft tile, like the form's cards */
+.titleIcon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; background: #e7eee5; color: var(--cn-green-800); }
+.sideHeading { flex-shrink: 0; padding-bottom: 10px; }
 .barButton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: #e7eee5; color: var(--cn-green-800); font: 700 14px var(--font-sans); cursor: pointer; }
 .sheet[data-snap="peek"] .barButton { background: var(--cn-green-800); color: #fff; }
 .barButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
