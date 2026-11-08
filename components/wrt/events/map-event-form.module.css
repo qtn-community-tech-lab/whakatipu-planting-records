@@ -1,0 +1,139 @@
+/* The planting-event form in a panel over the map (map-event-form.tsx).
+   Canopy colours and type; the host panel sets the width. */
+
+.form { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* header: steps, title, lead */
+.head { flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; padding: 4px 0 14px; border-bottom: 1px solid var(--border-card, #e6e8df); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.stepLink { display: flex; flex-direction: column; gap: 8px; width: 100%; border: 0; padding: 0; background: none; text-align: left; font: inherit; color: inherit; }
+button.stepLink { cursor: pointer; }
+.stepBar { height: 6px; border-radius: 3px; background: var(--surface-soft, #e7eee5); transition: background var(--dur) var(--ease); }
+.stepLabel { display: flex; align-items: center; gap: 8px; font: 600 13px/1.2 var(--font-sans); color: var(--text-muted); }
+.stepN { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: var(--surface-soft, #e7eee5); color: var(--text-strong); }
+.step[data-state="current"] .stepBar, .step[data-state="current"] .stepN { background: var(--cn-green-800); }
+.step[data-state="current"] .stepN { color: #fff; }
+.step[data-state="current"] .stepLabel { font-weight: 700; color: var(--text-strong); }
+.step[data-state="reached"] .stepBar, .step[data-state="reached"] .stepN { background: var(--cn-green-400); }
+.step[data-state="reached"] .stepLabel { color: var(--text-brand); }
+.stepLink:focus-visible, .title:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; border-radius: 6px; }
+
+.titleRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.title { margin: 0; font: 800 28px/1.1 var(--font-sans); letter-spacing: -0.02em; color: var(--text-strong); }
+.total { display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0; }
+.total b { font: 800 26px/1 var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
+.total span { font: 400 12.5px/1.4 var(--font-sans); color: var(--text-muted); }
+
+/* body scrolls; the tree grid sizes to the panel */
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px; padding: 18px 2px 18px 0; container-type: inline-size; }
+
+.group { display: flex; flex-direction: column; gap: 12px; }
+.groupTitle { margin: 0; font: 700 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-eyebrow); }
+.fields { display: flex; flex-direction: column; gap: 12px; }
+
+/* the site, as confirmed by the map */
+.card { position: relative; display: flex; align-items: center; gap: 14px; padding: 14px 10px 14px 16px; border-radius: 18px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); }
+.cardIcon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); }
+.cardText { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.cardText b { font: 700 16.5px/1.2 var(--font-sans); color: var(--text-strong); }
+.cardText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
+.link { align-self: center; min-height: 44px; padding: 0 10px; border: 0; background: none; font: 600 14px var(--font-sans); color: var(--text-brand); cursor: pointer; }
+.fields .link { align-self: flex-end; }
+
+/* season: four options and the year */
+.seasonRow { display: flex; gap: 8px; align-items: stretch; }
+.segment { flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 4px; border-radius: 14px; background: var(--surface-soft, #e7eee5); }
+.segmentItem { min-height: 40px; border: 0; border-radius: 10px; background: none; font: 600 13.5px var(--font-sans); color: var(--text-body); cursor: pointer; }
+.segmentItem[aria-checked="true"] { background: var(--surface-card, #fff); color: var(--text-strong); font-weight: 700; box-shadow: 0 2px 6px rgba(21, 38, 28, 0.12); }
+.year { width: 84px; border-radius: 14px; border: 1px solid var(--border-input, #dfe2d8); background: var(--surface-card, #fff); padding: 0 10px; font: 600 15px var(--font-sans); color: var(--text-strong); text-align: center; }
+
+/* what was planted: one row per species, the quantity column down the right (like the paper sheets) */
+.rowsHead, .row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 64px 92px; gap: 0 12px; align-items: center; }
+.rowsHead { padding: 0; }
+.rowsHead > span:first-child { grid-column: 1 / 3; }
+.rowsHead > span:not(:first-child) { font: 600 11.5px/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); text-align: right; }
+.rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--border-card, #e6e8df); }
+/* No side padding: rows line up with the search and the headings. A picked row's tint
+   spreads outward (box-shadow), so it reads as a margin round the row, not padding inside it. */
+.row { padding: 8px 0; border-bottom: 1px solid var(--border-card, #e6e8df); border-radius: 2px; transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.row[data-picked] { background: #f2f6e6; box-shadow: -8px 0 0 #f2f6e6, 8px 0 0 #f2f6e6; }
+.row[data-invalid] { background: #fbefe8; box-shadow: -8px 0 0 #fbefe8, 8px 0 0 #fbefe8; }
+.rowPhoto { position: relative; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: var(--surface-soft, #e7eee5); display: grid; place-items: center; font: 800 17px/1 var(--font-sans); color: rgba(21, 38, 28, 0.5); }
+.rowName { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.rowName b { font: 700 15px/1.25 var(--font-sans); color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowName span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rowHere { text-align: right; font: 500 13px var(--font-sans); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.rowQty {
+  width: 100%; min-height: 44px; box-sizing: border-box; border-radius: 12px; border: 1px solid var(--border-input, #dfe2d8);
+  background: var(--surface-card, #fff); padding: 0 6px; text-align: center;
+  font: 700 16px var(--font-sans); color: var(--text-strong); font-variant-numeric: tabular-nums; -moz-appearance: textfield;
+}
+.rowQty::-webkit-outer-spin-button, .rowQty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.rowQty:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 1px; }
+.row[data-picked] .rowQty { border-color: var(--cn-green-800); }
+.row[data-invalid] .rowQty { border-color: var(--text-risk, #9a3f17); }
+.rowRemove { justify-self: end; min-height: 44px; border: 0; background: none; font: 600 13px var(--font-sans); color: var(--text-brand); cursor: pointer; }
+.rowError { grid-column: 2 / -1; padding-top: 4px; text-align: right; font: 600 12px/1.3 var(--font-sans); color: var(--text-risk, #9a3f17); }
+
+/* narrow (a phone): the "Here" column folds under the name */
+@container (max-width: 380px) {
+  .rowsHead, .row { grid-template-columns: 40px minmax(0, 1fr) 84px; }
+  .rowsHead > span:nth-child(2), .rowHere { display: none; }
+}
+
+.note { margin: 0; font: 400 12.5px/1.4 var(--font-sans); color: var(--text-muted); }
+
+/* footer */
+.foot { flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 14px 0 6px; border-top: 1px solid var(--border-card, #e6e8df); }
+.count { flex: 1; font: 400 13px var(--font-sans); color: var(--text-muted); }
+.back { min-height: 52px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--surface-soft, #e7eee5); color: var(--text-brand); font: 700 15px var(--font-sans); cursor: pointer; }
+.next { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--cn-green-800); color: #fff; font: 700 15.5px var(--font-sans); cursor: pointer; transition: transform 420ms cubic-bezier(.34, 1.4, .5, 1); }
+.next:active { transform: scale(0.97); transition-duration: 90ms; }
+.count + .next { flex: 0 1 auto; }
+
+/* Phones: one line of steps (only the current one is named) and no lead, so the fields get the room. */
+@media (max-width: 767px) {
+  .head { gap: 10px; padding-top: 8px; }
+  .step:not([data-state="current"]) .stepTitle { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    .title { font-size: 24px; }
+}
+
+/* step 2: which planting this is, carried over from step 1 */
+.context { margin: -4px 0 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font: 500 13.5px/1.4 var(--font-sans); color: var(--text-muted); }
+.inlineLink { border: 0; background: none; padding: 4px 2px; min-height: 32px; font: 600 13.5px var(--font-sans); color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* step 2: search on top, pinned while the list scrolls */
+.searchBar { position: sticky; top: 0; z-index: 1; padding: 0 0 8px; box-shadow: 0 -18px 0 var(--surface-app, #fdfcf9); background: var(--surface-app, #fdfcf9); display: flex; flex-direction: column; gap: 8px; }
+.search { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 6px 0 14px; border-radius: 14px; border: 1px solid var(--border-input, #dfe2d8); background: var(--surface-card, #fff); color: var(--text-eyebrow); }
+.search:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
+.search input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: none; outline: none; font: 500 16px var(--font-sans); color: var(--text-strong); }
+.search input::-webkit-search-cancel-button { display: none; }
+.searchClear { width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-soft, #e7eee5); font: 600 18px/1 var(--font-sans); color: var(--text-strong); cursor: pointer; }
+.problem { margin: 0; padding: 10px 12px; border-radius: 12px; background: #fbefe8; font: 600 13.5px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
+.empty { margin: 0; padding: 12px 0; font: 400 14px var(--font-sans); color: var(--text-muted); }
+
+/* step 3 and the preview: the event as a flat list, no cards */
+.summary { display: flex; flex-direction: column; gap: 22px; }
+.sumGroup { display: flex; flex-direction: column; }
+.sumHead { display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; }
+.sumHead h3 { margin: 0; font: 700 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-eyebrow); }
+.sumList { margin: 0; }
+.sumRow { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--border-card, #e6e8df); }
+.sumRow dt { font: 400 14.5px/1.35 var(--font-sans); color: var(--text-body); }
+.sumRow dd { margin: 0; font: 600 14.5px/1.35 var(--font-sans); color: var(--text-strong); text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.sumNotes { margin: 0; padding: 10px 0; border-top: 1px solid var(--border-card, #e6e8df); font: 400 14.5px/1.45 var(--font-sans); color: var(--text-strong); white-space: pre-wrap; }
+.sumTotal { border-top: 2px solid var(--text-strong); }
+.sumTotal dt, .sumTotal dd { font-weight: 800; color: var(--text-strong); }
+
+.badge { align-self: flex-start; padding: 5px 10px; border-radius: 999px; background: #fdf3e2; font: 700 12px/1 var(--font-sans); color: #6b4300; }
+.note { margin: 0; padding: 0 0 8px; text-align: center; }
+
+/* step 1: the date as a card, its native input hidden inside (Change opens the picker) */
+.card:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
+.dateInput { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* step 3: where the area's map snippet will go */
+.areaPlaceholder { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; padding: 18px 16px; border: var(--border-dashed-empty, 1.5px dashed #c9cfc0); border-radius: 18px; background: var(--surface-soft, #f1f3ec); color: var(--text-eyebrow); }
+.areaPlaceholder svg { grid-row: 1 / 3; }
+.areaPlaceholder b { font: 700 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
+.areaPlaceholder span { font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }

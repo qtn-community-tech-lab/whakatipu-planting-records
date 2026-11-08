@@ -30,7 +30,7 @@ const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef,
+  options, today, formRef, headingRef, initialPlace = "",
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -39,10 +39,12 @@ export function useEventForm({
   formRef: RefObject<HTMLFormElement | null>;
   /** The current step's heading, focused when the step changes. */
   headingRef: RefObject<HTMLHeadingElement | null>;
+  /** Site slug to start on, e.g. when the form opens from the map at a site. */
+  initialPlace?: string;
 }) {
   const suggested = seasonFromDate(today)!;
 
-  const [placeSlug, setPlaceSlug] = useState("");
+  const [placeSlug, setPlaceSlug] = useState(initialPlace);
   const [parcelId, setParcelId] = useState<string | null>(null);
   const [plantedOn, setPlantedOn] = useState(today);
   const [season, setSeason] = useState<EventSeason>(suggested.season);
@@ -159,6 +161,16 @@ export function useEventForm({
     removeLine(key: number) { setLines((ls) => ls.filter((l) => l.key !== key)); },
     addLine() {
       setLines((ls) => [...ls, { key: nextKey, speciesId: "", quantity: "" }]);
+      setNextKey((k) => k + 1);
+    },
+    /** Add a species in one go (the map view's tree tiles): fills the empty line if there is one. */
+    addSpecies(speciesId: string, quantity = "") {
+      setLines((ls) => {
+        if (ls.some((l) => l.speciesId === speciesId)) return ls;
+        const empty = ls.find((l) => !l.speciesId);
+        if (empty) return ls.map((l) => (l === empty ? { ...l, speciesId, quantity } : l));
+        return [...ls, { key: nextKey, speciesId, quantity }];
+      });
       setNextKey((k) => k + 1);
     },
 
