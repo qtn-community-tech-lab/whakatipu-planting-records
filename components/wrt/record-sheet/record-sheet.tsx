@@ -18,10 +18,11 @@ import { MapEventForm } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { STEP } from "@/lib/wrt/events/steps";
-import { FormPanel, MID, TALL, type Snap } from "@/components/wrt/shared/form-panel";
-import { sitePins } from "./sites";
+import { FormPanel, MID, PEEK, TALL, type Snap } from "@/components/wrt/shared/form-panel";
+import type { LngLat } from "./geometry";
+import { nearestSite, sitePins } from "./sites";
 import { TopBar } from "./top-bar";
-import { showSite, useMapPadding, useRecordMap } from "./use-record-map";
+import { showSite, useDropPin, useMapPadding, useRecordMap, useSpotMarker } from "./use-record-map";
 import s from "./record-sheet.module.css";
 
 const WIDE = "(min-width: 768px)";
@@ -52,12 +53,33 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
 
   const { map, phase } = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: (slug) => setPicked({ slug }) });
   const open = phase === "open";
-  useMapPadding(map, open, wide, snap);
+
+  // A new location: tap the map to drop it; the nearest site is chosen for it.
+  const [placing, setPlacing] = useState(false);
+  const [spot, setSpot] = useState<LngLat | null>(null);
+  const startPlacing = useCallback(() => {
+    setPlacing(true);
+    setSnap(PEEK); // phones: drop the drawer out of the way
+  }, []);
+  const stopPlacing = () => {
+    setPlacing(false);
+    setSnap(MID);
+  };
+  const onDrop = useCallback((at: LngLat) => {
+    setSpot(at);
+    setPlacing(false);
+    setSnap(MID);
+    const near = nearestSite(pins, at);
+    if (near) setPicked({ slug: near });
+  }, [pins]);
+  useDropPin(map, placing, onDrop);
+  useSpotMarker(map, spot, s.spot);
+  useMapPadding(map, open, wide, snap, spot);
 
   const onPlaceChange = useCallback((placeSlug: string, parcelId: string | null) => {
     setPlace(placeSlug);
-    showSite(map, placeSlug, parcelId);
-  }, [map]);
+    showSite(map, placeSlug, parcelId, spot);
+  }, [map, spot]);
 
   const onStepChange = useCallback((step: number) => {
     // The species list needs the room: raise the phone drawer for it.
@@ -68,10 +90,28 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
     <div ref={setScreen} className={s.screen}>
       <div ref={mapEl} className={s.map} />
       <TopBar siteName={placeName} exitHref={exitHref} />
+      {placing ? (
+        <p className={s.hint} role="status">
+          Tap the map where you planted
+          <button type="button" onClick={stopPlacing}>Cancel</button>
+        </p>
+      ) : open && (
+        <div className={s.tools}>
+          <button type="button" className={s.tool} onClick={startPlacing}>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><path d="M12 7v5M9.5 9.5h5" /></svg>
+            New location
+          </button>
+          <button type="button" className={s.tool} disabled title="Drawing the planted area comes in the next PR">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l9-2 5 9-7 7-8-5z" /></svg>
+            Draw area <span className={s.soon}>Next</span>
+          </button>
+        </div>
+      )}
       <FormPanel wide={wide} open={open} container={screen} snap={snap} onSnap={setSnap} eyebrow="New planting event" title={`New planting event at ${placeName}`}>
         <MapEventForm
           options={options} today={today} initialPlace={initialSite} picked={picked}
           suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
+          spot={spot} onAddSpot={startPlacing} onRemoveSpot={() => setSpot(null)}
         />
       </FormPanel>
     </div>

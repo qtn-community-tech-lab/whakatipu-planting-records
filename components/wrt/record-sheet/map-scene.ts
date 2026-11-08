@@ -43,3 +43,10 @@ export function pinMarker(pin: SitePin, className: string, onPick: (slug: string
   el.addEventListener("click", () => onPick(pin.slug));
   return new maplibregl.Marker({ element: el }).setLngLat(pin.at);
 }
+
+/** A new location dropped on the map (not a site yet), styled by `className`. */
+export function spotMarker(at: LngLat, className: string) {
+  const el = document.createElement("div");
+  el.className = className;
+  return new maplibregl.Marker({ element: el, anchor: "bottom" }).setLngLat(at);
+}

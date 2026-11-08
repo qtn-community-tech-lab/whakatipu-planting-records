@@ -6,10 +6,10 @@
  */
 import type * as maplibregl from "maplibre-gl";
 import { useEffect, useRef, useState, type RefObject } from "react";
-import { bezier, boundsOf, centreOf } from "./geometry";
+import { bezier, boundsOf, centreOf, type LngLat } from "./geometry";
 import { MID, type Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor, withMargin } from "./layout";
-import { createMap, pinMarker } from "./map-scene";
+import { createMap, pinMarker, spotMarker } from "./map-scene";
 import { pinFor, type SitePin } from "./sites";
 
 /** flying → open (the form comes up). */
@@ -80,23 +80,51 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   return { map, phase };
 }
 
-/** Re-centre when the form opens, moves between snaps, or switches side and bottom. */
-export function useMapPadding(map: RefObject<maplibregl.Map | null>, open: boolean, wide: boolean, snap: Snap) {
+/**
+ * Re-centre when the form opens, moves between snaps, or switches side and bottom. With a new
+ * location dropped, aim at it too: this easeTo would otherwise cancel the flight to it part-way.
+ */
+export function useMapPadding(map: RefObject<maplibregl.Map | null>, open: boolean, wide: boolean, snap: Snap, spot: LngLat | null) {
   useEffect(() => {
     const m = map.current;
     if (!open || !m) return;
-    // Padding only: the map keeps its centre and zoom.
-    m.easeTo({ padding: paddingFor(wide, snap), duration: 500, easing: bezier(0.32, 0.72, 0, 1) });
-  }, [map, open, wide, snap]);
+    m.easeTo({ padding: paddingFor(wide, snap), ...(spot ? { center: spot } : {}), duration: 500, easing: bezier(0.32, 0.72, 0, 1) });
+  }, [map, open, wide, snap, spot]);
 }
 
-/** Highlight the chosen site's pins and fly to it (or to its part's own pin). */
-export function showSite(map: RefObject<maplibregl.Map | null>, siteSlug: string, parcelId: string | null) {
+/** Highlight the chosen site's pins and fly to it: to a new location if one is dropped, else its (part's) pin. */
+export function showSite(map: RefObject<maplibregl.Map | null>, siteSlug: string, parcelId: string | null, spot: LngLat | null) {
   const m = map.current;
   if (!m) return;
   m.getContainer().querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
     el.toggleAttribute("data-on", el.dataset.site === siteSlug);
   });
-  const pin = pinFor(siteSlug, parcelId);
+  const pin = spot ?? pinFor(siteSlug, parcelId);
   if (pin) m.flyTo({ center: pin, zoom: SITE_ZOOM, duration: 1600, essential: true });
+}
+
+/** While `placing`, the next tap on the map drops a new location there. */
+export function useDropPin(map: RefObject<maplibregl.Map | null>, placing: boolean, onDrop: (at: LngLat) => void) {
+  useEffect(() => {
+    const m = map.current;
+    if (!placing || !m) return;
+    const canvas = m.getCanvasContainer();
+    canvas.style.cursor = "crosshair";
+    const drop = (e: maplibregl.MapMouseEvent) => onDrop([e.lngLat.lng, e.lngLat.lat]);
+    m.once("click", drop);
+    return () => {
+      m.off("click", drop);
+      canvas.style.cursor = "";
+    };
+  }, [map, placing, onDrop]);
+}
+
+/** The dropped new location's pin, kept in step with `at`. */
+export function useSpotMarker(map: RefObject<maplibregl.Map | null>, at: LngLat | null, className: string) {
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !at) return;
+    const marker = spotMarker(at, className).addTo(m);
+    return () => { marker.remove(); };
+  }, [map, at, className]);
 }

@@ -23,3 +23,15 @@ export function pinFor(siteSlug: string, parcelId: string | null = null): LngLat
   const l = (parcelId && at.find((x) => x.parcelIds?.includes(parcelId))) || at.find((x) => !x.parcelIds) || at[0];
   return l ? [l.longitude, l.latitude] : null;
 }
+
+/** The site whose pin is closest to `at` (flat-earth distance is fine at this scale). */
+export function nearestSite(pins: readonly SitePin[], at: LngLat): string | null {
+  const k = Math.cos((at[1] * Math.PI) / 180);
+  let best: SitePin | null = null;
+  let bestD = Infinity;
+  for (const p of pins) {
+    const d = ((p.at[0] - at[0]) * k) ** 2 + (p.at[1] - at[1]) ** 2;
+    if (d < bestD) { bestD = d; best = p; }
+  }
+  return best?.slug ?? null;
+}

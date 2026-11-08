@@ -43,6 +43,11 @@ interface MapEventFormProps {
   picked?: { slug: string } | null;
   /** Tells the host when the site or part changes, so the map can move its pin. */
   onPlaceChange?: (placeSlug: string, parcelId: string | null) => void;
+  /** A new location dropped on the map, [longitude, latitude]. Shown in the form; not saved yet. */
+  spot?: [number, number] | null;
+  /** Start dropping a new location on the map, and take it off again. */
+  onAddSpot?: () => void;
+  onRemoveSpot?: () => void;
 }
 
 export function MapEventForm(props: MapEventFormProps) {
@@ -50,7 +55,7 @@ export function MapEventForm(props: MapEventFormProps) {
   return <Form key={round} {...props} onStartAnother={() => setRound((r) => r + 1)} />;
 }
 
-function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, onStartAnother }: MapEventFormProps & {
+function Form({ options, today, initialPlace, plantedArea, suggestions, picked, onStepChange, onPlaceChange, spot, onAddSpot, onRemoveSpot, onStartAnother }: MapEventFormProps & {
   onStartAnother: () => void;
 }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -69,7 +74,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   });
 
   if (form.preview) {
-    return <Preview summary={describeEvent(form.preview, options)} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Preview summary={describeEvent(form.preview, options)} location={spot ? spotLabel(spot) : null} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${EVENT_STEPS[step + 1].title}` : "Submit planting event";
@@ -105,7 +110,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} />}
+        {step === STEP.whereWhen && <WhereWhen form={form} options={options} today={today} plantedArea={plantedArea} spot={spot ?? null} onAddSpot={onAddSpot} onRemoveSpot={onRemoveSpot} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} />}
         {step === STEP.check && (
           <>
@@ -118,7 +123,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
               </div>
             )}
             {form.checkedEvent
-              ? <Summary summary={describeEvent(form.checkedEvent, options)} onChange={form.goTo} />
+              ? <Summary summary={describeEvent(form.checkedEvent, options)} location={spot ? spotLabel(spot) : null} onChange={form.goTo} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -177,8 +182,9 @@ function Steps({ form }: { form: EventFormState }) {
   );
 }
 
-function WhereWhen({ form, options, today, plantedArea }: {
+function WhereWhen({ form, options, today, plantedArea, spot, onAddSpot, onRemoveSpot }: {
   form: EventFormState; options: EventFormOptions; today: string; plantedArea: ReactNode;
+  spot: [number, number] | null; onAddSpot?: () => void; onRemoveSpot?: () => void;
 }) {
   const { err } = form;
   // A chosen site shows as a card; the pickers show until there is one, on an error, or after Change.
@@ -209,7 +215,32 @@ function WhereWhen({ form, options, today, plantedArea }: {
             <button type="button" className={s.link} onClick={() => setChanging(true)}>Change</button>
           </div>
         )}
-        {plantedArea && <FormField label="Planted area" group>{() => plantedArea}</FormField>}
+        {spot ? (
+          <div className={cn(s.card, s.spotCard)}>
+            <span className={s.cardIcon} aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+            </span>
+            <span className={s.cardText}>
+              <b>New location</b>
+              <span>{spotLabel(spot)}</span>
+            </span>
+            {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move</button>}
+            {onRemoveSpot && <button type="button" className={s.link} onClick={onRemoveSpot}>Remove</button>}
+          </div>
+        ) : onAddSpot && (
+          <button type="button" className={s.addRow} onClick={onAddSpot}>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+            Add a new location
+            <span>Tap the map where you planted</span>
+          </button>
+        )}
+        {plantedArea ?? (
+          <button type="button" className={s.addRow} disabled>
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 6l9-2 5 9-7 7-8-5z" /></svg>
+            Draw the planted area
+            <span className={s.soon}>Next</span>
+          </button>
+        )}
       </section>
 
       <section className={s.group} aria-label="When">
@@ -367,7 +398,7 @@ function WhatPlanted({ form, options, suggestions }: {
 }
 
 /** The checked event as a flat list: what Check and submit and the preview both show. */
-function Summary({ summary, onChange }: { summary: EventSummary; onChange?: (step: number) => void }) {
+function Summary({ summary, location, onChange }: { summary: EventSummary; location: string | null; onChange?: (step: number) => void }) {
   const group = (title: string, step: number, rows: ReactNode) => (
     <section className={s.sumGroup}>
       <div className={s.sumHead}>
@@ -386,6 +417,7 @@ function Summary({ summary, onChange }: { summary: EventSummary; onChange?: (ste
     <div className={s.summary}>
       {group("Where and when", STEP.whereWhen, <>
         {row("Site", summary.part === WHOLE_SITE ? summary.site : `${summary.site} · ${summary.part}`)}
+        {location && row("New location", location)}
         {row("Date", summary.date)}
         {row("Season", summary.season)}
       </>)}
@@ -404,7 +436,9 @@ function Summary({ summary, onChange }: { summary: EventSummary; onChange?: (ste
 }
 
 /** What Submit shows while nothing can be saved: the event, plainly marked "Not saved". */
-function Preview({ summary, onBack, onStartAnother }: { summary: EventSummary; onBack: () => void; onStartAnother: () => void }) {
+function Preview({ summary, location, onBack, onStartAnother }: {
+  summary: EventSummary; location: string | null; onBack: () => void; onStartAnother: () => void;
+}) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
   return (
@@ -414,11 +448,16 @@ function Preview({ summary, onBack, onStartAnother }: { summary: EventSummary; o
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>Planting event preview</h2>
         <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
       </header>
-      <div className={s.scroll}><Summary summary={summary} /></div>
+      <div className={s.scroll}><Summary summary={summary} location={location} /></div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>
       </footer>
     </div>
   );
+}
+
+/** "44.97360° S, 168.85460° E" */
+function spotLabel([lng, lat]: [number, number]) {
+  return `${Math.abs(lat).toFixed(5)}° ${lat < 0 ? "S" : "N"}, ${Math.abs(lng).toFixed(5)}° ${lng < 0 ? "W" : "E"}`;
 }
