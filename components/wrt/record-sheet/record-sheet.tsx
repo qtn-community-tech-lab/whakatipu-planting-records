@@ -85,7 +85,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [spot, setSpot] = useState<LngLat | null>(null);
   // The pin nearest the new location: within NEAR_KM it fills in the site (and part); further, the form asks.
   const [spotNear, setSpotNear] = useState<{ label: string; km: number; matched: boolean } | null>(null);
-  // The new location's name, and whether it's a new part of the site or just a pin for it. Not saved yet.
+  // The new location's name, and whether it's a new location near the site or a sublocation of it. Not saved yet.
   const [spotInfo, setSpotInfo] = useState<SpotInfo>({ name: "", asPart: false });
   function removeSpot() {
     setSpot(null);
@@ -95,7 +95,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   // What the header, the title and the mini map call this place. While a new location is being
   // added, that's what it is: never just the site's name, so it can't be mistaken for the site itself.
   const where = spot
-    ? { title: spotInfo.name.trim() || "New location", sub: !placeSite ? "Not at a known site yet" : `${spotInfo.asPart ? "New part of" : "A pin for"} ${placeSite.name}` }
+    ? { title: spotInfo.name.trim() || "New location", sub: !placeSite ? "Not at a known site yet" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${placeSite.name}` }
     : { title: placeName, sub: partName };
   const startPlacing = useCallback(() => {
     setPlacing(true);

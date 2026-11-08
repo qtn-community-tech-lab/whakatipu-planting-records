@@ -25,6 +25,7 @@ import { EVENT_STEPS, LAST_STEP, STEP } from "@/lib/wrt/events/steps";
 import { describeEvent, WHOLE_SITE, type EventSummary } from "@/lib/wrt/events/summary";
 import { EVENT_SEASONS, type EventSeason } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
+import { DatePicker } from "@/components/ui/date-picker";
 import { formatNumber, rankMatches } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 import { useEventForm, type EventFormState } from "./use-event-form";
@@ -55,7 +56,7 @@ interface MapEventFormProps {
   /** Start dropping a new location on the map, and take it off again. */
   onAddSpot?: () => void;
   onRemoveSpot?: () => void;
-  /** The new location's name, and whether it's a new part of the site or a pin for it. Not saved yet. */
+  /** The new location's name, and whether it's a new location near the site or a sublocation of it. Not saved yet. */
   spotInfo?: SpotInfo;
   onSpotInfo?: (info: SpotInfo) => void;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the parts list. */
@@ -85,7 +86,7 @@ function Form({ options, today, initialPlace, plantedArea, suggestions, picked, 
   const form = useEventForm({ options, today, formRef, headingRef, initialPlace });
   const { step } = form;
   // How the summary describes a new location: no coordinates, just what it is to the site.
-  const location = !spot ? null : `${spotInfo.asPart ? "A new part" : "A pin for the site"}${spotInfo.name.trim() ? `: ${spotInfo.name.trim()}` : ""}`;
+  const location = !spot ? null : `${spotInfo.asPart ? "New sublocation" : "New location"}${spotInfo.name.trim() ? `: ${spotInfo.name.trim()}` : ""}`;
 
   useEffect(() => { onStepChange?.(form.preview ? LAST_STEP : step); }, [step, form.preview, onStepChange]);
   // Always, even with no site: the host shows the site in the header and title, so it must never keep an old one.
@@ -209,7 +210,6 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
   // when there's none yet, a problem with it, or a new location away from every site.
   const unmatched = !!spot && !!spotNear && !spotNear.matched;
   const siteProblem = err("placeSlug") ?? err("parcelId");
-  const dateRef = useRef<HTMLInputElement>(null);
   const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
   const seasonProblem = err("season") ?? err("seasonYear");
   const [seasonOpen, setSeasonOpen] = useState(form.seasonChosen);
@@ -283,10 +283,10 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
             {form.site && (
               <div role="radiogroup" aria-label={`What this location is to ${form.site.name}`} className={cn(s.segment, s.segmentTwo)}>
                 <button type="button" role="radio" aria-checked={!spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: false })}>
-                  A pin for the site
+                  New location
                 </button>
                 <button type="button" role="radio" aria-checked={spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: true })}>
-                  A new part
+                  New sublocation
                 </button>
               </div>
             )}
@@ -307,11 +307,12 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onA
             <b>{form.plantedOn ? `${form.plantedOn === today ? "Today, " : ""}${formatPlantedOn(form.plantedOn)}` : "Choose a date"}</b>
             <span>{form.season} {form.seasonYear}</span>
           </span>
-          <input
-            ref={dateRef} type="date" className={s.dateInput} value={form.plantedOn} max={today} aria-label="Planting date"
-            aria-invalid={!!err("plantedOn")} onChange={(e) => form.changeDate(e.target.value)}
-          />
-          <button type="button" className={s.link} onClick={() => dateRef.current?.showPicker?.()}>Change</button>
+          <DatePicker
+            value={form.plantedOn} max={today} onChange={form.changeDate} className={s.link}
+            aria-label="Change planting date" aria-invalid={!!err("plantedOn")}
+          >
+            Change
+          </DatePicker>
         </div>
         {err("plantedOn") && <p className={s.problem} role="alert">{err("plantedOn")}</p>}
         {/* Rarely needed: WRT counting a planting in another season than its date's. */}
