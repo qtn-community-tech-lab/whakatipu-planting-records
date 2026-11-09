@@ -56,18 +56,18 @@ export default async function EditSpeciesPage({
       return {
         issues: [{ path: "slug", message: "The slug cannot be changed after the species is created." }],
       };
+    let savedSlug: string;
     try {
       const { data, error } = await updateSpecies(slug, parsed.data);
       if (error)
         return { error: "The species could not be saved. Please try again." };
-      if (!data)
-        return { error: "This species is no longer available to edit." };
+      savedSlug = data.slug;
     } catch {
       return { error: "The species could not be saved. Please try again." };
     }
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
-    redirect(`/species/${slug}/edit?saved=1`);
+    redirect(`/species/${savedSlug}/edit?saved=1`);
   }
 
   return (

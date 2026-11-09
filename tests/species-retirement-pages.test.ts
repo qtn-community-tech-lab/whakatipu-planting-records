@@ -20,19 +20,19 @@ vi.mock("next/navigation", () => ({
 
 import DetailPage from "@/app/species/[slug]/page";
 import RegisterPage from "@/app/species/page";
-import { RetireSpecies } from "@/components/wrt/species/retire-species";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { q } from "./helpers";
 
 const rows = await q.speciesList();
 const detail = (await q.species(rows[0].item.slug))!;
-const retiredAt = "2026-11-09T00:00:00.000Z";
+const deactivatedAt = "2026-11-09T00:00:00.000Z";
 const page = () => DetailPage({ params: Promise.resolve({ slug: detail.species.slug }) });
 type Submit = () => Promise<SpeciesSubmitResult>;
 async function action() {
   const control = Children.toArray((await page()).props.children).find((child) =>
-    isValidElement<{ onRetire: Submit }>(child) && child.type === RetireSpecies);
-  if (!isValidElement<{ onRetire: Submit }>(control)) throw new Error("Retirement control missing");
-  return control.props.onRetire;
+    isValidElement<{ onDeactivate: Submit }>(child) && child.type === DeactivateSpecies);
+  if (!isValidElement<{ onDeactivate: Submit }>(control)) throw new Error("Deactivation control missing");
+  return control.props.onDeactivate;
 }
 
 beforeEach(() => {
@@ -41,12 +41,12 @@ beforeEach(() => {
   mocks.authenticated.mockResolvedValue(true);
   mocks.species.mockResolvedValue(detail);
   mocks.list.mockResolvedValue(rows);
-  mocks.deactivate.mockResolvedValue({ data: { slug: detail.species.slug, deactivated_at: retiredAt }, error: null });
+  mocks.deactivate.mockResolvedValue({ data: { slug: detail.species.slug, deactivated_at: deactivatedAt }, error: null });
   mocks.redirect.mockImplementation(() => { throw new Error("REDIRECT"); });
 });
 
-describe("species retirement action", () => {
-  it("retires the selected species, invalidates shared reads and opens its detail", async () => {
+describe("species deactivation action", () => {
+  it("deactivates the selected species, invalidates shared reads and opens its detail", async () => {
     const submit = await action();
     await expect(submit()).rejects.toThrow("REDIRECT");
     expect(mocks.deactivate).toHaveBeenCalledWith(detail.species.slug);
@@ -58,9 +58,9 @@ describe("species retirement action", () => {
   it("checks access again when submitting a stale control", async () => {
     const submit = await action();
     mocks.authenticated.mockResolvedValue(false);
-    expect(await submit()).toHaveProperty("error", "Sign in to retire species.");
+    expect(await submit()).toHaveProperty("error", "Sign in to deactivate species.");
     expect(mocks.deactivate).not.toHaveBeenCalled();
-    expect(renderToStaticMarkup(await page())).not.toContain("Retire species");
+    expect(renderToStaticMarkup(await page())).not.toContain("Deactivate Species");
   });
 
   it("returns a database failure without redirecting or expiring caches", async () => {
@@ -70,11 +70,11 @@ describe("species retirement action", () => {
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
-  it("shows the persisted retired state on reopening and hides edit and retire actions", async () => {
-    mocks.species.mockResolvedValue({ ...detail, species: { ...detail.species, deactivatedAt: retiredAt } });
+  it("shows the persisted deactivated state on reopening and hides edit and deactivate actions", async () => {
+    mocks.species.mockResolvedValue({ ...detail, species: { ...detail.species, deactivatedAt: deactivatedAt } });
     const html = renderToStaticMarkup(await page());
-    expect(html).not.toContain("Retire species");
-    expect(html).toContain("Retired");
+    expect(html).not.toContain("Deactivate Species");
+    expect(html).toContain("Deactivated");
     expect(html).not.toContain(`/species/${detail.species.slug}/edit`);
   });
 });
@@ -82,13 +82,13 @@ describe("species retirement action", () => {
 describe("species register lifecycle views", () => {
   beforeEach(() => {
     mocks.list.mockResolvedValue(rows.map((row, index) => index === 0
-      ? { ...row, item: { ...row.item, deactivatedAt: retiredAt } } : row));
+      ? { ...row, item: { ...row.item, deactivatedAt: deactivatedAt } } : row));
   });
 
-  it.each([undefined, "retired"])("separates active and retired entries (state: %s)", async (state) => {
+  it.each([undefined, "deactivated"])("separates active and deactivated entries (state: %s)", async (state) => {
     const html = renderToStaticMarkup(await RegisterPage({ searchParams: Promise.resolve({ state }) }));
     const speciesLink = `href="/species/${detail.species.slug}"`;
-    if (state === "retired") expect(html).toContain(speciesLink);
+    if (state === "deactivated") expect(html).toContain(speciesLink);
     else expect(html).not.toContain(speciesLink);
     expect(html).toContain("140,068 recorded plants across all historical species");
   });

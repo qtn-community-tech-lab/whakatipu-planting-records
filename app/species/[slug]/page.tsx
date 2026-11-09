@@ -19,7 +19,7 @@ import { deactivateSpecies } from "@/db/queries/species";
 import { SUPABASE_TAG } from "@/db/cache";
 import type { SpeciesSubmitResult } from "@/db/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { RetireSpecies } from "@/components/wrt/species/retire-species";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
@@ -66,31 +66,32 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const prev = at > 0 ? ranked[at - 1] : null;
   const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
-  async function onRetire(): Promise<SpeciesSubmitResult> {
+  async function onDeactivate(): Promise<SpeciesSubmitResult> {
     "use server";
-    if (dataSource() !== "supabase") return { error: "Retirement is unavailable in CSV preview mode." };
-    if (!(await isAuthenticated())) return { error: "Sign in to retire species." };
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate species." };
     try {
-      const { data, error } = await deactivateSpecies(slug);
-      if (error) return { error: "The species could not be retired. Please try again." };
-      if (!data) return { error: "This species could not be found. Reopen the register to continue." };
-      if (!data.deactivated_at) return { error: "The species could not be retired. Please try again." };
+      const { error } = await deactivateSpecies(slug);
+      if (error) return { error: "The species could not be deactivated. Please try again." };
     } catch {
-      return { error: "The species could not be retired. Please try again." };
+      return { error: "The species could not be deactivated. Please try again." };
     }
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
     redirect(`/species/${slug}`);
   }
 
+  const editButton = <Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button>;
+
   return (
     <>
-      {authenticated && !sp.deactivatedAt && <div className="flex justify-end"><Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button></div>}
+      {authenticated && !sp.deactivatedAt && (dataSource() === "supabase"
+        ? <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
+        : <div className="flex justify-end">{editButton}</div>)}
       {sp.deactivatedAt && <Alert role="status">
-        <AlertTitle><Badge tone="soft">Retired</Badge></AlertTitle>
+        <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
         <AlertDescription>
           <p>This species is unavailable for new planting lines. Its historical records and recorded quantities are retained.</p>
-          <Link href="/species?state=retired" className="cn-link">View retired species</Link>
+          <Link href="/species?state=deactivated" className="cn-link">View deactivated species</Link>
         </AlertDescription>
       </Alert>}
       <SpeciesHero
@@ -104,9 +105,6 @@ export default async function SpeciesDetailPage({ params }: Props) {
         photos={photos}
         otherNames={otherNames}
       />
-
-      {authenticated && !sp.deactivatedAt && dataSource() === "supabase" &&
-        <RetireSpecies name={sp.displayName} onRetire={onRetire} />}
 
       {contested.length > 0 && (
         <div className="cn-callout cn-callout--note !items-start">

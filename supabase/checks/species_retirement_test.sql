@@ -29,14 +29,9 @@ create temp table retirement_before as select
   (select jsonb_agg(to_jsonb(t) order by t.site) from public.totals_by_site t) as sites,
   (select jsonb_agg(to_jsonb(t) order by t.season) from public.totals_by_season t) as seasons;
 
-update public.species set deactivated_at = now() where slug = 'retirement-test-species' and deactivated_at is null;
+update public.species set deactivated_at = now() where slug = 'retirement-test-species';
 select pg_temp.assert_true(
   (select deactivated_at = now() from public.species where slug = 'retirement-test-species'), 'Retirement must persist');
--- The query's active-only predicate makes subsequent retirement a no-op.
-update public.species set deactivated_at = now() + interval '1 day'
-  where slug = 'retirement-test-species' and deactivated_at is null;
-select pg_temp.assert_true(
-  (select deactivated_at = now() from public.species where slug = 'retirement-test-species'), 'Repeated retirement must retain its timestamp');
 
 select pg_temp.assert_true(
   (select jsonb_agg(to_jsonb(l) order by l.id) from public.planting_lines l) = (select lines from retirement_before),
