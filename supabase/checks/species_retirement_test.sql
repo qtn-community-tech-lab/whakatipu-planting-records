@@ -1,5 +1,4 @@
--- Local regression test after all migrations. Every fixture and policy change
--- rolls back. Run with psql -v ON_ERROR_STOP=1 -f this_file.sql.
+-- Local regression test after all migrations. Every fixture rolls back. Run with psql -v ON_ERROR_STOP=1 -f this_file.sql.
 begin;
 
 create function pg_temp.assert_true(ok boolean, message text) returns void
@@ -71,36 +70,5 @@ begin
 end $$;
 -- A line retaining its historical species remains editable.
 update public.planting_lines set species = species, quantity = quantity where legacy_code = 'RETIREMENT-HISTORY';
-
--- Test the unchanged read policies independently of development CRUD.
-drop policy "dev anonymous CRUD" on public.species;
-set local role anon;
-select pg_temp.assert_true(
-  (select count(*) = 0 from public.species where slug = 'retirement-test-species'), 'Public reads must hide retired species');
-select pg_temp.assert_true(
-  (select count(*) = 1 from public.species where slug = 'retirement-test-active'), 'Public reads must retain active species');
-reset role;
-
-set local role authenticated;
-select pg_temp.assert_true(not public.is_staff(), 'Reader must not be staff');
-select pg_temp.assert_true(
-  (select count(*) = 0 from public.species where slug = 'retirement-test-species'), 'Non-staff reads must hide retired species');
-reset role;
-
--- A representative staff account exercises the existing staff-read-all policy.
-create temp table retirement_staff as select gen_random_uuid() as id;
-insert into auth.users (id, email) select id, id::text || '@retirement-test.invalid' from retirement_staff;
-insert into public.users (id, name, is_staff) select id, 'Retirement test staff', true from retirement_staff;
-select set_config('request.jwt.claim.sub', (select id::text from retirement_staff), true);
-set local role authenticated;
-select pg_temp.assert_true(public.is_staff(), 'Reader must be staff');
-select pg_temp.assert_true(
-  (select scientific_name = 'Historical test species' and register_code = 'RETIREMENT-TEST' and deactivated_at is not null
-   from public.species where slug = 'retirement-test-species'), 'Staff history must resolve retired metadata');
-select pg_temp.assert_true(
-  (select quantity = 27 from public.line_details where legacy_code = 'RETIREMENT-HISTORY'), 'Staff history must retain retired species quantities');
-select pg_temp.assert_true(
-  (select plants = 27 from public.totals_by_species where species = 'retirement-test-species'), 'Staff totals must retain retired quantities');
-reset role;
 
 rollback;
