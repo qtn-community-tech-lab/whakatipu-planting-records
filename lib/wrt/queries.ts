@@ -125,7 +125,7 @@ export interface PlaceSummary extends Ranked<Place> {
 }
 
 export interface SpeciesSummary extends Ranked<Species> {
-  span: Span;
+  span: Span | null;
   placeCount: number;
 }
 
@@ -406,13 +406,11 @@ export function createQueries(repo: WrtRepository) {
         a.push(r);
         bySpecies.set(r.speciesId, a);
       }
-      return [...bySpecies.entries()]
-        .map(([id, recs]) => ({
-          item: c.speciesById.get(id)!,
-          split: splitOf(recs),
-          span: spanOf(c, recs)!,
-          placeCount: new Set(recs.map((r) => r.placeSlug)).size,
-        }))
+      return c.species
+        .map((item) => {
+          const recs = bySpecies.get(item.id) ?? [];
+          return { item, split: splitOf(recs), span: spanOf(c, recs), placeCount: new Set(recs.map((r) => r.placeSlug)).size };
+        })
         .sort(byTotalDesc);
     },
 

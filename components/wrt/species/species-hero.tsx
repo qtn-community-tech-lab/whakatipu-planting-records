@@ -34,7 +34,7 @@ export function SpeciesHero({
 }: {
   species: Species;
   split: QuantitySplit;
-  span: Span;
+  span: Span | null;
   seasons: SeasonPoint[];
   siteCount: number;
   rank: number;
@@ -115,7 +115,7 @@ export function SpeciesHero({
           <div className="wrt-shero__stat">
             <dt><NavGlyph name="seasons" /> Seasons</dt>
             <dd className="tabular-nums">
-              {span.seasonsActive}
+              {span?.seasonsActive ?? 0}
               <span className="wrt-shero__of"> of {seasons.length}</span>
             </dd>
           </div>
@@ -125,7 +125,7 @@ export function SpeciesHero({
           </div>
         </dl>
         <p className="wrt-shero__span">
-          {span.seasonsActive === 1 ? `Recorded in ${span.first.label} only.` : `${span.first.label} → ${span.last.label}`}
+          {!span ? "No planting records yet." : span.seasonsActive === 1 ? `Recorded in ${span.first.label} only.` : `${span.first.label} → ${span.last.label}`}
         </p>
       </div>
 

@@ -302,7 +302,7 @@ export const tools = {
           slug: p.item.slug, name: p.item.name, split: p.split, first: p.span.first.label, last: p.span.last.label })) };
       }
       return lean({ kind, rows: (await wrt.speciesList()).map((s) => ({
-        slug: s.item.slug, name: s.item.displayName, species: s.item, split: s.split, first: s.span.first.label, last: s.span.last.label })) });
+        slug: s.item.slug, name: s.item.displayName, species: s.item, split: s.split, first: s.span?.first.label ?? null, last: s.span?.last.label ?? null })) });
     },
     toModelOutput: ({ output: o }) => brief({
       kind: o.kind, rows: o.rows.map((r) => `${named(r, r.split)}${"first" in r ? `, ${r.first} → ${r.last}` : ""}`),

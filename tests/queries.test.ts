@@ -105,6 +105,15 @@ describe("places", () => {
 });
 
 describe("species", () => {
+  it("includes register species without planting history", async () => {
+    const list = await q.speciesList();
+    const unplanted = list.filter((row) => row.split.records === 0);
+    expect(unplanted.length).toBeGreaterThan(0);
+    for (const row of unplanted) {
+      expect(row.span).toBeNull();
+      expect((await q.species(row.item.slug))?.species.slug).toBe(row.item.slug);
+    }
+  });
   it("sum of species totals equals the grand total", async () => {
     const list = await q.speciesList();
     expect(list.reduce((a, s) => a + s.split.total, 0)).toBe(140068);

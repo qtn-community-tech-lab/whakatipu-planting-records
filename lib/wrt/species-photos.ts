@@ -10,6 +10,6 @@ export interface SpeciesPhoto {
 
 /** Rank recorded quantities, including those needing review; ties use botanical names. */
 export function topPlantedSpecies(rows: readonly SpeciesSummary[]) {
-  return [...rows].sort((a, b) => b.split.total - a.split.total ||
+  return rows.filter((row) => row.split.records > 0).sort((a, b) => b.split.total - a.split.total ||
     a.item.scientificName.localeCompare(b.item.scientificName));
 }

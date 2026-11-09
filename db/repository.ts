@@ -1,5 +1,7 @@
 /** The planting history and season-total checks from Supabase. */
 import { createClient } from "@supabase/supabase-js";
+import { cache } from "react";
+import { SUPABASE_TAG } from "@/db/cache";
 import type { Database, Db } from "@/db/types";
 import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
@@ -17,7 +19,12 @@ export function publicDb(): Db {
   return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    { auth: { persistSession: false } },
+    {
+      auth: { persistSession: false },
+      global: { fetch: (input, init) => fetch(input, {
+        ...init, next: { revalidate: 300, tags: [SUPABASE_TAG] },
+      }) },
+    },
   );
 }
 
@@ -193,18 +200,9 @@ async function load(db: Db): Promise<Loaded> {
 }
 
 export class SupabaseWrtRepository implements WrtRepository {
-  private loaded: { at: number; data: Promise<Loaded> } | null = null;
   constructor(private readonly db: () => Db = publicDb) {}
 
-  private data(): Promise<Loaded> {
-    if (!this.loaded || Date.now() - this.loaded.at > KEEP_MS) {
-      const data = load(this.db());
-      // A failed read is not kept: the next page tries again.
-      data.catch(() => { this.loaded = null; });
-      this.loaded = { at: Date.now(), data };
-    }
-    return this.loaded.data;
-  }
+  private data = cache(() => load(this.db()));
 
   private read = <K extends keyof Loaded>(key: K) => async () => (await this.data())[key];
 

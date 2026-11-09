@@ -18,7 +18,6 @@ const eslintConfig = defineConfig([
     files: ["db/queries/**/*.ts"],
     plugins: { "@stylistic": stylistic },
     rules: {
-      "@stylistic/newline-per-chained-call": ["error", { ignoreChainWithDepth: 1 }],
       "@stylistic/indent": ["error", 2],
     },
   },
@@ -27,12 +26,17 @@ const eslintConfig = defineConfig([
     files: ["**/*.{ts,tsx}"],
     ignores: ["db/**", "lib/supabase/**", "scripts/**", "tests/**"],
     rules: {
-      "no-restricted-imports": ["error", {
-        patterns: [{
-          group: ["@supabase/*", "@/lib/supabase/*"],
-          message: "Read through db/queries. Only db/ talks to Supabase.",
-        }],
-      }],
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@supabase/*", "@/lib/supabase/*"],
+              message: "Read through db/queries. Only db/ talks to Supabase.",
+            },
+          ],
+        },
+      ],
     },
   },
   // Generated Supabase types and shadcn UI components.
