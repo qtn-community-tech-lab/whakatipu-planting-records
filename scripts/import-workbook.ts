@@ -8,16 +8,21 @@
  * passes the access rules, so keep it out of the app and out of git.
  *
  * Safe to run again: rows match on slug, or spreadsheet code for lines, and only
- * differences are written. It never touches descriptions, pins, profiles, photos or
- * rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
+ * differences are written, including profiles and photos from the reference JSON.
+ * It keeps descriptions, pins, rulings and notes a person wrote, and deactivates
+ * lines that leave the CSV.
  */
+import { isDeepStrictEqual } from "node:util";
+import profiles from "../data/species-profiles.json";
+import photos from "../data/species-photos.json";
+import type { Json } from "../db/database.types";
 import { createClient } from "@supabase/supabase-js";
 import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
 import { REVIEW_THEMES } from "../lib/wrt/review-themes";
 import { slugify } from "../lib/wrt/text";
 import type { ReviewNoteKind } from "../lib/wrt/types";
 
-type Row = Record<string, string | number | boolean | null>;
+type Row = Record<string, Json>;
 const write = process.argv.includes("--write");
 
 // ------------------------------------------------------------------ 1. what the CSVs say
@@ -55,12 +60,15 @@ for (const s of data.species) {
   const code = [...members].map((id) => byId.get(id)?.note?.match(/^(C\d+):/)?.[1]).find(Boolean);
   if (code) for (const id of members) groupOf.set(id, code);
 }
+const profileById = new Map(profiles.map((profile) => [profile.speciesId, profile]));
+const photosById = Map.groupBy(photos, (photo) => photo.speciesId);
 const species: Row[] = data.species.map((s) => ({
   slug: s.slug, scientific_name: s.scientificName, suggested_spelling: s.suggestedSpelling,
   common_name: s.commonName, maori_name: s.maoriName, status: s.status === "unknown" ? null : s.status,
   over_5m: s.over5m, threatened: s.threatened, threatened_te_kakano: s.threatenedMarks.teKakano,
   contested_group: groupOf.get(s.id) ?? null, needs_decision: s.needsDecision,
   register_code: s.id, register_note: s.note,
+  profile: profileById.get(s.id) ?? {}, photos: photosById.get(s.id) ?? [],
 }));
 
 const questions: Row[] = Object.entries(REVIEW_THEMES).map(([slug, t]) => ({ slug, question: `${t.label}: ${t.question}` }));
@@ -125,7 +133,7 @@ async function main() {
   function diff(want: Row[], have: Row[], key = "slug") {
     const current = new Map(have.map((r) => [r[key], r]));
     const added = want.filter((r) => !current.has(r[key]));
-    const changed = want.filter((r) => current.has(r[key]) && Object.keys(r).some((k) => (r[k] ?? null) !== (current.get(r[key])![k] ?? null)));
+    const changed = want.filter((r) => current.has(r[key]) && Object.keys(r).some((k) => !isDeepStrictEqual(r[k] ?? null, current.get(r[key])![k] ?? null)));
     return { added, changed, all: [...added, ...changed] };
   }
 

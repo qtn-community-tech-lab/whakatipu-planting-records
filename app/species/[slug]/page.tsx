@@ -13,7 +13,6 @@ import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
-import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
 
 type Props = Readonly<PageProps<"/species/[slug]">>;
@@ -43,7 +42,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
   if (!d || !d.span) notFound();
   const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
 
-  const photos = getSpeciesPhotos(sp.id);
+  const photos = sp.photos;
   const otherNames = [sp.maoriName, sp.commonName]
     .filter((n): n is string => !!n && n !== sp.displayName);
   const aliases = [...new Set(sp.aliases)].filter(Boolean);
@@ -98,7 +97,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
         </div>
       )}
 
-      <SpeciesProfilePanel speciesId={sp.id} />
+      <SpeciesProfilePanel speciesId={sp.id} profile={sp.profile} />
 
       <Card
         title="Recorded plants by season"

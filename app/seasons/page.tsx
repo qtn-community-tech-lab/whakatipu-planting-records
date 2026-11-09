@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
-import { reviewShown } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SeasonsPage() {
-  const [rows, leaders, showReview] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown()]);
+  const [rows, leaders, showReview, species] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown(), getWrt().speciesList()]);
+  const speciesBySlug = new Map(species.map((row) => [row.item.slug, row.item]));
   // Only seasons with planting lines, as in the workbook.
   const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
 
@@ -23,7 +24,7 @@ export default async function SeasonsPage() {
   for (const r of leaders.species) {
     const scientificName = r.scientific_name!;
     const displayName = r.maori_name ?? r.common_name ?? scientificName;
-    const tree = { species: { id: r.register_code ?? "", slug: r.species!, scientificName, displayName, displayIsScientific: displayName === scientificName }, split: { total: r.plants ?? 0 } };
+    const tree = { species: { photos: speciesBySlug.get(r.species!)?.photos ?? [], id: r.register_code ?? "", slug: r.species!, scientificName, displayName, displayIsScientific: displayName === scientificName }, split: { total: r.plants ?? 0 } };
     topBySeason.set(r.season!, [...(topBySeason.get(r.season!) ?? []), tree]);
   }
   const sitesBySeason = new Map<string, TopSite[]>();

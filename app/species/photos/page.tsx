@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getWrt } from "@/lib/wrt/server";
-import { getSpeciesPhotos, topPlantedSpecies } from "@/lib/wrt/species-photos";
+import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import { emptySplit } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, PageHead, Rule } from "@/components/wrt/shared/page";
@@ -8,7 +8,6 @@ import { SpeciesName } from "@/components/wrt/shared/names";
 import { SplitLine } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { SpeciesPhotoFigure } from "@/components/wrt/species/species-photo";
-import { getSpeciesProfile, SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
 import { SpeciesProfileContent } from "@/components/wrt/species/species-profile";
 import { SpeciesReferenceStatus } from "@/components/wrt/species/species-reference-status";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
@@ -20,20 +19,20 @@ export const metadata: Metadata = {
 
 export default async function SpeciesPhotosPage() {
   const all = await getWrt().speciesList();
-  const rows = topPlantedSpecies(all, SPECIES_PROFILE_LIMIT);
+  const rows = topPlantedSpecies(all);
   const split = emptySplit();
   for (const row of rows) {
     for (const key of Object.keys(split) as (keyof typeof split)[]) split[key] += row.split[key];
   }
   const total = all.reduce((sum, row) => sum + row.split.total, 0);
-  const profileCount = rows.filter((row) => getSpeciesProfile(row.item.id) && getSpeciesReferenceReview(row.item.id)?.status !== "unresolved").length;
+  const profileCount = rows.filter((row) => row.item.profile && getSpeciesReferenceReview(row.item.id)?.status !== "unresolved").length;
   const unresolvedCount = rows.filter((row) => getSpeciesReferenceReview(row.item.id)?.status === "unresolved").length;
-  const completePhotoCount = rows.filter((row) => getSpeciesPhotos(row.item.id).length >= 3).length;
+  const completePhotoCount = rows.filter((row) => row.item.photos.length >= 3).length;
   const partialPhotoCount = rows.filter((row) => {
-    const count = getSpeciesPhotos(row.item.id).length;
+    const count = row.item.photos.length;
     return count > 0 && count < 3;
   }).length;
-  const photoCount = rows.reduce((sum, row) => sum + getSpeciesPhotos(row.item.id).length, 0);
+  const photoCount = rows.reduce((sum, row) => sum + row.item.photos.length, 0);
   return (
     <>
       <PageHead
@@ -50,8 +49,8 @@ export default async function SpeciesPhotosPage() {
       </Card>
       <div className="wrt-photo-grid">
         {rows.map((row, index) => {
-          const photos = getSpeciesPhotos(row.item.id);
-          const profile = getSpeciesProfile(row.item.id);
+          const photos = row.item.photos;
+          const profile = row.item.profile;
           const photo = photos[0];
           return (
             <Card key={row.item.id} id={`guide-${row.item.slug}`} className="wrt-photo-card">

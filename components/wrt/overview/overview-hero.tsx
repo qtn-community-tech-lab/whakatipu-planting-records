@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
@@ -39,7 +38,7 @@ export function OverviewHero({
     { href: "/records", icon: "records", label: "Records", value: formatNumber(split.records) },
   ];
   const pictured = topSpecies
-    .map((s, i) => ({ s, rank: i + 1, photo: getSpeciesPhoto(s.item.id) }))
+    .map((s, i) => ({ s, rank: i + 1, photo: s.item.photos[0] }))
     .filter((x) => x.photo)
     .slice(0, 2);
 

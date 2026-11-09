@@ -8,8 +8,6 @@ import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
 import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
@@ -68,7 +66,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
 
   const all = await getWrt().speciesList();
-  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
+  const guideCount = all.filter((r) => r.item.photos[0] && r.item.profile).length;
   const referenceGapCount = all.filter((r) => {
     const review = getSpeciesReferenceReview(r.item.id);
     return review && review.status !== "confirmed";
