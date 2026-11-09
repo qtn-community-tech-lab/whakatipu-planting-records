@@ -411,7 +411,7 @@ export function createQueries(repo: WrtRepository) {
           const recs = bySpecies.get(item.id) ?? [];
           return { item, split: splitOf(recs), span: spanOf(c, recs), placeCount: new Set(recs.map((r) => r.placeSlug)).size };
         })
-        .sort(byTotalDesc);
+        .sort((a, b) => byTotalDesc(a, b) || a.item.scientificName.localeCompare(b.item.scientificName));
     },
 
     async species(slug: string): Promise<SpeciesDetail | null> {
