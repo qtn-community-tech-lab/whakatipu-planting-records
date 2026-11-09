@@ -57,6 +57,16 @@ with expected (part, item, want, got) as (
     (select count(*)::int from pg_views where schemaname = 'public' and viewname in
       ('season_species', 'season_sites', 'totals_by_question'))
 
+  union all select 'species retirement', 'original species visibility policies retained', 2,
+    (select count(*)::int from pg_policies where schemaname = 'public' and tablename = 'species'
+      and policyname in ('public read live rows', 'read live rows, staff read all') and cmd = 'SELECT')
+  union all select 'species retirement', 'active species guard function', 1,
+    (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public' and p.proname = 'guard_active_species')
+  union all select 'species retirement', 'planting-line active species guard trigger', 1,
+    (select count(*)::int from pg_trigger where not tgisinternal
+      and tgrelid = 'public.planting_lines'::regclass and tgname = 'guard_active_species')
+
   -- Naming file: nothing still has an old name ----------------------------
   union all select 'naming', 'deactivated_at columns (users and the 7 history tables)', 8,
     (select count(*)::int from information_schema.columns

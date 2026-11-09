@@ -12,7 +12,9 @@ const sites = await listSites();
 - `database.types.ts` is generated from the database schema. Column names in `.select("…")` are checked against it.
 - `queries/views.ts` holds one base query per view or table. The other files add a filter or a limit.
 - Queries are named `list<Entity>s`, `read<Entity>`, and later `create<Entity>`, `update<Entity>` and `deactivate<Entity>`, with the entity spelled out (`listPlantingAreaTotals`, not `listAreaTotals`). `findPlantingLines` is the one exception: it pages through lines that match a filter. The rule is in `CLAUDE.md`.
-- Rows are never deleted. A row with `deactivated_at` set is hidden from the public key and from volunteers.
+- Rows are never deleted. Species with `deactivated_at` set are retired from the active register and new planting selections. Existing policies restrict retired metadata to staff; the temporary anonymous development CRUD policy also permits reads. Public and non-staff read policies remain limited to active species.
+- When staff authentication replaces the development bypass, historical repositories must use the signed-in staff client. The current anonymous history loader cannot preserve retired species in joins and totals under the restricted public policy.
+- `deactivateSpecies` retires only the species row, preserving its slug and all linked planting quantities. Repeated requests retain its first retirement timestamp. `guard_active_species` rejects new lines and species reassignment to retired entries; unchanged historical associations stay valid.
 - In app code, only `db/` imports Supabase, and ESLint enforces it. `lib/supabase/`, `scripts/` and `tests/` are exempt.
 
 ## Generate types after a migration

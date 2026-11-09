@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath, updateTag } from "next/cache";
+import { dataSource, getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -14,6 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { isAuthenticated } from "@/db/queries/access";
+import { deactivateSpecies } from "@/db/queries/species";
+import { SUPABASE_TAG } from "@/db/cache";
+import type { SpeciesSubmitResult } from "@/db/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { RetireSpecies } from "@/components/wrt/species/retire-species";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
@@ -60,9 +66,33 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const prev = at > 0 ? ranked[at - 1] : null;
   const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
+  async function onRetire(): Promise<SpeciesSubmitResult> {
+    "use server";
+    if (dataSource() !== "supabase") return { error: "Retirement is unavailable in CSV preview mode." };
+    if (!(await isAuthenticated())) return { error: "Sign in to retire species." };
+    try {
+      const { data, error } = await deactivateSpecies(slug);
+      if (error) return { error: "The species could not be retired. Please try again." };
+      if (!data) return { error: "This species could not be found. Reopen the register to continue." };
+      if (!data.deactivated_at) return { error: "The species could not be retired. Please try again." };
+    } catch {
+      return { error: "The species could not be retired. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/species/${slug}`);
+  }
+
   return (
     <>
-      {authenticated && <div className="flex justify-end"><Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button></div>}
+      {authenticated && !sp.deactivatedAt && <div className="flex justify-end"><Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button></div>}
+      {sp.deactivatedAt && <Alert role="status">
+        <AlertTitle><Badge tone="soft">Retired</Badge></AlertTitle>
+        <AlertDescription>
+          <p>This species is unavailable for new planting lines. Its historical records and recorded quantities are retained.</p>
+          <Link href="/species?state=retired" className="cn-link">View retired species</Link>
+        </AlertDescription>
+      </Alert>}
       <SpeciesHero
         species={sp}
         split={split}
@@ -74,6 +104,9 @@ export default async function SpeciesDetailPage({ params }: Props) {
         photos={photos}
         otherNames={otherNames}
       />
+
+      {authenticated && !sp.deactivatedAt && dataSource() === "supabase" &&
+        <RetireSpecies name={sp.displayName} onRetire={onRetire} />}
 
       {contested.length > 0 && (
         <div className="cn-callout cn-callout--note !items-start">
