@@ -56,8 +56,8 @@ async function load(db: Db): Promise<Loaded> {
   const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos")
-      .is("deactivated_at", null).throwOnError(),
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
+      .throwOnError(),
     db.from("sites").select("slug, name, description, is_scheme").is("deactivated_at", null).throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
     allLines(db),
@@ -83,6 +83,7 @@ async function load(db: Db): Promise<Loaded> {
     const keys = new Set([s.scientific_name, s.suggested_spelling ?? "", s.common_name ?? "", s.maori_name ?? "", ...aliases].map(searchKey));
     keys.delete("");
     return {
+      deactivatedAt: s.deactivated_at,
       id: idOf(s.slug, s.register_code),
       slug: s.slug,
       scientificName: s.scientific_name,

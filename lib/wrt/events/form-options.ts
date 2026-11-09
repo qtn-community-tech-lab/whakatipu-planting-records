@@ -6,7 +6,7 @@
  * keys); every label shown is a name, as everywhere else in the app.
  */
 import "server-only";
-import { getWrtAll } from "../server";
+import { getRepository, getWrtAll } from "../server";
 import { searchKey } from "../text";
 
 /** Macron-free search keys, matched with rankMatches in the browser. */
@@ -37,11 +37,15 @@ export interface EventFormOptions {
 }
 
 /**
- * Uses getWrtAll(), not getWrt(): which sites and species exist must not
- * depend on the reader's "show records needing review" switch.
+ * Uses unscoped data: available sites and species must not depend on the
+ * reader's review switch. New lines use the full active species register,
+ * including entries with no planting history; history lookups keep retired ones.
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {
-  const { places, species } = await getWrtAll().lookups();
+  const [{ places }, species] = await Promise.all([
+    getWrtAll().lookups(),
+    getRepository().listSpecies(),
+  ]);
   return {
     sites: places
       .filter((p) => !p.isScheme)
@@ -53,6 +57,7 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species
+      .filter((s) => s.deactivatedAt === null)
       .map((s) => ({
         id: s.id,
         name: s.displayName,

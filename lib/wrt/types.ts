@@ -48,6 +48,8 @@ export interface Season {
 }
 
 export interface Species {
+  /** Retired from new selections; historical records still reference this species. */
+  deactivatedAt: string | null;
   /** Join key only. Never shown to users. */
   id: string;
   /** URL slug from the scientific name, e.g. "leptospermum-scoparium". */

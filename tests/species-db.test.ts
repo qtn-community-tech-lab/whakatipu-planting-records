@@ -7,17 +7,18 @@ import { defined } from "./assertions";
 
 const firstProfile = defined(profile[0]);
 
-async function speciesFromDb(reference: { profile: object; photos: object[] }) {
+async function speciesFromDb(reference: { profile: object; photos: object[]; deactivated_at?: string | null }) {
   const selected: string[] = [];
   const db = {
     from(table: string) {
+      const filters: [string, unknown][] = [];
       const query = {
         select: (columns: string) => { if (table === "species") selected.push(columns); return query; },
-        order: () => query, is: () => query, range: () => query,
+        order: () => query, is: (key: string, value: unknown) => { filters.push([key, value]); return query; }, range: () => query,
         throwOnError: async () => ({ data: table === "species" ? [{
           slug: "database-species", register_code: firstProfile.speciesId,
-          scientific_name: firstProfile.scientificName, ...reference,
-        }] : [] }),
+          scientific_name: firstProfile.scientificName, deactivated_at: null, ...reference,
+        }].filter((row) => filters.every(([key, value]) => row[key as keyof typeof row] === value)) : [] }),
       };
       return query;
     },
@@ -43,5 +44,12 @@ describe("database species references", () => {
     const species = await speciesFromDb({ profile: {}, photos: [] });
     expect(species.profile).toBeNull();
     expect(species.photos).toEqual([]);
+  });
+
+  it("loads retired species for historical joins and exposes the saved timestamp", async () => {
+    const deactivated_at = "2026-11-09T00:00:00.000Z";
+    const species = await speciesFromDb({ profile: {}, photos: [], deactivated_at });
+    expect(species.deactivatedAt).toBe(deactivated_at);
+    expect(species.id).toBe(profile[0].speciesId);
   });
 });
