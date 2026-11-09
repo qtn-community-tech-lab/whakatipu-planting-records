@@ -1,6 +1,6 @@
 /**
  * The Supabase project the live tests read: your .env.local if you have one, otherwise the
- * public URL and read-only key committed in .env. The first file to set a value wins.
+ * public URL and publishable key committed in .env. The first file to set a value wins.
  *
  * Without a project the live tests skip. On CI that would pass with nothing checked, so it fails instead.
  */

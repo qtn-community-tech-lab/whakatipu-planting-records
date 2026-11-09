@@ -16,8 +16,11 @@ describe("species form", () => {
     const species = speciesWriteValues({ ...valid(), over_5m: "yes", maori_name: "Mānuka" });
     expect(speciesSchema.parse(species)).toEqual(species);
     expect(species.over_5m).toBe(true);
-    expect(species.threatened).toBeNull();
+    expect(species.status).toBe("core");
+    expect(species.threatened).toBe(false);
+    expect(species.threatened_te_kakano).toBe(false);
     expect(species.maori_name).toBe("Mānuka");
+    expect(speciesWriteValues({ ...valid(), needs_decision: true }).needs_decision).toBe(false);
   });
 
   it.each(["", "Some Plant", "a--b", "-plant", "plant-", "new", "photos"])("rejects invalid or reserved slug %j", (slug) => {
@@ -32,7 +35,7 @@ describe("species form", () => {
 
   it("normalizes supplied URLs, names and unknown flags", () => {
     const values = speciesFormSchema.parse({
-      ...valid(), photos: [{ src: "https://example.com/new.jpg", attribution: "New photographer · CC BY" }, { src: "https://example.com/old.jpg", attribution: "Old photographer · CC BY-SA" }],
+      ...valid(), threatened: "unknown", photos: [{ src: "https://example.com/new.jpg", attribution: "New photographer · CC BY" }, { src: "https://example.com/old.jpg", attribution: "Old photographer · CC BY-SA" }],
     });
     const row = speciesWriteValues(values);
     expect(row.photos).toEqual([{ src: "https://example.com/new.jpg", attribution: "New photographer · CC BY" }, { src: "https://example.com/old.jpg", attribution: "Old photographer · CC BY-SA" }]);
@@ -48,8 +51,8 @@ describe("species form", () => {
       ...valid(), over_5m: "no", threatened: "yes", status: "appended", common_name: "Mingimingi",
       photos: [{ src: "https://example.com/plant.jpg", attribution: "Photographer · CC BY" }],
     });
-    const saved = { ...speciesWriteValues(input), updated_at: "2026-11-07T00:00:00Z" };
-    expect(speciesFormValues(saved)).toEqual(input);
+    const saved = { ...speciesWriteValues(input), needs_decision: true, updated_at: "2026-11-07T00:00:00Z" };
+    expect(speciesWriteValues(speciesFormValues(saved))).toEqual(speciesWriteValues(input));
     expect(speciesWriteValues({ ...input, photos: [] })).toHaveProperty("photos", []);
   });
 

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Controller,
   useFieldArray,
   useForm,
   useWatch,
@@ -14,12 +13,11 @@ import Image from "next/image";
 import { FormField } from "@/components/forms/form-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Empty, EmptyDescription } from "@/components/ui/empty";
+import { Card } from "@/components/wrt/shared/page";
 import {
-  Field,
-  FieldError,
   FieldGroup,
-  FieldLabel,
   FieldLegend,
   FieldDescription,
   FieldSet,
@@ -66,9 +64,9 @@ export const emptySpecies: SpeciesFormValues = {
   suggested_spelling: "",
   common_name: "",
   maori_name: "",
-  status: "unknown",
+  status: "core",
   over_5m: "unknown",
-  threatened: "unknown",
+  threatened: "no",
   threatened_te_kakano: false,
   needs_decision: false,
   contested_group: "",
@@ -112,6 +110,7 @@ export function speciesWriteValues(values: SpeciesFormValues): SpeciesInput {
     value === "unknown" ? null : value === "yes";
   return {
     ...values,
+    needs_decision: false,
     suggested_spelling: nullable(values.suggested_spelling),
     common_name: nullable(values.common_name),
     maori_name: nullable(values.maori_name),
@@ -232,6 +231,7 @@ export function SpeciesForm({
                 control={form.control}
                 name="status"
                 label="Register status"
+                description="Core: part of the main species list.Appended: added outside the core list. Contested: the species identity needs review. Seed log only: recorded only in seed logs. Choose Not recorded if the status is unknown."
                 render={(field, accessibility) => (
                   <Select
                     name={field.name}
@@ -315,48 +315,32 @@ export function SpeciesForm({
                   </Select>
                 )}
               />
-              <FieldSet>
-                <FieldLegend variant="label">Register flags</FieldLegend>
-                <FieldGroup data-slot="checkbox-group">
-                  {(
-                    [
-                      [
-                        "threatened_te_kakano",
-                        "Marked threatened by Te Kākano",
-                      ],
-                      ["needs_decision", "Name needs a WRT decision"],
-                    ] as const
-                  ).map(([name, label]) => (
-                    <Controller
-                      key={name}
-                      control={form.control}
-                      name={name}
-                      render={({ field, fieldState }) => (
-                        <Field
-                          orientation="horizontal"
-                          data-invalid={fieldState.invalid}
-                        >
-                          <Checkbox
-                            id={name}
-                            name={name}
-                            checked={field.value}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked === true)
-                            }
-                            ref={field.ref}
-                            onBlur={field.onBlur}
-                            aria-invalid={fieldState.invalid}
-                          />
-                          <FieldLabel htmlFor={name}>{label}</FieldLabel>
-                          {fieldState.error && (
-                            <FieldError errors={[fieldState.error]} />
-                          )}
-                        </Field>
-                      )}
-                    />
-                  ))}
-                </FieldGroup>
-              </FieldSet>
+              <FormField
+                control={form.control}
+                name="threatened_te_kakano"
+                label="Marked threatened by Te Kākano"
+                render={(field, accessibility) => (
+                  <Select
+                    name={field.name}
+                    value={field.value ? "yes" : "no"}
+                    onValueChange={(value) => field.onChange(value === "yes")}
+                  >
+                    <SelectTrigger
+                      {...accessibility}
+                      ref={field.ref}
+                      onBlur={field.onBlur}
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="yes">Yes</SelectItem>
+                        <SelectItem value="no">No</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="contested_group"
@@ -384,77 +368,92 @@ export function SpeciesForm({
             </FieldDescription>
             <FieldGroup>
               {photos.fields.map((photo, index) => (
-                <FieldSet key={photo.id}>
-                  <FieldLegend variant="label">Image {index + 1}</FieldLegend>
-                  <FieldGroup>
-                    <FormField
-                      control={form.control}
-                      name={`photos.${index}.src`}
-                      label="Image URL"
-                      render={(field, accessibility) => (
-                        <Input
-                          {...field}
-                          {...accessibility}
-                          type="url"
-                          required
+                <Card
+                  key={photo.id}
+                  title={`Image ${index + 1}`}
+                  action={index === 0 ? <Badge tone="brand">Primary image</Badge> : undefined}
+                  className="wrt-species-image"
+                >
+                  <FieldSet aria-label={`Image ${index + 1}`}>
+                    <div className="wrt-species-image__layout">
+                      <FieldGroup>
+                        <FormField
+                          control={form.control}
+                          name={`photos.${index}.src`}
+                          label="Image URL"
+                          render={(field, accessibility) => (
+                            <Input
+                              {...field}
+                              {...accessibility}
+                              type="url"
+                              required
+                            />
+                          )}
                         />
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`photos.${index}.attribution`}
-                      label="Photo attribution"
-                      render={(field, accessibility) => (
-                        <Input {...field} {...accessibility} />
-                      )}
-                    />
-                    {speciesFormSchema.shape.photos.element.shape.src.safeParse(
-                      photoValues[index]?.src,
-                    ).success && (
-                      <div className="relative h-48">
-                        <Image
-                          src={photoValues[index].src}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 768px"
-                          unoptimized
-                          alt={`Image ${index + 1} preview`}
-                          className="object-contain"
+                        <FormField
+                          control={form.control}
+                          name={`photos.${index}.attribution`}
+                          label="Photo attribution"
+                          render={(field, accessibility) => (
+                            <Input {...field} {...accessibility} />
+                          )}
                         />
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            type="button"
+                            variant="soft"
+                            disabled={index === 0}
+                            onClick={() => photos.move(index, index - 1)}
+                            aria-label={`Move image ${index + 1} up`}
+                          >
+                            Move up
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="soft"
+                            disabled={index === photos.fields.length - 1}
+                            onClick={() => photos.move(index, index + 1)}
+                            aria-label={`Move image ${index + 1} down`}
+                          >
+                            Move down
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="soft"
+                            onClick={() => photos.remove(index)}
+                          >
+                            Remove image {index + 1}
+                          </Button>
+                        </div>
+                      </FieldGroup>
+                      <div className="wrt-species-image__preview">
+                        {speciesFormSchema.shape.photos.element.shape.src.safeParse(
+                          photoValues[index]?.src,
+                        ).success ? (
+                          <Image
+                            src={photoValues[index].src}
+                            fill
+                            sizes="(min-width: 640px) 240px, calc(100vw - 80px)"
+                            unoptimized
+                            alt={`Image ${index + 1} preview`}
+                            className="object-contain"
+                          />
+                        ) : (
+                          <Empty>
+                            <EmptyDescription>
+                              Add an image URL to see a preview.
+                            </EmptyDescription>
+                          </Empty>
+                        )}
                       </div>
-                    )}
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        type="button"
-                        variant="soft"
-                        disabled={index === 0}
-                        onClick={() => photos.move(index, index - 1)}
-                        aria-label={`Move image ${index + 1} up`}
-                      >
-                        Move up
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="soft"
-                        disabled={index === photos.fields.length - 1}
-                        onClick={() => photos.move(index, index + 1)}
-                        aria-label={`Move image ${index + 1} down`}
-                      >
-                        Move down
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="soft"
-                        onClick={() => photos.remove(index)}
-                      >
-                        Remove image {index + 1}
-                      </Button>
                     </div>
-                  </FieldGroup>
-                </FieldSet>
+                  </FieldSet>
+                </Card>
               ))}
               <Button
                 type="button"
                 variant="secondary"
+                className="self-start"
                 onClick={() => photos.append({ src: "", attribution: "" })}
               >
                 Add image

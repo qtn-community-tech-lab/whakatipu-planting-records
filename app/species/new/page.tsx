@@ -38,10 +38,17 @@ export default async function NewSpeciesPage() {
             },
           ],
         };
-      if (error || !data)
+      if (error) {
+        console.error("Failed to create species:", error);
+        if (error.code === "42501")
+          return { error: "You need to sign in with a staff account to create species." };
+        return { error: "The species could not be created. Please try again." };
+      }
+      if (!data)
         return { error: "The species could not be created. Please try again." };
       slug = data.slug;
-    } catch {
+    } catch (error) {
+      console.error("Failed to create species:", error);
       return { error: "The species could not be created. Please try again." };
     }
     updateTag(SUPABASE_TAG);

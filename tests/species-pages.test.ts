@@ -47,7 +47,7 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     expect(await submit({ ...values, slug: "photos" })).toHaveProperty("issues");
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
-    await expect(submit({ ...values, ...{ created_by: "spoofed", profile: { summary: "Must not overwrite the imported profile" } } })).rejects.toThrow("REDIRECT");
+    await expect(submit({ ...values, ...{ created_by: "spoofed", needs_decision: true, profile: { summary: "Must not overwrite the imported profile" } } })).rejects.toThrow("REDIRECT");
     if (kind === "new") expect(mocks.create).toHaveBeenCalledWith(values);
     else expect(mocks.update).toHaveBeenCalledWith("old-slug", values);
   });
@@ -78,5 +78,12 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     (kind === "new" ? mocks.create : mocks.update).mockRejectedValue(new Error("connection failed"));
     expect(await (await pageForm(kind))!.props.onSubmit(values)).toHaveProperty("error");
     expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  if (kind === "new") it("explains when database permissions reject creation", async () => {
+    mocks.create.mockResolvedValue({ data: null, error: { code: "42501", message: "permission denied for table species" } });
+    expect(await (await pageForm(kind))!.props.onSubmit(values)).toEqual({ error: "You need to sign in with a staff account to create species." });
+    expect(mocks.redirect).not.toHaveBeenCalled();
+    expect(mocks.tag).not.toHaveBeenCalled();
   });
 });
