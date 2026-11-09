@@ -43,11 +43,11 @@ function sortRows(rows: SpeciesSummary[], sort: SortKey) {
 
 /** Two ways to browse: full-width rows (list) or photo cards four to a row (grid). */
 type View = "list" | "grid";
-type RegisterState = "active" | "retired";
+type RegisterState = "active" | "deactivated";
 
 function href(sort: SortKey, show: ShowKey, q = "", view: View = "list", state: RegisterState = "active"): `/species${"" | `?${string}`}` {
   const sp = new URLSearchParams();
-  if (state === "retired") sp.set("state", state);
+  if (state === "deactivated") sp.set("state", state);
   if (q) sp.set("q", q);
   if (show !== "all") sp.set("show", show);
   if (sort !== "plants") sp.set("sort", sort);
@@ -68,10 +68,10 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
   const sort = pick(SORTS, first(sp.sort), "plants");
   const show = pick(SHOWS, first(sp.show), "all");
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
-  const state: RegisterState = first(sp.state) === "retired" ? "retired" : "active";
+  const state: RegisterState = first(sp.state) === "deactivated" ? "deactivated" : "active";
 
   const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
-  const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "retired"));
+  const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "deactivated"));
   const guideCount = register.filter((r) => r.item.photos[0] && r.item.profile).length;
   const referenceGapCount = register.filter((r) => {
     const review = getSpeciesReferenceReview(r.item.id);
@@ -130,17 +130,17 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
       {/* No card around the list: filters and rows sit straight on the page. */}
       <section className="wrt-species" aria-label="Species">
         <nav aria-label="Species register" className="wrt-stool__show mb-3">
-          {(["active", "retired"] as const).map((option) => (
+          {(["active", "deactivated"] as const).map((option) => (
             <Link key={option} href={href(sort, show, q, view, option)} className="wrt-stool__opt"
               aria-current={state === option ? "true" : undefined}>
-              {option === "active" ? "Active" : "Retired"}
-              {" "}<span className="wrt-stool__n">{all.filter((row) => (row.item.deactivatedAt !== null) === (option === "retired")).length}</span>
+              {option === "active" ? "Active" : "Deactivated"}
+              {" "}<span className="wrt-stool__n">{all.filter((row) => (row.item.deactivatedAt !== null) === (option === "deactivated")).length}</span>
             </Link>
           ))}
         </nav>
         <div className="wrt-stool">
           <form method="get" action="/species" className="wrt-stool__form" role="search">
-            {state === "retired" && <input type="hidden" name="state" value="retired" />}
+            {state === "deactivated" && <input type="hidden" name="state" value="deactivated" />}
             {show !== "all" && <input type="hidden" name="show" value={show} />}
             {view !== "list" && <input type="hidden" name="view" value={view} />}
             <label className="wrt-stool__search">

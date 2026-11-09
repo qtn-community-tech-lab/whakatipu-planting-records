@@ -67,24 +67,16 @@ export async function updateSpecies(slug: string, values: SpeciesInput) {
     .from("species")
     .update({ ...values, slug })
     .eq("slug", slug)
-    .is("deactivated_at", null)
     .select("slug")
-    .maybeSingle();
+    .single();
 }
 
-/** Retire once, without changing the species key or any planting line. */
+/** Deactivate the species without changing its key or any planting line. */
 export async function deactivateSpecies(slug: string) {
-  const client = await db();
-  const result = await client
+  return (await db())
     .from("species")
     .update({ deactivated_at: new Date().toISOString() })
     .eq("slug", slug)
-    .is("deactivated_at", null)
-    .select("slug, deactivated_at")
-    .maybeSingle();
-  if (result.error || result.data) return result;
-
-  // Another request may already have retired it. Never overwrite its timestamp.
-  return client.from("species").select("slug, deactivated_at")
-    .eq("slug", slug).maybeSingle();
+    .select("slug")
+    .single();
 }
