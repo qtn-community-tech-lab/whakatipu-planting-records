@@ -3,7 +3,6 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
 import speciesProfiles from "@/data/species-profiles.json";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
 import speciesPhotos from "@/data/species-photos.json";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
@@ -12,7 +11,7 @@ interface ResearchEntry {
   speciesId: string;
   scientificName: string;
   profile: SpeciesProfile | null;
-  photos: SpeciesPhoto[];
+  photos: (typeof speciesPhotos)[number][];
   identityEvidence: { url: string; note: string }[];
   photoEvidence: { sourceUrl: string; viewed: boolean; visualCheck: string; author: string; license: string }[];
   searchedSources: string[];

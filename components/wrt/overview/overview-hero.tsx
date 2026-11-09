@@ -98,10 +98,9 @@ export function OverviewHero({
               <li key={s.item.slug} className="wrt-ohero__tile">
                 <Image
                   src={photo!.src}
-                  width={photo!.width}
-                  height={photo!.height}
+                  width={960}
+                  height={720}
                   sizes="(max-width: 960px) 50vw, 18vw"
-                  style={{ objectPosition: photo!.focalPoint }}
                   alt=""
                   className="wrt-ohero__img"
                   unoptimized
@@ -115,7 +114,7 @@ export function OverviewHero({
                   <span className="wrt-ohero__tile-count tabular-nums">{formatNumber(s.split.total)} recorded</span>
                 </Link>
                 <span className="wrt-ohero__tile-credit">
-                  {photo!.author} · <a href={photo!.licenseUrl}>{photo!.license}</a>
+                  {photo!.attribution}
                 </span>
               </li>
             ))}

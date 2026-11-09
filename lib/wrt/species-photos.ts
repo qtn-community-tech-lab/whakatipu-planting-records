@@ -2,22 +2,8 @@
 import type { SpeciesSummary } from "./queries";
 
 export interface SpeciesPhoto {
-  speciesId: string;
-  scientificName: string;
-  sourceName: "Wikimedia Commons" | "iNaturalist";
-  observationUrl?: string;
   src: string;
-  width: number;
-  height: number;
-  caption: string;
-  focalPoint: string;
-  author: string;
-  license: string;
-  licenseUrl: string;
-  sourceUrl: string;
-  articleUrl: string;
-  articleLabel?: string;
-  retrievedAt: string;
+  attribution: string;
 }
 
 /** Rank recorded quantities, including those needing review; ties use botanical names. */

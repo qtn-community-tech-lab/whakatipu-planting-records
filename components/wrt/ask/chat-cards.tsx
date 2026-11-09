@@ -195,17 +195,14 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
   );
 }
 
-/** A reference photo. Its caption and credit stay hidden until it's hovered, focused or tapped. */
+/** A reference photo. Its attribution stays hidden until it's hovered, focused or tapped. */
 function Photo({ photo, alt, sizes }: { photo: SpeciesPhoto; alt: string; sizes: string }) {
   return (
     <figure className="wrt-chat__photo" tabIndex={0}>
-      <Image src={photo.src} width={photo.width} height={photo.height} sizes={sizes} unoptimized
-        style={{ objectPosition: photo.focalPoint }} alt={alt} className="wrt-chat__photo-img" />
+      <Image src={photo.src} width={960} height={720} sizes={sizes} unoptimized
+        alt={alt} className="wrt-chat__photo-img" />
       <figcaption className="wrt-chat__photo-credit">
-        {photo.caption}
-        <br />
-        Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-        <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
+        Photo: {photo.attribution}
       </figcaption>
     </figure>
   );
@@ -282,7 +279,7 @@ function PlantCard({ o }: { o: Found<"species"> }) {
     <article className="wrt-scard wrt-chat__plant">
       <div className="wrt-scard__media">
         {photo
-          ? <Photo photo={photo} sizes="200px" alt={`Reference photo of ${o.species.displayName}: ${photo.caption}`} />
+          ? <Photo photo={photo} sizes="200px" alt={`Reference photo of ${o.species.displayName}`} />
           : <span className="wrt-chat__plant-initial" aria-hidden="true">{o.species.displayName.charAt(0)}</span>}
         <span className="wrt-scard__rank" title={`Number ${o.rank} by recorded plants`}>{o.rank}</span>
       </div>
@@ -295,13 +292,13 @@ function PlantCard({ o }: { o: Found<"species"> }) {
 export function SpeciesCard({ o }: { o: Found<"species"> }) {
   if (!o.span) return null;
   const [big, ...small] = o.photos;
-  const alt = (p: SpeciesPhoto) => `Reference photo of ${o.species.displayName}: ${p.caption}`;
+  const alt = `Reference photo of ${o.species.displayName}`;
   return (
     <div className="wrt-chat__guide">
       {big && (
         <div className="wrt-chat__gallery">
-          <Photo photo={big} sizes="560px" alt={alt(big)} />
-          {small.slice(0, 2).map((p) => <Photo key={p.src} photo={p} sizes="280px" alt={alt(p)} />)}
+          <Photo photo={big} sizes="560px" alt={alt} />
+          {small.slice(0, 2).map((p) => <Photo key={p.src} photo={p} sizes="280px" alt={alt} />)}
         </div>
       )}
       <PlantBody o={o} />

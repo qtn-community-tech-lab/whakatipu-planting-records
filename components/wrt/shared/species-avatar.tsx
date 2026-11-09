@@ -9,7 +9,7 @@ export function SpeciesAvatar({ species }: { species: Pick<Species, "photos" | "
   return (
     <span className="wrt-avatar" aria-hidden="true">
       {photo ? (
-        <Image src={photo.src} width={photo.width} height={photo.height} alt="" sizes="40px" style={{ objectPosition: photo.focalPoint }} unoptimized />
+        <Image src={photo.src} width={960} height={720} alt="" sizes="40px" unoptimized />
       ) : (
         <span className="wrt-avatar__initial">{initial}</span>
       )}

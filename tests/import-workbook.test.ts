@@ -81,7 +81,7 @@ it("imports profiles and ordered photos, reports changes without writing, and is
   expect(species).toHaveLength(workbook.species.length);
   for (const row of species) {
     expect(row.profile).toEqual(profiles.find((profile) => profile.speciesId === row.register_code) ?? {});
-    expect(row.photos).toEqual(photos.filter((photo) => photo.speciesId === row.register_code));
+    expect(row.photos).toEqual(photos.filter((photo) => photo.speciesId === row.register_code).map((photo) => ({ src: photo.src, attribution: `${photo.author} · ${photo.license}` })));
   }
   // JSONB does not retain object key order. Equal content must not trigger writes.
   for (const row of species) row.profile = Object.fromEntries(Object.entries(row.profile as Row).reverse());

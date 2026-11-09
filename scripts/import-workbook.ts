@@ -68,7 +68,9 @@ const species: Row[] = data.species.map((s) => ({
   over_5m: s.over5m, threatened: s.threatened, threatened_te_kakano: s.threatenedMarks.teKakano,
   contested_group: groupOf.get(s.id) ?? null, needs_decision: s.needsDecision,
   register_code: s.id, register_note: s.note,
-  profile: profileById.get(s.id) ?? {}, photos: photosById.get(s.id) ?? [],
+  profile: profileById.get(s.id) ?? {}, photos: (photosById.get(s.id) ?? []).map((photo) => ({
+    src: photo.src, attribution: `${photo.author} · ${photo.license}`,
+  })),
 }));
 
 const questions: Row[] = Object.entries(REVIEW_THEMES).map(([slug, t]) => ({ slug, question: `${t.label}: ${t.question}` }));

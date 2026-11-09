@@ -27,7 +27,7 @@ async function speciesFromDb(reference: { profile: object; photos: object[] }) {
 describe("database species references", () => {
   it("uses saved profiles and ordered images rather than catalogue content", async () => {
     const savedProfile = { ...profile[0], summary: "Description from the database." };
-    const savedPhotos = photos.slice(0, 2).reverse();
+    const savedPhotos = photos.slice(0, 2).reverse().map((photo) => ({ src: photo.src, attribution: `${photo.author} · ${photo.license}` }));
     const species = await speciesFromDb({ profile: savedProfile, photos: savedPhotos });
     expect(species.profile).toEqual(savedProfile);
     expect(species.photos).toEqual(savedPhotos);

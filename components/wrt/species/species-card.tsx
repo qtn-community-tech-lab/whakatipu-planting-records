@@ -43,11 +43,10 @@ function PhotoMedia({ photo, name, sizes }: { photo: SpeciesPhoto; name: string;
   return (
     <Image
       src={photo.src}
-      width={photo.width}
-      height={photo.height}
+      width={960}
+      height={720}
       sizes={sizes}
-      style={{ objectPosition: photo.focalPoint }}
-      alt={`Reference photo of ${name}: ${photo.caption}`}
+      alt={`Reference photo of ${name}`}
       className="wrt-scard__img"
       unoptimized
     />
@@ -147,8 +146,7 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
         {photo && (
           // Shown on hover or focus, so the credit stays with the photos without crowding the row.
           <p className="wrt-scard__credit wrt-scard__above">
-            Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-            <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
+            Photo: {photo.attribution}
           </p>
         )}
       </div>

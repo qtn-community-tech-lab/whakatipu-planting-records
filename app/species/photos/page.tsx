@@ -63,9 +63,9 @@ export default async function SpeciesPhotosPage() {
               {profile && <SpeciesProfileContent profile={profile} />}
               <SpeciesReferenceStatus speciesId={row.item.id} />
               {photo ? <>
-                <SpeciesPhotoFigure photo={photo} />
+                <SpeciesPhotoFigure photo={photo} name={row.item.displayName} />
                 {photos.length > 1 && <details className="wrt-photo-more"><summary>View {photos.length - 1} more photos</summary>
-                  <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <SpeciesPhotoFigure key={extra.src} photo={extra} />)}</div>
+                  <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <SpeciesPhotoFigure key={extra.src} photo={extra} name={row.item.displayName} />)}</div>
                 </details>}
               </> : <p className="wrt-muted">A reference photo has not been reviewed for this species yet.</p>}
               {row.split.needsReview > 0 && <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>}

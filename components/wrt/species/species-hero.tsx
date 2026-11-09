@@ -18,22 +18,17 @@ function Mosaic({ photos, name }: { photos: readonly SpeciesPhoto[]; name: strin
           <a href={photo.src} target="_blank" rel="noreferrer" aria-label={`Open full reference photo ${i + 1} of ${name}`}>
             <Image
               src={photo.src}
-              width={photo.width}
-              height={photo.height}
+              width={960}
+              height={720}
               sizes={i === 0 ? "(max-width: 960px) 100vw, 40vw" : "(max-width: 960px) 50vw, 20vw"}
-              style={{ objectPosition: photo.focalPoint }}
-              alt={photo.caption}
+              alt={`Reference photo of ${name}`}
               className="wrt-shero__img"
               unoptimized
               priority={i === 0}
             />
           </a>
           <figcaption className="wrt-shero__credit">
-            <span className="wrt-shero__caption">{photo.caption}</span>
-            <span>
-              {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-              <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-            </span>
+            {photo.attribution}
           </figcaption>
         </figure>
       ))}
@@ -152,7 +147,7 @@ export function SpeciesHero({
             <Mosaic photos={photos} name={sp.displayName} />
             <p className="wrt-shero__note">
               Reference photos from other places, not WRT sites. Young plants may look different.{" "}
-              <a href={firstPhoto.articleUrl}>{firstPhoto.articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
+              <Link href="/species/photos">Species reference guide</Link>
             </p>
           </>
         ) : (
