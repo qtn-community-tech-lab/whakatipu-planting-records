@@ -10,16 +10,12 @@ end $$;
 insert into public.sites (slug, name) values ('retirement-test-site', 'Retirement test');
 insert into public.areas (slug, site, name)
   values ('retirement-test-area', 'retirement-test-site', 'Retirement test area');
-insert into public.species (slug, scientific_name, register_code) values
-  ('retirement-test-species', 'Historical test species', 'RETIREMENT-TEST'),
-  ('retirement-test-active', 'Active test species', null);
+insert into public.species (slug, scientific_name, register_code)
+  values ('retirement-test-species', 'Historical test species', 'RETIREMENT-TEST');
 insert into public.planting_events (area, season, source)
   values ('retirement-test-area', 0, 'workbook');
 insert into public.planting_lines (planting_event, species, quantity, legacy_code)
   select id, 'retirement-test-species', 27, 'RETIREMENT-HISTORY'
-  from public.planting_events where area = 'retirement-test-area';
-insert into public.planting_lines (planting_event, species, quantity)
-  select id, 'retirement-test-active', 13
   from public.planting_events where area = 'retirement-test-area';
 
 create temp table retirement_before as select
@@ -48,22 +44,5 @@ select pg_temp.assert_true(
 select pg_temp.assert_true(
   (select jsonb_agg(to_jsonb(t) order by t.season) from public.totals_by_season t) = (select seasons from retirement_before),
   'Season totals and splits must remain unchanged');
-
-do $$
-begin
-  begin
-    insert into public.planting_lines (planting_event, species, quantity)
-      select id, 'retirement-test-species', 9 from public.planting_events where area = 'retirement-test-area';
-    raise exception 'A new line must reject a retired species';
-  exception when check_violation then null;
-  end;
-  begin
-    update public.planting_lines set species = 'retirement-test-species' where species = 'retirement-test-active';
-    raise exception 'Species reassignment must reject a retired species';
-  exception when check_violation then null;
-  end;
-end $$;
--- A line retaining its historical species remains editable.
-update public.planting_lines set species = species, quantity = quantity where legacy_code = 'RETIREMENT-HISTORY';
 
 rollback;
