@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { plantsLine, type PlantTotals } from "@/components/wrt/events/map-event-form";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { rankMatches } from "@/lib/wrt/text";
+import { SearchField } from "@/components/wrt/shared/search-field";
 import s from "./site-chooser.module.css";
 
 export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
@@ -114,10 +115,9 @@ export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
         <h2 id="site-chooser-title">Where was it planted?</h2>
         <button type="button" className={s.chooserClose} aria-label="Close" onClick={onClose}>×</button>
       </header>
-      <label className={s.chooserSearch}>
-        <span className="sr-only">Search sites and parts</span>
-        <input type="search" value={query} placeholder="Search sites and parts" onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-      </label>
+      <div className={s.chooserSearch}>
+        <SearchField label="Search sites and parts" placeholder="Search sites and parts" value={query} onChange={setQuery} />
+      </div>
       <div className={s.chooserList}>
         {/* Browsing: one site open at a time. Searching: every match open, so its parts show. */}
         {q ? (
