@@ -58,6 +58,12 @@ describe("editDistance", () => {
   it("is zero for equal strings", () => {
     expect(editDistance("abc", "abc")).toBe(0);
   });
+  it("handles empty strings within and beyond the bound", () => {
+    expect(editDistance("", "")).toBe(0);
+    expect(editDistance("", "ab")).toBe(2);
+    expect(editDistance("ab", "")).toBe(2);
+    expect(editDistance("abcd", "", 2)).toBe(3);
+  });
   it("gives up past the bound with max + 1", () => {
     expect(editDistance("abc", "xyzxyz", 2)).toBe(3);
     expect(editDistance("kitten", "sitting", 1)).toBe(2);

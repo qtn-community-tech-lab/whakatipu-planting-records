@@ -15,8 +15,11 @@ function scopeOfPart(p: ChatMessage["parts"][number]): Scope | null {
     case "tool-records": {
       const { filter: f, names: n } = p.output;
       return {
-        place: f.place && n.place ? { slug: f.place, name: n.place } : undefined, part: n.part ?? undefined,
-        species: f.species && n.species ? { slug: f.species, name: n.species } : undefined, season: f.season, year: f.year,
+        ...(f.place && n.place ? { place: { slug: f.place, name: n.place } } : {}),
+        ...(n.part ? { part: n.part } : {}),
+        ...(f.species && n.species ? { species: { slug: f.species, name: n.species } } : {}),
+        ...(f.season ? { season: f.season } : {}),
+        ...(f.year !== undefined ? { year: f.year } : {}),
       };
     }
     case "tool-place": return p.output.found ? { place: { slug: p.output.place.slug, name: p.output.place.name } } : null;
@@ -24,7 +27,8 @@ function scopeOfPart(p: ChatMessage["parts"][number]): Scope | null {
       if (!p.output.found) return null;
       const h = p.output.here;
       return {
-        place: h ? { slug: h.place, name: h.placeName } : undefined, part: h?.part ?? undefined,
+        ...(h ? { place: { slug: h.place, name: h.placeName } } : {}),
+        ...(h?.part ? { part: h.part } : {}),
         species: { slug: p.output.species.slug, name: p.output.species.displayName },
       };
     }
@@ -39,11 +43,19 @@ function scopeOfPart(p: ChatMessage["parts"][number]): Scope | null {
  * (three plants at a site), only what they share is kept: the site, not one of the plants.
  */
 export function scopeOf(messages: ChatMessage[]): Scope {
-  for (let i = messages.length - 1; i >= 0; i--) {
-    const all = messages[i].parts.map(scopeOfPart).filter((x): x is Scope => !!x);
-    if (!all.length) continue;
-    const same = (k: (typeof KEYS)[number]) => all.every((s) => JSON.stringify(s[k]) === JSON.stringify(all[0][k]));
-    return Object.fromEntries(KEYS.filter(same).map((k) => [k, all[0][k]]).filter(([, v]) => v !== undefined)) as Scope;
+  for (const message of messages.toReversed()) {
+    const all = message.parts.map(scopeOfPart).filter((x): x is Scope => x !== null);
+    const first = all[0];
+    if (!first) continue;
+    const shared: Scope = {};
+    function copyShared<Key extends keyof Scope>(key: Key) {
+      const value = first?.[key];
+      if (value !== undefined && all.every((s) => JSON.stringify(s[key]) === JSON.stringify(value))) {
+        shared[key] = value;
+      }
+    }
+    KEYS.forEach(copyShared);
+    return shared;
   }
   return {};
 }

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import type { Species } from "@/lib/wrt/types";
 import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
@@ -18,7 +19,7 @@ export function SpeciesAvatar({ species }: { species: Pick<Species, "id" | "scie
 }
 
 /** Leaderboard label: rank chip in front of whatever names the row. */
-export function RankLabel({ rank, children }: { rank: number; children: React.ReactNode }) {
+export function RankLabel({ rank, children }: { rank: number; children: ReactNode }) {
   return (
     <span className="wrt-lb">
       <span className="wrt-lb__rank" data-top={rank <= 3 || undefined}>{rank}</span>

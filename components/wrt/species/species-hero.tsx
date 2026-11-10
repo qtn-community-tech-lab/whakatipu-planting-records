@@ -66,10 +66,10 @@ export function SpeciesHero({
     total: p.split.total,
     needsReview: p.split.needsReview,
   }));
-  const hasPhotos = photos.length > 0;
+  const firstPhoto = photos[0];
 
   return (
-    <section className="wrt-shero" data-photos={hasPhotos || undefined} aria-labelledby="species-title">
+    <section className="wrt-shero" data-photos={!!firstPhoto || undefined} aria-labelledby="species-title">
       <div className="wrt-shero__text">
         <Link href="/species" className="wrt-shero__back">← All species</Link>
 
@@ -147,12 +147,12 @@ export function SpeciesHero({
       </div>
 
       <div className="wrt-shero__media" id="photos">
-        {hasPhotos ? (
+        {firstPhoto ? (
           <>
             <Mosaic photos={photos} name={sp.displayName} />
             <p className="wrt-shero__note">
               Reference photos from other places, not WRT sites. Young plants may look different.{" "}
-              <a href={photos[0].articleUrl}>{photos[0].articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
+              <a href={firstPhoto.articleUrl}>{firstPhoto.articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
             </p>
           </>
         ) : (

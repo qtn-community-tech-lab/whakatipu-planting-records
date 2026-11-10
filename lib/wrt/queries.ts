@@ -292,7 +292,9 @@ export function createQueries(repo: WrtRepository) {
     if (!recs.length) return null;
     const slugs = new Set(recs.map((r) => r.seasonSlug));
     const active = c.seasons.filter((s) => slugs.has(s.slug));
-    return { first: active[0], last: active[active.length - 1], seasonsActive: active.length };
+    const first = active[0];
+    const last = active.at(-1);
+    return first && last ? { first, last, seasonsActive: active.length } : null;
   }
 
   function themesOf(recs: PlantingRecord[]): ThemeSummary[] {
@@ -334,10 +336,13 @@ export function createQueries(repo: WrtRepository) {
   return {
     async overview(): Promise<Overview> {
       const c = await ctx();
+      const firstSeason = c.seasons[0];
+      const lastSeason = c.seasons.at(-1);
+      if (!firstSeason || !lastSeason) throw new Error("The planting history has no seasons.");
       return {
         split: splitOf(c.records),
-        firstSeason: c.seasons[0],
-        lastSeason: c.seasons[c.seasons.length - 1],
+        firstSeason,
+        lastSeason,
         seasons: seasonSeries(c, c.records),
         placeCount: new Set(c.records.filter((r) => !c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
         schemeCount: new Set(c.records.filter((r) => c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,

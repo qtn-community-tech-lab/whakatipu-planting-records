@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 /**
  * Runs every read query against the Supabase project (tests/live-env.ts), as a signed-out
  * visitor with the publishable key. Skipped when there is no project to read.
@@ -32,7 +33,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
   it("lists areas with totals and pins", async () => {
     expect(sum(await listPlantingAreaTotals())).toBe(ALL_PLANTS);
     expect((await listPlantingAreaPins()).length).toBe(78);
-    const [site] = await listSites();
+    const site = defined((await listSites())[0]);
     expect((await listPlantingAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
   });
 
@@ -42,7 +43,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
   });
 
   it("opens one species with its totals and lines", async () => {
-    const [top] = await listSpeciesTotals();
+    const top = defined((await listSpeciesTotals())[0]);
     const page = await readSpecies(top.species!);
     expect(page?.totals?.plants).toBe(top.plants);
     expect(page?.history.length).toBe(top.lines);
@@ -61,7 +62,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     const second = await findPlantingLines({}, 1);
     expect(first.length).toBe(PAGE_SIZE);
     expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
-    const [season] = await listSeasons();
+    const season = defined((await listSeasons())[0]);
     expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
   });
 
@@ -73,7 +74,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
       expect(perSeason.size).toBe(23);
       for (const top of perSeason.values()) {
         expect(top.map((r) => r.rank)).toEqual([1, 2, 3].slice(0, top.length));
-        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (top[i - 1].plants ?? 0))).toBe(true);
+        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (defined(top[i - 1]).plants ?? 0))).toBe(true);
       }
     }
   });

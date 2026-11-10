@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { type RawParams, first } from "@/lib/wrt/params";
+import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import type { PlaceSummary } from "@/lib/wrt/queries";
@@ -28,7 +28,7 @@ const SORTS = [
 ] as const;
 type SortKey = (typeof SORTS)[number]["key"];
 
-function href(cls: ClassFilter | undefined, sort: SortKey) {
+function href(cls: ClassFilter | undefined, sort: SortKey): `/sites${"" | `?${string}`}` {
   const sp = new URLSearchParams();
   if (cls) sp.set("class", cls);
   if (sort !== "plants") sp.set("sort", sort);
@@ -45,7 +45,7 @@ function sortSites(list: PlaceSummary[], sort: SortKey) {
   return out;
 }
 
-export default async function SitesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
+export default async function SitesPage({ searchParams }: Readonly<PageProps<"/sites">>) {
   const sp = await searchParams;
   const classParam = first(sp.class);
   const cls = CLASSES.find((c) => c === classParam);
@@ -58,7 +58,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
   const schemes = all.filter((p) => p.item.isScheme);
 
   const filtered = cls
-    ? all.filter((p) => !p.item.isScheme && p.item.siteClasses.includes(cls as SiteClass))
+    ? all.filter((p) => !p.item.isScheme && p.item.siteClasses.includes(cls))
     : all;
   const rows = sortSites(filtered, sort);
   const max = Math.max(1, ...all.map((p) => p.split.total));
@@ -66,7 +66,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
   for (const p of rows) for (const k of Object.keys(shown) as (keyof typeof shown)[]) shown[k] += p.split[k];
 
   const countFor = (c: ClassFilter) =>
-    realSites.filter((p) => p.item.siteClasses.includes(c as SiteClass)).length;
+    realSites.filter((p) => p.item.siteClasses.includes(c)).length;
 
   const schemeNote =
     schemes.length > 0

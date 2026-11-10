@@ -1,9 +1,10 @@
+import type { AppRoute } from "@/lib/wrt/routes";
+import type { CSSProperties, ReactNode } from "react";
 /**
  * Charts, drawn with Canopy bars only (no chart library).
  * Every chart keeps the resolved / needs-review split visible.
  */
 import Link from "next/link";
-import type { ReactNode } from "react";
 import type { QuantitySplit } from "@/lib/wrt/types";
 import type { SeasonPoint, YearRow } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
@@ -30,7 +31,7 @@ export function SeasonColumns({
   currentSlug?: string;
   size?: "md" | "sm";
   link?: boolean;
-  hrefFor?: (p: SeasonPoint) => string;
+  hrefFor?: (p: SeasonPoint) => AppRoute;
   caption?: string;
 }) {
   const max = Math.max(1, ...points.map((p) => p.split.total));
@@ -40,10 +41,14 @@ export function SeasonColumns({
         {points.map((p, i) => {
           const r = (p.split.resolved / max) * 100;
           const n = (p.split.needsReview / max) * 100;
+          const stackStyle: CSSProperties & { "--i": number } = {
+            height: p.split.total ? `${Math.max(1.5, r + n)}%` : undefined,
+            "--i": i,
+          };
           const body = (
             <div
               className="wrt-col__stack"
-              style={{ height: p.split.total ? `${Math.max(1.5, r + n)}%` : undefined, "--i": i } as React.CSSProperties}
+              style={stackStyle}
             >
               {r > 0 && (
                 <span
@@ -87,7 +92,7 @@ export interface RankedItem {
   key: string;
   label: ReactNode;
   split: QuantitySplit;
-  href?: string;
+  href?: AppRoute;
 }
 
 /** Ranked horizontal bars (sites, species). Bars are relative to the largest item. */
@@ -127,8 +132,8 @@ export function RankedBars({ items, max, aligned = false }: { items: RankedItem[
 }
 
 /** Year table: Autumn | Spring | Year | Running total. Needs-review shown under each figure. */
-export function YearTable({ years, seasonHref }: { years: YearRow[]; seasonHref?: (year: number, season: "autumn" | "spring") => string }) {
-  const cell = (s: QuantitySplit, href?: string) =>
+export function YearTable({ years, seasonHref }: { years: YearRow[]; seasonHref?: (year: number, season: "autumn" | "spring") => AppRoute }) {
+  const cell = (s: QuantitySplit, href?: AppRoute) =>
     s.records === 0 ? (
       <span className="cn-num--empty">–</span>
     ) : (

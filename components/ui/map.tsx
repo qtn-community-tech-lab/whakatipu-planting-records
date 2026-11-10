@@ -11,10 +11,12 @@ import {
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
@@ -254,7 +256,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   const [mapInstance, setMapInstance] = useState<MapLibreGL.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isStyleLoaded, setIsStyleLoaded] = useState(false);
-  const [pendingStyle, setPendingStyle] = useState<MapStyleOption | null>(null);
+  const [stagedStyle, setStagedStyle] = useState<MapStyleOption | null>(null);
   const currentStyleRef = useRef<MapStyleOption | null>(null);
   const styleSwapInFlightRef = useRef(false);
   const internalUpdateRef = useRef(false);
@@ -263,7 +265,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   const isControlled = viewport !== undefined && onViewportChange !== undefined;
 
   const onViewportChangeRef = useRef(onViewportChange);
-  onViewportChangeRef.current = onViewportChange;
+  useLayoutEffect(() => { onViewportChangeRef.current = onViewportChange; }, [onViewportChange]);
 
   const stableStyles = useStableValue(styles);
 
@@ -373,18 +375,17 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
 
     currentStyleRef.current = newStyle;
     setIsStyleLoaded(false);
-    setPendingStyle(newStyle);
+    setStagedStyle(newStyle);
   }, [mapInstance, resolvedTheme, mapStyles]);
 
   useEffect(() => {
-    if (!mapInstance || !pendingStyle) return;
+    if (!mapInstance || !stagedStyle) return;
 
-    setPendingStyle(null);
     styleSwapInFlightRef.current = true;
     // Full reload (no diff) so `style.load` fires deterministically. A
     // successful diff would never fire it, leaving isStyleLoaded stuck false.
-    mapInstance.setStyle(pendingStyle, { diff: false });
-  }, [mapInstance, pendingStyle]);
+    mapInstance.setStyle(stagedStyle, { diff: false });
+  }, [mapInstance, stagedStyle]);
 
   // Sync projection when the prop changes after mount.
   useEffect(() => {
@@ -475,14 +476,9 @@ function MapMarker({
     onDrag,
     onDragEnd,
   });
-  callbacksRef.current = {
-    onClick,
-    onMouseEnter,
-    onMouseLeave,
-    onDragStart,
-    onDrag,
-    onDragEnd,
-  };
+  useLayoutEffect(() => {
+    callbacksRef.current = { onClick, onMouseEnter, onMouseLeave, onDragStart, onDrag, onDragEnd };
+  }, [onClick, onMouseEnter, onMouseLeave, onDragStart, onDrag, onDragEnd]);
 
   const marker = useMemo(() => {
     const markerInstance = new MapLibreGL.Marker({
@@ -491,41 +487,52 @@ function MapMarker({
       draggable,
     }).setLngLat([longitude, latitude]);
 
+    return markerInstance;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     const handleClick = (e: MouseEvent) => callbacksRef.current.onClick?.(e);
     const handleMouseEnter = (e: MouseEvent) =>
       callbacksRef.current.onMouseEnter?.(e);
     const handleMouseLeave = (e: MouseEvent) =>
       callbacksRef.current.onMouseLeave?.(e);
 
-    markerInstance.getElement()?.addEventListener("click", handleClick);
-    markerInstance
+    marker.getElement()?.addEventListener("click", handleClick);
+    marker
       .getElement()
       ?.addEventListener("mouseenter", handleMouseEnter);
-    markerInstance
+    marker
       .getElement()
       ?.addEventListener("mouseleave", handleMouseLeave);
 
     const handleDragStart = () => {
-      const lngLat = markerInstance.getLngLat();
+      const lngLat = marker.getLngLat();
       callbacksRef.current.onDragStart?.({ lng: lngLat.lng, lat: lngLat.lat });
     };
     const handleDrag = () => {
-      const lngLat = markerInstance.getLngLat();
+      const lngLat = marker.getLngLat();
       callbacksRef.current.onDrag?.({ lng: lngLat.lng, lat: lngLat.lat });
     };
     const handleDragEnd = () => {
-      const lngLat = markerInstance.getLngLat();
+      const lngLat = marker.getLngLat();
       callbacksRef.current.onDragEnd?.({ lng: lngLat.lng, lat: lngLat.lat });
     };
 
-    markerInstance.on("dragstart", handleDragStart);
-    markerInstance.on("drag", handleDrag);
-    markerInstance.on("dragend", handleDragEnd);
+    marker.on("dragstart", handleDragStart);
+    marker.on("drag", handleDrag);
+    marker.on("dragend", handleDragEnd);
 
-    return markerInstance;
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => {
+      const element = marker.getElement();
+      element.removeEventListener("click", handleClick);
+      element.removeEventListener("mouseenter", handleMouseEnter);
+      element.removeEventListener("mouseleave", handleMouseLeave);
+      marker.off("dragstart", handleDragStart);
+      marker.off("drag", handleDrag);
+      marker.off("dragend", handleDragEnd);
+    };
+  }, [marker]);
 
   useEffect(() => {
     if (!map) return;
@@ -821,7 +828,7 @@ const positionClasses = {
   "bottom-right": "bottom-10 right-2",
 };
 
-function ControlGroup({ children }: { children: React.ReactNode }) {
+function ControlGroup({ children }: { children: ReactNode }) {
   return (
     <div className="border-border bg-background [&>button:not(:last-child)]:border-border flex flex-col overflow-hidden rounded-md border shadow-sm [&>button:not(:last-child)]:border-b">
       {children}
@@ -837,7 +844,7 @@ function ControlButton({
 }: {
   onClick: () => void;
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   disabled?: boolean;
 }) {
   return (
@@ -1037,7 +1044,7 @@ function MapPopup({
 }: MapPopupProps) {
   const { map } = useMap();
   const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  useLayoutEffect(() => { onCloseRef.current = onClose; }, [onClose]);
   const container = useMemo(() => document.createElement("div"), []);
   const { offset, maxWidth } = popupOptions;
 
@@ -1144,8 +1151,11 @@ function measureRoute(coordinates: [number, number][]): RouteMeasure {
   let total = 0;
 
   for (let i = 1; i < coordinates.length; i += 1) {
-    const [lng1, lat1] = coordinates[i - 1];
-    const [lng2, lat2] = coordinates[i];
+    const previous = coordinates[i - 1];
+    const current = coordinates[i];
+    if (!previous || !current) continue;
+    const [lng1, lat1] = previous;
+    const [lng2, lat2] = current;
     const midLat = ((lat1 + lat2) / 2) * (Math.PI / 180);
     total += Math.hypot((lng2 - lng1) * Math.cos(midLat), lat2 - lat1);
     cumulative.push(total);
@@ -1161,7 +1171,7 @@ function findSegmentIndex(cumulative: number[], distance: number) {
 
   while (low < high) {
     const mid = Math.floor((low + high) / 2);
-    if (cumulative[mid] < distance) low = mid + 1;
+    if ((cumulative[mid] ?? Infinity) < distance) low = mid + 1;
     else high = mid;
   }
 
@@ -1175,15 +1185,20 @@ function pointAtFraction(
   fraction: number,
 ): [number, number] | null {
   if (coordinates.length === 0) return null;
-  if (coordinates.length === 1 || measure.total === 0) return coordinates[0];
+  if (coordinates.length === 1 || measure.total === 0) return coordinates[0] ?? null;
 
   const target = measure.total * clampFraction(fraction);
   const index = findSegmentIndex(measure.cumulative, target);
-  const [lng1, lat1] = coordinates[index];
-  const [lng2, lat2] = coordinates[index + 1];
-  const segment = measure.cumulative[index + 1] - measure.cumulative[index];
+  const start = coordinates[index];
+  const end = coordinates[index + 1];
+  const startDistance = measure.cumulative[index];
+  const endDistance = measure.cumulative[index + 1];
+  if (!start || !end || startDistance === undefined || endDistance === undefined) return null;
+  const [lng1, lat1] = start;
+  const [lng2, lat2] = end;
+  const segment = endDistance - startDistance;
   const ratio =
-    segment === 0 ? 0 : (target - measure.cumulative[index]) / segment;
+    segment === 0 ? 0 : (target - startDistance) / segment;
 
   return [lng1 + (lng2 - lng1) * ratio, lat1 + (lat2 - lat1) * ratio];
 }
@@ -1321,7 +1336,14 @@ function MapRoute({
   const id = propId ?? autoId;
   const sourceId = `route-source-${id}`;
   const layerId = `route-layer-${id}`;
-  const [ready, setReady] = useState(false);
+  const subscribeToStyle = useCallback((onChange: () => void) => {
+    if (!map) return () => {};
+    map.on("styledata", onChange);
+    return () => { map.off("styledata", onChange); };
+  }, [map]);
+  const hasRouteLayer = useCallback(() => !!map?.getLayer(layerId), [map, layerId]);
+  const hasLayer = useSyncExternalStore(subscribeToStyle, hasRouteLayer, () => false);
+  const ready = isLoaded && hasLayer;
 
   // Callers often pass `data?.coordinates ?? []`, a fresh array each render.
   // Collapse empties to one shared instance so nothing downstream re-runs.
@@ -1345,8 +1367,8 @@ function MapRoute({
   const pointAt = useCallback(
     (at: RouteAnchor) => {
       if (coordinates.length === 0) return null;
-      if (at === "start") return coordinates[0];
-      if (at === "end") return coordinates[coordinates.length - 1];
+      if (at === "start") return coordinates[0] ?? null;
+      if (at === "end") return coordinates.at(-1) ?? null;
       if (at === "progress") {
         if (progress === undefined) return null;
         return pointAtFraction(coordinates, measure, progress);
@@ -1397,12 +1419,8 @@ function MapRoute({
       resolveBeforeId(map, beforeId),
     );
 
-    // Children add their layers once this is set, which keeps them above the
-    // base line: child effects would otherwise run before this one.
-    setReady(true);
-
+    // The style subscription lets children add layers after the base line exists.
     return () => {
-      setReady(false);
       try {
         if (map.getLayer(layerId)) map.removeLayer(layerId);
         if (map.getSource(sourceId)) map.removeSource(sourceId);
@@ -1830,7 +1848,7 @@ function MapGeoJSON<
     [defaults.line, linePaint],
   );
   const latestRef = useRef({ onClick, onHover });
-  latestRef.current = { onClick, onHover };
+  useLayoutEffect(() => { latestRef.current = { onClick, onHover }; }, [onClick, onHover]);
 
   // Add source on mount.
   useEffect(() => {
@@ -2181,7 +2199,7 @@ function MapArc<T extends MapArcDatum = MapArcDatum>({
   );
 
   const latestRef = useRef({ data, onClick, onHover });
-  latestRef.current = { data, onClick, onHover };
+  useLayoutEffect(() => { latestRef.current = { data, onClick, onHover }; }, [data, onClick, onHover]);
 
   // Add source and layers on mount.
   useEffect(() => {
@@ -2560,9 +2578,8 @@ function MapClusterLayer<
       const features = map.queryRenderedFeatures(e.point, {
         layers: [clusterLayerId],
       });
-      if (!features.length) return;
-
       const feature = features[0];
+      if (!feature) return;
       const clusterId = feature.properties?.cluster_id as number;
       const pointCount = feature.properties?.point_count as number;
       const coordinates = (feature.geometry as GeoJSON.Point).coordinates as [
@@ -2589,9 +2606,8 @@ function MapClusterLayer<
         features?: MapLibreGL.MapGeoJSONFeature[];
       },
     ) => {
-      if (!onPointClick || !e.features?.length) return;
-
-      const feature = e.features[0];
+      const feature = e.features?.[0];
+      if (!onPointClick || !feature) return;
       const coordinates = (
         feature.geometry as GeoJSON.Point
       ).coordinates.slice() as [number, number];

@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import type { NavIcon } from "./nav";
 
 /**
  * Hand-drawn nav glyphs (24px grid, 1.75 stroke, round caps) so the sidebar
  * needs no icon dependency. Decorative only: the label carries the meaning.
  */
-const PATHS: Record<NavIcon, React.ReactNode> = {
+const PATHS: Record<NavIcon, ReactNode> = {
   // Whakatipu skyline with a low sun
   overview: (
     <>

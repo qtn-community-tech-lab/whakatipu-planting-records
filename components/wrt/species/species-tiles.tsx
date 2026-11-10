@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Species as tiles: picture, names, recorded plants with the split, and how
  * widely each one went in. Built from any set of records (a season, a site,
@@ -16,7 +17,7 @@ export function SpeciesTiles({
 }: {
   records: RecordView[];
   /** Where a tile goes: usually the records behind its number. */
-  hrefFor: (species: Species) => string;
+  hrefFor: (species: Species) => AppRoute;
   /** What the small count under the bar measures. */
   spread: "sites" | "seasons";
   cap?: number;

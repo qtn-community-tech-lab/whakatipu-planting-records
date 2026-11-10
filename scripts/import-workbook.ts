@@ -131,7 +131,9 @@ async function main() {
 
   const report: [string, number, number][] = [];
   async function sync(table: string, want: Row[]) {
-    const have = await readAll(table, Object.keys(want[0]).join(", "), "slug");
+    const first = want[0];
+    if (!first) return;
+    const have = await readAll(table, Object.keys(first).join(", "), "slug");
     const d = diff(want, have);
     report.push([table, d.added.length, d.changed.length]);
     if (write) await inBatches(d.all, (b) => db.from(table).upsert(b, { onConflict: "slug" }), `write ${table}`);
