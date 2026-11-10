@@ -1,9 +1,26 @@
 import { describe, expect, it } from "vitest";
 import { createSiteSchema, editSiteSchema } from "@/db/types";
+import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 
 const site = { slug: "river-reserve", name: "River Reserve", description: "" };
 
 describe("site schemas", () => {
+  it.each([
+    ["slug", INPUT_LIMITS.identifier],
+    ["name", INPUT_LIMITS.shortText],
+    ["description", INPUT_LIMITS.longText],
+  ] as const)("accepts %s at its limit and rejects one character over", (field, limit) => {
+    const schemas = field === "slug" ? [createSiteSchema] : [createSiteSchema, editSiteSchema];
+    for (const schema of schemas) {
+      const value = "a".repeat(limit);
+      expect(schema.parse({ ...site, [field]: value })[field]).toBe(value);
+      const result = schema.safeParse({ ...site, [field]: `${value}a` });
+      expect(result.success).toBe(false);
+      if (!result.success)
+        expect(result.error.issues).toContainEqual(expect.objectContaining({ path: [field], message: lengthMessage(limit) }));
+    }
+  });
+
   it("allows creating without a description or location and trims text", () => {
     expect(createSiteSchema.parse({ ...site, name: "  River Reserve  ", description: "  By the river.  " }))
       .toEqual({ ...site, description: "By the river." });

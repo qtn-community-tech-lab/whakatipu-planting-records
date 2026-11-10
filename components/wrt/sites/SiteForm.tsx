@@ -26,6 +26,7 @@ import {
   type SiteSubmitResult,
 } from "@/db/types";
 import type { AppRoute } from "@/lib/wrt/routes";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 
 type SiteFormProps = {
   submitLabel: string;
@@ -90,7 +91,7 @@ export function SiteForm(props: SiteFormProps) {
           {props.values ? (
             <Field>
               <FieldLabel htmlFor="slug">Slug</FieldLabel>
-              <Input id="slug" value={props.values.slug} readOnly />
+              <Input id="slug" value={props.values.slug} maxLength={INPUT_LIMITS.identifier} readOnly />
               <FieldDescription>
                 The site&rsquo;s slug is fixed after creation.
               </FieldDescription>
@@ -102,7 +103,7 @@ export function SiteForm(props: SiteFormProps) {
               label="Slug"
               description="Use a unique slug with lowercase letters, numbers and single hyphens, for example lake-hayes. This sets the site URL and is fixed after creation."
               render={(field, accessibility) => (
-                <Input {...field} {...accessibility} required />
+                <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} required />
               )}
             />
           )}
@@ -111,7 +112,7 @@ export function SiteForm(props: SiteFormProps) {
             name="name"
             label="Site name"
             render={(field, accessibility) => (
-              <Input {...field} {...accessibility} required />
+              <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} required />
             )}
           />
           <FormField
@@ -120,7 +121,7 @@ export function SiteForm(props: SiteFormProps) {
             label="Description"
             description="Optional. Describe the site."
             render={(field, accessibility) => (
-              <Textarea {...field} {...accessibility} rows={4} />
+              <Textarea {...field} {...accessibility} maxLength={INPUT_LIMITS.longText} rows={4} />
             )}
           />
           {errors.root && (

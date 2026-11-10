@@ -36,11 +36,11 @@ export type SpeciesSubmitResult = { error?: string; issues?: { path: string; mes
 
 export const editSiteSchema = z.object({
   name: text.min(1, "Enter a site name."),
-  description: text,
+  description: notes,
 });
 
 export const createSiteSchema = editSiteSchema.extend({
-  slug: text.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
+  slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
     .refine((value) => value !== "new", "This slug is reserved. Choose another."),
 });
 

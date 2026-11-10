@@ -21,6 +21,7 @@ import SitesPage from "@/app/sites/page";
 import SitePage, { generateMetadata } from "@/app/sites/[slug]/page";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import type { CreateSiteInput, SiteSubmitResult } from "@/db/types";
+import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 
 const values = { slug: "new-reserve", name: "New Reserve", description: "Beside the river." };
 const params = Promise.resolve({ slug: values.slug });
@@ -65,6 +66,17 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
     expect(await (await pageForm(kind))!.props.onSubmit({ ...values, name: "  " })).toHaveProperty("issues");
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["name", INPUT_LIMITS.shortText],
+    ["description", INPUT_LIMITS.longText],
+  ] as const)("rejects an overlong %s before writing", async (field, limit) => {
+    const result = await (await pageForm(kind))!.props.onSubmit({ ...values, [field]: "a".repeat(limit + 1) });
+    expect(result.issues).toContainEqual({ path: field, message: lengthMessage(limit) });
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("writes only allowed fields and invalidates shared data before redirecting", async () => {
