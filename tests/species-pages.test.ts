@@ -1,6 +1,7 @@
 import { Children, isValidElement, type ReactElement } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type * as SpeciesFormModule from "@/components/wrt/species/SpeciesForm";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 
 const mocks = vi.hoisted(() => ({ authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn() }));
 vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
@@ -35,6 +36,16 @@ beforeEach(() => {
 
 describe.each(["new", "edit"] as const)("%s species page", (kind) => {
   const input = kind === "new" ? values : { ...values, slug: "old-slug" };
+
+  it("rejects overlong input on the server before writing", async () => {
+    const result = await (await pageForm(kind))!.props.onSubmit({
+      ...input, scientific_name: "a".repeat(INPUT_LIMITS.shortText + 1),
+    });
+    expect(result.issues).toContainEqual(expect.objectContaining({ path: "scientific_name" }));
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
 
   it("hides the editor when signed out and checks authentication again on submission", async () => {
     const form = await pageForm(kind);

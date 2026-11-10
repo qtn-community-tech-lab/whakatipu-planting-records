@@ -21,3 +21,24 @@ the people reviewing or reusing the work can see what's there without reading th
 - Upload the images through the GitHub comment box and put them in a table in the PR
   description.
 - If nothing visual changed, write "Not applicable: no visual change."
+
+## Form input validation
+
+When adding or changing forms, reuse the string limits in `lib/forms/limits.ts`:
+
+| Kind | Maximum length |
+|---|---|
+| Slugs and identifiers | 80 |
+| Names, short text and photo attribution | 255 |
+| URLs | 2,048 |
+| Notes and long text | 2,000 |
+
+Enforce limits in server-side Zod schemas and reuse those schemas in client forms. Set matching
+HTML `maxLength` attributes on text inputs and textareas. Reject overlong submitted values with
+clear field errors; do not silently truncate stored input. Unwrap nullable server fields for form
+schemas instead of replacing them with unbounded strings. Test values at the limit and one character over.
+
+These shared limits currently apply to the species create/edit form. Apply the convention to other
+forms when they are updated; do not expand a task's scope solely to migrate every existing form.
+The PostgreSQL species columns remain `text` without explicit length constraints; do not assume
+the database enforces these application limits.

@@ -35,6 +35,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
 import { z } from "zod";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 import {
   speciesSchema,
   type SpeciesEdit,
@@ -42,18 +43,17 @@ import {
   type SpeciesSubmitResult,
 } from "@/db/types";
 
-const text = z.string().trim();
 const flag = z.enum(["unknown", "yes", "no"]);
 
 export const speciesFormSchema = speciesSchema.extend({
-  suggested_spelling: text,
-  common_name: text,
-  maori_name: text,
+  suggested_spelling: speciesSchema.shape.suggested_spelling.unwrap(),
+  common_name: speciesSchema.shape.common_name.unwrap(),
+  maori_name: speciesSchema.shape.maori_name.unwrap(),
   status: speciesSchema.shape.status.unwrap().or(z.literal("unknown")),
   over_5m: flag,
   threatened: flag,
   contested_group: speciesSchema.shape.contested_group.unwrap(),
-  register_note: text,
+  register_note: speciesSchema.shape.register_note.unwrap(),
 });
 export type SpeciesFormValues = z.infer<typeof speciesFormSchema>;
 export type { SpeciesInput, SpeciesSubmitResult };
@@ -194,7 +194,7 @@ export function SpeciesForm({
                   ? "The slug cannot be changed after the species is created."
                   : "Slugs must be unique. Use lowercase letters, numbers and hyphens, for example coprosma-propinqua. The slug cannot be changed after creation."}
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} readOnly={!!values} required />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} readOnly={!!values} required />
                 )}
               />
               <FormField
@@ -202,7 +202,7 @@ export function SpeciesForm({
                 name="scientific_name"
                 label="Scientific name"
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} required />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} required />
                 )}
               />
               <FormField
@@ -210,7 +210,7 @@ export function SpeciesForm({
                 name="suggested_spelling"
                 label="Suggested spelling"
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
                 )}
               />
               <FormField
@@ -218,7 +218,7 @@ export function SpeciesForm({
                 name="common_name"
                 label="Common name"
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
                 )}
               />
               <FormField
@@ -226,7 +226,7 @@ export function SpeciesForm({
                 name="maori_name"
                 label="Māori name"
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
                 )}
               />
               <FormField
@@ -349,7 +349,7 @@ export function SpeciesForm({
                 label="Contested group"
                 description="For example C3. Leave blank if this name is not part of a contested group."
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} />
                 )}
               />
               <FormField
@@ -357,7 +357,7 @@ export function SpeciesForm({
                 name="register_note"
                 label="Register notes"
                 render={(field, accessibility) => (
-                  <Textarea {...field} {...accessibility} rows={3} />
+                  <Textarea {...field} {...accessibility} maxLength={INPUT_LIMITS.longText} rows={3} />
                 )}
               />
             </FieldGroup>
@@ -388,6 +388,7 @@ export function SpeciesForm({
                               {...field}
                               {...accessibility}
                               type="url"
+                              maxLength={INPUT_LIMITS.url}
                               required
                             />
                           )}
@@ -397,7 +398,7 @@ export function SpeciesForm({
                           name={`photos.${index}.attribution`}
                           label="Photo attribution"
                           render={(field, accessibility) => (
-                            <Input {...field} {...accessibility} />
+                            <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
                           )}
                         />
                         <div className="flex flex-wrap gap-2">

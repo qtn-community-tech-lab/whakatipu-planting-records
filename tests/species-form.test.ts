@@ -3,10 +3,75 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SpeciesForm, emptySpecies, speciesFormSchema, speciesFormValues, speciesWriteValues } from "@/components/wrt/species/SpeciesForm";
 import { speciesSchema } from "@/db/types";
+import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 
 const valid = () => ({ ...emptySpecies, slug: "coprosma-propinqua", scientific_name: "Coprosma propinqua" });
 
 describe("species form", () => {
+  const textCases = [
+    { field: "slug", limit: INPUT_LIMITS.identifier, prefix: "" },
+    { field: "scientific_name", limit: INPUT_LIMITS.shortText, prefix: "" },
+    { field: "suggested_spelling", limit: INPUT_LIMITS.shortText, prefix: "" },
+    { field: "common_name", limit: INPUT_LIMITS.shortText, prefix: "" },
+    { field: "maori_name", limit: INPUT_LIMITS.shortText, prefix: "" },
+    { field: "contested_group", limit: INPUT_LIMITS.identifier, prefix: "C" },
+    { field: "register_note", limit: INPUT_LIMITS.longText, prefix: "" },
+  ] as const;
+
+  it.each(textCases)("enforces the $field length in both form and server validation", ({ field, limit, prefix }) => {
+    const exact = prefix + (prefix ? "1" : "a").repeat(limit - prefix.length);
+    const input = { ...valid(), [field]: exact };
+    expect(speciesFormSchema.safeParse(input).success).toBe(true);
+    expect(speciesSchema.safeParse(speciesWriteValues(input)).success).toBe(true);
+
+    const overlong = { ...input, [field]: exact + "1" };
+    for (const result of [speciesFormSchema.safeParse(overlong), speciesSchema.safeParse(speciesWriteValues(overlong))]) {
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: [field], message: lengthMessage(limit),
+      }));
+    }
+  });
+
+  it.each([
+    { field: "src", limit: INPUT_LIMITS.url, prefix: "https://example.com/" },
+    { field: "attribution", limit: INPUT_LIMITS.shortText, prefix: "" },
+  ] as const)("enforces photo $field lengths in both schemas", ({ field, limit, prefix }) => {
+    const exact = prefix + "a".repeat(limit - prefix.length);
+    const photo = { src: "https://example.com/plant.jpg", attribution: "Credit", [field]: exact };
+    const input = { ...valid(), photos: [photo] };
+    expect(speciesFormSchema.safeParse(input).success).toBe(true);
+    expect(speciesSchema.safeParse(speciesWriteValues(input)).success).toBe(true);
+
+    const overlong = { ...input, photos: [{ ...photo, [field]: exact + "a" }] };
+    for (const result of [speciesFormSchema.safeParse(overlong), speciesSchema.safeParse(speciesWriteValues(overlong))]) {
+      expect(result.success).toBe(false);
+      if (!result.success) expect(result.error.issues).toContainEqual(expect.objectContaining({
+        path: ["photos", 0, field], message: lengthMessage(limit),
+      }));
+    }
+  });
+
+  it("matches HTML length limits to the validation limits", () => {
+    const html = renderToStaticMarkup(createElement(SpeciesForm, {
+      onSubmit: async () => {},
+      values: {
+        ...speciesWriteValues(valid()), updated_at: "2026-11-07T00:00:00Z",
+        photos: [{ src: "https://example.com/plant.jpg", attribution: "Credit" }],
+      },
+    }));
+    const controls = html.match(/<(?:input|textarea)\b[^>]*>/g) ?? [];
+    for (const { field, limit } of [
+      ...textCases,
+      { field: "photos.0.src", limit: INPUT_LIMITS.url },
+      { field: "photos.0.attribution", limit: INPUT_LIMITS.shortText },
+    ]) {
+      const control = controls.find((tag) => tag.includes(`name="${field}"`));
+      expect(control).toBeDefined();
+      expect(control?.toLowerCase()).toContain(`maxlength="${limit}"`);
+    }
+  });
+
   it("only allows entering a slug when creating a species", () => {
     const onSubmit = async () => {};
     const created = renderToStaticMarkup(createElement(SpeciesForm, { onSubmit }));
