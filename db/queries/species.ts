@@ -58,14 +58,16 @@ export async function readSpeciesForEdit(slug: string) {
 }
 
 export async function createSpecies(values: SpeciesInput) {
-  return (await db()).from("species").insert(values).select("slug").single();
+  return (await db()).from("species").insert({ ...values, needs_decision: false }).select("slug").single();
 }
 
-/** Preserve the existing slug. The database touch trigger sets updated_at. */
+/** Preserve the existing slug and decision flag. The database touch trigger sets updated_at. */
 export async function updateSpecies(slug: string, values: SpeciesInput) {
+  const { needs_decision, ...editable } = values;
+  void needs_decision; // This flag is managed outside the species editor.
   return (await db())
     .from("species")
-    .update({ ...values, slug })
+    .update({ ...editable, slug })
     .eq("slug", slug)
     .is("deactivated_at", null)
     .select("slug")

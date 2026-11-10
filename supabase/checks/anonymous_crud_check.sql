@@ -1,16 +1,13 @@
--- Run as postgres after all migrations. Real CRUD as anon, with fixture rows rolled back.
--- The auth.users fixture only supplies the foreign key required by public.users.
+-- Run as postgres after all migrations. Anonymous reads/edits and denied operations.
+-- All fixture rows are rolled back.
 begin;
 
-select set_config('wrt.crud_check_user', gen_random_uuid()::text, true);
-insert into auth.users (id) values (current_setting('wrt.crud_check_user')::uuid);
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
 set local role anon;
 
 do $$
 declare
   fixture_slug text := 'anonymous-crud-check-' || txid_current();
-  fixture_user uuid := current_setting('wrt.crud_check_user')::uuid;
   fixture_season smallint;
   fixture_event bigint;
   fixture_line bigint;
@@ -25,7 +22,6 @@ begin
   where not exists (select 1 from public.seasons where id = candidate or year = candidate)
   limit 1;
 
-  insert into public.users (id, name) values (fixture_user, 'Anonymous CRUD check');
   insert into public.seasons (id, slug, label, year, half)
     values (fixture_season, fixture_slug, 'Anonymous CRUD check', fixture_season, 'autumn');
   insert into public.sites (slug, name) values (fixture_slug, 'Anonymous CRUD check');
@@ -36,14 +32,13 @@ begin
   insert into public.planting_lines (planting_event, species, quantity)
     values (fixture_event, fixture_slug, 1) returning id into fixture_line;
 
-  -- Reverse dependency order also allows each fixture to be deleted below.
-  foreach t in array array['planting_lines', 'planting_events', 'species', 'areas', 'sites', 'seasons', 'users'] loop
+  -- Check every application table and ensure anonymous deletes are denied.
+  foreach t in array array['planting_lines', 'planting_events', 'species', 'areas', 'sites', 'seasons'] loop
     key_column := case when t in ('species', 'areas', 'sites') then 'slug' else 'id' end;
     key_value := case t
       when 'planting_lines' then fixture_line::text
       when 'planting_events' then fixture_event::text
       when 'seasons' then fixture_season::text
-      when 'users' then fixture_user::text
       else fixture_slug end;
 
     execute format('select count(*) from public.%I where %I::text = $1', t, key_column)
@@ -62,11 +57,26 @@ begin
     get diagnostics changed = row_count;
     if changed <> 1 then raise exception 'Anonymous UPDATE failed for %', t; end if;
 
-    execute format('delete from public.%I where %I::text = $1', t, key_column) using key_value;
-    get diagnostics changed = row_count;
-    if changed <> 1 then raise exception 'Anonymous DELETE failed for %', t; end if;
-    raise notice 'PASS: anonymous INSERT, SELECT, UPDATE, DELETE on %', t;
+    begin
+      execute format('delete from public.%I where %I::text = $1', t, key_column) using key_value;
+      raise exception 'Anonymous DELETE unexpectedly allowed for %', t;
+    exception when insufficient_privilege then null;
+    end;
+    raise notice 'PASS: anonymous INSERT, SELECT, UPDATE allowed; DELETE denied on %', t;
   end loop;
+
+  if has_table_privilege('anon', 'public.users', 'SELECT')
+    or has_table_privilege('anon', 'public.users', 'INSERT')
+    or has_table_privilege('anon', 'public.users', 'UPDATE')
+    or has_table_privilege('anon', 'public.users', 'DELETE') then
+    raise exception 'Anonymous access to users is still granted';
+  end if;
+  begin
+    update public.users set is_staff = true;
+    raise exception 'Anonymous users UPDATE unexpectedly allowed';
+  exception when insufficient_privilege then null;
+  end;
+  raise notice 'PASS: anonymous users access denied';
 end $$;
 
 rollback;
