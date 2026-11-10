@@ -9,6 +9,8 @@ import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
@@ -65,7 +67,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
   const show = pick(SHOWS, first(sp.show), "all");
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
 
-  const all = await getWrt().speciesList();
+  const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
   const guideCount = all.filter((r) => r.item.photos[0] && r.item.profile).length;
   const referenceGapCount = all.filter((r) => {
     const review = getSpeciesReferenceReview(r.item.id);
@@ -112,9 +114,12 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
           </>
         }
         aside={
+          <>
+          {authenticated && <Button asChild><Link href="/species/new">Create species</Link></Button>}
           <Link href="/species/photos" className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
             Species reference guide →
           </Link>
+          </>
         }
       />
 
@@ -204,7 +209,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
       </section>
       <Rule>
         Species are listed as WRT typed them, with te reo Māori names shown with macrons. Two names that may be the same species
-        are kept apart until WRT rules. Photos are Wiki references from other places; they do not confirm plants at a WRT site.
+        are kept apart until WRT rules. Photos are reference images; they do not confirm plants at a WRT site.
         Species without a photo show one ring per season they were recorded in.
       </Rule>
     </>

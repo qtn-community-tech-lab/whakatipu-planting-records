@@ -21,7 +21,7 @@ function toneFor(slug: string) {
  */
 function RingTile({ row }: { row: SpeciesSummary }) {
   const { item: sp, span } = row;
-  const seasons = Math.max(1, span.seasonsActive);
+  const seasons = Math.max(1, span?.seasonsActive ?? 0);
   const initial = (sp.displayIsScientific ? sp.scientificName : sp.displayName).trim().charAt(0).toUpperCase();
   const step = 46 / Math.max(seasons, 1);
   return (
@@ -50,7 +50,7 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
   const photo = photos[0];
   const profile = sp.profile;
   const name = sp.displayName;
-  const years = span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
+  const years = !span ? "No records yet" : span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
   // Every other name it goes by: common name and Māori names, minus the one shown as the title.
   const also = [...new Set([profile?.commonName ?? sp.commonName, ...(profile?.maoriNames ?? [sp.maoriName])])]
     .filter((x): x is string => !!x && x !== name);
@@ -110,7 +110,7 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
             </dd>
           </div>
           <div><dt>Sites</dt><dd>{formatNumber(placeCount)}</dd></div>
-          <div title={`${span.seasonsActive} seasons with records`}><dt>Seasons</dt><dd>{years}</dd></div>
+          <div title={`${span?.seasonsActive ?? 0} seasons with records`}><dt>Seasons</dt><dd>{years}</dd></div>
           {also.length > 0 && <div className="wrt-scard__also"><dt>Also called</dt><dd>{also.join(" · ")}</dd></div>}
         </dl>
       </div>

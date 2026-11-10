@@ -24,12 +24,14 @@ describe("confirmed-only view", () => {
     expect((await confirmed.records({ review: "needs-review" })).rows).toEqual([]);
   });
 
-  it("drops sites and species that have only records needing review", async () => {
+  it("drops sites with only records needing review and keeps the full species register", async () => {
     const [allPlaces, places, allSpecies, species] = await Promise.all([
       q.places(), confirmed.places(), q.speciesList(), confirmed.speciesList(),
     ]);
     expect(places.length).toBeLessThan(allPlaces.length);
-    expect(species.length).toBeLessThan(allSpecies.length);
+    expect(species.map((row) => row.item.id).sort()).toEqual(allSpecies.map((row) => row.item.id).sort());
+    expect(species.some((row) => row.span === null)).toBe(true);
+    for (const row of species) expect(row.split.needsReview).toBe(0);
     for (const p of places) expect(p.split.needsReview).toBe(0);
   });
 

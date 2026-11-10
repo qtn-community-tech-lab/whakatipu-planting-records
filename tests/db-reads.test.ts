@@ -46,7 +46,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
   });
 
   it("lists the species register and ranks species by plants", async () => {
-    expect((await listSpecies()).length).toBe(164);
+    expect((await listSpecies()).length).toBeGreaterThanOrEqual(164);
     expect(sum(await listSpeciesTotals())).toBe(ALL_PLANTS);
   });
 

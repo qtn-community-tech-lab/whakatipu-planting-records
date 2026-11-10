@@ -11,6 +11,9 @@ import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/shared/ch
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
+import { isAuthenticated } from "@/db/queries/access";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
@@ -28,18 +31,18 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const d = await getWrt().species(slug);
-  if (!d || !d.span) return { title: "Species not found" };
+  if (!d) return { title: "Species not found" };
   const name = d.species.displayName;
   return {
     title: name,
-    description: `${formatNumber(d.split.total)} recorded ${name} plants since ${d.span.first.label}.`,
+    description: d.span ? `${formatNumber(d.split.total)} recorded ${name} plants since ${d.span.first.label}.` : `Species register entry for ${name}.`,
   };
 }
 
 export default async function SpeciesDetailPage({ params }: Props) {
   const { slug } = await params;
-  const d = await getWrt().species(slug);
-  if (!d || !d.span) notFound();
+  const [d, authenticated] = await Promise.all([getWrt().species(slug), isAuthenticated()]);
+  if (!d) notFound();
   const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
 
   const photos = sp.photos;
@@ -52,7 +55,6 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const ranked = [...(await getWrt().speciesList())].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
   );
-  const planted = new Set(ranked.map((r) => r.item.slug));
   const at = ranked.findIndex((r) => r.item.slug === sp.slug);
   const rank = at + 1;
   const prev = at > 0 ? ranked[at - 1] : null;
@@ -60,6 +62,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
 
   return (
     <>
+      {authenticated && <div className="flex justify-end"><Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button></div>}
       <SpeciesHero
         species={sp}
         split={split}
@@ -84,10 +87,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
                 return (
                   <span key={c.slug}>
                     {i > 0 && (i === contested.length - 1 ? " and " : ", ")}
-                    {/* A species with no plantings has no page: name it without a link. */}
-                    {planted.has(c.slug) ? (
-                      <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
-                    ) : name}
+                    <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
                   </span>
                 );
               })}{" "}
@@ -99,6 +99,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
 
       <SpeciesProfilePanel speciesId={sp.id} profile={sp.profile} />
 
+      {!span ? <Empty><EmptyHeader><EmptyTitle>No planting records yet</EmptyTitle><EmptyDescription>This species is in the register and has no recorded plantings.</EmptyDescription></EmptyHeader></Empty> : <>
       <Card
         title="Recorded plants by season"
         foot={`${seasons.length} planting seasons. Select a column to open that season.`}
@@ -170,6 +171,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
           All {formatNumber(split.records)} records for this species →
         </Link>
       </Rule>
+      </>}
 
       <nav className="wrt-snext" aria-label="Neighbouring species by recorded plants">
         {prev ? (

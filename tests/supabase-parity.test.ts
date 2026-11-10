@@ -50,7 +50,9 @@ describe.skipIf(!ready)("Supabase matches the workbook import", { timeout: 120_0
 
   it("species list and every species page", async () => {
     const [a, b] = await Promise.all([workbook.speciesList(), db.speciesList()]);
-    expect(b.map((s) => [s.item.slug, s.item.id, s.item.displayName, s.split, s.placeCount])).toEqual(a.map((s) => [s.item.slug, s.item.id, s.item.displayName, s.split, s.placeCount]));
+    // App-created species extend the register without changing imported workbook rows.
+    const importedIds = new Set(a.map((s) => s.item.id));
+    expect(b.filter((s) => importedIds.has(s.item.id)).map((s) => [s.item.slug, s.item.id, s.item.displayName, s.split, s.placeCount])).toEqual(a.map((s) => [s.item.slug, s.item.id, s.item.displayName, s.split, s.placeCount]));
     for (const { item } of a) {
       const [x, y] = await Promise.all([workbook.species(item.slug), db.species(item.slug)]);
       expect(seasonsOf(y!.seasons)).toEqual(seasonsOf(x!.seasons));

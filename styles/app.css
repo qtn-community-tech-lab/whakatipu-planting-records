@@ -184,9 +184,14 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   background: var(--surface-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237d877f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center;
   border: 1px solid var(--border-card); font: 600 13.5px/1 var(--font-sans); color: var(--text-strong); appearance: none; max-width: 100%;
 }
+/* Radix triggers render the arrow as an icon rather than a background image. */
+.wrt-select[data-slot="select-trigger"] { position: relative; background-image: none; }
+.wrt-select__icon { position: absolute; right: 14px; width: 10px; height: 6px; color: var(--text-muted); pointer-events: none; }
+.wrt-select[data-size="sm"] { height: 32px; }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
 /* Form fields (components/ui/field.tsx and components/ui/inputs) */
+.cn-input { background: var(--surface-card); }
 .cn-field > .wrt-select { width: 100%; }
 .wrt-textarea { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
 .cn-input[type="file"] { height: auto; padding: 0; background: none; font: var(--type-small); color: var(--text-muted); }
@@ -194,6 +199,14 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 /* "(optional)" keeps the label's size and line height, so labels line up across a row. */
 .wrt-field-optional { font-weight: 500; color: var(--text-muted); }
 .cn-field :is(input, select, textarea, button)[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
+
+/* Species photo editor: one card per image, with a stable preview area. */
+.wrt-species-image__layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
+.wrt-species-image .cn-input { border: var(--border-input); }
+.wrt-species-image__preview { position: relative; display: grid; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--border-card); border-radius: var(--radius-field); background: var(--surface-soft); }
+@media (min-width: 640px) {
+  .wrt-species-image__layout { grid-template-columns: minmax(0, 1fr) 240px; }
+}
 
 /* Combobox (components/ui/combobox.tsx): type in the field, list opens underneath */
 .wrt-combobox { position: relative; display: flex; align-items: center; }

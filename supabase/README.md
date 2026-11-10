@@ -15,6 +15,8 @@ setting local keys and loading the initial data. This README covers database mai
 | `migrations/20261104000000_seasons_page.sql` | Adds year, half, workbook cell and review counts to the season totals, and the views `season_species`, `season_sites` and `totals_by_question` |
 | `migrations/20261105000000_line_records.sql` | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details` |
 | `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
+| `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled |
+| `checks/anonymous_crud_check.sql` | Verifies anonymous CRUD on all seven tables using temporary fixture rows, then rolls back |
 | `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
 
@@ -43,7 +45,9 @@ The current project ID in `config.toml` is `wrt-planting-app`. Stopping the stac
 
 ## Not here yet
 
-- Sign-in. Until then, the public key reads live rows and nothing else, and only the SQL Editor and the secret key can write.
+- Sign-in. During early development, the anonymous CRUD migration allows the public key to read, insert, update and delete rows in the seven app tables above. Questions and notes remain read-only. User IDs must still reference an existing `auth.users` account.
+
+The development migration applies everywhere it is deployed, including hosted projects. Anonymous callers can read user rows and change staff flags. Revoke its grants and drop its policies before public use with real data.
 
 ## The workbook import
 
