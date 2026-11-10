@@ -5,31 +5,108 @@ planting season since Autumn 2015 by **site, species, year and season**, without
 
 5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species planted (164 in the register).
 
-## Run it
+## Local development
+
+Run Next.js against a local Supabase database. A hosted Supabase project is not provisioned yet and is not
+required for local development.
+
+Prerequisites: Node.js 22, npm and Docker running. Run all commands from the repository root. The npm scripts
+use a pinned Supabase CLI, so you do not need a global CLI installation or a Supabase account.
+
+### 1. Install dependencies and start the database
 
 ```bash
-npm install
-npm run dev        # http://localhost:3000
-npm run typecheck  # generate Next.js route types and run strict TypeScript checks
+npm ci
+npm run supabase:start
+```
+
+`supabase:start` runs `supabase start`, then `migration up --local`. The CLI applies the SQL files in
+[`supabase/migrations/`](supabase/migrations/) one by one in timestamp order and records each applied version.
+On later starts, only pending migrations run; existing data is kept. You do not need to paste each file into
+SQL Editor. This creates the schema and seasons; the workbook data is imported in step 3.
+
+### 2. Configure the local environment
+
+Copy the template if you do not already have `.env.local`:
+
+```bash
+cp .env.example .env.local
+```
+
+Fill in `.env.local` with the **local** values printed by Supabase:
+
+```dotenv
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<local publishable key, or anon key>
+SUPABASE_SECRET_KEY=<local secret key, or service_role key>
+```
+
+To see the values again, run `npx --yes supabase@2.121.0 status`. The publishable/anon key is used by the app;
+the secret/service-role key is used only by the import scripts and must never have a `NEXT_PUBLIC_` prefix.
+
+Keep these values in the git-ignored `.env.local`: the import scripts load that file directly, and Next.js uses
+it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
+Restart Next.js after changing environment variables.
+
+### 3. Load the planting history and map pins
+
+Check that the URL in `.env.local` is local, then run the workbook import before the pins import:
+
+```bash
+npm run import-workbook             # preview changes
+npm run import-workbook -- --write
+npm run import-pins                 # preview changes
+npm run import-pins -- --write
+```
+
+The tracked CSVs supply the history; no original spreadsheet download is needed. The workbook import checks
+each season against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+
+### 4. Start the app
+
+```bash
+npm run dev
+```
+
+Open [the app](http://localhost:3000). Local [Supabase Studio](http://127.0.0.1:54323) provides the table browser
+and SQL Editor. Reference photos and map tiles still need internet access.
+
+### Everyday commands
+
+```bash
+npm run supabase:start  # start the local database and apply pending migrations
+npm run db:migrate      # apply pending migrations while Supabase is already running
+npm run supabase:stop   # stop Supabase, keeping local data
+npm run typecheck       # generate Next.js route types and run strict TypeScript checks
 npm run lint
-npm test           # vitest: parser, validation, repository and query invariants, search
+npm test                # parser, validation, repository and query invariants, search
 npm run build && npm start
 ```
 
-Node 20.9+ (tested on 22). No accounts or setup: planting data is read live from the hosted Supabase project, using the
-read-only key committed in `.env`. That key reads everything and can't change anything; the database's access rules
-refuse every write. Reference photos also need internet access.
+Start Supabase before running the app or the full test suite. Live database tests use `.env.local` and expect
+the workbook import to have run. The [database checks](supabase/README.md#checking-it-all-ran) verify the schema
+and imported data in SQL Editor.
 
-Only the import scripts write, with the secret key in your own `.env.local` (never committed). See `supabase/README.md`.
+## Documentation
+
+| Guide                                   | Contents                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------- |
+| [Supabase](supabase/README.md)          | Migrations, import behaviour, SQL checks and future hosted database setup |
+| [Database reads](db/README.md)          | Query conventions and generating TypeScript types from the local schema   |
+| [Research and planning](docs/README.md) | Source-data discovery, plans and application reference guides             |
+| [Canopy](styles/canopy/README.md)       | Vendored design system                                                    |
 
 ## Deployment
 
-The source is in the private [GitHub repository](https://github.com/ktgcreative/wtr-app-tree-reforestation).
-The [Vercel project](https://vercel.com/ktgcreatives-projects/wtr-app-tree-reforestation) is connected to it;
-pushes to the existing production branch `z` trigger a deployment.
+The source is in the private [GitHub repository](https://github.com/ktgcreative/wtr-app-tree-reforestation),
+with a [Vercel project](https://vercel.com/ktgcreatives-projects/wtr-app-tree-reforestation) for the Next.js app.
+Hosting the app also requires a provisioned Supabase database with the migrations and imports applied;
+deploying Next.js alone does not create it. See [hosted database setup](supabase/README.md#hosted-database-setup).
 
-Vercel uses the Next.js preset and `npm run build`. No environment variables need setting: the build reads the
-Supabase URL and read-only key from the committed `.env`.
+Use the Next.js preset and `npm run build`. Set `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the deployment environment to the hosted project's values before
+building. These public values are bundled at build time; local URLs and legacy `.env` values are not production configuration.
+The app does not need `SUPABASE_SECRET_KEY`.
 `.vercelignore` excludes local build output, import scripts and research material from CLI uploads.
 
 ## Pages
