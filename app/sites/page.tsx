@@ -32,8 +32,9 @@ const SORTS = [
 type SortKey = (typeof SORTS)[number]["key"];
 type ListedSite = Omit<PlaceSummary, "span"> & { span: PlaceSummary["span"] | null };
 
-function href(cls: ClassFilter | undefined, sort: SortKey): `/sites${"" | `?${string}`}` {
+function href(cls: ClassFilter | undefined, sort: SortKey, state: "active" | "deactivated"): `/sites${"" | `?${string}`}` {
   const sp = new URLSearchParams();
+  if (state === "deactivated") sp.set("state", state);
   if (cls) sp.set("class", cls);
   if (sort !== "plants") sp.set("sort", sort);
   const s = sp.toString();
@@ -51,13 +52,14 @@ function sortSites(list: ListedSite[], sort: SortKey) {
 
 export default async function SitesPage({ searchParams }: Readonly<PageProps<"/sites">>) {
   const sp = await searchParams;
+  const state = first(sp.state) === "deactivated" ? "deactivated" : "active";
   const classParam = first(sp.class);
   const cls = CLASSES.find((c) => c === classParam);
   const sortParam = first(sp.sort);
   const sort: SortKey = SORTS.find((s) => s.key === sortParam)?.key ?? "plants";
 
   const [register, history, overview, records, authenticated] = await Promise.all([
-    listSites(), getWrt().places(), getWrt().overview(), getWrt().records(), isAuthenticated(),
+    listSites(state), getWrt().places(), getWrt().overview(), getWrt().records(), isAuthenticated(),
   ]);
   const historyBySlug = new Map(history.map((site) => [site.item.slug, site]));
   const all: ListedSite[] = register.map((site) => {
@@ -97,15 +99,20 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
   return (
     <>
       <PageHead
-        title={`${realSites.length} sites${schemeNote}`}
+        title={`${realSites.length} ${state === "deactivated" ? "deactivated " : ""}site${realSites.length === 1 ? "" : "s"}${schemeNote}`}
         aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
-            Every registered site, with planting history since {overview.firstSeason.label} where available.
+            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"} since {overview.firstSeason.label} where available.
             {lead && <> {lead}</>}
           </>
         }
       />
+
+      <nav aria-label="Site lifecycle" className="wrt-stool__show">
+        <Link href={href(cls, sort, "active")} className="wrt-stool__opt" aria-current={state === "active" ? "true" : undefined}>Active</Link>
+        <Link href={href(cls, sort, "deactivated")} className="wrt-stool__opt" aria-current={state === "deactivated" ? "true" : undefined}>Deactivated</Link>
+      </nav>
 
       <LocationCard sites={rows.filter((p) => !p.item.isScheme).map((p) => p.item)} records={records.rows.map((row) => row.record)} />
 
@@ -119,6 +126,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
       >
         <div className="wrt-stool">
           <form method="get" action="/sites" className="wrt-stool__form">
+            {state === "deactivated" && <input type="hidden" name="state" value="deactivated" />}
             {cls && <input type="hidden" name="class" value={cls} />}
             <label className="wrt-stool__sort">
               <span className="wrt-stool__label">Sort</span>
@@ -135,11 +143,11 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
           </form>
 
           <nav aria-label="Filter by site class" className="wrt-stool__show">
-            <Link href={href(undefined, sort)} className="wrt-stool__opt" aria-current={!cls ? "true" : undefined}>
+            <Link href={href(undefined, sort, state)} className="wrt-stool__opt" aria-current={!cls ? "true" : undefined}>
               All <span className="wrt-stool__n">{all.length}</span>
             </Link>
             {CLASSES.map((c) => (
-              <Link key={c} href={href(c, sort)} className="wrt-stool__opt" aria-current={cls === c ? "true" : undefined}>
+              <Link key={c} href={href(c, sort, state)} className="wrt-stool__opt" aria-current={cls === c ? "true" : undefined}>
                 {SITE_CLASS_LABELS[c]} <span className="wrt-stool__n">{countFor(c)}</span>
               </Link>
             ))}
@@ -154,7 +162,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         </div>
 
         {rows.length === 0 ? (
-          <EmptyState title="No sites in this class">No site matches this filter.</EmptyState>
+          <EmptyState title={state === "deactivated" ? "No deactivated sites" : "No active sites"}>No site matches this filter.</EmptyState>
         ) : (
           <SiteRows
             max={max}
