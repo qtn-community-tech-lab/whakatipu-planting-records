@@ -13,7 +13,7 @@ describe("Supabase repository without workbook files", () => {
     const rows: Record<string, unknown[]> = {
       seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
       species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla" }],
-      sites: [{ slug: "reserve", name: "Reserve", is_scheme: false }],
+      sites: [{ slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false }],
       areas: [{ slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community" }],
       line_details: [{
         line_id: 1, legacy_code: "PH-1", season: "autumn-2030", area: "reserve-east", area_name: "East",
@@ -42,6 +42,7 @@ describe("Supabase repository without workbook files", () => {
       statedCell: "MASTER!A2", records: 1, cause: null,
     }]);
     expect(info.tables).toContainEqual({ name: "planting lines", rows: 1 });
+    expect(await repo.listPlaces()).toMatchObject([{ slug: "reserve", description: "Planting beside the river." }]);
     expect(fetch).toHaveBeenCalledTimes(6);
   });
 });

@@ -51,7 +51,7 @@ async function load(db: Db): Promise<Loaded> {
     db.from("species")
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note")
       .is("deactivated_at", null).throwOnError(),
-    db.from("sites").select("slug, name, is_scheme").is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, description, is_scheme").is("deactivated_at", null).throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
@@ -155,6 +155,7 @@ async function load(db: Db): Promise<Loaded> {
       return {
         slug: site.slug,
         name: site.name,
+        description: site.description,
         siteClasses: [...plantsByClass].sort((a, b) => b[1] - a[1]).map(([c]) => c),
         isScheme: site.is_scheme,
         parcels: parts,

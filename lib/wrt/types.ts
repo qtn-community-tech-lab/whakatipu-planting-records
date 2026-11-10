@@ -108,6 +108,8 @@ export interface Place {
   slug: string;
   /** "Lake Hayes". */
   name: string;
+  /** Available when the site itself is read, rather than a planting-line summary. */
+  description?: string;
   /** Distinct site classes of the parcels in this place, most plants first. */
   siteClasses: SiteClass[];
   /** True for order schemes (Paper4Trees) that are not a physical place. */

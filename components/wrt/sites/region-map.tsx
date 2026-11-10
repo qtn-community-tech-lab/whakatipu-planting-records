@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
 import { formatNumber } from "@/lib/wrt/text";
-import { REGION_MAP_OPTIONS } from "@/lib/wrt/map-region";
+import type { RegionMapOptions } from "@/lib/wrt/map-region";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
 function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation | undefined }) {
@@ -77,7 +77,7 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   });
 }
 
-export function RegionMap({ locations, siteName }: { locations: MappedSiteLocation[]; siteName?: string | undefined }) {
+export function RegionMap({ locations, siteName, mapOptions }: { locations: MappedSiteLocation[]; siteName?: string | undefined; mapOptions: RegionMapOptions }) {
   const selectId = useId();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = locations.find((location) => location.id === selectedId);
@@ -105,12 +105,12 @@ export function RegionMap({ locations, siteName }: { locations: MappedSiteLocati
       </div>
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
         role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
-        <Map {...REGION_MAP_OPTIONS} theme="light">
+        <Map {...mapOptions} theme="light">
           <MapFocus locations={locations} selected={selected} />
           <MapControls showFullscreen />
-          <LocationMarkers key={locations.map((location) => location.id).join("/")} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />
+          <LocationMarkers key={`markers:${locations.map((location) => location.id).join("/")}`} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />
           {selected && (
-            <MapPopup key={selected.id} longitude={selected.longitude} latitude={selected.latitude}
+            <MapPopup key={`popup:${selected.id}`} longitude={selected.longitude} latitude={selected.latitude}
               closeButton closeOnClick={false} focusAfterOpen={false} anchor="bottom" offset={26}
               onClose={() => setSelectedId(null)} className="wrt-mappop !max-w-none">
               <div className="wrt-mappop__body">
@@ -141,16 +141,15 @@ export function RegionMap({ locations, siteName }: { locations: MappedSiteLocati
             <strong>{selected.label}</strong>
             <p className="wrt-prose m-0"><b className="tabular-nums">{formatNumber(selected.split.total)}</b> recorded plants · {selected.countScope === "part" ? "this part of the site" : "whole site"}</p>
             <SplitLine split={selected.split} />
-            <p className="wrt-prose m-0">{selected.description}</p>
+            {selected.description.trim() && <p className="wrt-prose m-0">{selected.description}</p>}
             <p className="wrt-muted m-0 tabular-nums">
               Approximate latitude: {selected.latitude.toFixed(4)} · longitude: {selected.longitude.toFixed(4)}
             </p>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
               {!siteName && <Link href={`/sites/${selected.siteSlug}`} className="cn-link">View {selected.siteName} →</Link>}
               <a href={locationMapUrl(selected)} target="_blank" rel="noopener noreferrer" className="cn-link">Open in Google Maps ↗</a>
-              <a href={selected.sourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">{selected.sourceLabel} ↗</a>
-              {selected.coordinateSourceUrl !== selected.sourceUrl && (
-                <a href={selected.coordinateSourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">Coordinate reference ↗</a>
+              {selected.sourceUrl && (
+                <a href={selected.sourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">Coordinate reference ↗</a>
               )}
             </div>
           </div>

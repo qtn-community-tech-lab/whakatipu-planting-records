@@ -1,6 +1,12 @@
-import referenceLocations from "@/data/site-locations.json";
 import { splitOf } from "@/lib/wrt/queries";
 import type { PlantingRecord, QuantitySplit } from "@/lib/wrt/types";
+import type { Tables } from "@/db/types";
+
+export type PlantingAreaPin = Pick<Tables<"areas">,
+  "slug" | "site" | "name" | "description" | "wrt_number" | "lat" | "lng" | "pin_source_url" | "pin_checked_on"
+>;
+
+type Coordinates = { latitude: number; longitude: number };
 
 /** Public reference points, kept separate from the historical planting ledger. */
 export interface SiteLocation {
@@ -9,15 +15,9 @@ export interface SiteLocation {
   label: string;
   latitude: number;
   longitude: number;
-  precision: "historic-event" | "landmark";
   description: string;
-  sourceUrl: string;
-  sourceLabel: string;
-  coordinateSourceUrl: string;
-  coordinateMethod?: string;
-  checkedOn: string;
-  /** Set only for distinct mapped parts of a site; otherwise the count covers the whole site. */
-  parcelIds?: string[];
+  sourceUrl: string | null;
+  checkedOn: string | null;
 }
 
 export interface MappedSiteLocation extends SiteLocation {
@@ -26,16 +26,22 @@ export interface MappedSiteLocation extends SiteLocation {
   countScope: "site" | "part";
 }
 
-export const siteLocations: readonly SiteLocation[] = referenceLocations as SiteLocation[];
-
-export function locationsForSites(sites: readonly { slug: string; name: string }[], records: readonly PlantingRecord[]): MappedSiteLocation[] {
+/** Pass all active areas, including unpinned ones, to identify single-area sites. */
+export function locationsForSites(areas: readonly PlantingAreaPin[], sites: readonly { slug: string; name: string }[], records: readonly PlantingRecord[]): MappedSiteLocation[] {
   const names = new Map(sites.map((site) => [site.slug, site.name]));
-  return siteLocations.flatMap((location) => {
-    const siteName = names.get(location.siteSlug);
-    if (!siteName) return [];
-    const matching = records.filter((record) => record.placeSlug === location.siteSlug &&
-      (!location.parcelIds || location.parcelIds.includes(record.parcelId)));
-    return [{ ...location, siteName, split: splitOf(matching), countScope: location.parcelIds ? "part" as const : "site" as const }];
+  const areaCounts = new Map<string, number>();
+  for (const area of areas) areaCounts.set(area.site, (areaCounts.get(area.site) ?? 0) + 1);
+  return areas.flatMap((area) => {
+    const siteName = names.get(area.site);
+    if (siteName === undefined || area.lat === null || area.lng === null) return [];
+    const parcelId = area.wrt_number ?? area.slug;
+    const matching = records.filter((record) => record.placeSlug === area.site && record.parcelId === parcelId);
+    return [{
+      id: area.slug, siteSlug: area.site, siteName, label: area.name,
+      latitude: area.lat, longitude: area.lng, description: area.description,
+      sourceUrl: area.pin_source_url, checkedOn: area.pin_checked_on,
+      split: splitOf(matching), countScope: areaCounts.get(area.site) === 1 ? "site" as const : "part" as const,
+    }];
   });
 }
 
@@ -44,7 +50,7 @@ export function compactPlantCount(quantity: number): string {
 }
 
 /** MapLibre uses longitude first; coordinates shown to people keep explicit labels. */
-export function locationBounds(locations: readonly SiteLocation[]): [[number, number], [number, number]] | null {
+export function locationBounds(locations: readonly Coordinates[]): [[number, number], [number, number]] | null {
   if (!locations.length) return null;
   return [
     [Math.min(...locations.map((p) => p.longitude)), Math.min(...locations.map((p) => p.latitude))],
@@ -52,7 +58,7 @@ export function locationBounds(locations: readonly SiteLocation[]): [[number, nu
   ];
 }
 
-export function locationMapUrl(location: SiteLocation): string {
+export function locationMapUrl(location: Coordinates): string {
   return `https://www.google.com/maps/search/?api=1&query=${location.latitude},${location.longitude}`;
 }
 
