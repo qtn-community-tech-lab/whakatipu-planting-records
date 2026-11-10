@@ -22,7 +22,6 @@ export function SpeciesName({ s }: { s: SpeciesOption }) {
 const getValue = (s: SpeciesOption) => s.id;
 const getLabel = (s: SpeciesOption) => s.name;
 const renderItem = (s: SpeciesOption) => <SpeciesName s={s} />;
-const noMatch = (q: string) => `No species matches “${q}”.`;
 
 export function SpeciesPicker({
   species, value, taken, onChange, ...field
@@ -46,7 +45,11 @@ export function SpeciesPicker({
       renderItem={renderItem}
       placeholder="Search species"
       clearLabel="Clear species"
-      empty={noMatch}
+      empty={(q) => {
+        // Taken species are left out of the list; say so instead of "no match".
+        const added = rankMatches(species.filter((s) => taken.has(s.id) && s.id !== value), q)[0];
+        return added ? `${added.name} is already on this event.` : `No species matches “${q}”.`;
+      }}
     />
   );
 }

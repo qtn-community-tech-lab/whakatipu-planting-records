@@ -6,7 +6,7 @@ import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
-import { MissingSeasonRow, SeasonRow, medianSites, type TopSite, type TopSpecies } from "@/components/wrt/seasons/season-parts";
+import { SeasonRow, medianSites, type TopSite, type TopSpecies } from "@/components/wrt/seasons/season-parts";
 
 export const metadata: Metadata = {
   title: "Planting seasons",
@@ -74,9 +74,11 @@ export default async function SeasonsPage() {
             {matching} of {checked} seasons match the workbook&rsquo;s own total
           </span>
         </div>
-        <p className="wrt-muted m-0">Newest first. Select a season to see every site and species in it.</p>
+        <p className="wrt-muted m-0">
+          Newest first. Select a season to see every site and species in it.
+          {missingSpring && ` ${missingSpring} isn’t in the master workbook yet.`}
+        </p>
         <ol className="wrt-srows">
-          {missingSpring && <MissingSeasonRow label={missingSpring} />}
           {[...seasons].reverse().map((s) => (
             <SeasonRow
               key={s.season.slug}

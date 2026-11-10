@@ -132,13 +132,3 @@ export function SeasonRow({
     </li>
   );
 }
-
-/** Row placeholder for a season that is not in the workbook yet. */
-export function MissingSeasonRow({ label }: { label: string }) {
-  return (
-    <li className="wrt-srow wrt-srow--missing">
-      <h3 className="wrt-srow__title">{label}</h3>
-      <p className="wrt-scard2__line m-0">Not in the master workbook yet, so there is nothing to show.</p>
-    </li>
-  );
-}

@@ -3,6 +3,7 @@ import type { Lookups, PlaceSummary } from "@/lib/wrt/queries";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { type RecordsView, hasFilters } from "./filters";
 import { AutoSubmit } from "./auto-submit";
+import { FilterChooser, type FilterOption } from "./filter-chooser";
 
 /** Radio group styled as a Canopy segmented control. Works without JS. */
 function Segmented({
@@ -40,18 +41,21 @@ export function RecordsFilter({
   const nameCount = new Map<string, number>();
   for (const s of lookups.species) nameCount.set(s.displayName, (nameCount.get(s.displayName) ?? 0) + 1);
 
+  const siteOptions: FilterOption[] = sites.map((p) => ({
+    value: p.slug, name: p.isScheme ? `${p.name} (order scheme)` : p.name, keys: p.searchKeys,
+  }));
+  const speciesOptions: FilterOption[] = lookups.species.map((s) => ({
+    value: s.slug, keys: s.searchKeys, detail: s.displayIsScientific ? undefined : s.scientificName,
+    name: (nameCount.get(s.displayName) ?? 0) > 1 && !s.displayIsScientific ? `${s.displayName} (${s.scientificName})` : s.displayName,
+  }));
+
   return (
     <form method="get" action="/records" className="exp-form" aria-label="Filter records">
       <div className="exp-form__selects">
-        <div className="cn-field">
-          <label className="cn-field__label" htmlFor="exp-place">Site</label>
-          <select id="exp-place" name="place" className="wrt-select" defaultValue={f.place ?? ""}>
-            <option value="">All sites</option>
-            {sites.map((p) => (
-              <option key={p.slug} value={p.slug}>{p.isScheme ? `${p.name} (order scheme)` : p.name}</option>
-            ))}
-          </select>
-        </div>
+        <FilterChooser
+          name="place" label="Site" options={siteOptions} value={f.place ?? ""}
+          placeholder="All sites" clearLabel="Show all sites" noun="site"
+        />
         <div className="cn-field">
           <label className="cn-field__label" htmlFor="exp-parcel">Part of site</label>
           <select id="exp-parcel" name="parcel" className="wrt-select" defaultValue={f.parcel ?? ""} disabled={!selectedPlace}>
@@ -59,17 +63,10 @@ export function RecordsFilter({
             {selectedPlace?.parcels.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </div>
-        <div className="cn-field">
-          <label className="cn-field__label" htmlFor="exp-species">Species</label>
-          <select id="exp-species" name="species" className="wrt-select" defaultValue={f.species ?? ""}>
-            <option value="">All species</option>
-            {lookups.species.map((s) => (
-              <option key={s.slug} value={s.slug}>
-                {(nameCount.get(s.displayName) ?? 0) > 1 && !s.displayIsScientific ? `${s.displayName} (${s.scientificName})` : s.displayName}
-              </option>
-            ))}
-          </select>
-        </div>
+        <FilterChooser
+          name="species" label="Species" options={speciesOptions} value={f.species ?? ""}
+          placeholder="All species" clearLabel="Show all species" noun="species"
+        />
         <div className="cn-field">
           <label className="cn-field__label" htmlFor="exp-year">Year</label>
           <select id="exp-year" name="year" className="wrt-select" defaultValue={f.year ? String(f.year) : ""}>
