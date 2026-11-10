@@ -13,7 +13,7 @@ describe("site schemas", () => {
     const schemas = field === "slug" ? [createSiteSchema] : [createSiteSchema, editSiteSchema];
     for (const schema of schemas) {
       const value = "a".repeat(limit);
-      expect(schema.parse({ ...site, [field]: value })[field]).toBe(value);
+      expect(schema.parse({ ...site, [field]: value })).toHaveProperty(field, value);
       const result = schema.safeParse({ ...site, [field]: `${value}a` });
       expect(result.success).toBe(false);
       if (!result.success)

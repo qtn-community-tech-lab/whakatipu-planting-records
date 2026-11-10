@@ -110,6 +110,13 @@ it("maps duplicate creation slugs to the slug field", async () => {
   expect(mocks.tag).not.toHaveBeenCalled();
 });
 
+it("rejects an overlong creation slug before writing", async () => {
+  const result = await (await pageForm("new"))!.props.onSubmit({ ...values, slug: "a".repeat(INPUT_LIMITS.identifier + 1) });
+  expect(result.issues).toContainEqual({ path: "slug", message: lengthMessage(INPUT_LIMITS.identifier) });
+  expect(mocks.create).not.toHaveBeenCalled();
+  expect(mocks.redirect).not.toHaveBeenCalled();
+});
+
 it("rejects malformed creation slugs and shows unknown edit sites as not found", async () => {
   expect(await (await pageForm("new"))!.props.onSubmit({ ...values, slug: "new" })).toHaveProperty("issues");
   mocks.read.mockResolvedValue(null);
