@@ -1,6 +1,9 @@
 # Supabase database
 
-The planting database: 9 tables, the totals views and the access rules. The model is described in the "WRT Planting Data Model" doc.
+The planting database: 9 tables, the totals views and the access rules. See the [table diagram](diagrams/tables.png).
+
+Start with the [local development guide](../README.md#local-development) for installation, starting Supabase,
+setting local keys and loading the initial data. This README covers database maintenance.
 
 ## Files
 
@@ -15,18 +18,28 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 | `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
 
-## Where they have run
+## Migrations
 
-| Date | Project | Run |
-|---|---|---|
-| 2 November 2026 | hosted Supabase project | schema, then access rules, pasted into SQL Editor |
-| 2 November 2026 | hosted Supabase project | `scripts/import-workbook.ts --write`: 39 sites, 78 areas, 164 species, 360 plantings, 5,449 lines, 1,377 notes. All 23 seasons match the workbook TOTAL cells |
-| 2 November 2026 | hosted Supabase project | `checks/schema_check.sql` after the import: every row PASS. The check had fewer rows then; it has changed since |
-| not recorded | hosted Supabase project | `public_reads.sql`, `seasons_page.sql` and `line_records.sql`, then the import again to fill the new line columns. Confirmed live on 5 November 2026: the public key reads the new views, and all 5,449 lines have their workbook file, sheet, cell and code |
-| 4 November 2026 | hosted Supabase project | `scripts/import-pins.ts --write`: 50 pins set on 50 areas, each with its source link and checked date. A second dry run changes nothing |
-| 5 November 2026 | hosted Supabase project | `checks/schema_check.sql`, read-only: 25 of 26 rows PASS. The notes row expected 1,377; the database has 1,339, the same as the CSV since the Slope Hill 2024 ruling. The check now expects 1,339. `import-workbook.ts` dry run: nothing to change |
+[`migrations/`](migrations/) is the source of truth for the schema. Apply all files in timestamp order, starting
+with `20261102000000_schema.sql`. `npm run supabase:start` starts the local stack and applies pending files;
+`npm run db:migrate` applies pending files while it is running. Both commands use the pinned Supabase CLI.
 
-`checks/access_rules_check.sql` has not been run. Its staff tests need a staff account, and sign-in isn't set up.
+On a fresh database, `supabase start` applies the migrations. On an existing database, the npm startup command
+also runs `migration up --local`, because plain `supabase start` can reuse the database without applying new files.
+Supabase tracks applied versions, so later runs skip them. Each migration runs as a transaction; a failure rolls
+back that file and stops the command. Fix the failure before continuing with imports or the app.
+
+Add schema changes as new timestamped SQL files, apply them locally, then
+[regenerate the database types](../db/README.md#generate-types-after-a-migration).
+See the [Supabase migration reference](https://supabase.com/docs/reference/cli/supabase-migration-up).
+
+If a local stack started under the previous project ID is occupying the ports, stop it before starting this one:
+
+```bash
+npx --yes supabase@2.121.0 stop --project-id whakatipu-planting-records
+```
+
+The current project ID in `config.toml` is `wrt-planting-app`. Stopping the stack preserves its data.
 
 ## Not here yet
 
@@ -34,7 +47,10 @@ The planting database: 9 tables, the totals views and the access rules. The mode
 
 ## The workbook import
 
-`scripts/import-workbook.ts` loads the history from `docs/planning/prototype/*.csv`: 39 sites, 78 areas, 164 species, 5,449 lines and 1,339 review notes (1,377 before the Slope Hill 2024 ruling on 3 November cleared 38). It needs `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
+[`scripts/import-workbook.ts`](../scripts/import-workbook.ts) loads the history from `docs/planning/prototype/*.csv`:
+39 sites, 78 areas, 164 species, 5,449 lines and 1,339 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and
+`SUPABASE_SECRET_KEY` in `.env.local`. For local development, use the local URL and secret/service-role key.
+Migrations create the schema and seasons; they do not import the workbook (`db.seed` is disabled in `config.toml`).
 
 ```bash
 npm run import-workbook              # dry run: lists what would change, writes nothing
@@ -47,47 +63,42 @@ Running it again is safe. Rows match on slug, or spreadsheet code for lines, and
 
 ## The map pins
 
-`scripts/import-pins.ts` copies the researched pins in `data/site-locations.json` onto their areas: latitude, longitude, the link the coordinates came from, and the date they were checked. Run it the same way, dry run first, then `--write`.
+[`scripts/import-pins.ts`](../scripts/import-pins.ts) copies the researched pins in `data/site-locations.json`
+onto their areas: latitude, longitude, the link the coordinates came from, and the date they were checked.
+It uses the same `.env.local` settings as the workbook import. Import the workbook first so the areas exist.
+
+```bash
+npm run import-pins              # dry run
+npm run import-pins -- --write
+```
 
 A pin with a WRT number goes on that area of its site. A pin for a whole site goes on the site's area only when the site has just one. It fills empty pins only, so a pin someone has set or moved is never changed.
 
-## Running locally
+## Hosted database setup
 
-With Docker running, start Supabase from the repository root:
+A hosted Supabase project is not provisioned yet. Local startup and migration commands only change the local
+database. Older notes about a hosted project's imports and checks are historical, not deployment instructions.
 
-```bash
-npm run supabase:start
-```
+When provisioning a hosted environment:
 
-This uses the pinned Supabase CLI and the checked-in `config.toml`, with project ID `wrt-planting-app`. On a fresh local database, plain `supabase start` also applies every file in `supabase/migrations/` in timestamp order. The npm command additionally runs `migration up --local` to apply pending migrations to an existing database. Supabase records applied versions, so subsequent runs skip them and keep existing data. Each migration runs as one transaction; a failure rolls back that file and stops the command.
+1. Create the Supabase project and apply all migrations in timestamp order.
+2. Run the workbook import, then the pins import, with that project's URL and secret key. The scripts read
+   `.env.local`; restore your local values before resuming local development.
+3. Run the SQL checks below against the hosted database.
+4. Set the hosted URL and publishable key in the Next.js deployment environment before building the app.
 
-To apply new migrations while Supabase is already running, or stop it:
+For automated migrations, configure the [Supabase GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
+and enable **Deploy to production** for the chosen branch. Only after that setup should production-branch pushes
+be expected to apply pending migrations. Commit new migrations with the application changes that need them.
 
-```bash
-npm run db:migrate
-npm run supabase:stop
-```
-
-Use `npm run supabase:start` for routine startup so pending migrations are always applied. Plain `supabase start` can reuse an existing database without applying new migrations. There is no automatic database reset in this flow.
-
-Workbook history is a separate import. Before running `npm run import-workbook -- --write`, point `.env.local` at the **local** URL and secret/service-role key shown by the CLI. Starting Supabase creates the schema and seasons, but does not import the workbook.
-
-If a stack started under the previous project ID is still occupying the local ports, stop it first, preserving its data:
-
-```bash
-supabase stop --project-id whakatipu-planting-records
-```
-
-## Running them on a hosted project
-
-Hosted migrations deploy automatically through the Supabase GitHub integration. With **Deploy to production** enabled for the configured production branch, pushing or merging to that branch applies pending files from `supabase/migrations/` in timestamp order. Supabase tracks applied versions and skips migrations that have already run. No manual SQL Editor step, `db push`, or separate GitHub Action is needed for routine deployments.
-
-Commit new migration files with the application changes that need them. Local startup only changes the local database; hosted migrations are applied by the Supabase integration when the production branch deploys.
-
-The original hosted migrations were pasted into SQL Editor, so their versions may be missing from Supabase's migration history. If they have not already been reconciled, compare `migration list --linked` with the actual schema and use `migration repair --linked --status applied VERSION` only for migrations confirmed to have run before the first automated deployment. Do not replay the initial schema migration over existing tables.
-
-See the [Supabase GitHub integration guide](https://supabase.com/docs/guides/deployment/branching/github-integration) and [CLI migration reference](https://supabase.com/docs/reference/cli/supabase-migration-up).
+If reusing an older database whose migrations were pasted into SQL Editor, reconcile its migration history
+against the actual schema before enabling automation. Do not replay the initial schema over existing tables.
 
 ## Checking it all ran
 
-Paste `checks/schema_check.sql` into SQL Editor. Every row should say PASS. It checks 6 fixed lists, 9 tables with row-level security on, 8 views, 5 indexes, the 25 seasons, 4 functions, 31 row rules, 16 triggers, the table privileges, that no old names remain after `naming.sql`, and that signed-out visitors can't write or see `users`. After the import, it also checks the row counts, that every line has its workbook file, sheet and cell, and that every season matches its workbook TOTAL cell. The import rows say FAIL until the import has run.
+Open local [Supabase Studio](http://127.0.0.1:54323) and paste [`checks/schema_check.sql`](checks/schema_check.sql)
+into SQL Editor. After the workbook import, every row should say PASS. It checks the schema, access rules,
+imported row counts, workbook provenance and season totals. The import rows say FAIL until the import has run.
+
+[`checks/access_rules_check.sql`](checks/access_rules_check.sql) exercises signed-out, volunteer and staff access.
+Its staff tests need a staff account; sign-in is not set up yet. The script removes its test site at the end.
