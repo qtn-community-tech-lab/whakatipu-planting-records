@@ -61,11 +61,11 @@ export async function createSpecies(values: SpeciesInput) {
   return (await db()).from("species").insert(values).select("slug").single();
 }
 
-/** The database touch trigger sets updated_at when the row is saved. */
+/** Preserve the existing slug. The database touch trigger sets updated_at. */
 export async function updateSpecies(slug: string, values: SpeciesInput) {
   return (await db())
     .from("species")
-    .update(values)
+    .update({ ...values, slug })
     .eq("slug", slug)
     .is("deactivated_at", null)
     .select("slug")

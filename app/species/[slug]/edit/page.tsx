@@ -52,29 +52,22 @@ export default async function EditSpeciesPage({
           message,
         })),
       };
-    let savedSlug: string;
+    if (parsed.data.slug !== slug)
+      return {
+        issues: [{ path: "slug", message: "The slug cannot be changed after the species is created." }],
+      };
     try {
       const { data, error } = await updateSpecies(slug, parsed.data);
-      if (error?.code === "23505")
-        return {
-          issues: [
-            {
-              path: "slug",
-              message: "This slug is already in use. Choose a unique slug.",
-            },
-          ],
-        };
       if (error)
         return { error: "The species could not be saved. Please try again." };
       if (!data)
         return { error: "This species is no longer available to edit." };
-      savedSlug = data.slug;
     } catch {
       return { error: "The species could not be saved. Please try again." };
     }
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
-    redirect(`/species/${savedSlug}/edit?saved=1`);
+    redirect(`/species/${slug}/edit?saved=1`);
   }
 
   return (

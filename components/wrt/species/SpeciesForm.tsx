@@ -190,9 +190,11 @@ export function SpeciesForm({
                 control={form.control}
                 name="slug"
                 label="Slug"
-                description="Slugs must be unique. Use lowercase letters, numbers and hyphens, for example coprosma-propinqua. Changing a slug changes the species URL."
+                description={values
+                  ? "The slug cannot be changed after the species is created."
+                  : "Slugs must be unique. Use lowercase letters, numbers and hyphens, for example coprosma-propinqua. The slug cannot be changed after creation."}
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} required />
+                  <Input {...field} {...accessibility} readOnly={!!values} required />
                 )}
               />
               <FormField

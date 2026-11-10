@@ -1,10 +1,27 @@
 import { describe, expect, it } from "vitest";
-import { emptySpecies, speciesFormSchema, speciesFormValues, speciesWriteValues } from "@/components/wrt/species/SpeciesForm";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { SpeciesForm, emptySpecies, speciesFormSchema, speciesFormValues, speciesWriteValues } from "@/components/wrt/species/SpeciesForm";
 import { speciesSchema } from "@/db/types";
 
 const valid = () => ({ ...emptySpecies, slug: "coprosma-propinqua", scientific_name: "Coprosma propinqua" });
 
 describe("species form", () => {
+  it("only allows entering a slug when creating a species", () => {
+    const onSubmit = async () => {};
+    const created = renderToStaticMarkup(createElement(SpeciesForm, { onSubmit }));
+    const existing = renderToStaticMarkup(createElement(SpeciesForm, {
+      onSubmit,
+      values: { ...speciesWriteValues(valid()), updated_at: "2026-11-07T00:00:00Z" },
+    }));
+    const slugInput = (markup: string) => markup.match(/<input\b[^>]*name="slug"[^>]*>/)?.[0];
+    expect(slugInput(created)).toBeDefined();
+    expect(slugInput(created)).not.toMatch(/readonly/i);
+    expect(slugInput(existing)).toMatch(/readonly/i);
+    expect(slugInput(existing)).toContain('value="coprosma-propinqua"');
+    expect(existing).toContain("The slug cannot be changed after the species is created.");
+  });
+
   it("keeps the admin's slug and allows optional fields", () => {
     const values = speciesFormSchema.parse({ ...valid(), slug: "my-own-slug", maori_name: "  Mānuka  " });
     expect(values.slug).toBe("my-own-slug");
