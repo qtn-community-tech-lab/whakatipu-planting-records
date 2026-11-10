@@ -32,7 +32,15 @@ describe.skipIf(!live)("read queries against Supabase", () => {
 
   it("lists areas with totals and pins", async () => {
     expect(sum(await listPlantingAreaTotals())).toBe(ALL_PLANTS);
-    expect((await listPlantingAreaPins()).length).toBe(78);
+    const areas = await listPlantingAreaPins();
+    expect(areas.length).toBe(78);
+    const pinned = areas.filter((area) => area.lat !== null && area.lng !== null);
+    expect(pinned).toHaveLength(50);
+    for (const area of pinned) {
+      expect(typeof area.description).toBe("string");
+      expect(new URL(area.pin_source_url!).protocol).toBe("https:");
+      expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
     const site = defined((await listSites())[0]);
     expect((await listPlantingAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
   });

@@ -78,7 +78,7 @@ export default async function SitePage({ params, searchParams }: Props) {
         lead={
           place.isScheme
             ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
-            : undefined
+            : place.description?.trim() || undefined
         }
       />
 
