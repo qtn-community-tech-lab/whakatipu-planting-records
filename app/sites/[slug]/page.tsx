@@ -5,7 +5,7 @@ import { getWrt } from "@/lib/wrt/server";
 import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { PageHead, Card, CardLink, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
@@ -16,6 +16,10 @@ import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
+import Link from "next/link";
+import { readSite } from "@/db/queries/sites";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
 
@@ -28,21 +32,31 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
   const { slug } = await params;
-  const d = await getWrt().place(slug);
-  if (!d || !d.split.records) return { title: "Site not found" };
+  const [site, d] = await Promise.all([readSite(slug), getWrt().place(slug)]);
+  if (!site) return { title: "Site not found" };
+  if (!d || !d.split.records) return { title: site.name, description: site.description };
   return {
-    title: d.place.name,
-    description: `${formatNumber(d.split.total)} recorded plants at ${d.place.name}, ${d.span.first.label} to ${d.span.last.label}, by season, year and species.`,
+    title: site.name,
+    description: site.description.trim() || `${formatNumber(d.split.total)} recorded plants at ${site.name}, ${d.span.first.label} to ${d.span.last.label}, by season, year and species.`,
   };
 }
 
 export default async function SitePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const d = await getWrt().place(slug);
-  if (!d || !d.split.records) notFound();
+  const [site, d, authenticated] = await Promise.all([readSite(slug), getWrt().place(slug), isAuthenticated()]);
+  if (!site) notFound();
+  const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  if (!d || !d.split.records)
+    return (
+      <>
+        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={editButton} />
+        <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
+      </>
+    );
 
-  const { place, split, span } = d;
+  const { split, span } = d;
+  const place = { ...d.place, name: site.name };
   const yearParam = Number(first(sp.year));
   const year = d.years.some((y) => y.year === yearParam) ? yearParam : undefined;
 
@@ -75,10 +89,11 @@ export default async function SitePage({ params, searchParams }: Props) {
         back={{ href: "/sites", label: "All sites" }}
         eyebrow={eyebrow}
         title={title}
+        aside={editButton}
         lead={
           place.isScheme
             ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
-            : place.description?.trim() || undefined
+            : site.description.trim() || undefined
         }
       />
 
