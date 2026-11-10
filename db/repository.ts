@@ -49,7 +49,7 @@ async function load(db: Db): Promise<Loaded> {
   const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos")
       .is("deactivated_at", null).throwOnError(),
     db.from("sites").select("slug, name, description, is_scheme").is("deactivated_at", null).throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
@@ -64,7 +64,7 @@ async function load(db: Db): Promise<Loaded> {
     .map((s, order) => ({ slug: s.slug, label: s.label, year: s.year, name: s.half === "autumn" ? "Autumn" : "Spring", order }));
   const seasonBySlug = new Map(seasons.map((s) => [s.slug, s]));
 
-  // Species: the register code is the join key the photos and profiles use.
+  // Species: keep the original register code as the historical join key.
   const spellings = new Map<string, Set<string>>();
   for (const l of lines) {
     if (l.species_original) spellings.set(l.species!, (spellings.get(l.species!) ?? new Set()).add(l.species_original));
@@ -95,6 +95,8 @@ async function load(db: Db): Promise<Loaded> {
       aliases,
       searchKeys: [...keys],
       note: s.register_note,
+      photos: s.photos as unknown as Species["photos"],
+      profile: Object.keys(s.profile).length ? s.profile as unknown as Species["profile"] : null,
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));

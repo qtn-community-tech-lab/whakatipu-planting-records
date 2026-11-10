@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
-import { getSpeciesPhotos, type SpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
+import { PhotoMedia } from "./photo-media";
 import { SpeciesMarkers } from "./species-meta";
 import { SpeciesReferenceStatus } from "./species-reference-status";
 import { SpeciesProfileSources } from "./species-profile-preview";
@@ -40,21 +38,6 @@ function RingTile({ row }: { row: SpeciesSummary }) {
   );
 }
 
-function PhotoMedia({ photo, name, sizes }: { photo: SpeciesPhoto; name: string; sizes: string }) {
-  return (
-    <Image
-      src={photo.src}
-      width={photo.width}
-      height={photo.height}
-      sizes={sizes}
-      style={{ objectPosition: photo.focalPoint }}
-      alt={`Reference photo of ${name}: ${photo.caption}`}
-      className="wrt-scard__img"
-      unoptimized
-    />
-  );
-}
-
 /**
  * One species in the field guide, as a full-width row, in the order people meet a plant:
  * what it looks like (photos, right), what it's called and what kind of plant it is, how to recognise it,
@@ -63,9 +46,9 @@ function PhotoMedia({ photo, name, sizes }: { photo: SpeciesPhoto; name: string;
  */
 export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; rank: number; tile?: boolean }) {
   const { item: sp, split, span, placeCount } = row;
-  const photos = getSpeciesPhotos(sp.id);
+  const photos = sp.photos;
   const photo = photos[0];
-  const profile = getSpeciesProfile(sp.id);
+  const profile = sp.profile;
   const name = sp.displayName;
   const years = span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
   // Every other name it goes by: common name and Māori names, minus the one shown as the title.
@@ -114,7 +97,7 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
         {profile?.summary && <p className="wrt-scard__summary">{profile.summary}</p>}
         {profile?.lookFor && <p className="wrt-scard__look"><b>Look for</b> {profile.lookFor}</p>}
         <SpeciesReferenceStatus speciesId={sp.id} />
-        <SpeciesProfileSources speciesId={sp.id} slug={sp.slug} includeLookFor={false} />
+        <SpeciesProfileSources profile={profile} slug={sp.slug} includeLookFor={false} />
 
         <dl className="wrt-scard__facts">
           <div>
@@ -144,13 +127,6 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
         </span>
         {photo && photos.length > 1 && (
           <Link href={`${hrefs.species(sp.slug)}#photos`} className="wrt-scard__chip wrt-scard__above">{photos.length} photos</Link>
-        )}
-        {photo && (
-          // Shown on hover or focus, so the credit stays with the photos without crowding the row.
-          <p className="wrt-scard__credit wrt-scard__above">
-            Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-            <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-          </p>
         )}
       </div>
     </li>

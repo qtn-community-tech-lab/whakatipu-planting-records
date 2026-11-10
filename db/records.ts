@@ -34,13 +34,14 @@ export function toSeasonSummary(r: SeasonRow, showReview: boolean): SeasonSummar
 }
 
 /** One line_details row as a record with its species, site and season. */
-export function toRecordView(r: LineRow): RecordView {
+export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "photos" | "profile">>): RecordView {
   const scientificName = r.scientific_name!;
   const displayName = r.maori_name ?? r.common_name ?? scientificName;
   const siteClass = (r.class ?? "unknown") as SiteClass;
   const season = toSeason(r.season!, r.season_label!, r.year!, r.season_order!);
   const notes = (r.notes as { question: string; kind: ReviewNoteKind; text: string }[] | null) ?? [];
   const species: Species = {
+    photos: reference?.photos ?? [], profile: reference?.profile ?? null,
     id: r.register_code ?? r.species!, slug: r.species!, scientificName, suggestedSpelling: null,
     commonName: r.common_name, maoriName: r.maori_name, displayName, displayIsScientific: displayName === scientificName,
     status: "unknown", over5m: null, threatened: r.threatened,
@@ -96,14 +97,14 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
  * One season's page from its totals and lines. Seasons are those with lines, in order.
  * With the review switch off, lines still waiting on WRT are left out.
  */
-export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean): SeasonDetail | null {
+export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean, speciesBySlug: ReadonlyMap<string, Pick<Species, "photos">> = new Map()): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
   const summary = seasons[at];
   if (!summary) return null;
   // Workbook order (line ids follow it), for consistent ranking when totals tie.
   const views = [...lines].sort((a, b) => a.line_id! - b.line_id!)
-    .map(toRecordView)
+    .map((row) => toRecordView(row, speciesBySlug.get(row.species!)))
     .filter((v) => showReview || !v.record.needsReview);
   return {
     season: summary.season,

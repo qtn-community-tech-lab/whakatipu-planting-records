@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { reviewShown } from "@/lib/wrt/server";
 import { listSeasonPlantingLines, listSeasons } from "@/db/queries/plantings";
+import { listSpecies } from "@/db/queries/species";
 import { toSeasonDetail, toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
@@ -22,9 +23,9 @@ const RECORDS_CAP = 12;
 
 /** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
 async function loadSeason(slug: string) {
-  const [rows, lines, showReview] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown()]);
+  const [rows, lines, showReview, species] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown(), listSpecies()]);
   const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
-  return { all, d: toSeasonDetail(slug, all, lines, showReview), showReview };
+  return { all, d: toSeasonDetail(slug, all, lines, showReview, new Map(species.map((row) => [row.slug, row]))), showReview };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

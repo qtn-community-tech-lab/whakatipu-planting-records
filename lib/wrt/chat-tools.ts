@@ -13,8 +13,6 @@ import { tool, type InferUITools, type LanguageModelUsage, type UIMessage } from
 import { z } from "zod";
 import { speciesBySite, emptySplit, groupSplits, type RecordFilter, type RecordView } from "@/lib/wrt/queries";
 import { getWrt } from "@/lib/wrt/server";
-import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { matchScore, searchKey } from "@/lib/wrt/text";
 
 import type { PlantingRecord, QuantitySplit, SeasonName } from "@/lib/wrt/types";
@@ -83,8 +81,8 @@ export async function speciesDetail(slug: string) {
   return {
     ...slim(detail),
     rank,
-    photos: getSpeciesPhotos(detail.species.id).slice(0, 3),
-    profile: getSpeciesProfile(detail.species.id) ?? null,
+    photos: detail.species.photos.slice(0, 3),
+    profile: detail.species.profile ?? null,
   };
 }
 

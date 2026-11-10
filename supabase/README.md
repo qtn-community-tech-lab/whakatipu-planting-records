@@ -59,7 +59,7 @@ npm run import-workbook -- --write   # makes the changes
 
 `tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
-Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. It never touches descriptions, pins, profiles, photos or rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. Species profiles and photos are imported from `data/species-profiles.json` and `data/species-photos.json`, matched by register code. These files are import inputs only: the app reads this data from the species table. Rerunning the import replaces these columns when the source data changes, including clearing missing references to `{}` and `[]`. Each saved photo contains only `src` and a plain-text `attribution` combining photographer and licence. Photo order and profile sources are preserved. Descriptions, pins, rulings and notes a person wrote are kept, and lines that leave the CSV are deactivated.
 
 ## The map pins
 

@@ -2,9 +2,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
+import speciesProfiles from "@/data/species-profiles.json";
+import speciesPhotos from "@/data/species-photos.json";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
 interface ResearchEntry {
@@ -12,7 +11,7 @@ interface ResearchEntry {
   speciesId: string;
   scientificName: string;
   profile: SpeciesProfile | null;
-  photos: SpeciesPhoto[];
+  photos: (typeof speciesPhotos)[number][];
   identityEvidence: { url: string; note: string }[];
   photoEvidence: { sourceUrl: string; viewed: boolean; visualCheck: string; author: string; license: string }[];
   searchedSources: string[];
@@ -35,8 +34,8 @@ describe("five-species reference research batches", () => {
       for (const source of entry.identityEvidence) expect(new URL(source.url).protocol).toBe("https:");
       const review = getSpeciesReferenceReview(entry.speciesId)!;
       expect(review.scientificName).toBe(entry.scientificName);
-      expect(getSpeciesProfile(entry.speciesId)).toEqual(entry.profile ?? undefined);
-      const published = getSpeciesPhotos(entry.speciesId);
+      expect(speciesProfiles.find((profile) => profile.speciesId === entry.speciesId)).toEqual(entry.profile ?? undefined);
+      const published = speciesPhotos.filter((photo) => photo.speciesId === entry.speciesId);
       expect(published).toEqual(entry.photos);
       for (const photo of published) {
         const evidence = entry.photoEvidence.find((e) => e.sourceUrl === photo.sourceUrl)!;

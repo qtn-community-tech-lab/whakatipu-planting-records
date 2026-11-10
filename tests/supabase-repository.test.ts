@@ -12,7 +12,7 @@ describe("Supabase repository without workbook files", () => {
   it("reads records and season checks entirely from the database", async () => {
     const rows: Record<string, unknown[]> = {
       seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
-      species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla" }],
+      species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", profile: {}, photos: [] }],
       sites: [{ slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false }],
       areas: [{ slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community" }],
       line_details: [{

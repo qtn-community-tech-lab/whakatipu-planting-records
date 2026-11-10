@@ -196,7 +196,8 @@ export function loadFromDirectory(dir: string): Loaded {
       id: s.species_id,
       slug,
       scientificName,
-      suggestedSpelling: suggested && suggested !== scientificName ? suggested : null,
+      suggestedSpelling:
+        suggested && suggested !== scientificName ? suggested : null,
       commonName,
       maoriName,
       displayName,
@@ -204,12 +205,17 @@ export function loadFromDirectory(dir: string): Loaded {
       status,
       over5m: yn(s.over_5m),
       threatened: yn(s.threatened),
-      threatenedMarks: { plantsOutMaster: s.threatened === "Y", teKakano: teKakanoThreatened.has(s.species_id) },
+      threatenedMarks: {
+        plantsOutMaster: s.threatened === "Y",
+        teKakano: teKakanoThreatened.has(s.species_id),
+      },
       needsDecision: s.needs_wrt_decision === "Y",
       contestedWith: (s.contested_with ?? "").split(/\s+/).filter(Boolean),
       aliases: [...new Set(alias.raw)].filter((a) => a !== scientificName),
       searchKeys: [...searchKeys],
       note: s.note?.trim() || null,
+      photos: [],
+      profile: null,
     });
   }
 

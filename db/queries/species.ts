@@ -1,16 +1,17 @@
 /** Species: the register and one species page. */
 import { db } from "@/db/client";
+import type { Species } from "@/lib/wrt/types";
 import { lines, speciesTotals } from "./views";
 
 /** The register, A to Z, history or not. Deactivated species are left out. */
 export async function listSpecies() {
   const { data } = await (await db())
     .from("species")
-    .select("slug, scientific_name, common_name, maori_name, status, threatened")
+    .select("slug, scientific_name, common_name, maori_name, status, threatened, photos")
     .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
-  return data;
+  return data.map((species) => ({ ...species, photos: species.photos as unknown as Species["photos"] }));
 }
 
 /** Species with planting history, most recorded first. */

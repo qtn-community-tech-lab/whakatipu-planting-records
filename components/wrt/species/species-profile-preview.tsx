@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
+import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
 
 /** Source and identity notes also fit the compact species rows. */
-export function SpeciesProfileSources({ speciesId, slug, includeLookFor = true }: { speciesId: string; slug: string; includeLookFor?: boolean }) {
-  const profile = getSpeciesProfile(speciesId);
+export function SpeciesProfileSources({ profile, slug, includeLookFor = true }: { profile: SpeciesProfile | null; slug: string; includeLookFor?: boolean }) {
   if (!profile) return null;
   return (
     <details className="wrt-profile-preview__details">
