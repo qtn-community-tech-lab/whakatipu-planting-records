@@ -145,11 +145,18 @@ async function load(db: Db): Promise<Loaded> {
   });
   records.sort((a, b) => seasonBySlug.get(a.seasonSlug)!.order - seasonBySlug.get(b.seasonSlug)!.order || a.id.localeCompare(b.id));
 
-  // Places: each site with the parts that have lines, classes by plants, header spellings as aliases.
+  // Keep every active site and area, including those awaiting their first planting.
+  // Classes are ranked by recorded plants; header spellings remain aliases.
   const places: Place[] = siteRows.data
     .map((site) => {
       const parcels = new Map<string, Parcel>();
       const plantsByClass = new Map<SiteClass, number>();
+      for (const area of areaRows.data) {
+        if (area.site !== site.slug) continue;
+        const siteClass = (area.class ?? "unknown") as SiteClass;
+        parcels.set(area.slug, { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] });
+        plantsByClass.set(siteClass, 0);
+      }
       for (const l of lines) {
         const area = areaBySlug.get(l.area!)!;
         if (area.site !== site.slug) continue;
@@ -172,7 +179,6 @@ async function load(db: Db): Promise<Loaded> {
         searchKeys: [...keys],
       };
     })
-    .filter((p) => p.parcels.length > 0)
     .sort((a, b) => a.name.localeCompare(b.name));
 
   // Each season against its workbook TOTAL cell, all read from Supabase.

@@ -497,7 +497,7 @@ export function createQueries(repo: WrtRepository) {
         b.score - a.score || b.split.total - a.split.total;
       const places = c.places
         .map((p) => ({ item: p, split: placeSplits.get(p.slug) ?? emptySplit(), score: matchScore(q, p.searchKeys) }))
-        .filter((x) => x.score > 0 && x.split.records > 0)
+        .filter((x) => x.score > 0)
         .sort(rank)
         .slice(0, limit);
       const species = c.species

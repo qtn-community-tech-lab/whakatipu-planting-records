@@ -12,6 +12,21 @@ import { validateEventInput } from "@/lib/wrt/events/validate";
 import { repo } from "./helpers";
 
 describe("new planting species options", () => {
+  it("includes sites and areas without history while excluding order schemes", async () => {
+    mocks.lookups.mockResolvedValue({ places: [
+      { slug: "empty", name: "Empty site", isScheme: false, searchKeys: ["empty site"], parcels: [] },
+      { slug: "new", name: "New site", isScheme: false, searchKeys: ["new site", "riverbank"],
+        parcels: [{ id: "new-area", name: "Riverbank" }] },
+      { slug: "scheme", name: "Order scheme", isScheme: true, searchKeys: [], parcels: [] },
+    ] });
+    mocks.species.mockResolvedValue([]);
+    expect((await eventFormOptions()).sites).toEqual([
+      { slug: "empty", name: "Empty site", keys: ["empty site"], parts: [] },
+      { slug: "new", name: "New site", keys: ["new site", "riverbank"],
+        parts: [{ id: "new-area", name: "Riverbank", keys: ["riverbank"] }] },
+    ]);
+  });
+
   it("includes unused active species, omits deactivated ones and leaves history lookups intact", async () => {
     const all = await repo.listSpecies();
     const history = await repo.listRecords();
