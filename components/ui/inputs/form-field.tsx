@@ -9,11 +9,11 @@ export interface FieldProps {
   /** Help shown under the control, always visible. */
   hint?: ReactNode;
   /** The validation message, shown under the control. Its presence marks the control invalid. */
-  error?: string;
+  error?: string | undefined;
   /** Adds "(optional)" to the label. */
-  optional?: boolean;
+  optional?: boolean | undefined;
   /** Class for the field wrapper (layout); the control's own className goes on the control. */
-  fieldClassName?: string;
+  fieldClassName?: string | undefined;
 }
 
 /** Attributes the shell hands to its control: spread them onto the input, select, textarea or button. */

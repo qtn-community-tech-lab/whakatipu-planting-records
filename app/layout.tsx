@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { dataSource, getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { dataSource, getWrt, reviewShown } from "@/lib/wrt/server";
 import { DataSourceBadge } from "@/components/wrt/shell/data-source-badge";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
@@ -21,10 +21,9 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
-  const [overview, index, showReview, everything] = await Promise.all([
-    getWrt().overview(), buildSearchIndex(), reviewShown(), getWrtAll().overview(),
+  const [overview, index, showReview] = await Promise.all([
+    getWrt().overview(), buildSearchIndex(), reviewShown(),
   ]);
-  const left = everything.split;
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
   const counts: NavCounts = {
     sites: formatNumber(overview.placeCount),
