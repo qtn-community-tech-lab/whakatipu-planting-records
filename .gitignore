@@ -46,5 +46,8 @@ next-env.d.ts
 # local agent dev servers
 /.next-*/
 
+# planting events saved locally until Supabase is connected (lib/wrt/events/json-event-store.ts)
+/data/local/
+
 # Supabase CLI cache
 supabase/.temp/
