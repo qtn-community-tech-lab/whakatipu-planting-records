@@ -37,8 +37,6 @@ jobs:
     name: Live database tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Reports without blocking until the hosted access rules match what these tests expect.
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -47,4 +45,10 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Tests against the hosted project, using the public key in .env
+        id: live
+        # Warns without failing the PR until the hosted access rules match what these tests expect.
+        continue-on-error: true
         run: npx vitest run tests/db-reads.test.ts tests/db-accountable.test.ts tests/supabase-parity.test.ts
+      - name: Flag failing live tests
+        if: steps.live.outcome == 'failure'
+        run: echo "::warning title=Live database tests failed::The hosted project does not match what tests/db-*.test.ts and tests/supabase-parity.test.ts expect. See the step above."
