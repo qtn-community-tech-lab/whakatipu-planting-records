@@ -13,6 +13,9 @@ import { SplitLine, SplitKey } from "@/components/wrt/shared/quantity";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SiteRows } from "@/components/wrt/sites/site-rows";
 import { LocationCard } from "@/components/wrt/sites/location-card";
+import { listSites } from "@/db/queries/sites";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Sites",
@@ -27,6 +30,7 @@ const SORTS = [
   { key: "name", label: "Name A–Z" },
 ] as const;
 type SortKey = (typeof SORTS)[number]["key"];
+type ListedSite = Omit<PlaceSummary, "span"> & { span: PlaceSummary["span"] | null };
 
 function href(cls: ClassFilter | undefined, sort: SortKey): `/sites${"" | `?${string}`}` {
   const sp = new URLSearchParams();
@@ -36,11 +40,11 @@ function href(cls: ClassFilter | undefined, sort: SortKey): `/sites${"" | `?${st
   return s ? `/sites?${s}` : "/sites";
 }
 
-function sortSites(list: PlaceSummary[], sort: SortKey) {
+function sortSites(list: ListedSite[], sort: SortKey) {
   const out = [...list];
   if (sort === "name") out.sort((a, b) => a.item.name.localeCompare(b.item.name, "en-NZ"));
   else if (sort === "recent")
-    out.sort((a, b) => b.span.last.order - a.span.last.order || b.split.total - a.split.total);
+    out.sort((a, b) => (b.span?.last.order ?? -1) - (a.span?.last.order ?? -1) || b.split.total - a.split.total || a.item.name.localeCompare(b.item.name, "en-NZ"));
   else out.sort(byTotalDesc);
   return out;
 }
@@ -52,7 +56,18 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
   const sortParam = first(sp.sort);
   const sort: SortKey = SORTS.find((s) => s.key === sortParam)?.key ?? "plants";
 
-  const [all, overview, records] = await Promise.all([getWrt().places(), getWrt().overview(), getWrt().records()]);
+  const [register, history, overview, records, authenticated] = await Promise.all([
+    listSites(), getWrt().places(), getWrt().overview(), getWrt().records(), isAuthenticated(),
+  ]);
+  const historyBySlug = new Map(history.map((site) => [site.item.slug, site]));
+  const all: ListedSite[] = register.map((site) => {
+    const summary = historyBySlug.get(site.slug);
+    return {
+      item: { ...summary?.item, slug: site.slug, name: site.name, isScheme: site.is_scheme,
+        siteClasses: summary?.item.siteClasses ?? [], parcels: summary?.item.parcels ?? [], searchKeys: summary?.item.searchKeys ?? [] },
+      split: summary?.split ?? emptySplit(), span: summary?.span ?? null, speciesCount: summary?.speciesCount ?? 0,
+    };
+  });
   const bySite = speciesBySite(records.rows);
   const realSites = all.filter((p) => !p.item.isScheme);
   const schemes = all.filter((p) => p.item.isScheme);
@@ -83,9 +98,10 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
     <>
       <PageHead
         title={`${realSites.length} sites${schemeNote}`}
+        aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
-            Every place with recorded plants since {overview.firstSeason.label}, with its most recorded species.
+            Every registered site, with planting history since {overview.firstSeason.label} where available.
             {lead && <> {lead}</>}
           </>
         }
@@ -138,7 +154,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         </div>
 
         {rows.length === 0 ? (
-          <EmptyState title="No sites in this class">No site with recorded plants matches this filter.</EmptyState>
+          <EmptyState title="No sites in this class">No site matches this filter.</EmptyState>
         ) : (
           <SiteRows
             max={max}
@@ -155,11 +171,11 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
                 meta: (
                   <>
                     {classes && <>{classes} · </>}
-                    {spanLabel(p.span)} · {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {p.speciesCount} species
+                    {p.span ? <>{spanLabel(p.span)} · {p.span.seasonsActive} {p.span.seasonsActive === 1 ? "season" : "seasons"} · {p.speciesCount} species</> : "No planting records yet"}
                     {p.item.parcels.length > 1 && <> · {p.item.parcels.length} parcels</>}
                   </>
                 ),
-                totalHref: hrefs.records({ place: p.item.slug }),
+                totalHref: p.span ? hrefs.records({ place: p.item.slug }) : hrefs.place(p.item.slug),
                 moreHref: hrefs.place(p.item.slug),
                 speciesHref: (s) => hrefs.records({ place: p.item.slug, species: s.slug }),
               };

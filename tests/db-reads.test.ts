@@ -13,7 +13,7 @@ vi.mock("@/db/client", () => ({
   db: async () => createClient<Database>(url!, key!, { auth: { persistSession: false } }),
 }));
 
-const { listSites, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
+const { listSites, listSiteTotals, readSite, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
 const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
 const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
@@ -24,10 +24,17 @@ const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.
 
 describe.skipIf(!live)("read queries against Supabase", () => {
   it("lists sites, and their plants add up to the whole history", async () => {
-    const sites = await listSites();
+    const sites = await listSiteTotals();
     expect(sites.length).toBeGreaterThan(0);
     expect(sum(sites)).toBe(ALL_PLANTS);
-    expect(await listSites(3)).toEqual(sites.slice(0, 3));
+    expect(await listSiteTotals(3)).toEqual(sites.slice(0, 3));
+  });
+
+  it("reads the active site register and site descriptions independently of planting history", async () => {
+    const sites = await listSites();
+    const site = defined(sites[0]);
+    expect(await readSite(site.slug)).toMatchObject({ slug: site.slug, name: site.name, description: expect.any(String) });
+    expect(await readSite("no-such-site")).toBeNull();
   });
 
   it("lists areas with totals and pins", async () => {
@@ -42,7 +49,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
       expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
     const site = defined((await listSites())[0]);
-    expect((await listPlantingAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
+    expect((await listPlantingAreaPins(site.slug)).every((a) => a.site === site.slug)).toBe(true);
   });
 
   it("lists the species register and ranks species by plants", async () => {

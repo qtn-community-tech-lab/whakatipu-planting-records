@@ -33,3 +33,18 @@ export const speciesSchema = z.object({
 export type SpeciesInput = z.infer<typeof speciesSchema>;
 export type SpeciesEdit = Pick<Tables<"species">, keyof SpeciesInput | "updated_at">;
 export type SpeciesSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
+
+export const editSiteSchema = z.object({
+  name: text.min(1, "Enter a site name."),
+  description: text,
+});
+
+export const createSiteSchema = editSiteSchema.extend({
+  slug: text.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
+    .refine((value) => value !== "new", "This slug is reserved. Choose another."),
+});
+
+export type CreateSiteInput = z.infer<typeof createSiteSchema>;
+export type EditSiteInput = z.infer<typeof editSiteSchema>;
+export type SiteEdit = Pick<Tables<"sites">, keyof CreateSiteInput | "updated_at">;
+export type SiteSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
