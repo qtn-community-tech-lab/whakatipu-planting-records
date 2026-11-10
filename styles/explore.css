@@ -29,8 +29,11 @@
 .exp-seg label.cn-seg__opt:has(input:focus-visible),
 .cn-seg a.cn-seg__opt:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 .cn-seg a.cn-seg__opt { color: var(--text-body); text-decoration: none; padding: 0 14px; white-space: nowrap; }
-/* Four sort options fit a 390px phone card with tighter padding. */
-@media (max-width: 420px) { .exp-seg .cn-seg__opt, .cn-seg a.cn-seg__opt { padding: 0 10px; } }
+/* Four sort options fit a 390px phone card with tighter padding; narrower phones scroll them. */
+@media (max-width: 420px) {
+  .exp-seg .cn-seg__opt, .cn-seg a.cn-seg__opt { padding: 0 9px; }
+  .exp-seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+}
 .cn-seg a.cn-seg__opt:hover:not([aria-current="true"]) { background: var(--surface-tint); color: var(--text-strong); }
 .exp-seg label.cn-seg__opt:hover:not(:has(input:checked)) { background: var(--surface-tint); }
 
