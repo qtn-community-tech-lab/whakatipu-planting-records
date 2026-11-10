@@ -70,6 +70,8 @@ const species: Row[] = data.species.map((s) => ({
   register_code: s.id, register_note: s.note,
   profile: profileById.get(s.id) ?? {}, photos: (photosById.get(s.id) ?? []).map((photo) => ({
     src: photo.src, attribution: `${photo.author} · ${photo.license}`,
+    sourceUrl: photo.sourceUrl,
+    licenseUrl: photo.licenseUrl,
   })),
 }));
 

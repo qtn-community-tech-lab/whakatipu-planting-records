@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
+import { PhotoMedia } from "@/components/wrt/species/photo-media";
 import type { Species } from "@/lib/wrt/types";
 
 /** Small round picture for a species in a ranked list: its photo, or its initial. */
@@ -9,7 +9,7 @@ export function SpeciesAvatar({ species }: { species: Pick<Species, "photos" | "
   return (
     <span className="wrt-avatar" aria-hidden="true">
       {photo ? (
-        <Image src={photo.src} width={960} height={720} alt="" sizes="40px" unoptimized />
+        <PhotoMedia photo={photo} name={species.displayName} variant="avatar" sizes="40px" />
       ) : (
         <span className="wrt-avatar__initial">{initial}</span>
       )}

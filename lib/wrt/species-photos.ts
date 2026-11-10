@@ -4,6 +4,8 @@ import type { SpeciesSummary } from "./queries";
 export interface SpeciesPhoto {
   src: string;
   attribution: string;
+  sourceUrl: string;
+  licenseUrl: string;
 }
 
 /** Rank recorded quantities, including those needing review; ties use botanical names. */

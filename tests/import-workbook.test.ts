@@ -2,7 +2,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import { isDeepStrictEqual } from "node:util";
 import profiles from "@/data/species-profiles.json";
 import photos from "@/data/species-photos.json";
-import { DEFAULT_DATA_DIR, loadFromDirectory } from "@/lib/wrt/csv/csv-repository";
+import { DEFAULT_DATA_DIR, loadFromDirectory } from "@/scripts/workbook/load";
 
 // Run the real CLI against an in-memory Supabase client; never use a database key.
 const workbook = loadFromDirectory(DEFAULT_DATA_DIR);
@@ -81,7 +81,10 @@ it("imports profiles and ordered photos, reports changes without writing, and is
   expect(species).toHaveLength(workbook.species.length);
   for (const row of species) {
     expect(row.profile).toEqual(profiles.find((profile) => profile.speciesId === row.register_code) ?? {});
-    expect(row.photos).toEqual(photos.filter((photo) => photo.speciesId === row.register_code).map((photo) => ({ src: photo.src, attribution: `${photo.author} · ${photo.license}` })));
+    expect(row.photos).toEqual(photos.filter((photo) => photo.speciesId === row.register_code).map((photo) => ({
+      src: photo.src, attribution: `${photo.author} · ${photo.license}`,
+      sourceUrl: photo.sourceUrl, licenseUrl: photo.licenseUrl,
+    })));
   }
   // JSONB does not retain object key order. Equal content must not trigger writes.
   for (const row of species) row.profile = Object.fromEntries(Object.entries(row.profile as Row).reverse());
@@ -90,6 +93,15 @@ it("imports profiles and ordered photos, reports changes without writing, and is
   expect(writes).toEqual([]);
 
   const researched = species.find((row) => !isDeepStrictEqual(row.profile, {}))!;
+  // Existing two-field photos must gain source and licence links on the next import.
+  researched.photos = (researched.photos as Row[]).map(({ src, attribution }) => ({ src, attribution }));
+  const linkReport = await run(false);
+  expect(linkReport.some((line) => /species\s+\+0 new, 1 changed/.test(line))).toBe(true);
+  expect(writes).toEqual([]);
+  await run(true);
+  expect(writes).toEqual(["species"]);
+  writes.length = 0;
+
   researched.profile = {};
   researched.photos = [];
   const report = await run(false);

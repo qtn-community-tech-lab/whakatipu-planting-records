@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { reviewShown } from "@/lib/wrt/server";
+import { listSpecies } from "@/db/queries/species";
 import { toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
@@ -14,8 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SeasonsPage() {
-  const [rows, leaders, showReview, species] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown(), getWrt().speciesList()]);
-  const speciesBySlug = new Map(species.map((row) => [row.item.slug, row.item]));
+  const [rows, leaders, showReview, species] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown(), listSpecies()]);
+  const speciesBySlug = new Map(species.map((row) => [row.slug, row]));
   // Only seasons with planting lines, as in the workbook.
   const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
 

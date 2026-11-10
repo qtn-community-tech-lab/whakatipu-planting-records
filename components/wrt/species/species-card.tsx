@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
+import { PhotoMedia } from "./photo-media";
 import { SpeciesMarkers } from "./species-meta";
 import { SpeciesReferenceStatus } from "./species-reference-status";
 import { SpeciesProfileSources } from "./species-profile-preview";
@@ -36,20 +35,6 @@ function RingTile({ row }: { row: SpeciesSummary }) {
         {initial}
       </span>
     </div>
-  );
-}
-
-function PhotoMedia({ photo, name, sizes }: { photo: SpeciesPhoto; name: string; sizes: string }) {
-  return (
-    <Image
-      src={photo.src}
-      width={960}
-      height={720}
-      sizes={sizes}
-      alt={`Reference photo of ${name}`}
-      className="wrt-scard__img"
-      unoptimized
-    />
   );
 }
 
@@ -142,12 +127,6 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
         </span>
         {photo && photos.length > 1 && (
           <Link href={`${hrefs.species(sp.slug)}#photos`} className="wrt-scard__chip wrt-scard__above">{photos.length} photos</Link>
-        )}
-        {photo && (
-          // Shown on hover or focus, so the credit stays with the photos without crowding the row.
-          <p className="wrt-scard__credit wrt-scard__above">
-            Photo: {photo.attribution}
-          </p>
         )}
       </div>
     </li>

@@ -34,7 +34,7 @@ export function toSeasonSummary(r: SeasonRow, showReview: boolean): SeasonSummar
 }
 
 /** One line_details row as a record with its species, site and season. */
-export function toRecordView(r: LineRow, reference?: Pick<Species, "photos" | "profile">): RecordView {
+export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "photos" | "profile">>): RecordView {
   const scientificName = r.scientific_name!;
   const displayName = r.maori_name ?? r.common_name ?? scientificName;
   const siteClass = (r.class ?? "unknown") as SiteClass;
@@ -97,7 +97,7 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
  * One season's page from its totals and lines. Seasons are those with lines, in order.
  * With the review switch off, lines still waiting on WRT are left out.
  */
-export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean, speciesBySlug: ReadonlyMap<string, Species> = new Map()): SeasonDetail | null {
+export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean, speciesBySlug: ReadonlyMap<string, Pick<Species, "photos">> = new Map()): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
   const summary = seasons[at];

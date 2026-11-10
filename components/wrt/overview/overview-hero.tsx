@@ -1,5 +1,4 @@
 import type { AppRoute } from "@/lib/wrt/routes";
-import Image from "next/image";
 import Link from "next/link";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
@@ -8,6 +7,7 @@ import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
 import { hrefs } from "@/components/wrt/shared/names";
+import { PhotoMedia } from "@/components/wrt/species/photo-media";
 
 interface Stat {
   href: AppRoute;
@@ -96,15 +96,10 @@ export function OverviewHero({
           <ul className="wrt-ohero__grid">
             {pictured.map(({ s, rank, photo }) => (
               <li key={s.item.slug} className="wrt-ohero__tile">
-                <Image
-                  src={photo!.src}
-                  width={960}
-                  height={720}
+                <PhotoMedia
+                  photo={photo!} name={s.item.displayName} variant="overview"
                   sizes="(max-width: 960px) 50vw, 18vw"
-                  alt=""
-                  className="wrt-ohero__img"
-                  unoptimized
-                  priority={rank <= 2}
+                  preload={rank <= 2}
                 />
                 <span className="wrt-ohero__rank">{rank}</span>
                 <Link href={hrefs.species(s.item.slug)} className="wrt-ohero__tile-link">
@@ -113,9 +108,6 @@ export function OverviewHero({
                   </span>
                   <span className="wrt-ohero__tile-count tabular-nums">{formatNumber(s.split.total)} recorded</span>
                 </Link>
-                <span className="wrt-ohero__tile-credit">
-                  {photo!.attribution}
-                </span>
               </li>
             ))}
           </ul>

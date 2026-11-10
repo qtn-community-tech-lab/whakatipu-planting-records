@@ -484,19 +484,18 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 }
 .wrt-sgrid .wrt-scard__media:not([data-count]) { background: var(--surface-media); }
 .wrt-sgrid .wrt-scard[data-photo] .wrt-scard__media::after { display: none; }
-.wrt-sgrid .wrt-scard__media > .wrt-scard__img { min-height: 0; border-radius: 14px; background: var(--surface-media); } /* tone while the photo loads */
-.wrt-sgrid .wrt-scard__media > .wrt-scard__img:first-child { grid-row: 1 / -1; }
+.wrt-sgrid .wrt-scard__media > .wrt-scard__photo:first-child { grid-row: 1 / -1; }
 .wrt-sgrid .wrt-scard__media[data-count="1"] { grid-template-columns: 1fr; }
-.wrt-sgrid .wrt-scard__media[data-count="2"] > .wrt-scard__img:nth-child(2) { grid-row: 1 / -1; }
+.wrt-sgrid .wrt-scard__media[data-count="2"] > .wrt-scard__photo:nth-child(2) { grid-row: 1 / -1; }
 .wrt-sgrid > .wrt-scard:hover .wrt-scard__img { transform: none; } /* scaling would spill into the next photo */
 /* Photo credit over the photos, shown on hover or keyboard focus. */
-.wrt-sgrid .wrt-scard__credit {
+.wrt-scard__photo .wrt-scard__credit {
   position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px; border-radius: 0 0 14px 14px;
   background: linear-gradient(to top, rgba(21, 38, 28, .85), transparent); color: var(--cn-white);
   opacity: 0; transition: opacity var(--dur);
 }
-.wrt-sgrid .wrt-scard:hover .wrt-scard__credit, .wrt-sgrid .wrt-scard:focus-within .wrt-scard__credit { opacity: 1; }
-.cn-app .wrt-sgrid .wrt-scard__credit a { color: var(--cn-white); }
+.wrt-scard__photo:hover .wrt-scard__credit, .wrt-scard__photo:focus-within .wrt-scard__credit { opacity: 1; }
+.cn-app .wrt-scard__photo .wrt-scard__credit a { color: var(--cn-white); }
 @media (max-width: 760px) {
   .wrt-sgrid > .wrt-scard { grid-template-columns: minmax(0, 1fr); height: auto; padding: 12px 12px 18px; border-radius: 20px; }
   .wrt-sgrid .wrt-scard__media { grid-column: 1; height: 220px; }
@@ -516,6 +515,9 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-tile); overflow: hidden;
   background: var(--surface-media); isolation: isolate;
 }
+.wrt-scard[data-photo] .wrt-scard__media { z-index: 2; }
+.wrt-scard__photo { position: relative; min-height: 0; height: 100%; margin: 0; border-radius: 14px; overflow: hidden; background: var(--surface-media); }
+.wrt-scard__photo > a { position: relative; z-index: 2; display: block; height: 100%; }
 .wrt-scard__img {
   display: block; width: 100%; height: 100%; object-fit: cover;
   transition: transform 700ms var(--ease);
@@ -754,6 +756,7 @@ a.wrt-col:hover { transform: translateY(-3px); }
 .wrt-ohero__media-head a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .wrt-ohero__grid { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-height: 300px; }
 .wrt-ohero__tile { position: relative; overflow: hidden; border-radius: var(--radius-tile-lg); background: var(--cn-green-900); min-height: 0; }
+.wrt-ohero__photo { position: absolute; inset: 0; margin: 0; }
 .wrt-ohero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease); }
 .wrt-ohero__tile:hover .wrt-ohero__img { transform: scale(1.07); }
 .wrt-ohero__tile::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(21, 38, 28, .82), rgba(21, 38, 28, 0) 55%); }
@@ -769,6 +772,9 @@ a.wrt-col:hover { transform: translateY(-3px); }
 .wrt-ohero__tile-count { font: 600 12px/1 var(--font-sans); color: var(--cn-lime-300); }
 .wrt-ohero__tile-credit { position: absolute; z-index: 3; left: 12px; right: 12px; bottom: 8px; font: 500 9.5px/1.2 var(--font-sans); color: rgba(255, 255, 255, .62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wrt-ohero__tile-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.wrt-ohero__tile-credit > span { display: flex; align-items: baseline; gap: 3px; }
+.wrt-ohero__tile-credit a:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.wrt-ohero__tile-credit a:last-child { flex-shrink: 0; }
 .wrt-ohero__note { margin: 0; font: 500 11.5px/1.4 var(--font-sans); color: rgba(255, 255, 255, .5); }
 
 @media (max-width: 1100px) {
