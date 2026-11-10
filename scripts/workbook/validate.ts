@@ -1,10 +1,17 @@
 /**
- * Row validators for the V0 CSV sources. Each turns a raw CSV row into a typed
- * row or records a DataIssue. Errors stop the load; warnings are kept and shown
- * on the "About the data" page.
+ * Workbook import validators. Errors stop the import; warnings are retained
+ * with the loaded data for inspection.
  */
 import type { CsvTable } from "./parse";
-import type { Confidence, DataIssue, Precision, SeasonName, SiteClass } from "../types";
+import type { Confidence, Precision, SeasonName, SiteClass } from "../../lib/wrt/types";
+
+/** A problem found while loading the source data. */
+export interface DataIssue {
+  file: string;
+  line: number;
+  message: string;
+  severity: "error" | "warning";
+}
 
 export const REQUIRED_COLUMNS = {
   planting_history: [

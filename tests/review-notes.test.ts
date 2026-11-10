@@ -1,6 +1,6 @@
 import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
-import { parseReviewNotes, reviewTheme } from "@/lib/wrt/csv/csv-repository";
+import { parseReviewNotes, reviewTheme } from "@/scripts/workbook/load";
 
 describe("reviewTheme", () => {
   it.each([
@@ -111,7 +111,7 @@ describe("parseReviewNotes", () => {
 
 describe("humaniseNote (display text never exposes join keys)", () => {
   it("replaces species IDs with names and drops cluster codes", async () => {
-    const { humaniseNote } = await import("@/lib/wrt/csv/csv-repository");
+    const { humaniseNote } = await import("@/scripts/workbook/load");
     const names: Record<string, string> = { "SP-122": "Ozothamnus leptophyllus", "SP-121": "Ozothamnus fulvida" };
     const out = humaniseNote(
       "species contested (C5) with SP-122 SP-121: separate stock lines or one? ID kept as typed, no merge",
@@ -121,8 +121,8 @@ describe("humaniseNote (display text never exposes join keys)", () => {
   });
 
   it("no record note shown to users contains a species ID, but the raw note is kept", async () => {
-    const { CsvWrtRepository } = await import("@/lib/wrt/csv/csv-repository");
-    const recs = await new CsvWrtRepository().listRecords();
+    const { repo } = await import("./helpers");
+    const recs = await repo.listRecords();
     const notes = recs.flatMap((r) => r.notes);
     expect(notes.some((n) => /SP-\d+/.test(n.raw))).toBe(true);
     expect(notes.filter((n) => /SP-\d+|\(C\d+\)/.test(n.text))).toEqual([]);

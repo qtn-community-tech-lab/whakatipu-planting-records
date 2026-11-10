@@ -1,20 +1,14 @@
-/**
- * CsvWrtRepository: the V0 storage adapter.
- *
- * Reads the transformed CSVs (never the original WRT spreadsheets), validates
- * every row, and builds domain entities. Loaded once per server process.
- */
+/** Workbook import only: read and validate the transformed CSVs, then build import entities. */
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { parseCsv, type CsvTable } from "./parse";
-import { checkColumns, toSiteClass, validateHistoryRow, yn, type HistoryRow, type SourceName, type SourceRow } from "./validate";
-import type { SourceInfo, WrtRepository } from "../repository";
+import { checkColumns, toSiteClass, validateHistoryRow, yn, type DataIssue, type HistoryRow, type SourceName, type SourceRow } from "./validate";
 import type {
-  DataIssue, Parcel, Place, PlantingRecord, ReconciliationRow, ReviewNote, ReviewNoteKind,
+  Parcel, Place, PlantingRecord, ReconciliationRow, ReviewNote, ReviewNoteKind,
   ReviewTheme, Season, SeasonName, SiteClass, Species,
-} from "../types";
-import { cleanLabel, searchKey, slugify } from "../text";
-import { primaryName, withMacrons } from "../display-names";
+} from "../../lib/wrt/types";
+import { cleanLabel, searchKey, slugify } from "../../lib/wrt/text";
+import { primaryName, withMacrons } from "../../lib/wrt/display-names";
 
 export const DEFAULT_DATA_DIR = path.join(process.cwd(), "docs", "planning", "prototype");
 
@@ -33,7 +27,6 @@ interface Loaded {
   records: PlantingRecord[];
   reconciliation: ReconciliationRow[];
   issues: DataIssue[];
-  info: SourceInfo;
 }
 
 export class WrtDataError extends Error {
@@ -331,13 +324,6 @@ export function loadFromDirectory(dir: string): Loaded {
   const errors = issues.filter((i) => i.severity === "error");
   if (errors.length) throw new WrtDataError(errors);
 
-  const info: SourceInfo = {
-    description:
-      "Generated from the MASTER sheet of WRT's Plants Out Master workbook, one row per species, site and season. The app reads these generated files; it never opens the original spreadsheets.",
-    files: (Object.keys(FILES) as SourceName[]).map((n) => ({ name: FILES[n], rows: tables[n].rows.length })),
-    loadedAt: new Date().toISOString(),
-  };
-
   return {
     seasons,
     species: [...speciesById.values()],
@@ -345,24 +331,5 @@ export function loadFromDirectory(dir: string): Loaded {
     records,
     reconciliation,
     issues,
-    info,
   };
-}
-
-export class CsvWrtRepository implements WrtRepository {
-  private data: Loaded | null = null;
-  constructor(private readonly dir: string = DEFAULT_DATA_DIR) {}
-
-  private load(): Loaded {
-    if (!this.data) this.data = loadFromDirectory(this.dir);
-    return this.data;
-  }
-
-  async listSeasons() { return this.load().seasons; }
-  async listSpecies() { return this.load().species; }
-  async listPlaces() { return this.load().places; }
-  async listRecords() { return this.load().records; }
-  async listReconciliation() { return this.load().reconciliation; }
-  async listDataIssues() { return this.load().issues; }
-  async getSourceInfo() { return this.load().info; }
 }

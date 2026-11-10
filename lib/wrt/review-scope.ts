@@ -19,7 +19,6 @@ export function confirmedOnly(repo: WrtRepository): WrtRepository {
     listRecords: () => (records ??= repo.listRecords().then((all) => all.filter((r) => !r.needsReview))),
     // The workbook's totals include the records left out here, so there is nothing to check against.
     listReconciliation: async () => [],
-    listDataIssues: () => repo.listDataIssues(),
     getSourceInfo: () => repo.getSourceInfo(),
   };
 }

@@ -12,7 +12,7 @@
  * rulings, keeps notes a person wrote, and deactivates lines that leave the CSV.
  */
 import { createClient } from "@supabase/supabase-js";
-import { DEFAULT_DATA_DIR, loadFromDirectory } from "../lib/wrt/csv/csv-repository";
+import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
 import { REVIEW_THEMES } from "../lib/wrt/review-themes";
 import { slugify } from "../lib/wrt/text";
 import type { ReviewNoteKind } from "../lib/wrt/types";
@@ -21,7 +21,7 @@ type Row = Record<string, string | number | boolean | null>;
 const write = process.argv.includes("--write");
 
 // ------------------------------------------------------------------ 1. what the CSVs say
-const data = loadFromDirectory(process.env.WRT_DATA_DIR || DEFAULT_DATA_DIR);
+const data = loadFromDirectory(DEFAULT_DATA_DIR);
 
 const sites: Row[] = data.places.map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme }));
 

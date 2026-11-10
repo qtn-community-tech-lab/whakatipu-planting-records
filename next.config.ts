@@ -12,10 +12,6 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "inaturalist-open-data.s3.amazonaws.com", pathname: "/photos/**" },
     ],
   },
-  // The CSVs are read from disk at runtime; ship them with the server build.
-  outputFileTracingIncludes: {
-    "/**": ["./docs/planning/prototype/*.csv"],
-  },
 };
 
 export default nextConfig;

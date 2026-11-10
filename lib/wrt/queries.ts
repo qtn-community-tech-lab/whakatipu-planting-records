@@ -225,8 +225,7 @@ export interface DataQuality {
   byPrecision: Ranked<Precision>[];
   themes: ThemeSummary[];
   reconciliation: ReconciliationRow[];
-  issues: { errors: number; warnings: number; sample: string[] };
-  source: { description: string; files: { name: string; rows: number }[] };
+  source: { description: string; tables: { name: string; rows: number }[] };
   /**
    * Every species WRT marks threatened in either of its two lists, with recorded
    * plants. Raised on About the data because the basis of the mark is unknown
@@ -523,8 +522,8 @@ export function createQueries(repo: WrtRepository) {
 
     async dataQuality(): Promise<DataQuality> {
       const c = await ctx();
-      const [reconciliation, issues, info] = await Promise.all([
-        repo.listReconciliation(), repo.listDataIssues(), repo.getSourceInfo(),
+      const [reconciliation, info] = await Promise.all([
+        repo.listReconciliation(), repo.getSourceInfo(),
       ]);
       return {
         split: splitOf(c.records),
@@ -532,12 +531,7 @@ export function createQueries(repo: WrtRepository) {
         byPrecision: rankBy(c.records, (r) => r.precision),
         themes: themesOf(c.records),
         reconciliation,
-        issues: {
-          errors: issues.filter((i) => i.severity === "error").length,
-          warnings: issues.filter((i) => i.severity === "warning").length,
-          sample: issues.slice(0, 20).map((i) => `${i.file}: ${i.message}`),
-        },
-        source: { description: info.description, files: info.files },
+        source: info,
         threatened: c.species
           .filter((sp) => sp.threatenedMarks.plantsOutMaster || sp.threatenedMarks.teKakano)
           .map((sp) => {

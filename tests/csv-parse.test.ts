@@ -1,6 +1,6 @@
 import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
-import { parseCsv } from "@/lib/wrt/csv/parse";
+import { parseCsv } from "@/scripts/workbook/parse";
 
 describe("parseCsv", () => {
   it("parses a plain table keyed by header", () => {

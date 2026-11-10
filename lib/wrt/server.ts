@@ -1,37 +1,15 @@
-/**
- * Server-only entry point. Pages call `getWrt()`; nothing else in the UI
- * knows which repository is behind it. WRT_DATA_SOURCE in .env picks it:
- * "supabase" (the default) reads live data, "csv" reads the files in
- * docs/planning/prototype. Every page shows which one it is reading.
- */
+/** Server-only queries over Supabase, scoped by the reader’s review switch. */
 import "server-only";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
 import { SupabaseWrtRepository } from "@/db/repository";
-import { CsvWrtRepository, DEFAULT_DATA_DIR } from "./csv/csv-repository";
 import { createQueries, type WrtQueries } from "./queries";
 import type { WrtRepository } from "./repository";
 import { REVIEW_COOKIE, REVIEW_HIDDEN, confirmedOnly } from "./review-scope";
 
-export type DataSource = "supabase" | "csv";
-
-/** Where every page reads from. Supabase unless WRT_DATA_SOURCE says "csv". */
-export function dataSource(): DataSource {
-  return process.env.WRT_DATA_SOURCE?.trim().toLowerCase() === "csv" ? "csv" : "supabase";
-}
-
-let repo: WrtRepository | null = null;
+const repo = new SupabaseWrtRepository();
 let queries: WrtQueries | null = null;
 let allQueries: WrtQueries | null = null;
-
-export function getRepository(): WrtRepository {
-  if (!repo) {
-    repo = dataSource() === "csv"
-      ? new CsvWrtRepository(process.env.WRT_DATA_DIR || DEFAULT_DATA_DIR)
-      : new SupabaseWrtRepository();
-  }
-  return repo;
-}
 
 /** Is this reader seeing records still needing review? On unless they switched it off. */
 export async function reviewShown(): Promise<boolean> {
@@ -46,7 +24,7 @@ export async function reviewShown(): Promise<boolean> {
 
 /** The repository for this request: everything, or confirmed records only, by the reader's switch. */
 function scopedRepository(): WrtRepository {
-  const all = getRepository();
+  const all = repo;
   const confirmed = confirmedOnly(all);
   const pick = async () => ((await reviewShown()) ? all : confirmed);
   return {
@@ -55,7 +33,6 @@ function scopedRepository(): WrtRepository {
     listPlaces: () => all.listPlaces(),
     listRecords: async () => (await pick()).listRecords(),
     listReconciliation: async () => (await pick()).listReconciliation(),
-    listDataIssues: () => all.listDataIssues(),
     getSourceInfo: () => all.getSourceInfo(),
   };
 }
@@ -68,6 +45,6 @@ export function getWrt(): WrtQueries {
 
 /** Every record whatever the switch says: for pages that explain the data itself. */
 export function getWrtAll(): WrtQueries {
-  if (!allQueries) allQueries = createQueries(getRepository());
+  if (!allQueries) allQueries = createQueries(repo);
   return allQueries;
 }
