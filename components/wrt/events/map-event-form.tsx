@@ -11,7 +11,7 @@
  *    species. The host widens the panel for this step (onStepChange).
  * 3. Check and submit: a flat summary, then notes, then Submit.
  */
-import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, MapPinPlus, Pencil, Pentagon, Plus, Search, SquareDashedMousePointer, X } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Calendar, Camera, Check, ChevronDown, ChevronRight, Map as MapIcon, MapPin, MapPinPlus, Pencil, Pentagon, Plus, SquareDashedMousePointer, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
@@ -28,6 +28,7 @@ import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { DatePicker } from "@/components/ui/date-picker";
 import { formatNumber, rankMatches } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
+import { SearchField } from "@/components/wrt/shared/search-field";
 import { useEventForm, type EventFormState } from "./use-event-form";
 import s from "./map-event-form.module.css";
 
@@ -479,21 +480,14 @@ function WhatPlanted({ form, options, suggestions }: {
   return (
     <section className={s.group} aria-label="Species and how many">
       <div className={s.searchBar}>
-        <label className={s.search}>
-          <Search size={18} strokeWidth={2.2} />
-          <span className="sr-only">Search species</span>
-          <input type="search" value={query} placeholder="Search species" onChange={(e) => setQuery(e.target.value)} autoComplete="off" />
-          {query
-            ? <button type="button" className={s.searchClear} aria-label="Clear search" onClick={() => setQuery("")}>×</button>
-            : (
-              <button
-                type="button" className={s.searchCamera} aria-disabled="true" title="Photos are coming next"
-                aria-label="Take a photo of what was planted (coming next)" onClick={() => setCameraTip(true)}
-              >
-                <Camera size={20} strokeWidth={2} />
-              </button>
-            )}
-        </label>
+        <SearchField label="Search species" placeholder="Search species" value={query} onChange={setQuery}>
+          <button
+            type="button" className={s.searchCamera} aria-disabled="true" title="Photos are coming next"
+            aria-label="Take a photo of what was planted (coming next)" onClick={() => setCameraTip(true)}
+          >
+            <Camera size={20} strokeWidth={2} />
+          </button>
+        </SearchField>
         {cameraTip && <p className={s.tip} role="status">Photos of what was planted are coming next.</p>}
         {nothingYet && <p className={s.problem} role="alert">Enter how many went in for at least one species.</p>}
         {err("species") && <p className={s.problem} role="alert">{err("species")}</p>}
