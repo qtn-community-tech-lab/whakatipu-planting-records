@@ -216,6 +216,7 @@ export function loadFromDirectory(dir: string): Loaded {
       note: s.note?.trim() || null,
       photos: [],
       profile: null,
+      deactivatedAt: null,
     });
   }
 

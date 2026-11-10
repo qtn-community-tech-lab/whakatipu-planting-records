@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath, updateTag } from "next/cache";
+import { dataSource, getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -14,6 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { isAuthenticated } from "@/db/queries/access";
+import { deactivateSpecies } from "@/db/queries/species";
+import { SUPABASE_TAG } from "@/db/cache";
+import type { SpeciesSubmitResult } from "@/db/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
@@ -60,9 +66,34 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const prev = at > 0 ? ranked[at - 1] : null;
   const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
+  async function onDeactivate(): Promise<SpeciesSubmitResult> {
+    "use server";
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate species." };
+    try {
+      const { error } = await deactivateSpecies(slug);
+      if (error) return { error: "The species could not be deactivated. Please try again." };
+    } catch {
+      return { error: "The species could not be deactivated. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/species/${slug}`);
+  }
+
+  const editButton = <Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button>;
+
   return (
     <>
-      {authenticated && <div className="flex justify-end"><Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button></div>}
+      {authenticated && !sp.deactivatedAt && (dataSource() === "supabase"
+        ? <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
+        : <div className="flex justify-end">{editButton}</div>)}
+      {sp.deactivatedAt && <Alert role="status">
+        <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
+        <AlertDescription>
+          <p>This species is unavailable for new planting lines. Its historical records and recorded quantities are retained.</p>
+          <Link href="/species?state=deactivated" className="cn-link">View deactivated species</Link>
+        </AlertDescription>
+      </Alert>}
       <SpeciesHero
         species={sp}
         split={split}

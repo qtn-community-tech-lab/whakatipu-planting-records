@@ -86,6 +86,8 @@ export interface Species {
   note: string | null;
   photos: readonly SpeciesPhoto[];
   profile: SpeciesProfile | null;
+  /** Deactivated from new selections; historical records still reference this species. */
+  deactivatedAt: string | null;
 }
 
 /** WRT's two threatened-species marks, kept separately because they disagree. */

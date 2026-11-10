@@ -17,6 +17,17 @@ export async function listSpecies() {
   return data.map((species) => ({ ...species, photos: species.photos as unknown as Species["photos"] }));
 }
 
+/** Active species for new planting lines, including entries with no history. */
+export async function listSpeciesForPlanting() {
+  const { data } = await (await db())
+    .from("species")
+    .select("slug, register_code, scientific_name, suggested_spelling, common_name, maori_name")
+    .is("deactivated_at", null)
+    .order("scientific_name")
+    .throwOnError();
+  return data;
+}
+
 /** Species with planting history, most recorded first. */
 export async function listSpeciesTotals() {
   const { data } = await speciesTotals(await db()).throwOnError();
@@ -69,7 +80,16 @@ export async function updateSpecies(slug: string, values: SpeciesInput) {
     .from("species")
     .update({ ...editable, slug })
     .eq("slug", slug)
-    .is("deactivated_at", null)
     .select("slug")
-    .maybeSingle();
+    .single();
+}
+
+/** Deactivate the species without changing its key or any planting line. */
+export async function deactivateSpecies(slug: string) {
+  return (await db())
+    .from("species")
+    .update({ deactivated_at: new Date().toISOString() })
+    .eq("slug", slug)
+    .select("slug")
+    .single();
 }

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default async function SpeciesPhotosPage() {
   const all = await getWrt().speciesList();
-  const rows = topPlantedSpecies(all);
+  const rows = topPlantedSpecies(all.filter((row) => row.item.deactivatedAt === null));
   const split = emptySplit();
   for (const row of rows) {
     for (const key of Object.keys(split) as (keyof typeof split)[]) split[key] += row.split[key];
@@ -40,7 +40,7 @@ export default async function SpeciesPhotosPage() {
         eyebrow="Species · Field guide"
         title={`Meet ${rows.length} species in the planting history`}
         lead={<>Ranked by recorded plants across all sites and seasons.
-          These {rows.length} species account for {formatNumber(split.total)} plants—{Math.round(split.total / total * 100)}% of the recorded total.</>}
+          These {rows.length} active species account for {formatNumber(split.total)} plants—{total ? Math.round(split.total / total * 100) : 0}% of the recorded total.</>}
       />
       <Card title="Before you head out" action={<SplitLine split={split} />}>
         <p className="wrt-prose m-0">{profileCount} species have sourced identification profiles.{unresolvedCount > 0 && <> {unresolvedCount} recorded {unresolvedCount === 1 ? "name awaits" : "names await"} identification.</>} {completePhotoCount} species have three confirmed reference photos; {partialPhotoCount} {partialPhotoCount === 1 ? "has" : "have"} one or two. There are {photoCount} image references in total. Remaining gaps and uncertain identities are noted beside each species. Herbarium specimens are labelled. Photos were taken at other locations.
