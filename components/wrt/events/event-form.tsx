@@ -51,7 +51,7 @@ function PlantingEventForm({ options, today, focusOnMount, onStartAnother }: Eve
       <StepIndicator step={step} furthest={form.furthest} onGoTo={form.goTo} />
       <h2 ref={headingRef} tabIndex={-1} className="ev-step-title">
         <span className="ev-step-title__count">Step {step + 1} of {EVENT_STEPS.length}</span>
-        {EVENT_STEPS[step].title}
+        {EVENT_STEPS[step]?.title}
       </h2>
 
       {Object.keys(form.errors).length > 0 && (

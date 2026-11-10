@@ -19,16 +19,16 @@ import { matchScore, searchKey } from "@/lib/wrt/text";
 
 import type { PlantingRecord, QuantitySplit, SeasonName } from "@/lib/wrt/types";
 
-export const SYSTEM = `You answer questions about the Wakatipu Reforestation Trust planting history, Autumn 2015 to Autumn 2026, straight from the data.
+export const SYSTEM = `You answer questions about the Wakatipu Reforestation Trust planting history, straight from the data.
 - Every number comes from a tool. Never estimate, add or subtract figures yourself. Call counts "recorded".
 - Answer plainly in one or two sentences and name at most three items. The cards under your reply show the rest.
 - Never ask the user to confirm or choose. Take the most likely reading of the question and answer it.
 - Don't add caveats about the data: the page banner and the About the data page explain it. Only when a figure is marked "mostly unconfirmed", add those two words after it.
-- Tools take names or slugs ("Lake Hayes", "kōwhai", "Gorge Rd Wetlands", "Autumn 2026"), so call them directly. Use search only when unsure what a name refers to. If nothing matches, say so in a few words; if a tool returns choices, name the closest ones.
-- Some sites have parts, e.g. Gorge Rd Wetlands in Gorge Road area. For a part, call records with the part's name as place (place shows the whole site).
+- Tools take site, species, part and season names or slugs, so call them directly. Use search only when unsure what a name refers to. If nothing matches, say so in a few words; if a tool returns choices, name the closest ones.
+- Some sites have parts within them. For a part, call records with the part's name as place (place shows the whole site).
 - records can narrow to tall trees (trait over5m), species WRT marks threatened (trait threatened: the "T" in the Plants Out Master; no file records which threat list or year it follows, so always say "marked threatened by WRT", never "threatened species", and mention the basis is unconfirmed) and keystone, community or school sites (siteClass).
 - Seasons are the dates: every record has a season (Autumn or Spring, and a year) but no day or month. Quote firstSeason and lastSeason exactly as given; Autumn comes before Spring in a year. For "when", call records with groupBy season and the same place, part and species as the last answer.
-- "Last year" and "latest" mean the last seasons in the data. Spring 2026 is not in the data yet.
+- For "last year" and "latest", call records grouped by season to find the last seasons in the data. Never assume a fixed date range or that a season is missing.
 - When asked to show or see something, call a tool so a card appears, even if an earlier answer had the numbers.
 - "Most likely to see" means the most recorded species there: call records grouped by species.
 - "Top 3 plants" or one plant "with its profile": call records for the place, then species for each plant asked for (at most three), passing the same place and part.
@@ -37,7 +37,7 @@ export const SYSTEM = `You answer questions about the Wakatipu Reforestation Tru
 - Never show ids such as SP-012 or site numbers.
 - Write plain text: no markdown, asterisks or lists. Write the reply once, after your last tool call.`;
 
-const name = (what: string, e: string) => z.string().describe(`${what} name or slug, e.g. ${e}`);
+const name = (what: string) => z.string().describe(`${what} name or slug as recorded in the data`);
 
 // ---- What the model reads. Tools return everything the cards draw; the model gets a short brief
 // (toModelOutput), and so does the history on every later question (convertToModelMessages with tools).
@@ -174,7 +174,7 @@ export const tools = {
   /** One site: parts, top species, seasons, years, flags. Wraps queries.place. Card: PlaceCard */
   place: tool({
     description: "Summary of one site: totals, seasons, top species and its parts.",
-    inputSchema: z.object({ name: name("Site", "Lake Hayes") }),
+    inputSchema: z.object({ name: name("Site") }),
     execute: async ({ name }) => {
       const r = await resolvePlace(name);
       return r ? placeDetail(r.slug) : { found: false as const };
@@ -189,11 +189,11 @@ export const tools = {
   /** One species: photo, profile, totals, top sites, and its count at a site if asked. Wraps queries.species. Card: PlantCard */
   species: tool({
     description: "One species by slug: reference photo, short profile, totals and where it went. "
-      + "Pass place (and part) when the question is about it at a site, e.g. 'profiles of the plants at Gorge Rd Wetlands'.",
+      + "Pass place (and part) when the question is about it at a site.",
     inputSchema: z.object({
-      name: name("Species", "kōwhai"),
+      name: name("Species"),
       place: z.string().nullish().describe("Site or part name or slug when the question is about this species at a site. Null otherwise."),
-      part: z.string().nullish().describe("Part name, e.g. Gorge Rd Wetlands, when place is the whole site. Null otherwise."),
+      part: z.string().nullish().describe("Part name when place is the whole site. Null otherwise."),
     }),
     execute: async ({ name, place, part }) => {
       const r = await resolveSpecies(name);
@@ -212,7 +212,7 @@ export const tools = {
   /** One season: places, species, site classes, workbook check. Wraps queries.season. Card: SeasonCard */
   season: tool({
     description: "Summary of one season: totals, top sites and top species.",
-    inputSchema: z.object({ name: name("Season", "Autumn 2026") }),
+    inputSchema: z.object({ name: name("Season") }),
     execute: async ({ name }) => lean(slim(await getWrt().season(name.trim().toLowerCase().replace(/\s+/g, "-")))),
     toModelOutput: ({ output: o }) => brief(!o.found ? { found: false } : {
       season: o.season.label, recorded: n(o.split), sites: o.places.length, species: o.species.length,
@@ -226,10 +226,10 @@ export const tools = {
     inputSchema: z.object({
       // Models fill every field they see, so each one says when to leave it null.
       place: z.string().nullish().describe("Site or part name or slug. Null for all sites."),
-      part: z.string().nullish().describe("A part name, e.g. Gorge Rd Wetlands, when place is the whole site. Null when the question is about the whole site."),
+      part: z.string().nullish().describe("A part name when place is the whole site. Null when the question is about the whole site."),
       species: z.string().nullish().describe("Species name or slug. Null for all species."),
       // ponytail: single year only; add yearFrom/yearTo to RecordFilter when staff ask "since 2020"
-      year: z.number().int().min(2015).max(2026).nullish().describe("Only when the question names a year."),
+      year: z.number().int().min(1000).max(9999).nullish().describe("Only when the question names a year."),
       season: z.enum(["Autumn", "Spring"]).nullish().describe("Only when the question says autumn or spring. Null otherwise."),
       review: z.enum(["all", "needs-review", "resolved"]).nullish().describe("Null unless the question is about review status."),
       trait: z.enum(["over5m", "threatened"]).nullish().describe("Only for tall trees (over 5 m) or species WRT marks threatened. Null otherwise."),

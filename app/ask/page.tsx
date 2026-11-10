@@ -16,12 +16,12 @@ import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 import { openDetail } from "./actions";
 
 const STARTERS = [
-  "Tell me about Lake Hayes",
-  "What went in at Whitechapel in 2019?",
+  "Which sites have the most recorded plants?",
+  "What was recorded in the latest planting season?",
   "What does kōwhai look like, and where did it go?",
-  "Which tall trees went in at Gorge Road area?",
+  "Which tall trees have we recorded?",
   "Which threatened plants have we recorded?",
-  "What went into school sites in 2024?",
+  "What went into school sites?",
 ];
 
 const unslug = (s: string) => s.replace(/-/g, " ");

@@ -99,7 +99,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
         title={`${formatNumber(all.length)} species`}
         lead={
           <>
-            {formatNumber(allSplit.total)} recorded plants since Autumn 2015.
+            {formatNumber(allSplit.total)} recorded plants across the planting history.
             {" "}{guideCount} species have reference photos and identification notes.
             {referenceGapCount > 0 && <> {referenceGapCount} reference sets have gaps or unresolved identities.</>}
             {contested > 0 && (

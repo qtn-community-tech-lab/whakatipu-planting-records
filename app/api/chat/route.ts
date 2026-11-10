@@ -29,7 +29,7 @@ function readScope(raw: unknown): Scope {
     ...(part ? { part } : {}),
     ...(species ? { species } : {}),
     ...(s.season === "Autumn" || s.season === "Spring" ? { season: s.season } : {}),
-    ...(typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 2015 && s.year <= 2026 ? { year: s.year } : {}),
+    ...(typeof s.year === "number" && Number.isInteger(s.year) && s.year >= 2000 && s.year <= 2026 ? { year: s.year } : {}),
   };
 }
 

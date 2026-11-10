@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Page not found" };
 const LINKS = [
   { href: "/sites", title: "Sites", line: "Every site, ranked by recorded plants." },
   { href: "/species", title: "Species", line: "Every species, with its names and where it went." },
-  { href: "/seasons", title: "Seasons", line: "Autumn 2015 to Autumn 2026, season by season." },
+  { href: "/seasons", title: "Seasons", line: "Explore the planting history, season by season." },
 ] as const;
 
 export default function NotFound() {

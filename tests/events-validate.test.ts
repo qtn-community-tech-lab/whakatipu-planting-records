@@ -1,7 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { validateEventInput, type EventLookups } from "@/lib/wrt/events/validate";
-import { polygonAreaM2, ringSelfIntersects } from "@/lib/wrt/events/geo";
+import { isClosed, polygonAreaM2, ringSelfIntersects } from "@/lib/wrt/events/geo";
 import { q } from "./helpers";
+import { defined } from "./assertions";
 
 const TODAY = "2026-11-01";
 let lookups: EventLookups;
@@ -14,9 +15,10 @@ beforeAll(async () => {
   const l = await q.lookups();
   lookups = l;
   const sites = l.places.filter((p) => !p.isScheme && p.parcels.length > 1);
-  site = sites[0];
-  otherParcel = sites[1].parcels[0].id;
-  [speciesA, speciesB] = l.species.map((s) => s.id);
+  site = defined(sites[0]);
+  otherParcel = defined(defined(sites[1]).parcels[0]).id;
+  speciesA = defined(l.species[0]).id;
+  speciesB = defined(l.species[1]).id;
 });
 
 const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => ({
@@ -34,7 +36,7 @@ const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => (
 describe("validateEventInput", () => {
   it("accepts a well-formed event (with or without a parcel)", () => {
     expect(validateEventInput(valid(), lookups, TODAY).ok).toBe(true);
-    expect(validateEventInput(valid({ parcelId: site.parcels[0].id }), lookups, TODAY).ok).toBe(true);
+    expect(validateEventInput(valid({ parcelId: defined(site.parcels[0]).id }), lookups, TODAY).ok).toBe(true);
   });
 
   it("trims notes and turns blank notes into null", () => {
@@ -45,6 +47,13 @@ describe("validateEventInput", () => {
   it("accepts an event with no area drawn (the map comes in a later PR)", () => {
     const r = validateEventInput(valid({ polygon: null }), lookups, TODAY);
     expect(r.ok && r.value.polygon).toBeNull();
+  });
+
+  it("drops altitude from validated coordinates", () => {
+    const r = validateEventInput(valid({
+      polygon: { type: "Polygon", coordinates: [[[0, 0, 10], [1, 0, 20], [1, 1, 30], [0, 0, 40]]] },
+    }), lookups, TODAY);
+    expect(r.ok && r.value.polygon?.coordinates).toEqual([[[0, 0], [1, 0], [1, 1], [0, 0]]]);
   });
 
   const cases: [string, Record<string, unknown>, string][] = [
@@ -63,6 +72,7 @@ describe("validateEventInput", () => {
     ["open ring", { polygon: { type: "Polygon", coordinates: [[[168.8, -44.98], [168.81, -44.98], [168.81, -44.99], [168.8, -44.99]]] } }, "polygon"],
     ["bow tie", { polygon: { type: "Polygon", coordinates: [[[0, 0], [1, 1], [1, 0], [0, 1], [0, 0]]] } }, "polygon"],
     ["polygon with a hole", { polygon: { type: "Polygon", coordinates: [[[0, 0], [1, 0], [1, 1], [0, 0]], [[0, 0], [1, 0], [1, 1], [0, 0]]] } }, "polygon.coordinates"],
+    ["polygon with no rings", { polygon: { type: "Polygon", coordinates: [] } }, "polygon.coordinates"],
     ["out-of-range coordinate", { polygon: { type: "Polygon", coordinates: [[[200, 0], [1, 0], [1, 1], [200, 0]]] } }, "polygon.coordinates.0.0.0"],
   ];
 
@@ -89,6 +99,14 @@ describe("validateEventInput", () => {
 });
 
 describe("geo", () => {
+  it("handles empty rings and rejects incomplete coordinates", () => {
+    expect(isClosed([])).toBe(false);
+    expect(ringSelfIntersects([])).toBe(false);
+    expect(polygonAreaM2({ type: "Polygon", coordinates: [] })).toBe(0);
+    expect(() => isClosed([[0], [0]])).toThrow(RangeError);
+    expect(() => polygonAreaM2({ type: "Polygon", coordinates: [[[0], [1, 1]]] })).toThrow(RangeError);
+  });
+
   it("a 100 m × 100 m square near Queenstown is about 1 ha", () => {
     // 0.001° latitude ≈ 111.2 m; at −45° 0.001° longitude ≈ 78.8 m.
     const dLat = 100 / 111_200, dLon = 100 / 78_850;
