@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "import-workbook": "tsx scripts/import-workbook.ts",
     "import-pins": "tsx scripts/import-pins.ts",
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "@ai-sdk/react": "^3.0.303",
+    "@base-ui/react": "^1.9.0",
     "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.3",
@@ -32,6 +34,8 @@
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.7.0",
+    "terra-draw": "^1.39.0",
+    "terra-draw-maplibre-gl-adapter": "^1.5.0",
     "zod": "4.3.6"
   },
   "devDependencies": {

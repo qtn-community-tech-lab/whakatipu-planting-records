@@ -44,20 +44,26 @@ export function cleanLabel(s: string): string {
 export function editDistance(a: string, b: string, max = 2): number {
   if (a === b) return 0;
   if (Math.abs(a.length - b.length) > max) return max + 1;
-  const d: number[][] = Array.from({ length: a.length + 1 }, (_, i) => [i]);
-  for (let j = 1; j <= b.length; j++) d[0][j] = j;
+  if (!a.length || !b.length) return Math.max(a.length, b.length);
+  let previous = Array.from({ length: b.length + 1 }, (_, j) => j);
+  let beforePrevious: number[] = [];
   for (let i = 1; i <= a.length; i++) {
+    const row = [i];
     let rowMin = Infinity;
     for (let j = 1; j <= b.length; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      let v = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
-      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, d[i - 2][j - 2] + 1);
-      d[i][j] = v;
+      let v = Math.min((previous[j] ?? Infinity) + 1, (row[j - 1] ?? Infinity) + 1, (previous[j - 1] ?? Infinity) + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        v = Math.min(v, (beforePrevious[j - 2] ?? Infinity) + 1);
+      }
+      row[j] = v;
       if (v < rowMin) rowMin = v;
     }
     if (rowMin > max) return max + 1;
+    beforePrevious = previous;
+    previous = row;
   }
-  return d[a.length][b.length];
+  return previous[b.length] ?? max + 1;
 }
 
 function typoTolerance(len: number): number {
@@ -106,6 +112,20 @@ export function matchScore(query: string, keys: string[]): number {
     }
   }
   return best;
+}
+
+/**
+ * Items matching a query, best match first (ties by name). With nothing typed,
+ * the whole list in its given order. Used by the form's searchable choosers.
+ */
+export function rankMatches<T extends { name: string; keys: string[] }>(items: readonly T[], query: string): T[] {
+  const q = query.trim();
+  if (!q) return [...items];
+  return items
+    .map((item) => ({ item, score: matchScore(q, item.keys) }))
+    .filter((r) => r.score > 0)
+    .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
+    .map((r) => r.item);
 }
 
 /** en-NZ number formatting: 7,020. */

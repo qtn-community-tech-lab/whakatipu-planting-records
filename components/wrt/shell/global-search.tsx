@@ -1,4 +1,5 @@
 "use client";
+import type { AppRoute } from "@/lib/wrt/routes";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
@@ -17,7 +18,7 @@ export function GlobalSearch({ index }: { index: SearchIndex }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      const t = e.target as HTMLElement | null;
+      const t = e.target instanceof HTMLElement ? e.target : null;
       if (e.key === "/" && !(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT"))) {
         e.preventDefault();
         inputRef.current?.focus();
@@ -48,7 +49,7 @@ export function GlobalSearch({ index }: { index: SearchIndex }) {
     return { places, species, seasons };
   }, [q, index]);
 
-  const go = (href: string) => {
+  const go = (href: AppRoute) => {
     setOpen(false);
     setQ("");
     inputRef.current?.blur();

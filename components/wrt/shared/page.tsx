@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Page scaffolding: heads, cards, sections. Thin wrappers over Canopy classes.
  */
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils";
 /** Eyebrow + H1. Canopy: headlines state the number. */
 export function PageHead({
   eyebrow, title, lead, aside, back,
-}: { eyebrow?: ReactNode; title: ReactNode; lead?: ReactNode; aside?: ReactNode; back?: { href: string; label: string } }) {
+}: { eyebrow?: ReactNode; title: ReactNode; lead?: ReactNode; aside?: ReactNode; back?: { href: AppRoute; label: string } | undefined }) {
   return (
     <header className="cn-pagehead">
       <div className="cn-pagehead__text">
@@ -47,7 +48,7 @@ export function Card({
   );
 }
 
-export function CardLink({ href, children }: { href: string; children: ReactNode }) {
+export function CardLink({ href, children }: { href: AppRoute; children: ReactNode }) {
   return <Link href={href} className="cn-link whitespace-nowrap">{children} →</Link>;
 }
 

@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { repo, workbook } from "./helpers";
 
@@ -17,16 +18,16 @@ describe("workbook import invariants", () => {
   it("covers 23 seasons from Autumn 2015 to Autumn 2026, in order", async () => {
     const seasons = await repo.listSeasons();
     expect(seasons).toHaveLength(23);
-    expect(seasons[0].label).toBe("Autumn 2015");
-    expect(seasons[seasons.length - 1].label).toBe("Autumn 2026");
+    expect(defined(seasons[0]).label).toBe("Autumn 2015");
+    expect(defined(seasons[seasons.length - 1]).label).toBe("Autumn 2026");
     seasons.forEach((s, i) => expect(s.order).toBe(i));
     for (let i = 1; i < seasons.length; i++) {
-      const a = seasons[i - 1];
-      const b = seasons[i];
+      const a = defined(seasons[i - 1]);
+      const b = defined(seasons[i]);
       expect(b.year > a.year || (b.year === a.year && a.name === "Autumn" && b.name === "Spring")).toBe(true);
     }
     expect(new Set(seasons.map((s) => s.slug)).size).toBe(seasons.length);
-    expect(seasons[0].slug).toBe("autumn-2015");
+    expect(defined(seasons[0]).slug).toBe("autumn-2015");
   });
 
   it("gives no record a missing species, place, parcel or season", async () => {
@@ -83,9 +84,9 @@ describe("workbook import invariants", () => {
     const recs = await repo.listRecords();
     const noQty = recs.filter((r) => !r.hasQuantity);
     expect(noQty).toHaveLength(1);
-    expect(noQty[0].quantity).toBe(0);
-    expect(noQty[0].needsReview).toBe(true);
-    expect(noQty[0].provenance.sourceCell).toBe("OP50");
+    expect(defined(noQty[0]).quantity).toBe(0);
+    expect(defined(noQty[0]).needsReview).toBe(true);
+    expect(defined(noQty[0]).provenance.sourceCell).toBe("OP50");
   });
 
   it("loaded with no errors", async () => {

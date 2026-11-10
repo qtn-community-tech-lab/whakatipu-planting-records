@@ -1,10 +1,11 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import { formatNumber } from "@/lib/wrt/text";
 
 /** Previous / Next with "Showing 51–100 of 584". Plain links, no JS. */
 export function RecordsPager({
   page, pageCount, from, to, total, hrefFor,
-}: { page: number; pageCount: number; from: number; to: number; total: number; hrefFor: (page: number) => string }) {
+}: { page: number; pageCount: number; from: number; to: number; total: number; hrefFor: (page: number) => AppRoute }) {
   return (
     <nav className="wrt-pager" aria-label="Pages of records">
       <span className="wrt-muted" role="status">

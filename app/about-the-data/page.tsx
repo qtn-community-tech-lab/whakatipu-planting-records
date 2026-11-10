@@ -37,7 +37,6 @@ export default async function AboutTheData() {
 
   const themeSum = dq.themes.reduce((a, t) => a + t.split.needsReview, 0);
   const themeRecordSum = dq.themes.reduce((a, t) => a + t.split.recordsNeedingReview, 0);
-  const slopeHill = dq.themes.find((t) => t.theme === "slope-hill-2024");
 
   const areaRows = dq.byPrecision.find((r) => r.item === "area");
   const marked = dq.threatened;
@@ -105,11 +104,6 @@ export default async function AboutTheData() {
       <Card
         id="rulings"
         title="What still needs a WRT ruling"
-        foot={
-          slopeHill
-            ? `The Slope Hill 2024 columns alone hold ${formatNumber(slopeHill.split.needsReview)} recorded plants, ${formatShare(slopeHill.split.needsReview, split.total)} of everything on record.`
-            : undefined
-        }
       >
         <div className="wrt-grid wrt-grid--main-rail">
           <div className="flex flex-col gap-4">
@@ -192,7 +186,7 @@ export default async function AboutTheData() {
             {areaRows ? (
               <>
                 {" "}
-                Detail below the level of a parcel appears only in Autumn 2026, on {formatNumber(areaRows.split.records)}{" "}
+                Detail below the level of a parcel is recorded on {formatNumber(areaRows.split.records)}{" "}
                 records.
               </>
             ) : null}
@@ -241,8 +235,8 @@ export default async function AboutTheData() {
               <strong>Every record keeps its origin.</strong> It carries the site, species and season exactly as they
               were typed, plus the source workbook, sheet and cell. Open <strong>Source</strong> on any row of a record
               table to see them, for example{" "}
-              <Link href={hrefs.records({ place: "whitechapel", year: 2019 })} className="cn-link">
-                the Whitechapel 2019 records
+              <Link href={hrefs.records({})} className="cn-link">
+                the planting records
               </Link>
               .
             </p>

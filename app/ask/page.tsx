@@ -16,12 +16,12 @@ import type { ChatMessage, Scope } from "@/lib/wrt/chat-tools";
 import { openDetail } from "./actions";
 
 const STARTERS = [
-  "Tell me about Lake Hayes",
-  "What went in at Whitechapel in 2019?",
+  "Which sites have the most recorded plants?",
+  "What was recorded in the latest planting season?",
   "What does kōwhai look like, and where did it go?",
-  "Which tall trees went in at Gorge Road area?",
+  "Which tall trees have we recorded?",
   "Which threatened plants have we recorded?",
-  "What went into school sites in 2024?",
+  "What went into school sites?",
 ];
 
 const unslug = (s: string) => s.replace(/-/g, " ");
@@ -40,11 +40,10 @@ export default function AskPage() {
   const foundKey = JSON.stringify(found);
   const [off, setOff] = useState<{ key: string; keys: string[] }>({ key: "", keys: [] });
   const cleared = off.key === foundKey ? off.keys : []; // a new answer brings a new scope
-  const scope: Scope = {
-    ...(cleared.includes("place") ? {} : { place: found.place, part: found.part }),
-    ...(cleared.includes("species") ? {} : { species: found.species }),
-    ...(cleared.includes("when") ? {} : { season: found.season, year: found.year }),
-  };
+  const scope: Scope = { ...found };
+  if (cleared.includes("place")) { delete scope.place; delete scope.part; }
+  if (cleared.includes("species")) delete scope.species;
+  if (cleared.includes("when")) { delete scope.season; delete scope.year; }
 
   function ask(question: string) {
     const q = question.trim();
@@ -68,21 +67,28 @@ export default function AskPage() {
   const [side, setSide] = useState<{ href: string; detail: Awaited<ReturnType<typeof openDetail>> | null } | null>(null);
 
   async function onLink(e: MouseEvent) {
-    const href = (e.target as HTMLElement).closest("a")?.getAttribute("href");
+    if (!(e.target instanceof Element)) return;
+    const href = e.target.closest("a")?.getAttribute("href");
     if (!href || e.metaKey || e.ctrlKey || e.shiftKey) return;
     // A part of a site ("Gorge Rd Wetlands") or a season column is asked about in the chat.
     const part = href.match(/^\/sites\/([a-z0-9-]+)\/parts\/([a-z0-9-]+)$/);
     const season = href.match(/^\/seasons\/(autumn|spring)-(\d{4})$/);
-    if (part || season) {
+    if (part?.[1] && part[2]) {
       e.preventDefault();
       setSide(null);
-      if (part) return ask(`What's recorded at ${unslug(part[2])} in ${unslug(part[1])}?`);
+      ask(`What's recorded at ${unslug(part[2])} in ${unslug(part[1])}?`);
+      return;
+    }
+    if (season?.[1] && season[2]) {
+      e.preventDefault();
+      setSide(null);
       const w = scopeWhere(scope);
       const sp = scope.species?.name;
-      return ask(`What was recorded${sp ? ` of ${sp}` : ""}${w ? ` at ${w}` : ""} in ${season![1][0].toUpperCase()}${season![1].slice(1)} ${season![2]}?`);
+      ask(`What was recorded${sp ? ` of ${sp}` : ""}${w ? ` at ${w}` : ""} in ${season[1].charAt(0).toUpperCase()}${season[1].slice(1)} ${season[2]}?`);
+      return;
     }
     const m = href.match(/^\/(sites|species)\/([a-z0-9-]+)(?:\?(.*))?$/);
-    if (!m || (e.target as HTMLElement).closest("[data-full-page]")) return;
+    if (!m?.[2] || e.target.closest("[data-full-page]")) return;
     e.preventDefault();
     setSide({ href, detail: null });
     const at = new URLSearchParams(m[3] ?? ""); // ?place=…&part=… when opened from a card about a site

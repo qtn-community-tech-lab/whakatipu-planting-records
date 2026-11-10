@@ -10,8 +10,9 @@ import { key, live, url } from "./live-env";
 const db = () => createClient(url!, key!, { auth: { persistSession: false } });
 
 /** Rows matching a filter, counted by the database. */
-async function count(table: string, filter: (q: any) => any = (q) => q) { // eslint-disable-line @typescript-eslint/no-explicit-any
-  const { count: n, error } = await filter(db().from(table).select("*", { count: "exact", head: true }));
+const countQuery = (table: string) => db().from(table).select("*", { count: "exact", head: true });
+async function count(table: string, filter: (query: ReturnType<typeof countQuery>) => ReturnType<typeof countQuery> = (q) => q) {
+  const { count: n, error } = await filter(countQuery(table));
   expect(error).toBeNull();
   return n;
 }

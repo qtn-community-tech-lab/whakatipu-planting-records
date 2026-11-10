@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { type RawParams, first } from "@/lib/wrt/params";
+import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import type { PlaceSummary } from "@/lib/wrt/queries";
@@ -16,7 +16,7 @@ import { LocationCard } from "@/components/wrt/sites/location-card";
 
 export const metadata: Metadata = {
   title: "Sites",
-  description: "Every site with recorded plants since Autumn 2015, with seasons active, species and recorded plants.",
+  description: "Explore sites by seasons active, species and recorded plants.",
 };
 
 const CLASSES = ["keystone", "community", "school"] as const;
@@ -28,7 +28,7 @@ const SORTS = [
 ] as const;
 type SortKey = (typeof SORTS)[number]["key"];
 
-function href(cls: ClassFilter | undefined, sort: SortKey) {
+function href(cls: ClassFilter | undefined, sort: SortKey): `/sites${"" | `?${string}`}` {
   const sp = new URLSearchParams();
   if (cls) sp.set("class", cls);
   if (sort !== "plants") sp.set("sort", sort);
@@ -45,7 +45,7 @@ function sortSites(list: PlaceSummary[], sort: SortKey) {
   return out;
 }
 
-export default async function SitesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
+export default async function SitesPage({ searchParams }: Readonly<PageProps<"/sites">>) {
   const sp = await searchParams;
   const classParam = first(sp.class);
   const cls = CLASSES.find((c) => c === classParam);
@@ -58,7 +58,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
   const schemes = all.filter((p) => p.item.isScheme);
 
   const filtered = cls
-    ? all.filter((p) => !p.item.isScheme && p.item.siteClasses.includes(cls as SiteClass))
+    ? all.filter((p) => !p.item.isScheme && p.item.siteClasses.includes(cls))
     : all;
   const rows = sortSites(filtered, sort);
   const max = Math.max(1, ...all.map((p) => p.split.total));
@@ -66,7 +66,7 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
   for (const p of rows) for (const k of Object.keys(shown) as (keyof typeof shown)[]) shown[k] += p.split[k];
 
   const countFor = (c: ClassFilter) =>
-    realSites.filter((p) => p.item.siteClasses.includes(c as SiteClass)).length;
+    realSites.filter((p) => p.item.siteClasses.includes(c)).length;
 
   const schemeNote =
     schemes.length > 0
@@ -96,11 +96,8 @@ export default async function SitesPage({ searchParams }: { searchParams: Promis
       <Card
         foot={
           <>
-            A site is the place people know, such as Lake Hayes. A parcel is one of WRT’s registered sub-sites inside it,
-            such as Lake Hayes Pavilion. Recorded plants are kept against parcels and added up to the site. Bars are scaled to
-            the largest site.
-            {rows.some((r) => r.item.slug === "slope-hill") &&
-              " Slope Hill’s bar is long because of its 2024 restoration: 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation."}
+            A site is the place people know. A parcel is one of WRT’s registered sub-sites inside it.
+            Recorded plants are kept against parcels and added up to the site.
           </>
         }
       >

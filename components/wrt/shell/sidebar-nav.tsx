@@ -14,8 +14,8 @@ function NavGroup({
 }: {
   items: readonly NavItem[];
   label: string;
-  counts?: NavCounts;
-  onNavigate?: () => void;
+  counts?: NavCounts | undefined;
+  onNavigate?: (() => void) | undefined;
   foot?: boolean;
 }) {
   const pathname = usePathname();
@@ -59,7 +59,7 @@ function NavGroup({
               href={n.href}
               className="wrt-snav__item"
               aria-current={active ? "page" : undefined}
-              onClick={onNavigate}
+              onClick={() => onNavigate?.()}
             >
               <span className="wrt-snav__glyph">
                 <NavGlyph name={n.icon} />
@@ -74,11 +74,11 @@ function NavGroup({
   );
 }
 
-export function SidebarNav({ onNavigate, counts }: { onNavigate?: () => void; counts?: NavCounts }) {
+export function SidebarNav({ onNavigate, counts }: { onNavigate?: (() => void) | undefined; counts?: NavCounts | undefined }) {
   return <NavGroup items={NAV_MAIN} label="Main" counts={counts} onNavigate={onNavigate} />;
 }
 
-export function SidebarFootNav({ onNavigate }: { onNavigate?: () => void }) {
+export function SidebarFootNav({ onNavigate }: { onNavigate?: (() => void) | undefined }) {
   return <NavGroup items={NAV_FOOT} label="About" onNavigate={onNavigate} foot />;
 }
 

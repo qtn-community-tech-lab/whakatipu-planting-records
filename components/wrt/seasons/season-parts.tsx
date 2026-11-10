@@ -35,7 +35,7 @@ export function ReconBadge({ recon }: { recon: ReconciliationRow | null }) {
 /** Median site count, used to flag seasons that recorded far fewer sites than usual. */
 export function medianSites(seasons: SeasonSummary[]) {
   const counts = seasons.filter((s) => s.split.records > 0).map((s) => s.placeCount).sort((a, b) => a - b);
-  return counts.length ? counts[Math.floor(counts.length / 2)] : 0;
+  return counts[Math.floor(counts.length / 2)] ?? 0;
 }
 
 export interface TopSite {

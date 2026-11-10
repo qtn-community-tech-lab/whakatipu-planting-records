@@ -10,7 +10,7 @@
 import type { Lookups, RecordFilter, ReviewFilter } from "@/lib/wrt/queries";
 import type { ReviewTheme, SeasonName } from "@/lib/wrt/types";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import { hrefs } from "@/components/wrt/shared/names";
+import { hrefs } from "@/lib/wrt/routes";
 
 export const PAGE_SIZE = 50;
 
@@ -72,12 +72,14 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
   if (yearRaw && /^\d{4}$/.test(yearRaw) && lookups.years.includes(Number(yearRaw))) filter.year = Number(yearRaw);
   else reject("year", yearRaw);
 
-  const season = first(raw.season)?.trim();
-  if (season && (SEASONS as string[]).includes(season)) filter.season = season as SeasonName;
-  else reject("season", season);
+  const seasonRaw = first(raw.season)?.trim();
+  const season = SEASONS.find((value) => value === seasonRaw);
+  if (season) filter.season = season;
+  else reject("season", seasonRaw);
 
   const review = first(raw.review)?.trim();
-  if (review && review !== "all" && (REVIEW_VALUES as string[]).includes(review)) filter.review = review as ReviewFilter;
+  const reviewValue = REVIEW_VALUES.find((value) => value !== "all" && value === review);
+  if (reviewValue) filter.review = reviewValue;
 
   const theme = first(raw.theme)?.trim();
   if (theme && Object.prototype.hasOwnProperty.call(REVIEW_THEMES, theme)) filter.theme = theme as ReviewTheme;
@@ -87,7 +89,7 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
   if (q) filter.q = q;
 
   const sortRaw = first(raw.sort)?.trim();
-  const sort = (SORT_KEYS as readonly string[]).includes(sortRaw ?? "") ? (sortRaw as SortKey) : "season";
+  const sort = SORT_KEYS.find((value) => value === sortRaw) ?? "season";
 
   const pageRaw = first(raw.page)?.trim();
   const page = pageRaw && /^\d{1,6}$/.test(pageRaw) && Number(pageRaw) >= 1 ? Number(pageRaw) : 1;
@@ -122,14 +124,14 @@ function viewParams(view: RecordsView, over: Partial<Record<ParamKey, string | n
 }
 
 /** `/records?…` for a view, with optional overrides. Changing any filter resets the page. */
-export function recordsHref(view: RecordsView, over: Partial<Record<ParamKey, string | number | undefined>> = {}) {
+export function recordsHref(view: RecordsView, over: Partial<Record<ParamKey, string | number | undefined>> = {}): `/records${"" | `?${string}`}` {
   const resetsPage = Object.keys(over).some((k) => k !== "page");
   const params = viewParams(view, resetsPage && !("page" in over) ? { ...over, page: undefined } : over);
   return hrefs.records(params);
 }
 
 /** `/records/export?…` for a view: same filter, no sort or page. */
-export function exportHref(view: RecordsView) {
+export function exportHref(view: RecordsView): `/records/export${"" | `?${string}`}` {
   const params = viewParams({ ...view, sort: "season", page: 1, ignored: [] });
   const sp = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));

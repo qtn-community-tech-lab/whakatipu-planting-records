@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  typedRoutes: true,
   // Lets several dev servers run side by side (one dist dir each).
   distDir: process.env.NEXT_DIST_DIR || ".next",
   // Reference images load directly in the browser (components use unoptimized).

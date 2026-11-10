@@ -15,7 +15,7 @@ import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 
-type Props = { params: Promise<{ slug: string; part: string }> };
+type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
 
 const REVIEW_CAP = 25;
 

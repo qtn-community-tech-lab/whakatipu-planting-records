@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { parseReviewNotes, reviewTheme } from "@/scripts/workbook/load";
 
@@ -32,10 +33,10 @@ describe("parseReviewNotes", () => {
   it("parses a single ruling (Paper4Trees)", () => {
     const n = parseReviewNotes("RULING: Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count");
     expect(n).toHaveLength(1);
-    expect(n[0].kind).toBe("ruling");
-    expect(n[0].theme).toBe("order-scheme");
+    expect(defined(n[0]).kind).toBe("ruling");
+    expect(defined(n[0]).theme).toBe("order-scheme");
     // The untagged "WRT to rule…" clause continues the note, it is not a new one.
-    expect(n[0].text).toBe("Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count");
+    expect(defined(n[0]).text).toBe("Paper4Trees is an order scheme, not a place; WRT to rule how scheme columns count");
   });
 
   it("parses a contested species ruling", () => {
@@ -56,7 +57,7 @@ describe("parseReviewNotes", () => {
     expect(n).toHaveLength(1);
     expect(n[0]).toMatchObject({ kind: "fyi", theme: "other" });
     // "site mapped by header text" is a continuation clause of the FYI note.
-    expect(n[0].text).toBe("row-5 site ID blank in source; site mapped by header text");
+    expect(defined(n[0]).text).toBe("row-5 site ID blank in source; site mapped by header text");
   });
 
   it("splits decision 4 from its FYI siblings", () => {
@@ -64,9 +65,9 @@ describe("parseReviewNotes", () => {
       "RULING: decision 4: are the two 2024 Slope Hill columns real plantings? (29,000 plants, 21% of all-time total); FYI: row-5 site ID blank in source; site mapped by header text; FYI: provisional ID: the Sites master will issue the real one",
     );
     expect(n.map((x) => x.kind)).toMatchObject(["ruling", "fyi", "fyi"]);
-    expect(n[0].theme).toBe("slope-hill-2024");
-    expect(n[0].text).toContain("29,000 plants, 21% of all-time total");
-    expect(n[2].text).toBe("provisional ID: the Sites master will issue the real one");
+    expect(defined(n[0]).theme).toBe("slope-hill-2024");
+    expect(defined(n[0]).text).toContain("29,000 plants, 21% of all-time total");
+    expect(defined(n[2]).text).toBe("provisional ID: the Sites master will issue the real one");
   });
 
   it("keeps a continuation clause with the note that precedes it", () => {
@@ -74,9 +75,9 @@ describe("parseReviewNotes", () => {
       "RULING: new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear; FYI: provisional ID: the Sites master will issue the real one",
     );
     expect(n).toHaveLength(2);
-    expect(n[0].theme).toBe("new-site");
-    expect(n[0].text.endsWith("(A26 J4); meaning unclear")).toBe(true);
-    expect(n[1].kind).toBe("fyi");
+    expect(defined(n[0]).theme).toBe("new-site");
+    expect(defined(n[0]).text.endsWith("(A26 J4); meaning unclear")).toBe(true);
+    expect(defined(n[1]).kind).toBe("fyi");
   });
 
   it("handles two rulings on one record (scheme + contested species)", () => {
@@ -94,7 +95,7 @@ describe("parseReviewNotes", () => {
       ["ruling", "site-identity"],
       ["confirm", "header-cleaned"],
     ]);
-    expect(n[1].text).toContain("stripped to the site stem; parcel from the row-5 ID");
+    expect(defined(n[1]).text).toContain("stripped to the site stem; parcel from the row-5 ID");
   });
 
   it("treats untagged text as a ruling rather than losing it", () => {

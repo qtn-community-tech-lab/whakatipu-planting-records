@@ -34,17 +34,14 @@ export default async function SeasonsPage() {
 
   const total = { total: seasons.reduce((n, s) => n + s.split.total, 0) };
 
-  const first = seasons[0].season;
-  const last = seasons[seasons.length - 1].season;
+  const first = seasons[0]?.season;
+  const last = seasons.at(-1)?.season;
+  if (!first || !last) {
+    return <PageHead title="No planting seasons recorded" />;
+  }
   const matching = seasons.filter((s) => s.reconciliation?.difference === 0).length;
   const checked = seasons.filter((s) => s.reconciliation).length;
   const median = medianSites(seasons);
-
-  // The Slope Hill restoration makes 2024 tower over the rest; say so, with its plants from the database.
-  const slopeSeasons = seasons.filter((s) => s.season.year === 2024).map((s) => s.season.label);
-  const slopeHill2024 = leaders.sites
-    .filter((r) => r.site === "slope-hill" && r.season?.endsWith("-2024"))
-    .reduce((n, r) => n + (r.plants ?? 0), 0);
 
   // The workbook ends on an autumn: show the spring after it as "not in yet".
   const missingSpring = last.name === "Autumn" ? `Spring ${last.year}` : null;
@@ -68,12 +65,6 @@ export default async function SeasonsPage() {
           <SplitKey spring />
         </div>
         <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
-        {slopeHill2024 > 0 && (
-          <Rule>
-            {slopeSeasons.join(" and ")} stand out because of the Slope Hill restoration: {formatNumber(slopeHill2024)} recorded plants there,
-            including 22,000 trees funded by the Hilton Global Foundation and 7,000 donated by Trees That Count for the coronation.
-          </Rule>
-        )}
       </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="by-year">
@@ -91,8 +82,8 @@ export default async function SeasonsPage() {
               key={s.season.slug}
               s={s}
               fewSites={s.placeCount < median * 0.6}
-              trees={topBySeason.get(s.season.slug)}
-              sites={sitesBySeason.get(s.season.slug)}
+              trees={topBySeason.get(s.season.slug) ?? []}
+              sites={sitesBySeason.get(s.season.slug) ?? []}
             />
           ))}
         </ol>

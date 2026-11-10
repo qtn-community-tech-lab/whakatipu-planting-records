@@ -2,7 +2,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { parseCsv, type CsvTable } from "./parse";
-import { checkColumns, toSiteClass, validateHistoryRow, yn, type DataIssue, type HistoryRow, type SourceName } from "./validate";
+import { checkColumns, toSiteClass, validateHistoryRow, yn, type DataIssue, type HistoryRow, type SourceName, type SourceRow } from "./validate";
 import type {
   Parcel, Place, PlantingRecord, ReconciliationRow, ReviewNote, ReviewNoteKind,
   ReviewTheme, Season, SeasonName, SiteClass, Species,
@@ -68,13 +68,16 @@ export function parseReviewNotes(reason: string): ReviewNote[] {
     if (!p) continue;
     const m = NOTE_TAG.exec(p);
     if (m) {
-      const kind = m[1].toLowerCase() as ReviewNoteKind;
+      const kind: ReviewNoteKind = m[1] === "FYI" ? "fyi" : m[1] === "CONFIRM" ? "confirm" : "ruling";
       notes.push({ kind, theme: "other", text: p.slice(m[0].length), raw: p });
-    } else if (notes.length) {
-      notes[notes.length - 1].text += `; ${p}`;
-      notes[notes.length - 1].raw += `; ${p}`;
     } else {
-      notes.push({ kind: "ruling", theme: "other", text: p, raw: p });
+      const last = notes.at(-1);
+      if (last) {
+        last.text += `; ${p}`;
+        last.raw += `; ${p}`;
+      } else {
+        notes.push({ kind: "ruling", theme: "other", text: p, raw: p });
+      }
     }
   }
   for (const n of notes) n.theme = n.kind === "fyi" ? "other" : reviewTheme(n.text);
@@ -118,25 +121,32 @@ function placeNameFromGroup(group: string) {
 
 export function loadFromDirectory(dir: string): Loaded {
   const issues: DataIssue[] = [];
-  const tables = {} as Record<SourceName, CsvTable>;
-  for (const [name, file] of Object.entries(FILES) as [SourceName, string][]) {
+  function readTable<Name extends SourceName>(name: Name): CsvTable<SourceRow<Name>> {
+    const file = FILES[name];
     let text: string;
     try {
       text = readFileSync(path.join(dir, file), "utf8");
     } catch {
       issues.push({ file: name, line: 0, severity: "error", message: `Cannot read ${path.join(dir, file)}` });
-      continue;
+      return { header: [], rows: [], lines: [] };
     }
-    tables[name] = parseCsv(text);
-    checkColumns(name, tables[name], issues);
+    const table = parseCsv(text);
+    return checkColumns(name, table, issues) ? table : { header: [], rows: [], lines: [] };
   }
+  const tables = {
+    planting_history: readTable("planting_history"),
+    species_master_proposed: readTable("species_master_proposed"),
+    species_crosswalk: readTable("species_crosswalk"),
+    site_crosswalk: readTable("site_crosswalk"),
+    history_reconciliation: readTable("history_reconciliation"),
+  };
   if (issues.some((i) => i.severity === "error")) throw new WrtDataError(issues.filter((i) => i.severity === "error"));
 
   // ---- history rows
   const hist: HistoryRow[] = [];
   const histTable = tables.planting_history;
   histTable.rows.forEach((raw, i) => {
-    const row = validateHistoryRow(raw, histTable.lines[i], issues);
+    const row = validateHistoryRow(raw, histTable.lines[i] ?? 1, issues);
     if (row) hist.push(row);
   });
   const seenIds = new Set<string>();
@@ -204,7 +214,7 @@ export function loadFromDirectory(dir: string): Loaded {
   }
 
   // ---- sites
-  const siteXwalk = new Map<string, Record<string, string>>();
+  const siteXwalk = new Map<string, SourceRow<"site_crosswalk">>();
   for (const x of tables.site_crosswalk.rows) siteXwalk.set(cleanLabel(x.site_original).toLowerCase(), x);
 
   // ---- seasons

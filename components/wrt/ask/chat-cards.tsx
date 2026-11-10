@@ -77,7 +77,7 @@ function placeRow(slug: string, name: string, split: QuantitySplit, meta: ReactN
  * A species link that remembers the site (and part) it was clicked from, so the sidebar can show
  * how many were recorded there and when. The full species page ignores the query.
  */
-const speciesAtHref = (place?: string | null, part?: string | null) => (s: { slug: string }) =>
+const speciesAtHref = (place?: string | null, part?: string | null) => (s: { slug: string }): `/species/${string}` =>
   place ? `${hrefs.species(s.slug)}?${new URLSearchParams(part ? { place, part } : { place })}` : hrefs.species(s.slug);
 
 // ---- Follow-up questions: built from the card's own data, no extra model call.

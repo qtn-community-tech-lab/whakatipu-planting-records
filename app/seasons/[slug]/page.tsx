@@ -16,7 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<PageProps<"/seasons/[slug]">>;
 
 const RECORDS_CAP = 12;
 
@@ -129,7 +129,7 @@ export default async function SeasonPage({ params }: Props) {
         <div className="cn-callout cn-callout--note items-start" role="note">
           <div className="flex flex-col gap-1.5">
             <span>
-              {season.label} includes the Slope Hill 2024 column{slopeSites.length === 1 ? "" : "s"}
+              {season.label} includes unconfirmed planting column{slopeSites.length === 1 ? "" : "s"}
               {slopeSites.length > 0 && <> ({list(slopeSites)})</>}. WRT decision 4 on these is still open.
             </span>
             <span className="font-medium text-[14px] leading-[1.45]">

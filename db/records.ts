@@ -99,19 +99,21 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
 export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
+  const summary = seasons[at];
+  if (!summary) return null;
   // Workbook order (line ids follow it), for consistent ranking when totals tie.
   const views = [...lines].sort((a, b) => a.line_id! - b.line_id!)
     .map(toRecordView)
     .filter((v) => showReview || !v.record.needsReview);
   return {
-    season: seasons[at].season,
+    season: summary.season,
     previous: seasons[at - 1]?.season ?? null,
     next: seasons[at + 1]?.season ?? null,
     split: splitOf(views.map((v) => v.record)),
     places: rank(views, (v) => v.place.slug, (v) => v.place),
     species: rank(views, (v) => v.species.slug, (v) => v.species),
     byClass: rank(views, (v) => v.record.siteClass, (v) => v.record.siteClass),
-    reconciliation: seasons[at].reconciliation,
+    reconciliation: summary.reconciliation,
     themes: themesOf(views),
     records: views,
   };

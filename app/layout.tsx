@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { getWrt, getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { getWrt, reviewShown } from "@/lib/wrt/server";
 import { buildSearchIndex } from "@/lib/wrt/build-search-index";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
@@ -16,14 +16,13 @@ import { formatNumber } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
   title: { default: "Restoration history · Whakatipu Reforestation Trust", template: "%s · WRT restoration history" },
-  description: "Explore every recorded WRT planting season since Autumn 2015 by site, species, year and season.",
+  description: "Explore the WRT planting history by site, species, year and season.",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const [overview, index, showReview, everything] = await Promise.all([
-    getWrt().overview(), buildSearchIndex(), reviewShown(), getWrtAll().overview(),
+export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
+  const [overview, index, showReview] = await Promise.all([
+    getWrt().overview(), buildSearchIndex(), reviewShown(),
   ]);
-  const left = everything.split;
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
   const counts: NavCounts = {
     sites: formatNumber(overview.placeCount),
@@ -81,22 +80,6 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             </header>
             <ViewTransition default="wrt-page-fade">
               <main id="main" className="wrt-main">
-                <div className="wrt-notice" role="note">
-                  <span className="wrt-notice__icon" aria-hidden="true">i</span>
-                  <p className="wrt-notice__text">
-                    <b>Recorded plants, not verified plantings.</b>{" "}
-                    Figures come from nursery allocation sheets, not from counts in the ground.{" "}
-                    {showReview ? (
-                      <><span className="wrt-notice__amber">Amber</span> marks plants on records WRT still has to rule on.</>
-                    ) : (
-                      <>
-                        Showing confirmed records only: {formatNumber(left.needsReview)} plants on{" "}
-                        {formatNumber(left.recordsNeedingReview)} records WRT still has to rule on are left out.
-                      </>
-                    )}
-                  </p>
-                  <Link href="/about-the-data" className="wrt-notice__link">How to read these numbers →</Link>
-                </div>
                 {children}
               </main>
             </ViewTransition>
