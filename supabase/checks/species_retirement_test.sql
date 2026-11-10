@@ -1,6 +1,17 @@
 -- Local regression test after all migrations. Every fixture rolls back. Run with psql -v ON_ERROR_STOP=1 -f this_file.sql.
 begin;
 
+-- Exercise production public-read policies, without development access.
+do $$
+declare p record;
+begin
+  for p in select tablename, policyname from pg_policies
+    where schemaname = 'public' and policyname like 'dev anonymous %'
+  loop
+    execute format('drop policy %I on public.%I', p.policyname, p.tablename);
+  end loop;
+end $$;
+
 create function pg_temp.assert_true(ok boolean, message text) returns void
 language plpgsql as $$
 begin
@@ -18,6 +29,7 @@ insert into public.planting_lines (planting_event, species, quantity, legacy_cod
   select id, 'retirement-test-species', 27, 'RETIREMENT-HISTORY'
   from public.planting_events where area = 'retirement-test-area';
 
+set local role anon;
 create temp table retirement_before as select
   (select jsonb_agg(to_jsonb(l) order by l.id) from public.planting_lines l) as lines,
   (select jsonb_agg(to_jsonb(l) order by l.line_id) from public.line_details l) as details,
@@ -25,9 +37,20 @@ create temp table retirement_before as select
   (select jsonb_agg(to_jsonb(t) order by t.site) from public.totals_by_site t) as sites,
   (select jsonb_agg(to_jsonb(t) order by t.season) from public.totals_by_season t) as seasons;
 
+reset role;
 update public.species set deactivated_at = now() where slug = 'retirement-test-species';
 select pg_temp.assert_true(
   (select deactivated_at = now() from public.species where slug = 'retirement-test-species'), 'Retirement must persist');
+
+set local role anon;
+select pg_temp.assert_true(
+  (select scientific_name = 'Historical test species' and deactivated_at is not null
+   from public.species where slug = 'retirement-test-species'),
+  'Public readers must resolve deactivated species without development policies');
+select pg_temp.assert_true(
+  not exists (select 1 from public.species
+    where slug = 'retirement-test-species' and deactivated_at is null),
+  'Active selectors must omit deactivated species');
 
 select pg_temp.assert_true(
   (select jsonb_agg(to_jsonb(l) order by l.id) from public.planting_lines l) = (select lines from retirement_before),
@@ -44,5 +67,37 @@ select pg_temp.assert_true(
 select pg_temp.assert_true(
   (select jsonb_agg(to_jsonb(t) order by t.season) from public.totals_by_season t) = (select seasons from retirement_before),
   'Season totals and splits must remain unchanged');
+
+reset role;
+insert into public.questions (slug, question, deactivated_at)
+  values ('retirement-test-question', 'Historical question', now());
+insert into public.notes (line, question, kind, text, deactivated_at)
+  select id, 'retirement-test-question', 'confirm', 'Historical note', now()
+  from public.planting_lines where legacy_code = 'RETIREMENT-HISTORY';
+update public.sites set deactivated_at = now() where slug = 'retirement-test-site';
+update public.areas set deactivated_at = now() where slug = 'retirement-test-area';
+
+set local role anon;
+select pg_temp.assert_true(
+  exists (select 1 from public.sites where slug = 'retirement-test-site' and deactivated_at is not null)
+  and exists (select 1 from public.areas where slug = 'retirement-test-area' and deactivated_at is not null)
+  and exists (select 1 from public.questions where slug = 'retirement-test-question' and deactivated_at is not null)
+  and exists (select 1 from public.notes where question = 'retirement-test-question' and deactivated_at is not null),
+  'Public readers must resolve deactivated sites, areas, questions and notes');
+select pg_temp.assert_true(
+  (select quantity = 27 from public.line_details where legacy_code = 'RETIREMENT-HISTORY'),
+  'Deactivating reference data must preserve joined planting history');
+
+reset role;
+update public.planting_lines set deactivated_at = now() where legacy_code = 'RETIREMENT-HISTORY';
+update public.planting_events set deactivated_at = now() where area = 'retirement-test-area';
+set local role anon;
+select pg_temp.assert_true(
+  exists (select 1 from public.planting_lines where legacy_code = 'RETIREMENT-HISTORY' and deactivated_at is not null)
+  and exists (select 1 from public.planting_events where area = 'retirement-test-area' and deactivated_at is not null),
+  'Public readers must resolve deactivated events and lines');
+select pg_temp.assert_true(
+  not exists (select 1 from public.line_details where legacy_code = 'RETIREMENT-HISTORY'),
+  'History views must still exclude deactivated events and lines');
 
 rollback;

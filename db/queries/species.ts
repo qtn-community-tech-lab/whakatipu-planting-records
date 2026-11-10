@@ -17,6 +17,17 @@ export async function listSpecies() {
   return data.map((species) => ({ ...species, photos: species.photos as unknown as Species["photos"] }));
 }
 
+/** Active species for new planting lines, including entries with no history. */
+export async function listSpeciesForPlanting() {
+  const { data } = await (await db())
+    .from("species")
+    .select("slug, register_code, scientific_name, suggested_spelling, common_name, maori_name")
+    .is("deactivated_at", null)
+    .order("scientific_name")
+    .throwOnError();
+  return data;
+}
+
 /** Species with planting history, most recorded first. */
 export async function listSpeciesTotals() {
   const { data } = await speciesTotals(await db()).throwOnError();

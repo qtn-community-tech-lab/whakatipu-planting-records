@@ -1,21 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { CsvWrtRepository } from "@/lib/wrt/csv/csv-repository";
+import { repo } from "./helpers";
 import { createQueries } from "@/lib/wrt/queries";
 import { recordsToCsv } from "@/lib/wrt/records-csv";
 
 const deactivatedAt = "2026-11-09T00:00:00.000Z";
 const slug = "leptospermum-scoparium";
 
-class DeactivatedSpeciesRepository extends CsvWrtRepository {
-  override async listSpecies() {
-    return (await super.listSpecies()).map((species) => species.slug === slug
-      ? { ...species, deactivatedAt: deactivatedAt } : species);
-  }
-}
+const deactivatedRepo = {
+  ...repo,
+  listSpecies: async () => (await repo.listSpecies()).map((species) => species.slug === slug
+    ? { ...species, deactivatedAt } : species),
+};
 
 describe("deactivated species history", () => {
-  const active = createQueries(new CsvWrtRepository());
-  const deactivated = createQueries(new DeactivatedSpeciesRepository());
+  const active = createQueries(repo);
+  const deactivated = createQueries(deactivatedRepo);
 
   it("keeps the species identity, records, quantities and review splits", async () => {
     const before = (await active.species(slug))!;
