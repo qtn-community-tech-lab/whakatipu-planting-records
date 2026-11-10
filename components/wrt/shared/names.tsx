@@ -7,17 +7,8 @@ import { CONFIDENCE_LABELS, PRECISION_LABELS } from "@/lib/wrt/review-themes";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-export const hrefs = {
-  place: (slug: string) => `/sites/${slug}`,
-  species: (slug: string) => `/species/${slug}`,
-  season: (slug: string) => `/seasons/${slug}`,
-  records: (params: Record<string, string | number | undefined>) => {
-    const sp = new URLSearchParams();
-    for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
-    const s = sp.toString();
-    return s ? `/records?${s}` : "/records";
-  },
-};
+import { hrefs } from "@/lib/wrt/routes";
+export { hrefs } from "@/lib/wrt/routes";
 
 /** Canopy SpeciesName: common (or Māori) name first, botanical name in italics beneath. */
 export function SpeciesName({ species, link = false, size = "md" }: { species: Species; link?: boolean; size?: "md" | "lg" }) {

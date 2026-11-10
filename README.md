@@ -10,6 +10,8 @@ planting season since Autumn 2015 by **site, species, year and season**, without
 ```bash
 npm install
 npm run dev        # http://localhost:3000
+npm run typecheck  # generate Next.js route types and run strict TypeScript checks
+npm run lint
 npm test           # vitest: parser, validation, repository and query invariants, search
 npm run build && npm start
 ```

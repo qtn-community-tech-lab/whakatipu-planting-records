@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: "Explore the WRT planting history by site, species, year and season.",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
   const [overview, index, showReview, everything] = await Promise.all([
     getWrt().overview(), buildSearchIndex(), reviewShown(), getWrtAll().overview(),
   ]);

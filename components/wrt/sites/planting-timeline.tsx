@@ -1,3 +1,5 @@
+import type { AppRoute } from "@/lib/wrt/routes";
+import type { CSSProperties } from "react";
 /**
  * What went in, and when: rows (species, or parts of a site) against seasons.
  * Each dot is sized by recorded plants in that season; amber means some or
@@ -32,11 +34,11 @@ function buildRows(records: RecordView[], rowsBy: "species" | "part" | "site"): 
       ({
         key,
         name: rowsBy === "species" ? v.species.displayName : rowsBy === "site" ? v.place.name : v.record.parcelName,
-        species: rowsBy === "species" ? v.species : undefined,
-        parcelId: rowsBy === "part" ? v.record.parcelId : undefined,
-        placeSlug: rowsBy === "site" ? v.place.slug : undefined,
+        ...(rowsBy === "species" ? { species: v.species } : {}),
+        ...(rowsBy === "part" ? { parcelId: v.record.parcelId } : {}),
+        ...(rowsBy === "site" ? { placeSlug: v.place.slug } : {}),
         total: emptySplit(),
-        bySeason: new Map(),
+        bySeason: new Map<string, QuantitySplit>(),
       } satisfies Row);
     addToSplit(row.total, v.record);
     const cell = row.bySeason.get(v.season.slug) ?? emptySplit();
@@ -55,9 +57,9 @@ export function PlantingTimeline({
   seasons: Season[];
   rowsBy: "species" | "part" | "site";
   /** Link for one dot: the records behind it. */
-  hrefFor: (row: { species?: Species; parcelId?: string; placeSlug?: string }, season: Season) => string;
+  hrefFor: (row: { species?: Species; parcelId?: string; placeSlug?: string }, season: Season) => AppRoute;
   /** Link for a row name. */
-  rowHref?: (row: { species?: Species; parcelId?: string; placeSlug?: string; name: string }) => string;
+  rowHref?: (row: { species?: Species; parcelId?: string; placeSlug?: string; name: string }) => AppRoute;
   cap?: number;
 }) {
   const rows = buildRows(records, rowsBy);
@@ -79,7 +81,7 @@ export function PlantingTimeline({
     else years.push({ year: s.year, span: 1 });
   }
 
-  const style = { "--cols": cols.length } as React.CSSProperties;
+  const style: CSSProperties & { "--cols": number } = { "--cols": cols.length };
 
   const renderRow = (r: Row) => (
     <div key={r.key} className="wrt-tl__row" role="row">

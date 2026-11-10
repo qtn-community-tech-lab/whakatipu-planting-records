@@ -1,10 +1,11 @@
+import type { ReactNode } from "react";
 import type { NavIcon } from "./nav";
 
 /**
  * Hand-drawn nav glyphs (24px grid, 1.75 stroke, round caps) so the sidebar
  * needs no icon dependency. Decorative only: the label carries the meaning.
  */
-const PATHS: Record<NavIcon, React.ReactNode> = {
+const PATHS: Record<NavIcon, ReactNode> = {
   // Whakatipu skyline with a low sun
   overview: (
     <>
@@ -38,6 +39,16 @@ const PATHS: Record<NavIcon, React.ReactNode> = {
       <circle cx="4.6" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
       <circle cx="4.6" cy="12" r="1.1" fill="currentColor" stroke="none" />
       <circle cx="4.6" cy="17.5" r="1.1" fill="currentColor" stroke="none" />
+    </>
+  ),
+  // A drawn area (polygon with corner dots) and a plus: record a new planting
+  events: (
+    <>
+      <path d="M4 15.5 7 5l8.5 2.5L13 17Z" />
+      <circle cx="4" cy="15.5" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="7" cy="5" r="1.1" fill="currentColor" stroke="none" />
+      <circle cx="15.5" cy="7.5" r="1.1" fill="currentColor" stroke="none" />
+      <path d="M18.5 14v6M15.5 17h6" />
     </>
   ),
   // Speech bubble with a leaf inside

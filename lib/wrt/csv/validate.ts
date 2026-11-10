@@ -25,8 +25,12 @@ export const REQUIRED_COLUMNS = {
 } as const;
 
 export type SourceName = keyof typeof REQUIRED_COLUMNS;
+export type SourceRow<Name extends SourceName> =
+  Record<(typeof REQUIRED_COLUMNS)[Name][number], string> & Record<string, string | undefined>;
 
-export function checkColumns(file: SourceName, table: CsvTable, issues: DataIssue[]): boolean {
+export function checkColumns<Name extends SourceName>(
+  file: Name, table: CsvTable, issues: DataIssue[],
+): table is CsvTable<SourceRow<Name>> {
   const missing = REQUIRED_COLUMNS[file].filter((c) => !table.header.includes(c));
   if (missing.length) {
     issues.push({ file, line: 1, severity: "error", message: `Missing columns: ${missing.join(", ")}` });
@@ -35,7 +39,7 @@ export function checkColumns(file: SourceName, table: CsvTable, issues: DataIssu
   table.rows.forEach((r, i) => {
     if (r.__fieldCount) {
       issues.push({
-        file, line: table.lines[i], severity: "warning",
+        file, line: table.lines[i] ?? 1, severity: "warning",
         message: `Row has ${r.__fieldCount} fields, header has ${table.header.length}`,
       });
     }
@@ -74,7 +78,7 @@ export function toSiteClass(v: string): SiteClass {
 }
 
 export function validateHistoryRow(
-  raw: Record<string, string>, line: number, issues: DataIssue[],
+  raw: Record<string, string | undefined>, line: number, issues: DataIssue[],
 ): HistoryRow | null {
   const file = "planting_history";
   const err = (message: string) => {
@@ -87,13 +91,13 @@ export function validateHistoryRow(
   if (!raw.record_id) return err("missing record_id");
   const year = Number(raw.year);
   if (!Number.isInteger(year) || year < 2000 || year > 2100) return err(`bad year '${raw.year}'`);
-  const season = raw.season.trim();
+  const season = raw.season?.trim();
   if (season !== "Autumn" && season !== "Spring") return err(`bad season '${raw.season}'`);
   if (!raw.species_id_proposed) return err("missing species_id_proposed");
   if (!raw.site_group_proposed) return err("missing site_group_proposed");
 
   let quantity: number | null = null;
-  const q = raw.quantity.trim();
+  const q = raw.quantity?.trim() ?? "";
   if (q === "") {
     if (raw.needs_review !== "Y") return err("blank quantity on a record not flagged for review");
   } else {
@@ -103,33 +107,33 @@ export function validateHistoryRow(
     quantity = n;
   }
 
-  const precision = PRECISIONS.includes(raw.precision as Precision) ? (raw.precision as Precision) : "unknown";
+  const precision = PRECISIONS.find((value) => value === raw.precision) ?? "unknown";
   if (precision === "unknown" && raw.precision !== "unknown") warn(`unknown precision '${raw.precision}'`);
-  const confidence = CONFIDENCES.includes(raw.confidence as Confidence) ? (raw.confidence as Confidence) : null;
+  const confidence = CONFIDENCES.find((value) => value === raw.confidence);
   if (!confidence) return err(`bad confidence '${raw.confidence}'`);
   if (raw.needs_review !== "Y" && raw.needs_review !== "N") return err(`bad needs_review '${raw.needs_review}'`);
-  if (raw.needs_review === "Y" && !raw.review_reason.trim()) warn("flagged for review with no reason");
+  if (raw.needs_review === "Y" && !raw.review_reason?.trim()) warn("flagged for review with no reason");
 
   return {
     recordId: raw.record_id,
     year,
     season,
-    seasonLabelOriginal: raw.season_label_original,
-    siteOriginal: raw.site_original,
-    siteIdProposed: raw.site_id_proposed.trim(),
+    seasonLabelOriginal: raw.season_label_original ?? "",
+    siteOriginal: raw.site_original ?? "",
+    siteIdProposed: raw.site_id_proposed?.trim() ?? "",
     siteGroupProposed: raw.site_group_proposed.trim(),
-    siteClass: toSiteClass(raw.site_class),
-    speciesOriginal: raw.species_original,
+    siteClass: toSiteClass(raw.site_class ?? ""),
+    speciesOriginal: raw.species_original ?? "",
     speciesIdProposed: raw.species_id_proposed.trim(),
-    speciesCanonical: raw.species_canonical.trim(),
+    speciesCanonical: raw.species_canonical?.trim() ?? "",
     quantity,
     precision,
     confidence,
     needsReview: raw.needs_review === "Y",
-    reviewReason: raw.review_reason.trim(),
-    sourceFile: raw.source_file,
-    sourceSheet: raw.source_sheet,
-    sourceCell: raw.source_cell,
+    reviewReason: raw.review_reason?.trim() ?? "",
+    sourceFile: raw.source_file ?? "",
+    sourceSheet: raw.source_sheet ?? "",
+    sourceCell: raw.source_cell ?? "",
   };
 }
 

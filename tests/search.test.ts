@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { q } from "./helpers";
 
@@ -6,7 +7,7 @@ describe("search", () => {
     for (const term of ["manuka", "mānuka", "MANUKA", "Mānuka"]) {
       const r = await q.search(term);
       expect(r.species[0]?.item.slug, term).toBe("leptospermum-scoparium");
-      expect(r.species[0].item.displayName).toBe("Mānuka");
+      expect(defined(r.species[0]).item.displayName).toBe("Mānuka");
     }
   });
 
@@ -29,7 +30,7 @@ describe("search", () => {
 
   it("finds a season by its full label", async () => {
     const r = await q.search("autumn 2024");
-    expect(r.seasons[0].season.slug).toBe("autumn-2024");
+    expect(defined(r.seasons[0]).season.slug).toBe("autumn-2024");
   });
 
   it("finds a species by scientific name", async () => {
@@ -63,6 +64,6 @@ describe("search", () => {
 
   it("ranks the better match first", async () => {
     const r = await q.search("manuka");
-    for (let i = 1; i < r.species.length; i++) expect(r.species[i - 1].score).toBeGreaterThanOrEqual(r.species[i].score);
+    for (let i = 1; i < r.species.length; i++) expect(defined(r.species[i - 1]).score).toBeGreaterThanOrEqual(defined(r.species[i]).score);
   });
 });

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { type RawParams, first } from "@/lib/wrt/params";
+import { first } from "@/lib/wrt/params";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
@@ -17,10 +17,7 @@ import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 
-type Props = {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<RawParams>;
-};
+type Props = Readonly<PageProps<"/sites/[slug]">>;
 
 const REVIEW_CAP = 25;
 

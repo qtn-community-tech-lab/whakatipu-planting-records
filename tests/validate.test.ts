@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { checkColumns, REQUIRED_COLUMNS, toSiteClass, validateHistoryRow, yn } from "@/lib/wrt/csv/validate";
 import { parseCsv } from "@/lib/wrt/csv/parse";
@@ -46,15 +47,15 @@ describe("validateHistoryRow", () => {
     const { result, issues } = run(over);
     expect(result).toBeNull();
     expect(issues).toHaveLength(1);
-    expect(issues[0].severity).toBe("error");
-    expect(issues[0].message).toMatch(message);
-    expect(issues[0].line).toBe(7);
+    expect(defined(issues[0]).severity).toBe("error");
+    expect(defined(issues[0]).message).toMatch(message);
+    expect(defined(issues[0]).line).toBe(7);
   });
 
   it("allows a blank quantity only when the row needs review", () => {
     const bad = run({ quantity: "", needs_review: "N" });
     expect(bad.result).toBeNull();
-    expect(bad.issues[0].message).toMatch(/blank quantity/);
+    expect(defined(bad.issues[0]).message).toMatch(/blank quantity/);
 
     const ok = run({ quantity: "", needs_review: "Y", review_reason: "RULING: species contested (C1) with SP-060: x" });
     expect(ok.issues.filter((i) => i.severity === "error")).toEqual([]);
@@ -76,13 +77,13 @@ describe("validateHistoryRow", () => {
     const { result, issues } = run({ needs_review: "Y", review_reason: "" });
     expect(result?.needsReview).toBe(true);
     expect(issues).toHaveLength(1);
-    expect(issues[0].severity).toBe("warning");
+    expect(defined(issues[0]).severity).toBe("warning");
   });
 
   it("falls back to precision 'unknown' with a warning for an unrecognised precision", () => {
     const { result, issues } = run({ precision: "pixel" });
     expect(result?.precision).toBe("unknown");
-    expect(issues[0].severity).toBe("warning");
+    expect(defined(issues[0]).severity).toBe("warning");
   });
 
   it("does not warn for a literal 'unknown' precision", () => {
@@ -92,7 +93,7 @@ describe("validateHistoryRow", () => {
   });
 
   it("names the record in the message so an issue can be traced", () => {
-    expect(run({ year: "x" }).issues[0].message).toContain("PH-2019A-FK12");
+    expect(defined(run({ year: "x" }).issues[0]).message).toContain("PH-2019A-FK12");
   });
 
   it("maps site class letters", () => {
@@ -116,8 +117,8 @@ describe("checkColumns", () => {
     const issues: DataIssue[] = [];
     const ok = checkColumns("species_crosswalk", parseCsv("species_id,raw_name\nSP-1,x\n"), issues);
     expect(ok).toBe(false);
-    expect(issues[0].message).toMatch(/Missing columns: match_key/);
-    expect(issues[0].severity).toBe("error");
+    expect(defined(issues[0]).message).toMatch(/Missing columns: match_key/);
+    expect(defined(issues[0]).severity).toBe("error");
   });
 
   it("warns about ragged rows with their source line", () => {

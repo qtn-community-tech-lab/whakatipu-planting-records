@@ -16,7 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<PageProps<"/seasons/[slug]">>;
 
 const RECORDS_CAP = 12;
 

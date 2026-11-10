@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { type RawParams, first } from "@/lib/wrt/params";
+import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber, foldMacrons, matchScore } from "@/lib/wrt/text";
@@ -19,7 +19,7 @@ export const metadata: Metadata = { title: "Species" };
 
 
 function pick<T extends { key: string }>(list: readonly T[], v: string | undefined, fallback: T["key"]): T["key"] {
-  return list.some((o) => o.key === v) ? (v as T["key"]) : fallback;
+  return list.find((o) => o.key === v)?.key ?? fallback;
 }
 
 function matches(show: ShowKey, r: SpeciesSummary) {
@@ -44,7 +44,7 @@ function sortRows(rows: SpeciesSummary[], sort: SortKey) {
 /** Two ways to browse: full-width rows (list) or photo cards four to a row (grid). */
 type View = "list" | "grid";
 
-function href(sort: SortKey, show: ShowKey, q = "", view: View = "list") {
+function href(sort: SortKey, show: ShowKey, q = "", view: View = "list"): `/species${"" | `?${string}`}` {
   const sp = new URLSearchParams();
   if (q) sp.set("q", q);
   if (show !== "all") sp.set("show", show);
@@ -61,10 +61,10 @@ const SHORT: Record<ShowKey, string> = {
   contested: "Name needs a ruling",
 };
 
-export default async function SpeciesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
+export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"/species">>) {
   const sp = await searchParams;
-  const sort = pick(SORTS, first(sp.sort), "plants") as SortKey;
-  const show = pick(SHOWS, first(sp.show), "all") as ShowKey;
+  const sort = pick(SORTS, first(sp.sort), "plants");
+  const show = pick(SHOWS, first(sp.show), "all");
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
 
   const all = await getWrt().speciesList();
@@ -84,7 +84,12 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
   const rankOf = new Map(
     [...all].sort((a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName)).map((r, i) => [r.item.slug, i + 1]),
   );
-  const counts = Object.fromEntries(SHOWS.map((o) => [o.key, all.filter((r) => matches(o.key, r)).length]));
+  const counts = {
+    all: all.length,
+    over5m: all.filter((r) => matches("over5m", r)).length,
+    threatened: all.filter((r) => matches("threatened", r)).length,
+    contested: all.filter((r) => matches("contested", r)).length,
+  } satisfies Record<ShowKey, number>;
   const contested = counts.contested;
   const filtered = show !== "all" || !!q;
 

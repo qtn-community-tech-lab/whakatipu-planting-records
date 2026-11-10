@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * The explore view above the records list: what these records add up to, in
  * pictures you can click through. Every item narrows the current filter (the
@@ -24,14 +25,14 @@ const TOP = 8;
 interface Item {
   key: string;
   name: string;
-  sub?: string;
+  sub?: string | undefined;
   italic?: boolean;
   avatar: ReactNode;
   split: QuantitySplit;
   /** Narrow the records to this item. */
-  href: string;
+  href: AppRoute;
   /** The item's own page. */
-  page?: string;
+  page?: AppRoute;
 }
 
 
