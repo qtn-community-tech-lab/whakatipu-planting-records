@@ -29,12 +29,11 @@ const kindOf = (slug: string) => KIND[slug.split("-")[0] as keyof typeof KIND] ?
 const row = "grid w-full grid-cols-[44px_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-2xl border border-[var(--border-card,#e6e8df)] bg-[var(--surface-card,#fff)] px-3 py-2.5 text-left font-sans text-[var(--cn-green-900)]";
 const button = "cursor-pointer transition-colors hover:border-[var(--cn-green-600)] hover:bg-[#f6f9f1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cn-green-800)]";
 
-export function SeasonList({ seasons, today, onOpen, title = "Past plantings", summary, children }: {
+export function SeasonList({ seasons, today, onOpen, summary, children }: {
   seasons: readonly PastSeason[];
   /** NZ today, "YYYY-MM-DD": how long ago each season was. */
   today: string;
   onOpen?: ((season: PastSeason) => void) | undefined;
-  title?: string | undefined;
   /** Beside the heading, e.g. "6 seasons · 449 plants". */
   summary?: string | undefined;
   /** Under the list, e.g. a link to every season. */
@@ -45,7 +44,7 @@ export function SeasonList({ seasons, today, onOpen, title = "Past plantings", s
   return (
     <section className="flex flex-col gap-2.5" aria-labelledby={id}>
       <div className="flex items-baseline justify-between gap-3">
-        <h3 id={id} className="m-0 font-sans text-xs font-bold uppercase leading-none tracking-[0.06em] text-[var(--text-eyebrow)]">{title}</h3>
+        <h3 id={id} className="m-0 font-sans text-xs font-bold uppercase leading-none tracking-[0.06em] text-[var(--text-eyebrow)]">Past plantings</h3>
         {summary && <span className="font-sans text-[12.5px] font-medium tabular-nums text-[var(--text-muted)]">{summary}</span>}
       </div>
       <ul className="m-0 flex list-none flex-col gap-2 p-0">
