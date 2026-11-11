@@ -22,7 +22,7 @@
  */
 import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { MapEventForm, SITE_AS_A_WHOLE, type AreaPick, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
+import { MapEventForm, SITE_AS_A_WHOLE, type AreaPick, type MapEventFormProps, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { MAP_EVENT_STEPS, STEP } from "@/lib/wrt/events/steps";
@@ -65,9 +65,11 @@ export interface CreatePlantingEventProps {
   totals: PlantTotals;
   /** Every area with its pin, from the areas table. */
   areas: Parameters<typeof sitePins>[1];
+  /** Saves the checked event and its plants (the page's server action). */
+  onSave?: MapEventFormProps["onSave"];
 }
 
-export function CreatePlantingEvent({ initialSite, options, today, exitHref, suggestions, totals, areas }: CreatePlantingEventProps) {
+export function CreatePlantingEvent({ initialSite, options, today, exitHref, suggestions, totals, areas, onSave }: CreatePlantingEventProps) {
   const wide = useMedia(WIDE);
   const mapEl = useRef<HTMLDivElement>(null);
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
@@ -463,7 +465,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           ? <SiteOverview slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} pinMoved={isMoved(siteSlug, parcel)} onMovePin={startMoving} onUndoPin={undoMove} />
           : <SiteIndex sites={options.sites} totals={totals} onChoose={(slug) => chooseSite(slug, null)} onStart={() => setStarted(true)} onAddLocation={startPlacing} onDrawArea={newArea} />)}
         <MapEventForm
-          key={formKey} hidden={overview || choosing || !!sheetArea} options={options} today={today} initialSite={initialSite} picked={picked} onChooseSite={changeSite}
+          key={formKey} hidden={overview || choosing || !!sheetArea} options={options} onSave={onSave} today={today} initialSite={initialSite} picked={picked} onChooseSite={changeSite}
           suggestions={suggestions[siteSlug] ?? []} onStepChange={onStepChange} onSiteChange={onSiteChange}
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
           pinMoved={isMoved(siteSlug, parcel)}

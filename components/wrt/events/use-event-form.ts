@@ -5,9 +5,12 @@
  *
  * Three steps (lib/wrt/events/steps.ts). Next checks only the current step's
  * fields; Submit on the last step checks everything and, when it all passes,
- * shows a "Not saved" preview. Nothing is saved yet.
+ * saves it with `save` (when given) and shows the receipt; without `save` it
+ * shows a "Not saved" preview.
  */
+import { unstable_rethrow } from "next/navigation";
 import { useMemo, useState, type RefObject } from "react";
+import type { PlantingEventSubmitResult } from "@/db/types";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
 import { errorsForStep, EVENT_STEPS, firstStepWithError, LAST_STEP, type EventStep } from "@/lib/wrt/events/steps";
@@ -35,7 +38,7 @@ export const NEW_SITE = "new-site";
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialSite = "", steps = EVENT_STEPS, newSite = false,
+  options, today, formRef, headingRef, initialSite = "", steps = EVENT_STEPS, newSite = false, save,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -50,6 +53,8 @@ export function useEventForm({
   steps?: readonly EventStep[];
   /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
   newSite?: boolean;
+  /** Saves the checked event (a server action); `savedPlantingEvent` is passed back on a retry. Without it, Submit only previews. */
+  save?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }) {
   const suggested = seasonFromDate(today)!;
 
@@ -71,6 +76,13 @@ export function useEventForm({
   const [checkedSteps, setCheckedSteps] = useState<ReadonlySet<number>>(new Set());
   // The checked event once Submit passes: shown as the "Not saved" preview.
   const [preview, setPreview] = useState<PlantingEventInput | null>(null);
+  // Saving: in progress, the general failure to show by Submit, and the event's id once its row
+  // exists (sent back on retry so it isn't created twice).
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savedPlantingEvent, setSavedPlantingEvent] = useState<number | undefined>(undefined);
+  // Field problems the server found, for the input it was sent: they go once anything is edited.
+  const [server, setServer] = useState<{ input: string; errors: FieldErrors } | null>(null);
 
   const site = options.sites.find((s) => s.slug === placeSlug);
 
@@ -82,7 +94,7 @@ export function useEventForm({
   const checkedPlace = newSite && !placeSlug ? NEW_SITE : placeSlug;
 
   // Checked on every change (cheap); errors are shown only for checked steps.
-  const result = validateEventInput({
+  const input = {
     placeSlug: checkedPlace,
     parcelId,
     plantedOn,
@@ -91,8 +103,11 @@ export function useEventForm({
     polygon: null, // drawn on the map once the map PR lands
     species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity), ...(l.area === undefined ? {} : { area: l.area }) })),
     notes: notes.trim() || null,
-  }, lookups, today);
-  const allErrors: FieldErrors = result.ok ? {} : result.errors;
+  };
+  const result = validateEventInput(input, lookups, today);
+  const inputKey = JSON.stringify(input);
+  const serverErrors = server?.input === inputKey ? server.errors : {};
+  const allErrors: FieldErrors = { ...serverErrors, ...(result.ok ? {} : result.errors) };
   const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step, steps) : {};
 
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
@@ -114,16 +129,39 @@ export function useEventForm({
     else goTo(step + 1);
   }
 
-  /** Check everything; show the preview, or go to the first step with a problem. */
-  function finish() {
-    if (result.ok) {
-      setPreview(result.value);
-      return;
-    }
-    const s = firstStepWithError(result.errors, steps) ?? 0;
+  /** Go to the first step with one of these problems. */
+  function showProblems(errs: FieldErrors) {
+    const s = firstStepWithError(errs, steps) ?? 0;
     markChecked(s);
     show(s);
     focusFirstProblem();
+  }
+
+  /** Check everything; save it (when the form saves) and show the receipt, or go to the first step with a problem. */
+  async function finish() {
+    if (!result.ok) return showProblems(result.errors);
+    if (!save) return setPreview(result.value);
+    if (saving) return;
+    const value = result.value;
+    setSaving(true);
+    setSaveError(null);
+    let outcome: PlantingEventSubmitResult;
+    try {
+      outcome = await save(value, savedPlantingEvent);
+    } catch (error) {
+      unstable_rethrow(error);
+      outcome = { error: "The planting event could not be saved. Your entries are still here; please try again." };
+    } finally {
+      setSaving(false);
+    }
+    if (outcome.savedPlantingEvent !== undefined) setSavedPlantingEvent(outcome.savedPlantingEvent);
+    if (outcome.issues?.length) {
+      const errs: FieldErrors = Object.fromEntries(outcome.issues.map((x) => [x.path, x.message]));
+      setServer({ input: inputKey, errors: errs });
+      return showProblems(errs);
+    }
+    if (outcome.error) return setSaveError(outcome.error);
+    setPreview(value);
   }
 
   return {
@@ -136,8 +174,11 @@ export function useEventForm({
     /** The checked event for "Check and submit", or null while something needs fixing. */
     checkedEvent: result.ok ? result.value : null,
     /** Go to the first step with a problem (or the preview, if there is none). */
-    showFirstProblem: finish,
+    showFirstProblem() { void finish(); },
     preview,
+    /** Saving now; the general save failure (shown by Submit); true once the event and its plants are saved. */
+    // With `save`, the receipt only shows once everything is saved.
+    saving, saveError, saved: !!save && preview !== null,
     /** Leave the preview and return to the last step, values kept. */
     closePreview() {
       setPreview(null);
@@ -212,7 +253,7 @@ export function useEventForm({
     submit(e: React.FormEvent) {
       e.preventDefault();
       if (step < LAST_STEP) next();
-      else finish();
+      else void finish();
     },
   };
 }

@@ -17,6 +17,7 @@
 import { ArrowRight, Calendar, Camera, Check, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { TextareaInput } from "@/components/ui/inputs";
+import { Spinner } from "@/components/ui/spinner";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { FigureList, type FigureRow } from "@/components/wrt/shared/figure-list";
 import { ListRow } from "@/components/wrt/shared/list-row";
@@ -35,10 +36,11 @@ import { formatNumber, partBesideSite, rankMatches } from "@/lib/wrt/text";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
 import { cn } from "@/lib/utils";
 import { NEW_SITE, useEventForm, type EventFormState } from "./use-event-form";
+import type { PlantingEventSubmitResult } from "@/db/types";
 import { useHideOnScroll } from "./use-hide-on-scroll";
 import s from "./map-event-form.module.css";
 
-interface MapEventFormProps {
+export interface MapEventFormProps {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
   today: string;
@@ -91,6 +93,8 @@ interface MapEventFormProps {
   onPlantClose?: (() => void) | undefined;
   /** Kept mounted but out of sight, e.g. while the host shows the site first. */
   hidden?: boolean | undefined;
+  /** Saves the checked event and its plants (a server action). Without it, Submit shows a "Not saved" receipt. */
+  onSave?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }
 
 export interface SpotInfo { name: string; asPart: boolean }
@@ -125,7 +129,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
   const { options, today, initialSite, plantedArea, suggestions, picked, onStepChange, onSiteChange, spot, spotInfo = NO_SPOT, pinMoved, hidden, onStartAnother } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const form = useEventForm({ options, today, formRef, headingRef, initialSite, steps: STEPS, newSite: !!spot });
+  const form = useEventForm({ options, today, formRef, headingRef, initialSite, steps: STEPS, newSite: !!spot, save: props.onSave });
   const { step } = form;
   // Phones, the plant list: the footer gets out of the way while the list scrolls down.
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -235,7 +239,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
     return <LocationPreview name={spotName} what={what} plantedArea={plantedArea} onBack={() => setLocationOnly(false)} onStartAnother={onStartAnother} />;
   }
   if (form.preview) {
-    return <Receipt summary={describe(form.preview)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} onBack={form.closePreview} onStartAnother={onStartAnother} />;
+    return <Receipt summary={describe(form.preview)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} saved={form.saved} onBack={form.closePreview} onStartAnother={onStartAnother} />;
   }
 
   const next = step < LAST_STEP ? `Next: ${STEPS[step + 1]!.title}` : cards.length > 1 ? `Submit ${cards.length} planting events` : "Submit planting event";
@@ -312,16 +316,17 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
         )}
       </div>
 
+      {step === LAST_STEP && form.saveError && <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">{form.saveError}</div>}
       <footer ref={footRef} className={s.foot}>
         {step > 0
           ? <button type="button" className={s.back} onClick={form.back}>Back</button>
           : <span className={s.count}>Step 1 of {STEPS.length}</span>}
-        <button type="submit" className={s.next}>
-          {next}
+        <button type="submit" className={s.next} disabled={form.saving} aria-busy={form.saving}>
+          {form.saving ? <><Spinner aria-hidden="true" />Saving…</> : next}
           {step < LAST_STEP && <ArrowRight size={18} strokeWidth={2.2} />}
         </button>
       </footer>
-      {step === STEP.check && <p className={s.note}>Prototype: Submit checks everything, but nothing is saved yet.</p>}
+      {step === STEP.check && !props.onSave && <p className={s.note}>Prototype: Submit checks everything, but nothing is saved yet.</p>}
     </form>
   );
 }
@@ -372,6 +377,7 @@ function When({ form, today }: { form: EventFormState; today: string }) {
         </DatePicker>
       </div>
       {err("plantedOn") && <p className={s.problem} role="alert">{err("plantedOn")}</p>}
+      {err("season") && <p className={s.problem} role="alert">{err("season")}</p>}
     </section>
   );
 }
@@ -718,11 +724,13 @@ function PlaceCards({ cards, onEdit }: { cards: PlaceCard[]; onEdit: (c: PlaceCa
   );
 }
 
-/** What Submit shows while nothing can be saved: a short receipt, plainly marked "Not saved". */
-function Receipt({ summary, cards, empty, onBack, onStartAnother }: {
+/** What Submit shows: a short receipt, marked "Saved", or plainly "Not saved" when the form can't save. */
+function Receipt({ summary, cards, empty, saved, onBack, onStartAnother }: {
   summary: EventSummary; cards: PlaceCard[];
   /** Areas kept with no plants (their names): said in a line, so they aren't silently dropped. */
   empty: string[];
+  /** The event and its plants were saved: no going back to the form (it would save them again). */
+  saved: boolean;
   onBack: () => void; onStartAnother: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -731,9 +739,11 @@ function Receipt({ summary, cards, empty, onBack, onStartAnother }: {
   return (
     <div className={s.form}>
       <header className={s.head}>
-        <span className={s.badge}>Not saved</span>
-        <h2 ref={headingRef} tabIndex={-1} className={s.title}>{cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
-        <p className={s.context} role="status"><span>Everything checks out. This prototype can’t store events yet.</span></p>
+        {saved ? <span className={cn(s.badge, s.saved)}>Saved</span> : <span className={s.badge}>Not saved</span>}
+        <h2 ref={headingRef} tabIndex={-1} className={s.title}>{saved || cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
+        <p className={s.context} role="status">
+          <span>{saved ? "The planting event and its plants are saved. Drawn areas aren’t stored yet." : "Everything checks out. This prototype can’t store events yet."}</span>
+        </p>
       </header>
       <div className={s.scroll}>
         <p className={s.receipt}>
@@ -744,7 +754,7 @@ function Receipt({ summary, cards, empty, onBack, onStartAnother }: {
         {empty.length > 0 && <p className={s.quiet}>{listed(empty)} kept with no plants.</p>}
       </div>
       <footer className={s.foot}>
-        <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
+        {!saved && <button type="button" className={s.back} onClick={onBack}>Back to the form</button>}
         <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>
       </footer>
     </div>

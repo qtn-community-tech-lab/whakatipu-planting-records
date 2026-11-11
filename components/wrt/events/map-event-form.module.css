@@ -84,6 +84,7 @@ button.stepLink { cursor: pointer; }
 .back { min-height: 52px; padding: 0 20px; border: 0; border-radius: 999px; background: var(--surface-soft, #e7eee5); color: var(--text-brand); font: 700 15px var(--font-sans); cursor: pointer; }
 .next { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--cn-green-800); color: #fff; font: 700 15.5px var(--font-sans); cursor: pointer; transition: transform 420ms cubic-bezier(.34, 1.4, .5, 1); }
 .next:active { transform: scale(0.97); transition-duration: 90ms; }
+.next:disabled { opacity: 0.75; cursor: progress; }
 .count + .next { flex: 0 1 auto; }
 
 /* Phones: no step timeline (the footer says "Step 1 of 3") and a small step heading,
@@ -122,6 +123,7 @@ button.stepLink { cursor: pointer; }
 
 
 .badge { align-self: flex-start; padding: 5px 10px; border-radius: 999px; background: #fdf3e2; font: 700 12px/1 var(--font-sans); color: #6b4300; }
+.saved { background: #e6f2e9; color: var(--cn-green-800); }
 .note { margin: 0; padding: 0 0 8px; text-align: center; }
 
 /* the date as a card (the check step), its native input hidden inside (Change opens the picker) */

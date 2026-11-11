@@ -81,3 +81,14 @@ export async function listSiteSeasons(site: string, wrtNumber: string | null, li
   const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query.is("area", null)).throwOnError();
   return data;
 }
+
+/** A site's active areas, for saving a planting event against one. */
+export async function listPlantingAreas(site: string) {
+  const { data } = await (await db())
+    .from("areas")
+    .select("slug, wrt_number")
+    .eq("site", site)
+    .is("deactivated_at", null)
+    .throwOnError();
+  return data;
+}

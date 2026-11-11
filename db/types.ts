@@ -48,3 +48,5 @@ export type CreateSiteInput = z.infer<typeof createSiteSchema>;
 export type EditSiteInput = z.infer<typeof editSiteSchema>;
 export type SiteEdit = Pick<Tables<"sites">, keyof CreateSiteInput | "updated_at">;
 export type SiteSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
+/** A planting event's save: `savedPlantingEvent` once the event row exists, even if its plants failed (sent back on retry). */
+export type PlantingEventSubmitResult = { error?: string; issues?: { path: string; message: string }[]; savedPlantingEvent?: number };
