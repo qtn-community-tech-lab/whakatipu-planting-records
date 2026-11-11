@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { q } from "./helpers";
 
 const mocks = vi.hoisted(() => ({
-  authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
+  deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
   revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
 }));
 vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
-vi.mock("@/db/queries/sites", () => ({ createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
+vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
 vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); } }));
@@ -19,6 +19,7 @@ import NewSitePage from "@/app/sites/new/page";
 import EditSitePage from "@/app/sites/[slug]/edit/page";
 import SitesPage from "@/app/sites/page";
 import SitePage, { generateMetadata } from "@/app/sites/[slug]/page";
+import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import type { CreateSiteInput, SiteSubmitResult } from "@/db/types";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
@@ -36,6 +37,7 @@ async function pageForm(kind: "new" | "edit") {
 beforeEach(async () => {
   vi.resetAllMocks();
   mocks.authenticated.mockResolvedValue(true);
+  mocks.deactivate.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.create.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.update.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.read.mockResolvedValue({ ...values, is_scheme: false, updated_at: "2026-11-10T00:00:00Z" });
@@ -144,4 +146,80 @@ it("opens a site's detail and metadata before any planting history exists", asyn
   expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Edit site");
   mocks.read.mockResolvedValue(null);
   await expect(SitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
+});
+
+async function deactivationAction() {
+  const page = await SitePage({ params, searchParams });
+  const control = Children.toArray(page.props.children).find((child): child is ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> =>
+    isValidElement(child) && child.type === DeactivateSite);
+  if (!control) throw new Error("Missing deactivation control");
+  return control.props.onDeactivate;
+}
+
+it("deactivates the captured site and refreshes shared reads before redirecting", async () => {
+  await expect((await deactivationAction())()).rejects.toThrow("REDIRECT");
+  expect(mocks.deactivate).toHaveBeenCalledWith(values.slug);
+  expect(mocks.tag).toHaveBeenCalledWith("supabase");
+  expect(mocks.revalidate).toHaveBeenCalledWith("/", "layout");
+  expect(mocks.redirect).toHaveBeenCalledWith(`/sites/${values.slug}`);
+  expect(mocks.tag.mock.invocationCallOrder[0]).toBeLessThan(mocks.revalidate.mock.invocationCallOrder[0]!);
+  expect(mocks.revalidate.mock.invocationCallOrder[0]).toBeLessThan(mocks.redirect.mock.invocationCallOrder[0]!);
+});
+
+it("checks access again when a stale deactivation control is submitted", async () => {
+  const submit = await deactivationAction();
+  mocks.authenticated.mockResolvedValue(false);
+  expect(await submit()).toHaveProperty("error", "Sign in to deactivate sites.");
+  expect(mocks.deactivate).not.toHaveBeenCalled();
+  expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Deactivate site");
+});
+
+it.each(["permission", "database", "exception", "missing row"])("returns a retryable %s deactivation failure without expiring caches", async (kind) => {
+  if (kind === "exception") mocks.deactivate.mockRejectedValue(new Error("Offline"));
+  else mocks.deactivate.mockResolvedValue({ data: null, error: kind === "missing row" ? null : { code: kind === "permission" ? "42501" : "other" } });
+  const result = await (await deactivationAction())();
+  expect(result.error).toContain(kind === "permission" ? "staff account" : "try again");
+  expect(mocks.tag).not.toHaveBeenCalled();
+  expect(mocks.redirect).not.toHaveBeenCalled();
+});
+
+it("shows persisted deactivation without history and prevents editing", async () => {
+  mocks.read.mockResolvedValue({ ...values, deactivated_at: "2026-11-11T00:00:00Z" });
+  const html = renderToStaticMarkup(await SitePage({ params, searchParams }));
+  expect(html).toContain("Deactivated");
+  expect(html).toContain("No planting records yet");
+  expect(html).toContain("/sites?state=deactivated");
+  expect(html).not.toContain("Deactivate site");
+  expect(html).not.toContain(`/sites/${values.slug}/edit`);
+  await expect(EditSitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
+  expect(await generateMetadata({ params })).toEqual({ title: values.name, description: values.description });
+});
+
+it("keeps a deactivated site's historical records and quantities on its detail", async () => {
+  const detail = (await q.place("whitechapel")) ?? (await q.place((await q.places())[0]!.item.slug))!;
+  mocks.read.mockResolvedValue({ ...values, name: detail.place.name, deactivated_at: "2026-11-11T00:00:00Z" });
+  mocks.place.mockResolvedValue(detail);
+  const html = renderToStaticMarkup(await SitePage({ params, searchParams }));
+  expect(html).toContain("Deactivated");
+  expect(html).toContain("Recorded plants by season");
+  expect(html).toContain(`All ${detail.split.records.toLocaleString("en-NZ")} records`);
+});
+
+it("requests the deactivated register and preserves lifecycle state through filters", async () => {
+  mocks.list.mockResolvedValue([{ slug: values.slug, name: values.name, is_scheme: false }]);
+  const html = renderToStaticMarkup(await SitesPage({ params: Promise.resolve({}), searchParams: Promise.resolve({ state: "deactivated", sort: "name" }) }));
+  expect(mocks.list).toHaveBeenCalledWith("deactivated");
+  expect(html).toContain('name="state" value="deactivated"');
+  expect(html).toContain("state=deactivated&amp;class=keystone&amp;sort=name");
+  expect(html).toContain(`href="/sites/${values.slug}"`);
+  expect(html).toContain("1 deactivated site");
+  expect(html).toMatch(/aria-current="true"[^>]*>Deactivated<\/a>/);
+});
+
+it("defaults to the active register and explains an empty deactivated register", async () => {
+  await SitesPage({ params: Promise.resolve({}), searchParams });
+  expect(mocks.list).toHaveBeenCalledWith("active");
+  mocks.list.mockResolvedValue([]);
+  const html = renderToStaticMarkup(await SitesPage({ params: Promise.resolve({}), searchParams: Promise.resolve({ state: "deactivated" }) }));
+  expect(html).toContain("No deactivated sites");
 });

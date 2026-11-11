@@ -55,7 +55,7 @@ async function load(db: Db): Promise<Loaded> {
     db.from("species")
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
       .throwOnError(),
-    db.from("sites").select("slug, name, description, is_scheme").is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, description, is_scheme").throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
@@ -142,7 +142,7 @@ async function load(db: Db): Promise<Loaded> {
   });
   records.sort((a, b) => seasonBySlug.get(a.seasonSlug)!.order - seasonBySlug.get(b.seasonSlug)!.order || a.id.localeCompare(b.id));
 
-  // Keep every active site and area, including those awaiting their first planting.
+  // Keep historical site identities, including deactivated sites, and active areas.
   // Classes are ranked by recorded plants; header spellings remain aliases.
   const places: Place[] = siteRows.data
     .map((site) => {
