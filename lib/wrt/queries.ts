@@ -125,7 +125,7 @@ export interface PlaceSummary extends Ranked<Place> {
 }
 
 export interface SpeciesSummary extends Ranked<Species> {
-  span: Span;
+  span: Span | null;
   placeCount: number;
 }
 
@@ -225,8 +225,7 @@ export interface DataQuality {
   byPrecision: Ranked<Precision>[];
   themes: ThemeSummary[];
   reconciliation: ReconciliationRow[];
-  issues: { errors: number; warnings: number; sample: string[] };
-  source: { description: string; files: { name: string; rows: number }[] };
+  source: { description: string; tables: { name: string; rows: number }[] };
   /**
    * Every species WRT marks threatened in either of its two lists, with recorded
    * plants. Raised on About the data because the basis of the mark is unknown
@@ -292,7 +291,9 @@ export function createQueries(repo: WrtRepository) {
     if (!recs.length) return null;
     const slugs = new Set(recs.map((r) => r.seasonSlug));
     const active = c.seasons.filter((s) => slugs.has(s.slug));
-    return { first: active[0], last: active[active.length - 1], seasonsActive: active.length };
+    const first = active[0];
+    const last = active.at(-1);
+    return first && last ? { first, last, seasonsActive: active.length } : null;
   }
 
   function themesOf(recs: PlantingRecord[]): ThemeSummary[] {
@@ -334,10 +335,13 @@ export function createQueries(repo: WrtRepository) {
   return {
     async overview(): Promise<Overview> {
       const c = await ctx();
+      const firstSeason = c.seasons[0];
+      const lastSeason = c.seasons.at(-1);
+      if (!firstSeason || !lastSeason) throw new Error("The planting history has no seasons.");
       return {
         split: splitOf(c.records),
-        firstSeason: c.seasons[0],
-        lastSeason: c.seasons[c.seasons.length - 1],
+        firstSeason,
+        lastSeason,
         seasons: seasonSeries(c, c.records),
         placeCount: new Set(c.records.filter((r) => !c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
         schemeCount: new Set(c.records.filter((r) => c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
@@ -402,14 +406,12 @@ export function createQueries(repo: WrtRepository) {
         a.push(r);
         bySpecies.set(r.speciesId, a);
       }
-      return [...bySpecies.entries()]
-        .map(([id, recs]) => ({
-          item: c.speciesById.get(id)!,
-          split: splitOf(recs),
-          span: spanOf(c, recs)!,
-          placeCount: new Set(recs.map((r) => r.placeSlug)).size,
-        }))
-        .sort(byTotalDesc);
+      return c.species
+        .map((item) => {
+          const recs = bySpecies.get(item.id) ?? [];
+          return { item, split: splitOf(recs), span: spanOf(c, recs), placeCount: new Set(recs.map((r) => r.placeSlug)).size };
+        })
+        .sort((a, b) => byTotalDesc(a, b) || a.item.scientificName.localeCompare(b.item.scientificName));
     },
 
     async species(slug: string): Promise<SpeciesDetail | null> {
@@ -495,7 +497,7 @@ export function createQueries(repo: WrtRepository) {
         b.score - a.score || b.split.total - a.split.total;
       const places = c.places
         .map((p) => ({ item: p, split: placeSplits.get(p.slug) ?? emptySplit(), score: matchScore(q, p.searchKeys) }))
-        .filter((x) => x.score > 0 && x.split.records > 0)
+        .filter((x) => x.score > 0)
         .sort(rank)
         .slice(0, limit);
       const species = c.species
@@ -518,8 +520,8 @@ export function createQueries(repo: WrtRepository) {
 
     async dataQuality(): Promise<DataQuality> {
       const c = await ctx();
-      const [reconciliation, issues, info] = await Promise.all([
-        repo.listReconciliation(), repo.listDataIssues(), repo.getSourceInfo(),
+      const [reconciliation, info] = await Promise.all([
+        repo.listReconciliation(), repo.getSourceInfo(),
       ]);
       return {
         split: splitOf(c.records),
@@ -527,12 +529,7 @@ export function createQueries(repo: WrtRepository) {
         byPrecision: rankBy(c.records, (r) => r.precision),
         themes: themesOf(c.records),
         reconciliation,
-        issues: {
-          errors: issues.filter((i) => i.severity === "error").length,
-          warnings: issues.filter((i) => i.severity === "warning").length,
-          sample: issues.slice(0, 20).map((i) => `${i.file}: ${i.message}`),
-        },
-        source: { description: info.description, files: info.files },
+        source: info,
         threatened: c.species
           .filter((sp) => sp.threatenedMarks.plantsOutMaster || sp.threatenedMarks.teKakano)
           .map((sp) => {

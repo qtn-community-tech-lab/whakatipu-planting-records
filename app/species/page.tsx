@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { type RawParams, first } from "@/lib/wrt/params";
+import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber, foldMacrons, matchScore } from "@/lib/wrt/text";
@@ -8,9 +8,9 @@ import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
 import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
-import { getSpeciesProfile } from "@/lib/wrt/species-profiles";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
@@ -19,7 +19,7 @@ export const metadata: Metadata = { title: "Species" };
 
 
 function pick<T extends { key: string }>(list: readonly T[], v: string | undefined, fallback: T["key"]): T["key"] {
-  return list.some((o) => o.key === v) ? (v as T["key"]) : fallback;
+  return list.find((o) => o.key === v)?.key ?? fallback;
 }
 
 function matches(show: ShowKey, r: SpeciesSummary) {
@@ -43,9 +43,11 @@ function sortRows(rows: SpeciesSummary[], sort: SortKey) {
 
 /** Two ways to browse: full-width rows (list) or photo cards four to a row (grid). */
 type View = "list" | "grid";
+type RegisterState = "active" | "deactivated";
 
-function href(sort: SortKey, show: ShowKey, q = "", view: View = "list") {
+function href(sort: SortKey, show: ShowKey, q = "", view: View = "list", state: RegisterState = "active"): `/species${"" | `?${string}`}` {
   const sp = new URLSearchParams();
+  if (state === "deactivated") sp.set("state", state);
   if (q) sp.set("q", q);
   if (show !== "all") sp.set("show", show);
   if (sort !== "plants") sp.set("sort", sort);
@@ -61,15 +63,17 @@ const SHORT: Record<ShowKey, string> = {
   contested: "Name needs a ruling",
 };
 
-export default async function SpeciesPage({ searchParams }: { searchParams: Promise<RawParams> }) {
+export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"/species">>) {
   const sp = await searchParams;
-  const sort = pick(SORTS, first(sp.sort), "plants") as SortKey;
-  const show = pick(SHOWS, first(sp.show), "all") as ShowKey;
+  const sort = pick(SORTS, first(sp.sort), "plants");
+  const show = pick(SHOWS, first(sp.show), "all");
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
+  const state: RegisterState = first(sp.state) === "deactivated" ? "deactivated" : "active";
 
-  const all = await getWrt().speciesList();
-  const guideCount = all.filter((r) => getSpeciesPhoto(r.item.id) && getSpeciesProfile(r.item.id)).length;
-  const referenceGapCount = all.filter((r) => {
+  const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
+  const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "deactivated"));
+  const guideCount = register.filter((r) => r.item.photos[0] && r.item.profile).length;
+  const referenceGapCount = register.filter((r) => {
     const review = getSpeciesReferenceReview(r.item.id);
     return review && review.status !== "confirmed";
   }).length;
@@ -78,29 +82,34 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
 
   const q = (first(sp.q) ?? "").trim();
   const byName = (r: SpeciesSummary) => !q || matchScore(q, r.item.searchKeys) > 0;
-  const shown = sortRows(all.filter((r) => matches(show, r) && byName(r)), sort);
+  const shown = sortRows(register.filter((r) => matches(show, r) && byName(r)), sort);
   const shownSplit = splitOf([]);
   for (const r of shown) for (const k of Object.keys(shownSplit) as (keyof typeof shownSplit)[]) shownSplit[k] += r.split[k];
   const rankOf = new Map(
     [...all].sort((a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName)).map((r, i) => [r.item.slug, i + 1]),
   );
-  const counts = Object.fromEntries(SHOWS.map((o) => [o.key, all.filter((r) => matches(o.key, r)).length]));
+  const counts = {
+    all: register.length,
+    over5m: register.filter((r) => matches("over5m", r)).length,
+    threatened: register.filter((r) => matches("threatened", r)).length,
+    contested: register.filter((r) => matches("contested", r)).length,
+  } satisfies Record<ShowKey, number>;
   const contested = counts.contested;
   const filtered = show !== "all" || !!q;
 
   return (
     <>
       <PageHead
-        title={`${formatNumber(all.length)} species`}
+        title={`${formatNumber(register.length)} ${state} species`}
         lead={
           <>
-            {formatNumber(allSplit.total)} recorded plants since Autumn 2015.
+            {formatNumber(allSplit.total)} recorded plants across all historical species.
             {" "}{guideCount} species have reference photos and identification notes.
             {referenceGapCount > 0 && <> {referenceGapCount} reference sets have gaps or unresolved identities.</>}
             {contested > 0 && (
               <>
                 {" "}
-                <Link href={href(sort, "contested", "", view)} className="cn-link">
+                <Link href={href(sort, "contested", "", view, state)} className="cn-link">
                   {formatNumber(contested)} {contested === 1 ? "name needs" : "names need"} a WRT ruling
                 </Link>{" "}
                 before their records can be merged.
@@ -109,16 +118,29 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
           </>
         }
         aside={
+          <>
+          {authenticated && <Button asChild><Link href="/species/new">Create species</Link></Button>}
           <Link href="/species/photos" className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
             Species reference guide →
           </Link>
+          </>
         }
       />
 
       {/* No card around the list: filters and rows sit straight on the page. */}
       <section className="wrt-species" aria-label="Species">
+        <nav aria-label="Species register" className="wrt-stool__show mb-3">
+          {(["active", "deactivated"] as const).map((option) => (
+            <Link key={option} href={href(sort, show, q, view, option)} className="wrt-stool__opt"
+              aria-current={state === option ? "true" : undefined}>
+              {option === "active" ? "Active" : "Deactivated"}
+              {" "}<span className="wrt-stool__n">{all.filter((row) => (row.item.deactivatedAt !== null) === (option === "deactivated")).length}</span>
+            </Link>
+          ))}
+        </nav>
         <div className="wrt-stool">
           <form method="get" action="/species" className="wrt-stool__form" role="search">
+            {state === "deactivated" && <input type="hidden" name="state" value="deactivated" />}
             {show !== "all" && <input type="hidden" name="show" value={show} />}
             {view !== "list" && <input type="hidden" name="view" value={view} />}
             <label className="wrt-stool__search">
@@ -146,7 +168,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
             {SHOWS.map((o) => (
               <Link
                 key={o.key}
-                href={href(sort, o.key, q, view)}
+                href={href(sort, o.key, q, view, state)}
                 className="wrt-stool__opt"
                 aria-current={show === o.key ? "true" : undefined}
               >
@@ -158,7 +180,7 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
           <nav aria-label="View" className="wrt-stool__show wrt-stool__view">
             {(["list", "grid"] as const).map((v) => (
               <Link
-                key={v} href={href(sort, show, q, v)} className="wrt-stool__opt" title={v === "list" ? "List: one plant per row" : "Grid: photo cards"}
+                key={v} href={href(sort, show, q, v, state)} className="wrt-stool__opt" title={v === "list" ? "List: one plant per row" : "Grid: photo cards"}
                 aria-current={view === v ? "true" : undefined}
               >
                 <span className="sr-only">{v === "list" ? "List view" : "Grid view"}</span>
@@ -181,9 +203,9 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
               <b>{formatNumber(shown.length)}</b> {shown.length === 1 ? "species" : "species"}
               {q && <> matching “{q}”</>}
               {" · "}
-              {formatNumber(shownSplit.total)} recorded
+              {formatNumber(shownSplit.total)} recorded plants for listed species
             </span>
-            {filtered && <Link href={href(sort, "all", "", view)} className="wrt-stool__clear">Clear filters</Link>}
+            {filtered && <Link href={href(sort, "all", "", view, state)} className="wrt-stool__clear">Clear filters</Link>}
           </p>
         </div>
 
@@ -195,13 +217,13 @@ export default async function SpeciesPage({ searchParams }: { searchParams: Prom
           </ul>
         ) : (
           <EmptyState title="No species match">
-            <Link href="/species" className="cn-link">Show all species →</Link>
+            <Link href={href("plants", "all", "", "list", state)} className="cn-link">Show all {state} species →</Link>
           </EmptyState>
         )}
       </section>
       <Rule>
         Species are listed as WRT typed them, with te reo Māori names shown with macrons. Two names that may be the same species
-        are kept apart until WRT rules. Photos are Wiki references from other places; they do not confirm plants at a WRT site.
+        are kept apart until WRT rules. Photos are reference images; they do not confirm plants at a WRT site.
         Species without a photo show one ring per season they were recorded in.
       </Rule>
     </>

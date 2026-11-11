@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSpeciesProfile, speciesProfiles, SPECIES_PROFILE_LIMIT } from "@/lib/wrt/species-profiles";
+import speciesProfiles from "@/data/species-profiles.json";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import { q } from "./helpers";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
@@ -7,20 +7,20 @@ import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 describe("reviewed species profiles", () => {
   it("covers researched species without attaching information to unconfirmed identities", async () => {
     const all = await q.speciesList();
-    const top = topPlantedSpecies(all, SPECIES_PROFILE_LIMIT);
+    const top = topPlantedSpecies(all);
     expect(top).toHaveLength(95);
     expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(140068);
     expect(speciesProfiles.length).toBeGreaterThanOrEqual(75);
     expect(new Set(speciesProfiles.map((p) => p.speciesId)).size).toBe(speciesProfiles.length);
     expect(speciesProfiles.every((p) => top.some((r) => r.item.id === p.speciesId))).toBe(true);
     for (const row of top) {
-      const profile = getSpeciesProfile(row.item.id);
+      const profile = speciesProfiles.find((profile) => profile.speciesId === row.item.id);
       if (profile) expect(profile.scientificName).toBe(row.item.scientificName);
       else expect(getSpeciesReferenceReview(row.item.id)?.status).toBe("unresolved");
     }
     const maorica = all.find((r) => r.item.scientificName === "Carex maorica")!;
-    expect(getSpeciesProfile(maorica.item.id)?.scientificName).toBe("Carex maorica");
-    expect(getSpeciesProfile("unknown")).toBeUndefined();
+    expect(speciesProfiles.find((profile) => profile.speciesId === maorica.item.id)?.scientificName).toBe("Carex maorica");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "unknown")).toBeUndefined();
   });
 
   it("retains attribution and makes gaps and shared names explicit", () => {
@@ -35,14 +35,14 @@ describe("reviewed species profiles", () => {
       }
       expect(profile.checkedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
-    expect(getSpeciesProfile("SP-116")?.maoriNames).toEqual([]);
-    expect(getSpeciesProfile("SP-026")?.nameNote).toContain("species-specific Māori name has not been confirmed");
-    expect(getSpeciesProfile("SP-152")?.nameNote).toContain("shared");
-    expect(getSpeciesProfile("SP-136")?.nameNote).toContain("possible name in southern districts");
-    expect(getSpeciesProfile("SP-079")?.nameNote).toContain("Whauwhau, which was not confirmed");
-    expect(getSpeciesProfile("SP-046")?.commonName).toBeNull();
-    expect(getSpeciesProfile("SP-109")?.nameNote).toContain("Shawia avicenniifolia");
-    expect(getSpeciesProfile("SP-113")?.nameNote).toContain("Shawia fragrantissima");
-    expect(getSpeciesProfile("SP-155")?.maoriNames).toEqual([]);
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-116")?.maoriNames).toEqual([]);
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-026")?.nameNote).toContain("species-specific Māori name has not been confirmed");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-152")?.nameNote).toContain("shared");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-136")?.nameNote).toContain("possible name in southern districts");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-079")?.nameNote).toContain("Whauwhau, which was not confirmed");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-046")?.commonName).toBeNull();
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-109")?.nameNote).toContain("Shawia avicenniifolia");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-113")?.nameNote).toContain("Shawia fragrantissima");
+    expect(speciesProfiles.find((profile) => profile.speciesId === "SP-155")?.maoriNames).toEqual([]);
   });
 });

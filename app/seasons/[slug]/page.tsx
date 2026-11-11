@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { reviewShown } from "@/lib/wrt/server";
 import { listSeasonPlantingLines, listSeasons } from "@/db/queries/plantings";
+import { listSpecies } from "@/db/queries/species";
 import { toSeasonDetail, toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
@@ -16,15 +17,15 @@ import { buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<PageProps<"/seasons/[slug]">>;
 
 const RECORDS_CAP = 12;
 
 /** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
 async function loadSeason(slug: string) {
-  const [rows, lines, showReview] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown()]);
+  const [rows, lines, showReview, species] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown(), listSpecies()]);
   const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
-  return { all, d: toSeasonDetail(slug, all, lines, showReview), showReview };
+  return { all, d: toSeasonDetail(slug, all, lines, showReview, new Map(species.map((row) => [row.slug, row]))), showReview };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -129,7 +130,7 @@ export default async function SeasonPage({ params }: Props) {
         <div className="cn-callout cn-callout--note items-start" role="note">
           <div className="flex flex-col gap-1.5">
             <span>
-              {season.label} includes the Slope Hill 2024 column{slopeSites.length === 1 ? "" : "s"}
+              {season.label} includes unconfirmed planting column{slopeSites.length === 1 ? "" : "s"}
               {slopeSites.length > 0 && <> ({list(slopeSites)})</>}. WRT decision 4 on these is still open.
             </span>
             <span className="font-medium text-[14px] leading-[1.45]">

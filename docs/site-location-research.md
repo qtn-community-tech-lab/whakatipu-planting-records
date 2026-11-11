@@ -2,7 +2,7 @@
 
 Checked 7 October 2026. The map contains 50 public reference points across 29 of the 38 physical site groups. The second research batch investigated 20 additional groups, found supported references for 18, and added KingsView School as a further identifiable school site. Skippers–DOC and Kingston remain unmapped.
 
-Coordinates, source links, derivations and checked dates are maintained in [site-locations.json](../data/site-locations.json). These references locate named reserves, schools, restoration projects and historical events. They do not reconstruct the boundaries of historical planting patches. Recorded quantities come from the existing planting CSV and follow the reader's review switch. Public project totals are never substituted for the application's quantities.
+Coordinates, source links, derivations and checked dates are maintained in [site-locations.json](../data/site-locations.json). These references locate named reserves, schools, restoration projects and historical events. They do not reconstruct the boundaries of historical planting patches. Recorded quantities come from Supabase and follow the reader's review switch. Public project totals are never substituted for the application's quantities.
 
 ## Additional references
 

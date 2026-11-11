@@ -1,5 +1,6 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
-import { parseCsv } from "@/lib/wrt/csv/parse";
+import { parseCsv } from "@/scripts/workbook/parse";
 
 describe("parseCsv", () => {
   it("parses a plain table keyed by header", () => {
@@ -19,13 +20,13 @@ describe("parseCsv", () => {
 
   it("unescapes doubled quotes", () => {
     const t = parseCsv('a\n"she said ""hi"""\n');
-    expect(t.rows[0].a).toBe('she said "hi"');
+    expect(defined(t.rows[0]).a).toBe('she said "hi"');
   });
 
   it("keeps newlines inside quotes and counts source lines correctly", () => {
     const t = parseCsv('a,b\n"line one\nline two",x\ny,z\n');
     expect(t.rows).toHaveLength(2);
-    expect(t.rows[0].a).toBe("line one\nline two");
+    expect(defined(t.rows[0]).a).toBe("line one\nline two");
     // Row 1 starts on line 2; the quoted newline pushes the next row to line 4.
     expect(t.lines).toEqual([2, 4]);
   });
@@ -45,7 +46,7 @@ describe("parseCsv", () => {
   it("strips a UTF-8 BOM so the first header is clean", () => {
     const t = parseCsv("﻿record_id,year\nPH-1,2015\n");
     expect(t.header[0]).toBe("record_id");
-    expect(t.rows[0].record_id).toBe("PH-1");
+    expect(defined(t.rows[0]).record_id).toBe("PH-1");
   });
 
   it("drops trailing rows that are entirely empty fields (spreadsheet export padding)", () => {
@@ -74,14 +75,14 @@ describe("parseCsv", () => {
   it("flags ragged rows instead of silently dropping them", () => {
     const t = parseCsv("a,b,c\n1,2\n1,2,3,4\n");
     expect(t.rows).toHaveLength(2);
-    expect(t.rows[0].__fieldCount).toBe("2");
-    expect(t.rows[0].c).toBe(""); // missing field padded
-    expect(t.rows[1].__fieldCount).toBe("4");
-    expect(t.rows[1].c).toBe("3");
+    expect(defined(t.rows[0]).__fieldCount).toBe("2");
+    expect(defined(t.rows[0]).c).toBe(""); // missing field padded
+    expect(defined(t.rows[1]).__fieldCount).toBe("4");
+    expect(defined(t.rows[1]).c).toBe("3");
   });
 
   it("does not flag rows with the right field count", () => {
-    expect(parseCsv("a,b\n1,2\n").rows[0].__fieldCount).toBeUndefined();
+    expect(defined(parseCsv("a,b\n1,2\n").rows[0]).__fieldCount).toBeUndefined();
   });
 
   it("throws on an unterminated quote", () => {

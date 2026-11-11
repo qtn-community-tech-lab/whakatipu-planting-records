@@ -1,16 +1,16 @@
-import Image from "next/image";
+import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
 import { hrefs } from "@/components/wrt/shared/names";
+import { PhotoMedia } from "@/components/wrt/species/photo-media";
 
 interface Stat {
-  href: string;
+  href: AppRoute;
   icon: NavIcon;
   label: string;
   value: string;
@@ -38,7 +38,7 @@ export function OverviewHero({
     { href: "/records", icon: "records", label: "Records", value: formatNumber(split.records) },
   ];
   const pictured = topSpecies
-    .map((s, i) => ({ s, rank: i + 1, photo: getSpeciesPhoto(s.item.id) }))
+    .map((s, i) => ({ s, rank: i + 1, photo: s.item.photos[0] }))
     .filter((x) => x.photo)
     .slice(0, 2);
 
@@ -96,16 +96,10 @@ export function OverviewHero({
           <ul className="wrt-ohero__grid">
             {pictured.map(({ s, rank, photo }) => (
               <li key={s.item.slug} className="wrt-ohero__tile">
-                <Image
-                  src={photo!.src}
-                  width={photo!.width}
-                  height={photo!.height}
+                <PhotoMedia
+                  photo={photo!} name={s.item.displayName} variant="overview"
                   sizes="(max-width: 960px) 50vw, 18vw"
-                  style={{ objectPosition: photo!.focalPoint }}
-                  alt=""
-                  className="wrt-ohero__img"
-                  unoptimized
-                  priority={rank <= 2}
+                  preload={rank <= 2}
                 />
                 <span className="wrt-ohero__rank">{rank}</span>
                 <Link href={hrefs.species(s.item.slug)} className="wrt-ohero__tile-link">
@@ -114,9 +108,6 @@ export function OverviewHero({
                   </span>
                   <span className="wrt-ohero__tile-count tabular-nums">{formatNumber(s.split.total)} recorded</span>
                 </Link>
-                <span className="wrt-ohero__tile-credit">
-                  {photo!.author} · <a href={photo!.licenseUrl}>{photo!.license}</a>
-                </span>
               </li>
             ))}
           </ul>

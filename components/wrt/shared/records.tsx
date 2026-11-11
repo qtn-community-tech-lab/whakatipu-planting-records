@@ -110,7 +110,7 @@ const KIND_COPY = {
 } as const;
 
 /** What WRT needs to settle on one record: the question, the detail, and where its siblings are. */
-function ReviewIssue({ record, focusTheme }: { record: PlantingRecord; focusTheme?: string }) {
+function ReviewIssue({ record, focusTheme }: { record: PlantingRecord; focusTheme?: string | undefined }) {
   const asks = actionable(record);
   if (!asks.length) return null;
   return (
@@ -181,7 +181,7 @@ export function RecordsTable({
   hide?: ("season" | "site" | "species")[];
   caption?: string;
   /** The review question the list is already filtered to: rows then show only their own detail. */
-  focusTheme?: string;
+  focusTheme?: string | undefined;
 }) {
   const show = (c: "season" | "site" | "species") => !hide.includes(c);
   const cols = 3 + (["season", "site", "species"] as const).filter(show).length;

@@ -13,10 +13,7 @@ build/
 *-debug.log*
 
 # Research material is kept in private GitHub, not uploaded with the app.
-# docs/planning/prototype/*.csv must remain available to the Next.js build.
-docs/discovery/
-docs/planning/gauntlet/
-docs/planning/scripts/
-docs/planning/_sources/
+docs/
+scripts/
 data/research/
 tests/

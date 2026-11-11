@@ -1,0 +1,54 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Type-check, lint and unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - name: Unit tests
+        run: >-
+          npx vitest run
+          --exclude tests/db-reads.test.ts
+          --exclude tests/db-accountable.test.ts
+          --exclude tests/supabase-parity.test.ts
+
+  live-database:
+    name: Live database tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tests against the hosted project, using the public key in .env
+        id: live
+        # Warns without failing the PR until the hosted access rules match what these tests expect.
+        continue-on-error: true
+        run: npx vitest run tests/db-reads.test.ts tests/db-accountable.test.ts tests/supabase-parity.test.ts
+      - name: Flag failing live tests
+        if: steps.live.outcome == 'failure'
+        run: echo "::warning title=Live database tests failed::The hosted project does not match what tests/db-*.test.ts and tests/supabase-parity.test.ts expect. See the step above."

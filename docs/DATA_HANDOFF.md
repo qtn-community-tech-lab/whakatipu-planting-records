@@ -1,6 +1,6 @@
 # WRT — extracted data handoff (for the app planner)
 
-*3 Oct 2026. Everything below is in this repo under `docs/planning/prototype/` (data) and `docs/planning/scripts/` (how it was made). Nothing in WRT's source spreadsheets was changed. The app should read these CSVs directly for now — no database yet.*
+*3 Oct 2026. Everything below is in this repo under `docs/planning/prototype/` (data) and `docs/planning/scripts/` (how it was made). Nothing in WRT's source spreadsheets was changed. These CSVs are retained as inputs to the one-off workbook import. The live app now reads Supabase only.*
 
 ## What we have
 

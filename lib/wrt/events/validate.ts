@@ -119,7 +119,7 @@ export function validateEventInput(raw: unknown, lookups: EventLookups, today: s
     value: {
       ...v,
       // Drop any altitude so stored shapes are always [lon, lat].
-      polygon: v.polygon && { type: "Polygon", coordinates: [v.polygon.coordinates[0].map((p) => [p[0], p[1]])] },
+      polygon: v.polygon && { type: "Polygon", coordinates: v.polygon.coordinates.map((ring) => ring.map((p) => [p[0], p[1]])) },
       notes: v.notes?.trim() || null,
     },
   };

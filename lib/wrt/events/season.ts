@@ -32,12 +32,16 @@ export function seasonFromDate(isoDate: string): { season: EventSeason; seasonYe
   if (!isIsoDate(isoDate)) return null;
   const year = Number(isoDate.slice(0, 4));
   const month = Number(isoDate.slice(5, 7));
-  return { season: BY_MONTH[month - 1], seasonYear: month === 12 ? year + 1 : year };
+  const season = BY_MONTH[month - 1];
+  if (!season) return null;
+  return { season, seasonYear: month === 12 ? year + 1 : year };
 }
 
 /** "2026-10-07" → "Wed 7 Oct 2026" (Canopy's date style). */
 export function formatPlantedOn(isoDate: string): string {
-  const [y, m, d] = isoDate.split("-").map(Number);
+  const y = Number(isoDate.slice(0, 4));
+  const m = Number(isoDate.slice(5, 7));
+  const d = Number(isoDate.slice(8, 10));
   const date = new Date(Date.UTC(y, m - 1, d));
   const part = (o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat("en-NZ", { timeZone: "UTC", ...o }).format(date);
   return `${part({ weekday: "short" })} ${d} ${part({ month: "short" })} ${y}`;
