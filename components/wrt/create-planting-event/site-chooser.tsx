@@ -7,12 +7,12 @@
  * it's open (the phone sheet goes full screen for it), so there is one sheet, never a dialog over it. Escape or × closes it.
  * For a new pin or a drawn area (`forNew`) it asks which site that belongs to instead.
  */
-import { ChevronDown, MapPinPlus, Plus } from "lucide-react";
+import { ChevronDown, MapPin, MapPinPlus, Plus } from "lucide-react";
 import { Accordion } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import { plantsAndSpecies, type PlantTotals } from "@/components/wrt/events/map-event-form";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
-import { rankMatches } from "@/lib/wrt/text";
+import { partBesideSite, rankMatches } from "@/lib/wrt/text";
 import f from "@/components/wrt/events/map-event-form.module.css";
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { SearchField } from "@/components/wrt/shared/search-field";
@@ -56,6 +56,10 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   }).sort((a, b) => Number(b.site.slug === value.slug) - Number(a.site.slug === value.slug));
 
   const amount = (key: string) => plantsAndSpecies(totals[key]);
+  // Under the heading: what's chosen now, e.g. "Glenorchy, the site as a whole".
+  const chosen = sites.find((x) => x.slug === value.slug);
+  const part = chosen?.parts.find((p) => p.id === value.parcelId);
+  const now = chosen && `${chosen.name}, ${part ? partBesideSite(part.name, chosen.name) : "the site as a whole"}`;
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
@@ -111,9 +115,14 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
     <section className={f.form} aria-labelledby={onClose ? "site-chooser-title" : undefined} aria-label={onClose ? undefined : "All sites"} onKeyDown={(e) => { if (e.key === "Escape") onClose?.(); }}>
       <div className={f.scroll}>
         {onClose && (
-          <header className={s.chooserHead}>
-            <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forNew ? `Which site is this ${forNew.what === "area" ? "area" : "new location"} at?` : "Choose a site"}</h2>
-            <button type="button" className={s.chooserClose} aria-label="Close" onClick={onClose}>×</button>
+          // The same pin header as the panel's other screens. No ×: choosing closes it, and so do Escape,
+          // the breadcrumb (desktop) and the sheet's title (phones).
+          <header className={s.chooserHead} data-question={forNew ? "" : undefined}>
+            <span className={s.chooserIcon} aria-hidden="true"><MapPin size={22} strokeWidth={2.2} /></span>
+            <span>
+              <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forNew ? `Which site is this ${forNew.what === "area" ? "area" : "new location"} at?` : "Choose a site"}</h2>
+              {!forNew && now && <p>Now: {now}</p>}
+            </span>
           </header>
         )}
         {forNew?.what === "area" && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site, or add it as a new location.</p>}
