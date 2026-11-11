@@ -1,5 +1,6 @@
 "use client";
 import { ArrowLeft, ChevronDown, MapPin, Pentagon, Plus, X } from "lucide-react";
+import type { Route } from "next";
 import Link from "next/link";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -16,7 +17,7 @@ export function TopBar({ siteName, hint, exitHref, choosing, onChooseSite, onLea
   siteName?: string | undefined;
   /** Under the site: the part, or the step the form is on. */
   hint?: string | undefined;
-  exitHref: string;
+  exitHref: Route;
   /** The site chooser is open: the site's chevron points up, and a tap closes it. */
   choosing: boolean; onChooseSite: () => void;
   /** Back to every site (asks first mid-event). Only with a site. */

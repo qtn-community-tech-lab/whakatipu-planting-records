@@ -20,6 +20,7 @@
  *   use-keyboard-fit.ts phones: the screen shrinks above the keyboard
  * Shared pieces: FormPanel (the form's panel), MiniMap and FigureList (components/wrt/shared).
  */
+import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { MapEventForm, SITE_AS_A_WHOLE, type AreaPick, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
@@ -57,7 +58,7 @@ export interface CreatePlantingEventProps {
   /** NZ today, "YYYY-MM-DD". */
   today: string;
   /** Where the back arrow goes. */
-  exitHref: string;
+  exitHref: Route;
   /** Each site's most planted species, by site slug, for step 2. */
   suggestions: Record<string, SpeciesSuggestion[]>;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
