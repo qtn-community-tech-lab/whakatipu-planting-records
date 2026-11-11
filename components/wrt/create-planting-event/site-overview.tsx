@@ -4,10 +4,10 @@
  * how much has been planted there, to pick from. With a site, PlaceOverview: its (or the chosen
  * part's) most planted trees and its last few seasons, kept short. "Add new planting event" then opens the form.
  */
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, MapPinned } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { placePlantings, type PlacePlantings } from "@/app/playground/record-sheet/actions";
+import { placePlantings, type PlacePlantings } from "@/app/playground/create-planting-event/actions";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber } from "@/lib/wrt/text";
@@ -15,16 +15,20 @@ import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 // The form's own frame and Next button, so the overview sits exactly where the form will.
 import f from "@/components/wrt/events/map-event-form.module.css";
-import s from "./place-overview.module.css";
+import s from "./site-overview.module.css";
 
-export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
+export function PlaceOverview({ slug, parcelId, partName, onStart, onBack, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
   /** The chosen part: its own trees and seasons, when it has any recorded. */
   parcelId: string | null;
-  partName?: string;
+  partName?: string | undefined;
   onStart: () => void;
   /** Back to the index of every site. */
   onBack: () => void;
+  /** The site's pin is in the wrong spot: move it here, before an event is started there. Not saved yet. */
+  pinMoved?: boolean | undefined;
+  onMovePin?: (() => void) | undefined;
+  onUndoPin?: (() => void) | undefined;
 }) {
   const key = `${slug}/${parcelId ?? ""}`;
   const [loaded, setLoaded] = useState<{ key: string; data: PlacePlantings | null } | null>(null);
@@ -56,6 +60,17 @@ export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
             </FigureList>
           </>
         )}
+      {onMovePin && (pinMoved ? (
+        <p className={s.pinMoved} role="status">
+          <span>Pin moved, not saved yet.</span>
+          <button type="button" onClick={onMovePin}>Move again</button>
+          <button type="button" onClick={onUndoPin}>Undo</button>
+        </p>
+      ) : (
+        <button type="button" className={s.movePin} onClick={onMovePin}>
+          <MapPinned size={15} strokeWidth={2.2} aria-hidden="true" />Pin in the wrong spot? Move it
+        </button>
+      ))}
     </Frame>
   );
 }

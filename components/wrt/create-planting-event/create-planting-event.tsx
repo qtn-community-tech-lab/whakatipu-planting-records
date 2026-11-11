@@ -26,12 +26,12 @@ import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form
 import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
 import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
-import { PlaceOverview, SiteIndex } from "./place-overview";
+import { PlaceOverview, SiteIndex } from "./site-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
-import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
-import s from "./record-sheet.module.css";
+import { highlightSite, mapCentre, useCamera, usePlantingMap, useSpotMarker } from "./use-planting-map";
+import s from "./create-planting-event.module.css";
 
 const WIDE = "(min-width: 768px)";
 /** A new location this close to a site's (or part's) pin counts as that site. */
@@ -85,7 +85,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   const [leaving, setLeaving] = useState<SitePin | null>(null);
   const [formKey, setFormKey] = useState(0);
 
-  const map = useRecordMap({ pins, initialSite, container: mapEl, pinClass: s.pin, wideQuery: WIDE, onPick: pickPin });
+  const map = usePlantingMap({ pins, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin });
 
   // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
   function pickPin(pin: SitePin) {
@@ -202,13 +202,13 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
       ) : null}
       <FormPanel wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="New planting event" title={where.title} subtitle={where.sub} onTitle={changeSite}>
         {overview && (place
-          ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} onBack={() => setPicked({ slug: "", parcelId: null })} />
+          ? <PlaceOverview slug={place} parcelId={parcel} partName={parcel ? partName : undefined} onStart={() => setStarted(true)} onBack={() => setPicked({ slug: "", parcelId: null })} pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove} />
           : <SiteIndex sites={options.sites} totals={totals} onChoose={(slug) => chooseSite(slug, null)} onStart={() => setStarted(true)} />)}
         <MapEventForm
-          key={formKey} hidden={overview} options={options} today={today} initialPlace={initialSite} picked={picked} onChooseSite={changeSite}
-          suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onPlaceChange={onPlaceChange}
-          spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo} totals={totals}
-          pinMoved={isMoved(place, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
+          key={formKey} hidden={overview} options={options} today={today} initialSite={initialSite} picked={picked} onChooseSite={changeSite}
+          suggestions={suggestions[place] ?? []} onStepChange={onStepChange} onSiteChange={onPlaceChange}
+          spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
+          pinMoved={isMoved(place, parcel)}
           // A mini map of the place: always on desktop, and on phones when the sheet is full screen (covering the big map).
           plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />

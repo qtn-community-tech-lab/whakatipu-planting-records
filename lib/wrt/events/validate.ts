@@ -63,6 +63,7 @@ export const eventInputSchema = z.object({
       .int({ error: "Use a whole number." })
       .positive({ error: "Must be at least 1." })
       .max(MAX_QUANTITY, { error: `At most ${MAX_QUANTITY.toLocaleString("en-NZ")} per species.` }),
+    area: z.number().int().nonnegative().optional(),
   })).min(1, { error: "Add at least one species." }).max(200),
   notes: z.string().max(NOTES_MAX, { error: `Keep notes under ${NOTES_MAX} characters.` }).nullable(),
 });
@@ -106,10 +107,12 @@ export function validateEventInput(raw: unknown, lookups: EventLookups, today: s
 
   const known = new Set(lookups.species.map((s) => s.id));
   const seen = new Set<string>();
+  // A species once per event, or once per drawn area when it has areas.
   v.species.forEach((line, i) => {
+    const key = `${line.area ?? ""}:${line.speciesId}`;
     if (!known.has(line.speciesId)) add(`species.${i}.speciesId`, "That species is not in the register.");
-    else if (seen.has(line.speciesId)) add(`species.${i}.speciesId`, "This species is already listed; add the quantities together.");
-    seen.add(line.speciesId);
+    else if (seen.has(key)) add(`species.${i}.speciesId`, "This species is already listed; add the quantities together.");
+    seen.add(key);
   });
 
   if (Object.keys(errors).length) return { ok: false, errors };
