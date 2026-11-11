@@ -3,8 +3,8 @@
  * The planting-event form for the map view: the same three steps, state and
  * checks as EventForm (useEventForm), laid out for a panel over the map.
  *
- * 1. Where and when: the site and part (Change opens the site chooser) and the date with its
- *    season, confirmed up front; then the site on a mini map and its past plantings. A new
+ * 1. Where and when: the site on a mini map, then under it the site and part (Change opens the
+ *    site chooser) and the date with its season, confirmed up front; then its past plantings. A new
  *    location dropped from the map's + is named here too.
  * 2. What was planted: a search on top, then one row per species (name, Māori
  *    name, how many here before) with a quantity column down the side, like the
@@ -407,9 +407,9 @@ function Notes({ form }: { form: EventFormState }) {
 }
 
 /**
- * Step 1: where and when, confirmed up front. At a site: the site and part (Change opens the chooser),
- * the date and its season, the areas drawn on the map, the site on a mini map, and what was planted
- * there in past seasons. A new location gets its name and pin instead of the place row.
+ * Step 1: where and when, confirmed up front. The site on a mini map first, then under it the site and
+ * part (Change opens the chooser) and the date with its season, the areas drawn on the map, and what was
+ * planted there in past seasons. A new location gets its name and pin instead of the place row.
  */
 function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly: () => void }) {
   const { err } = form;
@@ -420,6 +420,8 @@ function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spot
 
   return (
     <>
+      {/* The map first: where it is; then the place and the date under it. */}
+      {plantedArea}
       {!spot && !form.site && (
         <section className={s.group} aria-label="Site">
           <button type="button" className={s.choosePrompt} onClick={onChooseSite}>
@@ -528,7 +530,6 @@ function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spot
           <ChevronRight size={18} strokeWidth={2.4} />
         </button>
       )}
-      {plantedArea}
       {!spot && form.site && history}
     </>
   );
