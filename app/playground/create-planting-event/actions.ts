@@ -2,8 +2,8 @@
 /**
  * What a site, or one part of it, has had planted, for the planting event page's overview:
  * its most planted trees and its most recent seasons, from the site_area_species and
- * site_area_seasons views; every season planted there, for the form's Where step; and one
- * season's planting events there, for its details; and saving one of those events once edited.
+ * site_area_seasons views; one season's planting events there, for its details; and saving one
+ * of those events once edited.
  */
 import { revalidatePath, updateTag } from "next/cache";
 import { SUPABASE_TAG } from "@/db/cache";
@@ -20,8 +20,6 @@ import { SLUG } from "@/lib/wrt/text";
 
 const TREES_SHOWN = 5;
 const SEASONS_SHOWN = 6;
-/** Every season, as far as anyone needs to look back. */
-const ALL_SEASONS = 200;
 
 export interface SitePlantings {
   trees: { id: string; name: string; italic: boolean; here: number; photo: { src: string } | null }[];
@@ -66,15 +64,6 @@ export async function loadSiteOverview(slug: string, parcelId: string | null): P
   };
 }
 
-/** Every season planted at a site or part, newest first. A part with nothing recorded shows the whole site's. */
-export async function loadSiteSeasonHistory(slug: string, parcelId: string | null): Promise<Omit<SitePlantings, "trees"> | null> {
-  if (!valid(slug, parcelId)) return null;
-  const [first, parts] = await Promise.all([listSiteSeasons(slug, parcelId, ALL_SEASONS), partsPerSeason(slug)]);
-  let seasons = first;
-  const wholeSite = !parcelId || seasons.length === 0;
-  if (parcelId && wholeSite) seasons = await listSiteSeasons(slug, null, ALL_SEASONS);
-  return { seasons: seasons.map((x) => toSeason(x, wholeSite ? parts : undefined)), wholeSite };
-}
 
 export interface SeasonPlantingEvents {
   /** The season's slug, e.g. "autumn-2021": every event's here. */

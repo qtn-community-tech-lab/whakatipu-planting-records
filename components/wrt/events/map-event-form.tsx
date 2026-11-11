@@ -3,8 +3,8 @@
  * The planting-event form for the map view: the same three steps, state and
  * checks as EventForm (useEventForm), laid out for a panel over the map.
  *
- * 1. Where and when: the site on a mini map, then under it the site and part (Change opens the
- *    site chooser) and the date with its season, confirmed up front; then its past plantings. A new
+ * 1. Where and when: the site on a mini map, then under it the site and part (tap to open the
+ *    site chooser) and the date with its season, confirmed up front. A new
  *    location dropped from the map's + is named here too.
  * 2. What was planted: a search on top, then one row per species (name, Māori
  *    name, how many here before) with a quantity column down the side, like the
@@ -51,8 +51,6 @@ export interface MapEventFormProps {
   plantedArea?: ReactNode | undefined;
   /** Step 1's Back: out of the form, to what came before it (the site's overview). Entries are kept. */
   onBack?: (() => void) | undefined;
-  /** Step 1, at a chosen site: what's been planted there before (the page supplies it). */
-  history?: ReactNode | undefined;
   /** The chosen site's most planted species, for step 2. */
   suggestions: SpeciesSuggestion[];
   /** Tells the host which step is showing, so it can size the panel and move the map. */
@@ -181,7 +179,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
     if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
     return [
       ...areas.map((a, i) => card(String(a.id), areaName(a, i), `${areaHa(a)} · ${place}`, input.species.filter((l) => l.area === a.id), { pts: a.pts, pick: a.id })),
-      card("whole", `${place} as a whole`, "Not in a drawn area", input.species.filter((l) => l.area === undefined), { pick: WHOLE_SITE_KEY }),
+      card("whole", "Whole site", `${place}, not in a drawn area`, input.species.filter((l) => l.area === undefined), { pick: WHOLE_SITE_KEY }),
     ].filter((c) => c.rows.length);
   };
   const cards = cardsFor(form.checkedEvent);
@@ -411,10 +409,10 @@ function Notes({ form }: { form: EventFormState }) {
 
 /**
  * Step 1: where and when, confirmed up front. The site on a mini map first, then under it the site and
- * part (Change opens the chooser) and the date with its season, the areas drawn on the map, and what was
- * planted there in past seasons. A new location gets its name and pin instead of the place row.
+ * part (tap to open the chooser) and the date with its season, then the areas drawn on the map. Past
+ * plantings are on the site's page. A new location gets its name and pin instead of the place row.
  */
-function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly: () => void }) {
+function WhereWhen({ form, today, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly: () => void }) {
   const { err } = form;
   // A new location with no site chosen is a new site of its own; it can still be put at one.
   const newSite = !!spot && !form.site;
@@ -438,10 +436,10 @@ function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spot
         <div className={s.picks}>
           <button
             type="button" className={s.pick} onClick={onChooseSite} disabled={!onChooseSite}
-            aria-label={`${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "the site as a whole"}: change the site or part`}
+            aria-label={`${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "whole site"}: change the site or part`}
           >
             <MapPin size={18} strokeWidth={2} aria-hidden="true" />
-            <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "The site as a whole"}</small></span>
+            <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "Whole site"}</small></span>
           </button>
           <When form={form} today={today} />
         </div>
@@ -532,7 +530,6 @@ function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spot
           <ChevronRight size={18} strokeWidth={2.4} />
         </button>
       )}
-      {!spot && form.site && history}
     </>
   );
 }
@@ -567,8 +564,7 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
   const plantsSaid = (n: number) => (n ? `${formatNumber(n)} plants` : "No plants yet");
   /** "0.51 ha · 22 plants". */
   const areaLine = (a: DrawnArea) => `${areaHa(a)} · ${plantsSaid(plantsIn(form.lines, a.id))}`;
-  const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
-  const wholeName = `${form.site ? (partName ? partBesideSite(partName, form.site.name) : form.site.name) : "The site"} as a whole`;
+  const wholeName = "Whole site";
   const wholeLine = `Not in a drawn area · ${plantsSaid(plantsIn(form.lines, undefined))}`;
   const current = areas[at]; // undefined for the site as a whole
   const pickName = whole ? wholeName : current ? areaName(current, at) : "";

@@ -14,7 +14,6 @@
  *   top-bar             back, the site, and the + menu
  *   site-chooser        every site and its parts, with a search: the panel with no site chosen, or opened to change site
  *   site-overview       before the form: what a chosen site has had planted
- *   season-history      the form's Where step: every season planted at the site
  *   past-season         one past season's planting events at the site, opened from a season's row
  *   draw-area/          drawing planted areas, and the bar along the bottom of the map
  *   navigator/          wide screens: the panel's breadcrumb and area list, the map's toolbar and keys
@@ -37,7 +36,6 @@ import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
 import { PartMenu } from "./part-menu";
 import { SiteOverview } from "./site-overview";
-import { SeasonHistory } from "./season-history";
 import { PastSeason } from "./past-season";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
@@ -95,7 +93,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
   const [focus, setFocus] = useState<LngLat | null>(null);
   const site = options.sites.find((x) => x.slug === siteSlug);
   const siteName = site?.name ?? "Choose a site";
-  const partName = site ? site.parts.find((p) => p.id === parcel)?.name ?? "The site as a whole" : undefined;
+  const partName = site ? site.parts.find((p) => p.id === parcel)?.name ?? "Whole site" : undefined;
   // Beside the site's name, the part without the site in front of it: "Morning Star Reserve", not "Arthurs Point - Morning Star Reserve".
   const partShort = partName && site ? partBesideSite(partName, site.name) : partName;
   // The site title (and the form's "Choose a site") opens the chooser in the panel's place: sites with
@@ -533,14 +531,14 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
           // Step 1's Back: the site's overview again. A new location has no overview to go back to.
           onBack={spot ? undefined : () => setStarted(false)}
-          pinMoved={isMoved(siteSlug, parcel)} history={siteSlug ? <SeasonHistory slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} today={today} onOpenSeason={openSeason} /> : undefined}
+          pinMoved={isMoved(siteSlug, parcel)}
           areas={draw.areas} areasListed={wide} plantIn={plantIn} onPlant={plantArea} onRemoveArea={(id) => draw.remove(draw.areas.findIndex((x) => x.id === id))} onDrawArea={newArea} onShowArea={showAreaFromForm} onPlantClose={() => { backTo.current = lastPlanted.current; if (!wide) setSnap("peek"); }} onAreaPlants={setAreaPlants} onAreaFocus={focusArea} onReset={() => { clearEvent(); if (!wide) setSnap("mid"); }}
           // A mini map of the site or location: always on desktop, and on phones when the sheet is full screen (covering the big map).
           plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
         />
       </FormPanel>
       <ConfirmDialog
-        open={!!pendingMove} title={`Move the pin for ${partShort && partShort !== "The site as a whole" ? `${siteName} · ${partShort}` : siteName}?`}
+        open={!!pendingMove} title={`Move the pin for ${partShort && partShort !== "Whole site" ? `${siteName} · ${partShort}` : siteName}?`}
         confirmLabel="Move pin" onConfirm={() => pendingMove && movePin(pendingMove)} onCancel={() => setPendingMove(null)}
       >
         <ul>

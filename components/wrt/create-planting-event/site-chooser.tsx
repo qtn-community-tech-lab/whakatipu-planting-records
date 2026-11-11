@@ -1,7 +1,7 @@
 "use client";
 /**
  * Choose where: a search, then every site as an accordion (Radix, one open at a
- * time, animated) that opens to "The site as a whole" and its parts. A site with
+ * time, animated) that opens to "Whole site" and its parts. A site with
  * no parts is a single row; an open site ends with New sublocation (a pin dropped on the map as a
  * part of it). With no site chosen it is the panel (All sites); otherwise it takes the panel's place while
  * it's open (the phone sheet goes full screen for it), so there is one sheet, never a dialog over it. Escape or × closes it.
@@ -58,17 +58,17 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   }).sort((a, b) => Number(b.site.slug === value.slug) - Number(a.site.slug === value.slug));
 
   const amount = (key: string) => plantsAndSpecies(totals[key]);
-  // Under the heading: what's chosen now, e.g. "Glenorchy, the site as a whole".
+  // Under the heading: what's chosen now, e.g. "Glenorchy, whole site".
   const chosen = sites.find((x) => x.slug === value.slug);
   const part = chosen?.parts.find((p) => p.id === value.parcelId);
-  const now = chosen && `${chosen.name}, ${part ? partBesideSite(part.name, chosen.name) : "the site as a whole"}`;
+  const now = chosen && `${chosen.name}, ${part ? partBesideSite(part.name, chosen.name) : "whole site"}`;
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
     if (site.parts.length === 0) {
       return <ul key={site.slug} className={s.chooserRow}>{option(site.name, site.slug, null, amount(site.slug))}</ul>;
     }
-    const chosenPart = chosenHere ? site.parts.find((p) => p.id === value.parcelId)?.name ?? "The site as a whole" : null;
+    const chosenPart = chosenHere ? site.parts.find((p) => p.id === value.parcelId)?.name ?? "Whole site" : null;
     return (
       <Accordion.Item key={site.slug} value={site.slug} className={s.chooserItem}>
         <Accordion.Header className={s.chooserHeader}>
@@ -86,7 +86,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         </Accordion.Header>
         <Accordion.Content className={s.chooserContent}>
           <ul>
-            {(!q || rankMatches([site], q).length > 0) && option("The site as a whole", site.slug, null, amount(site.slug))}
+            {(!q || rankMatches([site], q).length > 0) && option("Whole site", site.slug, null, amount(site.slug))}
             {parts.map((p) => option(p.name, site.slug, p.id, amount(`${site.slug}/${p.id}`)))}
             {onAddSublocation && !q && (
               <li>

@@ -197,7 +197,7 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
                 <span className={s.areaText}>
                   <b>{partName ?? siteName}</b>
-                  <small>{partName ? siteName : parts.length ? "The site as a whole" : "Site"}</small>
+                  <small>{partName ? siteName : parts.length ? "Whole site" : "Site"}</small>
                 </span>
                 <ChevronUp size={16} strokeWidth={2.4} aria-hidden="true" />
               </PartMenu>

@@ -37,7 +37,7 @@ export function AreaSheet({ area, site, plants, onPlant, onWholeSite }: {
         <ArrowRight size={18} strokeWidth={2.4} aria-hidden="true" />
       </button>
       <button type="button" className={`${f.inlineLink} justify-self-center`} onClick={onWholeSite}>
-        {site ? `Plant at ${site} as a whole instead` : "Plant at the site as a whole instead"}
+        {site ? `Plant at the whole of ${site} instead` : "Plant at the whole site instead"}
       </button>
     </div>
   );

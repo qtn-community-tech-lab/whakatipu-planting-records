@@ -53,7 +53,7 @@ export function SitePartPicker({
 }) {
   // A site with a single part has nothing to choose between.
   const parts = site && site.parts.length > 1 ? site.parts : [];
-  const placeholder = !site ? "Choose a site first" : parts.length === 0 ? "This site has one part" : "The site as a whole";
+  const placeholder = !site ? "Choose a site first" : parts.length === 0 ? "This site has one part" : "Whole site";
 
   return (
     <ComboboxInput

@@ -25,15 +25,15 @@ export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, on
     <nav className={s.crumbs} aria-label="Where you are">
       <button type="button" onClick={onAllSites}>All sites</button>
       {sep}
-      <button type="button" onClick={onSite} aria-label={`${siteName}: the site as a whole, on the map`}>
+      <button type="button" onClick={onSite} aria-label={`${siteName}: whole site, on the map`}>
         <span>{siteName}</span>
       </button>
       {/* A site with no parts is only ever the site as a whole: nothing to choose. */}
       {parts.length > 0 && (
         <>
           {sep}
-          <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} side="bottom" className={s.partCrumb} label={`${partName ?? "The site as a whole"}: change the part`}>
-            <span>{partName ?? "The site as a whole"}</span>
+          <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} side="bottom" className={s.partCrumb} label={`${partName ?? "Whole site"}: change the part`}>
+            <span>{partName ?? "Whole site"}</span>
             <ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" />
           </PartMenu>
         </>
