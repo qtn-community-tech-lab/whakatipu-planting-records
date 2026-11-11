@@ -43,7 +43,7 @@ export default async function EditSitePage({
     readSite(slug),
     listPlantingAreas(slug),
   ]);
-  if (!site) notFound();
+  if (!site || site.deactivated_at) notFound();
 
   async function onSubmit(
     input: EditSiteInput,

@@ -34,8 +34,9 @@ describe.skipIf(!ready)("Supabase matches the workbook import", { timeout: 120_0
 
   it("sites list and every site page", async () => {
     const [a, b] = await Promise.all([workbook.places(), db.places()]);
-    expect(b.map((p) => [p.item.slug, p.item.name, p.item.siteClasses, p.split, p.span.first.slug, p.span.last.slug, p.speciesCount]))
-      .toEqual(a.map((p) => [p.item.slug, p.item.name, p.item.siteClasses, p.split, p.span.first.slug, p.span.last.slug, p.speciesCount]));
+    // Site names are editable; their historical identities and planting figures must stay intact.
+    expect(b.map((p) => [p.item.slug, p.item.siteClasses, p.split, p.span.first.slug, p.span.last.slug, p.speciesCount]))
+      .toEqual(a.map((p) => [p.item.slug, p.item.siteClasses, p.split, p.span.first.slug, p.span.last.slug, p.speciesCount]));
     for (const { item } of a) {
       const [x, y] = await Promise.all([workbook.place(item.slug), db.place(item.slug)]);
       expect(y!.place.parcels.map((p) => [part(p.id, p.name), p.name, p.siteClass])).toEqual(x!.place.parcels.map((p) => [part(p.id, p.name), p.name, p.siteClass]));

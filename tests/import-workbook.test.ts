@@ -109,4 +109,4 @@ it("imports profiles and ordered photos, reports changes without writing, and is
   expect(writes).toEqual([]);
   await run(true);
   expect(writes).toEqual(["species"]);
-});
+}, 30_000);

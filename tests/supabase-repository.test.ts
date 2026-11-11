@@ -11,12 +11,12 @@ vi.mock("node:fs", () => ({
 }));
 
 describe("Supabase repository without workbook files", () => {
-  it("reads records and season checks entirely from the database", async () => {
+  it.each([null, "2026-11-11T00:00:00Z"])("preserves database history when the site deactivation timestamp is %s", async (deactivated_at) => {
     const rows: Record<string, unknown[]> = {
       seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
       species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", profile: {}, photos: [] }],
       sites: [
-        { slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false },
+        { slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false, deactivated_at },
         { slug: "new-site", name: "New site", description: "", is_scheme: false },
         { slug: "empty-site", name: "Empty site", description: "", is_scheme: false },
       ],
@@ -35,6 +35,10 @@ describe("Supabase repository without workbook files", () => {
     };
     const fetch = vi.fn(async (input: RequestInfo | URL) => {
       const table = new URL(input instanceof Request ? input.url : input.toString()).pathname.split("/").at(-1)!;
+      if (table === "sites") {
+        const url = new URL(input instanceof Request ? input.url : input.toString());
+        expect(url.searchParams.has("deactivated_at")).toBe(false);
+      }
       if (!(table in rows)) throw new Error(`Unexpected table: ${table}`);
       return new Response(JSON.stringify(rows[table]), { headers: { "Content-Type": "application/json" } });
     });
@@ -72,6 +76,10 @@ describe("Supabase repository without workbook files", () => {
       expect(result.places[0]?.item.slug).toBe(term === "Empty site" ? "empty-site" : "new-site");
     }
     expect((await queries.overview()).split.total).toBe(12);
+    expect((await queries.place("reserve"))!.split.total).toBe(12);
+    expect((await queries.records({ place: "reserve" })).rows).toHaveLength(1);
+    expect((await queries.species("kowhai"))!.split.total).toBe(12);
+    expect((await queries.season("autumn-2030"))!.split.total).toBe(12);
     // Historical rankings still describe recorded planting, rather than the register.
     expect((await queries.places()).map((p) => p.item.slug)).toEqual(["reserve"]);
     expect(locationsForSites([{

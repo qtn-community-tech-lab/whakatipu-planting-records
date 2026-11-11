@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
-import { notFound } from "next/navigation";
+import { revalidatePath, updateTag } from "next/cache";
+import { SUPABASE_TAG } from "@/db/cache";
+import type { SiteSubmitResult } from "@/db/types";
+import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { notFound, redirect } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
@@ -17,10 +23,9 @@ import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 import Link from "next/link";
-import { readSite } from "@/db/queries/sites";
+import { readSite, deactivateSite } from "@/db/queries/sites";
 import { isAuthenticated } from "@/db/queries/access";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
 
@@ -47,12 +52,36 @@ export default async function SitePage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const [site, d, authenticated] = await Promise.all([readSite(slug), getWrt().place(slug), isAuthenticated()]);
   if (!site) notFound();
-  const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  async function onDeactivate(): Promise<SiteSubmitResult> {
+    "use server";
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate sites." };
+    try {
+      const { data, error } = await deactivateSite(slug);
+      if (error?.code === "42501") return { error: "You need to sign in with a staff account to deactivate sites." };
+      if (error || !data) return { error: "The site could not be deactivated. Please try again." };
+    } catch {
+      return { error: "The site could not be deactivated. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/sites/${slug}`);
+  }
+
+  const status = site.deactivated_at ? <Alert role="status">
+    <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
+    <AlertDescription>
+      <p>This site is unavailable for new planting events. Its historical records and recorded quantities are retained.</p>
+      <Link href="/sites?state=deactivated" className="cn-link">View deactivated sites</Link>
+    </AlertDescription>
+  </Alert> : null;
+  const editButton = authenticated && !site.deactivated_at ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const actions = editButton ? <DeactivateSite name={site.name} onDeactivate={onDeactivate}>{editButton}</DeactivateSite> : null;
   const savedNotice = first(sp.saved) === "1" ? <Alert role="status"><AlertTitle>Changes saved</AlertTitle><AlertDescription>The site and its areas have been saved.</AlertDescription></Alert> : null;
   if (!d || !d.split.records)
     return (
       <>
-        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={editButton} />
+        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={actions} />
+        {status}
         {savedNotice}
         <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
       </>
@@ -92,13 +121,16 @@ export default async function SitePage({ params, searchParams }: Props) {
         back={{ href: "/sites", label: "All sites" }}
         eyebrow={eyebrow}
         title={title}
-        aside={editButton}
+        aside={actions}
         lead={
           place.isScheme
             ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
             : site.description.trim() || undefined
         }
       />
+
+      {status}
+      {savedNotice}
 
       {savedNotice}
 

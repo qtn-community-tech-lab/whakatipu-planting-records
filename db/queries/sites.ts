@@ -3,23 +3,25 @@ import { db } from "@/db/client";
 import { areaPins, areaTotals, siteTotals } from "./views";
 import type { CreateSiteInput, EditSiteInput, CreatePlantingAreaInput, EditPlantingAreaInput } from "@/db/types";
 
-/** The active register, including sites without planting history. */
-export async function listSites() {
-  const { data } = await (await db())
+/** The register by lifecycle state, including sites without planting history. */
+export async function listSites(state: "active" | "deactivated" = "active") {
+  const query = (await db())
     .from("sites")
     .select("slug, name, is_scheme")
-    .is("deactivated_at", null)
-    .order("name")
-    .throwOnError();
+    .order("name");
+  const { data } = await (
+    state === "deactivated"
+      ? query.not("deactivated_at", "is", null)
+      : query.is("deactivated_at", null)
+  ).throwOnError();
   return data;
 }
 
 export async function readSite(slug: string) {
   const { data } = await (await db())
     .from("sites")
-    .select("slug, name, description, is_scheme, updated_at")
+    .select("slug, name, description, is_scheme, updated_at, deactivated_at")
     .eq("slug", slug)
-    .is("deactivated_at", null)
     .maybeSingle()
     .throwOnError();
   return data;
@@ -87,7 +89,9 @@ export async function updatePlantingArea(site: string, slug: string, values: Edi
 /** Every site with recorded plants, most first, or just the `limit` most planted. */
 export async function listSiteTotals(limit?: number) {
   const query = siteTotals(await db());
-  const { data } = await (limit === undefined ? query : query.limit(limit)).throwOnError();
+  const { data } = await (
+    limit === undefined ? query : query.limit(limit)
+  ).throwOnError();
   return data;
 }
 
@@ -103,4 +107,14 @@ export async function listPlantingAreaPins(site?: string) {
   const query = areaPins(await db());
   const { data } = await (site ? query.eq("site", site) : query).throwOnError();
   return data;
+}
+
+/** Preserve the site key and every historical association. */
+export async function deactivateSite(slug: string) {
+  return (await db())
+    .from("sites")
+    .update({ deactivated_at: new Date().toISOString() })
+    .eq("slug", slug)
+    .select("slug")
+    .single();
 }
