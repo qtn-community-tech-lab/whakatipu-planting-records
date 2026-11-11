@@ -6,6 +6,7 @@
  * keys); every label shown is a name, as everywhere else in the app.
  */
 import "server-only";
+import { listSites } from "@/db/queries/sites";
 import { listSpeciesForPlanting } from "@/db/queries/species";
 import { getWrtAll } from "../server";
 import { searchKey } from "../text";
@@ -39,17 +40,19 @@ export interface EventFormOptions {
 
 /**
  * Uses unscoped data: available sites and species must not depend on the
- * reader's review switch. New lines use the full active species register,
- * including entries with no planting history; history lookups keep retired ones.
+ * reader's review switch. New events use active sites and species,
+ * including entries with no planting history; historical lookups retain deactivated ones.
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {
-  const [{ places }, species] = await Promise.all([
+  const [{ places }, species, sites] = await Promise.all([
     getWrtAll().lookups(),
     listSpeciesForPlanting(),
+    listSites(),
   ]);
+  const activeSites = new Set(sites.map((site) => site.slug));
   return {
     sites: places
-      .filter((p) => !p.isScheme && !p.deactivatedAt)
+      .filter((p) => !p.isScheme && activeSites.has(p.slug))
       .map((p) => ({
         slug: p.slug,
         name: p.name,

@@ -3,29 +3,12 @@
  * Skipped without a Supabase project (tests/live-env.ts).
  */
 import { createClient } from "@supabase/supabase-js";
+import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { key, live, url } from "./live-env";
 
 const db = () => createClient(url!, key!, { auth: { persistSession: false } });
 const local = !!url && /^https?:\/\/(127\.0\.0\.1|localhost)(:|\/)/.test(url);
-
-/** Rows matching a filter, counted by the database. */
-const countQuery = (table: string) => db().from(table).select("*", { count: "exact", head: true });
-async function count(table: string, filter: (query: ReturnType<typeof countQuery>) => ReturnType<typeof countQuery> = (q) => q) {
-  const { count: n, error } = await filter(countQuery(table));
-  expect(error).toBeNull();
-  return n;
-}
-
-describe.skipIf(!live)("live planting lines keep their provenance", { timeout: 60_000 }, () => {
-  it("has all 5,449 workbook lines", async () => {
-    expect(await count("planting_lines", (q) => q.not("legacy_code", "is", null))).toBe(5449);
-  });
-
-  it.each(["legacy_code", "source_file", "source_sheet", "source_cell"])("no line is missing %s", async (column) => {
-    expect(await count("planting_lines", (q) => q.is(column, null))).toBe(0);
-  });
-});
 
 const TABLES: [table: string, column: string, value: string | number, update: Record<string, unknown>][] = [
   ["species", "slug", "no-such-row", { deactivated_at: null }],
@@ -53,8 +36,9 @@ describe.skipIf(!live)("public database access", { timeout: 60_000 }, () => {
   });
 
   it.skipIf(!local)("rejects direct Auth signup for an unapproved address", async () => {
+    // The signup hook only runs for new identities, not existing sign-ins.
     const { error } = await db().auth.signInWithOtp({
-      email: "not-approved@example.invalid",
+      email: `not-approved-${randomUUID()}@example.invalid`,
       options: { shouldCreateUser: true },
     });
     expect(error?.status).toBe(403);

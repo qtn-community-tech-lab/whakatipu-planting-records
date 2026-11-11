@@ -24,6 +24,9 @@ npm run supabase:start
 On later starts, only pending migrations run; existing data is kept. You do not need to paste each file into
 SQL Editor. This creates the schema and seasons; the workbook data is imported in step 3.
 
+After changing `supabase/config.toml`, run `npm run supabase:stop` followed by `npm run supabase:start`
+to reload Auth settings and hooks. Applying database migrations alone does not reload the running Auth service.
+
 ### 2. Configure the local environment
 
 Copy the template if you do not already have `.env.local`:
@@ -74,8 +77,9 @@ npm run import-pins                 # preview changes
 npm run import-pins -- --write
 ```
 
-The tracked CSVs supply the history; no original spreadsheet download is needed. The workbook import checks
-each season against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
+[Client documentation](#client-documentation) before running the workbook import. It checks each season
+against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
 
 ### 5. Start the app
 
@@ -112,8 +116,14 @@ and imported data in SQL Editor.
 | --------------------------------------- | ------------------------------------------------------------------------- |
 | [Supabase](supabase/README.md)          | Migrations, import behaviour, SQL checks and future hosted database setup |
 | [Database reads](db/README.md)          | Query conventions and generating TypeScript types from the local schema   |
-| [Research and planning](docs/README.md) | Source-data discovery, plans and application reference guides             |
 | [Canopy](styles/canopy/README.md)       | Vendored design system                                                    |
+
+### Client documentation
+
+The client documentation and workbook-derived source files are excluded from Git. To use them locally,
+download or copy the contents of the [shared Google Drive folder](https://drive.google.com/drive/folders/13_jeLGxdwGMCy4ZJUO27X-KoThnqbZ6M?usp=share_link)
+into a `docs/` directory at the repository root. Git ignores that directory, so its contents will not be
+committed or pushed.
 
 ## Deployment
 
@@ -156,7 +166,7 @@ the app does not need a Resend SDK or API key.
 ## Architecture
 
 ```text
-docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
+local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
  data/site-locations.json     → scripts/import-pins.ts     → Supabase
                                                              ↓
                                                      db/repository.ts
@@ -171,9 +181,9 @@ docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
 The live app reads only Supabase. `SupabaseWrtRepository` implements `WrtRepository` for the shared query layer;
 the seasons pages also read database views through `db/queries`.
 
-CSV parsing and validation live under `scripts/workbook/` for the one-off workbook import. The tracked CSV files
-remain as import inputs and offline test fixtures. `tests/supabase-parity.test.ts` checks live database figures
-against that import fixture, including season-total checks. The app never reads these files at runtime.
+CSV parsing and validation live under `scripts/workbook/` for the one-off workbook import. Client source CSVs
+must be restored locally before importing. `tests/supabase-parity.test.ts` checks live database figures against
+the import fixture, including season-total checks. The app never reads source files at runtime.
 
 ## Design system
 
@@ -193,8 +203,8 @@ display only. Delete it once the species register has its own display-name colum
 
 ## Site reference maps
 
-The Sites map and individual site pages show approximate public reference locations across 29 historical site groups (50 points). The October 2026 expansion researched the next 20 groups, mapped 18 of them and added KingsView School; Skippers–DOC and Kingston remain unresolved. See [location research and omissions](docs/site-location-research.md). `data/site-locations.json` keeps these points separate from the planting ledger, with explicit latitude/longitude, location and coordinate source URLs, derivation notes and a checked date. Points come from WRT's historic event map, council geometry or public landmarks; they do not claim historical planting boundaries. The sub-location audit added 12 references within existing groups, improved the Lake Hayes South and Pavilion points, and separated seven previously aggregated marker counts. Lake Hayes, Jardine Park, Arthurs Point, Feehly Hill, Arrowtown, Frankton and the dispersed Gorge Road group have multiple points. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. Whole-site references use the group count; references for identified parts use distinct registered parcel IDs so quantities are not duplicated or assigned to unmapped parts. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
+The Sites map and individual site pages show approximate public reference locations across 29 historical site groups (50 points). `data/site-locations.json` keeps these points separate from the planting ledger, with explicit latitude/longitude, location and coordinate source URLs, derivation notes and a checked date. Points come from WRT's historic event map, council geometry or public landmarks; they do not claim historical planting boundaries. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. Whole-site references use the group count; references for identified parts use distinct registered parcel IDs so quantities are not duplicated or assigned to unmapped parts. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
 
 ## Species photo guide
 
-Open **Species → Top 20 photo guide** for hosted reference photos of the twenty most planted species. Each species has three photos; thumbnails appear in the main Species list, and the full set appears on its detail page, with photographer credits, licences and source links. See [the source and maintenance notes](docs/species-photo-guide.md).
+Open **Species → Top 20 photo guide** for hosted reference photos of the twenty most planted species. Each species has three photos; thumbnails appear in the main Species list, and the full set appears on its detail page, with photographer credits, licences and source links.

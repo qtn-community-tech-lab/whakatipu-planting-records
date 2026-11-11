@@ -8,8 +8,8 @@ import {
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unstable_rethrow } from "next/navigation";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import Image from "next/image";
 import { FormField } from "@/components/forms/form-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -137,7 +137,7 @@ const statusOptions = [
 ] as const;
 
 /** New and edit pages supply defaults to this single form. */
-export function SpeciesForm({
+export function SpeciesForm<T extends string>({
   values,
   onSubmit,
   submitLabel = "Save species",
@@ -146,7 +146,7 @@ export function SpeciesForm({
   values?: SpeciesEdit;
   onSubmit: (species: SpeciesInput) => Promise<SpeciesSubmitResult | void>;
   submitLabel?: string;
-  cancelHref?: Route;
+  cancelHref?: Route<T>;
 }) {
   const form = useForm<SpeciesFormValues>({
     resolver: zodResolver(speciesFormSchema),
@@ -370,90 +370,93 @@ export function SpeciesForm({
               Add image URLs and photo credits. The first image is the primary image.
             </FieldDescription>
             <FieldGroup>
-              {photos.fields.map((photo, index) => (
-                <Card
-                  key={photo.id}
-                  title={`Image ${index + 1}`}
-                  action={index === 0 ? <Badge tone="brand">Primary image</Badge> : undefined}
-                  className="wrt-species-image"
-                >
-                  <FieldSet aria-label={`Image ${index + 1}`}>
-                    <div className="wrt-species-image__layout">
-                      <FieldGroup>
-                        <FormField
-                          control={form.control}
-                          name={`photos.${index}.src`}
-                          label="Image URL"
-                          render={(field, accessibility) => (
-                            <Input
-                              {...field}
-                              {...accessibility}
-                              type="url"
-                              maxLength={INPUT_LIMITS.url}
-                              required
-                            />
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
-                          name={`photos.${index}.attribution`}
-                          label="Photo attribution"
-                          render={(field, accessibility) => (
-                            <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
-                          )}
-                        />
-                        <div className="flex flex-wrap gap-2">
-                          <Button
-                            type="button"
-                            variant="soft"
-                            disabled={index === 0}
-                            onClick={() => photos.move(index, index - 1)}
-                            aria-label={`Move image ${index + 1} up`}
-                          >
-                            Move up
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="soft"
-                            disabled={index === photos.fields.length - 1}
-                            onClick={() => photos.move(index, index + 1)}
-                            aria-label={`Move image ${index + 1} down`}
-                          >
-                            Move down
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="soft"
-                            onClick={() => photos.remove(index)}
-                          >
-                            Remove image {index + 1}
-                          </Button>
-                        </div>
-                      </FieldGroup>
-                      <div className="wrt-species-image__preview">
-                        {speciesFormSchema.shape.photos.element.shape.src.safeParse(
-                          photoValues[index]?.src,
-                        ).success ? (
-                          <Image
-                            src={photoValues[index]?.src ?? ""}
-                            fill
-                            sizes="(min-width: 640px) 240px, calc(100vw - 80px)"
-                            unoptimized
-                            alt={`Image ${index + 1} preview`}
-                            className="object-contain"
+              {photos.fields.map((photo, index) => {
+                const preview = speciesFormSchema.shape.photos.element.shape.src.safeParse(
+                  photoValues[index]?.src,
+                );
+                return (
+                  <Card
+                    key={photo.id}
+                    title={`Image ${index + 1}`}
+                    action={index === 0 ? <Badge tone="brand">Primary image</Badge> : undefined}
+                    className="wrt-species-image"
+                  >
+                    <FieldSet aria-label={`Image ${index + 1}`}>
+                      <div className="wrt-species-image__layout">
+                        <FieldGroup>
+                          <FormField
+                            control={form.control}
+                            name={`photos.${index}.src`}
+                            label="Image URL"
+                            render={(field, accessibility) => (
+                              <Input
+                                {...field}
+                                {...accessibility}
+                                type="url"
+                                maxLength={INPUT_LIMITS.url}
+                                required
+                              />
+                            )}
                           />
-                        ) : (
-                          <Empty>
-                            <EmptyDescription>
-                              Add an image URL to see a preview.
-                            </EmptyDescription>
-                          </Empty>
-                        )}
+                          <FormField
+                            control={form.control}
+                            name={`photos.${index}.attribution`}
+                            label="Photo attribution"
+                            render={(field, accessibility) => (
+                              <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} />
+                            )}
+                          />
+                          <div className="flex flex-wrap gap-2">
+                            <Button
+                              type="button"
+                              variant="soft"
+                              disabled={index === 0}
+                              onClick={() => photos.move(index, index - 1)}
+                              aria-label={`Move image ${index + 1} up`}
+                            >
+                              Move up
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="soft"
+                              disabled={index === photos.fields.length - 1}
+                              onClick={() => photos.move(index, index + 1)}
+                              aria-label={`Move image ${index + 1} down`}
+                            >
+                              Move down
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="soft"
+                              onClick={() => photos.remove(index)}
+                            >
+                              Remove image {index + 1}
+                            </Button>
+                          </div>
+                        </FieldGroup>
+                        <div className="wrt-species-image__preview">
+                          {preview.success ? (
+                            <Image
+                              src={preview.data}
+                              fill
+                              sizes="(min-width: 640px) 240px, calc(100vw - 80px)"
+                              unoptimized
+                              alt={`Image ${index + 1} preview`}
+                              className="object-contain"
+                            />
+                          ) : (
+                            <Empty>
+                              <EmptyDescription>
+                                Add an image URL to see a preview.
+                              </EmptyDescription>
+                            </Empty>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </FieldSet>
-                </Card>
-              ))}
+                    </FieldSet>
+                  </Card>
+                );
+              })}
               <Button
                 type="button"
                 variant="secondary"

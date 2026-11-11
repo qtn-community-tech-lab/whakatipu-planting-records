@@ -11,7 +11,6 @@ it("preserves the existing slug even if an update caller supplies a different on
   const query = {
     update,
     eq: vi.fn().mockReturnThis(),
-    is: vi.fn().mockReturnThis(),
     select: vi.fn().mockReturnThis(),
     single: vi.fn().mockResolvedValue({ data: { slug: "existing-species" }, error: null }),
   };
@@ -31,7 +30,7 @@ it("preserves the existing slug even if an update caller supplies a different on
 it.each([true, false])("leaves the stored decision flag untouched when the caller submits %s", async (needs_decision) => {
   const query = {
     update: vi.fn().mockReturnThis(), eq: vi.fn().mockReturnThis(),
-    is: vi.fn().mockReturnThis(), select: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
     single: vi.fn().mockResolvedValue({ data: { slug: "existing-species" }, error: null }),
   };
   mocks.db.mockResolvedValue({ from: vi.fn().mockReturnValue(query) });

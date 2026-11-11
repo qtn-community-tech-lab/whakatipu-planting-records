@@ -142,7 +142,7 @@ async function load(db: Db): Promise<Loaded> {
   });
   records.sort((a, b) => seasonBySlug.get(a.seasonSlug)!.order - seasonBySlug.get(b.seasonSlug)!.order || a.id.localeCompare(b.id));
 
-  // Keep every active site and area, including those awaiting their first planting.
+  // Keep historical site identities, including deactivated sites, and active areas.
   // Classes are ranked by recorded plants; header spellings remain aliases.
   const places: Place[] = siteRows.data
     .map((site) => {

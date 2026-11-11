@@ -46,6 +46,9 @@ next-env.d.ts
 # local agent dev servers
 /.next-*/
 
+# Client documentation and workbook-derived data (restore locally from RESTORE_DOCS.md)
+/docs/
+
 # planting events saved locally until Supabase is connected (lib/wrt/events/json-event-store.ts)
 /data/local/
 
