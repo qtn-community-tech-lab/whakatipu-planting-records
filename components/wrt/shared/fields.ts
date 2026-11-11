@@ -17,9 +17,6 @@ const PLAIN = { autoComplete: "off", autoCorrect: "off", spellCheck: false } as 
 /** A name being typed (a location, an area): each word starts with a capital. */
 export const NAME_FIELD = { ...PLAIN, autoCapitalize: "words", "data-1p-ignore": true, "data-lpignore": "true" } as const;
 
-/** A search box: as typed, and the keyboard's Enter key reads "Search". */
-export const SEARCH_FIELD = { ...PLAIN, autoCapitalize: "none", enterKeyHint: "search" } as const;
-
 /** A whole number (a quantity, a year). Text with the number pad, not type="number": that one
     changes under a scroll wheel and lets "e", "+", "-" and "." through. Keep only `digits` of what's typed. */
 export const NUMBER_FIELD = { type: "text", inputMode: "numeric", pattern: "[0-9]*", autoComplete: "off" } as const;
