@@ -1,6 +1,6 @@
 /** Sites and their areas. */
 import { db } from "@/db/client";
-import { areaPins, areaTotals, placeSeasons, placeSpecies, siteTotals } from "./views";
+import { areaPins, areaTotals, siteAreaSeasons, siteAreaSpecies, siteTotals } from "./views";
 import type { CreateSiteInput, EditSiteInput } from "@/db/types";
 
 /** The active register, including sites without planting history. */
@@ -65,7 +65,7 @@ export async function listPlantingAreaPins(site?: string) {
 
 /** A site's `limit` most planted species, or one area's (by WRT number). */
 export async function listSiteSpecies(site: string, wrtNumber: string | null, limit: number) {
-  const query = placeSpecies(await db())
+  const query = siteAreaSpecies(await db())
     .eq("site", site)
     .lte("rank", limit);
   const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query.is("area", null)).throwOnError();
@@ -74,7 +74,7 @@ export async function listSiteSpecies(site: string, wrtNumber: string | null, li
 
 /** A site's `limit` most recent seasons with plants, or one area's (by WRT number), newest first. */
 export async function listSiteSeasons(site: string, wrtNumber: string | null, limit: number) {
-  const query = placeSeasons(await db())
+  const query = siteAreaSeasons(await db())
     .eq("site", site)
     .gt("plants", 0)
     .limit(limit);

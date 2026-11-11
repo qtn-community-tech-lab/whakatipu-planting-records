@@ -62,16 +62,16 @@ export const seasonSites = (db: Db) =>
     .order("rank");
 
 /** Species at each site and each of its areas, most planted first. Whole-site rows have no area. */
-export const placeSpecies = (db: Db) =>
+export const siteAreaSpecies = (db: Db) =>
   db
-    .from("place_species")
+    .from("site_area_species")
     .select("site, area, wrt_number, species, register_code, scientific_name, common_name, maori_name, plants, rank")
     .order("rank");
 
 /** Plants in each season at each site and each of its areas, newest season first. Whole-site rows have no area. */
-export const placeSeasons = (db: Db) =>
+export const siteAreaSeasons = (db: Db) =>
   db
-    .from("place_seasons")
+    .from("site_area_seasons")
     .select("site, area, wrt_number, season, season_label, season_order, plants")
     .order("season_order", { ascending: false });
 
