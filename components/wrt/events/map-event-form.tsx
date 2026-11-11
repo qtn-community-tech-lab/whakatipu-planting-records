@@ -110,9 +110,9 @@ const areaHa = (a: DrawnArea) => formatHectares(hectares(a.pts));
 /** What an area is called: its name, or "Area 2". */
 const areaName = (a: DrawnArea, i: number) => a.name || `Area ${i + 1}`;
 /** With drawn areas, plants can also go to the site as a whole: in no area (a line with no `area`). */
-export const SITE_AS_A_WHOLE = "site";
+export const WHOLE_SITE_KEY = "site";
 /** Where a list of plants goes: a drawn area (its id), or the site as a whole. */
-export type AreaPick = number | typeof SITE_AS_A_WHOLE;
+export type AreaPick = number | typeof WHOLE_SITE_KEY;
 /** Plants listed in one area so far (or, with no id, for the site as a whole), from the form's lines. */
 const plantsIn = (lines: EventFormState["lines"], id: number | undefined) => lines.reduce((t, l) => t + (l.area === id && l.speciesId ? Number(l.quantity) || 0 : 0), 0);
 const NO_SPOT: SpotInfo = { name: "", asPart: false };
@@ -122,7 +122,7 @@ const NO_AREAS: readonly DrawnArea[] = [];
 export type PlantTotals = Record<string, { plants: number; species: number }>;
 
 /** "1,280 plants · 30 species", or "No plants recorded yet". */
-export function plantsLine(x?: { plants: number; species: number }) {
+export function plantsAndSpecies(x?: { plants: number; species: number }) {
   return x?.plants ? `${formatNumber(x.plants)} plants · ${x.species} species` : "No plants recorded yet";
 }
 
@@ -182,7 +182,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
     if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
     return [
       ...areas.map((a, i) => card(String(a.id), areaName(a, i), `${areaHa(a)} · ${place}`, input.species.filter((l) => l.area === a.id), { pts: a.pts, pick: a.id })),
-      card("whole", `${place} as a whole`, "Not in a drawn area", input.species.filter((l) => l.area === undefined), { pick: SITE_AS_A_WHOLE }),
+      card("whole", `${place} as a whole`, "Not in a drawn area", input.species.filter((l) => l.area === undefined), { pick: WHOLE_SITE_KEY }),
     ].filter((c) => c.rows.length);
   };
   const cards = cardsFor(form.checkedEvent);
@@ -559,7 +559,7 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
     if (added) setPicked(added.id);
   }
   // The site as a whole is only a choice beside drawn areas; on its own, every plant is for the site anyway.
-  const whole = picked === SITE_AS_A_WHOLE && areas.length > 0;
+  const whole = picked === WHOLE_SITE_KEY && areas.length > 0;
   const area = whole ? undefined : typeof picked === "number" && areas.some((a) => a.id === picked) ? picked : areas[0]?.id;
   const at = areas.findIndex((a) => a.id === area);
   const plantsSaid = (n: number) => (n ? `${formatNumber(n)} plants` : "No plants yet");
@@ -660,14 +660,14 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
         // Where these plants went: one chunky dropdown, the area's outline (or the site's pin), name and plants;
         // the other areas, the site as a whole, and Add area in the list it opens. The event's total adds them all up.
         <AreaPicker
-          className="mb-2" label="Where the plants went" value={whole ? SITE_AS_A_WHOLE : String(area)}
+          className="mb-2" label="Where the plants went" value={whole ? WHOLE_SITE_KEY : String(area)}
           buttonLabel={`Planted ${whole ? "at" : "area:"} ${pickName}, ${whole ? wholeLine : current ? areaLine(current) : ""}. Change where`}
-          onChange={(key) => setPicked(key === SITE_AS_A_WHOLE ? SITE_AS_A_WHOLE : Number(key))}
+          onChange={(key) => setPicked(key === WHOLE_SITE_KEY ? WHOLE_SITE_KEY : Number(key))}
           footer={onDrawArea && { label: "Draw area", onClick: onDrawArea, icon: <Pentagon size={18} strokeWidth={2.2} aria-hidden="true" /> }}
           options={[
             ...areas.map((a, i) => ({ key: String(a.id), title: areaName(a, i), subtitle: areaLine(a), lead: (size: number) => <AreaShape pts={a.pts} size={size} onMap /> })),
             // Plants that went in across the site, not in one of the drawn areas.
-            { key: SITE_AS_A_WHOLE, title: wholeName, subtitle: wholeLine, lead: (size: number) => <span className={s.siteTile} style={{ width: size, height: size, borderRadius: Math.round(size * 0.27) }}><MapPin size={Math.round(size * 0.46)} strokeWidth={2.2} aria-hidden="true" /></span> },
+            { key: WHOLE_SITE_KEY, title: wholeName, subtitle: wholeLine, lead: (size: number) => <span className={s.siteTile} style={{ width: size, height: size, borderRadius: Math.round(size * 0.27) }}><MapPin size={Math.round(size * 0.46)} strokeWidth={2.2} aria-hidden="true" /></span> },
           ]}
         />
       )}

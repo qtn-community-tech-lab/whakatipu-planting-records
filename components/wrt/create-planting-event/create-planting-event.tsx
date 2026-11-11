@@ -25,7 +25,7 @@
 import { ChevronDown, MapPin } from "lucide-react";
 import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { MapEventForm, SITE_AS_A_WHOLE, plantsLine, type AreaPick, type MapEventFormProps, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
+import { MapEventForm, WHOLE_SITE_KEY, plantsAndSpecies, type AreaPick, type MapEventFormProps, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { MAP_EVENT_STEPS, STEP } from "@/lib/wrt/events/steps";
@@ -461,7 +461,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
         wide={wide} open container={screen} snap={snap} onSnap={snapTo} label="New planting event" locked={!!draw.draft}
         title={sheetArea ? sheetArea.name || "Planted area" : where.title}
         subtitle={sheetArea ? (site ? `Planted area at ${siteName}` : "Planted area")
-          : siteHeader ? `${partShort} · ${plantsLine(totals[parcel ? `${siteSlug}/${parcel}` : siteSlug])}` : where.sub}
+          : siteHeader ? `${partShort} · ${plantsAndSpecies(totals[parcel ? `${siteSlug}/${parcel}` : siteSlug])}` : where.sub}
         onTitle={wide || draw.draft || sheetArea ? undefined : toggleChooser} titleOpen={choosing} titleIcon={allSites || siteHeader}
         // Wide: the breadcrumb names the site and part, so in the form the title only shows when it's something else
         // (an area, a new location). With no site, and on a site's overview, it heads the panel as on phones.
@@ -483,7 +483,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           <AreaSheet
             area={sheetArea} site={site ? (parcel && partShort ? partShort : siteName) : undefined} plants={areaPlants[sheetArea.id] ?? 0}
             onPlant={() => plantArea(sheetArea.id)}
-            onWholeSite={() => plantArea(SITE_AS_A_WHOLE)}
+            onWholeSite={() => plantArea(WHOLE_SITE_KEY)}
           />
         )}
         {season && siteSlug && !choosing && !sheetArea && (

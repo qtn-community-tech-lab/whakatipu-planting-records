@@ -7,7 +7,7 @@
 import { ArrowRight, ArrowUpRight, MapPinned } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { sitePlantings } from "@/app/playground/create-planting-event/actions";
+import { loadSiteOverview } from "@/app/playground/create-planting-event/actions";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { formatNumber } from "@/lib/wrt/text";
 import { FigureList } from "@/components/wrt/shared/figure-list";
@@ -36,7 +36,7 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
   onUndoPin?: (() => void) | undefined;
 }) {
   // The history couldn't be read: it says so (an event can still be added), and Try again asks once more.
-  const { loading, failed, data: o, reload: retry } = useLoad(`${slug}/${parcelId ?? ""}`, () => sitePlantings(slug, parcelId));
+  const { loading, failed, data: o, reload: retry } = useLoad(`${slug}/${parcelId ?? ""}`, () => loadSiteOverview(slug, parcelId));
   // The header already names the part; only say so when it falls back to the whole site.
   const fellBack = !!parcelId && !!partName && !!o?.wholeSite;
 

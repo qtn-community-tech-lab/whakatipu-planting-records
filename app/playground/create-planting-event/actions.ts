@@ -9,10 +9,10 @@ import { revalidatePath, updateTag } from "next/cache";
 import { SUPABASE_TAG } from "@/db/cache";
 import { isAuthenticated } from "@/db/queries/access";
 import {
-  createPlantingLines, deactivatePlantingLines, listPlantingEventNotes, listPlantingLines, listSitePlantingLines,
+  createPlantingLines, deactivatePlantingLines, listPlantingEventNotes, listPlantingEventLines, listSiteSeasonPlantingLines,
   readPlantingEventSeason, updatePlantingEvent, updatePlantingLine,
 } from "@/db/queries/plantings";
-import { listSiteAreaSeasons, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
+import { listPlantedAreasBySeason, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
 import { plantingEventEditSchema, type PlantingEventEditResult } from "@/db/types";
 import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
@@ -39,12 +39,12 @@ const toSeason = (x: { season: string | null; season_label: string | null; plant
 /** How many of a site's parts had plants in each season, by season slug. */
 async function partsPerSeason(slug: string) {
   const out = new Map<string, number>();
-  for (const x of await listSiteAreaSeasons(slug)) if (x.season) out.set(x.season, (out.get(x.season) ?? 0) + 1);
+  for (const x of await listPlantedAreasBySeason(slug)) if (x.season) out.set(x.season, (out.get(x.season) ?? 0) + 1);
   return out;
 }
 
 /** `parcelId` is the part's WRT number, as in the form's parts. */
-export async function sitePlantings(slug: string, parcelId: string | null): Promise<SitePlantings | null> {
+export async function loadSiteOverview(slug: string, parcelId: string | null): Promise<SitePlantings | null> {
   if (!valid(slug, parcelId)) return null;
   const read = (part: string | null) => Promise.all([listSiteSpecies(slug, part, TREES_SHOWN), listSiteSeasons(slug, part, SEASONS_SHOWN)]);
   const [register, [first, firstSeasons], parts] = await Promise.all([listSpecies(), read(parcelId), partsPerSeason(slug)]);
@@ -96,7 +96,7 @@ export interface SeasonPlantings {
 /** One season's planting events at a site, or at one part of it: area by area, each one's plants most planted first. */
 export async function seasonPlantings(slug: string, season: string, parcelId: string | null): Promise<SeasonPlantings | null> {
   if (!valid(slug, parcelId) || !/^[a-z]+-\d{4}$/.test(season)) return null;
-  const [register, lines] = await Promise.all([listSpecies(), listSitePlantingLines(slug, season, parcelId)]);
+  const [register, lines] = await Promise.all([listSpecies(), listSiteSeasonPlantingLines(slug, season, parcelId)]);
   const ids = [...new Set(lines.map((l) => l.planting_id ?? 0))];
   const notes = new Map((ids.length ? await listPlantingEventNotes(ids) : []).map((n) => [n.id, n.notes.trim()]));
   const photos = new Map(register.map((s) => [s.slug, s.photos[0]]));
@@ -139,7 +139,7 @@ export async function savePlantingEvent(id: number, raw: unknown): Promise<Plant
 
   let saved = false;
   try {
-    const [season, current, species] = await Promise.all([readPlantingEventSeason(id), listPlantingLines(id), listSpeciesForPlanting()]);
+    const [season, current, species] = await Promise.all([readPlantingEventSeason(id), listPlantingEventLines(id), listSpeciesForPlanting()]);
     if (!season) return { error: NOT_SAVED };
     const problem = edit.plantedOn ? plantedOnProblem(edit.plantedOn, season, todayInNz()) : undefined;
     if (problem) return { issues: [{ path: "plantedOn", message: problem }] };
