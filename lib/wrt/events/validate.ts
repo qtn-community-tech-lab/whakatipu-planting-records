@@ -15,13 +15,14 @@
  * put each message next to its field.
  */
 import { z } from "zod";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { SLUG } from "../text";
 import { isClosed, ringSelfIntersects } from "./geo";
 import { isIsoDate } from "./season";
 import { EVENT_SEASONS, type PlantingEventInput } from "./types";
 
 /** Notes are free text; keep them to a sensible length. */
-export const NOTES_MAX = 2000;
+export const NOTES_MAX = INPUT_LIMITS.longText;
 /** A hand-drawn polygon with more corners than this is almost certainly a mistake (or abuse). */
 const MAX_CORNERS = 500;
 /** No single species line should be larger than this (the biggest historical record is far smaller). */
@@ -51,18 +52,19 @@ const polygon = z.object({
 
 export const eventInputSchema = z.object({
   placeSlug: z.string().regex(SLUG, { error: "Choose a site." }),
-  parcelId: z.string().min(1).max(80).nullable(),
+  parcelId: z.string().min(1).max(INPUT_LIMITS.identifier).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
   // Optional until the map PR adds drawing; a drawn area is still checked in full.
   polygon: polygon.nullable(),
   species: z.array(z.object({
-    speciesId: z.string().min(1, { error: "Choose a species." }).max(80),
+    speciesId: z.string().min(1, { error: "Choose a species." }).max(INPUT_LIMITS.identifier),
     quantity: z.number({ error: "Enter how many were planted." })
       .int({ error: "Use a whole number." })
       .positive({ error: "Must be at least 1." })
       .max(MAX_QUANTITY, { error: `At most ${MAX_QUANTITY.toLocaleString("en-NZ")} per species.` }),
+    area: z.number().int().nonnegative().optional(),
   })).min(1, { error: "Add at least one species." }).max(200),
   notes: z.string().max(NOTES_MAX, { error: `Keep notes under ${NOTES_MAX} characters.` }).nullable(),
 });
@@ -106,10 +108,12 @@ export function validateEventInput(raw: unknown, lookups: EventLookups, today: s
 
   const known = new Set(lookups.species.map((s) => s.id));
   const seen = new Set<string>();
+  // A species once per event, or once per drawn area when it has areas.
   v.species.forEach((line, i) => {
+    const key = `${line.area ?? ""}:${line.speciesId}`;
     if (!known.has(line.speciesId)) add(`species.${i}.speciesId`, "That species is not in the register.");
-    else if (seen.has(line.speciesId)) add(`species.${i}.speciesId`, "This species is already listed; add the quantities together.");
-    seen.add(line.speciesId);
+    else if (seen.has(key)) add(`species.${i}.speciesId`, "This species is already listed; add the quantities together.");
+    seen.add(key);
   });
 
   if (Object.keys(errors).length) return { ok: false, errors };
