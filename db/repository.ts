@@ -11,9 +11,6 @@ import type {
 } from "@/lib/wrt/types";
 import { searchKey } from "@/lib/wrt/text";
 
-/** Reads are kept for 5 minutes, like every other Supabase read. */
-const KEEP_MS = 5 * 60 * 1000;
-
 /** Supabase as a signed-out visitor: the planting history is public to read. */
 export function publicDb(): Db {
   return createClient<Database>(
@@ -58,8 +55,8 @@ async function load(db: Db): Promise<Loaded> {
     db.from("species")
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
       .throwOnError(),
-    db.from("sites").select("slug, name, description, is_scheme").is("deactivated_at", null).throwOnError(),
-    db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, description, is_scheme, deactivated_at").throwOnError(),
+    db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
   ]);
@@ -154,14 +151,20 @@ async function load(db: Db): Promise<Loaded> {
       for (const area of areaRows.data) {
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        parcels.set(area.slug, { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] });
+        parcels.set(area.slug, {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        });
         plantsByClass.set(siteClass, 0);
       }
       for (const l of lines) {
         const area = areaBySlug.get(l.area!)!;
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        const parcel = parcels.get(area.slug) ?? { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] };
+        const parcel = parcels.get(area.slug) ?? {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        };
         if (l.site_original && !parcel.aliases.includes(l.site_original)) parcel.aliases.push(l.site_original);
         parcels.set(area.slug, parcel);
         plantsByClass.set(siteClass, (plantsByClass.get(siteClass) ?? 0) + (l.quantity ?? 0));
@@ -173,6 +176,7 @@ async function load(db: Db): Promise<Loaded> {
         slug: site.slug,
         name: site.name,
         description: site.description,
+        deactivatedAt: site.deactivated_at,
         siteClasses: [...plantsByClass].sort((a, b) => b[1] - a[1]).map(([c]) => c),
         isScheme: site.is_scheme,
         parcels: parts,

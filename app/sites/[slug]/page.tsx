@@ -18,8 +18,9 @@ import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 import Link from "next/link";
 import { readSite } from "@/db/queries/sites";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
 
@@ -46,11 +47,14 @@ export default async function SitePage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const [site, d, authenticated] = await Promise.all([readSite(slug), getWrt().place(slug), isAuthenticated()]);
   if (!site) notFound();
-  const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const editButton = authenticated && !site.deactivated_at
+    ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button>
+    : undefined;
   if (!d || !d.split.records)
     return (
       <>
         <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={editButton} />
+        {site.deactivated_at && <Alert role="status"><AlertTitle>Deactivated</AlertTitle><AlertDescription>This site&apos;s historical record remains available.</AlertDescription></Alert>}
         <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
       </>
     );
@@ -96,6 +100,8 @@ export default async function SitePage({ params, searchParams }: Props) {
             : site.description.trim() || undefined
         }
       />
+
+      {site.deactivated_at && <Alert role="status"><AlertTitle>Deactivated</AlertTitle><AlertDescription>This site is unavailable for new planting records. Its historical records and quantities are retained.</AlertDescription></Alert>}
 
       {!place.isScheme && <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />}
 

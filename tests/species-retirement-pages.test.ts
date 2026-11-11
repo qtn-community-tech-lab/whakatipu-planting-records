@@ -10,7 +10,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/wrt/server", () => ({
   dataSource: mocks.source, getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate }));
 vi.mock("next/cache", () => ({ updateTag: mocks.tag, revalidatePath: mocks.revalidate }));
 vi.mock("next/navigation", () => ({
@@ -24,9 +24,12 @@ import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { q } from "./helpers";
 
 const rows = await q.speciesList();
-const detail = (await q.species(rows[0].item.slug))!;
+const detail = (await q.species(rows[0]!.item.slug))!;
 const deactivatedAt = "2026-11-09T00:00:00.000Z";
-const page = () => DetailPage({ params: Promise.resolve({ slug: detail.species.slug }) });
+const page = () => DetailPage({
+  params: Promise.resolve({ slug: detail.species.slug }),
+  searchParams: Promise.resolve({}),
+});
 type Submit = () => Promise<SpeciesSubmitResult>;
 async function action() {
   const control = Children.toArray((await page()).props.children).find((child) =>
@@ -86,7 +89,10 @@ describe("species register lifecycle views", () => {
   });
 
   it.each([undefined, "deactivated"])("separates active and deactivated entries (state: %s)", async (state) => {
-    const html = renderToStaticMarkup(await RegisterPage({ searchParams: Promise.resolve({ state }) }));
+    const html = renderToStaticMarkup(await RegisterPage({
+      params: Promise.resolve({}),
+      searchParams: Promise.resolve({ state }),
+    }));
     const speciesLink = `href="/species/${detail.species.slug}"`;
     if (state === "deactivated") expect(html).toContain(speciesLink);
     else expect(html).not.toContain(speciesLink);

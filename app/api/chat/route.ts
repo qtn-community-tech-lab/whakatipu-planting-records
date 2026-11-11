@@ -5,6 +5,7 @@
 import { convertToModelMessages, safeValidateUIMessages, smoothStream, stepCountIs, streamText } from "ai";
 import { SYSTEM, scopeLine, tools, type ChatMessage, type ChatMeta, type Scope } from "@/lib/wrt/chat-tools";
 import { SLUG } from "@/lib/wrt/text";
+import { isAuthenticated } from "@/db/queries/auth";
 
 // ponytail: check maxDuration against the Next 16.3.8 route docs in node_modules/next/dist/docs/
 export const maxDuration = 60;
@@ -34,6 +35,7 @@ function readScope(raw: unknown): Scope {
 }
 
 export async function POST(req: Request): Promise<Response> {
+  if (!(await isAuthenticated())) return new Response("Sign in to use AI Chat.", { status: 401 });
   const body: unknown = await req.json().catch(() => null);
   const rawMessages = isObject(body) ? body.messages : undefined;
   // Trust boundary: reject anything that isn't a short chat history.

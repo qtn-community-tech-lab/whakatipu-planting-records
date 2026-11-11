@@ -16,6 +16,12 @@ const notes = z.string().trim().max(INPUT_LIMITS.longText, lengthMessage(INPUT_L
 const url = z.url({ protocol: /^https$/i, error: "Enter a valid HTTPS URL." })
   .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url));
 
+export const loginEmailSchema = z.string()
+  .max(INPUT_LIMITS.shortText, lengthMessage(INPUT_LIMITS.shortText))
+  .trim()
+  .pipe(z.email({ error: "Enter a valid email address." }))
+  .transform((email) => email.toLowerCase());
+
 /** Writable species data, validated in both page submit handlers. */
 export const speciesSchema = z.object({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")

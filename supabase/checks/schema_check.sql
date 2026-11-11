@@ -29,10 +29,12 @@ with expected (part, item, want, got) as (
     (select (min(id) = 0 and max(id) = 24 and count(distinct id) = 25)::int from public.seasons)
 
   -- Access rules file -------------------------------------------------------
-  union all select 'access rules', 'functions (is_staff, touch_row, guard_deactivated, guard_history)', 4,
+  union all select 'access rules', 'functions (membership, signup, linking, audit and guards)', 7,
     (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
-      where n.nspname = 'public' and p.proname in ('is_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
-  union all select 'access rules', 'row rules (23 staff, 8 public reads, 7 anonymous development)', 38,
+      where n.nspname = 'public' and p.proname in
+        ('current_app_user_id', 'authorize_staff_signup', 'link_auth_user_to_staff',
+         'link_existing_auth_user_to_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
+  union all select 'access rules', 'row policies (active membership writes and public history reads)', 31,
     (select count(*)::int from pg_policies where schemaname = 'public')
   union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
@@ -44,14 +46,14 @@ with expected (part, item, want, got) as (
     (select count(*)::int from (values ('public.seasons'), ('public.users')) v (t)
       where has_table_privilege('authenticated', v.t, 'insert')
          or has_table_privilege('authenticated', v.t, 'update'))
-  -- Anonymous development CRUD: seven writable tables, including users ----
-  union all select 'public reads', 'signed out can write the seven development tables', 7,
+  -- Anonymous public read access; all write grants were removed ------------
+  union all select 'public reads', 'signed out can write no application table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'
         and (has_table_privilege('anon', c.oid, 'insert')
           or has_table_privilege('anon', c.oid, 'update')
           or has_table_privilege('anon', c.oid, 'delete')))
-  union all select 'public reads', 'signed out can read users during development', 1,
+  union all select 'public reads', 'signed out cannot read users', 0,
     (select has_table_privilege('anon', 'public.users', 'select')::int)
   union all select 'seasons page', 'views (season_species, season_sites, totals_by_question)', 3,
     (select count(*)::int from pg_views where schemaname = 'public' and viewname in
@@ -62,6 +64,27 @@ with expected (part, item, want, got) as (
     (select count(*)::int from information_schema.columns
       where table_schema = 'public' and column_name = 'deactivated_at'
         and table_name in (select tablename from pg_tables where schemaname = 'public'))
+  union all select 'authentication', 'email and Auth identity columns', 2,
+    (select count(*)::int from information_schema.columns
+      where table_schema = 'public' and table_name = 'users'
+        and column_name in ('email', 'auth_user_id'))
+  union all select 'authentication', 'removed is_staff column', 0,
+    (select count(*)::int from information_schema.columns
+      where table_schema = 'public' and table_name = 'users' and column_name = 'is_staff')
+  union all select 'authentication', 'normalized email unique index', 1,
+    (select count(*)::int from pg_indexes
+      where schemaname = 'public' and tablename = 'users' and indexname = 'users_email_lower_key')
+  union all select 'authentication', 'new application IDs default to UUIDs', 1,
+    (select count(*)::int from information_schema.columns
+      where table_schema = 'public' and table_name = 'users' and column_name = 'id'
+        and column_default like 'gen_random_uuid%')
+  union all select 'authentication', 'Auth foreign key uses ON DELETE SET NULL', 1,
+    (select count(*)::int from pg_constraint c
+      where c.conrelid = 'public.users'::regclass and c.conname = 'users_auth_user_id_fkey'
+        and c.confdeltype = 'n')
+  union all select 'authentication', 'application user ID no longer references auth.users', 0,
+    (select count(*)::int from pg_constraint c
+      where c.conrelid = 'public.users'::regclass and c.conname = 'users_id_fkey')
   union all select 'naming', 'columns, functions, triggers, indexes, sequences or constraints with an old name', 0,
     (select count(*)::int from (
        select column_name::text as name from information_schema.columns
@@ -77,8 +100,8 @@ with expected (part, item, want, got) as (
      ) old)
 
   -- Import (run by scripts/import-workbook.ts) ------------------------------
-  union all select 'import', 'sites', 39,          (select count(*)::int from public.sites)
-  union all select 'import', 'areas', 78,          (select count(*)::int from public.areas)
+  union all select 'import', 'sites', 39, (select count(*)::int from public.sites)
+  union all select 'import', 'areas', 78, (select count(*)::int from public.areas)
   union all select 'import', 'species with workbook register codes', 164,
     (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)

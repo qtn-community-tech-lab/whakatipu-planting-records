@@ -112,7 +112,7 @@ describe("species form", () => {
   it("validates image URLs", () => {
     const result = speciesFormSchema.safeParse({ ...valid(), photos: [{ src: "javascript:alert(1)", attribution: "" }] });
     expect(result.success).toBe(false);
-    if (!result.success) expect(result.error.issues[0].path).toEqual(["photos", 0, "src"]);
+    if (!result.success) expect(result.error.issues[0]!.path).toEqual(["photos", 0, "src"]);
   });
 
   it("normalizes supplied URLs, names and unknown flags", () => {

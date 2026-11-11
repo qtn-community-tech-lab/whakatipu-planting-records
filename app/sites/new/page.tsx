@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { createSite } from "@/db/queries/sites";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
@@ -11,7 +11,7 @@ import {
   type SiteSubmitResult,
 } from "@/db/types";
 import { PageHead } from "@/components/wrt/shared/page";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { StaffAccessRequired } from "@/components/wrt/auth/staff-access-required";
 
 export const metadata: Metadata = { title: "Create site" };
 
@@ -57,24 +57,21 @@ export default async function NewSitePage() {
     redirect(`/sites/${slug}`);
   }
 
-  return (
+  return authenticated ? (
     <>
-      <PageHead
-        title="Create site"
-        back={{ href: "/sites", label: "All sites" }}
-      />
-      {authenticated ? (
+      <PageHead title="Create site" back={{ href: "/sites", label: "All sites" }} />
         <SiteForm
           onSubmit={onSubmit}
           submitLabel="Create site"
           cancelHref="/sites"
         />
-      ) : (
-        <Alert>
-          <AlertTitle>Sign-in required</AlertTitle>
-          <AlertDescription>Sign in to create sites.</AlertDescription>
-        </Alert>
-      )}
     </>
+  ) : (
+    <StaffAccessRequired
+      title="Create site"
+      back={{ href: "/sites", label: "All sites" }}
+      message="Sign in to create sites."
+      next="/sites/new"
+    />
   );
 }

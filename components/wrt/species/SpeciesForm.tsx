@@ -9,6 +9,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unstable_rethrow } from "next/navigation";
 import Link from "next/link";
+import type { Route } from "next";
 import Image from "next/image";
 import { FormField } from "@/components/forms/form-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -145,7 +146,7 @@ export function SpeciesForm({
   values?: SpeciesEdit;
   onSubmit: (species: SpeciesInput) => Promise<SpeciesSubmitResult | void>;
   submitLabel?: string;
-  cancelHref?: string;
+  cancelHref?: Route;
 }) {
   const form = useForm<SpeciesFormValues>({
     resolver: zodResolver(speciesFormSchema),
@@ -434,7 +435,7 @@ export function SpeciesForm({
                           photoValues[index]?.src,
                         ).success ? (
                           <Image
-                            src={photoValues[index].src}
+                            src={photoValues[index]?.src ?? ""}
                             fill
                             sizes="(min-width: 640px) 240px, calc(100vw - 80px)"
                             unoptimized

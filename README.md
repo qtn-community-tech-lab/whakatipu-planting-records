@@ -1,7 +1,7 @@
 # WRT restoration history explorer (V0)
 
-A read-only web app that lets Whakatipu Reforestation Trust staff and volunteers explore every recorded
-planting season since Autumn 2015 by **site, species, year and season**, without opening an old spreadsheet.
+A public web app that lets anyone explore every recorded planting season since Autumn 2015 by **site, species,
+year and season**, without opening an old spreadsheet. Approved staff can sign in to use AI Chat and make changes.
 
 5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species planted (164 in the register).
 
@@ -38,6 +38,7 @@ Fill in `.env.local` with the **local** values printed by Supabase:
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<local publishable key, or anon key>
+NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
 SUPABASE_SECRET_KEY=<local secret key, or service_role key>
 ```
 
@@ -48,7 +49,21 @@ Keep these values in the git-ignored `.env.local`: the import scripts load that 
 it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
 Restart Next.js after changing environment variables.
 
-### 3. Load the planting history and map pins
+### 3. Add a staff email and test sign-in
+
+Approved staff emails are managed in `public.users`. Add a profile in Supabase Studio's SQL Editor, replacing the
+name and email with the approved person's details:
+
+```sql
+insert into public.users (name, email)
+values ('Staff name', 'staff@example.org');
+```
+
+Start the app and open [`/login`](http://localhost:3000/login). Local Supabase captures sign-in messages in its
+email inbox at [http://127.0.0.1:54324](http://127.0.0.1:54324); no email is delivered to a real inbox. Open the
+message link to sign in. Public pages and CSV downloads work without an account.
+
+### 4. Load the planting history and map pins
 
 Check that the URL in `.env.local` is local, then run the workbook import before the pins import:
 
@@ -62,7 +77,7 @@ npm run import-pins -- --write
 The tracked CSVs supply the history; no original spreadsheet download is needed. The workbook import checks
 each season against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
 
-### 4. Start the app
+### 5. Start the app
 
 ```bash
 npm run dev
@@ -82,6 +97,10 @@ npm run lint
 npm test                # parser, validation, repository and query invariants, search
 npm run build && npm start
 ```
+
+Local Supabase Auth sends email into its inbox. The built-in hosted sender is limited to project team addresses
+and two messages per hour; configure a custom SMTP provider such as Resend before broader staff testing or
+production use. The app's magic-link flow remains the same when SMTP is changed.
 
 Start Supabase before running the app or the full test suite. Live database tests use `.env.local` and expect
 the workbook import to have run. The [database checks](supabase/README.md#checking-it-all-ran) verify the schema

@@ -7,8 +7,10 @@ const mocks = vi.hoisted(() => ({
   authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
   revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
-vi.mock("@/db/queries/sites", () => ({ createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/sites", () => ({
+  createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list,
+}));
 vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); } }));
@@ -144,4 +146,16 @@ it("opens a site's detail and metadata before any planting history exists", asyn
   expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Edit site");
   mocks.read.mockResolvedValue(null);
   await expect(SitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
+});
+
+it("keeps a deactivated site page public while blocking its editor", async () => {
+  mocks.read.mockResolvedValue({
+    ...values, is_scheme: false, deactivated_at: "2026-11-01T00:00:00Z",
+    updated_at: "2026-11-10T00:00:00Z",
+  });
+  const html = renderToStaticMarkup(await SitePage({ params, searchParams }));
+  expect(html).toContain("Deactivated");
+  expect(html).toContain("historical record remains available");
+  expect(html).not.toContain("Edit site");
+  await expect(EditSitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
 });

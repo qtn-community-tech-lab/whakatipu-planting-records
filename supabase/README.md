@@ -16,7 +16,8 @@ setting local keys and loading the initial data. This README covers database mai
 | `migrations/20261105000000_line_records.sql` | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details` |
 | `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
 | `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled |
-| `checks/anonymous_crud_check.sql` | Verifies anonymous CRUD on all seven tables using temporary fixture rows, then rolls back |
+| `migrations/20261111000000_authentication.sql` | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes |
+| `checks/anonymous_crud_check.sql` | Verifies public reads remain available and anonymous writes and user-profile reads are denied |
 | `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
 
@@ -45,9 +46,25 @@ The current project ID in `config.toml` is `wrt-planting-app`. Stopping the stac
 
 ## Not here yet
 
-- Sign-in. During early development, the anonymous CRUD migration allows the public key to read, insert, update and delete rows in the seven app tables above. Questions and notes remain read-only. User IDs must still reference an existing `auth.users` account.
+- Resend SMTP. Local development uses Supabase's email inbox. Add a hosted SMTP provider before broader staff
+  testing or production; no application code change is needed to switch providers.
 
-The development migration applies everywhere it is deployed, including hosted projects. Anonymous callers can read user rows and change staff flags. Revoke its grants and drop its policies before public use with real data.
+## Authentication and public access
+
+`public.users` is the email allowlist and stays private to each linked profile. Insert an approved profile directly
+through Supabase Studio or SQL Editor; the user signs in for the first time at `/login` and Supabase links the
+confirmed Auth identity by normalized email. All active profiles have the same permissions. Deactivating the
+profile removes write and AI access on the next request.
+
+Anonymous visitors can read all planting history, including deactivated pages, search and CSV exports. They cannot
+read user profiles, write data or use AI Chat. Supabase's Before User Created hook checks the email allowlist for
+direct Auth requests as well as app sign-in requests. Database writes also check active membership through RLS.
+
+Local Supabase captures sign-in emails at [http://127.0.0.1:54324](http://127.0.0.1:54324). The local config uses a
+60-second resend interval and one-hour link expiry. The hosted built-in email sender is limited to addresses on the
+project team and two messages per hour; application approval does not bypass that provider restriction. Configure
+Resend SMTP (or another provider) in Supabase before broader staff testing or production. See [Supabase email
+delivery limits](https://supabase.com/docs/guides/auth/auth-smtp).
 
 ## The workbook import
 
@@ -85,11 +102,14 @@ database. Older notes about a hosted project's imports and checks are historical
 
 When provisioning a hosted environment:
 
-1. Create the Supabase project and apply all migrations in timestamp order.
+1. Create the Supabase project and apply all migrations in timestamp order. Configure the Auth Before User Created
+   hook, `/auth/confirm` redirect allowlist, one-hour email expiry and both magic-link email templates to match
+   `config.toml`.
 2. Run the workbook import, then the pins import, with that project's URL and secret key. The scripts read
    `.env.local`; restore your local values before resuming local development.
 3. Run the SQL checks below against the hosted database.
-4. Set the hosted URL and publishable key in the Next.js deployment environment before building the app.
+4. Set the hosted URL, publishable key and app origin (`NEXT_PUBLIC_APP_URL`) in the Next.js deployment environment
+   before building the app. Set a custom SMTP provider before broad email use.
 
 For automated migrations, configure the [Supabase GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
 and enable **Deploy to production** for the chosen branch. Only after that setup should production-branch pushes
@@ -104,5 +124,6 @@ Open local [Supabase Studio](http://127.0.0.1:54323) and paste [`checks/schema_c
 into SQL Editor. After the workbook import, every row should say PASS. It checks the schema, access rules,
 imported row counts, workbook provenance and season totals. The import rows say FAIL until the import has run.
 
-[`checks/access_rules_check.sql`](checks/access_rules_check.sql) exercises signed-out, volunteer and staff access.
-Its staff tests need a staff account; sign-in is not set up yet. The script removes its test site at the end.
+[`checks/access_rules_check.sql`](checks/access_rules_check.sql) exercises signed-out, unapproved identity and active
+staff access. Its staff tests need at least one active approved profile with a linked Auth identity. The script
+rolls back its test rows.
