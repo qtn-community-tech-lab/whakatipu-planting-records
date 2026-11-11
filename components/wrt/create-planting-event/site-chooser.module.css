@@ -1,6 +1,9 @@
 /* the site chooser: takes the panel's place (the phone sheet, or the desktop panel) while a site is chosen */
 .chooserHead { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: -6px; }
-.chooserHead > span:last-child { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.chooserHead > span:nth-child(2) { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.chooserBack { flex-shrink: 0; min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: #e7eee5; color: var(--cn-green-800); font: 700 13.5px var(--font-sans); cursor: pointer; }
+@media (hover: hover) { .chooserBack:hover { background: #dce7d6; } }
+.chooserBack:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 .chooserIcon { width: 40px; height: 40px; flex-shrink: 0; display: grid; place-items: center; border-radius: 12px; background: #e7eee5; color: var(--cn-green-800); }
 .chooserHead h2 { margin: 0; font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); }
 .chooserHead h2:focus { outline: none; }
@@ -18,7 +21,7 @@
 .chooserList ul { list-style: none; margin: 0; padding: 0; }
 .chooserItem, .chooserRow { border-bottom: 1px solid #e6e8df; }
 .chooserHeader { margin: 0; display: flex; }
-.chooserTrigger { flex: 1; min-height: 60px; padding: 8px 4px; }
+.chooserTrigger { flex: 1; min-height: 64px; padding: 8px 4px; }
 .chooserTrigger:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; border-radius: 10px; }
 .chooserTrigger svg { transition: transform 200ms ease; }
 .chooserTrigger[data-state="open"] svg { transform: rotate(180deg); }
@@ -32,9 +35,11 @@
 @keyframes chooser-open { from { height: 0; opacity: 0; } to { height: var(--radix-accordion-content-height); opacity: 1; } }
 @keyframes chooser-close { from { height: var(--radix-accordion-content-height); opacity: 1; } to { height: 0; opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .chooserContent { animation: none !important; } }
-.chooserContent ul { padding: 0 0 10px 8px; }
+/* the parts, indented under their site */
+.chooserContent ul { padding: 0 0 10px 16px; }
 .choice { padding: 6px 12px; border-radius: 12px; }
-.chooserRow .choice { padding-left: 4px; min-height: 60px; }
+.chooserRow .choice { padding: 8px 4px; min-height: 64px; }
+.chooserTrigger[data-chosen] [data-slot="title"] { color: var(--cn-green-800); }
 @media (hover: hover) { .choice:hover { background: #eef2e8; } }
 .choice[aria-pressed="true"] { background: #f2f6e6; color: var(--cn-green-800); }
 .addPart { display: inline-flex; align-items: center; gap: 6px; color: var(--cn-green-800); }
@@ -42,3 +47,10 @@
 .chooserEmpty { padding: 16px 0; font: 400 14px var(--font-sans); color: #5d6a60; }
 /* why it's asking: an area drawn away from every site */
 .chooserNote { margin: 0; padding: 10px 12px; border-radius: 12px; background: #fdf3e2; font: 600 13.5px/1.4 var(--font-sans); color: #6b4300; }
+/* the sort, under the search */
+.sort { flex: none; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+/* a site's plants, and what they are under them */
+.figure { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.figure small { font: 500 11.5px/1.2 var(--font-sans); color: var(--text-muted); }
+/* Create a new site, in the pinned footer */
+.newSite { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }

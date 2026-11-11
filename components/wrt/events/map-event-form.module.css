@@ -4,26 +4,14 @@
 .form { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .form[hidden] { display: none; }
 
-/* header: steps, title, lead */
+/* header: title, lead */
 .head { flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; padding: 4px 0 14px; border-bottom: 1px solid var(--border-card, #e6e8df); }
-.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
-.stepLink { display: flex; flex-direction: column; gap: 8px; width: 100%; border: 0; padding: 0; background: none; text-align: left; font: inherit; color: inherit; }
-button.stepLink { cursor: pointer; }
-.stepBar { height: 6px; border-radius: 3px; background: var(--surface-soft, #e7eee5); transition: background var(--dur) var(--ease); }
-.stepLabel { display: flex; align-items: center; gap: 8px; font: 600 13px/1.2 var(--font-sans); color: var(--text-muted); }
-.stepN { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; background: var(--surface-soft, #e7eee5); color: var(--text-strong); }
-.step[data-state="current"] .stepBar, .step[data-state="current"] .stepN { background: var(--cn-green-800); }
-.step[data-state="current"] .stepN { color: #fff; }
-.step[data-state="current"] .stepLabel { font-weight: 700; color: var(--text-strong); }
-.step[data-state="reached"] .stepBar, .step[data-state="reached"] .stepN { background: var(--cn-green-400); }
-.step[data-state="reached"] .stepLabel { color: var(--text-brand); }
-.stepLink:focus-visible, .title:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; border-radius: 6px; }
 
-.titleRow { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+.titleRow { position: relative; z-index: 2; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; } /* above the search bar's band, which reaches up to cover rows scrolling under it */
 .title { margin: 0; font: 800 28px/1.1 var(--font-sans); letter-spacing: -0.02em; color: var(--text-strong); }
 /* Focus moves to the heading when a step opens, for screen readers; it isn't a control, so no ring. */
 .title:focus { outline: none; }
-/* step 2: the running total, one quiet line beside the title */
+/* the plant list's running total, one quiet line beside its heading */
 .total { flex-shrink: 0; font: 500 13px/1.3 var(--font-sans); color: var(--text-muted); white-space: nowrap; }
 .total b { font: 700 15px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
 
@@ -87,17 +75,14 @@ button.stepLink { cursor: pointer; }
 .next:disabled { opacity: 0.75; cursor: progress; }
 .count + .next { flex: 0 1 auto; }
 
-/* Phones: no step timeline (the footer says "Step 1 of 3") and a small step heading,
+/* Phones: a small heading,
    so the fields get the room. */
 @media (max-width: 767px) {
-  .steps { display: none; }
+  /* the heading that repeats the top bar: kept for screen readers (focus goes to it) */
+  .head[data-repeat] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .head { gap: 6px; padding: 12px 0 10px; }
   .title { font-size: 19px; }
   /* the plant list with Done: one slim line (title, total, Done), so the list gets the room */
-  .head:has(.closeList) { padding: 6px 0 8px; }
-  .titleRow:has(.closeList) { flex-wrap: nowrap; gap: 10px; }
-  .titleRow:has(.closeList) .title { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 17px; }
-  .titleRow:has(.closeList) .total { order: 0; flex: 1 0 auto; flex-basis: auto; text-align: right; }
   .closeList { min-height: 36px; padding: 0 12px 0 10px; }
   /* scrolling down the plant list: the footer slides away and gives its room to the list (use-hide-on-scroll.ts) */
   .foot { transition: transform 220ms var(--ease, ease), margin-bottom 220ms var(--ease, ease), opacity 160ms ease; }
@@ -112,7 +97,7 @@ button.stepLink { cursor: pointer; }
 .head > .context { margin-top: -8px; }
 .inlineLink { border: 0; background: none; padding: 4px 2px; min-height: 32px; font: 600 13.5px var(--font-sans); color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 
-/* step 2: search on top, pinned while the list scrolls */
+/* the plant list: search on top, pinned while the list scrolls */
 .searchBar { position: sticky; top: 0; z-index: 1; padding: 0 0 8px; box-shadow: 0 -18px 0 var(--surface-app, #fdfcf9); background: var(--surface-app, #fdfcf9); display: flex; flex-direction: column; gap: 8px; }
 .searchCamera { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 12px; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); cursor: pointer; }
 .searchCamera[aria-disabled="true"] { opacity: 0.55; cursor: help; }
@@ -127,7 +112,7 @@ button.stepLink { cursor: pointer; }
 
 /* the date as a card (the check step), its native input hidden inside (Change opens the picker) */
 .card:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
-/* where and when: tiles you tap to change, side by side on step 1 */
+/* where and when: tiles you tap to change, side by side */
 .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 .picks > section { min-width: 0; }
 .pick { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--border-card, #e6e8df); border-radius: 14px; background: var(--surface-card, #fff); color: var(--cn-green-800); text-align: left; font: inherit; cursor: pointer; }
@@ -138,21 +123,21 @@ button.stepLink { cursor: pointer; }
 @media (hover: hover) { .pick:hover:enabled { border-color: var(--cn-green-600); } }
 .pick:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 .pick[aria-invalid="true"] { border-color: var(--cn-red-600, #b42318); }
-.dateRow { position: relative; display: flex; align-items: center; gap: 10px; padding: 2px 0 2px 14px; border-radius: 14px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); color: var(--cn-green-800); }
-.dateText { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
-.dateText b { font: 600 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
-.dateText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
 /* the whole date row opens the calendar, not just its Change */
-.dateChange::after { content: ""; position: absolute; inset: 0; border-radius: 14px; }
-.dateChange:focus-visible { outline: none; }
-.dateRow:has(.dateChange:focus-visible) { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 
-/* step 1: a new location placed from the map's + */
+/* a new location placed from the map's + */
 .spotCard { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px 12px; border-color: var(--cn-lime-300); background: #fbfdf1; }
 .spotHead { display: flex; align-items: center; gap: 14px; }
-.spotActions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.spotActions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .spotCancel { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px 0 10px; border: 1px solid var(--border-card, #e6e8df); border-radius: 999px; background: #fff; color: var(--text-strong); font: 600 14px var(--font-sans); cursor: pointer; }
 @media (hover: hover) { .spotCancel:hover { background: #f3f5ef; } }
+/* phones: the new location's card, tighter (the header already says what it is) */
+@media (max-width: 767px) {
+  .spotCard { gap: 8px; padding: 10px 12px; }
+  .spotHead .cardIcon { display: none; }
+  .spotCancel { min-height: 36px; padding: 0; border: 0; background: none; font-size: 14px; }
+  .spotActions .link { padding: 0 4px; }
+}
 /* a new location near the site, or a sublocation of it */
 .segmentTwo { flex: none; grid-template-columns: 1fr 1fr; }
 .segmentTwo .segmentItem { padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -164,7 +149,7 @@ button.stepLink { cursor: pointer; }
 .choosePrompt { width: 100%; min-height: 48px; border: 0; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px 8px 16px; border-radius: 16px; background: #fbefe8; font: 600 14px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
 
 
-/* step 1: the drawn areas by name, each one tap from the map */
+/* the drawn areas by name, each one tap from the map */
 .areaList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .areaList button { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px 10px 12px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); text-align: left; color: var(--cn-green-800); cursor: pointer; }
 @media (hover: hover) { .areaList button:hover { background: #eef2e8; } }
@@ -172,33 +157,26 @@ button.stepLink { cursor: pointer; }
 .areaList svg { flex-shrink: 0; }
 /* the plant list opened from an area's Add plants: Done goes back to where you were */
 /* with Done beside the title, the running total goes on its own line under them, so the title never wraps on a phone */
-.titleRow:has(.closeList) { flex-wrap: wrap; align-items: center; row-gap: 4px; }
-.titleRow:has(.closeList) .title { flex: 1; }
-.titleRow:has(.closeList) .total { order: 3; flex-basis: 100%; }
 .closeList { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px 0 12px; border: 0; border-radius: 999px; background: var(--cn-green-800); color: #fff; font: 700 14px var(--font-sans); cursor: pointer; }
 @media (hover: hover) { .closeList:hover { background: var(--cn-green-900); } }
 .closeList:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 
 
-/* the site as a whole, in step 2's area picker: its pin in a tile the size of an area's picture (set inline) */
+/* the site as a whole, in the plant list's area picker: its pin in a tile the size of an area's picture (set inline) */
 .siteTile { flex-shrink: 0; display: grid; place-items: center; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); }
 
-/* Step 1 with a new location: add the location on its own, without a planting. */
+/* With a new location: add the location on its own, without a planting. */
 .locationOnly { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px 8px 16px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); font: 500 14px/1.35 var(--font-sans); color: var(--cn-green-800); text-align: left; cursor: pointer; }
 .locationOnly b { font-weight: 700; }
 @media (hover: hover) { .locationOnly:hover { background: #eef2e8; } }
 .locationOnly:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 
 /* Typing on a phone (the page is marked data-keyboard while the keyboard is up, see
-   create-planting-event/use-keyboard-fit.ts): the heading is one slim line (beside Done, the running total
-   takes the title's place) and the footer is gone: Enter moves through the fields, and Next is back
-   once the keyboard is put away. */
-:global(html[data-keyboard]) .steps { display: none; }
+   create-planting-event/use-keyboard-fit.ts): the heading is one slim line and the footer is gone:
+   Enter moves through the fields, and Submit is back once the keyboard is put away. */
 :global(html[data-keyboard]) .head { gap: 0; padding: 2px 0 8px; }
 :global(html[data-keyboard]) .title { font-size: 17px; }
 :global(html[data-keyboard]) .titleRow { align-items: center; }
-:global(html[data-keyboard]) .titleRow:has(.closeList) .title { display: none; }
-:global(html[data-keyboard]) .titleRow:has(.closeList) .total { order: 0; flex: 1; }
 :global(html[data-keyboard]) .scroll { padding-top: 10px; padding-bottom: 8px; }
 :global(html[data-keyboard]) .foot, :global(html[data-keyboard]) .foot + .note { display: none; }
 
@@ -206,18 +184,19 @@ button.stepLink { cursor: pointer; }
 .quiet { margin: 0; font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }
 
 /* the check: an area with no plants, to fill or take off before Submit */
-.emptyArea { display: flex; flex-direction: column; gap: 8px; }
-.emptyArea p { margin: 0; }
-.emptyActions { display: flex; flex-wrap: wrap; gap: 8px; }
 /* a card per place planted (FigureList), and under them the events' total */
-.cards { display: flex; flex-direction: column; gap: 10px; }
-.placeCard { padding: 4px 14px 6px; border-radius: 18px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); }
-.placeCard > section > :first-child { border-bottom: 1px solid var(--border-card, #e6e8df); }
 .pinTile { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border-radius: 12px; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); }
-.grand { padding: 0 15px; }
-.grand [data-slot="title"], .grand [data-slot="figure"] { font-weight: 800; }
 .addNote { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; }
 /* the receipt: plants and where, then the date and season */
 .receipt { margin: 0; font: 400 15px/1.4 var(--font-sans); color: var(--text-strong); }
 .receipt b { font-weight: 800; }
 .receipt span { display: block; margin-top: 2px; font-size: 13.5px; color: var(--text-muted); }
+
+/* a past event's pencil, at the end of its header's line while it's edited: opens the calendar */
+.datePencil {
+  display: inline-grid; place-items: center; width: 28px; height: 28px; margin: -6px 0; vertical-align: middle;
+  border: 0; border-radius: 999px; background: none; color: var(--cn-green-800); cursor: pointer;
+}
+@media (hover: hover) { .datePencil:hover { background: var(--surface-soft, #e7eee5); } }
+.datePencil:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 1px; }
+.datePencil[aria-invalid="true"] { color: var(--destructive, #b42318); }

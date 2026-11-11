@@ -44,6 +44,8 @@ button.handle::before { content: ""; position: absolute; inset: -14px -30px; }
 button.handle:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 4px; }
 .bar[data-opens] { cursor: pointer; }
 .barText { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+/* the title with the page's own button (e.g. Edit) on the right */
+.headRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
 /* the title: plain, or a chooser (pin, title and its line, chevron) */
 .titleText { min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
 .titleText b { font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

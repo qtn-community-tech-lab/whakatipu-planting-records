@@ -100,24 +100,35 @@ function everyPin(m: maplibregl.Map, pins: SitePin[]) {
 /**
  * The one camera move: centre `focus` (the chosen site's pin, or a new location) in the part of
  * the map the form leaves. A new focus flies there at site zoom; losing it (back to every site)
- * flies out to every pin; the sheet changing snap only shifts the padding. One move, so a sheet
- * change never cancels a flight.
+ * flies out to every pin; the sheet changing snap only shifts the padding (the centre stays where it is,
+ * panned or not). One move, so a sheet change never cancels a flight (mid-flight, it keeps the target).
  */
 export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null, pins: SitePin[]) {
   const last = useRef<LngLat | null>(null);
+  // Our flight to the focus, until it lands: a sheet change meanwhile keeps flying there. (Not the map's own
+  // motion: a drag, its glide, or an area fitted into view shouldn't pull the map back to the pin.)
+  const flight = useRef(0);
+  const flying = useRef(false);
   useEffect(() => {
     const m = map.current;
     if (!m) return;
     const moved = focus !== last.current;
     const cleared = moved && !focus && !!last.current;
     last.current = focus;
+    // Only a new focus (or our flight to it still under way) sets the centre; the padding alone (the sheet moving)
+    // keeps it, so a pan the user made stays put.
+    const toFocus = !!focus && (moved || flying.current);
     m.flyTo({
       padding: paddingFor(wide, snap, m.getContainer().clientHeight),
-      ...(focus ? { center: focus } : {}),
+      ...(toFocus ? { center: focus } : {}),
       ...(focus && moved && (m.getZoom() < SITE_ZOOM || !m.getBounds().contains(focus)) ? { zoom: SITE_ZOOM } : {}),
       ...(cleared ? everyPin(m, pins) : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
     });
+    // After flyTo: the flight it interrupted ends (moveend) inside it, and that one's handler no longer counts.
+    const id = ++flight.current;
+    flying.current = toFocus;
+    if (toFocus) m.once("moveend", () => { if (flight.current === id) flying.current = false; });
   }, [map, wide, snap, focus, pins]);
 }
 

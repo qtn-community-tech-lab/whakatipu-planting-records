@@ -128,9 +128,10 @@ export async function savePlantingEventEdit(id: number, raw: unknown): Promise<P
 
   let saved = false;
   try {
-    const [season, current, species] = await Promise.all([readPlantingEventSeason(id), listPlantingEventLines(id), listSpeciesForPlanting()]);
-    if (!season) return { error: NOT_SAVED };
-    const problem = edit.plantedOn ? plantedOnProblem(edit.plantedOn, season, todayInNz()) : undefined;
+    const [stored, current, species] = await Promise.all([readPlantingEventSeason(id), listPlantingEventLines(id), listSpeciesForPlanting()]);
+    if (!stored) return { error: NOT_SAVED };
+    // The date is only checked once it's changed: an old one outside today's rules doesn't block the rest.
+    const problem = edit.plantedOn && edit.plantedOn !== stored.plantedOn ? plantedOnProblem(edit.plantedOn, stored.season, todayInNz()) : undefined;
     if (problem) return { issues: [{ path: "plantedOn", message: problem }] };
     // Only this event's own active lines can be changed.
     const byId = new Map(current.map((l) => [l.id, l]));

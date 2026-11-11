@@ -1,14 +1,14 @@
 "use client";
 /**
  * One past planting event, edited in place in its season's details: the date (optional, inside
- * the season and not in the future), how many of each species, species added or taken off, and
- * the notes. Save and Cancel are in the season view's footer: Save submits this form by its id,
+ * the season and not in the future) in the event's header, with a pencil, then how many of each
+ * species, species added or taken off, and the notes. Save and Cancel are in the season view's footer: Save submits this form by its id,
  * then a dialog lists what changes before savePlantingEventEdit writes it. Nothing changed, nothing is written.
  */
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, X } from "lucide-react";
+import { Pencil, X } from "lucide-react";
 import { unstable_rethrow } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Controller, useFieldArray, useForm, useWatch, type FieldPath } from "react-hook-form";
 import { z } from "zod";
 import { savePlantingEventEdit, type SeasonPlantingEvents } from "@/app/playground/create-planting-event/actions";
@@ -24,7 +24,7 @@ import { digits, NUMBER_FIELD } from "@/components/wrt/shared/fields";
 import { plantingEventEditSchema, type PlantingEventEdit } from "@/db/types";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
-import { formatPlantedOn, isIsoDate, plantedOnProblem, seasonDates, seasonMonths } from "@/lib/wrt/events/season";
+import { formatPlantedOn, isIsoDate, plantedOnProblem, seasonDates } from "@/lib/wrt/events/season";
 import { formatNumber } from "@/lib/wrt/text";
 import f from "@/components/wrt/events/map-event-form.module.css";
 
@@ -32,9 +32,11 @@ type Event = SeasonPlantingEvents["events"][number];
 const quantity = plantingEventEditSchema.shape.lines.element.shape.quantity;
 
 /** The writable schema with what the controls hold: the date "" for none, and quantities as typed. */
-function editFormSchema(season: string, today: string) {
+/** The date is only checked once it's changed: an old one outside today's rules doesn't block saving the rest. */
+function editFormSchema(season: string, today: string, was: string) {
   return z.object({
     plantedOn: z.string().superRefine((v, ctx) => {
+      if (v === was) return;
       const problem = !v ? undefined : isIsoDate(v) ? plantedOnProblem(v, season, today) : "Enter a real date.";
       if (problem) ctx.addIssue({ code: "custom", message: problem });
     }),
@@ -82,8 +84,10 @@ function changes(e: Event, v: EditFormValues): string[] {
 /** The edit form's id, for the footer's Save (`form` attribute). */
 export const editFormId = (id: number) => `edit-planting-event-${id}`;
 
-export function EditPlantingEvent({ event, season, today, species, onDone, onSaved, onSaving }: {
+export function EditPlantingEvent({ event, season, today, species, head, onDone, onSaved, onSaving, onDirty }: {
   event: Event;
+  /** The event's header, given the date chosen so far and its pencil, which opens the calendar. */
+  head: (edit: { plantedOn: string; pencil: ReactNode }) => ReactNode;
   /** The event's season, e.g. { slug: "autumn-2021", label: "Autumn 2021" }. */
   season: { slug: string; label: string };
   /** NZ today, "YYYY-MM-DD": the latest date allowed. */
@@ -95,12 +99,19 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
   onSaved: () => void;
   /** While the save is running, so the footer's Save can show it. */
   onSaving: (saving: boolean) => void;
+  /** Whether anything has been changed, so leaving can ask first (false again once the form is gone). */
+  onDirty?: ((dirty: boolean) => void) | undefined;
 }) {
-  const schema = useMemo(() => editFormSchema(season.slug, today), [season.slug, today]);
+  const was = event.plantedOn ?? "";
+  const schema = useMemo(() => editFormSchema(season.slug, today, was), [season.slug, today, was]);
   const form = useForm<EditFormValues>({ resolver: zodResolver(schema), defaultValues: formValues(event) });
   const lines = useFieldArray({ control: form.control, name: "lines" });
   const listed = useWatch({ control: form.control, name: "lines" });
-  const { errors } = form.formState;
+  const { errors, isDirty } = form.formState;
+  useEffect(() => {
+    onDirty?.(isDirty);
+    return () => onDirty?.(false);
+  }, [isDirty, onDirty]);
   // Valid values waiting on the dialog, and whether they're being saved.
   const [confirming, setConfirming] = useState<{ values: EditFormValues; lines: string[] } | null>(null);
   const [saving, setSaving] = useState(false);
@@ -119,7 +130,6 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
 
   const range = seasonDates(season.slug);
   const latest = range && range.last < today ? range.last : today;
-  const months = seasonMonths(season.slug);
   const byId = new Map(species.map((x) => [x.id, x]));
   const taken = new Set(listed.map((l) => l.species));
   // What a species row shows: its line as loaded, or for one just added, the register's names.
@@ -152,8 +162,13 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
     try {
       const result = await savePlantingEventEdit(event.id, editValues(confirming.values));
       if (result.issues) {
-        for (const issue of result.issues) form.setError(issue.path as FieldPath<EditFormValues>, { message: issue.message });
-        focusNext.current = (result.issues[0]?.path as FieldPath<EditFormValues> | undefined) ?? null;
+        // A problem with a field on the form marks it; any other (e.g. a species no longer in the register) is said at the top.
+        const onForm = (path: string) => path === "plantedOn" || path === "notes" || path === "lines" || /^lines\.\d+\.quantity$/.test(path);
+        const fields = result.issues.filter((issue) => onForm(issue.path));
+        for (const issue of fields) form.setError(issue.path as FieldPath<EditFormValues>, { message: issue.message });
+        const other = result.issues.find((issue) => !onForm(issue.path));
+        if (other) form.setError("root", { message: other.message });
+        focusNext.current = (fields[0]?.path as FieldPath<EditFormValues> | undefined) ?? null;
       } else if (result.error) {
         form.setError("root", { message: result.error });
       } else {
@@ -175,29 +190,23 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
     <form id={editFormId(event.id)} onSubmit={form.handleSubmit(review)} aria-label={`Edit ${event.area}`} className={f.group}>
       <fieldset disabled={saving} aria-busy={saving} className="m-0 min-w-0 border-0 p-0">
         <FieldGroup className="gap-5">
-          {/* The season view names the place just above; the form keeps its name for screen readers. */}
-          <h3 className="sr-only">{event.area}</h3>
-
-          <FormField
-            control={form.control} name="plantedOn" label="Planting date"
-            description={`Optional. Any day in ${months ?? season.label}, up to today.`}
-            render={(field, accessibility) => (
-              <div className="flex flex-col items-start gap-1">
-                <div className={`${f.dateRow} w-full`}>
-                  <Calendar size={18} strokeWidth={2} />
-                  <span className={f.dateText}>
-                    <b>{field.value ? formatPlantedOn(field.value) : "No date"}</b>
-                    <span>{season.label}</span>
-                  </span>
-                  <DatePicker
-                    {...accessibility} ref={field.ref} onBlur={field.onBlur}
-                    value={field.value} {...(range && { min: range.first })} max={latest}
-                    onChange={field.onChange} className={`${f.link} ${f.dateChange}`}
-                  >
-                    {field.value ? "Change" : "Choose"}
-                  </DatePicker>
-                </div>
-                {field.value && <button type="button" className={f.inlineLink} onClick={() => field.onChange("")}>Clear the date</button>}
+          <Controller
+            control={form.control} name="plantedOn"
+            render={({ field, fieldState }) => (
+              <div className="flex flex-col gap-1">
+                {head({
+                  plantedOn: field.value,
+                  pencil: (
+                    <DatePicker
+                      ref={field.ref} onBlur={field.onBlur} value={field.value} {...(range && { min: range.first })} max={latest} onChange={field.onChange}
+                      className={f.datePencil} aria-invalid={!!fieldState.error} aria-describedby={fieldState.error ? "plantedOn-error" : undefined}
+                      aria-label={field.value ? `Planting date ${formatPlantedOn(field.value)}: change it` : "Add the planting date"}
+                    >
+                      <Pencil size={14} strokeWidth={2.4} aria-hidden="true" />
+                    </DatePicker>
+                  ),
+                })}
+                {fieldState.error && <FieldError id="plantedOn-error" errors={[fieldState.error]} />}
               </div>
             )}
           />

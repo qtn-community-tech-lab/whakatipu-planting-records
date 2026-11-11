@@ -11,16 +11,16 @@ import { formatNumber } from "@/lib/wrt/text";
 import type { Area } from "./use-draw-area";
 import f from "@/components/wrt/events/map-event-form.module.css";
 
-export function AreaSheet({ area, site, plants, onPlant, onWholeSite }: {
+export function AreaSheet({ area, plants, onPlant, onWholeSite, onClose }: {
   area: Area;
-  /** Where the area is (the part, or the site), for the way back to it; none while the area has no site yet. */
-  site?: string | undefined;
   /** Plants already listed in this area. */
   plants: number;
-  /** List what was planted in it. */
-  onPlant: () => void;
+  /** List what was planted in it. Both left out once the event is saved. */
+  onPlant?: (() => void) | undefined;
   /** List plants for the site as a whole, in no area: the area stays drawn. */
-  onWholeSite: () => void;
+  onWholeSite?: (() => void) | undefined;
+  /** Back to what was showing before the sheet. */
+  onClose: () => void;
 }) {
   return (
     <div className="grid gap-3.5 py-[18px]">
@@ -31,14 +31,22 @@ export function AreaSheet({ area, site, plants, onPlant, onWholeSite }: {
           <span>{formatHectares(hectares(area.pts))} · {plants ? `${formatNumber(plants)} plants` : "No plants yet"}</span>
         </span>
       </div>
-      <button type="button" className={f.next} onClick={onPlant}>
-        <Sprout size={18} strokeWidth={2.4} aria-hidden="true" />
-        {plants ? "Change plants" : "Add plants"}
-        <ArrowRight size={18} strokeWidth={2.4} aria-hidden="true" />
-      </button>
-      <button type="button" className={`${f.inlineLink} justify-self-center`} onClick={onWholeSite}>
-        {site ? `Plant at the whole of ${site} instead` : "Plant at the whole site instead"}
-      </button>
+      <div className="flex items-center gap-2.5">
+        <button type="button" className={f.back} onClick={onClose}>Close</button>
+        {onPlant && (
+          <button type="button" className={f.next} onClick={onPlant}>
+            <Sprout size={18} strokeWidth={2.4} aria-hidden="true" />
+            {plants ? "Change plants" : "Add plants"}
+            <ArrowRight size={18} strokeWidth={2.4} aria-hidden="true" />
+          </button>
+        )}
+      </div>
+      {onWholeSite && (
+        <button type="button" className={`${f.inlineLink} justify-self-center`} onClick={onWholeSite}>
+          {/* As the plant list calls it: Whole site, plants in no drawn area. */}
+          Plant at Whole site instead, in no drawn area
+        </button>
+      )}
     </div>
   );
 }

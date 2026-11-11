@@ -38,7 +38,7 @@ export const NEW_SITE = "new-site";
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialSite = "", steps = EVENT_STEPS, newSite = false, save,
+  options, today, formRef, headingRef, initialSite = "", initialPart = null, steps = EVENT_STEPS, newSite = false, save,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -49,6 +49,8 @@ export function useEventForm({
   headingRef: RefObject<HTMLHeadingElement | null>;
   /** Site slug to start on, e.g. when the form opens from the map at a site. */
   initialSite?: string;
+  /** The part of that site to start on (its id), or null for the site as a whole. */
+  initialPart?: string | null | undefined;
   /** Which fields each step asks for (EVENT_STEPS, or the map form's order). */
   steps?: readonly EventStep[];
   /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
@@ -59,7 +61,7 @@ export function useEventForm({
   const suggested = seasonFromDate(today)!;
 
   const [placeSlug, setPlaceSlug] = useState(initialSite);
-  const [parcelId, setParcelId] = useState<string | null>(null);
+  const [parcelId, setParcelId] = useState<string | null>(initialPart);
   const [plantedOn, setPlantedOn] = useState(today);
   const [season, setSeason] = useState<EventSeason>(suggested.season);
   const [seasonYear, setSeasonYear] = useState(String(suggested.seasonYear));
@@ -81,6 +83,8 @@ export function useEventForm({
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [savedPlantingEvent, setSavedPlantingEvent] = useState<number | undefined>(undefined);
+  // Goes up each time problems are shown (Submit, or the server's), so the view can bring the first into sight.
+  const [problemAsk, setProblemAsk] = useState(0);
   // Field problems the server found, for the input it was sent: they go once anything is edited.
   const [server, setServer] = useState<{ input: string; errors: FieldErrors } | null>(null);
 
@@ -114,7 +118,7 @@ export function useEventForm({
 
   const markChecked = (s: number) => setCheckedSteps((prev) => new Set(prev).add(s));
   const show = (s: number) => { setStep(s); setFurthest((f) => Math.max(f, s)); };
-  const focusFirstProblem = () => focusSoon(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']"));
+  const focusFirstProblem = () => focusSoon(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [data-problem]"));
 
   /** Go to a step and move focus to its heading. */
   function goTo(s: number) {
@@ -132,6 +136,7 @@ export function useEventForm({
   /** Go to the first step with one of these problems. */
   function showProblems(errs: FieldErrors) {
     const s = firstStepWithError(errs, steps) ?? 0;
+    setProblemAsk((n) => n + 1);
     markChecked(s);
     show(s);
     focusFirstProblem();
@@ -165,7 +170,7 @@ export function useEventForm({
   }
 
   return {
-    site, total, errors,
+    site, total, errors, problemAsk,
     /** The message for one field path (e.g. "species.0.quantity"), if it has one. */
     err: (path: string): string | undefined => errors[path],
 
@@ -179,6 +184,8 @@ export function useEventForm({
     /** Saving now; the general save failure (shown by Submit); true once the event and its plants are saved. */
     // With `save`, the receipt only shows once everything is saved.
     saving, saveError, saved: !!save && preview !== null,
+    /** The event's row was saved but not its plants: a retry only adds the plants, so where and when can't change now. */
+    partlySaved: savedPlantingEvent !== undefined && preview === null,
     /** Leave the preview and return to the last step, values kept. */
     closePreview() {
       setPreview(null);

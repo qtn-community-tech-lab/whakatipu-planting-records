@@ -1,21 +1,26 @@
 "use client";
-import { Check, MapPin } from "lucide-react";
+import { ArrowLeftRight, Check, List, Plus } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import s from "./part-menu.module.css";
 
 /**
- * The site's parts in a dark menu, "Whole site" first, the chosen one ticked; with
- * `onChangeSite`, "Another site" last. Opened by the button it wraps (`children`, styled by `className`):
- * the map's dock on phones (opens upwards), the panel's breadcrumb on wide screens (downwards).
+ * The site's parts in a dark menu, "Whole site" first, the chosen one ticked; then, when given,
+ * "New sublocation", "Another site" and "All sites". Opened by the button it wraps (`children`, styled by `className`):
+ * the map's dock on phones (opens upwards), the panel's breadcrumb and title, and the form's place tile.
  */
-export function PartMenu({ siteName, parts, part, onChoosePart, onChangeSite, side, className, label, children }: {
+export function PartMenu({ siteName, parts, part, onChoosePart, onAddPart, onOtherSite, onAllSites, side, className, label, children }: {
   siteName: string;
   parts: { id: string; name: string }[];
   /** The chosen part's id, or null: the site as a whole. */
   part: string | null;
   onChoosePart: (id: string | null) => void;
-  onChangeSite?: (() => void) | undefined;
+  /** New sublocation: drop a pin on the map as a part of this site. */
+  onAddPart?: (() => void) | undefined;
+  /** Another site: the site chooser, to move what's being entered to a different site. */
+  onOtherSite?: (() => void) | undefined;
+  /** All sites: leaves the site for every site, as the header's × and the breadcrumb's All sites do. */
+  onAllSites?: (() => void) | undefined;
   side: "top" | "bottom";
   className?: string | undefined;
   label: string;
@@ -24,7 +29,7 @@ export function PartMenu({ siteName, parts, part, onChoosePart, onChangeSite, si
   const [open, setOpen] = useState(false);
   const pick = (fn: () => void) => () => { setOpen(false); fn(); };
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={setOpen} modal>
       <PopoverTrigger className={className} aria-label={label}>{children}</PopoverTrigger>
       <PopoverContent side={side} align="start" sideOffset={10} collisionPadding={12} className={s.menu}>
         <p>{siteName}</p>
@@ -34,10 +39,22 @@ export function PartMenu({ siteName, parts, part, onChoosePart, onChangeSite, si
             {p.name}
           </button>
         ))}
-        {onChangeSite && (
-          <button type="button" className={s.other} onClick={pick(onChangeSite)}>
-            <span><MapPin size={16} strokeWidth={2.2} aria-hidden="true" /></span>
+        {onAddPart && (
+          <button type="button" className={s.other} onClick={pick(onAddPart)}>
+            <span><Plus size={16} strokeWidth={2.4} aria-hidden="true" /></span>
+            New sublocation of {siteName}
+          </button>
+        )}
+        {onOtherSite && (
+          <button type="button" className={s.other} onClick={pick(onOtherSite)}>
+            <span><ArrowLeftRight size={16} strokeWidth={2.2} aria-hidden="true" /></span>
             Another site
+          </button>
+        )}
+        {onAllSites && (
+          <button type="button" className={s.other} onClick={pick(onAllSites)}>
+            <span><List size={16} strokeWidth={2.2} aria-hidden="true" /></span>
+            All sites
           </button>
         )}
       </PopoverContent>

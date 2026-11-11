@@ -15,19 +15,23 @@ import { Skeleton } from "@/components/ui/skeleton";
 // The form's own frame and Next button, so the overview sits exactly where the form will.
 import f from "@/components/wrt/events/map-event-form.module.css";
 import { SeasonList } from "@/components/wrt/shared/season-list";
+import { StatTiles } from "@/components/wrt/shared/stat-tiles";
+import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, parcelId, partName, today, partPicker, onStart, onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
+export function SiteOverview({ slug, parcelId, partName, today, totals, onStart, startLabel = "Add new planting event", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
-  /** First, on phones: a menu to switch to one of the site's parts (the page supplies it). */
-  partPicker?: ReactNode;
   /** NZ today, "YYYY-MM-DD": how long ago each season was. */
   today: string;
   /** The chosen part: its own trees and seasons, when it has any recorded. */
   parcelId: string | null;
   partName?: string | undefined;
+  /** Plants and species by site and by `site/part`: the tiles at the top. */
+  totals: PlantTotals;
   onStart: () => void;
+  /** The start button's words: "Back to your planting event" when one with entries is waiting. */
+  startLabel?: string | undefined;
   /** A season's row: open its planting events. `wholeSite` when the seasons shown are the whole site's (the part has none). */
   onOpenSeason?: ((season: { slug: string; label: string }, wholeSite: boolean) => void) | undefined;
   /** The site's pin is in the wrong spot: move it here, first, before an event is started there. Not saved yet. */
@@ -41,8 +45,7 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
   const fellBack = !!parcelId && !!partName && !!o?.wholeSite;
 
   return (
-    <Frame onStart={onStart} busy={loading}>
-      {partPicker}
+    <Frame onStart={onStart} label={startLabel} busy={loading}>
       {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
           <div className={s.loading}>
@@ -59,6 +62,7 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
         ) : (
           <>
             {fellBack && <p className={f.context}>Nothing recorded at {partName} yet, so this is the whole site.</p>}
+            <StatTiles stats={tiles(totals, slug, o.wholeSite ? null : parcelId)} />
             {/* Past plantings first: what went in, when, and a way into each season. */}
             <SeasonList
               seasons={o.seasons} today={today} summary={`Latest ${o.seasons.length === 1 ? "season" : `${o.seasons.length} seasons`}`}
@@ -86,8 +90,19 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
   );
 }
 
+/** Plants and species, as on a season; for the whole site, also how many of its parts (sites, to WRT) have plants. */
+function tiles(totals: PlantTotals, slug: string, parcelId: string | null) {
+  const x = totals[parcelId ? `${slug}/${parcelId}` : slug];
+  const parts = parcelId ? 0 : Object.entries(totals).filter(([k, v]) => k.startsWith(`${slug}/`) && v.plants > 0).length;
+  return [
+    { label: "Plants", value: formatNumber(x?.plants ?? 0) },
+    { label: "Species", value: String(x?.species ?? 0) },
+    ...(parts > 1 ? [{ label: "Sites", value: String(parts) }] : []),
+  ];
+}
+
 /** The site's pin in the wrong spot: a quiet link to move it, or once moved (not saved yet), Move again and Undo. */
-export function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () => void; onUndo?: (() => void) | undefined }) {
+function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () => void; onUndo?: (() => void) | undefined }) {
   return moved ? (
     <p className={s.pinMoved} role="status">
       <span>Pin moved, not saved yet.</span>
@@ -102,12 +117,12 @@ export function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () =
 }
 
 /** The form's frame, with "Add new planting event" where the form's Next sits. */
-function Frame({ children, onStart, busy }: { children: ReactNode; onStart: () => void; busy?: boolean | undefined }) {
+function Frame({ children, onStart, label, busy }: { children: ReactNode; onStart: () => void; label: string; busy?: boolean | undefined }) {
   return (
     <div className={f.form}>
       <div className={f.scroll} aria-busy={busy}>{children}</div>
       <footer className={f.foot}>
-        <button type="button" className={f.next} onClick={onStart}>Add new planting event<ArrowRight size={18} strokeWidth={2.2} /></button>
+        <button type="button" className={f.next} onClick={onStart}>{label}<ArrowRight size={18} strokeWidth={2.2} /></button>
       </footer>
     </div>
   );

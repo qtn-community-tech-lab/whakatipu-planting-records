@@ -20,16 +20,10 @@ export const EVENT_STEPS: readonly EventStep[] = [
   { title: "Check and submit", fields: [] },
 ];
 
-/**
- * The map form's two steps: what was planted, then where and when, which ends with the summary and Submit.
- * The site is already chosen on the map before the form opens.
- */
+/** The map form is one page: every field, checked together on Submit. */
 export const MAP_EVENT_STEPS: readonly EventStep[] = [
-  { title: "What was planted", fields: ["species"] },
-  { title: "Where and when", fields: ["placeSlug", "parcelId", "polygon", "plantedOn", "season", "seasonYear", "notes"] },
+  { title: "New planting event", fields: ["placeSlug", "parcelId", "polygon", "plantedOn", "season", "seasonYear", "species", "notes"] },
 ];
-/** Each map step's position in MAP_EVENT_STEPS. */
-export const MAP_STEP = { whatPlanted: 0, whereWhen: 1 } as const;
 
 /** Each step's position in EVENT_STEPS, for code that links to a particular step. */
 export const STEP = { whereWhen: 0, whatPlanted: 1, check: 2 } as const;

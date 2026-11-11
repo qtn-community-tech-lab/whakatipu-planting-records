@@ -8,28 +8,29 @@ import type { Area } from "../draw-area";
 import s from "./navigator.module.css";
 
 /**
- * The drawn areas, in the wide panel under the title, on every step. A row per area; a click goes to it
- * on the map and lights it, and the lit one shows Change shape and Add plants. On the first step the list
+ * The drawn areas, in the wide panel under the title. A row per area; a click goes to it
+ * on the map and lights it, and the lit one shows Change shape and Add plants. Before the form is started the list
  * is open; past it, one line ("3 areas · 0.7 ha") that opens it, so the form keeps the room.
  * Up and down move between rows (useMapKeys).
  */
-export function AreaList({ areas, shown, plants, firstStep, drawing, onShow, onReshape, onPlant, onDraw }: {
+export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, onReshape, onPlant, onDraw }: {
   areas: Area[];
   /** The area brought forward on the map (its id). */
   shown: number | null;
   /** Plants listed in each area, by id. */
   plants: Record<number, number>;
-  firstStep: boolean;
+  notStarted: boolean;
   drawing: boolean;
   onShow: (id: number) => void;
   /** Change the shape of the area at this place in the list. */
   onReshape: (i: number) => void;
-  onPlant: (id: number) => void;
+  /** Left out once the event is saved. */
+  onPlant?: ((id: number) => void) | undefined;
   onDraw: () => void;
 }) {
-  // Opened or closed by hand, on the step it was done on; a step either side of the first goes back to the rule.
-  const [toggled, setToggled] = useState<{ firstStep: boolean; open: boolean } | null>(null);
-  const open = toggled?.firstStep === firstStep ? toggled.open : firstStep;
+  // Opened or closed by hand, before or after the form started; the other side of that goes back to the rule.
+  const [toggled, setToggled] = useState<{ notStarted: boolean; open: boolean } | null>(null);
+  const open = toggled?.notStarted === notStarted ? toggled.open : notStarted;
   if (!areas.length) return null;
   const ha = formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0));
   const plantsOf = (id: number) => (plants[id] ? `${formatNumber(plants[id])} plants` : "No plants yet");
@@ -37,7 +38,7 @@ export function AreaList({ areas, shown, plants, firstStep, drawing, onShow, onR
   return (
     <section className={s.list} aria-label="Planted areas">
       <div className={s.listHead}>
-        <button type="button" className={s.listToggle} aria-expanded={open} onClick={() => setToggled({ firstStep, open: !open })}>
+        <button type="button" className={s.listToggle} aria-expanded={open} onClick={() => setToggled({ notStarted, open: !open })}>
           <Pentagon size={16} strokeWidth={2.4} aria-hidden="true" />
           <b>{areas.length} {areas.length === 1 ? "area" : "areas"}</b> · {ha}
           <ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" />
@@ -65,9 +66,11 @@ export function AreaList({ areas, shown, plants, firstStep, drawing, onShow, onR
                     <button type="button" onClick={() => onReshape(i)}>
                       <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />Change shape
                     </button>
-                    <button type="button" onClick={() => onPlant(a.id)}>
-                      <Sprout size={15} strokeWidth={2.4} aria-hidden="true" />{plants[a.id] ? "Change plants" : "Add plants"}
-                    </button>
+                    {onPlant && (
+                      <button type="button" onClick={() => onPlant(a.id)}>
+                        <Sprout size={15} strokeWidth={2.4} aria-hidden="true" />{plants[a.id] ? "Change plants" : "Add plants"}
+                      </button>
+                    )}
                   </span>
                 )}
               </li>

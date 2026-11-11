@@ -13,7 +13,7 @@
  * breakpoint (a window resized, a big phone turned on its side) restyles the panel but keeps the
  * form and what's typed in it. Wide, the sheet's spring and drags are off.
  */
-import { ChevronDown, MapPin } from "lucide-react";
+import { ChevronDown, MapPin, Search, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
@@ -28,7 +28,7 @@ export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
 /** At full, the gap left above the sheet, below the status bar, in px. */
 const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleIcon, titleHidden, locked, above, below, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onSearch, searchOpen, actionSlot, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -45,6 +45,14 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   onTitle?: (() => void) | undefined;
   /** What the title opens is open: its chevron flips, and the button says so (aria-expanded). */
   titleOpen?: boolean | undefined;
+  /** Instead of onTitle: wraps the title button (pin, title, chevron) in the page's own menu, e.g. a popover. */
+  titleMenu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined;
+  /** Phones: a Search button where Map would be (the page opens its search). */
+  onSearch?: (() => void) | undefined;
+  /** The search is open: the same button reads Close, so closing it is always on purpose. */
+  searchOpen?: boolean | undefined;
+  /** A place beside the title for the page's own button (e.g. Edit), filled through a portal. Phones: it takes Search's place. */
+  actionSlot?: ((el: HTMLElement | null) => void) | undefined;
   /** Without onTitle: the pin beside the title anyway, as a plain header (no chevron, not a button). */
   titleIcon?: boolean | undefined;
   /** Wide: the title is read out but not shown, e.g. when a breadcrumb above already says it. */
@@ -56,13 +64,14 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   below?: ReactNode | undefined;
   children: ReactNode;
 }) {
-  const heading = <>{wide && above}{wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} icon={titleIcon} />}{wide && below}</>;
-  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked}>{children}</Sheet>;
+  const title_ = wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} menu={titleMenu} icon={titleIcon} />;
+  const heading = <>{wide && above}{actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_}{wide && below}</>;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen} hasAction={!!actionSlot}>{children}</Sheet>;
 }
 
-function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, children }: {
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, hasAction, children }: {
   wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; children: ReactNode;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; hasAction?: boolean | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const visible = useRef<HTMLDivElement>(null);
@@ -207,7 +216,7 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
   const dragged = useRef(false);
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     dragged.current = false;
-    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button")) || !spring.current) return;
+    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button")) || (e.target as HTMLElement).closest("[data-bar-action]") || !spring.current) return;
     const bar = e.currentTarget;
     const startY = e.clientY;
     const start = spring.current.value;
@@ -235,10 +244,10 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
 
   // At peek a tap anywhere on the bar, its title too, opens it half way; once open, the title changes
   // the site. Caught before the title's own click. A drag that ends on the bar isn't a tap: a touch drag
-  // cancels the click, a mouse one is marked.
+  // cancels the click, a mouse one is marked. Search does its own thing on the first tap (it raises the sheet itself).
   const opensFromBar = !wide && !locked && snap === "peek";
   function openFromBar(e: React.MouseEvent<HTMLDivElement>) {
-    if (!opensFromBar) return;
+    if (!opensFromBar || (e.target as HTMLElement).closest("[data-bar-action]")) return;
     e.stopPropagation();
     e.preventDefault();
     if (!dragged.current) onSnap("mid");
@@ -264,7 +273,12 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
         <div className={s.barText}>
           {heading}
         </div>
-        {showMap && (
+        {!wide && !locked && onSearch ? (
+          <button type="button" className={s.barButton} data-bar-action="" onClick={onSearch} aria-label={searchOpen ? "Close the site search" : "Search sites"}>
+            {searchOpen ? <X size={16} strokeWidth={2.6} aria-hidden="true" /> : <Search size={16} strokeWidth={2.4} aria-hidden="true" />}
+            {searchOpen ? "Close" : "Search"}
+          </button>
+        ) : showMap && !hasAction && (
           <button type="button" className={s.barButton} onClick={() => onSnap("peek")} aria-expanded aria-label="Show the map">
             <ChevronDown size={16} strokeWidth={2.4} />
             Map
@@ -293,7 +307,10 @@ function scroller(el: HTMLElement | null, sheet: HTMLElement): HTMLElement | nul
 }
 
 /** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
-function Heading({ title, subtitle, onTitle, open, icon }: { title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined; icon?: boolean | undefined }) {
+function Heading({ title, subtitle, onTitle, open, menu, icon }: {
+  title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined;
+  menu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined; icon?: boolean | undefined;
+}) {
   const text = (
     <span className={s.titleText}>
       <b>{title}</b>
@@ -305,12 +322,14 @@ function Heading({ title, subtitle, onTitle, open, icon }: { title: string; subt
       <MapPin size={22} strokeWidth={2.2} />
     </span>
   );
+  const chevron = <ChevronDown size={22} strokeWidth={2.4} />;
+  if (menu) return menu({ className: s.titleButton!, label: `${title}${subtitle ? `, ${subtitle}` : ""}: change`, children: <>{pin}{text}{chevron}</> });
   if (!onTitle) return icon ? <div className={s.titlePlain}>{pin}{text}</div> : text;
   return (
     <button type="button" className={s.titleButton} onClick={onTitle} aria-expanded={open} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
       {pin}
       {text}
-      <ChevronDown size={22} strokeWidth={2.4} />
+      {chevron}
     </button>
   );
 }

@@ -107,19 +107,8 @@
    sits in the map beside it */
 @media (min-width: 768px) {
   .top { left: 588px; right: auto; }
-  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for back, the site pill and + */
-  .exit, .session, .add { display: none; }
+  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for the site pill and +; back stays, in the map beside the panel */
+  .session, .add { display: none; }
   .hint { left: calc(50% + 286px); }
 }
 
-/* phones, a site's overview: which part is showing, a menu to switch (the site's parts, and Another site) */
-.partRow {
-  width: 100%; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 6px 14px; border: 1px solid var(--border-card, #e6e8df);
-  border-radius: 14px; background: var(--surface-card, #fff); color: var(--cn-green-800); text-align: left; cursor: pointer;
-}
-.partRow > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.partRow small { font: 600 11.5px var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-eyebrow); }
-.partRow b { font: 700 15px/1.2 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.partRow > svg:last-child { transition: transform 150ms ease; }
-.partRow[data-state="open"] > svg:last-child { transform: rotate(180deg); }
-.partRow:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }

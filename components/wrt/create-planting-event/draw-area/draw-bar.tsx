@@ -4,7 +4,7 @@
  *   Drawing: one pill that says the next step, with Undo, Start again (or Remove, when changing
  *     a kept area), Done and Stop. Until the first corner goes down, a switch between tapping
  *     corners and tracing. Once there's a shape, a field above the pill names it: Done needs a name.
- *   Not drawing: a dock. The site's part (a menu of its parts, and Another site), the number of
+ *   Not drawing: a dock. The site's part (a menu of its parts, New sublocation and All sites), the number of
  *     areas kept (tap it to step into them) and a pencil that draws one.
  *   An area brought forward (from the dock, or tapped on the map): a stepper. Back and next go
  *     through the areas on the map; above it, Change shape and Add plants for the one in view.
@@ -27,7 +27,7 @@ const METHODS: { id: DrawMethod; label: string }[] = [
   { id: "trace", label: "Trace" },
 ];
 
-export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, choosing = false, onToggleSite, plants, shown, dock = true, style }: {
+export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, choosing = false, onToggleSite, plants, shown, dock = true, style }: {
   draw: DrawArea;
   /** The area brought forward on the map (its id): the bar steps through the areas from it. */
   shown: number | null;
@@ -35,8 +35,8 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
   onShow: (id: number) => void;
   /** Let the area go: back to the dock. */
   onClose: () => void;
-  /** List what was planted in an area (its id): the form's "What was planted", on that area. */
-  onPlant: (id: number) => void;
+  /** List what was planted in an area (its id): the form's "What was planted", on that area. Left out once the event is saved. */
+  onPlant?: ((id: number) => void) | undefined;
   /** Plants entered for each area (by area id), from the form's "What was planted". */
   plants: Record<number, number>;
   /** The event's site, and its part beside the site's name ("Roadside"); no part is the site as a whole. */
@@ -49,11 +49,19 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
   onChoosePart: (id: string | null) => void;
   /** Another site (the site chooser). */
   onChangeSite: () => void;
+  /** The part menu's All sites: leave the site for every site. */
+  onAllSites: () => void;
+  /** The part menu's New sublocation, where it's offered. */
+  onAddPart?: (() => void) | undefined;
+  /** The place can't change now (the event's row is saved without its plants): the part shows, without its menu. */
+  placeLocked?: boolean | undefined;
   /** With no site, the dock's Choose a site: opens the chooser, or closes it when it's open (`choosing`). */
   choosing?: boolean | undefined;
   onToggleSite?: (() => void) | undefined;
   /** Draw another area (the host drops the phone sheet first). */
   onAdd: () => void;
+  /** Stop drawing, keeping nothing new (the host may bring its list back). */
+  onStop: () => void;
   /** False: only the drawing pill (wide screens, where the panel and the map's toolbar do the rest). */
   dock?: boolean | undefined;
   /** Where it sits: the host knows how tall the phone sheet is. */
@@ -129,7 +137,7 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
                 </button>
               )}
               <button type="button" className={s.pillGo} onClick={() => draw.done()} disabled={n < 3 || !named}>Done</button>
-              <button type="button" className={s.pillCancel} onClick={draw.stop} aria-label="Stop drawing, keep nothing new" title="Stop drawing">
+              <button type="button" className={s.pillCancel} onClick={onStop} aria-label="Stop drawing, keep nothing new" title="Stop drawing">
                 <X size={18} strokeWidth={2.4} aria-hidden="true" />
               </button>
             </div>
@@ -175,7 +183,7 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
             <button type="button" className={s.stepBtn} onClick={() => step(1)} disabled={areas.length < 2} aria-label="Next area">
               <ChevronRight size={20} strokeWidth={2.4} aria-hidden="true" />
             </button>
-            <button type="button" className={s.closeBtn} onClick={onClose} aria-label="Close this area: back to the site">
+            <button type="button" className={s.closeBtn} onClick={onClose} aria-label="Close: stop showing this area">
               <X size={18} strokeWidth={2.4} aria-hidden="true" />
             </button>
           </div>
@@ -184,16 +192,23 @@ export function DrawBar({ draw, onAdd, onShow, onClose, onPlant, siteName, partN
             <button type="button" onClick={() => draw.start(ati)}>
               <Pencil size={16} strokeWidth={2.4} aria-hidden="true" />Change shape
             </button>
-            <button type="button" onClick={() => onPlant(at.id)}>
-              <Sprout size={16} strokeWidth={2.4} aria-hidden="true" />{plants[at.id] ? "Change plants" : "Add plants"}
-            </button>
+            {onPlant && (
+              <button type="button" onClick={() => onPlant(at.id)}>
+                <Sprout size={16} strokeWidth={2.4} aria-hidden="true" />{plants[at.id] ? "Change plants" : "Add plants"}
+              </button>
+            )}
           </div>
         </>
       ) : (
         <>
           <div className={s.dock} role="group" aria-label="Map tools">
-            {siteName ? (
-              <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onChangeSite={onChangeSite} side="top" className={s.partBtn} label={`${site}: change the part`}>
+            {siteName && placeLocked ? (
+              <button type="button" className={s.partBtn} disabled>
+                <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
+                <span className={s.areaText}><b>{partName ?? siteName}</b><small>{partName ? siteName : parts.length ? "Whole site" : "Site"}</small></span>
+              </button>
+            ) : siteName ? (
+              <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onAddPart={onAddPart} onAllSites={onAllSites} side="top" className={s.partBtn} label={`${site}: change the part`}>
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
                 <span className={s.areaText}>
                   <b>{partName ?? siteName}</b>

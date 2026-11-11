@@ -99,15 +99,15 @@ export async function createPlantingLines(plantingEvent: number, lines: { specie
     .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent })));
 }
 
-/** A planting event's season slug, e.g. "autumn-2021", to check an edited date against. Null when there is no such event. */
+/** A planting event's season slug (e.g. "autumn-2021") and stored date, to check an edited date against. Null when there is no such event. */
 export async function readPlantingEventSeason(id: number) {
   const { data } = await (await db())
     .from("planting_events")
-    .select("seasons(slug)")
+    .select("planted_on, seasons(slug)")
     .eq("id", id)
     .maybeSingle()
     .throwOnError();
-  return data?.seasons?.slug ?? null;
+  return data?.seasons?.slug ? { season: data.seasons.slug, plantedOn: data.planted_on } : null;
 }
 
 /** A planting event's active lines: each one's id, species slug and quantity. */
