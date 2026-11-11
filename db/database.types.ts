@@ -88,14 +88,14 @@ export type Database = {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
-            referencedRelation: "place_seasons";
+            referencedRelation: "site_area_seasons";
             referencedColumns: ["site"];
           },
           {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
-            referencedRelation: "place_species";
+            referencedRelation: "site_area_species";
             referencedColumns: ["site"];
           },
           {
@@ -275,14 +275,14 @@ export type Database = {
             foreignKeyName: "planting_events_area_fkey";
             columns: ["area"];
             isOneToOne: false;
-            referencedRelation: "place_seasons";
+            referencedRelation: "site_area_seasons";
             referencedColumns: ["area"];
           },
           {
             foreignKeyName: "planting_events_area_fkey";
             columns: ["area"];
             isOneToOne: false;
-            referencedRelation: "place_species";
+            referencedRelation: "site_area_species";
             referencedColumns: ["area"];
           },
           {
@@ -310,7 +310,7 @@ export type Database = {
             foreignKeyName: "planting_events_season_fkey";
             columns: ["season"];
             isOneToOne: false;
-            referencedRelation: "place_seasons";
+            referencedRelation: "site_area_seasons";
             referencedColumns: ["season_order"];
           },
           {
@@ -430,7 +430,7 @@ export type Database = {
             foreignKeyName: "planting_lines_species_fkey";
             columns: ["species"];
             isOneToOne: false;
-            referencedRelation: "place_species";
+            referencedRelation: "site_area_species";
             referencedColumns: ["species"];
           },
           {
@@ -748,7 +748,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      place_seasons: {
+      site_area_seasons: {
         Row: {
           area: string | null;
           plants: number | null;
@@ -760,7 +760,7 @@ export type Database = {
         };
         Relationships: [];
       };
-      place_species: {
+      site_area_species: {
         Row: {
           area: string | null;
           common_name: string | null;
