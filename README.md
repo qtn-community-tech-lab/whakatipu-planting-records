@@ -59,9 +59,10 @@ insert into public.users (name, email)
 values ('Staff name', 'staff@example.org');
 ```
 
-Start the app and open [`/login`](http://localhost:3000/login). Local Supabase captures sign-in messages in its
+Start the app and open [`/login`](http://127.0.0.1:3000/login). Local Supabase captures sign-in messages in its
 email inbox at [http://127.0.0.1:54324](http://127.0.0.1:54324); no email is delivered to a real inbox. Open the
-message link to sign in. Public pages and CSV downloads work without an account.
+message link to sign in. Use `http://127.0.0.1:3000` consistently: `localhost` has separate browser cookies.
+Public pages and CSV downloads work without an account.
 
 ### 4. Load the planting history and map pins
 
@@ -83,7 +84,7 @@ each season against its source total. These imports can be rerun; see [import be
 npm run dev
 ```
 
-Open [the app](http://localhost:3000). Local [Supabase Studio](http://127.0.0.1:54323) provides the table browser
+Open [the app](http://127.0.0.1:3000). Local [Supabase Studio](http://127.0.0.1:54323) provides the table browser
 and SQL Editor. Reference photos and map tiles still need internet access.
 
 ### Everyday commands
