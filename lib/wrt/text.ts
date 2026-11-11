@@ -134,6 +134,15 @@ export function spanLabel(span: { first: { slug: string; label: string }; last: 
   return span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
 }
 
+/**
+ * A part's name for showing beside its site's name: without the site in front
+ * ("Arthurs Point - Morning Star Reserve" at Arthurs Point reads "Morning Star Reserve").
+ */
+export function partBesideSite(part: string, site: string): string {
+  const rest = part.startsWith(site) ? part.slice(site.length).replace(/^\s*[-–—:/]\s*/, "") : part;
+  return rest && rest.length < part.length - site.length ? rest : part;
+}
+
 export function formatNumber(n: number): string {
   return new Intl.NumberFormat("en-NZ").format(n);
 }

@@ -6,6 +6,7 @@ import { FieldError } from "@/components/ui/field";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { formatNumber } from "@/lib/wrt/text";
+import { NUMBER_FIELD, digits } from "@/components/wrt/shared/fields";
 import { SpeciesPicker } from "./species-picker";
 import type { EventFormState } from "./use-event-form";
 
@@ -30,9 +31,9 @@ export function WhatPlantedStep({ form, options }: { form: EventFormState; optio
               />
               <TextInput
                 label="Quantity" fieldClassName="ev-line__qty" className="tabular-nums"
-                type="number" inputMode="numeric" min={1} step={1} placeholder="0" value={l.quantity}
+                {...NUMBER_FIELD} maxLength={6} placeholder="0" value={l.quantity}
                 error={err(`species.${i}.quantity`)}
-                onChange={(e) => form.updateLine(l.key, { quantity: e.target.value })}
+                onChange={(e) => form.updateLine(l.key, { quantity: digits(e.target.value) })}
               />
               <button
                 type="button" className="cn-btn cn-btn--soft cn-btn--sm ev-line__remove"

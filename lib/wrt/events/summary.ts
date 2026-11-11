@@ -12,8 +12,8 @@ export interface EventSummary {
   part: string;
   date: string;
   season: string;
-  /** With `area` when the event has drawn areas: the record sheet's area id. */
-  species: { name: string; quantity: number; area?: number }[];
+  /** With `area` when the event has drawn areas: the planting event page's area id. */
+  species: { name: string; quantity: number; area?: number | undefined }[];
   total: number;
   notes: string | null;
 }

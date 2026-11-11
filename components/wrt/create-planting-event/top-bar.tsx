@@ -3,7 +3,7 @@ import { ArrowLeft, ChevronDown, MapPin, Pentagon, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import s from "./record-sheet.module.css";
+import s from "./create-planting-event.module.css";
 
 /**
  * The session header over the map: a back button, the site in the middle (tap it to change the
