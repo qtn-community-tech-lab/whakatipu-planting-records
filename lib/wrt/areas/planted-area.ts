@@ -1,6 +1,6 @@
 /**
- * The maths for a drawn planted area: its size in hectares, and turning a
- * traced line into a few corners. No map code here.
+ * The maths for a drawn planted area: its size in hectares, turning a
+ * traced line into a few corners, and whether a tap is inside it. No map code here.
  */
 
 /** [longitude, latitude] */
@@ -17,7 +17,7 @@ export function hectares(ring: readonly (readonly [number, number])[]): number {
   if (n < 3) return 0;
   let total = 0;
   for (let i = 0; i < n; i++) {
-    const before = ring[i], here = ring[(i + 1) % n], after = ring[(i + 2) % n];
+    const before = ring[i]!, here = ring[(i + 1) % n]!, after = ring[(i + 2) % n]!;
     total += (rad(after[0]) - rad(before[0])) * Math.sin(rad(here[1]));
   }
   return Math.abs((total * EARTH_RADIUS_M * EARTH_RADIUS_M) / 2) / 10_000;
@@ -28,6 +28,16 @@ export function formatHectares(ha: number): string {
   if (ha < 10) return `${ha.toFixed(2)} ha`;
   if (ha < 100) return `${ha.toFixed(1)} ha`;
   return `${Math.round(ha)} ha`;
+}
+
+/** Whether point `p` is inside the ring of screen points (even–odd: count the edges a line to the right crosses). */
+export function insideRing(p: Px, ring: readonly Px[]): boolean {
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const a = ring[i]!, b = ring[j]!;
+    if ((a.y > p.y) !== (b.y > p.y) && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) inside = !inside;
+  }
+  return inside;
 }
 
 const dist = (a: Px, b: Px) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -44,7 +54,7 @@ function segmentDistance(p: Px, a: Px, b: Px): number {
 function keep(points: readonly Px[], from: number, to: number, tolerance: number, out: Set<number>) {
   let far = 0, at = -1;
   for (let i = from + 1; i < to; i++) {
-    const d = segmentDistance(points[i], points[from], points[to]);
+    const d = segmentDistance(points[i]!, points[from]!, points[to]!);
     if (d > far) { far = d; at = i; }
   }
   out.add(from).add(to);
@@ -60,11 +70,12 @@ function keep(points: readonly Px[], from: number, to: number, tolerance: number
  * `tolerance` is in px: how far a kept line may stray from the finger's path.
  */
 export function simplifyTrace(points: readonly Px[], tolerance = 10): number[] {
-  if (points.length < 3) return points.map((_, i) => i);
+  const start = points[0];
+  if (!start || points.length < 3) return points.map((_, i) => i);
   let far = 0, split = 0;
-  points.forEach((p, i) => { const d = dist(p, points[0]); if (d > far) { far = d; split = i; } });
+  points.forEach((p, i) => { const d = dist(p, start); if (d > far) { far = d; split = i; } });
   // Close the loop by repeating the start, simplify both halves, then drop the repeat.
-  const loop = [...points, points[0]];
+  const loop = [...points, start];
   const kept = new Set<number>();
   keep(loop, 0, split, tolerance, kept);
   keep(loop, split, loop.length - 1, tolerance, kept);

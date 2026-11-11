@@ -20,25 +20,35 @@ export const EVENT_STEPS: readonly EventStep[] = [
   { title: "Check and submit", fields: [] },
 ];
 
-/** Each step's position in EVENT_STEPS, for code that links to a particular step. */
+/**
+ * The map form's steps: the same three, but the date is asked last, with the check.
+ * Where is the map's business (the site, its part, the drawn area), and the date is nearly always today.
+ */
+export const MAP_EVENT_STEPS: readonly EventStep[] = [
+  { title: "Where", fields: ["placeSlug", "parcelId", "polygon"] },
+  { title: "What was planted", fields: ["species"] },
+  { title: "Check and submit", fields: ["plantedOn", "season", "seasonYear", "notes"] },
+];
+
+/** Each step's position in EVENT_STEPS (and MAP_EVENT_STEPS), for code that links to a particular step. */
 export const STEP = { whereWhen: 0, whatPlanted: 1, check: 2 } as const;
 
 export const LAST_STEP = EVENT_STEPS.length - 1;
 
 /** The step that owns an error path ("species.2.quantity" → step 1). Errors no step owns ("form") go to the first. */
-export function stepOfError(path: string): number {
+export function stepOfError(path: string, steps: readonly EventStep[] = EVENT_STEPS): number {
   const field = path.split(".")[0];
-  const i = EVENT_STEPS.findIndex((s) => s.fields.some((f) => f === field));
+  const i = steps.findIndex((s) => s.fields.some((f) => f === field));
   return i === -1 ? 0 : i;
 }
 
 /** Only the errors that belong to one step. */
-export function errorsForStep(errors: FieldErrors, step: number): FieldErrors {
-  return Object.fromEntries(Object.entries(errors).filter(([path]) => stepOfError(path) === step));
+export function errorsForStep(errors: FieldErrors, step: number, steps: readonly EventStep[] = EVENT_STEPS): FieldErrors {
+  return Object.fromEntries(Object.entries(errors).filter(([path]) => stepOfError(path, steps) === step));
 }
 
 /** The earliest step with an error, or null when there are none. */
-export function firstStepWithError(errors: FieldErrors): number | null {
-  const steps = Object.keys(errors).map(stepOfError);
-  return steps.length ? Math.min(...steps) : null;
+export function firstStepWithError(errors: FieldErrors, steps: readonly EventStep[] = EVENT_STEPS): number | null {
+  const at = Object.keys(errors).map((path) => stepOfError(path, steps));
+  return at.length ? Math.min(...at) : null;
 }

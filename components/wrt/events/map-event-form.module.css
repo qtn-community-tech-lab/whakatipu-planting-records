@@ -28,7 +28,7 @@ button.stepLink { cursor: pointer; }
 .total b { font: 700 15px var(--font-sans); font-variant-numeric: tabular-nums; color: var(--text-strong); }
 
 /* body scrolls; the tree grid sizes to the panel */
-.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px; padding: 18px 2px 18px 0; container-type: inline-size; }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; display: flex; flex-direction: column; gap: 22px; padding: 18px 2px 18px 0; container-type: inline-size; }
 
 .group { display: flex; flex-direction: column; gap: 12px; }
 .groupTitle { margin: 0; font: 700 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-eyebrow); }
@@ -41,45 +41,39 @@ button.stepLink { cursor: pointer; }
 .cardText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
 .link { align-self: center; min-height: 44px; padding: 0 10px; border: 0; background: none; font: 600 14px var(--font-sans); color: var(--text-brand); cursor: pointer; }
 
-/* season: four options and the year */
-.seasonLink { align-self: flex-start; margin-top: -4px; }
-.seasonRow { display: flex; gap: 8px; align-items: stretch; }
+/* a segmented choice (the new location: near the site, or a sublocation of it) */
 .segment { flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 3px; padding: 4px; border-radius: 14px; background: var(--surface-soft, #e7eee5); }
 .segmentItem { min-height: 40px; border: 0; border-radius: 10px; background: none; font: 600 13.5px var(--font-sans); color: var(--text-body); cursor: pointer; }
 .segmentItem[aria-checked="true"] { background: var(--surface-card, #fff); color: var(--text-strong); font-weight: 700; box-shadow: 0 2px 6px rgba(21, 38, 28, 0.12); }
-.year { width: 84px; border-radius: 14px; border: var(--border-input); background: var(--surface-card, #fff); padding: 0 10px; font: 600 15px var(--font-sans); color: var(--text-strong); text-align: center; }
 
 /* what was planted: one row per species, the quantity column down the right (like the paper sheets) */
-.rowsHead, .row { display: grid; grid-template-columns: 44px minmax(0, 1fr) 64px 92px; gap: 0 12px; align-items: center; }
+.rowsHead { display: grid; grid-template-columns: 44px minmax(0, 1fr) 64px 92px; gap: 0 12px; align-items: center; }
 .rowsHead { padding: 0; }
 .rowsHead > span:first-child { grid-column: 1 / 3; }
 .rowsHead > span:not(:first-child) { font: 600 11.5px/1 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-muted); text-align: right; }
 .rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--border-card, #e6e8df); }
 /* No side padding: rows line up with the search and the headings. A picked row's tint
    spreads outward (box-shadow), so it reads as a margin round the row, not padding inside it. */
-.row { padding: 8px 0; border-bottom: 1px solid var(--border-card, #e6e8df); border-radius: 2px; transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.row { padding: 4px 0; border-bottom: 1px solid var(--border-card, #e6e8df); border-radius: 2px; transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
 .row[data-picked] { background: #f2f6e6; box-shadow: -8px 0 0 #f2f6e6, 8px 0 0 #f2f6e6; }
 .row[data-invalid] { background: #fbefe8; box-shadow: -8px 0 0 #fbefe8, 8px 0 0 #fbefe8; }
-.rowPhoto { position: relative; width: 44px; height: 44px; border-radius: 50%; overflow: hidden; background: var(--surface-soft, #e7eee5); display: grid; place-items: center; font: 800 17px/1 var(--font-sans); color: rgba(21, 38, 28, 0.5); }
-.rowName { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-.rowName b { font: 700 15px/1.25 var(--font-sans); color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rowName span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rowHere { text-align: right; font: 500 13px var(--font-sans); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 .rowQty {
-  width: 100%; min-height: 44px; box-sizing: border-box; border-radius: 12px; border: var(--border-input);
+  flex-shrink: 0; width: 92px; min-height: 44px; box-sizing: border-box; border-radius: 12px; border: var(--border-input);
   background: var(--surface-card, #fff); padding: 0 6px; text-align: center;
-  font: 700 16px var(--font-sans); color: var(--text-strong); font-variant-numeric: tabular-nums; -moz-appearance: textfield;
+  font: 700 16px var(--font-sans); color: var(--text-strong); font-variant-numeric: tabular-nums;
 }
-.rowQty::-webkit-outer-spin-button, .rowQty::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .rowQty:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 1px; }
 .row[data-picked] .rowQty { border-color: var(--cn-green-800); }
 .row[data-invalid] .rowQty { border-color: var(--text-risk, #9a3f17); }
-.rowError { grid-column: 2 / -1; padding-top: 4px; text-align: right; font: 600 12px/1.3 var(--font-sans); color: var(--text-risk, #9a3f17); }
+.rowError { display: block; padding-top: 4px; text-align: right; font: 600 12px/1.3 var(--font-sans); color: var(--text-risk, #9a3f17); }
 
-/* narrow (a phone): the "Here" column folds under the name */
+/* The species list's ListRow: the "here" count is context, so quieter, and as wide as its heading. */
+.row [data-slot="figure"] { width: 64px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+/* narrow (a phone): the "Here" column is hidden */
 @container (max-width: 380px) {
-  .rowsHead, .row { grid-template-columns: 40px minmax(0, 1fr) 84px; }
-  .rowsHead > span:nth-child(2), .rowHere { display: none; }
+  .rowsHead { grid-template-columns: 44px minmax(0, 1fr) 84px; }
+  .rowsHead > span:nth-child(2), .row [data-slot="figure"] { display: none; }
+  .rowQty { width: 84px; }
 }
 
 .note { margin: 0; font: 400 12.5px/1.4 var(--font-sans); color: var(--text-muted); }
@@ -98,7 +92,18 @@ button.stepLink { cursor: pointer; }
   .steps { display: none; }
   .head { gap: 6px; padding: 12px 0 10px; }
   .title { font-size: 19px; }
+  /* the plant list with Done: one slim line (title, total, Done), so the list gets the room */
+  .head:has(.closeList) { padding: 6px 0 8px; }
+  .titleRow:has(.closeList) { flex-wrap: nowrap; gap: 10px; }
+  .titleRow:has(.closeList) .title { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 17px; }
+  .titleRow:has(.closeList) .total { order: 0; flex: 1 0 auto; flex-basis: auto; text-align: right; }
+  .closeList { min-height: 36px; padding: 0 12px 0 10px; }
+  /* scrolling down the plant list: the footer slides away and gives its room to the list (use-hide-on-scroll.ts) */
+  .foot { transition: transform 220ms var(--ease, ease), margin-bottom 220ms var(--ease, ease), opacity 160ms ease; }
+  .foot[data-away] { transform: translateY(100%); margin-bottom: calc(-1 * var(--bar-height, 72px)); opacity: 0; pointer-events: none; }
+  .foot[data-away] + .note { display: none; }
 }
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) { .foot { transition: none; } }
 
 
 /* the preview's one line under its title */
@@ -115,41 +120,27 @@ button.stepLink { cursor: pointer; }
 .problem { margin: 0; padding: 10px 12px; border-radius: 12px; background: #fbefe8; font: 600 13.5px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
 .empty { margin: 0; padding: 12px 0; font: 400 14px var(--font-sans); color: var(--text-muted); }
 
-/* step 3 and the preview: the event as a flat list, no cards */
-.summary { display: flex; flex-direction: column; gap: 22px; }
-.sumGroup { display: flex; flex-direction: column; }
-.sumHead { display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; }
-.sumHead h3 { margin: 0; font: 700 12px/1 var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-eyebrow); }
-.sumList { margin: 0; }
-.sumRow { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--border-card, #e6e8df); }
-.sumRow dt { font: 400 14.5px/1.35 var(--font-sans); color: var(--text-body); }
-.sumRow dd { margin: 0; font: 600 14.5px/1.35 var(--font-sans); color: var(--text-strong); text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
-.sumNotes { margin: 0; padding: 10px 0; border-top: 1px solid var(--border-card, #e6e8df); font: 400 14.5px/1.45 var(--font-sans); color: var(--text-strong); white-space: pre-wrap; }
-.sumTotal { border-top: 2px solid var(--text-strong); }
-.sumTotal dt, .sumTotal dd { font-weight: 800; color: var(--text-strong); }
 
 .badge { align-self: flex-start; padding: 5px 10px; border-radius: 999px; background: #fdf3e2; font: 700 12px/1 var(--font-sans); color: #6b4300; }
 .note { margin: 0; padding: 0 0 8px; text-align: center; }
 
-/* step 1: the date as a card, its native input hidden inside (Change opens the picker) */
+/* the date as a card (the check step), its native input hidden inside (Change opens the picker) */
 .card:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
 .dateRow { position: relative; display: flex; align-items: center; gap: 10px; padding: 2px 0 2px 14px; border-radius: 14px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); color: var(--cn-green-800); }
 .dateText { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
 .dateText b { font: 600 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
 .dateText span { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
-
-/* step 3: where the area's map snippet will go */
-.areaPlaceholder { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: center; padding: 18px 16px; border: var(--border-dashed-empty, 1.5px dashed #c9cfc0); border-radius: 18px; background: var(--surface-soft, #f1f3ec); color: var(--text-eyebrow); }
-.areaPlaceholder svg { grid-row: 1 / 3; }
-.areaPlaceholder b { font: 700 14.5px/1.3 var(--font-sans); color: var(--text-strong); }
-.areaPlaceholder span { font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }
+/* the whole date row opens the calendar, not just its Change */
+.dateChange::after { content: ""; position: absolute; inset: 0; border-radius: 14px; }
+.dateChange:focus-visible { outline: none; }
+.dateRow:has(.dateChange:focus-visible) { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 
 /* step 1: a new location placed from the map's + */
 .spotCard { flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 16px 12px; border-color: var(--cn-lime-300); background: #fbfdf1; }
 .spotHead { display: flex; align-items: center; gap: 14px; }
 .spotActions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .spotCancel { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px 0 10px; border: 1px solid var(--border-card, #e6e8df); border-radius: 999px; background: #fff; color: var(--text-strong); font: 600 14px var(--font-sans); cursor: pointer; }
-.spotCancel:hover { background: #f3f5ef; }
+@media (hover: hover) { .spotCancel:hover { background: #f3f5ef; } }
 /* a new location near the site, or a sublocation of it */
 .segmentTwo { flex: none; grid-template-columns: 1fr 1fr; }
 .segmentTwo .segmentItem { padding: 0 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -159,49 +150,70 @@ button.stepLink { cursor: pointer; }
 .spotName input { flex: 1; min-width: 0; min-height: 32px; padding: 0; border: 0; background: none; outline: none; font: 700 16.5px/1.2 var(--font-sans); color: var(--text-strong); }
 .spotName input::placeholder { color: var(--text-strong); opacity: 0.55; }
 .choosePrompt { width: 100%; min-height: 48px; border: 0; cursor: pointer; text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 12px 8px 16px; border-radius: 16px; background: #fbefe8; font: 600 14px/1.35 var(--font-sans); color: var(--text-risk, #9a3f17); }
-.cardText .spotFar { color: var(--text-risk, #9a3f17); font-weight: 600; }
 
-/* step 1: the site card, then New location and Draw area */
-.soon { padding: 2px 7px; border-radius: 999px; background: #e7eee5; font: 700 10.5px/1.3 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
 
-/* the part, chosen in a small popover on the site card */
-.whereTools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.whereTools button { position: relative; min-height: 76px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 10px 6px; border: 1px solid var(--border-card, #e6e8df); border-radius: 14px; background: var(--surface-card, #fff); font: 600 13.5px/1.2 var(--font-sans); color: var(--cn-green-800); text-align: center; cursor: pointer; }
-.whereTools button:hover:enabled { background: #eef2e8; }
-.whereTools button:disabled { cursor: default; color: var(--text-muted); }
-.whereTools .soon { position: absolute; top: 6px; right: 6px; padding: 1px 6px; font-size: 9.5px; }
-.place { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
-.placeHead { align-self: stretch; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.placeHead b { font: 700 18px/1.25 var(--font-sans); color: var(--text-strong); }
-.placeHead .link { margin-right: -10px; }
-.place > span:not(.placeLinks) { font: 400 13px/1.3 var(--font-sans); color: var(--text-muted); }
-.placeLinks { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; margin-top: 4px; }
-.placeLinks .siteLink, .placeLinks .pinMoved { margin-top: 0; }
-.siteLink { align-self: flex-start; display: inline-flex; align-items: center; gap: 3px; margin-top: 4px; font: 600 12.5px var(--font-sans); color: var(--cn-green-800); text-decoration: none; }
-.siteLink:hover { text-decoration: underline; text-underline-offset: 3px; }
-button.siteLink { padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
-.pinMoved { margin-top: 4px; font: 600 12.5px/1.4 var(--font-sans); color: var(--cn-green-800); }
-.pinMoved button + button { margin-left: 12px; }
-.pinMoved button { padding: 0; border: 0; background: none; font: inherit; color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-.partTrigger { align-self: flex-start; max-width: 100%; display: inline-flex; align-items: center; text-align: left; gap: 4px; min-height: 32px; margin: -4px 0 -6px -8px; padding: 0 8px; border: 0; border-radius: 10px; background: none; font: 600 13.5px/1.2 var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
-.partTrigger:hover, .partTrigger[data-state="open"] { background: #eef2e8; }
-.partList { z-index: 60; width: min(340px, calc(100vw - 32px)); max-height: min(360px, 60vh); overflow-y: auto; padding: 6px; border-radius: 16px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); box-shadow: 0 16px 40px rgba(21, 38, 28, 0.22); }
-.partList button { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 8px 10px; border: 0; border-radius: 12px; background: none; text-align: left; color: var(--cn-green-800); cursor: pointer; }
-.partList button:hover:enabled, .partList button[aria-pressed="true"] { background: #eef2e8; }
-.partMore { margin-top: 4px; padding-top: 4px; border-top: 1px solid var(--border-card, #e6e8df); }
-.partMore button { min-height: 44px; font: 600 14px var(--font-sans); }
-.partMore button:disabled { color: var(--text-muted); cursor: default; }
+/* step 1: the drawn areas by name, each one tap from the map */
+.areaList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.areaList button { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px 10px 12px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); text-align: left; color: var(--cn-green-800); cursor: pointer; }
+@media (hover: hover) { .areaList button:hover { background: #eef2e8; } }
+.areaList button:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.areaList svg { flex-shrink: 0; }
+/* the plant list opened from an area's Add plants: Done goes back to where you were */
+/* with Done beside the title, the running total goes on its own line under them, so the title never wraps on a phone */
+.titleRow:has(.closeList) { flex-wrap: wrap; align-items: center; row-gap: 4px; }
+.titleRow:has(.closeList) .title { flex: 1; }
+.titleRow:has(.closeList) .total { order: 3; flex-basis: 100%; }
+.closeList { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px 0 12px; border: 0; border-radius: 999px; background: var(--cn-green-800); color: #fff; font: 700 14px var(--font-sans); cursor: pointer; }
+@media (hover: hover) { .closeList:hover { background: var(--cn-green-900); } }
+.closeList:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
 
-/* step 2 with drawn areas: a tab per area (its number, size and plants), then Add area */
-/* margin: the sticky search bar paints 18px of background above itself; keep the tabs clear of it */
-.areaTabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.areaTabs button { flex: 0 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 6px 14px 6px 8px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); color: var(--cn-green-900); text-align: left; cursor: pointer; }
-.areaTabs button > span:last-child { display: flex; flex-direction: column; line-height: 1.2; }
-.areaTabs b { font: 700 14px var(--font-sans); font-variant-numeric: tabular-nums; }
-.areaTabs small { font: 500 12px var(--font-sans); color: var(--text-muted); }
-.areaTabs [aria-selected="true"] { border-color: var(--cn-green-800); box-shadow: inset 0 0 0 1px var(--cn-green-800); background: #f2f6e6; }
-.areaTabs button:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
-.areaNo { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--cn-green-900); color: var(--cn-lime-300); font: 800 12px var(--font-sans); }
-.areaTabs .areaAdd { padding: 0 14px; border-style: dashed; color: var(--cn-green-800); font: 600 14px var(--font-sans); gap: 6px; }
-/* the check: each area's species under its own line */
-.sumArea { padding: 10px 0 4px; font: 700 13px var(--font-sans); color: var(--cn-green-800); }
+
+/* the site as a whole, in step 2's area picker: its pin in a tile the size of an area's picture (set inline) */
+.siteTile { flex-shrink: 0; display: grid; place-items: center; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); }
+
+/* Step 1 with a new location: add the location on its own, without a planting. */
+.locationOnly { width: 100%; min-height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px 8px 16px; border: 1px solid var(--border-card, #e6e8df); border-radius: 16px; background: var(--surface-card, #fff); font: 500 14px/1.35 var(--font-sans); color: var(--cn-green-800); text-align: left; cursor: pointer; }
+.locationOnly b { font-weight: 700; }
+@media (hover: hover) { .locationOnly:hover { background: #eef2e8; } }
+.locationOnly:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+
+/* Typing on a phone (the page is marked data-keyboard while the keyboard is up, see
+   create-planting-event/use-keyboard-fit.ts): the heading is one slim line (beside Done, the running total
+   takes the title's place) and the footer is gone: Enter moves through the fields, and Next is back
+   once the keyboard is put away. */
+:global(html[data-keyboard]) .steps { display: none; }
+:global(html[data-keyboard]) .head { gap: 0; padding: 2px 0 8px; }
+:global(html[data-keyboard]) .title { font-size: 17px; }
+:global(html[data-keyboard]) .titleRow { align-items: center; }
+:global(html[data-keyboard]) .titleRow:has(.closeList) .title { display: none; }
+:global(html[data-keyboard]) .titleRow:has(.closeList) .total { order: 0; flex: 1; }
+:global(html[data-keyboard]) .scroll { padding-top: 10px; padding-bottom: 8px; }
+:global(html[data-keyboard]) .foot, :global(html[data-keyboard]) .foot + .note { display: none; }
+
+/* step 1: the one thing to do, draw round where it was planted */
+.drawMain { width: 100%; min-height: 84px; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; padding: 12px 16px; border: 0; border-radius: 18px; background: var(--cn-green-800); color: var(--cn-lime-300); text-align: left; cursor: pointer; }
+.drawMain svg { margin-bottom: 4px; }
+.drawMain b { font: 700 15.5px/1.2 var(--font-sans); color: #fff; }
+.drawMain span { font: 400 13px/1.3 var(--font-sans); color: rgba(243, 246, 238, 0.8); }
+@media (hover: hover) { .drawMain:hover:enabled { background: var(--cn-green-900); } }
+.drawMain:disabled { cursor: default; opacity: 0.6; }
+.drawMain:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+/* one quiet line: what happens with no area, or a new location on the check */
+.quiet { margin: 0; font: 400 13px/1.4 var(--font-sans); color: var(--text-muted); }
+
+/* the check: an area with no plants, to fill or take off before Submit */
+.emptyArea { display: flex; flex-direction: column; gap: 8px; }
+.emptyArea p { margin: 0; }
+.emptyActions { display: flex; flex-wrap: wrap; gap: 8px; }
+/* a card per place planted (FigureList), and under them the events' total */
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.placeCard { padding: 4px 14px 6px; border-radius: 18px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); }
+.placeCard > section > :first-child { border-bottom: 1px solid var(--border-card, #e6e8df); }
+.pinTile { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border-radius: 12px; background: var(--surface-soft, #e7eee5); color: var(--cn-green-800); }
+.grand { padding: 0 15px; }
+.grand [data-slot="title"], .grand [data-slot="figure"] { font-weight: 800; }
+.addNote { align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; }
+/* the receipt: plants and where, then the date and season */
+.receipt { margin: 0; font: 400 15px/1.4 var(--font-sans); color: var(--text-strong); }
+.receipt b { font-weight: 800; }
+.receipt span { display: block; margin-top: 2px; font-size: 13.5px; color: var(--text-muted); }
