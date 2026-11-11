@@ -8,7 +8,7 @@
 import { ChevronDown } from "lucide-react";
 import { Accordion } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
-import { plantsLine, type PlantTotals } from "@/components/wrt/events/map-event-form";
+import { plantsAndSpecies, type PlantTotals } from "@/components/wrt/events/map-event-form";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { rankMatches } from "@/lib/wrt/text";
 import { SearchField } from "@/components/wrt/shared/search-field";
@@ -41,7 +41,7 @@ export function SiteChooser({ open, sites, totals, value, onChoose, onClose }: {
     return siteHit || parts.length ? [{ site, parts }] : [];
   });
 
-  const amount = (key: string) => plantsLine(totals[key]);
+  const amount = (key: string) => plantsAndSpecies(totals[key]);
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
