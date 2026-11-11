@@ -342,6 +342,13 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
     const at = spot ?? pinAt(siteSlug, id);
     if (at) setFocus([at[0], at[1]]);
   }
+  // All sites: a site opened in the list flies the map there and lights its pin (nothing chosen yet);
+  // closed again, the map goes back out to every site. Choosing one of its rows opens its page.
+  function previewSite(slug: string) {
+    highlightSite(map, slug);
+    const at = slug ? pinAt(slug, null) : null;
+    setFocus(at ? [at[0], at[1]] : null);
+  }
   // The breadcrumb's site: up to the site as a whole, and the map goes to its pin.
   function showSite() {
     if (choosing) closeChooser(true);
@@ -501,6 +508,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
             onKeepNew={() => { setPicked({ slug: "", parcelId: null }); setSpotInfo((i) => ({ ...i, asPart: false })); closeChooser(); }}
             onAddLocation={draw.areas.length ? undefined : () => { setChoosing(false); startPlacing(); }}
             onAddSublocation={(slug) => { setChoosing(false); setPicked({ slug, parcelId: null }); setSpotInfo({ name: "", asPart: true }); startPlacing(); }}
+            onPreview={allSites ? previewSite : undefined}
           />
         )}
         {overview && siteSlug && !choosing && !sheetArea && !season && (

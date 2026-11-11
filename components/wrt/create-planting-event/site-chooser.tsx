@@ -20,7 +20,7 @@ import { AddToMap } from "./add-to-map";
 import add from "./add-to-map.module.css";
 import s from "./site-chooser.module.css";
 
-export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, onKeepNew, onAddLocation, onAddSublocation }: {
+export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, onKeepNew, onAddLocation, onAddSublocation, onPreview }: {
   sites: readonly SiteOption[];
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
   totals: PlantTotals;
@@ -37,6 +37,8 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   onAddLocation?: (() => void) | undefined;
   /** A new part of a site: drop a pin on the map as a sublocation of it. */
   onAddSublocation?: ((siteSlug: string) => void) | undefined;
+  /** A site opened in the list ("" when closed again): the map shows it before anything is chosen. */
+  onPreview?: ((siteSlug: string) => void) | undefined;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
   const search = useRef<HTMLInputElement>(null);
@@ -141,7 +143,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         </form>
         <div className={s.chooserList}>
           {/* One site open at a time, and only when tapped: typing filters the list but opens nothing. */}
-          <Accordion.Root type="single" collapsible value={open} onValueChange={setOpen}>{rows()}</Accordion.Root>
+          <Accordion.Root type="single" collapsible value={open} onValueChange={(slug) => { setOpen(slug); onPreview?.(slug); }}>{rows()}</Accordion.Root>
           {shown.length === 0 && <p className={s.chooserEmpty}>No site or part matches “{q}”.</p>}
         </div>
       </div>
