@@ -5,7 +5,7 @@
  * place_seasons views.
  */
 import { listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
+import { listSpecies } from "@/db/queries/species";
 import { SLUG } from "@/lib/wrt/text";
 
 const TREES = 5;
@@ -23,17 +23,18 @@ export async function placePlantings(slug: string, parcelId: string | null): Pro
   // Trust boundary: server actions are public endpoints.
   if (!SLUG.test(slug) || (parcelId !== null && parcelId.length > 80)) return null;
   const read = (part: string | null) => Promise.all([listSiteSpecies(slug, part, TREES), listSiteSeasons(slug, part, SEASONS)]);
-  let [species, seasons] = await read(parcelId);
+  const [register, [first, firstSeasons]] = await Promise.all([listSpecies(), read(parcelId)]);
+  let [species, seasons] = [first, firstSeasons];
   const wholeSite = !parcelId || species.length === 0;
   if (parcelId && wholeSite) [species, seasons] = await read(null);
 
+  const photos = new Map(register.map((s) => [s.slug, s.photos[0]]));
   return {
     trees: species.map((x) => {
-      const p = x.register_code ? getSpeciesPhoto(x.register_code) : undefined;
+      const p = photos.get(x.species ?? "");
       return {
         id: x.species ?? "", name: x.common_name ?? x.scientific_name ?? "", italic: !x.common_name, here: x.plants ?? 0,
-        // The 330px thumbnail is plenty for a 32px photo.
-        photo: p ? { src: p.src.replace("/960px-", "/330px-"), focalPoint: p.focalPoint } : null,
+        photo: p ? { src: p.src, focalPoint: "center" } : null,
       };
     }),
     seasons: seasons.map((x) => ({ slug: x.season ?? "", label: x.season_label ?? "", plants: x.plants ?? 0 })),

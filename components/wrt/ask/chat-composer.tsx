@@ -56,9 +56,9 @@ export function Composer({
   scope: Scope;
   onClearScope: (k: ScopeKey) => void;
   /** Recalled with ↑ when the box is empty. */
-  lastQuestion?: string;
+  lastQuestion?: string | undefined;
   /** Shown once there's a conversation to clear. */
-  onNew?: () => void;
+  onNew?: (() => void) | undefined;
   dev: boolean;
   onDev: (on: boolean) => void;
   /** Before the first question: rest narrower and spring wider on focus. */

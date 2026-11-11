@@ -26,7 +26,7 @@ export const areaTotals = (db: Db) =>
 export const areaPins = (db: Db) =>
   db
     .from("areas")
-    .select("slug, name, wrt_number, class, site, lat, lng, radius_m")
+    .select("slug, name, description, wrt_number, class, site, lat, lng, radius_m, pin_source_url, pin_checked_on")
     .is("deactivated_at", null)
     .order("site")
     .order("name");

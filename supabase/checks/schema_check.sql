@@ -1,5 +1,5 @@
 -- WRT planting database: did the whole SQL run?
--- Paste into Supabase > SQL Editor after all six migrations (and the import).
+-- Paste into Supabase > SQL Editor after all migrations (and the import).
 -- It only reads. Every row should say PASS.
 
 with expected (part, item, want, got) as (
@@ -32,7 +32,7 @@ with expected (part, item, want, got) as (
   union all select 'access rules', 'functions (is_staff, touch_row, guard_deactivated, guard_history)', 4,
     (select count(*)::int from pg_proc p join pg_namespace n on n.oid = p.pronamespace
       where n.nspname = 'public' and p.proname in ('is_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
-  union all select 'access rules', 'row rules (policies: 23 here, 8 from public_reads)', 31,
+  union all select 'access rules', 'row rules (23 staff, 8 public reads, 7 anonymous development)', 38,
     (select count(*)::int from pg_policies where schemaname = 'public')
   union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
@@ -44,14 +44,14 @@ with expected (part, item, want, got) as (
     (select count(*)::int from (values ('public.seasons'), ('public.users')) v (t)
       where has_table_privilege('authenticated', v.t, 'insert')
          or has_table_privilege('authenticated', v.t, 'update'))
-  -- Public reads file: signed out reads, never writes, never sees users ----
-  union all select 'public reads', 'signed out can write no table', 0,
+  -- Anonymous development CRUD: seven writable tables, including users ----
+  union all select 'public reads', 'signed out can write the seven development tables', 7,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'
         and (has_table_privilege('anon', c.oid, 'insert')
           or has_table_privilege('anon', c.oid, 'update')
           or has_table_privilege('anon', c.oid, 'delete')))
-  union all select 'public reads', 'signed out cannot read users', 0,
+  union all select 'public reads', 'signed out can read users during development', 1,
     (select has_table_privilege('anon', 'public.users', 'select')::int)
   union all select 'seasons page', 'views (season_species, season_sites, totals_by_question)', 3,
     (select count(*)::int from pg_views where schemaname = 'public' and viewname in
@@ -79,7 +79,8 @@ with expected (part, item, want, got) as (
   -- Import (run by scripts/import-workbook.ts) ------------------------------
   union all select 'import', 'sites', 39,          (select count(*)::int from public.sites)
   union all select 'import', 'areas', 78,          (select count(*)::int from public.areas)
-  union all select 'import', 'species', 164,       (select count(*)::int from public.species)
+  union all select 'import', 'species with workbook register codes', 164,
+    (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)
   union all select 'import', 'planting events', 360, (select count(*)::int from public.planting_events where source = 'workbook')
   union all select 'import', 'planting lines', 5449, (select count(*)::int from public.planting_lines where legacy_code is not null)

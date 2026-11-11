@@ -5,7 +5,6 @@
  * (Species page) and the season row with top trees and top sites (Seasons page).
  * One case per tool in lib/wrt/chat-tools.ts. Add a tool there → add a case here.
  */
-import Image from "next/image";
 import { byTotalDesc } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
@@ -14,11 +13,11 @@ import { hrefs } from "@/components/wrt/shared/names";
 import { Card } from "@/components/wrt/shared/page";
 import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
+import { PhotoMedia } from "@/components/wrt/species/photo-media";
 import { SeasonRow } from "@/components/wrt/seasons/season-parts";
 import { SiteRows, partHref, type SiteRowData } from "@/components/wrt/sites/site-rows";
 import type { ChatMessage } from "@/lib/wrt/chat-tools";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
 import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
@@ -77,7 +76,7 @@ function placeRow(slug: string, name: string, split: QuantitySplit, meta: ReactN
  * A species link that remembers the site (and part) it was clicked from, so the sidebar can show
  * how many were recorded there and when. The full species page ignores the query.
  */
-const speciesAtHref = (place?: string | null, part?: string | null) => (s: { slug: string }) =>
+const speciesAtHref = (place?: string | null, part?: string | null) => (s: { slug: string }): `/species/${string}` =>
   place ? `${hrefs.species(s.slug)}?${new URLSearchParams(part ? { place, part } : { place })}` : hrefs.species(s.slug);
 
 // ---- Follow-up questions: built from the card's own data, no extra model call.
@@ -195,22 +194,6 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
   );
 }
 
-/** A reference photo. Its caption and credit stay hidden until it's hovered, focused or tapped. */
-function Photo({ photo, alt, sizes }: { photo: SpeciesPhoto; alt: string; sizes: string }) {
-  return (
-    <figure className="wrt-chat__photo" tabIndex={0}>
-      <Image src={photo.src} width={photo.width} height={photo.height} sizes={sizes} unoptimized
-        style={{ objectPosition: photo.focalPoint }} alt={alt} className="wrt-chat__photo-img" />
-      <figcaption className="wrt-chat__photo-credit">
-        {photo.caption}
-        <br />
-        Photo: {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-        <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-      </figcaption>
-    </figure>
-  );
-}
-
 /** Names, flags, profile, totals. Shared by the chat card and the sidebar. */
 function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
   const here = o.here;
@@ -279,10 +262,10 @@ function PlantCard({ o }: { o: Found<"species"> }) {
   if (!o.span) return null;
   const photo = o.photos[0];
   return (
-    <article className="wrt-scard wrt-chat__plant">
+    <article className="wrt-scard wrt-chat__plant" data-photo={photo ? true : undefined}>
       <div className="wrt-scard__media">
         {photo
-          ? <Photo photo={photo} sizes="200px" alt={`Reference photo of ${o.species.displayName}: ${photo.caption}`} />
+          ? <PhotoMedia photo={photo} name={o.species.displayName} variant="chat" sizes="200px" />
           : <span className="wrt-chat__plant-initial" aria-hidden="true">{o.species.displayName.charAt(0)}</span>}
         <span className="wrt-scard__rank" title={`Number ${o.rank} by recorded plants`}>{o.rank}</span>
       </div>
@@ -295,13 +278,12 @@ function PlantCard({ o }: { o: Found<"species"> }) {
 export function SpeciesCard({ o }: { o: Found<"species"> }) {
   if (!o.span) return null;
   const [big, ...small] = o.photos;
-  const alt = (p: SpeciesPhoto) => `Reference photo of ${o.species.displayName}: ${p.caption}`;
   return (
     <div className="wrt-chat__guide">
       {big && (
         <div className="wrt-chat__gallery">
-          <Photo photo={big} sizes="560px" alt={alt(big)} />
-          {small.slice(0, 2).map((p) => <Photo key={p.src} photo={p} sizes="280px" alt={alt(p)} />)}
+          <PhotoMedia photo={big} name={o.species.displayName} variant="chat" sizes="560px" />
+          {small.slice(0, 2).map((p) => <PhotoMedia key={p.src} photo={p} name={o.species.displayName} variant="chat" sizes="280px" />)}
         </div>
       )}
       <PlantBody o={o} />

@@ -1,8 +1,7 @@
 /**
  * Domain types for the WRT historical restoration explorer.
  *
- * Nothing in this file knows where the data comes from. The CSV repository
- * (lib/wrt/csv) builds these; a database repository will build the same ones.
+ * These shapes are shared by Supabase reads, the query layer and import tooling.
  *
  * Vocabulary
  * - "Recorded plants": every quantity in the history. The historical MASTER was
@@ -11,6 +10,9 @@
  * - Place: what people call a site ("Whitechapel", "Lake Hayes").
  * - Parcel: a registered site or sub-site inside a place (WRT's own 9A, 9G…).
  */
+
+import type { SpeciesPhoto } from "./species-photos";
+import type { SpeciesProfile } from "./species-profiles";
 
 export type SeasonName = "Autumn" | "Spring";
 export type Confidence = "high" | "medium" | "low";
@@ -82,6 +84,10 @@ export interface Species {
   /** Macron-free, lower-case keys used for search. */
   searchKeys: string[];
   note: string | null;
+  photos: readonly SpeciesPhoto[];
+  profile: SpeciesProfile | null;
+  /** Deactivated from new selections; historical records still reference this species. */
+  deactivatedAt: string | null;
 }
 
 /** WRT's two threatened-species marks, kept separately because they disagree. */
@@ -109,6 +115,8 @@ export interface Place {
   slug: string;
   /** "Lake Hayes". */
   name: string;
+  /** Available when the site itself is read, rather than a planting-line summary. */
+  description?: string;
   /** Distinct site classes of the parcels in this place, most plants first. */
   siteClasses: SiteClass[];
   /** True for order schemes (Paper4Trees) that are not a physical place. */
@@ -176,7 +184,7 @@ export interface PlantingRecord {
   provenance: Provenance;
 }
 
-/** Generated vs workbook-stated totals (history_reconciliation.csv). */
+/** Recorded totals compared with the workbook’s stated totals. */
 export interface ReconciliationRow {
   kind: "season" | "grand" | "exception";
   label: string;
@@ -186,12 +194,4 @@ export interface ReconciliationRow {
   statedCell: string;
   records: number;
   cause: string | null;
-}
-
-/** A problem found while loading the source data. */
-export interface DataIssue {
-  file: string;
-  line: number;
-  message: string;
-  severity: "error" | "warning";
 }

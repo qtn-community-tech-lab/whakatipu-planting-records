@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Filter / sort chips that are plain links, so they work without JS.
  * The current choice is marked with aria-current and the pressed Canopy style.
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils";
 interface ChipLink {
   key: string;
   label: string;
-  href: string;
+  href: AppRoute;
   active: boolean;
   count?: number;
 }

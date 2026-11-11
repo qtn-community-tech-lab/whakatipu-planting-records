@@ -1,6 +1,23 @@
 import { describe, expect, it } from "vitest";
-import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, locationsForSites, siteLocations } from "@/lib/wrt/site-locations";
-import { q, repo } from "./helpers";
+import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, locationsForSites as mapLocationsForSites, type PlantingAreaPin } from "@/lib/wrt/site-locations";
+import siteLocations from "@/data/site-locations.json";
+import { regionMapOptions } from "@/lib/wrt/map-region";
+import type { PlantingRecord } from "@/lib/wrt/types";
+import { q, repo, workbook } from "./helpers";
+
+// Offline database-shaped areas; reference JSON is only an import/test fixture.
+const areas: PlantingAreaPin[] = workbook.places.flatMap((site) => site.parcels.map((parcel) => {
+  const pin = siteLocations.find((p) => p.siteSlug === site.slug &&
+    (p.parcelIds?.includes(parcel.id) ?? site.parcels.length === 1));
+  return {
+    slug: pin?.id ?? `${site.slug}-${parcel.id}`, site: site.slug, name: pin?.label ?? parcel.name,
+    description: pin?.description ?? "", wrt_number: parcel.id,
+    lat: pin?.latitude ?? null, lng: pin?.longitude ?? null,
+    pin_source_url: pin?.coordinateSourceUrl ?? null, pin_checked_on: pin?.checkedOn ?? null,
+  };
+}));
+const locationsForSites = (sites: readonly { slug: string; name: string }[], records: readonly PlantingRecord[]) =>
+  mapLocationsForSites(areas, sites, records);
 
 describe("public site reference locations", () => {
   it("groups overlapping points without hiding isolated locations or losing chain neighbours", () => {
@@ -9,6 +26,31 @@ describe("public site reference locations", () => {
     expect(groupNearbyLocations([{ x: 0, y: 0 }, { x: 90, y: 0 }])).toEqual([[0], [1]]);
     expect(groupNearbyLocations([])).toEqual([]);
   });
+  it("uses database values and handles unnumbered areas, missing pins and optional metadata", async () => {
+    const records = await repo.listRecords();
+    const record = records.find((r) => r.placeSlug === "whitechapel")!;
+    const area = areas.find((a) => a.site === "whitechapel")!;
+    const updated = { ...area, slug: "new-bank", name: "Updated bank", wrt_number: null, lat: -45, lng: 169,
+      description: "", pin_source_url: null, pin_checked_on: null };
+    const sites = [{ slug: area.site, name: "Whitechapel" }];
+    const mapped = mapLocationsForSites([updated], sites, [{ ...record, parcelId: updated.slug }]);
+    expect(mapped[0]).toMatchObject({ id: "new-bank", label: "Updated bank", latitude: -45, longitude: 169,
+      description: "", sourceUrl: null, checkedOn: null, countScope: "site", split: { total: record.quantity } });
+    expect(mapLocationsForSites([{ ...updated, lat: null }], sites, records)).toEqual([]);
+    expect(mapLocationsForSites([{ ...updated, lng: null }], sites, records)).toEqual([]);
+    expect(mapLocationsForSites([], sites, records)).toEqual([]);
+    expect(mapLocationsForSites([area, { ...updated, lat: null }], sites, records)[0]?.countScope).toBe("part");
+  });
+
+  it("derives regional bounds from all database pins", () => {
+    const bounds = locationBounds(locationsForSites(workbook.places, []))!;
+    expect(regionMapOptions(areas)).toEqual({ bounds,
+      maxBounds: [[bounds[0][0] - 0.35, bounds[0][1] - 0.12], [bounds[1][0] + 0.35, bounds[1][1] + 0.12]],
+      fitBoundsOptions: { padding: 24 }, cooperativeGestures: true });
+    expect(regionMapOptions([{ lat: -45, lng: 169 }]).bounds).toEqual([[169, -45], [169, -45]]);
+    expect(regionMapOptions([])).not.toHaveProperty("bounds");
+  });
+
   it("maps the ten largest historical groups to actual physical sites", async () => {
     const sites = (await q.places()).filter((site) => !site.item.isScheme);
     const records = await repo.listRecords();

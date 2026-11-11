@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { cn } from "@/lib/utils";
 
@@ -16,7 +15,7 @@ const Combobox = ComboboxPrimitive.Root;
 
 function ComboboxInput({
   className, showClear = true, clearLabel = "Clear", triggerLabel = "Show all", ...props
-}: ComboboxPrimitive.Input.Props & { showClear?: boolean; clearLabel?: string; triggerLabel?: string }) {
+}: ComboboxPrimitive.Input.Props & { showClear?: boolean; clearLabel?: string | undefined; triggerLabel?: string }) {
   return (
     <ComboboxPrimitive.InputGroup data-slot="combobox-input-group" className="wrt-combobox">
       <ComboboxPrimitive.Input data-slot="combobox-input" className={cn("cn-input wrt-combobox__input", className)} {...props} />

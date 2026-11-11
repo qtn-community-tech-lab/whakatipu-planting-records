@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 import type { Metadata } from "next";
 import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
@@ -9,7 +10,7 @@ import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
 import { QuantityCell, SplitBar } from "@/components/wrt/shared/quantity";
 import { PlaceName, SpeciesName, hrefs } from "@/components/wrt/shared/names";
 
-type Props = { searchParams: Promise<RawParams> };
+type Props = Readonly<PageProps<"/search">>;
 
 function queryOf(raw: RawParams) {
   const v = first(raw.q);
@@ -21,7 +22,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   return { title: q ? `Search: ${q}` : "Search" };
 }
 
-function Result({ href, children, split, note }: { href: string; children: ReactNode; split: QuantitySplit; note: string }) {
+function Result({ href, children, split, note }: { href: AppRoute; children: ReactNode; split: QuantitySplit; note: string }) {
   return (
     <Link href={href} className="exp-result">
       <span className="exp-result__main">
@@ -52,7 +53,7 @@ export default async function SearchPage({ searchParams }: Props) {
         <PageHead eyebrow="Search" title="Search sites, species and seasons" />
         <Card>
           <SearchForm q="" />
-          <p className="wrt-muted m-0">Try a site such as Whitechapel, a species such as mānuka, or a season such as Autumn 2024. Spellings are matched without macrons.</p>
+          <p className="wrt-muted m-0">Search by site name, species name, or season and year. Spellings are matched without macrons.</p>
         </Card>
       </>
     );

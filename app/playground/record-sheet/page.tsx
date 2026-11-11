@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { connection } from "next/server";
 import { RecordSheet } from "@/components/wrt/record-sheet";
-import { listPlantingAreaTotals, listSites } from "@/db/queries/sites";
+import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
@@ -23,8 +23,8 @@ type Props = { searchParams: Promise<{ site?: string | string[] }> };
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, suggestions, sites, areas, { site }] = await Promise.all([
-    eventFormOptions(), siteSpeciesSuggestions(), listSites(), listPlantingAreaTotals(), searchParams,
+  const [options, suggestions, sites, areas, pins, { site }] = await Promise.all([
+    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams,
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
   const totals: PlantTotals = {};
@@ -34,7 +34,7 @@ export default async function Page({ searchParams }: Props) {
   const initialSite = options.sites.some((x) => x.slug === site) ? String(site) : "";
   return (
     <RecordSheet
-      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" suggestions={suggestions} totals={totals}
+      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }

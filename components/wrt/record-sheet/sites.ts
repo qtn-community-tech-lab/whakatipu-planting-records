@@ -1,8 +1,8 @@
-import { siteLocations } from "@/lib/wrt/site-locations";
+import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
 /** [longitude, latitude] */
 export type LngLat = [number, number];
 
-/** One clickable pin on the map: a site's (or one part's) reference point from data/site-locations.json. */
+/** One clickable pin on the map: an area's pin from the areas table. */
 export interface SitePin {
   slug: string;
   /** The part this pin marks, or null for the site as a whole. */
@@ -14,29 +14,31 @@ export interface SitePin {
   plants: number;
 }
 
-/** The pins of the sites the form knows (order schemes have no place, so no pin). */
+/** The pins of the sites the form knows (order schemes have no place, so no pin).
+ * A site with one area gets one pin for the whole site. */
 export function sitePins(
   sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[],
+  areas: readonly Pick<PlantingAreaPin, "slug" | "site" | "wrt_number" | "lat" | "lng">[],
   totals: Record<string, { plants: number }>,
 ): SitePin[] {
   const bySlug = new Map(sites.map((x) => [x.slug, x]));
-  return siteLocations.flatMap((l) => {
-    const site = bySlug.get(l.siteSlug);
-    if (!site) return [];
-    const parcelId = l.parcelIds?.length === 1 ? l.parcelIds[0] : null;
-    const part = parcelId ? site.parts.find((p) => p.id === parcelId) : undefined;
-    const plants = l.parcelIds
-      ? l.parcelIds.reduce((sum, p) => sum + (totals[`${l.siteSlug}/${p}`]?.plants ?? 0), 0)
-      : totals[l.siteSlug]?.plants ?? 0;
-    return [{ slug: l.siteSlug, parcelId: part ? parcelId : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [l.longitude, l.latitude] as LngLat, plants }];
+  const areaCount = new Map<string, number>();
+  for (const a of areas) areaCount.set(a.site, (areaCount.get(a.site) ?? 0) + 1);
+  return areas.flatMap((a) => {
+    const site = bySlug.get(a.site);
+    if (!site || a.lat === null || a.lng === null) return [];
+    const id = a.wrt_number ?? a.slug;
+    const part = areaCount.get(a.site) === 1 ? undefined : site.parts.find((p) => p.id === id);
+    const plants = part ? totals[`${a.site}/${id}`]?.plants ?? 0 : totals[a.site]?.plants ?? 0;
+    return [{ slug: a.site, parcelId: part ? id : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [a.lng, a.lat] as LngLat, plants }];
   });
 }
 
-/** Where to fly for a site: its part's own pin if it has one, else the site's. */
-export function pinFor(siteSlug: string, parcelId: string | null = null): LngLat | null {
-  const at = siteLocations.filter((l) => l.siteSlug === siteSlug);
-  const l = (parcelId && at.find((x) => x.parcelIds?.includes(parcelId))) || at.find((x) => !x.parcelIds) || at[0];
-  return l ? [l.longitude, l.latitude] : null;
+/** Where to fly for a site: its part's own pin if it has one, else the site's, else any of its pins. */
+export function pinFor(pins: readonly SitePin[], siteSlug: string, parcelId: string | null = null): LngLat | null {
+  const at = pins.filter((p) => p.slug === siteSlug);
+  const pin = (parcelId && at.find((p) => p.parcelId === parcelId)) || at.find((p) => p.parcelId === null) || at[0];
+  return pin ? pin.at : null;
 }
 
 /** The pin closest to `at`, and how far it is in km (flat-earth maths is fine at this scale). */

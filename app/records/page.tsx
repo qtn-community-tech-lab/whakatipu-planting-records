@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
@@ -11,7 +12,7 @@ import { RecordsTable } from "@/components/wrt/shared/records";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
-  PAGE_SIZE, PARAM_KEYS, type RawParams, type RecordsView, exportHref, hasFilters, parseRecordParams, recordsHref,
+  PAGE_SIZE, PARAM_KEYS, type RecordsView, exportHref, hasFilters, parseRecordParams, recordsHref,
 } from "@/components/wrt/explore/filters";
 import { RecordsFilter } from "@/components/wrt/explore/records-filter";
 import { ActiveFilters } from "@/components/wrt/explore/active-filters";
@@ -20,7 +21,7 @@ import { SortLinks } from "@/components/wrt/explore/sort-links";
 import { recordsHeadline } from "@/components/wrt/explore/records-headline";
 import type { RecordView } from "@/lib/wrt/queries";
 
-type Props = { searchParams: Promise<RawParams> };
+type Props = Readonly<PageProps<"/records">>;
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const wrt = getWrt();
@@ -95,7 +96,7 @@ export default async function RecordsPage({ searchParams }: Props) {
 
 
   // Pages that tell the bigger story behind this filter.
-  const contextLinks: { href: string; kind: string; label: string }[] = [];
+  const contextLinks: { href: AppRoute; kind: string; label: string }[] = [];
   if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.name), kind: "Part of site", label: selectedPart.name });
   if (selectedPlace) contextLinks.push({ href: `/sites/${selectedPlace.slug}${filter.year ? `?year=${filter.year}#year-view` : ""}`, kind: "Site", label: selectedPlace.name });
   if (filter.year && filter.season) contextLinks.push({ href: `/seasons/${filter.season.toLowerCase()}-${filter.year}`, kind: "Season", label: `${filter.season} ${filter.year}` });

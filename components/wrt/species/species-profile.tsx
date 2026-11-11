@@ -1,4 +1,4 @@
-import { getSpeciesProfile, type SpeciesProfile } from "@/lib/wrt/species-profiles";
+import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
 import { Card } from "@/components/wrt/shared/page";
 import { SpeciesReferenceStatus } from "./species-reference-status";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
@@ -24,8 +24,7 @@ export function SpeciesProfileContent({ profile }: { profile: SpeciesProfile }) 
   );
 }
 
-export function SpeciesProfilePanel({ speciesId }: { speciesId: string }) {
-  const profile = getSpeciesProfile(speciesId);
+export function SpeciesProfilePanel({ speciesId, profile }: { speciesId: string; profile: SpeciesProfile | null }) {
   if (!profile && !getSpeciesReferenceReview(speciesId)) return null;
   if (!profile) return (
     <Card id="about-species" title="Species reference review">

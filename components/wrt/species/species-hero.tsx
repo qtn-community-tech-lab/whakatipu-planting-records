@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/shared/names";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
+import { PhotoMedia } from "./photo-media";
 import { formatNumber, formatShare } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
@@ -14,28 +14,11 @@ function Mosaic({ photos, name }: { photos: readonly SpeciesPhoto[]; name: strin
   return (
     <div className="wrt-shero__mosaic" data-count={shown.length}>
       {shown.map((photo, i) => (
-        <figure key={photo.src} className="wrt-shero__photo">
-          <a href={photo.src} target="_blank" rel="noreferrer" aria-label={`Open full reference photo ${i + 1} of ${name}`}>
-            <Image
-              src={photo.src}
-              width={photo.width}
-              height={photo.height}
-              sizes={i === 0 ? "(max-width: 960px) 100vw, 40vw" : "(max-width: 960px) 50vw, 20vw"}
-              style={{ objectPosition: photo.focalPoint }}
-              alt={photo.caption}
-              className="wrt-shero__img"
-              unoptimized
-              priority={i === 0}
-            />
-          </a>
-          <figcaption className="wrt-shero__credit">
-            <span className="wrt-shero__caption">{photo.caption}</span>
-            <span>
-              {photo.author} · <a href={photo.licenseUrl}>{photo.license}</a> ·{" "}
-              <a href={photo.sourceUrl}>{photo.sourceName === "iNaturalist" ? "iNaturalist" : "Wiki"} source</a>
-            </span>
-          </figcaption>
-        </figure>
+        <PhotoMedia
+          key={photo.src} photo={photo} name={name} variant="hero"
+          sizes={i === 0 ? "(max-width: 960px) 100vw, 40vw" : "(max-width: 960px) 50vw, 20vw"}
+          preload={i === 0}
+        />
       ))}
     </div>
   );
@@ -51,7 +34,7 @@ export function SpeciesHero({
 }: {
   species: Species;
   split: QuantitySplit;
-  span: Span;
+  span: Span | null;
   seasons: SeasonPoint[];
   siteCount: number;
   rank: number;
@@ -66,10 +49,10 @@ export function SpeciesHero({
     total: p.split.total,
     needsReview: p.split.needsReview,
   }));
-  const hasPhotos = photos.length > 0;
+  const firstPhoto = photos[0];
 
   return (
-    <section className="wrt-shero" data-photos={hasPhotos || undefined} aria-labelledby="species-title">
+    <section className="wrt-shero" data-photos={!!firstPhoto || undefined} aria-labelledby="species-title">
       <div className="wrt-shero__text">
         <Link href="/species" className="wrt-shero__back">← All species</Link>
 
@@ -132,7 +115,7 @@ export function SpeciesHero({
           <div className="wrt-shero__stat">
             <dt><NavGlyph name="seasons" /> Seasons</dt>
             <dd className="tabular-nums">
-              {span.seasonsActive}
+              {span?.seasonsActive ?? 0}
               <span className="wrt-shero__of"> of {seasons.length}</span>
             </dd>
           </div>
@@ -142,17 +125,17 @@ export function SpeciesHero({
           </div>
         </dl>
         <p className="wrt-shero__span">
-          {span.seasonsActive === 1 ? `Recorded in ${span.first.label} only.` : `${span.first.label} → ${span.last.label}`}
+          {!span ? "No planting records yet." : span.seasonsActive === 1 ? `Recorded in ${span.first.label} only.` : `${span.first.label} → ${span.last.label}`}
         </p>
       </div>
 
       <div className="wrt-shero__media" id="photos">
-        {hasPhotos ? (
+        {firstPhoto ? (
           <>
             <Mosaic photos={photos} name={sp.displayName} />
             <p className="wrt-shero__note">
               Reference photos from other places, not WRT sites. Young plants may look different.{" "}
-              <a href={photos[0].articleUrl}>{photos[0].articleLabel ?? "Wikipedia"}</a> · <Link href="/species/photos">Species reference guide</Link>
+              <Link href="/species/photos">Species reference guide</Link>
             </p>
           </>
         ) : (

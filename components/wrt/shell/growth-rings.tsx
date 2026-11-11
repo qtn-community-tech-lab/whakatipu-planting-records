@@ -1,4 +1,5 @@
 "use client";
+import type { CSSProperties } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { formatNumber } from "@/lib/wrt/text";
@@ -36,12 +37,13 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
     const k = room / sumRoots;
     const widths = roots.map((root) => MIN_W + k * root);
     return seasons.map((s, i) => {
-      const w = widths[i];
+      const w = MIN_W + k * Math.sqrt(Math.max(s.total, 0));
       const inner = PITH + GAP + widths.slice(0, i).reduce((a, b) => a + b + GAP, 0);
       const mid = inner + w / 2;
       const circ = 2 * Math.PI * mid;
       const share = s.total > 0 ? (s.total - s.needsReview) / s.total : 1;
-      return { ...s, i, w, mid, circ, resolvedLen: circ * share };
+      const style: CSSProperties & { "--i": number } = { "--i": i };
+      return { ...s, i, w, mid, circ, resolvedLen: circ * share, style };
     });
   }, [seasons]);
 
@@ -70,7 +72,7 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
               data-autumn={r.autumn || undefined}
               data-empty={r.total === 0 || undefined}
               data-on={focus === r.i || undefined}
-              style={{ "--i": r.i } as React.CSSProperties}
+              style={r.style}
             >
               <circle className="wrt-rings__review" cx={C} cy={C} r={r.mid} strokeWidth={r.w} />
               <circle

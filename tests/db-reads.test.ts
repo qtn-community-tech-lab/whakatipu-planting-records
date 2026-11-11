@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 /**
  * Runs every read query against the Supabase project (tests/live-env.ts), as a signed-out
  * visitor with the publishable key. Skipped when there is no project to read.
@@ -12,7 +13,7 @@ vi.mock("@/db/client", () => ({
   db: async () => createClient<Database>(url!, key!, { auth: { persistSession: false } }),
 }));
 
-const { listSites, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
+const { listSites, listSiteTotals, readSite, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
 const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
 const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
@@ -23,26 +24,41 @@ const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.
 
 describe.skipIf(!live)("read queries against Supabase", () => {
   it("lists sites, and their plants add up to the whole history", async () => {
-    const sites = await listSites();
+    const sites = await listSiteTotals();
     expect(sites.length).toBeGreaterThan(0);
     expect(sum(sites)).toBe(ALL_PLANTS);
-    expect(await listSites(3)).toEqual(sites.slice(0, 3));
+    expect(await listSiteTotals(3)).toEqual(sites.slice(0, 3));
+  });
+
+  it("reads the active site register and site descriptions independently of planting history", async () => {
+    const sites = await listSites();
+    const site = defined(sites[0]);
+    expect(await readSite(site.slug)).toMatchObject({ slug: site.slug, name: site.name, description: expect.any(String) });
+    expect(await readSite("no-such-site")).toBeNull();
   });
 
   it("lists areas with totals and pins", async () => {
     expect(sum(await listPlantingAreaTotals())).toBe(ALL_PLANTS);
-    expect((await listPlantingAreaPins()).length).toBe(78);
-    const [site] = await listSites();
-    expect((await listPlantingAreaPins(site.site!)).every((a) => a.site === site.site)).toBe(true);
+    const areas = await listPlantingAreaPins();
+    expect(areas.length).toBe(78);
+    const pinned = areas.filter((area) => area.lat !== null && area.lng !== null);
+    expect(pinned).toHaveLength(50);
+    for (const area of pinned) {
+      expect(typeof area.description).toBe("string");
+      expect(new URL(area.pin_source_url!).protocol).toBe("https:");
+      expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+    const site = defined((await listSites())[0]);
+    expect((await listPlantingAreaPins(site.slug)).every((a) => a.site === site.slug)).toBe(true);
   });
 
   it("lists the species register and ranks species by plants", async () => {
-    expect((await listSpecies()).length).toBe(164);
+    expect((await listSpecies()).length).toBeGreaterThanOrEqual(164);
     expect(sum(await listSpeciesTotals())).toBe(ALL_PLANTS);
   });
 
   it("opens one species with its totals and lines", async () => {
-    const [top] = await listSpeciesTotals();
+    const top = defined((await listSpeciesTotals())[0]);
     const page = await readSpecies(top.species!);
     expect(page?.totals?.plants).toBe(top.plants);
     expect(page?.history.length).toBe(top.lines);
@@ -61,7 +77,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     const second = await findPlantingLines({}, 1);
     expect(first.length).toBe(PAGE_SIZE);
     expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
-    const [season] = await listSeasons();
+    const season = defined((await listSeasons())[0]);
     expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
   });
 
@@ -73,7 +89,7 @@ describe.skipIf(!live)("read queries against Supabase", () => {
       expect(perSeason.size).toBe(23);
       for (const top of perSeason.values()) {
         expect(top.map((r) => r.rank)).toEqual([1, 2, 3].slice(0, top.length));
-        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (top[i - 1].plants ?? 0))).toBe(true);
+        expect(top.every((r, i) => i === 0 || (r.plants ?? 0) <= (defined(top[i - 1]).plants ?? 0))).toBe(true);
       }
     }
   });

@@ -1,6 +1,11 @@
-# WRT documentation: discovery and planning
+# WRT research and planning
 
 Documentation for the Wakatipu Reforestation Trust (WRT) nursery and planting software work.
+
+For app installation and local development, start with the [root README](../README.md#local-development).
+Database maintenance lives in the [Supabase reference](../supabase/README.md) and
+[database query guide](../db/README.md). This directory holds the research behind the app and its reference guides;
+discovery and planning reports describe the work at the time they were written.
 
 ## The two phases
 

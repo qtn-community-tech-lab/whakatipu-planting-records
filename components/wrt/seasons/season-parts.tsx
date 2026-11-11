@@ -35,7 +35,7 @@ export function ReconBadge({ recon }: { recon: ReconciliationRow | null }) {
 /** Median site count, used to flag seasons that recorded far fewer sites than usual. */
 export function medianSites(seasons: SeasonSummary[]) {
   const counts = seasons.filter((s) => s.split.records > 0).map((s) => s.placeCount).sort((a, b) => a - b);
-  return counts.length ? counts[Math.floor(counts.length / 2)] : 0;
+  return counts[Math.floor(counts.length / 2)] ?? 0;
 }
 
 export interface TopSite {
@@ -46,7 +46,7 @@ export interface TopSite {
 
 /** A season's top species: just what the row shows. */
 export interface TopSpecies {
-  species: Pick<Species, "id" | "slug" | "scientificName" | "displayName" | "displayIsScientific">;
+  species: Pick<Species, "photos" | "id" | "slug" | "scientificName" | "displayName" | "displayIsScientific">;
   split: Pick<QuantitySplit, "total">;
 }
 

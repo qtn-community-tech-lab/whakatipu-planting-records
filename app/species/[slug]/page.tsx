@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
+import { notFound, redirect } from "next/navigation";
+import { revalidatePath, updateTag } from "next/cache";
+import { dataSource, getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -11,12 +12,19 @@ import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/shared/ch
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
+import { isAuthenticated } from "@/db/queries/access";
+import { deactivateSpecies } from "@/db/queries/species";
+import { SUPABASE_TAG } from "@/db/cache";
+import type { SpeciesSubmitResult } from "@/db/types";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
-import { getSpeciesPhotos } from "@/lib/wrt/species-photos";
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<PageProps<"/species/[slug]">>;
 
 const PLACES_SHOWN = 15;
 const REVIEW_ROWS_SHOWN = 8;
@@ -29,21 +37,21 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const d = await getWrt().species(slug);
-  if (!d || !d.span) return { title: "Species not found" };
+  if (!d) return { title: "Species not found" };
   const name = d.species.displayName;
   return {
     title: name,
-    description: `${formatNumber(d.split.total)} recorded ${name} plants since ${d.span.first.label}.`,
+    description: d.span ? `${formatNumber(d.split.total)} recorded ${name} plants since ${d.span.first.label}.` : `Species register entry for ${name}.`,
   };
 }
 
 export default async function SpeciesDetailPage({ params }: Props) {
   const { slug } = await params;
-  const d = await getWrt().species(slug);
-  if (!d || !d.span) notFound();
+  const [d, authenticated] = await Promise.all([getWrt().species(slug), isAuthenticated()]);
+  if (!d) notFound();
   const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
 
-  const photos = getSpeciesPhotos(sp.id);
+  const photos = sp.photos;
   const otherNames = [sp.maoriName, sp.commonName]
     .filter((n): n is string => !!n && n !== sp.displayName);
   const aliases = [...new Set(sp.aliases)].filter(Boolean);
@@ -53,14 +61,39 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const ranked = [...(await getWrt().speciesList())].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
   );
-  const planted = new Set(ranked.map((r) => r.item.slug));
   const at = ranked.findIndex((r) => r.item.slug === sp.slug);
   const rank = at + 1;
   const prev = at > 0 ? ranked[at - 1] : null;
   const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
+  async function onDeactivate(): Promise<SpeciesSubmitResult> {
+    "use server";
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate species." };
+    try {
+      const { error } = await deactivateSpecies(slug);
+      if (error) return { error: "The species could not be deactivated. Please try again." };
+    } catch {
+      return { error: "The species could not be deactivated. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/species/${slug}`);
+  }
+
+  const editButton = <Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button>;
+
   return (
     <>
+      {authenticated && !sp.deactivatedAt && (dataSource() === "supabase"
+        ? <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
+        : <div className="flex justify-end">{editButton}</div>)}
+      {sp.deactivatedAt && <Alert role="status">
+        <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
+        <AlertDescription>
+          <p>This species is unavailable for new planting lines. Its historical records and recorded quantities are retained.</p>
+          <Link href="/species?state=deactivated" className="cn-link">View deactivated species</Link>
+        </AlertDescription>
+      </Alert>}
       <SpeciesHero
         species={sp}
         split={split}
@@ -85,10 +118,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
                 return (
                   <span key={c.slug}>
                     {i > 0 && (i === contested.length - 1 ? " and " : ", ")}
-                    {/* A species with no plantings has no page: name it without a link. */}
-                    {planted.has(c.slug) ? (
-                      <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
-                    ) : name}
+                    <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
                   </span>
                 );
               })}{" "}
@@ -98,11 +128,12 @@ export default async function SpeciesDetailPage({ params }: Props) {
         </div>
       )}
 
-      <SpeciesProfilePanel speciesId={sp.id} />
+      <SpeciesProfilePanel speciesId={sp.id} profile={sp.profile} />
 
+      {!span ? <Empty><EmptyHeader><EmptyTitle>No planting records yet</EmptyTitle><EmptyDescription>This species is in the register and has no recorded plantings.</EmptyDescription></EmptyHeader></Empty> : <>
       <Card
         title="Recorded plants by season"
-        foot={`Autumn 2015 → Autumn 2026, ${seasons.length} seasons. Select a column to open that season.`}
+        foot={`${seasons.length} planting seasons. Select a column to open that season.`}
       >
         <div className="mb-3"><SplitKey spring /></div>
         <SeasonColumns points={seasons} caption={`Recorded ${midSentence(sp.displayName)} plants by season`} />
@@ -171,6 +202,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
           All {formatNumber(split.records)} records for this species →
         </Link>
       </Rule>
+      </>}
 
       <nav className="wrt-snext" aria-label="Neighbouring species by recorded plants">
         {prev ? (
