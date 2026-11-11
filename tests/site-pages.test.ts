@@ -24,13 +24,13 @@ import PartPage, { generateMetadata as areaMetadata } from "@/app/sites/[slug]/p
 import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
 import { PageHead } from "@/components/wrt/shared/page";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
-import type { CreateSiteInput, SiteSubmitResult, PlantingAreaEdit } from "@/db/types";
+import type { CreateSiteInput, EditSiteInput, SiteSubmitResult, PlantingAreaEdit } from "@/db/types";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 
 const values = { slug: "new-reserve", name: "New Reserve", description: "Beside the river." };
 const params = Promise.resolve({ slug: values.slug });
 const searchParams = Promise.resolve({});
-type Submit = (input: CreateSiteInput, savedSiteSlug?: string) => Promise<SiteSubmitResult>;
+type Submit = (input: CreateSiteInput | EditSiteInput, savedSiteSlug?: string) => Promise<SiteSubmitResult>;
 
 async function pageForm(kind: "new" | "edit") {
   const page = kind === "new" ? await NewSitePage() : await EditSitePage({ params, searchParams });
