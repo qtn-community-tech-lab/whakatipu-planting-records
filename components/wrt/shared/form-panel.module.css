@@ -13,8 +13,11 @@
 }
 
 
+/* wide: the same inner box as the sheet's, filling the panel */
+.side .visible { flex: 1; min-height: 0; padding: 0; }
+
 /* The form fills what shows and scrolls inside it, so its own buttons can stay pinned at the bottom. */
-.scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; display: flex; flex-direction: column; padding-bottom: env(safe-area-inset-bottom); }
 
 /* phones: the sheet is the container's full height and slides; the spring sets its transform */
 .sheet {
@@ -23,18 +26,23 @@
   box-shadow: 0 -16px 44px rgba(0, 0, 0, 0.28);
   transform: translate3d(0, 100vh, 0);
   will-change: transform;
-  transition: border-radius 200ms ease;
 }
-/* Full screen: square corners, and the bar clears the status bar. */
-.sheet[data-snap="full"] { border-radius: 0; }
-.sheet[data-snap="full"] .bar { padding-top: calc(10px + env(safe-area-inset-top)); }
+/* the status bar's height, read by the sheet so full screen stops below it */
+.safeTop { position: absolute; top: 0; height: env(safe-area-inset-top, 0px); visibility: hidden; pointer-events: none; }
 .visible { display: flex; flex-direction: column; padding: 0 18px; }
+/* Below full screen every drag moves the sheet, so nothing inside scrolls by itself: otherwise a phone can
+   start scrolling the list before the sheet takes the drag, and then both move. */
+.sheet:not([data-snap="full"]) * { touch-action: none; }
 
-/* the bar: drag it, or use its button; at full screen it is the header */
-.bar { flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 10px 0 12px; touch-action: none; cursor: grab; border-bottom: 1px solid #e6e8df; }
+/* the bar: drag it, tap it at peek to open it, or use its Map button; at full screen it is the header */
+.bar { flex-shrink: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 12px; padding: 10px 0 12px; touch-action: none; -webkit-user-select: none; user-select: none; cursor: grab; border-bottom: 1px solid #e6e8df; }
 .bar:active { cursor: grabbing; }
 .handle { grid-column: 1 / -1; justify-self: center; width: 40px; height: 5px; margin-bottom: 10px; border-radius: 3px; background: #d4d8cc; }
-.sheet[data-snap="full"] .handle { display: none; }
+/* at peek the handle is a button (for a keyboard or screen reader): no button look, a finger-sized target */
+button.handle { position: relative; padding: 0; border: 0; cursor: pointer; }
+button.handle::before { content: ""; position: absolute; inset: -14px -30px; }
+button.handle:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 4px; }
+.bar[data-opens] { cursor: pointer; }
 .barText { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 /* the title: plain, or a chooser (pin, title and its line, chevron) */
 .titleText { min-width: 0; display: flex; flex-direction: column; gap: 2px; text-align: left; }
@@ -44,12 +52,23 @@
   max-width: 100%; display: inline-flex; align-items: center; gap: 10px; min-height: 44px; margin-left: -8px; padding: 4px 10px 4px 8px;
   border: 0; border-radius: 14px; background: none; color: var(--cn-green-800); cursor: pointer;
 }
-.titleButton:hover { background: #eef2e8; }
+@media (hover: hover) { .titleButton:hover { background: #eef2e8; } }
 .titleButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 1px; }
 .titleButton > svg { flex-shrink: 0; }
+/* open: the chevron points up */
+.titleButton > svg:last-child { transition: transform 150ms ease; }
+.titleButton[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .titleButton > svg:last-child { transition: none; } }
 /* the pin sits in a soft tile, like the form's cards */
 .titleIcon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; background: #e7eee5; color: var(--cn-green-800); }
 .sideHeading { flex-shrink: 0; padding-bottom: 10px; }
 .barButton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: #e7eee5; color: var(--cn-green-800); font: 700 14px var(--font-sans); cursor: pointer; }
 .sheet[data-snap="peek"] .barButton { background: var(--cn-green-800); color: #fff; }
 .barButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+
+/* Typing on a phone (the page is marked data-keyboard while the keyboard is up, see
+   create-planting-event/use-keyboard-fit.ts): the bar keeps only its handle, so the form gets the room. */
+:global(html[data-keyboard]) .sheet .bar { padding: 8px 0; border-bottom: 0; }
+:global(html[data-keyboard]) .sheet .bar > :not(.handle) { display: none; }
+:global(html[data-keyboard]) .sheet .handle { margin-bottom: 0; }
+:global(html[data-keyboard]) .scroll { padding-bottom: 0; }
