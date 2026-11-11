@@ -12,18 +12,18 @@ export function usePinMoves(basePins: SitePin[]) {
 
   /** Where a site's (or part's) pin is now, moved or not. */
   const pinAt = useCallback((slug: string, parcelId: string | null) => {
-    const at = pinFor(slug, parcelId);
+    const at = pinFor(basePins, slug, parcelId);
     return at && (moved[at.join()] ?? at);
-  }, [moved]);
+  }, [basePins, moved]);
 
   const isMoved = (slug: string, parcelId: string | null) => {
-    const at = pinFor(slug, parcelId);
+    const at = pinFor(basePins, slug, parcelId);
     return !!at && !!moved[at.join()];
   };
 
   /** Move a site's (or part's) pin to `to`, or put it back with null. */
   const move = (slug: string, parcelId: string | null, to: LngLat | null) => {
-    const key = pinFor(slug, parcelId)?.join();
+    const key = pinFor(basePins, slug, parcelId)?.join();
     if (!key) return;
     setMoved((m) => {
       const next = { ...m };

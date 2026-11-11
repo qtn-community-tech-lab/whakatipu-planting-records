@@ -49,15 +49,17 @@ export interface RecordSheetProps {
   suggestions: Record<string, SpeciesSuggestion[]>;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
   totals: PlantTotals;
+  /** Every area with its pin, from the areas table. */
+  areas: Parameters<typeof sitePins>[1];
 }
 
-export function RecordSheet({ initialSite, options, today, exitHref, suggestions, totals }: RecordSheetProps) {
+export function RecordSheet({ initialSite, options, today, exitHref, suggestions, totals, areas }: RecordSheetProps) {
   const wide = useMedia(WIDE);
   const mapEl = useRef<HTMLDivElement>(null);
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
   // Phones start with the sheet at its bar, so the map shows first.
   const [snap, setSnap] = useState<Snap>("peek");
-  const [basePins] = useState(() => sitePins(options.sites, totals));
+  const [basePins] = useState(() => sitePins(options.sites, areas, totals));
   const { pins, pinAt, isMoved, move } = usePinMoves(basePins);
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `place`.
@@ -135,7 +137,7 @@ export function RecordSheet({ initialSite, options, today, exitHref, suggestions
   }, []);
   function undoMove() {
     move(place, parcel, null);
-    setFocus(pinFor(place, parcel));
+    setFocus(pinFor(basePins, place, parcel));
   }
   // Moving a site's pin changes more than this event, so it's asked first.
   const [pendingMove, setPendingMove] = useState<LngLat | null>(null);

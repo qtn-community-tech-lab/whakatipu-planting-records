@@ -8,7 +8,6 @@
 import "server-only";
 import { speciesBySite } from "../queries";
 import { getWrtAll } from "../server";
-import { getSpeciesPhoto } from "../species-photos";
 
 export interface SpeciesSuggestion {
   /** Matches SpeciesOption.id in the form options. */
@@ -29,15 +28,14 @@ export async function siteSpeciesSuggestions(limit = 12): Promise<Record<string,
     .sort((a, b) => b.split.total - a.split.total)
     .slice(0, limit)
     .map(({ species, split }) => {
-      const p = getSpeciesPhoto(species.id);
+      const p = species.photos[0];
       return {
         speciesId: species.id,
         here: split.total,
         common: species.commonName,
         maori: species.maoriName,
         scientific: species.scientificName,
-        // The 330px thumbnail is plenty for a 44px photo.
-        photo: p ? { src: p.src.replace("/960px-", "/330px-"), focalPoint: p.focalPoint, credit: `Photo: ${p.author} · ${p.license}` } : null,
+        photo: p ? { src: p.src, focalPoint: "center", credit: p.attribution } : null,
       };
     })]));
 }

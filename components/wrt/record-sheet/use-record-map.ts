@@ -45,7 +45,7 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
       // Before the first draw: the form chose the site before the map existed, so its highlight missed.
       m.getContainer().dataset.chosenSite = initialSite;
       m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek", m.getContainer().clientHeight));
-      const start = initialSite ? pinFor(initialSite) : null;
+      const start = initialSite ? pinFor(pinsNow.current, initialSite) : null;
       m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : everyPin(m, pinsNow.current));
       drawPins();
     });
