@@ -12,15 +12,20 @@ import s from "./date-picker.module.css";
 
 type Props = Omit<ComponentProps<"button">, "value" | "onChange"> & {
   value: string;
+  /** The earliest date that can be chosen. */
+  min?: string;
   /** The latest date that can be chosen. */
   max?: string;
   onChange: (value: string) => void;
 };
 
-export function DatePicker({ value, max, onChange, ...trigger }: Props) {
+export function DatePicker({ value, min, max, onChange, ...trigger }: Props) {
   const [open, setOpen] = useState(false);
   const selected = value ? fromIso(value) : undefined;
+  const first = min ? fromIso(min) : undefined;
   const last = max ? fromIso(max) : undefined;
+  // With nothing chosen it opens on the latest month allowed (this month, or the end of a past range).
+  const month = selected ?? last;
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger type="button" {...trigger} />
@@ -28,7 +33,9 @@ export function DatePicker({ value, max, onChange, ...trigger }: Props) {
         <DayPicker
           // Always six weeks, so the popover never changes height and the arrows stay under your finger.
           mode="single" required weekStartsOn={1} autoFocus fixedWeeks showOutsideDays
-          selected={selected} {...(selected && { defaultMonth: selected })} {...(last && { endMonth: last, disabled: { after: last } })}
+          selected={selected} {...(month && { defaultMonth: month })}
+          {...(first && { startMonth: first })} {...(last && { endMonth: last })}
+          {...((first || last) && { disabled: [...(first ? [{ before: first }] : []), ...(last ? [{ after: last }] : [])] })}
           onSelect={(d) => { onChange(toIso(d)); setOpen(false); }}
         />
       </PopoverContent>
