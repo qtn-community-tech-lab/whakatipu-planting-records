@@ -1,23 +1,27 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { connection } from "next/server";
-import { RecordSheet } from "@/components/wrt/record-sheet";
+import { CreatePlantingEvent } from "@/components/wrt/create-planting-event";
 import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
 
 /**
- * /playground/record-sheet — concept for recording a planting on site. The
+ * /playground/create-planting-event — concept for recording a planting on site. The
  * map fills the screen with a pin for every site, and the planting-event form
  * (the same three steps as /events/new) opens over it: a panel on the left on
  * wide screens, a drawer from the bottom on phones. `?site=<slug>` starts at
  * that site. Not linked from the nav.
  */
 export const metadata: Metadata = {
-  title: "Record sheet playground",
+  title: "Create planting event playground",
   robots: { index: false, follow: false },
 };
+
+// The status bar in the header's green (the bottom bar takes the page's white); on Android the
+// keyboard shrinks the page instead of covering it.
+export const viewport: Viewport = { themeColor: "#15261c", interactiveWidget: "resizes-content" };
 
 type Props = { searchParams: Promise<{ site?: string | string[] }> };
 
@@ -33,7 +37,7 @@ export default async function Page({ searchParams }: Props) {
   // Only a site the form knows; anything else starts with every site in view.
   const initialSite = options.sites.some((x) => x.slug === site) ? String(site) : "";
   return (
-    <RecordSheet
+    <CreatePlantingEvent
       initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );

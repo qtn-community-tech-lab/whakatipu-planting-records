@@ -132,3 +132,17 @@
   ::view-transition-old(*),
   ::view-transition-new(*) { animation: none !important; }
 }
+/* Touch screens: iOS zooms the page in on a focused field whose text is under 16px, and doesn't
+   zoom back. Canopy's fields are 13.5 to 14px, so they go up to 16px there. */
+@media (pointer: coarse) {
+  .cn-input:not(.cn-input--number), .cn-search, .wrt-select, .wrt-stool__search .cn-input { font-size: 16px; }
+}
+
+/* A page that is the whole screen (it marks itself data-full-screen: the planting event page's map). The app's
+   frame under it (side bar, top bars, the white data notice) isn't drawn at all, and the page doesn't
+   take part in the page fade: otherwise a phone can show the notice for a moment while the page loads,
+   like a dialog flashing up. Here, not in the page's own stylesheet, so it holds from the first paint. */
+/* the sheet's cream behind the browser's own bars */
+html:has([data-full-screen]), body:has([data-full-screen]) { background: #fdfcf9; }
+.wrt-shell:has([data-full-screen]) :is(.wrt-shell__side, .wrt-mobilebar, .wrt-topbar, .wrt-notice) { display: none; }
+main:has([data-full-screen]) { view-transition-name: none !important; }
