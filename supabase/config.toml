@@ -240,15 +240,10 @@ content_path = "./supabase/templates/magic-link.html"
 subject = "Sign in to Whakatipu Reforestation Trust"
 content_path = "./supabase/templates/magic-link.html"
 
-# Use a production-ready SMTP server
-# [auth.email.smtp]
-# enabled = true
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# Local Auth uses the inbox on port 54324. Production uses Resend SMTP configured
+# in the hosted Supabase dashboard; see README.md#production-email-with-resend.
+[auth.email.smtp]
+enabled = false
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

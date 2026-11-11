@@ -7,8 +7,7 @@ year and season**, without opening an old spreadsheet. Approved staff can sign i
 
 ## Local development
 
-Run Next.js against a local Supabase database. A hosted Supabase project is not provisioned yet and is not
-required for local development.
+Run Next.js against a local Supabase database. A hosted Supabase project is not required for local development.
 
 Prerequisites: Node.js 22, npm and Docker running. Run all commands from the repository root. The npm scripts
 use a pinned Supabase CLI, so you do not need a global CLI installation or a Supabase account.
@@ -99,9 +98,9 @@ npm test                # parser, validation, repository and query invariants, s
 npm run build && npm start
 ```
 
-Local Supabase Auth sends email into its inbox. The built-in hosted sender is limited to project team addresses
-and two messages per hour; configure a custom SMTP provider such as Resend before broader staff testing or
-production use. The app's magic-link flow remains the same when SMTP is changed.
+Local Supabase Auth captures email in its inbox at `http://127.0.0.1:54324`. Production uses Resend through
+Supabase's custom SMTP settings, with `noreply@wrtqt.org.nz` as the sender. Follow the
+[production email setup](supabase/README.md#production-email-with-resend) to activate it in the hosted project.
 
 Start Supabase before running the app or the full test suite. Live database tests use `.env.local` and expect
 the workbook import to have run. The [database checks](supabase/README.md#checking-it-all-ran) verify the schema
@@ -127,6 +126,9 @@ Use the Next.js preset and `npm run build`. Set `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the deployment environment to the hosted project's values before
 building. These public values are bundled at build time; local URLs and legacy `.env` values are not production configuration.
 The app does not need `SUPABASE_SECRET_KEY`.
+Set `NEXT_PUBLIC_APP_URL` to the production app origin and configure
+[Resend SMTP in hosted Supabase](supabase/README.md#production-email-with-resend). Supabase owns email delivery;
+the app does not need a Resend SDK or API key.
 `.vercelignore` excludes local build output, import scripts and research material from CLI uploads.
 
 ## Pages

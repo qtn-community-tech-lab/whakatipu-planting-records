@@ -44,11 +44,6 @@ npx --yes supabase@2.121.0 stop --project-id whakatipu-planting-records
 
 The current project ID in `config.toml` is `wrt-planting-app`. Stopping the stack preserves its data.
 
-## Not here yet
-
-- Resend SMTP. Local development uses Supabase's email inbox. Add a hosted SMTP provider before broader staff
-  testing or production; no application code change is needed to switch providers.
-
 ## Authentication and public access
 
 `public.users` is the email allowlist and stays private to each linked profile. Insert an approved profile directly
@@ -60,11 +55,57 @@ Anonymous visitors can read all planting history, including deactivated pages, s
 read user profiles, write data or use AI Chat. Supabase's Before User Created hook checks the email allowlist for
 direct Auth requests as well as app sign-in requests. Database writes also check active membership through RLS.
 
-Local Supabase captures sign-in emails at [http://127.0.0.1:54324](http://127.0.0.1:54324). The local config uses a
-60-second resend interval and one-hour link expiry. The hosted built-in email sender is limited to addresses on the
-project team and two messages per hour; application approval does not bypass that provider restriction. Configure
-Resend SMTP (or another provider) in Supabase before broader staff testing or production. See [Supabase email
-delivery limits](https://supabase.com/docs/guides/auth/auth-smtp).
+Supabase generates and verifies magic links in every environment. Email delivery is configured per Supabase
+project, rather than selected by `NODE_ENV` in the app:
+
+| Environment | Delivery | Configuration |
+|---|---|---|
+| Local development | Captured in the [local inbox](http://127.0.0.1:54324); no real emails sent | `config.toml`: `local_smtp.enabled = true`, `auth.email.smtp.enabled = false` |
+| Production | Resend SMTP, from `noreply@wrtqt.org.nz` | Hosted Supabase Auth SMTP settings below |
+
+Point development at local Supabase. Connecting a development server to the production Supabase project uses
+that project's real email delivery. Local startup and database migrations do not apply hosted SMTP settings.
+
+### Production email with Resend
+
+Configure the **production Supabase project** under **Authentication → Email → SMTP Settings**, following
+[Resend's Supabase SMTP guide](https://resend.com/docs/send-with-supabase-smtp):
+
+| Setting | Value |
+|---|---|
+| Custom SMTP | Enabled |
+| Sender email | `noreply@wrtqt.org.nz` |
+| Sender name | `Whakatipu Reforestation Trust` |
+| Host | `smtp.resend.com` |
+| Port | `465` (TLS) |
+| Username | `resend` |
+| Password | A dedicated Resend API key with sending access to `wrtqt.org.nz` |
+| Minimum interval per user | `60` seconds |
+
+Keep the key in Supabase's SMTP password setting. It is not an application environment variable or an Edge
+Function secret. No Resend SDK, email webhook or database migration is needed. Domain verification is deferred;
+Resend requires `wrtqt.org.nz` to be verified before it can deliver from this address.
+
+Keep the existing Auth configuration when enabling SMTP:
+
+- Enable email signup and email confirmation. Keep the Before User Created hook set to
+  `public.authorize_staff_signup` so only approved staff can create an identity.
+- Set Supabase's Site URL and the app's `NEXT_PUBLIC_APP_URL` to the same production HTTPS origin. Allow that
+  origin's `/**` callback URLs; production links must not point to `localhost` or `127.0.0.1`.
+- Use [`templates/magic-link.html`](templates/magic-link.html) for both **Confirm signup** and **Magic link**,
+  with the subject `Sign in to Whakatipu Reforestation Trust`. Both templates must keep the token-hash link to
+  `/auth/confirm`; the default Supabase template uses a different callback flow.
+- Keep email OTP expiry at `3600` seconds and the resend interval at `60` seconds. Leave email link tracking
+  disabled so the provider preserves the sign-in URL.
+- Keep the custom SMTP email rate limit at `30` messages per hour initially. This accommodates the expected
+  20 sign-in emails per day; Supabase and Resend both enforce their own limits. See
+  [Supabase's SMTP limits](https://supabase.com/docs/guides/auth/auth-smtp).
+
+To verify production delivery after configuration, approve a test address in `public.users`, request a link at
+`/login`, and check delivery in Resend and the recipient's inbox. Follow it and confirm that the app shows
+**Sign out** and opens a protected edit page. Sign out and repeat to exercise the returning-user template.
+Check return navigation and that reopening a consumed link offers a fresh sign-in request. Routine testing
+continues through the local inbox without Resend credentials.
 
 ## The workbook import
 
@@ -97,8 +138,8 @@ A pin with a WRT number goes on that area of its site. A pin for a whole site go
 
 ## Hosted database setup
 
-A hosted Supabase project is not provisioned yet. Local startup and migration commands only change the local
-database. Older notes about a hosted project's imports and checks are historical, not deployment instructions.
+Local startup and migration commands only change the local database. Hosted Auth settings are configured in
+the hosted project's dashboard. Existing production databases keep their applied migrations.
 
 When provisioning a hosted environment:
 
@@ -109,7 +150,7 @@ When provisioning a hosted environment:
    `.env.local`; restore your local values before resuming local development.
 3. Run the SQL checks below against the hosted database.
 4. Set the hosted URL, publishable key and app origin (`NEXT_PUBLIC_APP_URL`) in the Next.js deployment environment
-   before building the app. Set a custom SMTP provider before broad email use.
+   before building the app. Configure [Resend SMTP](#production-email-with-resend) before broad email use.
 
 For automated migrations, configure the [Supabase GitHub integration](https://supabase.com/docs/guides/deployment/branching/github-integration)
 and enable **Deploy to production** for the chosen branch. Only after that setup should production-branch pushes
