@@ -35,7 +35,7 @@ export default async function EditSitePage({
     );
   const { slug } = await params;
   const site = await readSite(slug);
-  if (!site) notFound();
+  if (!site || site.deactivated_at) notFound();
 
   async function onSubmit(input: EditSiteInput): Promise<SiteSubmitResult> {
     "use server";
