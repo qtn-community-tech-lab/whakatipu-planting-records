@@ -1,3 +1,4 @@
+import { partBesideSite } from "@/lib/wrt/text";
 import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
 /** [longitude, latitude] */
 export type LngLat = [number, number];
@@ -14,7 +15,7 @@ export interface SitePin {
   plants: number;
 }
 
-/** The pins of the sites the form knows (order schemes have no place, so no pin).
+/** The pins of the sites the form knows (order schemes have no location, so no pin).
  * A site with one area gets one pin for the whole site. */
 export function sitePins(
   sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[],
@@ -30,7 +31,7 @@ export function sitePins(
     const id = a.wrt_number ?? a.slug;
     const part = areaCount.get(a.site) === 1 ? undefined : site.parts.find((p) => p.id === id);
     const plants = part ? totals[`${a.site}/${id}`]?.plants ?? 0 : totals[a.site]?.plants ?? 0;
-    return [{ slug: a.site, parcelId: part ? id : null, label: part ? `${site.name} · ${part.name}` : site.name, at: [a.lng, a.lat] as LngLat, plants }];
+    return [{ slug: a.site, parcelId: part ? id : null, label: part ? `${site.name} · ${partBesideSite(part.name, site.name)}` : site.name, at: [a.lng, a.lat] as LngLat, plants }];
   });
 }
 

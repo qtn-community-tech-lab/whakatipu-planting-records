@@ -1,5 +1,12 @@
-/* The place overview's two links: back to every site, and on to the site page. */
-.back { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; margin: -6px 0 -10px -4px; padding: 0 10px 0 6px; border: 0; border-radius: 999px; background: none; font: 600 14px var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
-.back:hover { background: #eef2e8; }
+/* The site overview: moving the site's pin, and the link on to the site page. Back to every site is the header's ×. */
 .more { align-self: flex-start; display: inline-flex; align-items: center; gap: 3px; font: 600 13px var(--font-sans); color: var(--cn-green-800); text-decoration: none; }
-.more:hover { text-decoration: underline; text-underline-offset: 3px; }
+/* moving the site's pin: a quiet link under the lists */
+.movePin { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; font: 600 13px var(--font-sans); color: var(--cn-green-800); cursor: pointer; }
+@media (hover: hover) { .movePin:hover { text-decoration: underline; text-underline-offset: 3px; } }
+.movePin:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+/* while the history loads: grey rows where the lists will be */
+.loading { display: flex; flex-direction: column; gap: 8px; }
+.pinMoved { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 14px; border-radius: 14px; background: #f2f6e6; font: 600 13.5px/1.35 var(--font-sans); color: var(--cn-green-800); }
+.pinMoved span { flex: 1 1 auto; }
+.pinMoved button { padding: 0; border: 0; background: none; font: inherit; color: var(--cn-green-800); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+@media (hover: hover) { .more:hover { text-decoration: underline; text-underline-offset: 3px; } }

@@ -14,7 +14,7 @@ import { pinFor, type LngLat, type SitePin } from "./sites";
 /** How close to show a chosen site. */
 const SITE_ZOOM = 15;
 
-export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery, onPick }: {
+export function usePlantingMap({ pins, initialSite, container, pinClass, wideQuery, onPick, onTap }: {
   pins: SitePin[];
   /** Site slug to start on, or "" to show every site. */
   initialSite: string;
@@ -24,11 +24,14 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
   wideQuery: string;
   /** A pin was clicked. */
   onPick: (pin: SitePin) => void;
+  /** The map itself was tapped, not a pin: where, on screen. */
+  onTap?: (at: { x: number; y: number }) => void;
 }) {
   const map = useRef<maplibregl.Map | null>(null);
   // The latest handler, so clicks never call a stale one and the map isn't rebuilt when it changes.
   const pick = useRef(onPick);
-  useEffect(() => { pick.current = onPick; });
+  const tap = useRef(onTap);
+  useEffect(() => { pick.current = onPick; tap.current = onTap; });
   // The latest pins: a moved pin redraws its marker without rebuilding the map.
   const pinsNow = useRef(pins);
   const redraw = useRef<(() => void) | null>(null);
@@ -60,9 +63,9 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
         drawn = key;
         markers.forEach((x) => x.remove());
         markers = groups.map((g) => {
-          const members = g.map((i) => pins[i]);
+          const members = g.map((i) => pins[i]!); // groups hold indexes into pins
           return pinMarker(members, pinClass, () => {
-            if (members.length === 1) return pick.current(members[0]);
+            if (members.length === 1) return pick.current(members[0]!);
             // Fit the group, but always zoom in some: on a phone one group can already fill the screen.
             const box = boundsOf(members.map((p) => p.at));
             const fit = m.cameraForBounds(box, { padding: 40 })?.zoom ?? 0;
@@ -72,6 +75,9 @@ export function useRecordMap({ pins, initialSite, container, pinClass, wideQuery
       }
       highlightSite(map, m.getContainer().dataset.chosenSite ?? "");
     }
+    m.on("click", (e) => {
+      if (!(e.originalEvent.target as Element).closest(".maplibregl-marker")) tap.current?.(e.point);
+    });
     m.on("moveend", drawPins);
     m.on("resize", drawPins);
     redraw.current = () => { drawn = ""; drawPins(); };
@@ -108,7 +114,7 @@ export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, 
     m.flyTo({
       padding: paddingFor(wide, snap, m.getContainer().clientHeight),
       ...(focus ? { center: focus } : {}),
-      ...(focus && moved ? { zoom: SITE_ZOOM } : {}),
+      ...(focus && moved && (m.getZoom() < SITE_ZOOM || !m.getBounds().contains(focus)) ? { zoom: SITE_ZOOM } : {}),
       ...(cleared ? everyPin(m, pins) : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
     });
