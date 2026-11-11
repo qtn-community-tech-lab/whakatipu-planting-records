@@ -3,11 +3,17 @@
  * A form over a full-screen view (a map). Wide screens: a panel on the left
  * that stays open. Phones: a sheet with a bouncy spring that rests in three
  * places: "peek" (a bar at the bottom), "mid" (a preview over the map) and
- * "full" (over the map entirely, its bar now a header). Drag or flick the bar,
- * or use its button, to move between them. Place it inside a positioned
+ * "full" (over the map, just below the status bar, its rounded top and handle
+ * still showing so it reads as a sheet that can come down). Drag or flick it from
+ * anywhere (at full screen, pull down from the top of the list), tap the bar at peek
+ * (title and all) to open it half way, or use the bar's Map button to bring it back down. Place it inside a positioned
  * element and pass that element as `container`.
+ *
+ * Both are one set of elements, the form always in the same place among them, so crossing the
+ * breakpoint (a window resized, a big phone turned on its side) restyles the panel but keeps the
+ * form and what's typed in it. Wide, the sheet's spring and drags are off.
  */
-import { ChevronDown, ChevronUp, MapPin } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
@@ -15,11 +21,14 @@ import s from "./form-panel.module.css";
 export type Snap = "peek" | "mid" | "full";
 /** How much of the sheet shows at peek, in px. */
 export const SHEET_HEIGHT = { peek: 88 } as const;
-/** How much of the sheet shows at peek and mid in a container this tall; full is all of it. Mid is half the screen, at most 560px. */
+/** How much of the sheet shows at peek and mid in a container this tall; full is all of it.
+    Mid is a little over half the screen (the form's first step needs the room), at most 620px. */
 export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
-  at === "peek" ? SHEET_HEIGHT.peek : Math.min(560, Math.round(containerHeight / 2));
+  at === "peek" ? SHEET_HEIGHT.peek : Math.min(620, Math.round(containerHeight * 0.58));
+/** At full, the gap left above the sheet, below the status bar, in px. */
+const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleHidden, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -31,48 +40,64 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   /** What it's about, e.g. the site's name. */
   title: string;
   /** A line under the title, e.g. the part of the site. */
-  subtitle?: string;
+  subtitle?: string | undefined;
   /** Makes the title a chooser (pin, title, chevron), e.g. to change the site. */
-  onTitle?: () => void;
+  onTitle?: (() => void) | undefined;
+  /** What the title opens is open: its chevron flips, and the button says so (aria-expanded). */
+  titleOpen?: boolean | undefined;
+  /** Wide: the title is read out but not shown, e.g. when a breadcrumb above already says it. */
+  titleHidden?: boolean | undefined;
+  /** Phones: the sheet can't move just now (e.g. while drawing on the map): its bar shows no button, and drags are ignored. */
+  locked?: boolean | undefined;
+  /** Wide only: above the title (e.g. a breadcrumb) and under it (e.g. what's on the map), outside the form's scroll. */
+  above?: ReactNode | undefined;
+  below?: ReactNode | undefined;
   children: ReactNode;
 }) {
-  const heading = <Heading title={title} subtitle={subtitle} onTitle={onTitle} />;
-  if (wide) {
-    return open ? (
-      <aside className={s.side} aria-label={`${label}: ${title}`}>
-        <div className={s.sideHeading}>{heading}</div>
-        <div className={s.scroll}>{children}</div>
-      </aside>
-    ) : null;
-  }
-  return <Sheet open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading}>{children}</Sheet>;
+  const heading = <>{wide && above}{wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} />}{wide && below}</>;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked}>{children}</Sheet>;
 }
 
-function Sheet({ open, container, snap, onSnap, label, title, heading, children }: {
-  open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; children: ReactNode;
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, children }: {
+  wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
+  const visible = useRef<HTMLDivElement>(null);
   const spring = useRef<Spring | null>(null);
   const fling = useRef(0);
+  const safeTop = useRef<HTMLSpanElement>(null);
   const [height, setHeight] = useState(0);
+  const [fullY, setFullY] = useState(FULL_GAP);
 
-  // The container's height decides where each snap sits.
+  // The container's height decides where each snap sits; the status bar's, where full stops.
   useEffect(() => {
     if (!container) return;
-    const measure = () => setHeight(container.clientHeight);
+    const measure = () => {
+      setHeight(container.clientHeight);
+      setFullY((safeTop.current?.offsetHeight ?? 0) + FULL_GAP);
+    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(container);
     return () => ro.disconnect();
   }, [container]);
 
-  const yFor = (at: Snap) => (at === "full" ? 0 : Math.max(0, height - sheetHeight(at, height)));
+  const yFor = (at: Snap) => (at === "full" ? fullY : Math.max(0, height - sheetHeight(at, height)));
+  // Drags and the spring read these, so they never see an old snap or height.
+  const now = useRef({ height, snap, onSnap, wide, fullY, locked });
+  useEffect(() => { now.current = { height, snap, onSnap, wide, fullY, locked }; });
 
-  // One spring moves the sheet.
+  // One spring moves the sheet. Only the part on screen is laid out, and it follows the sheet
+  // as it moves, so the list fills in while dragging and the form's own buttons stay on screen.
+  const paint = useRef((y: number) => {
+    if (now.current.wide) return; // the side panel doesn't move
+    sheet.current!.style.transform = `translate3d(0, ${y}px, 0)`;
+    const h = now.current.height;
+    if (visible.current && h) visible.current.style.height = `${Math.min(h, Math.max(0, h - y))}px`;
+  });
   useEffect(() => {
-    const el = sheet.current!;
-    const sp = new Spring(window.innerHeight, (y) => { el.style.transform = `translate3d(0, ${y}px, 0)`; });
+    const sp = new Spring(window.innerHeight, (y) => paint.current(y));
     spring.current = sp;
     return () => sp.stop();
   }, []);
@@ -81,82 +106,173 @@ function Sheet({ open, container, snap, onSnap, label, title, heading, children 
   const placed = useRef(false);
   useEffect(() => {
     const sp = spring.current;
+    // Wide: the side panel, where CSS places it. Coming back to a phone width, the sheet is placed at once.
+    if (wide) {
+      sheet.current!.style.transform = "";
+      if (visible.current) visible.current.style.height = "";
+      placed.current = false;
+      return;
+    }
     if (!height || !sp) return;
-    const target = open ? (snap === "full" ? 0 : Math.max(0, height - sheetHeight(snap, height))) : height;
+    const target = open ? (snap === "full" ? fullY : Math.max(0, height - sheetHeight(snap, height))) : height;
     if (placed.current) sp.to(target, fling.current);
     else sp.set(target);
+    paint.current(sp.value); // the height may have changed with the sheet standing still
     placed.current = true;
     fling.current = 0;
-  }, [open, snap, height]);
+  }, [open, snap, height, wide, fullY]);
 
-  // Drag the bar: the sheet follows the finger, rubber-bands past its ends, and on release goes
-  // where the flick would carry it. A tap without a drag does nothing (the bar's button does).
-  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
-    if ((e.target as HTMLElement).closest("button") || !spring.current) return;
+  // A drag: the sheet follows the finger, rubber-bands past its ends, and on release goes where
+  // the flick would carry it.
+  function follow(start: number, dy: number) {
+    const { height: h, fullY: top } = now.current;
+    const bottom = Math.max(0, h - sheetHeight("peek", h));
+    let y = start + dy;
+    if (y < top) y = top + rubberBand(y - top, h);
+    if (y > bottom) y = bottom + rubberBand(y - bottom, h);
+    spring.current?.set(y);
+  }
+  function release(velocity: number) {
     const sp = spring.current;
+    if (!sp) return;
+    const { height: h, snap: at, onSnap: go, fullY: top } = now.current;
+    const y = (to: Snap) => (to === "full" ? top : Math.max(0, h - sheetHeight(to, h)));
+    const rest = sp.value + project(velocity);
+    const next = (["full", "mid", "peek"] as const).reduce((best, to) => (Math.abs(y(to) - rest) < Math.abs(y(best) - rest) ? to : best));
+    fling.current = velocity;
+    sp.to(y(at), velocity); // back where it was, unless the page accepts the new snap
+    if (next !== at) go(next);
+  }
+  const speed = (samples: { t: number; y: number }[], t: number, y: number) => {
+    const first = samples[0];
+    const dt = first ? (t - first.t) / 1000 : 0;
+    return first && dt > 0 ? (y - first.y) / dt : 0;
+  };
+
+  // Fingers: drag from anywhere on the sheet. Below full screen every up-and-down drag moves
+  // the sheet; at full screen the list scrolls, and pulling down from its top brings the sheet down.
+  // Touch events, not pointer events: only they can stop the list scrolling once a drag is the sheet's.
+  useEffect(() => {
+    const el = sheet.current!;
+    let drag: { x: number; y: number; start: number; mine: boolean | null; samples: { t: number; y: number }[]; list: HTMLElement | null } | null = null;
+    const down = (e: TouchEvent) => {
+      // A second finger ends the drag (the sheet goes to its nearest stop, not left where it was). Locked: no drags.
+      if (e.touches.length !== 1 || !spring.current || now.current.wide || now.current.locked) {
+        if (drag?.mine) release(0);
+        drag = null;
+        return;
+      }
+      const t = e.touches[0]!; // exactly one, just checked
+      drag = { x: t.clientX, y: t.clientY, start: spring.current.value, mine: null, samples: [{ t: e.timeStamp, y: t.clientY }], list: scroller(e.target as HTMLElement, el) };
+    };
+    const move = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (!drag || !t) return;
+      const dx = t.clientX - drag.x, dy = t.clientY - drag.y;
+      if (drag.mine === null) {
+        if (Math.hypot(dx, dy) < 6) return;
+        const vertical = Math.abs(dy) > Math.abs(dx);
+        const atTop = !drag.list || drag.list.scrollTop <= 0;
+        drag.mine = vertical && (now.current.snap !== "full" || (atTop && dy > 0));
+        if (drag.mine) { drag.y = t.clientY; drag.samples = [{ t: e.timeStamp, y: t.clientY }]; }
+      }
+      if (!drag.mine) return;
+      e.preventDefault();
+      drag.samples.push({ t: e.timeStamp, y: t.clientY });
+      while (drag.samples.length > 2 && e.timeStamp - drag.samples[0]!.t > 90) drag.samples.shift();
+      follow(drag.start, t.clientY - drag.y);
+    };
+    const up = (e: TouchEvent) => {
+      const d = drag;
+      drag = null;
+      if (!d?.mine) return;
+      const t = e.changedTouches[0];
+      release(t ? speed(d.samples, e.timeStamp, t.clientY) : 0);
+    };
+    el.addEventListener("touchstart", down, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", up);
+    el.addEventListener("touchcancel", up);
+    return () => {
+      el.removeEventListener("touchstart", down);
+      el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", up);
+      el.removeEventListener("touchcancel", up);
+    };
+  }, []);
+
+  // The mouse (and a pen): drag the bar. A click without a drag opens it from peek (see openFromBar).
+  const dragged = useRef(false);
+  function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
+    dragged.current = false;
+    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button")) || !spring.current) return;
     const bar = e.currentTarget;
     const startY = e.clientY;
-    const start = sp.value;
+    const start = spring.current.value;
     const samples = [{ t: e.timeStamp, y: e.clientY }];
     let dragging = false;
     bar.setPointerCapture(e.pointerId);
-
     const move = (ev: PointerEvent) => {
       if (!dragging && Math.abs(ev.clientY - startY) < 4) return;
       dragging = true;
+      dragged.current = true;
       samples.push({ t: ev.timeStamp, y: ev.clientY });
-      while (samples.length > 2 && ev.timeStamp - samples[0].t > 90) samples.shift();
-      let y = start + ev.clientY - startY;
-      const bottom = yFor("peek");
-      if (y < 0) y = rubberBand(y, height);
-      if (y > bottom) y = bottom + rubberBand(y - bottom, height);
-      sp.set(y);
+      while (samples.length > 2 && ev.timeStamp - samples[0]!.t > 90) samples.shift();
+      follow(start, ev.clientY - startY);
     };
     const up = (ev: PointerEvent) => {
       bar.removeEventListener("pointermove", move);
       bar.removeEventListener("pointerup", up);
       bar.removeEventListener("pointercancel", up);
-      if (!dragging) return;
-      const a = samples[0];
-      const dt = (ev.timeStamp - a.t) / 1000;
-      const velocity = dt > 0 ? (ev.clientY - a.y) / dt : 0;
-      const rest = sp.value + project(velocity);
-      const next = (["full", "mid", "peek"] as const).reduce((best, at) => (Math.abs(yFor(at) - rest) < Math.abs(yFor(best) - rest) ? at : best));
-      fling.current = velocity;
-      if (next === snap) sp.to(yFor(snap), velocity);
-      else onSnap(next);
+      if (dragging) release(speed(samples, ev.timeStamp, ev.clientY));
     };
     bar.addEventListener("pointermove", move);
     bar.addEventListener("pointerup", up);
     bar.addEventListener("pointercancel", up);
   }
 
-  // The bar's button: open from the bar, or back to the map from full screen. In between there's
-  // no button: the form takes the sheet full screen itself when it needs the room, and the bar drags.
-  const action = snap === "peek" ? { label: "Open", to: "mid" as const, up: true }
-    : snap === "full" ? { label: "Map", to: "mid" as const, up: false } // short, so the title keeps the room
-    : null;
+  // At peek a tap anywhere on the bar, its title too, opens it half way; once open, the title changes
+  // the site. Caught before the title's own click. A drag that ends on the bar isn't a tap: a touch drag
+  // cancels the click, a mouse one is marked.
+  const opensFromBar = !wide && !locked && snap === "peek";
+  function openFromBar(e: React.MouseEvent<HTMLDivElement>) {
+    if (!opensFromBar) return;
+    e.stopPropagation();
+    e.preventDefault();
+    if (!dragged.current) onSnap("mid");
+  }
+  // From half way or full screen, a button down to the map, so there's always a way back to it
+  // without knowing to drag. None at peek (tap the bar) or while the sheet is locked.
+  const showMap = !wide && !locked && snap !== "peek";
 
   return (
-    <section ref={sheet} className={s.sheet} data-snap={snap} aria-label={`${label}: ${title}`} hidden={!container}>
-      {/* Only the part that shows is laid out, so the form's own buttons stay on screen at each snap. */}
-      <div className={s.visible} style={{ height: Math.max(0, height - yFor(snap)) }}>
-      <div className={s.bar} onPointerDown={onPointerDown}>
-        <span className={s.handle} aria-hidden="true" />
-        <span className={s.barText}>
+    <section
+      ref={sheet} className={wide ? s.side : s.sheet} data-snap={wide ? undefined : snap} aria-label={`${label}: ${title}`}
+      hidden={wide ? !open : !container}
+    >
+      {/* Measures the status bar's height, where the full sheet stops. */}
+      <span ref={safeTop} className={s.safeTop} aria-hidden="true" />
+      {/* Phones: its height follows the sheet (set as it moves), starting at this snap's. */}
+      <div ref={visible} className={s.visible} style={wide ? undefined : { height: Math.max(0, height - yFor(snap)) }}>
+      <div className={wide ? s.sideHeading : s.bar} data-opens={opensFromBar || undefined} onPointerDown={onPointerDown} onClickCapture={openFromBar}>
+        {!wide && (opensFromBar
+          // The handle is the bar's control for a keyboard or screen reader; a tap anywhere on the bar does the same.
+          ? <button type="button" data-handle className={s.handle} aria-label={`Open ${label.toLowerCase()}`} aria-expanded={false} />
+          : <span className={s.handle} aria-hidden="true" />)}
+        <div className={s.barText}>
           {heading}
-        </span>
-        {action && (
-          <button type="button" className={s.barButton} onClick={() => onSnap(action.to)} aria-expanded={snap !== "peek"} aria-label={snap === "full" ? "Show the map" : undefined}>
-            {action.up ? <ChevronUp size={16} strokeWidth={2.4} /> : <ChevronDown size={16} strokeWidth={2.4} />}
-            {action.label}
+        </div>
+        {showMap && (
+          <button type="button" className={s.barButton} onClick={() => onSnap("peek")} aria-expanded aria-label="Show the map">
+            <ChevronDown size={16} strokeWidth={2.4} />
+            Map
           </button>
         )}
       </div>
       {/* A field focused in the preview takes the sheet full screen, above the keyboard. */}
       <div
         className={s.scroll}
-        onFocusCapture={(e) => { if (snap === "mid" && (e.target as HTMLElement).matches("input, textarea")) onSnap("full"); }}
+        onFocusCapture={(e) => { if (!wide && snap === "mid" && (e.target as HTMLElement).matches("input, textarea")) onSnap("full"); }}
       >
         {/* Mounted once open, like the side panel, so the form starts after whatever opens it. */}
         {open && children}
@@ -166,8 +282,16 @@ function Sheet({ open, container, snap, onSnap, label, title, heading, children 
   );
 }
 
+/** The nearest list that scrolls, from `el` up to the sheet. */
+function scroller(el: HTMLElement | null, sheet: HTMLElement): HTMLElement | null {
+  for (; el && el !== sheet; el = el.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(el).overflowY) && el.scrollHeight > el.clientHeight) return el;
+  }
+  return null;
+}
+
 /** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
-function Heading({ title, subtitle, onTitle }: { title: string; subtitle?: string; onTitle?: () => void }) {
+function Heading({ title, subtitle, onTitle, open }: { title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined }) {
   const text = (
     <span className={s.titleText}>
       <b>{title}</b>
@@ -176,7 +300,7 @@ function Heading({ title, subtitle, onTitle }: { title: string; subtitle?: strin
   );
   if (!onTitle) return text;
   return (
-    <button type="button" className={s.titleButton} onClick={onTitle} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
+    <button type="button" className={s.titleButton} onClick={onTitle} aria-expanded={open} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
       <span className={s.titleIcon} aria-hidden="true">
         <MapPin size={22} strokeWidth={2.2} />
       </span>

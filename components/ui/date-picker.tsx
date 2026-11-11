@@ -28,7 +28,7 @@ export function DatePicker({ value, max, onChange, ...trigger }: Props) {
         <DayPicker
           // Always six weeks, so the popover never changes height and the arrows stay under your finger.
           mode="single" required weekStartsOn={1} autoFocus fixedWeeks showOutsideDays
-          selected={selected} defaultMonth={selected} endMonth={last} disabled={last && { after: last }}
+          selected={selected} {...(selected && { defaultMonth: selected })} {...(last && { endMonth: last, disabled: { after: last } })}
           onSelect={(d) => { onChange(toIso(d)); setOpen(false); }}
         />
       </PopoverContent>
@@ -38,7 +38,7 @@ export function DatePicker({ value, max, onChange, ...trigger }: Props) {
 
 // Local dates both ways, so a NZ morning isn't the day before in UTC.
 const fromIso = (iso: string) => {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 0, m = 1, d = 1] = iso.split("-").map(Number);
   return new Date(y, m - 1, d);
 };
 const toIso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
