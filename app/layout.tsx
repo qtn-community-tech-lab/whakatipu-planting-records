@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
@@ -85,6 +86,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
             </ViewTransition>
           </div>
         </div>
+        <SpeedInsights />
       </body>
     </html>
   );
