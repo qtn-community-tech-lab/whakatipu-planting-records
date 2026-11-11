@@ -68,7 +68,7 @@ export async function placeDetail(slug: string) {
   // Parts of the site with their top species, built the same way as the site page.
   const parts = detail.parcels.map((p) => {
     const species = [...speciesBySite(detail.records.filter((r) => r.record.parcelId === p.item.id)).values()][0]?.species ?? [];
-    return { name: p.item.name, split: p.split, span: p.span, speciesCount: species.length, species: species.slice(0, 3) };
+    return { slug: p.item.slug, name: p.item.name, split: p.split, span: p.span, speciesCount: species.length, species: species.slice(0, 3) };
   });
   return lean({ ...slim(detail), parts });
 }

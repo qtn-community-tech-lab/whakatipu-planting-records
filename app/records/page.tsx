@@ -97,7 +97,7 @@ export default async function RecordsPage({ searchParams }: Props) {
 
   // Pages that tell the bigger story behind this filter.
   const contextLinks: { href: AppRoute; kind: string; label: string }[] = [];
-  if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.name), kind: "Part of site", label: selectedPart.name });
+  if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.slug), kind: "Part of site", label: selectedPart.name });
   if (selectedPlace) contextLinks.push({ href: `/sites/${selectedPlace.slug}${filter.year ? `?year=${filter.year}#year-view` : ""}`, kind: "Site", label: selectedPlace.name });
   if (filter.year && filter.season) contextLinks.push({ href: `/seasons/${filter.season.toLowerCase()}-${filter.year}`, kind: "Season", label: `${filter.season} ${filter.year}` });
   const selectedSpecies = filter.species ? lookups.species.find((s) => s.slug === filter.species) : undefined;
@@ -108,7 +108,7 @@ export default async function RecordsPage({ searchParams }: Props) {
       <PageHead
         back={
           selectedPart && selectedPlace
-            ? { href: partHref(selectedPlace.slug, selectedPart.name), label: selectedPart.name }
+            ? { href: partHref(selectedPlace.slug, selectedPart.slug), label: selectedPart.name }
             : selectedPlace
               ? { href: `/sites/${selectedPlace.slug}`, label: selectedPlace.name }
               : undefined

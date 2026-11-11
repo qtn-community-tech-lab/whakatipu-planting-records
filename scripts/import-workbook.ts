@@ -19,7 +19,6 @@ import type { Json } from "../db/database.types";
 import { createClient } from "@supabase/supabase-js";
 import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
 import { REVIEW_THEMES } from "../lib/wrt/review-themes";
-import { slugify } from "../lib/wrt/text";
 import type { ReviewNoteKind } from "../lib/wrt/types";
 
 type Row = Record<string, Json>;
@@ -32,14 +31,10 @@ const sites: Row[] = data.places.map((p) => ({ slug: p.slug, name: p.name, is_sc
 
 // Area slugs are unique across sites: the area name, else site-area, else numbered.
 const areaOf = new Map<string, string>();
-const usedAreaSlugs = new Set<string>();
 const areas: Row[] = [];
 for (const place of data.places) {
   for (const parcel of place.parcels) {
-    const base = slugify(parcel.name) || "area";
-    let slug = usedAreaSlugs.has(base) ? `${place.slug}-${base}` : base;
-    for (let n = 2; usedAreaSlugs.has(slug); n++) slug = `${place.slug}-${base}-${n}`;
-    usedAreaSlugs.add(slug);
+    const slug = parcel.slug;
     areaOf.set(`${place.slug}|${parcel.id}`, slug);
     areas.push({
       slug, site: place.slug, name: parcel.name,

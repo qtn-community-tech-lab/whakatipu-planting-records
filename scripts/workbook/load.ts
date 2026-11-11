@@ -264,7 +264,7 @@ export function loadFromDirectory(dir: string): Loaded {
     const siteClass = r.siteClass !== "unknown" ? r.siteClass : toSiteClass(xw?.class ?? "");
     let parcel = entry.parcels.get(parcelKey);
     if (!parcel) {
-      parcel = { id: parcelKey, name: parcelName, placeSlug, siteClass, aliases: [] };
+      parcel = { id: parcelKey, slug: "", name: parcelName, placeSlug, siteClass, aliases: [] };
       entry.parcels.set(parcelKey, parcel);
     }
     const orig = cleanLabel(r.siteOriginal);
@@ -315,6 +315,18 @@ export function loadFromDirectory(dir: string): Loaded {
       return place;
     })
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Match the fixed keys allocated by the workbook import, without changing legacy IDs.
+  const usedAreaSlugs = new Set<string>();
+  for (const place of places) {
+    for (const parcel of place.parcels) {
+      const base = slugify(parcel.name) || "area";
+      let slug = usedAreaSlugs.has(base) ? `${place.slug}-${base}` : base;
+      for (let n = 2; usedAreaSlugs.has(slug); n++) slug = `${place.slug}-${base}-${n}`;
+      usedAreaSlugs.add(slug);
+      parcel.slug = slug;
+    }
+  }
 
   // ---- reconciliation
   const reconciliation: ReconciliationRow[] = tables.history_reconciliation.rows.map((x) => ({

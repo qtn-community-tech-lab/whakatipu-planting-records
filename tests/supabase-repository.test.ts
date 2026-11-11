@@ -57,7 +57,7 @@ describe("Supabase repository without workbook files", () => {
       { slug: "empty-site", parcels: [], siteClasses: [], searchKeys: ["empty site"] },
       { slug: "new-site", parcels: [{ id: "new-area", name: "Riverbank" }], siteClasses: ["keystone"] },
       { slug: "reserve", description: "Planting beside the river.", siteClasses: ["community", "school"],
-        parcels: [{ id: "1A" }, { id: "reserve-west" }] },
+        parcels: [{ id: "1A", slug: "reserve-east" }, { id: "reserve-west", slug: "reserve-west" }] },
     ]);
     expect(info.tables).toContainEqual({ name: "sites", rows: 3 });
     expect(new Set(fetch.mock.calls.map(([input]) =>

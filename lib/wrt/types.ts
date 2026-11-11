@@ -102,6 +102,8 @@ export interface ThreatenedMarks {
 export interface Parcel {
   /** Join key only (WRT site number or provisional id). Never shown as a label. */
   id: string;
+  /** Fixed database slug used for area-page navigation. */
+  slug: string;
   /** "Lake Hayes Pavilion". */
   name: string;
   placeSlug: string;

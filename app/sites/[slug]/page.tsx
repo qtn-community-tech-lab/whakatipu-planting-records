@@ -20,6 +20,7 @@ import Link from "next/link";
 import { readSite } from "@/db/queries/sites";
 import { isAuthenticated } from "@/db/queries/access";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
 
@@ -47,10 +48,12 @@ export default async function SitePage({ params, searchParams }: Props) {
   const [site, d, authenticated] = await Promise.all([readSite(slug), getWrt().place(slug), isAuthenticated()]);
   if (!site) notFound();
   const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const savedNotice = first(sp.saved) === "1" ? <Alert role="status"><AlertTitle>Changes saved</AlertTitle><AlertDescription>The site and its areas have been saved.</AlertDescription></Alert> : null;
   if (!d || !d.split.records)
     return (
       <>
         <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={editButton} />
+        {savedNotice}
         <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
       </>
     );
@@ -97,6 +100,8 @@ export default async function SitePage({ params, searchParams }: Props) {
         }
       />
 
+      {savedNotice}
+
       {!place.isScheme && <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />}
 
       <Card title="Recorded plants by season" action={<SplitKey spring />}
@@ -140,7 +145,7 @@ export default async function SitePage({ params, searchParams }: Props) {
             records={d.records}
             seasons={d.seasons.map((p) => p.season)}
             rowsBy="part"
-            rowHref={(r) => partHref(place.slug, r.name)}
+            rowHref={(r) => partHref(place.slug, place.parcels.find((p) => p.id === r.parcelId)!.slug)}
             hrefFor={(r, season) => recordsFor({ parcel: r.parcelId, season: season.name, year: season.year })}
           />
         </Card>
@@ -200,7 +205,7 @@ export default async function SitePage({ params, searchParams }: Props) {
             rows={d.parcels.map((p) => {
               const recs = d.records.filter((r) => r.record.parcelId === p.item.id);
               const species = [...speciesBySite(recs).values()][0]?.species ?? [];
-              const href = partHref(place.slug, p.item.name);
+              const href = partHref(place.slug, p.item.slug);
               return {
                 key: p.item.id,
                 name: p.item.name,

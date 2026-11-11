@@ -179,7 +179,7 @@ export function PlaceCard({ o }: { o: Found<"place"> }) {
             max={Math.max(1, ...o.parts.map((p) => p.split.total))}
             top={3}
             rows={o.parts.map((p) => {
-              const href = partHref(o.place.slug, p.name);
+              const href = partHref(o.place.slug, p.slug);
               return {
                 key: p.name, name: p.name, href, split: p.split, species: p.species,
                 meta: spanLabel(p.span)

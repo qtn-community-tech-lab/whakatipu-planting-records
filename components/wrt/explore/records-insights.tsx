@@ -137,13 +137,13 @@ export function RecordsInsights({
         page: hrefs.place(meta.slug),
       }))
     : showParts
-      ? group(rows, (v) => v.record.parcelId, (v) => ({ id: v.record.parcelId, name: v.record.parcelName })).map(({ meta, split }) => ({
+      ? group(rows, (v) => v.record.parcelId, (v) => ({ id: v.record.parcelId, slug: v.place.parcels.find((p) => p.id === v.record.parcelId)!.slug, name: v.record.parcelName })).map(({ meta, split }) => ({
           key: meta.id,
           name: meta.name,
           avatar: <Pin className="rx-pin" />,
           split,
           href: recordsHref(view, { parcel: meta.id }),
-          page: partHref(place!.slug, meta.name),
+          page: partHref(place!.slug, meta.slug),
         }))
       : [];
   if (showParts && sites.length < 2) sites = [];
