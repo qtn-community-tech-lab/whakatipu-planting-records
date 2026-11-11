@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { connection } from "next/server";
-import { RecordSheet } from "@/components/wrt/record-sheet";
+import { RecordSheet } from "@/components/wrt/create-planting-event";
 import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";

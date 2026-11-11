@@ -7,7 +7,7 @@
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { placePlantings, type PlacePlantings } from "@/app/playground/record-sheet/actions";
+import { placePlantings, type PlacePlantings } from "@/app/playground/create-planting-event/actions";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber } from "@/lib/wrt/text";
@@ -15,7 +15,7 @@ import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 // The form's own frame and Next button, so the overview sits exactly where the form will.
 import f from "@/components/wrt/events/map-event-form.module.css";
-import s from "./place-overview.module.css";
+import s from "./site-overview.module.css";
 
 export function PlaceOverview({ slug, parcelId, partName, onStart, onBack }: {
   slug: string;

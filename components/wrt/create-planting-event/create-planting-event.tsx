@@ -27,14 +27,14 @@ import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form
 import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
 import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
-import { PlaceOverview, SiteIndex } from "./place-overview";
+import { PlaceOverview, SiteIndex } from "./site-overview";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
 import { AreaOverlay, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
-import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-record-map";
+import { highlightSite, mapCentre, useCamera, useRecordMap, useSpotMarker } from "./use-planting-map";
 import { boundsOf } from "./map-scene";
-import s from "./record-sheet.module.css";
+import s from "./create-planting-event.module.css";
 
 const WIDE = "(min-width: 768px)";
 /** A new location this close to a site's (or part's) pin counts as that site. */
