@@ -488,8 +488,8 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
         )}
         {season && siteSlug && !choosing && !sheetArea && (
           <PastSeason
+            pinMoved={isMoved(siteSlug, parcel)} onMovePin={startMoving} onUndoPin={undoMove}
             slug={siteSlug} parcelId={season.wholeSite ? null : parcel} season={season} today={today} canEdit={canEdit} species={options.species}
-            place={parcel && partShort && !season.wholeSite ? `${siteName} · ${partShort}` : siteName}
             onBack={() => setSeason(null)} onStart={() => { setSeason(null); setStarted(true); }}
           />
         )}

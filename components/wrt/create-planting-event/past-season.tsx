@@ -19,24 +19,27 @@ import { editFormId, EditPlantingEvent } from "./edit-planting-event";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 import { StatTiles } from "@/components/wrt/shared/stat-tiles";
 import { useLoad } from "@/components/wrt/shared/use-load";
+import { PinFix } from "./site-overview";
 import s from "./past-season.module.css";
 
 type Event = Plantings["events"][number];
 
-/** Under the event's name: its date when it has one, how many species, and whether it came from the workbook. */
 const plantsIn = (e: Event) => e.lines.reduce((t, l) => t + l.quantity, 0);
 /** A species' share of its event, in per cent. */
 const percent = (n: number, of: number) => (of ? (n / of) * 100 : 0);
-const eventLine = (e: Event) =>
-  [e.plantedOn && formatPlantedOn(e.plantedOn), `${e.lines.length} species`].filter(Boolean).join(" · ") + (e.workbook ? " · from the workbook" : "");
+/** Under the event's name: its date when it has one, how many species, its plants (with several events;
+    with one the stats say it), and whether it came from the workbook. */
+const eventLine = (e: Event, plants: boolean) =>
+  [e.plantedOn && formatPlantedOn(e.plantedOn), `${e.lines.length} species`, plants && `${formatNumber(plantsIn(e))} plants`, e.workbook && "from the workbook"]
+    .filter(Boolean).join(" · ");
 
-export function PastSeason({ slug, parcelId, season, place, today, canEdit, species, onBack, onStart }: {
+export function PastSeason({ slug, parcelId, season, today, canEdit, species, pinMoved, onMovePin, onUndoPin, onBack, onStart }: {
   slug: string; parcelId: string | null;
   season: { slug: string; label: string };
-  /** The site, or "Site · Part". */
-  place: string;
   /** NZ today, "YYYY-MM-DD": how long ago the season was, and the latest date an edit can have. */
   today: string;
+  /** While an event is being edited: its site's pin in the wrong spot, to move (not saved yet). */
+  pinMoved?: boolean | undefined; onMovePin?: (() => void) | undefined; onUndoPin?: (() => void) | undefined;
   /** Shows Edit on each event. */
   canEdit?: boolean | undefined;
   /** The species register, for adding species to an event being edited. */
@@ -53,13 +56,26 @@ export function PastSeason({ slug, parcelId, season, place, today, canEdit, spec
   const total = events.reduce((t, e) => t + plantsIn(e), 0);
   const speciesCount = new Set(events.flatMap((e) => e.lines.map((l) => l.species))).size;
   const when = [seasonMonths(season.slug), seasonAgo(season.slug, today)].filter(Boolean).join(" · ");
+  // Only once Edit is pressed, under the where: the pin, if it's in the wrong spot.
+  const pinFix = onMovePin && <PinFix moved={!!pinMoved} onMove={onMovePin} onUndo={onUndoPin} />;
+  // An event's where: the site, its line, and Edit on the right.
+  const head = (e: Event, plants: boolean) => (
+    <div className={s.eventHead}>
+      <span className={s.eventIcon} aria-hidden="true"><MapPin size={18} strokeWidth={2.2} /></span>
+      <span className={s.eventText}><b>{e.area}</b><span>{eventLine(e, plants)}</span></span>
+      {canEdit && editing === null && (
+        <button type="button" className={s.edit} onClick={() => setEditing(e.id)} aria-label={`Edit ${e.area}`}>
+          <Pencil size={14} strokeWidth={2.4} aria-hidden="true" />Edit
+        </button>
+      )}
+    </div>
+  );
 
   return (
     <div className={f.form}>
       <div className={f.scroll} aria-busy={loading}>
         <header className={s.head}>
           <h2 ref={heading} tabIndex={-1}>{season.label}</h2>
-          <p>{place}</p>
           {when && <p>{when}</p>}
         </header>
         {loading ? (
@@ -73,7 +89,9 @@ export function PastSeason({ slug, parcelId, season, place, today, canEdit, spec
           <p className={f.quiet}>Nothing planted here this season.</p>
         ) : (
           <div className={s.events}>
-            {/* The season at a glance. */}
+            {/* One event: where first, then the season at a glance. Several: the totals first, each event's where with its list. */}
+            {events.length === 1 && head(events[0]!, false)}
+            {events.length === 1 && editing === events[0]!.id && pinFix}
             <StatTiles stats={[
               { label: "Plants", value: formatNumber(total) },
               { label: "Species", value: String(speciesCount) },
@@ -83,28 +101,18 @@ export function PastSeason({ slug, parcelId, season, place, today, canEdit, spec
               <Fragment key={e.id}>
                 {i > 0 && <hr className={s.rule} />}
                 {editing === e.id ? (
+                  <>
+                  {events.length > 1 && <>{head(e, true)}{pinFix}</>}
                   <EditPlantingEvent
                     event={e} season={season} today={today} species={species}
                     onDone={() => setEditing(null)} onSaving={setSaving}
                     onSaved={() => { setEditing(null); reload(); }}
                   />
+                  </>
                 ) : (
                   <FigureList
                     title={e.area}
-                    head={
-                      <div className="flex flex-col gap-2.5">
-                        <div className={s.eventHead}>
-                          <span className={s.eventIcon} aria-hidden="true"><MapPin size={18} strokeWidth={2.2} /></span>
-                          <span className={s.eventText}><b>{e.area}</b><span>{eventLine(e)}</span></span>
-                          <span className={s.eventTotal}><b>{formatNumber(sum)}</b><span>plants</span></span>
-                        </div>
-                        {canEdit && editing === null && (
-                          <button type="button" className={s.edit} onClick={() => setEditing(e.id)} aria-label={`Edit ${e.area}`}>
-                            <Pencil size={14} strokeWidth={2.4} aria-hidden="true" />Edit
-                          </button>
-                        )}
-                      </div>
-                    }
+                    head={events.length > 1 ? head(e, true) : <></>}
                     // Every species, most planted first: its other name under it, its share of the event beside it.
                     rows={e.lines.map((l) => ({
                       key: l.id, name: l.name, italic: l.italic, photo: l.photo, figure: formatNumber(l.quantity), share: percent(l.quantity, sum),

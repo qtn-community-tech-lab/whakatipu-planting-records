@@ -43,13 +43,7 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
   return (
     <Frame onStart={onStart} busy={loading}>
       {partPicker}
-      {onMovePin && pinMoved && (
-        <p className={s.pinMoved} role="status">
-          <span>Pin moved, not saved yet.</span>
-          <button type="button" onClick={onMovePin}>Move again</button>
-          <button type="button" onClick={onUndoPin}>Undo</button>
-        </p>
-      )}
+      {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
           <div className={s.loading}>
             <span className="sr-only">Loading what&apos;s been planted here</span>
@@ -85,12 +79,25 @@ export function SiteOverview({ slug, parcelId, partName, today, partPicker, onSt
       {onMovePin && !pinMoved && (
         <>
           <hr className={s.divider} />
-          <button type="button" className={s.movePin} onClick={onMovePin}>
-            <MapPinned size={15} strokeWidth={2.2} aria-hidden="true" />Pin in the wrong spot? Move it
-          </button>
+          <PinFix moved={false} onMove={onMovePin} />
         </>
       )}
     </Frame>
+  );
+}
+
+/** The site's pin in the wrong spot: a quiet link to move it, or once moved (not saved yet), Move again and Undo. */
+export function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () => void; onUndo?: (() => void) | undefined }) {
+  return moved ? (
+    <p className={s.pinMoved} role="status">
+      <span>Pin moved, not saved yet.</span>
+      <button type="button" onClick={onMove}>Move again</button>
+      <button type="button" onClick={onUndo}>Undo</button>
+    </p>
+  ) : (
+    <button type="button" className={s.movePin} onClick={onMove}>
+      <MapPinned size={15} strokeWidth={2.2} aria-hidden="true" />Pin in the wrong spot? Move it
+    </button>
   );
 }
 

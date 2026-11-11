@@ -175,7 +175,8 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
     <form id={editFormId(event.id)} onSubmit={form.handleSubmit(review)} aria-label={`Edit ${event.area}`} className={f.group}>
       <fieldset disabled={saving} aria-busy={saving} className="m-0 min-w-0 border-0 p-0">
         <FieldGroup className="gap-5">
-          <h3 className="m-0 text-[15px] font-bold leading-tight">{event.area}</h3>
+          {/* The season view names the place just above; the form keeps its name for screen readers. */}
+          <h3 className="sr-only">{event.area}</h3>
 
           <FormField
             control={form.control} name="plantedOn" label="Planting date"
