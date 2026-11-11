@@ -35,7 +35,7 @@
         "./*"
       ]
     },
-    "allowJs": true
+    "allowJs": false
   },
   "include": [
     "next-env.d.ts",
@@ -48,6 +48,7 @@
     ".next-preview/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    ".next-*/**"
   ]
 }

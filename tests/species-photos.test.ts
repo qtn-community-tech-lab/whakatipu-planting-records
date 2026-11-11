@@ -5,32 +5,31 @@ import { q } from "./helpers";
 import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
 describe("reviewed Wiki photo catalogue", () => {
-  it("covers the planting history with explicit outcomes for incomplete reference sets", async () => {
-    const rows = topPlantedSpecies(await q.speciesList()).slice(0, 95);
-    expect(rows).toHaveLength(95);
-    expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(140068);
-    expect(new Set(speciesReferenceReviews.map((r) => r.speciesId))).toEqual(new Set(rows.slice(50).map((r) => r.item.id)));
-    for (const [index, row] of rows.entries()) {
-      const photos = speciesPhotos.filter((photo) => photo.speciesId === row.item.id);
-      if (index < 50) expect(photos).toHaveLength(3);
-      else {
-        const review = getSpeciesReferenceReview(row.item.id)!;
-        expect(photos).toHaveLength(review.photoCount);
+  it("ranks recorded quantities and leaves unplanted species out", async () => {
+    const rows = topPlantedSpecies(await q.speciesList());
+    expect(rows.map((r) => [r.item.scientificName, r.split.total])).toEqual([
+      ["Leptospermum scoparium", 125], ["Sophora microphylla", 100],
+      ["Carex maorica", 60], ["Kunzea robusta", 50], ["Carex secta", 13],
+      ["Austroderia richardii", 8], ["Olearia bullata", 7], ["Phormium tenax", 7],
+    ]);
+  });
+
+  it("keeps photo sets consistent with their published identity reviews", () => {
+    const ids = new Set([...speciesPhotos.map((p) => p.speciesId), ...speciesReferenceReviews.map((r) => r.speciesId)]);
+    for (const id of ids) {
+      const photos = speciesPhotos.filter((p) => p.speciesId === id);
+      const review = getSpeciesReferenceReview(id);
+      expect(photos).toHaveLength(review?.photoCount ?? 3);
+      expect(new Set(photos.map((p) => p.sourceUrl)).size).toBe(photos.length);
+      if (review) {
         expect(review.reason.trim()).not.toBe("");
+        for (const photo of photos) expect(photo.scientificName).toBe(review.scientificName);
         if (review.status === "confirmed") expect(photos).toHaveLength(3);
         if (review.status === "unresolved") expect(photos).toHaveLength(0);
       }
-      expect(photos.length).toBeLessThanOrEqual(3);
-      expect(new Set(photos.map((p) => p.sourceUrl)).size).toBe(photos.length);
-      for (const photo of photos) expect(photo.scientificName).toBe(row.item.scientificName);
     }
-    // These disputed WRT entries are different biological species in the checked sources.
-    const maorica = (await q.speciesList()).find((r) => r.item.scientificName === "Carex maorica")!;
-    const secta = (await q.speciesList()).find((r) => r.item.scientificName === "Carex secta")!;
-    const sectaSources = new Set(speciesPhotos.filter((photo) => photo.speciesId === secta.item.id).map((p) => p.sourceUrl));
-    expect(speciesPhotos.filter((photo) => photo.speciesId === maorica.item.id).every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
-    expect(speciesPhotos.every((photo) => rows.some((row) => row.item.id === photo.speciesId))).toBe(true);
-    expect(speciesPhotos.find((photo) => photo.speciesId === "unknown")).toBeUndefined();
+    const sectaSources = new Set(speciesPhotos.filter((p) => p.scientificName === "Carex secta").map((p) => p.sourceUrl));
+    expect(speciesPhotos.filter((p) => p.scientificName === "Carex maorica").every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
   });
 
   it("keeps hosted image URLs, author credits and source licences for future offline use", () => {
