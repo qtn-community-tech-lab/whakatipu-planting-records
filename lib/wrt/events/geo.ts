@@ -49,12 +49,6 @@ export function polygonAreaM2(polygon: GeoJSON.Polygon): number {
   return Math.max(0, ringArea(outer) - holes.reduce((s, h) => s + ringArea(h), 0));
 }
 
-/** "0.42 ha" style, for the form and the CSV. */
-export function formatHectares(m2: number): string {
-  const ha = m2 / 10_000;
-  return `${ha < 10 ? ha.toFixed(2) : ha.toFixed(1)} ha`;
-}
-
 /** Do segments p1–p2 and p3–p4 cross (touching at an end counts as crossing)? */
 function segmentsCross(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
   const orient = (a: Point, b: Point, c: Point) =>

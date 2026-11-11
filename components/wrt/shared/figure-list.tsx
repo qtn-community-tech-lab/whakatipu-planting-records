@@ -24,8 +24,6 @@ export interface FigureRow {
   lead?: ReactNode | undefined;
   /** Makes the row a button. */
   onClick?: (() => void) | undefined;
-  /** After the figure, e.g. a chevron on a row that opens something. */
-  end?: ReactNode | undefined;
 }
 
 export function FigureList({ title, head, rows, total, children }: {
@@ -47,7 +45,7 @@ export function FigureList({ title, head, rows, total, children }: {
           <li key={r.key} className="border-b border-[var(--border-card,#e6e8df)] last:border-b-0">
             <ListRow
               title={r.italic ? <i>{r.name}</i> : r.name} initial={r.name.charAt(0)} subtitle={r.sub}
-              photo={r.photo} lead={r.lead} end={r.end} onClick={r.onClick}
+              photo={r.photo} lead={r.lead} onClick={r.onClick}
               figure={r.share === undefined ? r.figure : (
                 <span className="flex flex-col items-end leading-tight">
                   {r.figure}

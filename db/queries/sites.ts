@@ -92,8 +92,8 @@ export async function listSiteSeasons(site: string, wrtNumber: string | null, li
   return data;
 }
 
-/** Each of a site's areas with plants in a season: a row per area and season, for counting parts planted. */
-export async function listSiteAreaSeasons(site: string) {
+/** Each of a site's areas with plants in a season: a row per area and season, for counting the sites planted each season. */
+export async function listPlantedAreasBySeason(site: string) {
   const { data } = await siteAreaSeasons(await db())
     .eq("site", site)
     .not("area", "is", null)
@@ -102,13 +102,14 @@ export async function listSiteAreaSeasons(site: string) {
   return data;
 }
 
-/** A site's active areas, for saving a planting event against one. */
+/** A site's active areas, by name: to list and edit them, and (by WRT number) to save a planting event against one. */
 export async function listPlantingAreas(site: string) {
   const { data } = await (await db())
     .from("areas")
-    .select("slug, wrt_number")
+    .select("slug, site, name, description, updated_at, wrt_number")
     .eq("site", site)
     .is("deactivated_at", null)
+    .order("name")
     .throwOnError();
   return data;
 }

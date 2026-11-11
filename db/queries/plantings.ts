@@ -28,7 +28,7 @@ export async function listSeasonPlantingLines(season: string) {
 }
 
 /** A site's lines in one season, or one area's (by WRT number), area by area and most planted first. */
-export async function listSitePlantingLines(site: string, season: string, wrtNumber: string | null) {
+export async function listSiteSeasonPlantingLines(site: string, season: string, wrtNumber: string | null) {
   const query = (await db())
     .from("line_details")
     .select("line_id, planting_id, area_name, wrt_number, planted_on, source, species, register_code, scientific_name, common_name, maori_name, quantity")
@@ -111,7 +111,7 @@ export async function readPlantingEventSeason(id: number) {
 }
 
 /** A planting event's active lines: each one's id, species slug and quantity. */
-export async function listPlantingLines(plantingEvent: number) {
+export async function listPlantingEventLines(plantingEvent: number) {
   const { data } = await (await db())
     .from("planting_lines")
     .select("id, species, quantity")
