@@ -52,3 +52,23 @@ export function todayInNz(now = new Date()): string {
   // en-CA formats as YYYY-MM-DD.
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Pacific/Auckland" }).format(now);
 }
+
+/** Each season's middle month (1–12); Summer's is January of its year. */
+const MIDDLE: Record<string, number> = { summer: 1, autumn: 4, winter: 7, spring: 10 };
+
+/**
+ * How long ago a season was, from its middle to today: "autumn-2026" on "2026-11-11" → "7 months ago".
+ * Over a year it rounds to the half year ("1½ years ago"); the season you're in is "This season", a later one "Upcoming".
+ * Undefined for a slug that isn't "<season>-<year>".
+ */
+export function seasonAgo(slug: string, today: string): string | undefined {
+  const m = /^(summer|autumn|winter|spring)-(\d{4})$/.exec(slug);
+  if (!m) return undefined;
+  const months = (Number(today.slice(0, 4)) - Number(m[2])) * 12 + Number(today.slice(5, 7)) - MIDDLE[m[1]!]!;
+  if (months < -1) return "Upcoming";
+  if (months < 2) return "This season";
+  if (months < 12) return `${months} months ago`;
+  const halves = Math.round(months / 6);
+  const years = `${Math.floor(halves / 2) || ""}${halves % 2 ? "½" : ""}`;
+  return `${years} ${halves === 2 ? "year" : "years"} ago`;
+}

@@ -28,7 +28,7 @@ export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
 /** At full, the gap left above the sheet, below the status bar, in px. */
 const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleHidden, locked, above, below, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleIcon, titleHidden, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -45,6 +45,8 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   onTitle?: (() => void) | undefined;
   /** What the title opens is open: its chevron flips, and the button says so (aria-expanded). */
   titleOpen?: boolean | undefined;
+  /** Without onTitle: the pin beside the title anyway, as a plain header (no chevron, not a button). */
+  titleIcon?: boolean | undefined;
   /** Wide: the title is read out but not shown, e.g. when a breadcrumb above already says it. */
   titleHidden?: boolean | undefined;
   /** Phones: the sheet can't move just now (e.g. while drawing on the map): its bar shows no button, and drags are ignored. */
@@ -54,7 +56,7 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   below?: ReactNode | undefined;
   children: ReactNode;
 }) {
-  const heading = <>{wide && above}{wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} />}{wide && below}</>;
+  const heading = <>{wide && above}{wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} icon={titleIcon} />}{wide && below}</>;
   return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked}>{children}</Sheet>;
 }
 
@@ -291,19 +293,22 @@ function scroller(el: HTMLElement | null, sheet: HTMLElement): HTMLElement | nul
 }
 
 /** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
-function Heading({ title, subtitle, onTitle, open }: { title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined }) {
+function Heading({ title, subtitle, onTitle, open, icon }: { title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined; icon?: boolean | undefined }) {
   const text = (
     <span className={s.titleText}>
       <b>{title}</b>
       {subtitle && <span>{subtitle}</span>}
     </span>
   );
-  if (!onTitle) return text;
+  const pin = (
+    <span className={s.titleIcon} aria-hidden="true">
+      <MapPin size={22} strokeWidth={2.2} />
+    </span>
+  );
+  if (!onTitle) return icon ? <div className={s.titlePlain}>{pin}{text}</div> : text;
   return (
     <button type="button" className={s.titleButton} onClick={onTitle} aria-expanded={open} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
-      <span className={s.titleIcon} aria-hidden="true">
-        <MapPin size={22} strokeWidth={2.2} />
-      </span>
+      {pin}
       {text}
       <ChevronDown size={22} strokeWidth={2.4} />
     </button>
