@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * "Start exploring": the questions staff actually ask, each one a link.
  */
@@ -6,7 +7,7 @@ import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
 
 export interface StartQuestion {
-  href: string;
+  href: AppRoute;
   question: string;
   answer: string;
   icon?: NavIcon;

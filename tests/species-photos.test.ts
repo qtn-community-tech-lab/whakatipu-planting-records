@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { getSpeciesPhoto, getSpeciesPhotos, speciesPhotos, topPlantedSpecies } from "@/lib/wrt/species-photos";
+import { topPlantedSpecies } from "@/lib/wrt/species-photos";
+import speciesPhotos from "@/data/species-photos.json";
 import { q } from "./helpers";
 import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
 describe("reviewed Wiki photo catalogue", () => {
   it("covers the planting history with explicit outcomes for incomplete reference sets", async () => {
-    const rows = topPlantedSpecies(await q.speciesList());
+    const rows = topPlantedSpecies(await q.speciesList()).slice(0, 95);
     expect(rows).toHaveLength(95);
     expect(rows.reduce((sum, row) => sum + row.split.total, 0)).toBe(140068);
     expect(new Set(speciesReferenceReviews.map((r) => r.speciesId))).toEqual(new Set(rows.slice(50).map((r) => r.item.id)));
     for (const [index, row] of rows.entries()) {
-      const photos = getSpeciesPhotos(row.item.id);
+      const photos = speciesPhotos.filter((photo) => photo.speciesId === row.item.id);
       if (index < 50) expect(photos).toHaveLength(3);
       else {
         const review = getSpeciesReferenceReview(row.item.id)!;
@@ -26,10 +27,10 @@ describe("reviewed Wiki photo catalogue", () => {
     // These disputed WRT entries are different biological species in the checked sources.
     const maorica = (await q.speciesList()).find((r) => r.item.scientificName === "Carex maorica")!;
     const secta = (await q.speciesList()).find((r) => r.item.scientificName === "Carex secta")!;
-    const sectaSources = new Set(getSpeciesPhotos(secta.item.id).map((p) => p.sourceUrl));
-    expect(getSpeciesPhotos(maorica.item.id).every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
+    const sectaSources = new Set(speciesPhotos.filter((photo) => photo.speciesId === secta.item.id).map((p) => p.sourceUrl));
+    expect(speciesPhotos.filter((photo) => photo.speciesId === maorica.item.id).every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
     expect(speciesPhotos.every((photo) => rows.some((row) => row.item.id === photo.speciesId))).toBe(true);
-    expect(getSpeciesPhoto("unknown")).toBeUndefined();
+    expect(speciesPhotos.find((photo) => photo.speciesId === "unknown")).toBeUndefined();
   });
 
   it("keeps hosted image URLs, author credits and source licences for future offline use", () => {

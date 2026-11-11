@@ -1,7 +1,7 @@
 -- WRT planting database: access-rule check.
--- Run in Supabase > SQL Editor after all six migrations. It acts as signed out, as a volunteer
+-- Run in Supabase > SQL Editor after all migrations. It acts as signed out, as a volunteer
 -- and as your staff account, tries each thing, and lists PASS or FAIL.
--- It changes nothing: the one test site it adds is removed at the end.
+-- It changes nothing: the two test sites it adds are removed at the end.
 
 create temp table rls_check (n int, who text, test text, expected text, got text);
 grant all on rls_check to anon, authenticated;
@@ -19,8 +19,8 @@ end $f$;
 set role anon;
 select pg_temp.try(1, 'Signed out', 'read sites',          'allowed', 'select 1 from public.sites');
 select pg_temp.try(2, 'Signed out', 'read season totals',  'allowed', 'select 1 from public.totals_by_season');
-select pg_temp.try(3, 'Signed out', 'add a site',          'blocked', $$insert into public.sites (slug, name) values ('rls-check', 'x')$$);
-select pg_temp.try(17, 'Signed out', 'read users',          'blocked', 'select 1 from public.users');
+select pg_temp.try(3, 'Signed out', 'add a site',          'allowed', $$insert into public.sites (slug, name) values ('rls-check-anon', 'x')$$);
+select pg_temp.try(17, 'Signed out', 'read users',          'allowed', 'select 1 from public.users');
 reset role;
 
 -- Signed in, not staff -----------------------------------------------------
@@ -52,7 +52,7 @@ reset role;
 select set_config('request.jwt.claims', '', false);
 
 -- Tidy up and report -------------------------------------------------------
-delete from public.sites where slug = 'rls-check';
+delete from public.sites where slug in ('rls-check', 'rls-check-anon');
 
 select n, who, test, expected, got,
        case when expected = got then 'PASS' else 'FAIL' end as result

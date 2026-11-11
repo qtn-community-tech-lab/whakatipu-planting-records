@@ -1,3 +1,4 @@
+import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Sites (or parts of a site) as rows: name and a line of facts, the split bar, the total, and the
  * few most recorded species. Used on the Sites page and on each season page;
@@ -7,32 +8,29 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SiteSpecies } from "@/lib/wrt/queries";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
-import { formatNumber, slugify } from "@/lib/wrt/text";
+import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
 const TOP_PER_SITE = 3;
 
-/** Address of one part (parcel) of a site, by its readable name. */
-export function partHref(placeSlug: string, parcelName: string) {
-  return `/sites/${placeSlug}/parts/${slugify(parcelName)}`;
-}
+export { partHref } from "@/lib/wrt/routes";
 
 export interface SiteRowData {
   key: string;
   name: string;
   /** Where the name links: the site or part page. */
-  href: string;
+  href: AppRoute;
   isScheme?: boolean;
   split: QuantitySplit;
   species: SiteSpecies[];
   /** Small facts under the name: class badges, seasons, parcels. */
   meta?: ReactNode;
   /** Where the total links: the records behind it. */
-  totalHref: string;
+  totalHref: AppRoute;
   /** Where "+N more" links: the site page, or its year view. */
-  moreHref: string;
-  speciesHref: (s: Species) => string;
+  moreHref: AppRoute;
+  speciesHref: (s: Species) => AppRoute;
 }
 
 export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: SiteRowData[]; max: number; top?: number }) {

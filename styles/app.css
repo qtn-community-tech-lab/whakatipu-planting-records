@@ -184,9 +184,14 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   background: var(--surface-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237d877f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center;
   border: 1px solid var(--border-card); font: 600 13.5px/1 var(--font-sans); color: var(--text-strong); appearance: none; max-width: 100%;
 }
+/* Radix triggers render the arrow as an icon rather than a background image. */
+.wrt-select[data-slot="select-trigger"] { position: relative; background-image: none; }
+.wrt-select__icon { position: absolute; right: 14px; width: 10px; height: 6px; color: var(--text-muted); pointer-events: none; }
+.wrt-select[data-size="sm"] { height: 32px; }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
 /* Form fields (components/ui/field.tsx and components/ui/inputs) */
+.cn-input { background: var(--surface-card); }
 .cn-field > .wrt-select { width: 100%; }
 .wrt-textarea { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
 .cn-input[type="file"] { height: auto; padding: 0; background: none; font: var(--type-small); color: var(--text-muted); }
@@ -194,6 +199,14 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 /* "(optional)" keeps the label's size and line height, so labels line up across a row. */
 .wrt-field-optional { font-weight: 500; color: var(--text-muted); }
 .cn-field :is(input, select, textarea, button)[aria-invalid="true"] { box-shadow: inset 0 0 0 2px var(--cn-risk-fg); }
+
+/* Species photo editor: one card per image, with a stable preview area. */
+.wrt-species-image__layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; align-items: start; }
+.wrt-species-image .cn-input { border: var(--border-input); }
+.wrt-species-image__preview { position: relative; display: grid; aspect-ratio: 4 / 3; overflow: hidden; border: 1px solid var(--border-card); border-radius: var(--radius-field); background: var(--surface-soft); }
+@media (min-width: 640px) {
+  .wrt-species-image__layout { grid-template-columns: minmax(0, 1fr) 240px; }
+}
 
 /* Combobox (components/ui/combobox.tsx): type in the field, list opens underneath */
 .wrt-combobox { position: relative; display: flex; align-items: center; }
@@ -484,19 +497,18 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 }
 .wrt-sgrid .wrt-scard__media:not([data-count]) { background: var(--surface-media); }
 .wrt-sgrid .wrt-scard[data-photo] .wrt-scard__media::after { display: none; }
-.wrt-sgrid .wrt-scard__media > .wrt-scard__img { min-height: 0; border-radius: 14px; background: var(--surface-media); } /* tone while the photo loads */
-.wrt-sgrid .wrt-scard__media > .wrt-scard__img:first-child { grid-row: 1 / -1; }
+.wrt-sgrid .wrt-scard__media > .wrt-scard__photo:first-child { grid-row: 1 / -1; }
 .wrt-sgrid .wrt-scard__media[data-count="1"] { grid-template-columns: 1fr; }
-.wrt-sgrid .wrt-scard__media[data-count="2"] > .wrt-scard__img:nth-child(2) { grid-row: 1 / -1; }
+.wrt-sgrid .wrt-scard__media[data-count="2"] > .wrt-scard__photo:nth-child(2) { grid-row: 1 / -1; }
 .wrt-sgrid > .wrt-scard:hover .wrt-scard__img { transform: none; } /* scaling would spill into the next photo */
 /* Photo credit over the photos, shown on hover or keyboard focus. */
-.wrt-sgrid .wrt-scard__credit {
+.wrt-scard__photo .wrt-scard__credit {
   position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 12px 10px; border-radius: 0 0 14px 14px;
   background: linear-gradient(to top, rgba(21, 38, 28, .85), transparent); color: var(--cn-white);
   opacity: 0; transition: opacity var(--dur);
 }
-.wrt-sgrid .wrt-scard:hover .wrt-scard__credit, .wrt-sgrid .wrt-scard:focus-within .wrt-scard__credit { opacity: 1; }
-.cn-app .wrt-sgrid .wrt-scard__credit a { color: var(--cn-white); }
+.wrt-scard__photo:hover .wrt-scard__credit, .wrt-scard__photo:focus-within .wrt-scard__credit { opacity: 1; }
+.cn-app .wrt-scard__photo .wrt-scard__credit a { color: var(--cn-white); }
 @media (max-width: 760px) {
   .wrt-sgrid > .wrt-scard { grid-template-columns: minmax(0, 1fr); height: auto; padding: 12px 12px 18px; border-radius: 20px; }
   .wrt-sgrid .wrt-scard__media { grid-column: 1; height: 220px; }
@@ -516,6 +528,9 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius-tile); overflow: hidden;
   background: var(--surface-media); isolation: isolate;
 }
+.wrt-scard[data-photo] .wrt-scard__media { z-index: 2; }
+.wrt-scard__photo { position: relative; min-height: 0; height: 100%; margin: 0; border-radius: 14px; overflow: hidden; background: var(--surface-media); }
+.wrt-scard__photo > a { position: relative; z-index: 2; display: block; height: 100%; }
 .wrt-scard__img {
   display: block; width: 100%; height: 100%; object-fit: cover;
   transition: transform 700ms var(--ease);
@@ -754,6 +769,7 @@ a.wrt-col:hover { transform: translateY(-3px); }
 .wrt-ohero__media-head a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .wrt-ohero__grid { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; min-height: 300px; }
 .wrt-ohero__tile { position: relative; overflow: hidden; border-radius: var(--radius-tile-lg); background: var(--cn-green-900); min-height: 0; }
+.wrt-ohero__photo { position: absolute; inset: 0; margin: 0; }
 .wrt-ohero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease); }
 .wrt-ohero__tile:hover .wrt-ohero__img { transform: scale(1.07); }
 .wrt-ohero__tile::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, rgba(21, 38, 28, .82), rgba(21, 38, 28, 0) 55%); }
@@ -769,6 +785,9 @@ a.wrt-col:hover { transform: translateY(-3px); }
 .wrt-ohero__tile-count { font: 600 12px/1 var(--font-sans); color: var(--cn-lime-300); }
 .wrt-ohero__tile-credit { position: absolute; z-index: 3; left: 12px; right: 12px; bottom: 8px; font: 500 9.5px/1.2 var(--font-sans); color: rgba(255, 255, 255, .62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wrt-ohero__tile-credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.wrt-ohero__tile-credit > span { display: flex; align-items: baseline; gap: 3px; }
+.wrt-ohero__tile-credit a:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.wrt-ohero__tile-credit a:last-child { flex-shrink: 0; }
 .wrt-ohero__note { margin: 0; font: 500 11.5px/1.4 var(--font-sans); color: rgba(255, 255, 255, .5); }
 
 @media (max-width: 1100px) {

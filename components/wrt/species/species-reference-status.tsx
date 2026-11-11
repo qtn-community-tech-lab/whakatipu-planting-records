@@ -6,7 +6,7 @@ export function SpeciesReferenceStatus({ speciesId }: { speciesId: string }) {
   if (!review || review.status === "confirmed") return null;
   return (
     <p className="wrt-muted m-0 text-sm" data-reference-status={review.status}>
-      <strong>{review.photoCount} of 3 reference photos confirmed.</strong>{" "}{review.summary ?? review.reason}
+      {review.summary ?? review.reason}
     </p>
   );
 }

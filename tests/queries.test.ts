@@ -1,3 +1,4 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { expectCoherentSplit, q, repo } from "./helpers";
 import { needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
@@ -56,7 +57,7 @@ describe("overview", () => {
   it("lists places and species largest first", async () => {
     const o = await q.overview();
     for (const rows of [o.places, o.species]) {
-      for (let i = 1; i < rows.length; i++) expect(rows[i - 1].split.total).toBeGreaterThanOrEqual(rows[i].split.total);
+      for (let i = 1; i < rows.length; i++) expect(defined(rows[i - 1]).split.total).toBeGreaterThanOrEqual(defined(rows[i]).split.total);
     }
   });
 
@@ -104,6 +105,15 @@ describe("places", () => {
 });
 
 describe("species", () => {
+  it("includes register species without planting history", async () => {
+    const list = await q.speciesList();
+    const unplanted = list.filter((row) => row.split.records === 0);
+    expect(unplanted.length).toBeGreaterThan(0);
+    for (const row of unplanted) {
+      expect(row.span).toBeNull();
+      expect((await q.species(row.item.slug))?.species.slug).toBe(row.item.slug);
+    }
+  });
   it("sum of species totals equals the grand total", async () => {
     const list = await q.speciesList();
     expect(list.reduce((a, s) => a + s.split.total, 0)).toBe(140068);
@@ -262,7 +272,7 @@ describe("records()", () => {
     const all = await q.records({ review: "needs-review" });
     const tbc = all.rows.filter((v) => !v.record.hasQuantity);
     expect(tbc).toHaveLength(1);
-    expect(tbc[0].record.quantity).toBe(0);
+    expect(defined(tbc[0]).record.quantity).toBe(0);
   });
 });
 
@@ -277,11 +287,10 @@ describe("dataQuality()", () => {
     expect(dq.byConfidence.reduce((a, r) => a + r.split.total, 0)).toBe(140068);
   });
 
-  it("reports load health and the reconciliation rows", async () => {
+  it("reports database sources and season reconciliation rows", async () => {
     const dq = await q.dataQuality();
-    expect(dq.issues.errors).toBe(0);
     expect(dq.reconciliation.filter((r) => r.kind === "season")).toHaveLength(23);
-    expect(dq.source.files.length).toBeGreaterThan(0);
+    expect(dq.source.tables.length).toBeGreaterThan(0);
   });
 });
 
@@ -293,7 +302,7 @@ describe("lookups()", () => {
     expect(l.years.at(-1)).toBe(2026);
     expect(l.species).toHaveLength(95);
     for (let i = 1; i < l.species.length; i++) {
-      expect(l.species[i - 1].displayName.localeCompare(l.species[i].displayName)).toBeLessThanOrEqual(0);
+      expect(defined(l.species[i - 1]).displayName.localeCompare(defined(l.species[i]).displayName)).toBeLessThanOrEqual(0);
     }
   });
 });
@@ -349,6 +358,6 @@ describe("needsReviewByPlants", () => {
     const out = needsReviewByPlants(rows);
     expect(out.length).toBe(rows.filter((v) => v.record.needsReview).length);
     expect(out.every((v) => v.record.needsReview)).toBe(true);
-    for (let i = 1; i < out.length; i++) expect(out[i - 1].record.quantity).toBeGreaterThanOrEqual(out[i].record.quantity);
+    for (let i = 1; i < out.length; i++) expect(defined(out[i - 1]).record.quantity).toBeGreaterThanOrEqual(defined(out[i]).record.quantity);
   });
 });

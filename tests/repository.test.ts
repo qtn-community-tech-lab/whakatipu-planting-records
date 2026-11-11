@@ -1,7 +1,8 @@
+import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
-import { repo } from "./helpers";
+import { repo, workbook } from "./helpers";
 
-describe("repository invariants on the real CSVs", () => {
+describe("workbook import invariants", () => {
   it("loads 5,449 records totalling 140,068 recorded plants", async () => {
     const recs = await repo.listRecords();
     expect(recs).toHaveLength(5449);
@@ -17,16 +18,16 @@ describe("repository invariants on the real CSVs", () => {
   it("covers 23 seasons from Autumn 2015 to Autumn 2026, in order", async () => {
     const seasons = await repo.listSeasons();
     expect(seasons).toHaveLength(23);
-    expect(seasons[0].label).toBe("Autumn 2015");
-    expect(seasons[seasons.length - 1].label).toBe("Autumn 2026");
+    expect(defined(seasons[0]).label).toBe("Autumn 2015");
+    expect(defined(seasons[seasons.length - 1]).label).toBe("Autumn 2026");
     seasons.forEach((s, i) => expect(s.order).toBe(i));
     for (let i = 1; i < seasons.length; i++) {
-      const a = seasons[i - 1];
-      const b = seasons[i];
+      const a = defined(seasons[i - 1]);
+      const b = defined(seasons[i]);
       expect(b.year > a.year || (b.year === a.year && a.name === "Autumn" && b.name === "Spring")).toBe(true);
     }
     expect(new Set(seasons.map((s) => s.slug)).size).toBe(seasons.length);
-    expect(seasons[0].slug).toBe("autumn-2015");
+    expect(defined(seasons[0]).slug).toBe("autumn-2015");
   });
 
   it("gives no record a missing species, place, parcel or season", async () => {
@@ -83,13 +84,13 @@ describe("repository invariants on the real CSVs", () => {
     const recs = await repo.listRecords();
     const noQty = recs.filter((r) => !r.hasQuantity);
     expect(noQty).toHaveLength(1);
-    expect(noQty[0].quantity).toBe(0);
-    expect(noQty[0].needsReview).toBe(true);
-    expect(noQty[0].provenance.sourceCell).toBe("OP50");
+    expect(defined(noQty[0]).quantity).toBe(0);
+    expect(defined(noQty[0]).needsReview).toBe(true);
+    expect(defined(noQty[0]).provenance.sourceCell).toBe("OP50");
   });
 
   it("loaded with no errors", async () => {
-    const issues = await repo.listDataIssues();
+    const issues = workbook.issues;
     expect(issues.filter((i) => i.severity === "error")).toEqual([]);
   });
 
@@ -98,13 +99,6 @@ describe("repository invariants on the real CSVs", () => {
       expect(["site", "subsite", "area", "scheme", "unknown"]).toContain(r.precision);
       expect(["high", "medium", "low"]).toContain(r.confidence);
     }
-  });
-
-  it("reports the source files it read, with row counts", async () => {
-    const info = await repo.getSourceInfo();
-    const history = info.files.find((f) => f.name === "planting_history.csv");
-    expect(history?.rows).toBe(5449);
-    expect(info.description).toMatch(/never opens the original spreadsheets/i);
   });
 });
 
@@ -131,7 +125,7 @@ describe("reconciliation", () => {
   });
 
   it("explains every grand total that disagrees with the records", async () => {
-    const recon = await repo.listReconciliation();
+    const recon = workbook.reconciliation;
     const grand = recon.filter((r) => r.kind === "grand");
     expect(grand.map((r) => r.stated).sort((a, b) => a - b)).toEqual([135413, 137273, 139948, 140049, 140068]);
     for (const r of grand) {

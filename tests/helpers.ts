@@ -1,9 +1,26 @@
-import { CsvWrtRepository } from "@/lib/wrt/csv/csv-repository";
+import { DEFAULT_DATA_DIR, loadFromDirectory } from "@/scripts/workbook/load";
+import type { WrtRepository } from "@/lib/wrt/repository";
 import { createQueries } from "@/lib/wrt/queries";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
-/** One repository + query layer over the real CSVs, shared by every test file. */
-export const repo = new CsvWrtRepository();
+/** Offline fixture from the same validated data used by the one-off workbook import. */
+export const workbook = loadFromDirectory(DEFAULT_DATA_DIR);
+export const repo: WrtRepository = {
+  listSeasons: async () => workbook.seasons,
+  listSpecies: async () => workbook.species,
+  listPlaces: async () => workbook.places,
+  listRecords: async () => workbook.records,
+  listReconciliation: async () => workbook.reconciliation.filter((r) => r.kind === "season"),
+  getSourceInfo: async () => ({
+    description: "Offline workbook import fixture.",
+    tables: [
+      { name: "seasons", rows: workbook.seasons.length },
+      { name: "species", rows: workbook.species.length },
+      { name: "sites", rows: workbook.places.length },
+      { name: "planting lines", rows: workbook.records.length },
+    ],
+  }),
+};
 export const q = createQueries(repo);
 
 /** A split must always add up. */

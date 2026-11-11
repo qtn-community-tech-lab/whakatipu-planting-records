@@ -2,7 +2,7 @@
  * The Whakatipu area every map in the app is kept inside.
  *
  * WHAT
- *   PIN_BOUNDS: the box around all reference location pins (data/site-locations.json),
+ *   PIN_BOUNDS: the box around all active location pins read from Supabase,
  *   about 45 × 32 km. Maps open on it when there is nothing more specific to show.
  *   MAX_BOUNDS: PIN_BOUNDS plus a margin (about 27 km east–west, 13 km north–south).
  *   Maps cannot be panned or zoomed out beyond it.
@@ -15,29 +15,27 @@
  *   like the pins would force a wide map to zoom in past them.
  */
 import type { MapOptions } from "maplibre-gl";
-import { locationBounds, siteLocations } from "./site-locations";
+import { locationBounds, type PlantingAreaPin } from "./site-locations";
 
-type Bounds = [[number, number], [number, number]];
-
-export const PIN_BOUNDS: Bounds = locationBounds(siteLocations)!;
+export type RegionMapOptions = Pick<MapOptions, "bounds" | "fitBoundsOptions" | "maxBounds" | "cooperativeGestures">;
 
 const PAD_LNG = 0.35; // ≈ 27 km at this latitude
 const PAD_LAT = 0.12; // ≈ 13 km
 
-export const MAX_BOUNDS: Bounds = [
-  [PIN_BOUNDS[0][0] - PAD_LNG, PIN_BOUNDS[0][1] - PAD_LAT],
-  [PIN_BOUNDS[1][0] + PAD_LNG, PIN_BOUNDS[1][1] + PAD_LAT],
-];
-
-/**
- * Map options shared by every map: open on the pins, stay inside MAX_BOUNDS,
- * and let the page scroll past the map (cooperative gestures: one finger or a
- * plain mouse wheel scrolls the page; two fingers, pinch or ⌘/Ctrl + scroll
- * move the map).
- */
-export const REGION_MAP_OPTIONS: Pick<MapOptions, "bounds" | "fitBoundsOptions" | "maxBounds" | "cooperativeGestures"> = {
-  bounds: PIN_BOUNDS,
-  fitBoundsOptions: { padding: 24 },
-  maxBounds: MAX_BOUNDS,
-  cooperativeGestures: true,
-};
+/** Keep room for wide screens while preserving cooperative scrolling and regional limits. */
+export function regionMapOptions(areas: readonly Pick<PlantingAreaPin, "lat" | "lng">[]): RegionMapOptions {
+  const bounds = locationBounds(areas.flatMap((area) =>
+    area.lat === null || area.lng === null ? [] : [{ latitude: area.lat, longitude: area.lng }],
+  ));
+  return {
+    ...(bounds ? {
+      bounds,
+      maxBounds: [
+        [bounds[0][0] - PAD_LNG, bounds[0][1] - PAD_LAT],
+        [bounds[1][0] + PAD_LNG, bounds[1][1] + PAD_LAT],
+      ] as [[number, number], [number, number]],
+    } : {}),
+    fitBoundsOptions: { padding: 24 },
+    cooperativeGestures: true,
+  };
+}

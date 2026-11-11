@@ -2,9 +2,12 @@ import { Card, EmptyState } from "@/components/wrt/shared/page";
 import { RegionMap } from "@/components/wrt/sites/region-map";
 import { locationsForSites } from "@/lib/wrt/site-locations";
 import type { PlantingRecord } from "@/lib/wrt/types";
+import { listPlantingAreaPins } from "@/db/queries/sites";
+import { regionMapOptions } from "@/lib/wrt/map-region";
 
-export function LocationCard({ sites, records, siteName }: { sites: { slug: string; name: string }[]; records: PlantingRecord[]; siteName?: string }) {
-  const locations = locationsForSites(sites, records);
+export async function LocationCard({ sites, records, siteName }: { sites: { slug: string; name: string }[]; records: PlantingRecord[]; siteName?: string }) {
+  const areas = await listPlantingAreaPins();
+  const locations = locationsForSites(areas, sites, records);
   const mappedSites = new Set(locations.map((location) => location.siteSlug)).size;
   return (
     <Card title={siteName ? `Where to find ${siteName}` : "Explore planting locations"}
@@ -19,7 +22,7 @@ export function LocationCard({ sites, records, siteName }: { sites: { slug: stri
         </>
       ) : undefined}>
       {locations.length ? (
-        <RegionMap locations={locations} siteName={siteName} />
+        <RegionMap locations={locations} siteName={siteName} mapOptions={regionMapOptions(areas)} />
       ) : (
         <EmptyState title="Location not yet mapped">
           {siteName ? "No approximate location has been added for this site yet." : "No reference locations are available for these sites."}

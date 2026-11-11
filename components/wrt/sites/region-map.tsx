@@ -5,10 +5,10 @@ import Link from "next/link";
 import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
 import { formatNumber } from "@/lib/wrt/text";
-import { REGION_MAP_OPTIONS } from "@/lib/wrt/map-region";
+import type { RegionMapOptions } from "@/lib/wrt/map-region";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
-function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation }) {
+function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation | undefined }) {
   const { map, isLoaded } = useMap();
   useEffect(() => {
     if (!map || !isLoaded) return;
@@ -24,7 +24,7 @@ function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; se
   return null;
 }
 
-function LocationMarkers({ locations, selectedId, onSelect }: { locations: MappedSiteLocation[]; selectedId?: string; onSelect: (id: string) => void }) {
+function LocationMarkers({ locations, selectedId, onSelect }: { locations: MappedSiteLocation[]; selectedId?: string | undefined; onSelect: (id: string) => void }) {
   const { map, isLoaded } = useMap();
   const [groups, setGroups] = useState<number[][]>(() => locations.map((_, index) => [index]));
   useEffect(() => {
@@ -46,8 +46,9 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   }, [map, isLoaded, locations]);
 
   return groups.map((indexes) => {
-    const members = indexes.map((index) => locations[index]).filter(Boolean);
-    if (!members.length) return null;
+    const members = indexes.map((index) => locations[index]).filter((point) => point !== undefined);
+    const first = members[0];
+    if (!first) return null;
     const clustered = members.length > 1;
     const total = members.reduce((sum, point) => sum + point.split.total, 0);
     const needsReview = members.reduce((sum, point) => sum + point.split.needsReview, 0);
@@ -57,11 +58,11 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
       <MapMarker key={members.map((point) => point.id).join("/")} longitude={longitude} latitude={latitude}>
         <MarkerContent>
           <button type="button" className={`wrt-location-marker${clustered ? " wrt-location-marker--group" : ""}`}
-            aria-pressed={!clustered && members[0].id === selectedId}
-            aria-label={clustered ? `Zoom to ${members.length} nearby locations: ${members.map((point) => point.label).join(", ")}` : `Show ${members[0].label}`}
+            aria-pressed={!clustered && first.id === selectedId}
+            aria-label={clustered ? `Zoom to ${members.length} nearby locations: ${members.map((point) => point.label).join(", ")}` : `Show ${first.label}`}
             title={`${formatNumber(total)} recorded plants${needsReview ? `; ${formatNumber(needsReview)} needing review` : ""}`}
             onClick={() => {
-              if (!clustered) { onSelect(members[0].id); return; }
+              if (!clustered) { onSelect(first.id); return; }
               const bounds = locationBounds(members);
               if (bounds && map) map.fitBounds(bounds, { padding: 80, maxZoom: 17,
                 duration: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 450 });
@@ -76,7 +77,7 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   });
 }
 
-export function RegionMap({ locations, siteName }: { locations: MappedSiteLocation[]; siteName?: string }) {
+export function RegionMap({ locations, siteName, mapOptions }: { locations: MappedSiteLocation[]; siteName?: string | undefined; mapOptions: RegionMapOptions }) {
   const selectId = useId();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = locations.find((location) => location.id === selectedId);
@@ -104,12 +105,12 @@ export function RegionMap({ locations, siteName }: { locations: MappedSiteLocati
       </div>
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
         role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
-        <Map {...REGION_MAP_OPTIONS} theme="light">
+        <Map {...mapOptions} theme="light">
           <MapFocus locations={locations} selected={selected} />
           <MapControls showFullscreen />
-          <LocationMarkers key={locations.map((location) => location.id).join("/")} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />
+          <LocationMarkers key={`markers:${locations.map((location) => location.id).join("/")}`} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />
           {selected && (
-            <MapPopup key={selected.id} longitude={selected.longitude} latitude={selected.latitude}
+            <MapPopup key={`popup:${selected.id}`} longitude={selected.longitude} latitude={selected.latitude}
               closeButton closeOnClick={false} focusAfterOpen={false} anchor="bottom" offset={26}
               onClose={() => setSelectedId(null)} className="wrt-mappop !max-w-none">
               <div className="wrt-mappop__body">
@@ -140,16 +141,15 @@ export function RegionMap({ locations, siteName }: { locations: MappedSiteLocati
             <strong>{selected.label}</strong>
             <p className="wrt-prose m-0"><b className="tabular-nums">{formatNumber(selected.split.total)}</b> recorded plants · {selected.countScope === "part" ? "this part of the site" : "whole site"}</p>
             <SplitLine split={selected.split} />
-            <p className="wrt-prose m-0">{selected.description}</p>
+            {selected.description.trim() && <p className="wrt-prose m-0">{selected.description}</p>}
             <p className="wrt-muted m-0 tabular-nums">
               Approximate latitude: {selected.latitude.toFixed(4)} · longitude: {selected.longitude.toFixed(4)}
             </p>
             <div className="flex flex-wrap gap-x-5 gap-y-2">
               {!siteName && <Link href={`/sites/${selected.siteSlug}`} className="cn-link">View {selected.siteName} →</Link>}
               <a href={locationMapUrl(selected)} target="_blank" rel="noopener noreferrer" className="cn-link">Open in Google Maps ↗</a>
-              <a href={selected.sourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">{selected.sourceLabel} ↗</a>
-              {selected.coordinateSourceUrl !== selected.sourceUrl && (
-                <a href={selected.coordinateSourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">Coordinate reference ↗</a>
+              {selected.sourceUrl && (
+                <a href={selected.sourceUrl} target="_blank" rel="noopener noreferrer" className="cn-link">Coordinate reference ↗</a>
               )}
             </div>
           </div>
