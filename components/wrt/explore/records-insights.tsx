@@ -124,7 +124,7 @@ export function RecordsInsights({
           avatar: <Pin className="rx-pin" />,
           split,
           href: recordsHref(view, { parcel: meta!.id }),
-          page: partHref(place!.slug, meta!.name),
+          page: partHref(place!.slug, meta!.slug),
         }))
       : [];
   if (showParts && sites.length < 2) sites = [];

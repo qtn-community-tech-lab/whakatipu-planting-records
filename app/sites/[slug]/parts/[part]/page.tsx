@@ -5,8 +5,8 @@ import { getPublicWrt } from "@/lib/wrt/public-server";
 import type { PlaceDetail } from "@/lib/wrt/queries";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { speciesAtPlaces, tileRows } from "@/lib/wrt/presentation";
-import { spanLabel, formatNumber, slugify } from "@/lib/wrt/text";
-import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
+import { Card, CardLink, PageHead, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
 import { RecordsTable } from "@/components/wrt/shared/records";
@@ -14,9 +14,9 @@ import { hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
-import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
+import { readPlantingArea, readSite } from "@/db/queries/sites";
 import { Button } from "@/components/ui/button";
-import { readSite } from "@/db/queries/sites";
+import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { isAuthenticated } from "@/db/queries/auth";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
@@ -26,12 +26,12 @@ const REVIEW_CAP = 25;
 export async function generateStaticParams() {
   const places = await getPublicWrt().places();
   return places.flatMap((p) =>
-    p.item.parcels.length > 1 ? p.item.parcels.map((parcel) => ({ slug: p.item.slug, part: slugify(parcel.name) })) : [],
+    p.item.parcels.map((parcel) => ({ slug: p.item.slug, part: parcel.slug })),
   );
 }
 
 function findPart(d: PlaceDetail | null, part: string) {
-  return d?.parcels.find((p) => slugify(p.item.name) === part) ?? null;
+  return d?.parcels.find((p) => p.item.slug === part) ?? null;
 }
 
 async function loadPart(slug: string, part: string) {
@@ -40,23 +40,28 @@ async function loadPart(slug: string, part: string) {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, part } = await params;
-  const d = await loadPart(slug, part);
-  const p = findPart(d, part);
-  if (!d || !p) return { title: "Part not found" };
-  return {
-    title: `${p.item.name} · ${d.place.name}`,
-    description: `${formatNumber(p.split.total)} recorded plants at ${p.item.name}, part of ${d.place.name}.`,
-  };
+  const [site, area] = await Promise.all([readSite(slug), readPlantingArea(slug, part)]);
+  if (!site || !area) return { title: "Area not found" };
+  return { title: `${area.name} · ${site.name}`, description: area.description || `A named area within ${site.name}.` };
 }
 
 export default async function PartPage({ params }: Props) {
   const { slug, part } = await params;
-  const [d, site, authenticated] = await Promise.all([loadPart(slug, part), readSite(slug), isAuthenticated()]);
+  const [d, site, area, authenticated] = await Promise.all([
+    loadPart(slug, part), readSite(slug), readPlantingArea(slug, part), isAuthenticated(),
+  ]);
+  if (!site || !area) notFound();
+  const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit#area-${area.slug}`}>Edit area</Link></Button> : null;
   const p = findPart(d, part);
-  if (!d || !p) notFound();
+  if (!d || !p) return (
+    <>
+      <PageHead back={{ href: hrefs.place(slug), label: site.name }} eyebrow={`Area within ${site.name}`} title={area.name} lead={area.description || undefined} aside={editButton} />
+      <EmptyState title="No planting records yet">This area has no planting records yet.</EmptyState>
+    </>
+  );
 
-  const { place } = d;
-  const parcel = p.item;
+  const place = { ...d.place, name: site.name };
+  const parcel = { ...p.item, name: area.name };
   const recs = d.cells;
   const split = d.split;
   const span = p.span;
@@ -83,11 +88,14 @@ export default async function PartPage({ params }: Props) {
         back={{ href: hrefs.place(place.slug), label: place.name }}
         eyebrow={`Part of ${place.name} · ${spanText} · ${span.seasonsActive} ${span.seasonsActive === 1 ? "season" : "seasons"}`}
         title={`${formatNumber(split.total)} recorded plants at ${parcel.name}`}
-        lead={`${formatNumber(speciesCount)} species on ${formatNumber(split.records)} record${split.records === 1 ? "" : "s"}. No. ${at + 1} of ${d.parcels.length} parts of ${place.name} by recorded plants.`}
+        lead={`${area.description ? `${area.description} ` : ""}${formatNumber(speciesCount)} species on ${formatNumber(split.records)} record${split.records === 1 ? "" : "s"}. No. ${at + 1} of ${d.parcels.length} parts of ${place.name} by recorded plants.`}
         aside={
-          <Link href={recordsFor()} className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
-            All {formatNumber(split.records)} records →
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            {editButton}
+            <Link href={recordsFor()} className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
+              All {formatNumber(split.records)} records →
+            </Link>
+          </div>
         }
       />
 
@@ -162,7 +170,7 @@ export default async function PartPage({ params }: Props) {
             rows={siblings.map((x) => {
               const xr = d.partCells.filter((cell) => cell.parcel?.id === x.item.id);
               const species = [...speciesAtPlaces(xr).values()][0]?.species ?? [];
-              const href = partHref(place.slug, x.item.name);
+              const href = partHref(place.slug, x.item.slug);
               return {
                 key: x.item.id,
                 name: x.item.name,

@@ -84,6 +84,23 @@ describe("targeted history query boundaries", () => {
     expect(requests.filter((request) => request.path.endsWith("/read_history_references"))).toHaveLength(1);
   });
 
+  it("opens a renamed area by its fixed slug and preserves its historical quantities", async () => {
+    const area = references.areas[0]!;
+    const originalName = area.name;
+    area.name = "Renamed east bank";
+    try {
+      const detail = await createPublicHistoryQueries(() => true).place("reserve", { part: "east" });
+      expect(detail?.parcels[0]?.item).toMatchObject({ slug: "east", id: "9A", name: area.name });
+      expect(detail?.split).toEqual(split);
+      expect(detail?.records[0]?.record).toMatchObject({ parcelId: "9A", quantity: 5 });
+      expect(requests.find((request) => request.path.endsWith("/read_public_review_rows"))?.body).toEqual({
+        filters: { site: "reserve", area: "east" }, show_review: true, row_limit: 25,
+      });
+    } finally {
+      area.name = originalName;
+    }
+  });
+
   it("searches compact public summaries using historical aliases and macrons", async () => {
     const result = await createPublicHistoryQueries(() => true).search("old kowhai spelling");
     expect(result.species[0]?.item.slug).toBe("kowhai");

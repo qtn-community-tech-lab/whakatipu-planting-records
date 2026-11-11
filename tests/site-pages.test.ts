@@ -1,4 +1,4 @@
-import { Children, isValidElement, type ReactElement } from "react";
+import { Children, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { q, presentationCells } from "./helpers";
@@ -6,7 +6,8 @@ import { emptySplit, speciesBySite } from "@/lib/wrt/queries";
 
 const mocks = vi.hoisted(() => ({
   deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
-  revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
+  areas: vi.fn(), readArea: vi.fn(), createArea: vi.fn(), updateArea: vi.fn(),
+  revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(), seasons: vi.fn(),
 }));
 vi.mock("@/db/queries/auth", () => ({
   isAuthenticated: mocks.authenticated,
@@ -14,7 +15,7 @@ vi.mock("@/db/queries/auth", () => ({
     if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
   },
 }));
-vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
+vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list, listPlantingAreas: mocks.areas, readPlantingArea: mocks.readArea, createPlantingArea: mocks.createArea, updatePlantingArea: mocks.updateArea }));
 vi.mock("@/lib/wrt/public-server", () => ({ getPublicWrt: () => ({ places: mocks.places, overview: mocks.overview,
   seasons: () => q.seasons(), siteSpecies: async () => speciesBySite((await mocks.records()).rows),
   counts: async () => { const overview = await mocks.overview(); return { firstSeason: overview.firstSeason }; },
@@ -34,25 +35,30 @@ import NewSitePage from "@/app/sites/new/page";
 import EditSitePage from "@/app/sites/[slug]/edit/page";
 import SitesPage from "@/app/sites/page";
 import SitePage, { generateMetadata } from "@/app/sites/[slug]/page";
+import PartPage, { generateMetadata as areaMetadata } from "@/app/sites/[slug]/parts/[part]/page";
 import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
+import { PageHead } from "@/components/wrt/shared/page";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
-import type { CreateSiteInput, SiteSubmitResult } from "@/db/types";
+import type { CreateSiteInput, SiteSubmitResult, PlantingAreaEdit } from "@/db/types";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 
 const values = { slug: "new-reserve", name: "New Reserve", description: "Beside the river." };
 const params = Promise.resolve({ slug: values.slug });
 const searchParams = Promise.resolve({});
-type Submit = (input: CreateSiteInput) => Promise<SiteSubmitResult>;
+type Submit = (input: CreateSiteInput, savedSiteSlug?: string) => Promise<SiteSubmitResult>;
 
 async function pageForm(kind: "new" | "edit") {
   const page = kind === "new" ? await NewSitePage() : await EditSitePage({ params, searchParams });
-  return Children.toArray(page.props.children).find((child): child is ReactElement<{ onSubmit: Submit }> => isValidElement(child) && child.type === SiteForm);
+  return Children.toArray(page.props.children).find((child): child is ReactElement<{ onSubmit: Submit; areas?: PlantingAreaEdit[] }> => isValidElement(child) && child.type === SiteForm);
 }
 
 beforeEach(async () => {
   vi.resetAllMocks();
   mocks.authenticated.mockResolvedValue(true);
   mocks.deactivate.mockResolvedValue({ data: { slug: values.slug }, error: null });
+  mocks.areas.mockResolvedValue([]);
+  mocks.seasons.mockResolvedValue(await q.seasons());
+  mocks.readArea.mockResolvedValue(null);
   mocks.create.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.update.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.read.mockResolvedValue({ ...values, updated_at: "2026-11-10T00:00:00Z" });
@@ -73,7 +79,7 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   it("checks access both when rendering and when saving", async () => {
     const submit = (await pageForm(kind))!.props.onSubmit;
     mocks.authenticated.mockResolvedValue(false);
-    expect(await submit(values)).toHaveProperty("error");
+    expect(await submit({ ...values, areas: [] })).toHaveProperty("error");
     mocks.read.mockClear();
     await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
     expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/sites/new" : `/sites/${values.slug}/edit`)}`);
@@ -83,7 +89,7 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   });
 
   it("validates input before writing", async () => {
-    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, name: "  " })).toHaveProperty("issues");
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [], name: "  " })).toHaveProperty("issues");
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });
@@ -92,7 +98,7 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
     ["name", INPUT_LIMITS.shortText],
     ["description", INPUT_LIMITS.longText],
   ] as const)("rejects an overlong %s before writing", async (field, limit) => {
-    const result = await (await pageForm(kind))!.props.onSubmit({ ...values, [field]: "a".repeat(limit + 1) });
+    const result = await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [], [field]: "a".repeat(limit + 1) });
     expect(result.issues).toContainEqual({ path: field, message: lengthMessage(limit) });
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
@@ -100,45 +106,45 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   });
 
   it("writes only allowed fields and invalidates shared data before redirecting", async () => {
-    const input = { ...values, slug: "changed-slug", updated_by: "spoofed", deactivated_at: "now" };
+    const input = { ...values, areas: [], slug: "changed-slug", updated_by: "spoofed", deactivated_at: "now" };
     await expect((await pageForm(kind))!.props.onSubmit(input)).rejects.toThrow("REDIRECT");
-    if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...values, slug: "changed-slug" });
-    else expect(mocks.update).toHaveBeenCalledWith(values.slug, { name: values.name, description: values.description });
+    if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...values, areas: [], slug: "changed-slug" });
+    else expect(mocks.update).toHaveBeenCalledWith(values.slug, { name: values.name, description: values.description, areas: [] });
     expect(mocks.tag).toHaveBeenCalledWith("supabase");
     expect(mocks.revalidate).toHaveBeenCalledWith("/", "layout");
-    expect(mocks.redirect).toHaveBeenCalledWith(`/sites/${values.slug}`);
+    expect(mocks.redirect).toHaveBeenCalledWith(`/sites/${values.slug}?saved=1`);
     expect(mocks.tag.mock.invocationCallOrder[0]).toBeLessThan(mocks.revalidate.mock.invocationCallOrder[0]!);
     expect(mocks.revalidate.mock.invocationCallOrder[0]).toBeLessThan(mocks.redirect.mock.invocationCallOrder[0]!);
   });
 
   it("preserves retryable failures without invalidating caches", async () => {
     (kind === "new" ? mocks.create : mocks.update).mockRejectedValue(new Error("Database unavailable"));
-    expect(await (await pageForm(kind))!.props.onSubmit(values)).toHaveProperty("error");
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [] })).toHaveProperty("error");
     expect(mocks.tag).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("explains database permission failures", async () => {
     (kind === "new" ? mocks.create : mocks.update).mockResolvedValue({ data: null, error: { code: "42501" } });
-    expect(await (await pageForm(kind))!.props.onSubmit(values)).toEqual({ error: expect.stringContaining("staff account") });
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [] })).toEqual({ error: expect.stringContaining("staff account") });
   });
 });
 
 it("maps duplicate creation slugs to the slug field", async () => {
   mocks.create.mockResolvedValue({ data: null, error: { code: "23505" } });
-  expect(await (await pageForm("new"))!.props.onSubmit(values)).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique slug") }] });
+  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [] })).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique slug") }] });
   expect(mocks.tag).not.toHaveBeenCalled();
 });
 
 it("rejects an overlong creation slug before writing", async () => {
-  const result = await (await pageForm("new"))!.props.onSubmit({ ...values, slug: "a".repeat(INPUT_LIMITS.identifier + 1) });
+  const result = await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [], slug: "a".repeat(INPUT_LIMITS.identifier + 1) });
   expect(result.issues).toContainEqual({ path: "slug", message: lengthMessage(INPUT_LIMITS.identifier) });
   expect(mocks.create).not.toHaveBeenCalled();
   expect(mocks.redirect).not.toHaveBeenCalled();
 });
 
 it("rejects malformed creation slugs and shows unknown edit sites as not found", async () => {
-  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, slug: "new" })).toHaveProperty("issues");
+  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [], slug: "new" })).toHaveProperty("issues");
   mocks.read.mockResolvedValue(null);
   await expect(EditSitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
 });
@@ -166,10 +172,145 @@ it("opens a site's detail and metadata before any planting history exists", asyn
   await expect(SitePage({ params, searchParams })).rejects.toThrow("NOT_FOUND");
 });
 
+const area = { slug: "east-bank", name: "East bank", description: "By the river.", existing: false };
+
+it("does not attempt area writes if saving the site fails", async () => {
+  mocks.update.mockResolvedValue({ data: null, error: { code: "42501" } });
+  const result = await (await pageForm("edit"))!.props.onSubmit({ ...values, areas: [area] });
+  expect(result.error).toContain("staff account");
+  expect(mocks.createArea).not.toHaveBeenCalled();
+  expect(mocks.updateArea).not.toHaveBeenCalled();
+  expect(mocks.tag).not.toHaveBeenCalled();
+});
+
+it("validates every area before saving any part of the form", async () => {
+  const result = await (await pageForm("edit"))!.props.onSubmit({ ...values, areas: [area, { ...area, slug: "west-bank", name: " " }] });
+  expect(result.issues).toContainEqual({ path: "areas.1.name", message: "Enter an area name." });
+  expect(mocks.update).not.toHaveBeenCalled();
+  expect(mocks.createArea).not.toHaveBeenCalled();
+});
+
+it("continues after area failures and returns indexed successes for safe retries", async () => {
+  mocks.updateArea.mockRejectedValue(new Error("Unavailable"));
+  mocks.createArea
+    .mockResolvedValueOnce({ data: null, error: { code: "23505" } })
+    .mockResolvedValueOnce({ data: { slug: "south-bank" }, error: null });
+  const result = await (await pageForm("edit"))!.props.onSubmit({ ...values, areas: [
+    { ...area, existing: true }, { ...area, slug: "west-bank" }, { ...area, slug: "south-bank" },
+  ] });
+  expect(result.savedAreas).toEqual([{ index: 2, slug: "south-bank" }]);
+  expect(result.issues).toEqual([
+    { path: "areas.0.name", message: expect.stringContaining("could not be saved") },
+    { path: "areas.1.slug", message: expect.stringContaining("unique slug") },
+  ]);
+  expect(result.error).toContain("were saved");
+  expect(mocks.updateArea).toHaveBeenCalledWith(values.slug, area.slug, { name: area.name, description: area.description });
+  expect(mocks.createArea).toHaveBeenCalledTimes(2);
+  expect(mocks.update.mock.invocationCallOrder[0]).toBeLessThan(mocks.updateArea.mock.invocationCallOrder[0]!);
+  expect(mocks.updateArea.mock.invocationCallOrder[0]).toBeLessThan(mocks.createArea.mock.invocationCallOrder[0]!);
+  expect(mocks.tag).toHaveBeenCalled();
+  expect(mocks.revalidate).toHaveBeenCalled();
+  expect(mocks.redirect).not.toHaveBeenCalled();
+});
+
+it("scopes area writes to the captured site and writes only editable fields", async () => {
+  mocks.updateArea.mockResolvedValue({ data: { slug: area.slug }, error: null });
+  mocks.createArea.mockResolvedValue({ data: { slug: "west-bank" }, error: null });
+  const input = { ...values, site: "other-site", areas: [
+    { ...area, existing: true, site: "other-site", lat: -45, wrt_number: "9A" },
+    { ...area, slug: "west-bank", site: "other-site", lng: 168, updated_by: "spoofed" },
+  ] };
+  await expect((await pageForm("edit"))!.props.onSubmit(input)).rejects.toThrow("REDIRECT");
+  expect(mocks.updateArea).toHaveBeenCalledWith(values.slug, area.slug, { name: area.name, description: area.description });
+  expect(mocks.createArea).toHaveBeenCalledWith(values.slug, { slug: "west-bank", name: area.name, description: area.description });
+  expect(mocks.redirect).toHaveBeenCalledWith(`/sites/${values.slug}?saved=1`);
+});
+
+it("keeps the area register in the editor and shows only the saved status on site detail", async () => {
+  const areas = [{ ...area, site: values.slug, updated_at: "now" }];
+  mocks.areas.mockResolvedValue(areas);
+  expect((await pageForm("edit"))?.props.areas).toEqual(areas);
+  mocks.areas.mockClear();
+  const html = renderToStaticMarkup(await SitePage({ params, searchParams: Promise.resolve({ saved: "1" }) }));
+  expect(html).toContain("Changes saved");
+  expect(html).toContain("No planting records yet");
+  expect(html).not.toContain("Areas (1)");
+  expect(html).not.toContain("Add area");
+  expect(html).not.toContain("Edit area");
+  expect(mocks.areas).not.toHaveBeenCalled();
+});
+
+it("opens area details and metadata without planting history and rejects another parent", async () => {
+  mocks.readArea.mockResolvedValue({ ...area, site: values.slug, updated_at: "now" });
+  const areaParams = Promise.resolve({ slug: values.slug, part: area.slug });
+  const html = renderToStaticMarkup(await PartPage({ params: areaParams, searchParams }));
+  expect(html).toContain(area.name);
+  expect(html).toContain(area.description);
+  expect(html).toContain("No planting records yet");
+  expect(html).toContain(`/sites/${values.slug}/edit#area-${area.slug}`);
+  expect(await areaMetadata({ params: areaParams, searchParams })).toMatchObject({ title: `${area.name} · ${values.name}`, description: area.description });
+  expect(mocks.readArea).toHaveBeenCalledWith(values.slug, area.slug);
+  mocks.readArea.mockResolvedValue(null);
+  await expect(PartPage({ params: Promise.resolve({ slug: "other", part: area.slug }), searchParams })).rejects.toThrow("NOT_FOUND");
+});
+
+it("finds historical areas by fixed slug after correcting their display names", async () => {
+  const place = (await q.places())[0]!.item;
+  const d = (await q.place(place.slug))!;
+  const parcel = d.parcels[0]!.item;
+  mocks.place.mockResolvedValue(d);
+  mocks.read.mockResolvedValue({ slug: place.slug, name: place.name, description: "", is_scheme: false });
+  mocks.readArea.mockResolvedValue({ slug: parcel.slug, site: place.slug, name: "Corrected area name", description: "Corrected description" });
+  const html = renderToStaticMarkup(await PartPage({ params: Promise.resolve({ slug: place.slug, part: parcel.slug }), searchParams }));
+  expect(html).toContain("recorded plants at Corrected area name");
+  expect(html).toContain("Corrected description");
+  expect(html).toContain(`parcel=${encodeURIComponent(parcel.id)}`);
+});
+
+it("creates a site before its areas and returns its fixed slug after a partial save", async () => {
+  mocks.createArea.mockResolvedValueOnce({ data: null, error: { code: "23505" } })
+    .mockResolvedValueOnce({ data: { slug: "west-bank" }, error: null });
+  const submit = (await pageForm("new"))!.props.onSubmit;
+  const result = await submit({ ...values, areas: [area, { ...area, slug: "west-bank" }] });
+  expect(result).toMatchObject({ savedSiteSlug: values.slug, savedAreas: [{ index: 1, slug: "west-bank" }], issues: [{ path: "areas.0.slug", message: expect.stringContaining("unique slug") }] });
+  expect(mocks.create).toHaveBeenCalledTimes(1);
+  expect(mocks.create).toHaveBeenCalledWith({ ...values, areas: [area, { ...area, slug: "west-bank" }] });
+  expect(mocks.createArea.mock.invocationCallOrder[0]).toBeGreaterThan(mocks.create.mock.invocationCallOrder[0]!);
+  expect(mocks.createArea).toHaveBeenCalledWith(values.slug, { slug: area.slug, name: area.name, description: area.description });
+  expect(mocks.tag).toHaveBeenCalled();
+  expect(mocks.redirect).not.toHaveBeenCalled();
+
+  mocks.createArea.mockResolvedValue({ data: { slug: "east-bank-fixed" }, error: null });
+  await expect(submit({ ...values, areas: [{ ...area, slug: "east-bank-fixed" }] }, result.savedSiteSlug)).rejects.toThrow("REDIRECT");
+  expect(mocks.create).toHaveBeenCalledTimes(1);
+  expect(mocks.update).toHaveBeenCalledWith(values.slug, { name: values.name, description: values.description, areas: [{ ...area, slug: "east-bank-fixed" }] });
+  expect(mocks.redirect).toHaveBeenCalledWith(`/sites/${values.slug}?saved=1`);
+});
+
+it("validates creation areas before creating the parent site", async () => {
+  const result = await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [{ ...area, name: " " }] });
+  expect(result.issues).toContainEqual({ path: "areas.0.name", message: "Enter an area name." });
+  expect(mocks.create).not.toHaveBeenCalled();
+  expect(mocks.createArea).not.toHaveBeenCalled();
+});
+
+it("rejects changing the fixed site slug when retrying a partial creation", async () => {
+  const result = await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [] }, "other-site");
+  expect(result.issues).toContainEqual({ path: "slug", message: expect.stringContaining("cannot be changed") });
+  expect(mocks.create).not.toHaveBeenCalled();
+  expect(mocks.update).not.toHaveBeenCalled();
+});
+
 async function deactivationAction() {
   const page = await SitePage({ params, searchParams });
-  const control = Children.toArray(page.props.children).find((child): child is ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> =>
-    isValidElement(child) && child.type === DeactivateSite);
+  const header = Children.toArray(page.props.children).find(
+    (child): child is ReactElement<{ aside?: ReactNode }> =>
+      isValidElement(child) && child.type === PageHead,
+  );
+  const control = Children.toArray(header?.props.aside).find(
+    (child): child is ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> =>
+      isValidElement(child) && child.type === DeactivateSite,
+  );
   if (!control) throw new Error("Missing deactivation control");
   return control.props.onDeactivate;
 }
