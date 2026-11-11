@@ -27,6 +27,30 @@ export async function listSeasonPlantingLines(season: string) {
   return data;
 }
 
+/** A site's lines in one season, or one area's (by WRT number), area by area and most planted first. */
+export async function listSitePlantingLines(site: string, season: string, wrtNumber: string | null) {
+  const query = (await db())
+    .from("line_details")
+    .select("line_id, planting_id, area_name, wrt_number, planted_on, source, species, register_code, scientific_name, common_name, maori_name, quantity")
+    .eq("site", site)
+    .eq("season", season);
+  const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query)
+    .order("area_name")
+    .order("quantity", { ascending: false })
+    .throwOnError();
+  return data;
+}
+
+/** Planting events' notes, by id. (line_details' notes are each line's open review notes, not the event's.) */
+export async function listPlantingEventNotes(ids: number[]) {
+  const { data } = await (await db())
+    .from("planting_events")
+    .select("id, notes")
+    .in("id", ids)
+    .throwOnError();
+  return data;
+}
+
 /** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
 export async function listSeasons() {
   const { data } = await seasonTotals(await db())
@@ -46,4 +70,83 @@ export async function listSeasonLeaders(limit = 3) {
       .throwOnError(),
   ]);
   return { species: species.data, sites: sites.data };
+}
+
+/** A season's id by slug, e.g. "autumn-2026". Null when there is no such season. */
+export async function readSeason(slug: string) {
+  const { data } = await (await db())
+    .from("seasons")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle()
+    .throwOnError();
+  return data;
+}
+
+/** A new planting event. Its plants are added with createPlantingLines. */
+export async function createPlantingEvent(values: { area: string; season: number; planted_on: string; notes: string }) {
+  return (await db())
+    .from("planting_events")
+    .insert(values)
+    .select("id")
+    .single();
+}
+
+/** All of one planting event's lines in one insert, so they are saved together or not at all. */
+export async function createPlantingLines(plantingEvent: number, lines: { species: string; quantity: number }[]) {
+  return (await db())
+    .from("planting_lines")
+    .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent })));
+}
+
+/** A planting event's season slug, e.g. "autumn-2021", to check an edited date against. Null when there is no such event. */
+export async function readPlantingEventSeason(id: number) {
+  const { data } = await (await db())
+    .from("planting_events")
+    .select("seasons(slug)")
+    .eq("id", id)
+    .maybeSingle()
+    .throwOnError();
+  return data?.seasons?.slug ?? null;
+}
+
+/** A planting event's active lines: each one's id, species slug and quantity. */
+export async function listPlantingLines(plantingEvent: number) {
+  const { data } = await (await db())
+    .from("planting_lines")
+    .select("id, species, quantity")
+    .eq("planting_event", plantingEvent)
+    .is("deactivated_at", null)
+    .throwOnError();
+  return data;
+}
+
+/** A planting event's date and notes. The import's source stays as it is. */
+export async function updatePlantingEvent(id: number, values: { planted_on: string | null; notes: string }) {
+  return (await db())
+    .from("planting_events")
+    .update(values)
+    .eq("id", id)
+    .select("id")
+    .single();
+}
+
+/** One line's quantity, only within its own planting event. */
+export async function updatePlantingLine(plantingEvent: number, id: number, values: { quantity: number }) {
+  return (await db())
+    .from("planting_lines")
+    .update(values)
+    .eq("id", id)
+    .eq("planting_event", plantingEvent)
+    .select("id")
+    .single();
+}
+
+/** Deactivate lines taken off a planting event, only within that event. */
+export async function deactivatePlantingLines(plantingEvent: number, ids: number[]) {
+  return (await db())
+    .from("planting_lines")
+    .update({ deactivated_at: new Date().toISOString() })
+    .in("id", ids)
+    .eq("planting_event", plantingEvent);
 }
