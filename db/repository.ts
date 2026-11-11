@@ -11,9 +11,6 @@ import type {
 } from "@/lib/wrt/types";
 import { searchKey } from "@/lib/wrt/text";
 
-/** Reads are kept for 5 minutes, like every other Supabase read. */
-const KEEP_MS = 5 * 60 * 1000;
-
 /** Supabase as a signed-out visitor: the planting history is public to read. */
 export function publicDb(): Db {
   return createClient<Database>(

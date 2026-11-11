@@ -4,11 +4,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SpeciesSubmitResult } from "@/db/types";
 
 const mocks = vi.hoisted(() => ({
-  source: vi.fn(), authenticated: vi.fn(), deactivate: vi.fn(), species: vi.fn(), list: vi.fn(),
+  authenticated: vi.fn(), deactivate: vi.fn(), species: vi.fn(), list: vi.fn(),
   tag: vi.fn(), revalidate: vi.fn(), redirect: vi.fn(),
 }));
 vi.mock("@/lib/wrt/server", () => ({
-  dataSource: mocks.source, getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
+  getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
 vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate }));
@@ -22,11 +22,12 @@ import DetailPage from "@/app/species/[slug]/page";
 import RegisterPage from "@/app/species/page";
 import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { q } from "./helpers";
+import { defined } from "./assertions";
 
 const rows = await q.speciesList();
-const detail = (await q.species(rows[0].item.slug))!;
+const detail = (await q.species(defined(rows[0]).item.slug))!;
 const deactivatedAt = "2026-11-09T00:00:00.000Z";
-const page = () => DetailPage({ params: Promise.resolve({ slug: detail.species.slug }) });
+const page = () => DetailPage({ searchParams: Promise.resolve({}), params: Promise.resolve({ slug: detail.species.slug }) });
 type Submit = () => Promise<SpeciesSubmitResult>;
 async function action() {
   const control = Children.toArray((await page()).props.children).find((child) =>
@@ -37,7 +38,6 @@ async function action() {
 
 beforeEach(() => {
   vi.resetAllMocks();
-  mocks.source.mockReturnValue("supabase");
   mocks.authenticated.mockResolvedValue(true);
   mocks.species.mockResolvedValue(detail);
   mocks.list.mockResolvedValue(rows);
@@ -86,7 +86,7 @@ describe("species register lifecycle views", () => {
   });
 
   it.each([undefined, "deactivated"])("separates active and deactivated entries (state: %s)", async (state) => {
-    const html = renderToStaticMarkup(await RegisterPage({ searchParams: Promise.resolve({ state }) }));
+    const html = renderToStaticMarkup(await RegisterPage({ params: Promise.resolve({}), searchParams: Promise.resolve({ state }) }));
     const speciesLink = `href="/species/${detail.species.slug}"`;
     if (state === "deactivated") expect(html).toContain(speciesLink);
     else expect(html).not.toContain(speciesLink);
