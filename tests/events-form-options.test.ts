@@ -1,17 +1,44 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
-const mocks = vi.hoisted(() => ({ lookups: vi.fn(), species: vi.fn() }));
+const mocks = vi.hoisted(() => ({ lookups: vi.fn(), species: vi.fn(), sites: vi.fn() }));
 vi.mock("@/lib/wrt/server", () => ({
   getWrtAll: () => ({ lookups: mocks.lookups }),
 }));
 vi.mock("@/db/queries/species", () => ({ listSpeciesForPlanting: mocks.species }));
 
+vi.mock("@/db/queries/sites", () => ({ listSites: mocks.sites }));
+
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 import { repo } from "./helpers";
 
+beforeEach(async () => {
+  mocks.sites.mockResolvedValue([
+    ...(await repo.listPlaces()).map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme })),
+    { slug: "empty", name: "Empty site", is_scheme: false },
+    { slug: "new", name: "New site", is_scheme: false },
+  ]);
+});
+
 describe("new planting species options", () => {
+  it("omits deactivated sites while preserving historical lookups", async () => {
+    const places = await repo.listPlaces();
+    const deactivated = places.find((p) => !p.isScheme)!;
+    mocks.lookups.mockResolvedValue({ places });
+    mocks.species.mockResolvedValue([]);
+    mocks.sites.mockResolvedValue(places.filter((p) => p.slug !== deactivated.slug)
+      .map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme })));
+    const options = await eventFormOptions();
+    expect(options.sites.some((p) => p.slug === deactivated.slug)).toBe(false);
+    expect(places).toContain(deactivated);
+    const result = validateEventInput({
+      placeSlug: deactivated.slug, parcelId: null, plantedOn: "2026-11-09", season: "Spring",
+      seasonYear: 2026, polygon: null, notes: null, species: [{ speciesId: "test", quantity: 12 }],
+    }, { places: options.sites.map((p) => ({ ...p, isScheme: false, parcels: p.parts })), species: [{ id: "test" }] }, "2026-11-09");
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.errors).toHaveProperty("placeSlug");
+  });
   it("includes sites and areas without history while excluding order schemes", async () => {
     mocks.lookups.mockResolvedValue({ places: [
       { slug: "empty", name: "Empty site", isScheme: false, searchKeys: ["empty site"], parcels: [] },

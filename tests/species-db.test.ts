@@ -50,6 +50,6 @@ describe("database species references", () => {
     const deactivated_at = "2026-11-09T00:00:00.000Z";
     const species = await speciesFromDb({ profile: {}, photos: [], deactivated_at });
     expect(species.deactivatedAt).toBe(deactivated_at);
-    expect(species.id).toBe(profile[0].speciesId);
+    expect(species.id).toBe(firstProfile.speciesId);
   });
 });

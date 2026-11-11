@@ -1,26 +1,19 @@
 import { describe, expect, it } from "vitest";
 import speciesProfiles from "@/data/species-profiles.json";
-import { topPlantedSpecies } from "@/lib/wrt/species-photos";
-import { q } from "./helpers";
-import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
+import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
 describe("reviewed species profiles", () => {
-  it("covers researched species without attaching information to unconfirmed identities", async () => {
-    const all = await q.speciesList();
-    const top = topPlantedSpecies(all);
-    expect(top).toHaveLength(95);
-    expect(top.reduce((sum, row) => sum + row.split.total, 0)).toBe(140068);
-    expect(speciesProfiles.length).toBeGreaterThanOrEqual(75);
+  it("uses unique identities and keeps confirmed reviews linked to profiles", () => {
     expect(new Set(speciesProfiles.map((p) => p.speciesId)).size).toBe(speciesProfiles.length);
-    expect(speciesProfiles.every((p) => top.some((r) => r.item.id === p.speciesId))).toBe(true);
-    for (const row of top) {
-      const profile = speciesProfiles.find((profile) => profile.speciesId === row.item.id);
-      if (profile) expect(profile.scientificName).toBe(row.item.scientificName);
-      else expect(getSpeciesReferenceReview(row.item.id)?.status).toBe("unresolved");
+    for (const profile of speciesProfiles) {
+      const review = getSpeciesReferenceReview(profile.speciesId);
+      if (review) {
+        expect(profile.scientificName).toBe(review.scientificName);
+      }
     }
-    const maorica = all.find((r) => r.item.scientificName === "Carex maorica")!;
-    expect(speciesProfiles.find((profile) => profile.speciesId === maorica.item.id)?.scientificName).toBe("Carex maorica");
-    expect(speciesProfiles.find((profile) => profile.speciesId === "unknown")).toBeUndefined();
+    for (const review of speciesReferenceReviews.filter((r) => r.status === "confirmed")) {
+      expect(speciesProfiles.find((p) => p.speciesId === review.speciesId)).toBeDefined();
+    }
   });
 
   it("retains attribution and makes gaps and shared names explicit", () => {

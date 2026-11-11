@@ -4,7 +4,7 @@ import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { dataSource, getWrt } from "@/lib/wrt/server";
+import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -84,9 +84,9 @@ export default async function SpeciesDetailPage({ params }: Props) {
 
   return (
     <>
-      {authenticated && !sp.deactivatedAt && (dataSource() === "supabase"
-        ? <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
-        : <div className="flex justify-end">{editButton}</div>)}
+      {authenticated && !sp.deactivatedAt && (
+        <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
+      )}
       {sp.deactivatedAt && <Alert role="status">
         <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
         <AlertDescription>

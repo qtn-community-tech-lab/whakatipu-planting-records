@@ -1,23 +1,22 @@
-import { DEFAULT_DATA_DIR, loadFromDirectory } from "@/scripts/workbook/load";
+import { places, records, seasons, species } from "./fixtures/planting";
 import type { WrtRepository } from "@/lib/wrt/repository";
 import { createQueries } from "@/lib/wrt/queries";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
-/** Offline fixture from the same validated data used by the one-off workbook import. */
-export const workbook = loadFromDirectory(DEFAULT_DATA_DIR);
+/** Small in-memory fixture; no source files or live database required. */
 export const repo: WrtRepository = {
-  listSeasons: async () => workbook.seasons,
-  listSpecies: async () => workbook.species,
-  listPlaces: async () => workbook.places,
-  listRecords: async () => workbook.records,
-  listReconciliation: async () => workbook.reconciliation.filter((r) => r.kind === "season"),
+  listSeasons: async () => seasons,
+  listSpecies: async () => species,
+  listPlaces: async () => places,
+  listRecords: async () => records,
+  listReconciliation: async () => [],
   getSourceInfo: async () => ({
-    description: "Offline workbook import fixture.",
+    description: "Synthetic planting fixture.",
     tables: [
-      { name: "seasons", rows: workbook.seasons.length },
-      { name: "species", rows: workbook.species.length },
-      { name: "sites", rows: workbook.places.length },
-      { name: "planting lines", rows: workbook.records.length },
+      { name: "seasons", rows: seasons.length },
+      { name: "species", rows: species.length },
+      { name: "sites", rows: places.length },
+      { name: "planting lines", rows: records.length },
     ],
   }),
 };
