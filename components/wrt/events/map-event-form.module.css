@@ -127,6 +127,17 @@ button.stepLink { cursor: pointer; }
 
 /* the date as a card (the check step), its native input hidden inside (Change opens the picker) */
 .card:focus-within { border-color: var(--cn-green-800); box-shadow: 0 0 0 3px rgba(31, 77, 52, 0.12); }
+/* where and when: tiles you tap to change, side by side on step 1 */
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.picks > section { min-width: 0; }
+.pick { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--border-card, #e6e8df); border-radius: 14px; background: var(--surface-card, #fff); color: var(--cn-green-800); text-align: left; font: inherit; cursor: pointer; }
+.pick > svg { flex-shrink: 0; }
+.pick > span { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.pick b { font: 700 14.5px/1.25 var(--font-sans); color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick small { font: 500 12.5px/1.3 var(--font-sans); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .pick:hover:enabled { border-color: var(--cn-green-600); } }
+.pick:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.pick[aria-invalid="true"] { border-color: var(--cn-red-600, #b42318); }
 .dateRow { position: relative; display: flex; align-items: center; gap: 10px; padding: 2px 0 2px 14px; border-radius: 14px; background: var(--surface-card, #fff); border: 1px solid var(--border-card, #e6e8df); color: var(--cn-green-800); }
 .dateText { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; }
 .dateText b { font: 600 14.5px/1.3 var(--font-sans); color: var(--text-strong); }

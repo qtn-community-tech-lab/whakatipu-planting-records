@@ -368,19 +368,22 @@ function When({ form, today }: { form: EventFormState; today: string }) {
   const { err } = form;
   return (
     <section className={s.group} aria-label="When">
-      <div className={s.dateRow}>
-        <Calendar size={18} strokeWidth={2} />
-        <span className={s.dateText}>
-          <b>{form.plantedOn ? `${form.plantedOn === today ? "Today, " : ""}${formatPlantedOn(form.plantedOn)}` : "Choose a date"}</b>
-          <span>{form.season} {form.seasonYear}</span>
+      {/* The whole tile opens the calendar. */}
+      <DatePicker
+        value={form.plantedOn} max={today} onChange={form.changeDate} className={s.pick}
+        aria-label={`${form.plantedOn ? formatPlantedOn(form.plantedOn) : "No date"}, ${form.season} ${form.seasonYear}: change the planting date`} aria-invalid={!!err("plantedOn")}
+      >
+        <Calendar size={18} strokeWidth={2} aria-hidden="true" />
+        <span>
+          {/* Short, to fit half a phone's width: "Today, 12 Nov" or "3 Oct 2026" (the label above has it in full). */}
+          <b>
+            {!form.plantedOn ? "Choose a date"
+              : form.plantedOn === today ? `Today, ${formatPlantedOn(today).replace(/^\S+ | \d{4}$/g, "")}`
+              : formatPlantedOn(form.plantedOn).replace(/^\S+ /, "")}
+          </b>
+          <small>{form.season} {form.seasonYear}</small>
         </span>
-        <DatePicker
-          value={form.plantedOn} max={today} onChange={form.changeDate} className={cn(s.link, s.dateChange)}
-          aria-label="Change planting date" aria-invalid={!!err("plantedOn")}
-        >
-          Change
-        </DatePicker>
-      </div>
+      </DatePicker>
       {err("plantedOn") && <p className={s.problem} role="alert">{err("plantedOn")}</p>}
       {err("season") && <p className={s.problem} role="alert">{err("season")}</p>}
     </section>
@@ -430,20 +433,19 @@ function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spot
           </button>
         </section>
       )}
-      {!spot && form.site && (
-        // Confirm the place and the date up front: the site and part (Change opens the site chooser), then when.
-        <section className={s.group} aria-label="Place">
-          <div className={s.dateRow}>
-            <MapPin size={18} strokeWidth={2} />
-            <span className={s.dateText}>
-              <b>{form.site.name}</b>
-              <span>{partName ? partBesideSite(partName, form.site.name) : "The site as a whole"}</span>
-            </span>
-            {onChooseSite && <button type="button" className={cn(s.link, s.dateChange)} onClick={onChooseSite} aria-label="Change the site or part">Change</button>}
-          </div>
-        </section>
-      )}
-      <When form={form} today={today} />
+      {!spot && form.site ? (
+        // Where and when side by side, each a tile you tap to change: the site and part (the site chooser), then the date.
+        <div className={s.picks}>
+          <button
+            type="button" className={s.pick} onClick={onChooseSite} disabled={!onChooseSite}
+            aria-label={`${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "the site as a whole"}: change the site or part`}
+          >
+            <MapPin size={18} strokeWidth={2} aria-hidden="true" />
+            <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "The site as a whole"}</small></span>
+          </button>
+          <When form={form} today={today} />
+        </div>
+      ) : <When form={form} today={today} />}
       {!spot && form.site && ((areas.length > 0 && !areasListed) || err("parcelId")) && (
         // Parts are switched in the panel's header (or the map's dock); areas are drawn and new locations
         // dropped from the map.
