@@ -31,7 +31,7 @@ import f from "@/components/wrt/events/map-event-form.module.css";
 type Event = SeasonPlantingEvents["events"][number];
 const quantity = plantingEventEditSchema.shape.lines.element.shape.quantity;
 
-/** The writable schema with what the controls hold: the date "" for none, quantities as typed, and each line's name to show. */
+/** The writable schema with what the controls hold: the date "" for none, and quantities as typed. */
 function editFormSchema(season: string, today: string) {
   return z.object({
     plantedOn: z.string().superRefine((v, ctx) => {
@@ -42,12 +42,6 @@ function editFormSchema(season: string, today: string) {
     lines: z.array(z.object({
       id: z.number().nullable(),
       species: z.string(),
-      name: z.string(),
-      italic: z.boolean(),
-      // Shown only: the other name under it.
-      second: z.string().nullable(),
-      secondItalic: z.boolean(),
-      photo: z.object({ src: z.string() }).nullable(),
       quantity: z.string().superRefine((v, ctx) => {
         const checked = v ? quantity.safeParse(Number(v)) : undefined;
         const problem = !v ? "Enter how many were planted." : checked?.success ? undefined : checked?.error.issues[0]?.message;
@@ -61,9 +55,7 @@ type EditFormValues = z.infer<ReturnType<typeof editFormSchema>>;
 const formValues = (e: Event): EditFormValues => ({
   plantedOn: e.plantedOn ?? "",
   notes: e.notes,
-  lines: e.lines.map((l) => ({
-    id: Number(l.id), species: l.species, name: l.name, italic: l.italic, second: l.second, secondItalic: l.secondItalic, photo: l.photo, quantity: String(l.quantity),
-  })),
+  lines: e.lines.map((l) => ({ id: Number(l.id), species: l.species, quantity: String(l.quantity) })),
 });
 
 /** Only the writable fields, as the server action takes them. */
@@ -130,12 +122,17 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
   const months = seasonMonths(season.slug);
   const byId = new Map(species.map((x) => [x.id, x]));
   const taken = new Set(listed.map((l) => l.species));
+  // What a species row shows: its line as loaded, or for one just added, the register's names.
+  const shownAs = (id: string) => event.lines.find((l) => l.species === id) ?? {
+    name: byId.get(id)?.name ?? id, italic: !!byId.get(id)?.isScientific,
+    second: byId.get(id)?.isScientific === false ? byId.get(id)!.scientific : null, secondItalic: true, photo: null,
+  };
 
   function addSpecies(id: string) {
     const sp = byId.get(id);
     if (!sp || taken.has(id)) return;
     lines.append(
-      { id: null, species: id, name: sp.name, italic: sp.isScientific, second: sp.isScientific ? null : sp.scientific, secondItalic: true, photo: null, quantity: "" },
+      { id: null, species: id, quantity: "" },
       { focusName: `lines.${lines.fields.length}.quantity` },
     );
     setAdds((n) => n + 1);
@@ -214,25 +211,26 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
                   const before = event.lines.find((l) => Number(l.id) === value.id)?.quantity;
                   return before !== undefined && String(before) !== value.quantity ? `was ${formatNumber(before)}` : null;
                 })();
-                const second = value.second ? (value.secondItalic ? <i>{value.second}</i> : value.second) : null;
+                const sp = shownAs(value.species);
+                const second = sp.second ? (sp.secondItalic ? <i>{sp.second}</i> : sp.second) : null;
                 return (
                   <Controller
                     key={line.id} control={form.control} name={`lines.${i}.quantity`}
                     render={({ field, fieldState }) => (
                       <li className={f.row} data-invalid={fieldState.invalid || undefined}>
                         <ListRow
-                          photo={value.photo} initial={value.name.charAt(0)} title={value.italic ? <i>{value.name}</i> : value.name}
+                          photo={sp.photo} initial={sp.name.charAt(0)} title={sp.italic ? <i>{sp.name}</i> : sp.name}
                           subtitle={second || was ? <>{second}{second && was && " · "}{was && <b className="font-semibold text-[var(--cn-green-800)]">{was}</b>}</> : undefined}
                           end={
                             <span className="flex items-center gap-1">
                               <input
                                 {...field} {...NUMBER_FIELD} maxLength={6} className={f.rowQty} placeholder="–"
-                                aria-label={`${value.name}: how many planted`} aria-invalid={fieldState.invalid}
+                                aria-label={`${sp.name}: how many planted`} aria-invalid={fieldState.invalid}
                                 aria-describedby={fieldState.error ? `lines-${i}-error` : undefined}
                                 onChange={(e) => field.onChange(digits(e.target.value))}
                               />
                               <button
-                                type="button" className={f.link} aria-label={`Remove ${value.name}`}
+                                type="button" className={f.link} aria-label={`Remove ${sp.name}`}
                                 onClick={() => lines.remove(i)}
                               >
                                 <X size={18} strokeWidth={2.2} aria-hidden="true" />
