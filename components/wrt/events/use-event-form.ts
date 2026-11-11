@@ -10,7 +10,7 @@
 import { useMemo, useState, type RefObject } from "react";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import { errorsForStep, firstStepWithError, LAST_STEP } from "@/lib/wrt/events/steps";
+import { errorsForStep, EVENT_STEPS, firstStepWithError, LAST_STEP, type EventStep } from "@/lib/wrt/events/steps";
 import type { EventSeason, PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
 
@@ -20,19 +20,22 @@ export interface Line {
   speciesId: string;
   /** Kept as typed so a half-typed number is not reformatted under the cursor. */
   quantity: string;
-  /** The drawn area these plants went into (the record sheet's area id), or none. */
-  area?: number;
+  /** The drawn area these plants went into (the planting event page's area id), or none. */
+  area?: number | undefined;
 }
 
 export type EventFormState = ReturnType<typeof useEventForm>;
 
 const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
+/** Stands in for a new site (a new location not at any site) while the event is checked. Not saved. */
+export const NEW_SITE = "new-site";
+
 /** Focus an element once React has drawn the change that reveals it. */
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialPlace = "",
+  options, today, formRef, headingRef, initialSite = "", steps = EVENT_STEPS, newSite = false,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -42,11 +45,15 @@ export function useEventForm({
   /** The current step's heading, focused when the step changes. */
   headingRef: RefObject<HTMLHeadingElement | null>;
   /** Site slug to start on, e.g. when the form opens from the map at a site. */
-  initialPlace?: string;
+  initialSite?: string;
+  /** Which fields each step asks for (EVENT_STEPS, or the map form's order). */
+  steps?: readonly EventStep[];
+  /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
+  newSite?: boolean;
 }) {
   const suggested = seasonFromDate(today)!;
 
-  const [placeSlug, setPlaceSlug] = useState(initialPlace);
+  const [placeSlug, setPlaceSlug] = useState(initialSite);
   const [parcelId, setParcelId] = useState<string | null>(null);
   const [plantedOn, setPlantedOn] = useState(today);
   const [season, setSeason] = useState<EventSeason>(suggested.season);
@@ -69,13 +76,14 @@ export function useEventForm({
 
   // Reference data for the client-side check: the same shape the server validates against.
   const lookups: EventLookups = useMemo(() => ({
-    places: options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })),
+    places: [...options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })), { slug: NEW_SITE, isScheme: false, parcels: [] }],
     species: options.species,
   }), [options]);
+  const checkedPlace = newSite && !placeSlug ? NEW_SITE : placeSlug;
 
   // Checked on every change (cheap); errors are shown only for checked steps.
   const result = validateEventInput({
-    placeSlug,
+    placeSlug: checkedPlace,
     parcelId,
     plantedOn,
     season,
@@ -85,7 +93,7 @@ export function useEventForm({
     notes: notes.trim() || null,
   }, lookups, today);
   const allErrors: FieldErrors = result.ok ? {} : result.errors;
-  const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step) : {};
+  const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step, steps) : {};
 
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
 
@@ -102,7 +110,7 @@ export function useEventForm({
   /** Check the current step; move on when its fields are right. */
   function next() {
     markChecked(step);
-    if (Object.keys(errorsForStep(allErrors, step)).length) focusFirstProblem();
+    if (Object.keys(errorsForStep(allErrors, step, steps)).length) focusFirstProblem();
     else goTo(step + 1);
   }
 
@@ -112,7 +120,7 @@ export function useEventForm({
       setPreview(result.value);
       return;
     }
-    const s = firstStepWithError(result.errors) ?? 0;
+    const s = firstStepWithError(result.errors, steps) ?? 0;
     markChecked(s);
     show(s);
     focusFirstProblem();
@@ -179,13 +187,13 @@ export function useEventForm({
       setNextKey((k) => k + 1);
     },
     /**
-     * Keep the lines in step with the drawn areas (their ids, in order): a line whose area is gone,
-     * or that has none, moves to the first area, adding to that species there if it's already listed.
-     * With no areas, lines have none. Nothing typed is lost.
+     * Keep the lines in step with the drawn areas (their ids, in order): a line whose area is gone
+     * moves to the first area, adding to that species there if it's already listed. A line with no
+     * area is for the site as a whole, and stays so. With no areas, lines have none. Nothing typed is lost.
      */
     keepAreas(ids: readonly number[]) {
       setLines((ls) => {
-        const target = (l: Line) => (ids.length === 0 ? undefined : l.area !== undefined && ids.includes(l.area) ? l.area : ids[0]);
+        const target = (l: Line) => (ids.length === 0 || l.area === undefined ? undefined : ids.includes(l.area) ? l.area : ids[0]);
         if (ls.every((l) => l.area === target(l))) return ls;
         const out: Line[] = [];
         for (const l of ls) {

@@ -18,7 +18,7 @@ export interface SpeciesSuggestion {
   common: string | null;
   maori: string | null;
   scientific: string;
-  photo: { src: string; focalPoint: string; credit: string } | null;
+  photo: { src: string; credit: string } | null;
 }
 
 /** Every site's most planted species, by site slug: one query, so switching sites in the form is instant. */
@@ -35,7 +35,7 @@ export async function siteSpeciesSuggestions(limit = 12): Promise<Record<string,
         common: species.commonName,
         maori: species.maoriName,
         scientific: species.scientificName,
-        photo: p ? { src: p.src, focalPoint: "center", credit: p.attribution } : null,
+        photo: p ? { src: p.src, credit: p.attribution } : null,
       };
     })]));
 }
