@@ -19,6 +19,8 @@ export class Spring {
   /** Spring to `target`, starting at `velocity` (px/s) if given. */
   to(target: number, velocity?: number) {
     this.target = target;
+    // Reduce Motion: go straight there, no travel or bounce.
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return this.set(target);
     if (velocity !== undefined) this.velocity = velocity;
     if (!this.frame) {
       this.last = performance.now();
