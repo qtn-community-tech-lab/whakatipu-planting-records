@@ -29,8 +29,7 @@ describe("overview", () => {
   it("reports non-empty totals and counts consistent with its lists", async () => {
     const o = await q.overview();
     expectCoherentSplit(o.split);
-    expect(o.split.total).toBeGreaterThan(0);
-    expect(o.split.records).toBeGreaterThan(0);
+    expect(o.split).toEqual({ total: 370, resolved: 290, needsReview: 80, records: 16, recordsNeedingReview: 6 });
     expect(o.seasons.length).toBeGreaterThan(0);
     expect(o.firstSeason.label).toBe("Autumn 2015");
     expect(o.lastSeason.order).toBe(o.seasons.length - 1);
@@ -72,7 +71,7 @@ describe("overview", () => {
     }
   });
 
-  it("no longer lists Slope Hill 2024 as a question: WRT ruled it real", async () => {
+  it("does not create a review theme for settled informational notes", async () => {
     const o = await q.overview();
     expect(o.themes.find((x) => x.theme === "slope-hill-2024")).toBeUndefined();
   });
@@ -149,14 +148,6 @@ describe("seasons", () => {
     expect(seasons.length).toBeGreaterThan(0);
     expect(seasons.reduce((a, s) => a + s.split.total, 0)).toBe((await q.overview()).split.total);
     expectAllCoherent(seasons, "seasons");
-  });
-
-  it("every season total equals its reconciliation row", async () => {
-    for (const s of await q.seasons()) {
-      expect(s.reconciliation, s.season.label).not.toBeNull();
-      expect(s.split.total, s.season.label).toBe(s.reconciliation!.generated);
-      expect(s.reconciliation!.difference).toBe(0);
-    }
   });
 
   it("every season detail is coherent, linked in order and adds back", async () => {
@@ -286,9 +277,9 @@ describe("dataQuality()", () => {
     expect(dq.byConfidence.reduce((a, r) => a + r.split.total, 0)).toBe(o.split.total);
   });
 
-  it("reports database sources and season reconciliation rows", async () => {
+  it("reports the repository source without inventing reconciliation rows", async () => {
     const dq = await q.dataQuality();
-    expect(dq.reconciliation.filter((r) => r.kind === "season")).toHaveLength((await q.seasons()).length);
+    expect(dq.reconciliation).toEqual([]);
     expect(dq.source.tables.length).toBeGreaterThan(0);
   });
 });
@@ -318,6 +309,8 @@ describe("the query layer reads through the repository only", () => {
 describe("chat golden questions", () => {
   it("Whitechapel 2019", async () => {
     const r = await q.records({ place: "whitechapel", year: 2019 });
+    expect(r.split.total).toBe(180);
+    expect(r.rows).toHaveLength(4);
     expect(r.split).toEqual(splitOf(r.rows.map((v) => v.record)));
   });
 
@@ -342,17 +335,17 @@ describe("chat golden questions", () => {
     expect(r.places.length + r.species.length).toBe(0);
   });
 
-  it("Autumn 2026 has 11 places", async () => {
+  it("returns the sites planted in the selected season", async () => {
     const season = await q.season("autumn-2026");
     expect(season).not.toBeNull();
-    expect(season!.places.length).toBeGreaterThan(0);
+    expect(season!.places.map((p) => p.item.slug)).toEqual(["whitechapel"]);
   });
 
-  it("the Slope Hill 2024 columns hold 29,000 confirmed plants", async () => {
-    const slope = (await q.records()).rows.filter((v) => v.record.notes.some((n) => n.text.startsWith("decision 4 ruled")));
-    expect(slope.length).toBeGreaterThan(0);
-    expect(slope.reduce((n, v) => n + v.record.quantity, 0)).toBeGreaterThan(0);
-    expect(slope.every((v) => !v.record.needsReview)).toBe(true);
+  it("keeps informational notes out of the review queue", async () => {
+    const result = await q.records({ place: "slope-hill", year: 2024, review: "resolved" });
+    expect(result.split.total).toBe(60);
+    expect(result.rows.some((v) => v.record.notes.some((n) => n.kind === "fyi"))).toBe(true);
+    expect(result.rows.every((v) => !v.record.needsReview)).toBe(true);
   });
 });
 

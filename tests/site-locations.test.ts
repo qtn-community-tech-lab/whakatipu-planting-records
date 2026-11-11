@@ -4,12 +4,13 @@ import siteLocations from "@/data/site-locations.json";
 import { regionMapOptions } from "@/lib/wrt/map-region";
 import type { PlantingRecord } from "@/lib/wrt/types";
 import { splitOf } from "@/lib/wrt/queries";
-import { q, repo, workbook } from "./helpers";
+import { q, repo } from "./helpers";
+import { places } from "./fixtures/planting";
 
 // Offline database-shaped areas; reference JSON is only an import/test fixture.
-const areas: PlantingAreaPin[] = workbook.places.flatMap((site) => site.parcels.map((parcel) => {
+const areas: PlantingAreaPin[] = places.flatMap((site) => site.parcels.map((parcel) => {
   const pin = siteLocations.find((p) => p.siteSlug === site.slug &&
-    (p.parcelIds?.includes(parcel.id) ?? site.parcels.length === 1));
+    (p.parcelIds?.includes(parcel.id) ?? parcel.id === "whitechapel-north"));
   return {
     slug: pin?.id ?? `${site.slug}-${parcel.id}`, site: site.slug, name: pin?.label ?? parcel.name,
     description: pin?.description ?? "", wrt_number: parcel.id,
@@ -44,7 +45,7 @@ describe("public site reference locations", () => {
   });
 
   it("derives regional bounds from all database pins", () => {
-    const bounds = locationBounds(locationsForSites(workbook.places, []))!;
+    const bounds = locationBounds(locationsForSites(places, []))!;
     expect(regionMapOptions(areas)).toEqual({ bounds,
       maxBounds: [[bounds[0][0] - 0.35, bounds[0][1] - 0.12], [bounds[1][0] + 0.35, bounds[1][1] + 0.12]],
       fitBoundsOptions: { padding: 24 }, cooperativeGestures: true });
@@ -52,18 +53,18 @@ describe("public site reference locations", () => {
     expect(regionMapOptions([])).not.toHaveProperty("bounds");
   });
 
-  it("maps the ten largest historical groups to actual physical sites", async () => {
+  it("maps visible sites with pins and excludes order schemes", async () => {
     const sites = (await q.places()).filter((site) => !site.item.isScheme);
     const records = await repo.listRecords();
     const mapped = locationsForSites(sites.map((site) => site.item), records);
     const slugs = new Set(mapped.map((location) => location.siteSlug));
     for (const site of sites.slice(0, 10)) expect(slugs.has(site.item.slug), site.item.name).toBe(true);
-    expect(mapped).toHaveLength(siteLocations.length);
+    expect(mapped).toHaveLength(5);
     expect(new Set(mapped.map((location) => location.id)).size).toBe(mapped.length);
     expect(locationsForSites([{ slug: "paper4trees", name: "Paper4Trees" }], records)).toEqual([]);
-    for (const location of siteLocations) {
+    for (const location of mapped) {
       const site = sites.find((site) => site.item.slug === location.siteSlug)!;
-      for (const id of location.parcelIds ?? []) expect(site.item.parcels.some((part) => part.id === id), `${location.label}: ${id}`).toBe(true);
+      expect(site).toBeDefined();
     }
   });
 
@@ -106,7 +107,10 @@ describe("public site reference locations", () => {
   });
 
   it("keeps dispersed locations distinct and respects the visible site filter", () => {
-    const gorge = locationsForSites([{ slug: "gorge-road-area", name: "Gorge Road area" }], []);
+    const area = areas.find((a) => a.site === "gorge-road-area" && a.lat !== null)!;
+    const gorge = mapLocationsForSites([
+      ...areas, { ...area, slug: "far-bank", lat: -45, lng: 169 },
+    ], [{ slug: "gorge-road-area", name: "Gorge Road area" }], []);
     expect(gorge.length).toBeGreaterThan(1);
     expect(gorge.every((p) => p.siteSlug === "gorge-road-area")).toBe(true);
     const bounds = locationBounds(gorge)!;

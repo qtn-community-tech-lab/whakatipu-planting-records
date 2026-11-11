@@ -6,10 +6,10 @@ describe("threatened marks (raised on About the data)", () => {
     const { threatened } = await q.dataQuality();
     const po = threatened.filter((r) => r.item.threatenedMarks.plantsOutMaster);
     const te = threatened.filter((r) => r.item.threatenedMarks.teKakano);
-    expect(po).toHaveLength(13);
-    expect(te).toHaveLength(11);
-    expect(threatened.filter((r) => r.agreed)).toHaveLength(8);
-    expect(threatened).toHaveLength(16);
+    expect(po.map((r) => r.item.displayName).sort()).toEqual(["Kānuka", "Kōwhai"]);
+    expect(te.map((r) => r.item.displayName).sort()).toEqual(["Kōwhai", "Mānuka"]);
+    expect(threatened.filter((r) => r.agreed).map((r) => r.item.displayName)).toEqual(["Kōwhai"]);
+    expect(threatened).toHaveLength(3);
   });
 
   it("flags mānuka as marked in Te Kakano only", async () => {
