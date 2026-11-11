@@ -30,7 +30,7 @@ export const species: Species[] = [
 function place(name: string, parts: [string, string][], siteClass: SiteClass = "keystone"): Place {
   const slug = slugify(name);
   const parcels: Parcel[] = parts.map(([id, name]) => ({
-    id, name, placeSlug: slug, siteClass, aliases: [],
+    id, name, slug: slug, placeSlug: slug, siteClass, aliases: [],
   }));
   return { slug, name, parcels, siteClasses: [siteClass],
     searchKeys: [name, ...parcels.map((p) => p.name), ...(slug === "whitechapel" ? ["wcr"] : [])].map(searchKey) };
