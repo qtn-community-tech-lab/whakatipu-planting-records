@@ -3,7 +3,7 @@
  * The form's Where step, at a chosen site: every season planted there (or at the chosen part),
  * newest first, with the plants in each and a total, so you can see what's gone in before.
  */
-import { siteSeasons } from "@/app/playground/create-planting-event/actions";
+import { loadSiteSeasonHistory } from "@/app/playground/create-planting-event/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/wrt/text";
 import f from "@/components/wrt/events/map-event-form.module.css";
@@ -11,14 +11,14 @@ import { SeasonList } from "@/components/wrt/shared/season-list";
 import { useLoad } from "@/components/wrt/shared/use-load";
 
 
-export function PastPlantings({ slug, parcelId, partName, today, onOpenSeason }: {
+export function SeasonHistory({ slug, parcelId, partName, today, onOpenSeason }: {
   slug: string; parcelId: string | null; partName?: string | undefined;
   /** NZ today, "YYYY-MM-DD": how long ago each season was. */
   today: string;
   /** A season's row: open its planting events. `wholeSite` when the seasons shown are the whole site's (the part has none). */
   onOpenSeason?: ((season: { slug: string; label: string }, wholeSite: boolean) => void) | undefined;
 }) {
-  const { loading, failed, data: o } = useLoad(`${slug}/${parcelId ?? ""}`, () => siteSeasons(slug, parcelId));
+  const { loading, failed, data: o } = useLoad(`${slug}/${parcelId ?? ""}`, () => loadSiteSeasonHistory(slug, parcelId));
 
   if (loading) {
     return (

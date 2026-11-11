@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { TextareaInput } from "@/components/ui/inputs";
 import { Spinner } from "@/components/ui/spinner";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
-import { FigureList } from "@/components/wrt/shared/figure-list";
+import { FigureList, type FigureRow } from "@/components/wrt/shared/figure-list";
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { AreaPicker } from "@/components/wrt/shared/area-picker";
 import { SearchField } from "@/components/wrt/shared/search-field";
@@ -39,7 +39,6 @@ import { cn } from "@/lib/utils";
 import { NEW_SITE, useEventForm, type EventFormState } from "./use-event-form";
 import type { PlantingEventSubmitResult } from "@/db/types";
 import { useHideOnScroll } from "./use-hide-on-scroll";
-import { cardLead, PlaceCards, plantsLabel, type PlaceCard } from "./place-cards";
 import s from "./map-event-form.module.css";
 
 export interface MapEventFormProps {
@@ -308,7 +307,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
             {plantedArea}
             <When form={form} today={today} />
             {form.checkedEvent
-              ? <PlaceCards cards={cards} action={{ label: "Change", describe: (c) => `Change the plants in ${c.title}`, onClick: edit }} />
+              ? <PlaceCards cards={cards} onEdit={edit} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -709,6 +708,34 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
         <p className={s.empty}>No species matches “{query.trim()}”.</p>
       )}
     </section>
+  );
+}
+
+/** One place planted: a drawn area (its outline), or the site as a whole (its pin). Each is, in effect, a planting event. */
+interface PlaceCard { key: string; title: string; sub?: string | undefined; pts?: DrawnArea["pts"] | undefined; pick?: AreaPick | undefined; rows: FigureRow[]; total: number }
+const plantsLabel = (n: number) => `${formatNumber(n)} ${n === 1 ? "plant" : "plants"}`;
+const cardLead = (c: PlaceCard) => (c.pts ? <AreaShape pts={c.pts} size={44} onMap /> : <span className={s.pinTile}><MapPin size={20} strokeWidth={2.2} /></span>);
+
+/** The check: a card per place with its species; a subtotal each and the events' total when there are several. */
+function PlaceCards({ cards, onEdit }: { cards: PlaceCard[]; onEdit: (c: PlaceCard) => void }) {
+  const many = cards.length > 1;
+  return (
+    <div className={s.cards}>
+      {cards.map((c) => (
+        <div key={c.key} className={s.placeCard}>
+          <FigureList
+            title={c.title} rows={c.rows} total={{ label: many ? "Subtotal" : "Total", figure: plantsLabel(c.total) }}
+            head={
+              <ListRow
+                lead={cardLead(c)} title={c.title} subtitle={c.sub}
+                end={<button type="button" className={s.link} onClick={() => onEdit(c)} aria-label={`Change the plants in ${c.title}`}>Change</button>}
+              />
+            }
+          />
+        </div>
+      ))}
+      {many && <ListRow className={s.grand} title={`${cards.length} planting events`} figure={plantsLabel(cards.reduce((t, c) => t + c.total, 0))} />}
+    </div>
   );
 }
 

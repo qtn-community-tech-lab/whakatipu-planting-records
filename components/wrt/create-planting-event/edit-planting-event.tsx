@@ -3,7 +3,7 @@
  * One past planting event, edited in place in its season's details: the date (optional, inside
  * the season and not in the future), how many of each species, species added or taken off, and
  * the notes. Save and Cancel are in the season view's footer: Save submits this form by its id,
- * then a dialog lists what changes before savePlantingEvent writes it. Nothing changed, nothing is written.
+ * then a dialog lists what changes before savePlantingEventEdit writes it. Nothing changed, nothing is written.
  */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Calendar, X } from "lucide-react";
@@ -11,7 +11,7 @@ import { unstable_rethrow } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useFieldArray, useForm, useWatch, type FieldPath } from "react-hook-form";
 import { z } from "zod";
-import { savePlantingEvent, type SeasonPlantings } from "@/app/playground/create-planting-event/actions";
+import { savePlantingEventEdit, type SeasonPlantingEvents } from "@/app/playground/create-planting-event/actions";
 import { FormField } from "@/components/forms/form-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -28,7 +28,7 @@ import { formatPlantedOn, isIsoDate, plantedOnProblem, seasonDates, seasonMonths
 import { formatNumber } from "@/lib/wrt/text";
 import f from "@/components/wrt/events/map-event-form.module.css";
 
-type Event = SeasonPlantings["events"][number];
+type Event = SeasonPlantingEvents["events"][number];
 const quantity = plantingEventEditSchema.shape.lines.element.shape.quantity;
 
 /** The writable schema with what the controls hold: the date "" for none, quantities as typed, and each line's name to show. */
@@ -153,7 +153,7 @@ export function EditPlantingEvent({ event, season, today, species, onDone, onSav
     if (!confirming || saving) return;
     setBusy(true);
     try {
-      const result = await savePlantingEvent(event.id, editValues(confirming.values));
+      const result = await savePlantingEventEdit(event.id, editValues(confirming.values));
       if (result.issues) {
         for (const issue of result.issues) form.setError(issue.path as FieldPath<EditFormValues>, { message: issue.message });
         focusNext.current = (result.issues[0]?.path as FieldPath<EditFormValues> | undefined) ?? null;

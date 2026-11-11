@@ -9,7 +9,7 @@
 import { ArrowRight, MapPin, Pencil } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { seasonPlantings, type SeasonPlantings as Plantings } from "@/app/playground/create-planting-event/actions";
+import { loadSeasonPlantingEvents, type SeasonPlantingEvents as Plantings } from "@/app/playground/create-planting-event/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
 import { formatPlantedOn, seasonAgo, seasonMonths } from "@/lib/wrt/events/season";
@@ -19,7 +19,7 @@ import { editFormId, EditPlantingEvent } from "./edit-planting-event";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 import { StatTiles } from "@/components/wrt/shared/stat-tiles";
 import { useLoad } from "@/components/wrt/shared/use-load";
-import s from "./season-plantings.module.css";
+import s from "./past-season.module.css";
 
 type Event = Plantings["events"][number];
 
@@ -30,7 +30,7 @@ const percent = (n: number, of: number) => (of ? (n / of) * 100 : 0);
 const eventLine = (e: Event) =>
   [e.plantedOn && formatPlantedOn(e.plantedOn), `${e.lines.length} species`].filter(Boolean).join(" · ") + (e.workbook ? " · from the workbook" : "");
 
-export function SeasonPlantings({ slug, parcelId, season, place, today, canEdit, species, onBack, onStart }: {
+export function PastSeason({ slug, parcelId, season, place, today, canEdit, species, onBack, onStart }: {
   slug: string; parcelId: string | null;
   season: { slug: string; label: string };
   /** The site, or "Site · Part". */
@@ -46,7 +46,7 @@ export function SeasonPlantings({ slug, parcelId, season, place, today, canEdit,
   const heading = useRef<HTMLHeadingElement>(null);
   useEffect(() => heading.current?.focus(), []);
   // Read again after a save.
-  const { loading, failed, data, reload } = useLoad(`${slug}/${parcelId ?? ""}/${season.slug}`, () => seasonPlantings(slug, season.slug, parcelId));
+  const { loading, failed, data, reload } = useLoad(`${slug}/${parcelId ?? ""}/${season.slug}`, () => loadSeasonPlantingEvents(slug, season.slug, parcelId));
   const [editing, setEditing] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const events = data?.events ?? [];

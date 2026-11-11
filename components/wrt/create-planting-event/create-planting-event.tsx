@@ -14,8 +14,8 @@
  *   top-bar             back, the site, and the + menu
  *   site-chooser        every site and its parts, with a search: the panel with no site chosen, or opened to change site
  *   site-overview       before the form: what a chosen site has had planted
- *   past-plantings      the form's Where step: every season planted at the site
- *   season-plantings    one past season's planting events at the site, opened from a season's row
+ *   season-history      the form's Where step: every season planted at the site
+ *   past-season         one past season's planting events at the site, opened from a season's row
  *   draw-area/          drawing planted areas, and the bar along the bottom of the map
  *   navigator/          wide screens: the panel's breadcrumb and area list, the map's toolbar and keys
  *   part-menu           the site's parts in a menu (the phone dock and site page, the wide breadcrumb)
@@ -37,8 +37,8 @@ import { paddingFor } from "./layout";
 import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
 import { PartMenu } from "./part-menu";
 import { SiteOverview } from "./site-overview";
-import { PastPlantings } from "./past-plantings";
-import { SeasonPlantings } from "./season-plantings";
+import { SeasonHistory } from "./season-history";
+import { PastSeason } from "./past-season";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
@@ -487,7 +487,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           />
         )}
         {season && siteSlug && !choosing && !sheetArea && (
-          <SeasonPlantings
+          <PastSeason
             slug={siteSlug} parcelId={season.wholeSite ? null : parcel} season={season} today={today} canEdit={canEdit} species={options.species}
             place={parcel && partShort && !season.wholeSite ? `${siteName} · ${partShort}` : siteName}
             onBack={() => setSeason(null)} onStart={() => { setSeason(null); setStarted(true); }}
@@ -525,7 +525,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           spot={spot} spotNear={spotNear} onAddSpot={startPlacing} onRemoveSpot={removeSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
           // Step 1's Back: the site's overview again. A new location has no overview to go back to.
           onBack={spot ? undefined : () => setStarted(false)}
-          pinMoved={isMoved(siteSlug, parcel)} history={siteSlug ? <PastPlantings slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} today={today} onOpenSeason={openSeason} /> : undefined}
+          pinMoved={isMoved(siteSlug, parcel)} history={siteSlug ? <SeasonHistory slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} today={today} onOpenSeason={openSeason} /> : undefined}
           areas={draw.areas} areasListed={wide} plantIn={plantIn} onPlant={plantArea} onRemoveArea={(id) => draw.remove(draw.areas.findIndex((x) => x.id === id))} onDrawArea={newArea} onShowArea={showAreaFromForm} onPlantClose={() => { backTo.current = lastPlanted.current; if (!wide) setSnap("peek"); }} onAreaPlants={setAreaPlants} onAreaFocus={focusArea} onReset={() => { clearEvent(); if (!wide) setSnap("mid"); }}
           // A mini map of the site or location: always on desktop, and on phones when the sheet is full screen (covering the big map).
           plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}

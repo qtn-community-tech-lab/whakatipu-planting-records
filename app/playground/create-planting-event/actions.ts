@@ -67,7 +67,7 @@ export async function loadSiteOverview(slug: string, parcelId: string | null): P
 }
 
 /** Every season planted at a site or part, newest first. A part with nothing recorded shows the whole site's. */
-export async function siteSeasons(slug: string, parcelId: string | null): Promise<Omit<SitePlantings, "trees"> | null> {
+export async function loadSiteSeasonHistory(slug: string, parcelId: string | null): Promise<Omit<SitePlantings, "trees"> | null> {
   if (!valid(slug, parcelId)) return null;
   const [first, parts] = await Promise.all([listSiteSeasons(slug, parcelId, ALL_SEASONS), partsPerSeason(slug)]);
   let seasons = first;
@@ -76,7 +76,7 @@ export async function siteSeasons(slug: string, parcelId: string | null): Promis
   return { seasons: seasons.map((x) => toSeason(x, wholeSite ? parts : undefined)), wholeSite };
 }
 
-export interface SeasonPlantings {
+export interface SeasonPlantingEvents {
   /** The season's slug, e.g. "autumn-2021": every event's here. */
   season: string;
   events: {
@@ -94,14 +94,14 @@ export interface SeasonPlantings {
 }
 
 /** One season's planting events at a site, or at one part of it: area by area, each one's plants most planted first. */
-export async function seasonPlantings(slug: string, season: string, parcelId: string | null): Promise<SeasonPlantings | null> {
+export async function loadSeasonPlantingEvents(slug: string, season: string, parcelId: string | null): Promise<SeasonPlantingEvents | null> {
   if (!valid(slug, parcelId) || !/^[a-z]+-\d{4}$/.test(season)) return null;
   const [register, lines] = await Promise.all([listSpecies(), listSiteSeasonPlantingLines(slug, season, parcelId)]);
   const ids = [...new Set(lines.map((l) => l.planting_id ?? 0))];
   const notes = new Map((ids.length ? await listPlantingEventNotes(ids) : []).map((n) => [n.id, n.notes.trim()]));
   const photos = new Map(register.map((s) => [s.slug, s.photos[0]]));
   // The lines come area by area and most planted first, so each event's keep that order.
-  const events = new Map<number, SeasonPlantings["events"][number]>();
+  const events = new Map<number, SeasonPlantingEvents["events"][number]>();
   for (const l of lines) {
     const id = l.planting_id ?? 0;
     let event = events.get(id);
@@ -128,7 +128,7 @@ const NOT_SAVED = "The planting event could not be saved. Your changes are still
  * species added, species taken off, which are deactivated). These are separate writes, not one
  * transaction, so a failure part way says some changes were saved; saving again finishes the rest.
  */
-export async function savePlantingEvent(id: number, raw: unknown): Promise<PlantingEventEditResult> {
+export async function savePlantingEventEdit(id: number, raw: unknown): Promise<PlantingEventEditResult> {
   if (!(await isAuthenticated())) return { error: "Sign in to edit planting events." };
   // Trust boundary: the id and values come from the browser.
   if (!(Number.isSafeInteger(id) && id > 0)) return { error: NOT_SAVED };
