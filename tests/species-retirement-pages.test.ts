@@ -90,6 +90,6 @@ describe("species register lifecycle views", () => {
     const speciesLink = `href="/species/${detail.species.slug}"`;
     if (state === "deactivated") expect(html).toContain(speciesLink);
     else expect(html).not.toContain(speciesLink);
-    expect(html).toContain("140,068 recorded plants across all historical species");
+    expect(html).toContain("370 recorded plants across all historical species");
   });
 });
