@@ -60,8 +60,12 @@ button.handle:focus-visible { outline: 2px solid var(--cn-green-800); outline-of
 .titleButton[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
 @media (prefers-reduced-motion: reduce) { .titleButton > svg:last-child { transition: none; } }
 /* the pin sits in a soft tile, like the form's cards */
+/* the same pin and title, as a plain header */
+.titlePlain { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 4px 0; }
 .titleIcon { width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center; background: #e7eee5; color: var(--cn-green-800); }
 .sideHeading { flex-shrink: 0; padding-bottom: 10px; }
+/* with the pin header showing (no site yet, or a site's overview): a line under it, as the phone sheet's bar has */
+.sideHeading:has(.titlePlain) { margin-bottom: 4px; border-bottom: 1px solid #e6e8df; }
 .barButton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: #e7eee5; color: var(--cn-green-800); font: 700 14px var(--font-sans); cursor: pointer; }
 .sheet[data-snap="peek"] .barButton { background: var(--cn-green-800); color: #fff; }
 .barButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
