@@ -22,7 +22,7 @@
  */
 import type { Route } from "next";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { MapEventForm, SITE_AS_A_WHOLE, type AreaPick, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
+import { MapEventForm, WHOLE_SITE_KEY, type AreaPick, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { MAP_EVENT_STEPS, STEP } from "@/lib/wrt/events/steps";
@@ -447,7 +447,7 @@ export function CreatePlantingEvent({ initialSite, options, today, exitHref, sug
           <AreaSheet
             area={sheetArea} site={site ? (parcel && partShort ? partShort : siteName) : undefined} plants={areaPlants[sheetArea.id] ?? 0}
             onPlant={() => plantArea(sheetArea.id)}
-            onWholeSite={() => plantArea(SITE_AS_A_WHOLE)}
+            onWholeSite={() => plantArea(WHOLE_SITE_KEY)}
           />
         )}
         {choosing && (

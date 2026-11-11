@@ -7,7 +7,7 @@
 import { ArrowRight, ArrowUpRight, MapPinned } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { sitePlantings, type SitePlantings } from "@/app/playground/create-planting-event/actions";
+import { loadSiteOverview, type SitePlantings } from "@/app/playground/create-planting-event/actions";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber } from "@/lib/wrt/text";
@@ -36,7 +36,7 @@ export function SiteOverview({ slug, parcelId, partName, onStart, pinMoved, onMo
   const [tries, setTries] = useState(0);
   useEffect(() => {
     let live = true;
-    sitePlantings(slug, parcelId)
+    loadSiteOverview(slug, parcelId)
       .then((data) => { if (live) setLoaded({ key, data }); })
       // The history couldn't be read: say so (never an endless "Loading"). An event can still be added.
       .catch(() => { if (live) setLoaded({ key, data: null, failed: true }); });

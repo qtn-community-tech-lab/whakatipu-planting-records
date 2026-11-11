@@ -19,7 +19,7 @@ export interface SitePlantings {
 }
 
 /** `parcelId` is the part's WRT number, as in the form's parts. */
-export async function sitePlantings(slug: string, parcelId: string | null): Promise<SitePlantings | null> {
+export async function loadSiteOverview(slug: string, parcelId: string | null): Promise<SitePlantings | null> {
   // Trust boundary: server actions are public endpoints.
   if (!SLUG.test(slug) || (parcelId !== null && parcelId.length > 80)) return null;
   const read = (part: string | null) => Promise.all([listSiteSpecies(slug, part, TREES_SHOWN), listSiteSeasons(slug, part, SEASONS_SHOWN)]);
