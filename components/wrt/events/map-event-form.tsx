@@ -28,7 +28,7 @@ import { NAME_FIELD, NUMBER_FIELD, digits, enterStaysInField } from "@/component
 import type { EventFormOptions, SpeciesOption } from "@/lib/wrt/events/form-options";
 import { formatPlantedOn } from "@/lib/wrt/events/season";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
-import { LAST_STEP, MAP_EVENT_STEPS as STEPS, STEP } from "@/lib/wrt/events/steps";
+import { MAP_EVENT_STEPS as STEPS, MAP_STEP as STEP } from "@/lib/wrt/events/steps";
 import { describeEvent, WHOLE_SITE, type EventSummary } from "@/lib/wrt/events/summary";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
@@ -40,6 +40,9 @@ import { NEW_SITE, useEventForm, type EventFormState } from "./use-event-form";
 import type { PlantingEventSubmitResult } from "@/db/types";
 import { useHideOnScroll } from "./use-hide-on-scroll";
 import s from "./map-event-form.module.css";
+
+/** The map form's last step: where and when, with the summary and Submit. */
+const LAST_STEP = STEPS.length - 1;
 
 export interface MapEventFormProps {
   options: EventFormOptions;
@@ -284,10 +287,11 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
             {form.errors.form ?? "Some details need fixing. They are marked below."}
           </div>
         )}
-        {step === STEP.whereWhen && <WhereWhen {...props} form={form} onLocationOnly={() => setLocationOnly(true)} />}
         {step === STEP.whatPlanted && <WhatPlanted form={form} options={options} suggestions={suggestions} areas={areas} plantIn={plantIn} onDrawArea={props.onDrawArea} onAreaFocus={props.onAreaFocus} />}
-        {step === STEP.check && (
+        {step === STEP.whereWhen && (
           <>
+            {/* Where and when (the map, the place, the date), then what goes in, then Submit. */}
+            <WhereWhen {...props} form={form} onLocationOnly={() => setLocationOnly(true)} />
             {/* First, a quiet note for each area with no plants: fill it or take it off, or leave it (Submit doesn't wait). */}
             {emptyAreas.map((a) => {
               const name = areaName(a, areas.indexOf(a));
@@ -301,9 +305,6 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
                 </div>
               );
             })}
-            {/* What it looks like, then when, then what went where. */}
-            {plantedArea}
-            <When form={form} today={today} />
             {form.checkedEvent
               ? <PlaceCards cards={cards} onEdit={edit} />
               : (
@@ -329,7 +330,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
           {step < LAST_STEP && <ArrowRight size={18} strokeWidth={2.2} />}
         </button>
       </footer>
-      {step === STEP.check && !props.onSave && <p className={s.note}>Prototype: Submit checks everything, but nothing is saved yet.</p>}
+      {step === LAST_STEP && !props.onSave && <p className={s.note}>Prototype: Submit checks everything, but nothing is saved yet.</p>}
     </form>
   );
 }

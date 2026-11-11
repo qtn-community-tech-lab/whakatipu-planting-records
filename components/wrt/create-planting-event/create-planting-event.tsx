@@ -27,7 +27,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import { MapEventForm, WHOLE_SITE_KEY, plantsAndSpecies, type AreaPick, type MapEventFormProps, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
-import { MAP_EVENT_STEPS, STEP } from "@/lib/wrt/events/steps";
+import { MAP_EVENT_STEPS, MAP_STEP as STEP } from "@/lib/wrt/events/steps";
 import { partBesideSite } from "@/lib/wrt/text";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";

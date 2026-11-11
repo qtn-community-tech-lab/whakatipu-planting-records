@@ -13,7 +13,7 @@ import { useMemo, useState, type RefObject } from "react";
 import type { PlantingEventSubmitResult } from "@/db/types";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import { errorsForStep, EVENT_STEPS, firstStepWithError, LAST_STEP, type EventStep } from "@/lib/wrt/events/steps";
+import { errorsForStep, EVENT_STEPS, firstStepWithError, type EventStep } from "@/lib/wrt/events/steps";
 import type { EventSeason, PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
 
@@ -252,7 +252,7 @@ export function useEventForm({
     /** Enter or the main button: Next on the first steps, Submit on the last. */
     submit(e: React.FormEvent) {
       e.preventDefault();
-      if (step < LAST_STEP) next();
+      if (step < steps.length - 1) next();
       else void finish();
     },
   };

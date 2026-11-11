@@ -21,16 +21,17 @@ export const EVENT_STEPS: readonly EventStep[] = [
 ];
 
 /**
- * The map form's steps: the same three. Where and when are confirmed up front (the site and part, the
- * date and its season); the note is left for the check.
+ * The map form's two steps: what was planted, then where and when, which ends with the summary and Submit.
+ * The site is already chosen on the map before the form opens.
  */
 export const MAP_EVENT_STEPS: readonly EventStep[] = [
-  { title: "Where and when", fields: ["placeSlug", "parcelId", "polygon", "plantedOn", "season", "seasonYear"] },
   { title: "What was planted", fields: ["species"] },
-  { title: "Check and submit", fields: ["notes"] },
+  { title: "Where and when", fields: ["placeSlug", "parcelId", "polygon", "plantedOn", "season", "seasonYear", "notes"] },
 ];
+/** Each map step's position in MAP_EVENT_STEPS. */
+export const MAP_STEP = { whatPlanted: 0, whereWhen: 1 } as const;
 
-/** Each step's position in EVENT_STEPS (and MAP_EVENT_STEPS), for code that links to a particular step. */
+/** Each step's position in EVENT_STEPS, for code that links to a particular step. */
 export const STEP = { whereWhen: 0, whatPlanted: 1, check: 2 } as const;
 
 export const LAST_STEP = EVENT_STEPS.length - 1;
