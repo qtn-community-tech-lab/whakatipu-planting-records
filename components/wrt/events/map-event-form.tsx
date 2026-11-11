@@ -3,23 +3,24 @@
  * The planting-event form for the map view: the same three steps, state and
  * checks as EventForm (useEventForm), laid out for a panel over the map.
  *
- * 1. Where: the site and part are in the panel's header (and switched there), so the step is
- *    about one thing: drawing round where it was planted. A new location dropped from the
- *    map's + is named here too.
+ * 1. Where and when: the site and part (Change opens the site chooser) and the date with its
+ *    season, confirmed up front; then the site on a mini map and its past plantings. A new
+ *    location dropped from the map's + is named here too.
  * 2. What was planted: a search on top, then one row per species (name, Māori
  *    name, how many here before) with a quantity column down the side, like the
- *    paper sheets. The search filters the rows in place and brings in any other
- *    species. The host widens the panel for this step (onStepChange).
- * 3. Check and submit: the date (nearly always today; the season follows it), then a card per
+ *    paper sheets. Every other species is listed underneath; the search filters both lists
+ *    in place. The host widens the panel for this step (onStepChange).
+ * 3. Check and submit: the date again (from step 1), then a card per
  *    place planted (each drawn area with plants, and the site as a whole), each in effect a
  *    planting event of its own, then an optional note, then Submit.
  */
 import { ArrowRight, Calendar, Camera, Check, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, X } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Badge } from "@/components/ui/badge";
 import { TextareaInput } from "@/components/ui/inputs";
 import { Spinner } from "@/components/ui/spinner";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
-import { FigureList, type FigureRow } from "@/components/wrt/shared/figure-list";
+import { FigureList } from "@/components/wrt/shared/figure-list";
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { AreaPicker } from "@/components/wrt/shared/area-picker";
 import { SearchField } from "@/components/wrt/shared/search-field";
@@ -38,6 +39,7 @@ import { cn } from "@/lib/utils";
 import { NEW_SITE, useEventForm, type EventFormState } from "./use-event-form";
 import type { PlantingEventSubmitResult } from "@/db/types";
 import { useHideOnScroll } from "./use-hide-on-scroll";
+import { cardLead, PlaceCards, plantsLabel, type PlaceCard } from "./place-cards";
 import s from "./map-event-form.module.css";
 
 export interface MapEventFormProps {
@@ -48,6 +50,10 @@ export interface MapEventFormProps {
   initialSite: string;
   /** A picture of where it is (the host's mini map): in step 1, the check step and the preview. */
   plantedArea?: ReactNode | undefined;
+  /** Step 1's Back: out of the form, to what came before it (the site's overview). Entries are kept. */
+  onBack?: (() => void) | undefined;
+  /** Step 1, at a chosen site: what's been planted there before (the page supplies it). */
+  history?: ReactNode | undefined;
   /** The chosen site's most planted species, for step 2. */
   suggestions: SpeciesSuggestion[];
   /** Tells the host which step is showing, so it can size the panel and move the map. */
@@ -252,7 +258,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
         <div className={s.titleRow}>
           {/* Step 1 asks the question; the panel's header already names the site. */}
           <h2 ref={headingRef} tabIndex={-1} className={s.title}>
-            {step !== STEP.whereWhen ? STEPS[step]!.title : spot ? "Where is it?" : "Where was it planted?"}
+            {step !== STEP.whereWhen ? STEPS[step]!.title : spot ? "Where is it?" : "Where and when?"}
           </h2>
           {step === STEP.whatPlanted && (
             <span className={s.total} aria-live="polite">
@@ -302,7 +308,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
             {plantedArea}
             <When form={form} today={today} />
             {form.checkedEvent
-              ? <PlaceCards cards={cards} onEdit={edit} />
+              ? <PlaceCards cards={cards} action={{ label: "Change", describe: (c) => `Change the plants in ${c.title}`, onClick: edit }} />
               : (
                 <div className="cn-callout cn-callout--risk cn-callout--sm">
                   Some details need fixing before they can be checked.{" "}
@@ -318,8 +324,8 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void }) {
 
       {step === LAST_STEP && form.saveError && <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">{form.saveError}</div>}
       <footer ref={footRef} className={s.foot}>
-        {step > 0
-          ? <button type="button" className={s.back} onClick={form.back}>Back</button>
+        {step > 0 || props.onBack
+          ? <button type="button" className={s.back} onClick={step > 0 ? form.back : props.onBack}>Back</button>
           : <span className={s.count}>Step 1 of {STEPS.length}</span>}
         <button type="submit" className={s.next} disabled={form.saving} aria-busy={form.saving}>
           {form.saving ? <><Spinner aria-hidden="true" />Saving…</> : next}
@@ -402,17 +408,16 @@ function Notes({ form }: { form: EventFormState }) {
 }
 
 /**
- * Step 1: where at the site. The site and its part are the panel's header (and the pin tapped on the
- * map), so they aren't repeated here. The step offers the two ways to mark the spot itself (draw the
- * planted area, or drop a new location), then one row to switch to another part of the site.
+ * Step 1: where and when, confirmed up front. At a site: the site and part (Change opens the chooser),
+ * the date and its season, the areas drawn on the map, the site on a mini map, and what was planted
+ * there in past seasons. A new location gets its name and pin instead of the place row.
  */
-function WhereWhen({ form, plantedArea, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onDrawArea, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly: () => void }) {
+function WhereWhen({ form, today, plantedArea, history, onChooseSite, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly: () => void }) {
   const { err } = form;
   // A new location with no site chosen is a new site of its own; it can still be put at one.
   const newSite = !!spot && !form.site;
   const siteProblem = err("placeSlug") ?? err("parcelId");
   const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
-  const place = form.site ? (partName ? partBesideSite(partName, form.site.name) : form.site.name) : "";
 
   return (
     <>
@@ -425,8 +430,22 @@ function WhereWhen({ form, plantedArea, onChooseSite, spot, spotNear, onAddSpot,
         </section>
       )}
       {!spot && form.site && (
-        // One job: draw round where it was planted. Parts are switched in the panel's header (or the map's
-        // dock), and a new location starts from the map's +.
+        // Confirm the place and the date up front: the site and part (Change opens the site chooser), then when.
+        <section className={s.group} aria-label="Place">
+          <div className={s.dateRow}>
+            <MapPin size={18} strokeWidth={2} />
+            <span className={s.dateText}>
+              <b>{form.site.name}</b>
+              <span>{partName ? partBesideSite(partName, form.site.name) : "The site as a whole"}</span>
+            </span>
+            {onChooseSite && <button type="button" className={cn(s.link, s.dateChange)} onClick={onChooseSite} aria-label="Change the site or part">Change</button>}
+          </div>
+        </section>
+      )}
+      <When form={form} today={today} />
+      {!spot && form.site && ((areas.length > 0 && !areasListed) || err("parcelId")) && (
+        // Parts are switched in the panel's header (or the map's dock); areas are drawn and new locations
+        // dropped from the map.
         <section className={s.group} aria-label="Where it was planted">
           {/* The drawn areas by name, not a count: tap one to see it on the map (where its pencil and Add plants are). */}
           {areas.length > 0 && !areasListed && (
@@ -448,12 +467,6 @@ function WhereWhen({ form, plantedArea, onChooseSite, spot, spotNear, onAddSpot,
               })}
             </ul>
           )}
-          <button type="button" className={s.drawMain} onClick={onDrawArea} disabled={!onDrawArea}>
-            <Pentagon size={22} strokeWidth={2} aria-hidden="true" />
-            <b>Draw area</b>
-            <span>{areas.length ? `Round another planted spot, at ${place}` : `Round where it was planted, at ${place}`}</span>
-          </button>
-          {!areas.length && <p className={s.quiet}>No area? Next counts it for {place} as a whole.</p>}
           {err("parcelId") && <p className={s.problem} role="alert">{err("parcelId")}</p>}
         </section>
       )}
@@ -517,6 +530,7 @@ function WhereWhen({ form, plantedArea, onChooseSite, spot, spotNear, onAddSpot,
         </button>
       )}
       {plantedArea}
+      {!spot && form.site && history}
     </>
   );
 }
@@ -574,20 +588,22 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
   const site = new Map(suggestions.map((x) => [x.speciesId, x]));
   const lineOf = (id: string) => form.lines.findIndex((l) => l.speciesId === id && l.area === area);
 
-  // Species added from "Other species" stay there until the search changes, so the box
+  // Species added from the list underneath stay there until the search changes, so the box
   // being typed in isn't moved (and rebuilt) mid-number.
   const [kept, setKept] = useState<{ query: string; ids: ReadonlySet<string> }>({ query: "", ids: new Set() });
-  const keptIds = kept.query === query && query.trim() ? kept.ids : new Set<string>();
+  const keptIds = kept.query === query ? kept.ids : new Set<string>();
 
-  // The site's species, then anything added from the search. Typing filters them in
-  // place and brings in matches from the whole species list underneath.
+  // The site's species, then anything added from the list underneath. Underneath: every other
+  // species, or with a search, the best matches from them. Typing filters both in place.
   const listed = [
     ...suggestions.map((x) => byId.get(x.speciesId)).filter((x): x is SpeciesOption => !!x),
     ...form.lines.filter((l) => l.area === area).map((l) => byId.get(l.speciesId)).filter((x): x is SpeciesOption => !!x && !site.has(x.id) && !keptIds.has(x.id)),
   ];
   const shown = query.trim() ? rankMatches(listed, query) : listed;
   const listedIds = new Set(listed.map((x) => x.id));
-  const more = query.trim() ? rankMatches(options.species, query).filter((x) => !listedIds.has(x.id)).slice(0, 15) : [];
+  const more = query.trim()
+    ? rankMatches(options.species, query).filter((x) => !listedIds.has(x.id)).slice(0, 15)
+    : options.species.filter((x) => !listedIds.has(x.id));
 
   /** Typing a number adds the species; clearing it takes the species off again. */
   const setPlanted = (speciesId: string, value: string) => {
@@ -685,7 +701,7 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
       )}
       {more.length > 0 && (
         <>
-          <div className={s.rowsHead} aria-hidden="true"><span className={s.groupTitle}>Other species</span></div>
+          <div className={s.rowsHead} aria-hidden="true"><span className={s.groupTitle}>{query.trim() ? "Other species" : "All species"}</span></div>
           <ul className={s.rows}>{more.map((sp, n) => row(sp, shown.length === 0 && n === 0))}</ul>
         </>
       )}
@@ -693,34 +709,6 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
         <p className={s.empty}>No species matches “{query.trim()}”.</p>
       )}
     </section>
-  );
-}
-
-/** One place planted: a drawn area (its outline), or the site as a whole (its pin). Each is, in effect, a planting event. */
-interface PlaceCard { key: string; title: string; sub?: string | undefined; pts?: DrawnArea["pts"] | undefined; pick?: AreaPick | undefined; rows: FigureRow[]; total: number }
-const plantsLabel = (n: number) => `${formatNumber(n)} ${n === 1 ? "plant" : "plants"}`;
-const cardLead = (c: PlaceCard) => (c.pts ? <AreaShape pts={c.pts} size={44} onMap /> : <span className={s.pinTile}><MapPin size={20} strokeWidth={2.2} /></span>);
-
-/** The check: a card per place with its species; a subtotal each and the events' total when there are several. */
-function PlaceCards({ cards, onEdit }: { cards: PlaceCard[]; onEdit: (c: PlaceCard) => void }) {
-  const many = cards.length > 1;
-  return (
-    <div className={s.cards}>
-      {cards.map((c) => (
-        <div key={c.key} className={s.placeCard}>
-          <FigureList
-            title={c.title} rows={c.rows} total={{ label: many ? "Subtotal" : "Total", figure: plantsLabel(c.total) }}
-            head={
-              <ListRow
-                lead={cardLead(c)} title={c.title} subtitle={c.sub}
-                end={<button type="button" className={s.link} onClick={() => onEdit(c)} aria-label={`Change the plants in ${c.title}`}>Change</button>}
-              />
-            }
-          />
-        </div>
-      ))}
-      {many && <ListRow className={s.grand} title={`${cards.length} planting events`} figure={plantsLabel(cards.reduce((t, c) => t + c.total, 0))} />}
-    </div>
   );
 }
 
@@ -739,7 +727,7 @@ function Receipt({ summary, cards, empty, saved, onBack, onStartAnother }: {
   return (
     <div className={s.form}>
       <header className={s.head}>
-        {saved ? <span className={cn(s.badge, s.saved)}>Saved</span> : <span className={s.badge}>Not saved</span>}
+        <Badge tone={saved ? "ok" : "review"} className={s.badge}>{saved ? "Saved" : "Not saved"}</Badge>
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>{saved || cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
         <p className={s.context} role="status">
           <span>{saved ? "The planting event and its plants are saved. Drawn areas aren’t stored yet." : "Everything checks out. This prototype can’t store events yet."}</span>
@@ -770,7 +758,7 @@ function LocationPreview({ name, what, plantedArea, onBack, onStartAnother }: {
   return (
     <div className={s.form}>
       <header className={s.head}>
-        <span className={s.badge}>Not saved</span>
+        <Badge tone="review" className={s.badge}>Not saved</Badge>
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>New location preview</h2>
         <p className={s.context} role="status"><span>No planting yet: that can be added later. This prototype can’t store locations yet.</span></p>
       </header>

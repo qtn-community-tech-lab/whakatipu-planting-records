@@ -3,8 +3,8 @@
  * Choose where: a search, then every site as an accordion (Radix, one open at a
  * time, animated) that opens to "The site as a whole" and its parts. A site with
  * no parts is a single row; an open site ends with New sublocation (a pin dropped on the map as a
- * part of it). It takes the panel's place while it's open (the phone sheet
- * goes full screen for it), so there is one sheet, never a dialog over it. Escape or × closes it.
+ * part of it). With no site chosen it is the panel (All sites); otherwise it takes the panel's place while
+ * it's open (the phone sheet goes full screen for it), so there is one sheet, never a dialog over it. Escape or × closes it.
  * For a new pin or a drawn area (`forNew`) it asks which site that belongs to instead.
  */
 import { ChevronDown, MapPinPlus, Plus } from "lucide-react";
@@ -20,21 +20,21 @@ import { AddToMap } from "./add-to-map";
 import add from "./add-to-map.module.css";
 import s from "./site-chooser.module.css";
 
-export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, onKeepNew, onAddLocation, onAddSublocation, onDrawArea }: {
+export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, onKeepNew, onAddLocation, onAddSublocation }: {
   sites: readonly SiteOption[];
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"). */
   totals: PlantTotals;
   /** The current choice, marked in the list. */
   value: { slug: string; parcelId: string | null };
   onChoose: (slug: string, parcelId: string | null) => void;
-  onClose: () => void;
+  /** Left out when there's nothing to close back to (no site chosen yet): no heading or ×, the panel's title says it. */
+  onClose?: (() => void) | undefined;
   /** A new pin, or an area drawn but not at any site yet: the chooser asks for its site. */
   forNew?: { what: "area" | "location"; atSite: boolean } | undefined;
   /** A new location: keep it as a new site of its own, at no site we know. */
   onKeepNew?: (() => void) | undefined;
-  /** A location that isn't in the list: drop a pin, or draw its area. */
+  /** An area drawn away from every site: add it as a new location instead. */
   onAddLocation?: (() => void) | undefined;
-  onDrawArea?: (() => void) | undefined;
   /** A new part of a site: drop a pin on the map as a sublocation of it. */
   onAddSublocation?: ((siteSlug: string) => void) | undefined;
 }) {
@@ -108,12 +108,14 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   };
 
   return (
-    <section className={f.form} aria-labelledby="site-chooser-title" onKeyDown={(e) => { if (e.key === "Escape") onClose(); }}>
+    <section className={f.form} aria-labelledby={onClose ? "site-chooser-title" : undefined} aria-label={onClose ? undefined : "All sites"} onKeyDown={(e) => { if (e.key === "Escape") onClose?.(); }}>
       <div className={f.scroll}>
-        <header className={s.chooserHead}>
-          <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forNew ? `Which site is this ${forNew.what === "area" ? "area" : "new location"} at?` : "Choose a site"}</h2>
-          <button type="button" className={s.chooserClose} aria-label="Close" onClick={onClose}>×</button>
-        </header>
+        {onClose && (
+          <header className={s.chooserHead}>
+            <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forNew ? `Which site is this ${forNew.what === "area" ? "area" : "new location"} at?` : "Choose a site"}</h2>
+            <button type="button" className={s.chooserClose} aria-label="Close" onClick={onClose}>×</button>
+          </header>
+        )}
         {forNew?.what === "area" && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site, or add it as a new location.</p>}
         {forNew?.what === "location" && !forNew.atSite && <p className={s.chooserNote}>The pin you dropped isn&apos;t near a site we know. Choose the site it belongs to, or keep it as a new site.</p>}
         {forNew?.what === "location" && onKeepNew && (
@@ -121,9 +123,8 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
             <MapPinPlus size={20} strokeWidth={2.2} aria-hidden="true" />{forNew.atSite ? "Make it a new site instead" : "Keep it as a new site"}
           </button>
         )}
-        {/* Another area wouldn't answer the question, so only New location while asking about an area;
-            with a new location already dropped, neither (another one would just replace it). */}
-        {forNew?.what !== "location" && <AddToMap onAddLocation={onAddLocation} onDrawArea={forNew ? undefined : onDrawArea} />}
+        {/* Only while asking about a drawn area: it can be added as a new location instead. */}
+        {forNew?.what === "area" && <AddToMap onAddLocation={onAddLocation} />}
         {/* Pinned while the list scrolls. A form, so the keyboard's Search key (and the button) put the keyboard away. */}
         <form role="search" className={s.chooserSearch} data-pinned="" onSubmit={(e) => { e.preventDefault(); search.current?.blur(); }}>
           <SearchField ref={search} className={s.chooserField} label="Search sites and parts" placeholder="Search sites and parts" value={query} onChange={setQuery} />

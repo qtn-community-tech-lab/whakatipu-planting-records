@@ -3,7 +3,6 @@
 /* All sites › site › part: small, quiet links over the title */
 .crumbs { min-width: 0; display: flex; align-items: center; gap: 2px; margin: -6px 0 2px -8px; color: #5d6a60; font: 600 13.5px var(--font-sans); }
 .crumbs > svg { flex-shrink: 0; opacity: 0.6; }
-.crumbs > span { padding: 0 8px; }
 .crumbs button { min-width: 0; min-height: 36px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; border: 0; border-radius: 10px; background: none; color: var(--cn-green-800); font: inherit; cursor: pointer; }
 .crumbs button > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .crumbs button > svg { flex-shrink: 0; }

@@ -103,11 +103,23 @@
   /* one row that always fits: the text wraps, the buttons don't. Above the sheet at its bar (set inline), else under the header. */
   .hint { top: calc(60px + env(safe-area-inset-top)); left: 12px; right: 12px; transform: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; white-space: normal; border-radius: 22px; padding: 8px 8px 8px 16px; font-size: 13.5px; line-height: 1.25; }
 }
-/* wide screens: the form panel is on the left (572px with its inset), so the back button
-   and the placing hint sit in the map beside it */
+/* wide screens: the form panel is on the left (572px with its inset), so the placing hint
+   sits in the map beside it */
 @media (min-width: 768px) {
   .top { left: 588px; right: auto; }
-  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for the site pill and + */
-  .session, .add { display: none; }
+  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for back, the site pill and + */
+  .exit, .session, .add { display: none; }
   .hint { left: calc(50% + 286px); }
 }
+
+/* phones, a site's overview: which part is showing, a menu to switch (the site's parts, and Another site) */
+.partRow {
+  width: 100%; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 6px 14px; border: 1px solid var(--border-card, #e6e8df);
+  border-radius: 14px; background: var(--surface-card, #fff); color: var(--cn-green-800); text-align: left; cursor: pointer;
+}
+.partRow > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.partRow small { font: 600 11.5px var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-eyebrow); }
+.partRow b { font: 700 15px/1.2 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.partRow > svg:last-child { transition: transform 150ms ease; }
+.partRow[data-state="open"] > svg:last-child { transform: rotate(180deg); }
+.partRow:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }

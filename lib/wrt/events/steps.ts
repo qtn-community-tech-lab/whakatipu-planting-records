@@ -21,13 +21,13 @@ export const EVENT_STEPS: readonly EventStep[] = [
 ];
 
 /**
- * The map form's steps: the same three, but the date is asked last, with the check.
- * Where is the map's business (the site, its part, the drawn area), and the date is nearly always today.
+ * The map form's steps: the same three. Where and when are confirmed up front (the site and part, the
+ * date and its season); the note is left for the check.
  */
 export const MAP_EVENT_STEPS: readonly EventStep[] = [
-  { title: "Where", fields: ["placeSlug", "parcelId", "polygon"] },
+  { title: "Where and when", fields: ["placeSlug", "parcelId", "polygon", "plantedOn", "season", "seasonYear"] },
   { title: "What was planted", fields: ["species"] },
-  { title: "Check and submit", fields: ["plantedOn", "season", "seasonYear", "notes"] },
+  { title: "Check and submit", fields: ["notes"] },
 ];
 
 /** Each step's position in EVENT_STEPS (and MAP_EVENT_STEPS), for code that links to a particular step. */

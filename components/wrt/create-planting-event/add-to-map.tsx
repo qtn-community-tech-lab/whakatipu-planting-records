@@ -1,8 +1,8 @@
 "use client";
 /**
- * The two ways to add a location that isn't in the list, side by side at the top of the site
- * list and the site chooser: a new location (a pin), or a drawn area. The same two as the
- * header's + menu. Either can be left out.
+ * The ways to add a location that isn't in the list: a new location (a pin), or a drawn area.
+ * The same two as the header's + menu. Either can be left out. For now only the site chooser
+ * shows it, with New location alone, when a drawn area is at no site we know.
  */
 import { MapPinPlus, Pentagon } from "lucide-react";
 import s from "./add-to-map.module.css";

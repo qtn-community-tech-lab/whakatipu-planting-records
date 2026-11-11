@@ -35,8 +35,8 @@ type Props = { searchParams: Promise<{ site?: string | string[] }> };
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, suggestions, sites, areas, pins, { site }] = await Promise.all([
-    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams,
+  const [options, suggestions, sites, areas, pins, { site }, authenticated] = await Promise.all([
+    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, isAuthenticated(),
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
   const totals: PlantTotals = {};
@@ -46,7 +46,7 @@ export default async function Page({ searchParams }: Props) {
   const initialSite = options.sites.some((x) => x.slug === site) ? String(site) : "";
   return (
     <CreatePlantingEvent
-      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" onSave={onSave} suggestions={suggestions} totals={totals} areas={pins ?? []}
+      initialSite={initialSite} options={options} today={todayInNz()} exitHref="/events/new" onSave={authenticated ? onSave : undefined} canEdit={authenticated} suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }
@@ -59,6 +59,9 @@ export default async function Page({ searchParams }: Props) {
 async function onSave(raw: PlantingEventInput, savedPlantingEvent?: number): Promise<PlantingEventSubmitResult> {
   "use server";
   if (!(await isAuthenticated())) return { error: "Sign in to save planting events." };
+  // Trust boundary: the retry id comes from the browser.
+  if (savedPlantingEvent !== undefined && !(Number.isSafeInteger(savedPlantingEvent) && savedPlantingEvent > 0))
+    return { error: "The planting event could not be saved. Please try again." };
   const options = await eventFormOptions();
   const checked = validateEventInput(raw, {
     places: options.sites.map((x) => ({ slug: x.slug, isScheme: false, parcels: x.parts })),
@@ -80,10 +83,7 @@ async function onSave(raw: PlantingEventInput, savedPlantingEvent?: number): Pro
     const area = event.parcelId === null
       ? (areas.length === 1 ? areas[0] : undefined)
       : areas.find((a) => (a.wrt_number ?? a.slug) === event.parcelId);
-    if (!area) {
-      const message = event.parcelId === null ? "Choose which part of the site these were planted in." : "That part does not belong to the chosen site.";
-      return { issues: [{ path: "parcelId", message }] };
-    }
+    if (!area) return { issues: [{ path: "parcelId", message: "Choose where at this site these were planted." }] };
     // The form's species id is the register code, or the slug when it has none. Drawn areas are not
     // saved, so the same species in several areas is added together.
     const slugOf = new Map(species.map((x) => [x.register_code ?? x.slug, x.slug]));
