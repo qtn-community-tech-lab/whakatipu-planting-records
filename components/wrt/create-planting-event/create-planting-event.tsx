@@ -39,7 +39,9 @@ import { PinTooltip } from "./pin-tooltip";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
-import { AreaOverlay, AreaSheet, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
+import { AreaOverlay, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
+// The panel screen for an area (Plant here, Whole site, Close): with the page's other screens, not the map.
+import { AreaSheet } from "./draw-area/area-sheet";
 import { highlightSite, mapCentre, useCamera, useFindMe, usePlantingMap, useSpotMarker } from "./use-planting-map";
 import { boundsOf, fitArea } from "./map-scene";
 import { useKeyboardFit } from "./use-keyboard-fit";
