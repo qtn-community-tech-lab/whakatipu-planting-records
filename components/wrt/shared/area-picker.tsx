@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { ListRow } from "./list-row";
 
-export interface PickerOption {
+interface PickerOption {
   key: string;
   /** Its picture, at this size in px: 56 on the button, 52 in the list. */
   lead: (size: number) => ReactNode;
@@ -49,8 +49,8 @@ export function AreaPicker({ options, value, onChange, label, buttonLabel, foote
           aria-label={buttonLabel ?? `${chosen.title}${chosen.subtitle ? `, ${chosen.subtitle}` : ""}: change`}
           className={cn(
             rowButton,
-            "min-h-[72px] gap-3.5 rounded-[20px] border-[1.5px] border-solid border-[var(--cn-green-800)] bg-[#f2f6e6] py-2.5 pl-3 pr-4",
-            "hover:bg-[#e9f0d8] data-[state=open]:bg-[#e9f0d8] focus-visible:rounded-[20px]",
+            "min-h-[72px] gap-3.5 rounded-[var(--radius-stat)] border-[1.5px] border-solid border-[var(--cn-green-800)] bg-[var(--surface-picked)] py-2.5 pl-3 pr-4",
+            "hover:bg-[#e9f0d8] data-[state=open]:bg-[#e9f0d8] focus-visible:rounded-[var(--radius-stat)]",
             "[&_[data-slot=title]]:text-[17px] [&_[data-slot=subtitle]]:text-[13.5px]",
             // open: the chevron points up
             "[&>svg:last-child]:transition-transform [&>svg:last-child]:duration-200 data-[state=open]:[&>svg:last-child]:rotate-180 motion-reduce:[&>svg:last-child]:transition-none",
@@ -61,7 +61,7 @@ export function AreaPicker({ options, value, onChange, label, buttonLabel, foote
       {/* The global .cn-popover sets its own corners and shadow, unlayered: these need the ! to win. */}
       <PopoverContent
         aria-label={label}
-        className="z-[60] max-h-[min(420px,60vh)] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-[20px]! border border-[var(--border-card,#e6e8df)] bg-[var(--surface-card,#fff)] p-1.5 shadow-[0_16px_40px_rgba(21,38,28,0.22)]!"
+        className="z-[60] max-h-[min(420px,60vh)] w-[var(--radix-popover-trigger-width)] overflow-y-auto rounded-[var(--radius-stat)]! border border-[var(--border-card)] bg-[var(--surface-card)] p-1.5 shadow-[0_16px_40px_rgba(21,38,28,0.22)]!"
       >
         {options.map((o) => (
           <ListRow
@@ -70,15 +70,15 @@ export function AreaPicker({ options, value, onChange, label, buttonLabel, foote
             onClick={close(() => onChange(o.key))}
             className={cn(
               rowButton,
-              "min-h-16 rounded-[14px] py-2 pl-2 pr-3 hover:bg-[#eef2e8] aria-pressed:bg-[#eef2e8]",
-              "focus-visible:rounded-[14px] focus-visible:outline-offset-[-2px] [&_[data-slot=title]]:text-[16.5px]",
+              "min-h-16 rounded-[var(--radius-field)] py-2 pl-2 pr-3 hover:bg-[var(--surface-hover)] aria-pressed:bg-[var(--surface-hover)]",
+              "focus-visible:rounded-[var(--radius-field)] focus-visible:outline-offset-[-2px] [&_[data-slot=title]]:text-[16.5px]",
             )}
           />
         ))}
         {footer && (
           <button
             type="button" onClick={close(footer.onClick)}
-            className="mt-1 flex min-h-[52px] w-full cursor-pointer items-center gap-2.5 rounded-b-[14px] border-0 border-t border-solid border-[var(--border-card,#e6e8df)] bg-transparent pl-4 pr-3 text-left font-sans text-[15px] font-bold text-[var(--cn-green-800)] hover:bg-[#eef2e8] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--cn-green-800)]"
+            className="mt-1 flex min-h-[52px] w-full cursor-pointer items-center gap-2.5 rounded-b-[var(--radius-field)] border-0 border-t border-solid border-[var(--border-card)] bg-transparent pl-4 pr-3 text-left font-sans text-[15px] font-bold text-[var(--cn-green-800)] hover:bg-[var(--surface-hover)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--cn-green-800)]"
           >
             {footer.icon ?? <Plus size={18} strokeWidth={2.6} aria-hidden="true" />}{footer.label}
           </button>

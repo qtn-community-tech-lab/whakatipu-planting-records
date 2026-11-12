@@ -4,7 +4,7 @@
  * site. useCamera then keeps the chosen site or new location centred above the form.
  */
 import type * as maplibregl from "maplibre-gl";
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
 import { groupNearbyLocations } from "@/lib/wrt/site-locations";
@@ -156,4 +156,29 @@ export function useSpotMarker(map: RefObject<maplibregl.Map | null>, at: LngLat 
     const marker = spotMarker(at, className).addTo(m);
     return () => { marker.remove(); };
   }, [map, at, className]);
+}
+
+/** Find me: the map flies to where you are, and a short word when it can't (no location here, or it was refused). */
+export function useFindMe(map: RefObject<maplibregl.Map | null>) {
+  const [said, setSaid] = useState("");
+  useEffect(() => {
+    if (!said) return;
+    const t = setTimeout(() => setSaid(""), 4000);
+    return () => clearTimeout(t);
+  }, [said]);
+  function findMe() {
+    if (!("geolocation" in navigator)) return setSaid("This browser can't say where you are");
+    setSaid("Finding you…");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setSaid("");
+        const m = map.current;
+        m?.flyTo({ center: [pos.coords.longitude, pos.coords.latitude], zoom: Math.max(m.getZoom(), 15), duration: 1500 });
+      },
+      (e) => setSaid(e.code === e.PERMISSION_DENIED ? "Location is turned off for this site" : "Couldn't find where you are"),
+      // Without a timeout, a dismissed permission prompt would leave it finding forever.
+      { timeout: 10000 },
+    );
+  }
+  return { findMe, said };
 }

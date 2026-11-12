@@ -10,7 +10,7 @@
  * before) with a quantity column down the side, like the paper sheets. Every other species is
  * listed underneath; the search filters both lists in place. An optional note, then Submit.
  */
-import { Calendar, Camera, Check, ChevronRight, Map as MapIcon, MapPin, Pencil, Pentagon, Plus, X } from "lucide-react";
+import { Calendar, Camera, Check, ChevronRight, Map as MapIcon, MapPin, Pencil, Plus, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import { Badge } from "@/components/ui/badge";
 import { TextareaInput } from "@/components/ui/inputs";
@@ -20,6 +20,7 @@ import { FigureList, type FigureRow } from "@/components/wrt/shared/figure-list"
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { AreaPicker } from "@/components/wrt/shared/area-picker";
 import { SearchField } from "@/components/wrt/shared/search-field";
+import { Segmented } from "@/components/wrt/shared/segmented";
 import { NAME_FIELD, NUMBER_FIELD, digits, enterStaysInField } from "@/components/wrt/shared/fields";
 import type { EventFormOptions, SpeciesOption } from "@/lib/wrt/events/form-options";
 import { formatPlantedOn } from "@/lib/wrt/events/season";
@@ -29,7 +30,7 @@ import { describeEvent, WHOLE_SITE, type EventSummary } from "@/lib/wrt/events/s
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { DatePicker } from "@/components/ui/date-picker";
-import { formatNumber, partBesideSite, rankMatches } from "@/lib/wrt/text";
+import { formatNumber, fromPin, kmLabel, partBesideSite, plantsOrNone, rankMatches, spotKind } from "@/lib/wrt/text";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
 import { cn } from "@/lib/utils";
 import { NEW_SITE, useEventForm, type EventFormState } from "./use-event-form";
@@ -69,6 +70,15 @@ export interface MapEventFormProps {
   spot?: [number, number] | null | undefined;
   /** The pin nearest the new location; `matched` when it was close enough to fill in the site. */
   spotNear?: { label: string; km: number; matched: boolean } | null;
+  /** How far the new location is from its site's pin, and how far counts as at a site: further warns (no block). */
+  spotKm?: number | null | undefined;
+  /** The drawn areas' furthest distance from the event's site: further than `nearKm` gets the same quiet note. */
+  areaKm?: number | null | undefined;
+  nearKm?: number | undefined;
+  /** Keep the new location for this visit (Add the location on its own: Save location). */
+  onKeepLocation?: (() => void) | undefined;
+  /** A planting event was saved at the new location: the host keeps it for this visit. */
+  onSavedAtSpot?: (() => void) | undefined;
   /** Start dropping a new location on the map, and take it off again. */
   onAddSpot?: (() => void) | undefined;
   onRemoveSpot?: (() => void) | undefined;
@@ -82,8 +92,6 @@ export interface MapEventFormProps {
   onDrawArea?: (() => void) | undefined;
   /** Show a drawn area on the map (its id): the host goes there, and on phones lowers the sheet so the map shows. */
   onShowArea?: ((id: number) => void) | undefined;
-  /** List the plants in an area (or the site as a whole), as an area's Add plants on the map does: the check's Change. */
-  onPlant?: ((id: AreaPick) => void) | undefined;
   /** The host lists the areas itself (the wide panel's navigator): the form leaves its own list out. */
   areasListed?: boolean | undefined;
   /** Tells the host how many plants are listed in each area (by area id), for the map's area buttons. */
@@ -107,10 +115,11 @@ export interface MapEventFormProps {
   onSave?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }
 
-export interface SpotInfo { name: string; asPart: boolean }
+/** `decided`: started as a sublocation or a new site, so the kind isn't asked again. */
+export interface SpotInfo { name: string; asPart: boolean; decided?: boolean | undefined }
 export interface FormEntries { entered: boolean; saved: boolean; partly: boolean; saving: boolean }
 /** A drawn planted area: `id` stays with it; its number on screen is its place in the list; `name` if it was given one. */
-export interface DrawnArea { id: number; pts: readonly (readonly [number, number])[]; name?: string | undefined }
+interface DrawnArea { id: number; pts: readonly (readonly [number, number])[]; name?: string | undefined }
 const areaHa = (a: DrawnArea) => formatHectares(hectares(a.pts));
 /** What an area is called: its name, or "Area 2". */
 const areaName = (a: DrawnArea, i: number) => a.name || `Area ${i + 1}`;
@@ -120,6 +129,7 @@ export const WHOLE_SITE_KEY = "site";
 export type AreaPick = number | typeof WHOLE_SITE_KEY;
 /** Plants listed in one area so far (or, with no id, for the site as a whole), from the form's lines. */
 const plantsIn = (lines: EventFormState["lines"], id: number | undefined) => lines.reduce((t, l) => t + (l.area === id && l.speciesId ? Number(l.quantity) || 0 : 0), 0);
+const SPOT_KINDS = [["near", "New location"], ["part", "New sublocation"]] as const;
 const NO_SPOT: SpotInfo = { name: "", asPart: false };
 const NO_AREAS: readonly DrawnArea[] = [];
 
@@ -169,6 +179,21 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   // Add location only: the new location without a planting (not every location has one yet).
   const [locationOnly, setLocationOnly] = useState(false);
 
+  // Page changes slide in a little from the side they come from: forward from the right (the form shown again, a
+  // receipt), back from the left (the form after its receipt). Plays once, then the class is taken off again.
+  const [slide, setSlide] = useState<"forward" | "back" | null>(null);
+  const [wasHidden, setWasHidden] = useState(!!hidden);
+  const [wasOnReceipt, setWasOnReceipt] = useState(false);
+  const onReceipt = form.preview !== null || (locationOnly && !!spot);
+  if (!!hidden !== wasHidden) {
+    setWasHidden(!!hidden);
+    if (!hidden) setSlide("forward");
+  }
+  if (onReceipt !== wasOnReceipt) {
+    setWasOnReceipt(onReceipt);
+    if (!onReceipt) setSlide("back");
+  }
+
   const areas = props.areas ?? NO_AREAS;
   // The part, or the site: what an area is a piece of, and where plants in no area count.
   const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
@@ -189,7 +214,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     });
     // A new location names its own card, as the panel's title does.
     if (!areas.length && spot) {
-      const what = newSite ? "New site" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${form.site?.name}`;
+      const what = newSite ? "New site" : spotKind(spotInfo.asPart, form.site?.name ?? "");
       return [card("all", spotName || (spotInfo.asPart ? "New sublocation" : "New location"), what, input.species)];
     }
     if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
@@ -258,20 +283,26 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     requestAnimationFrame(() => listRef.current?.scrollIntoView({ block: "start" }));
   }, [plantIn, form]);
 
+  const { onSavedAtSpot } = props;
+  const savedAtSpot = form.saved && !!spot;
+  useEffect(() => { if (savedAtSpot) onSavedAtSpot?.(); }, [savedAtSpot, onSavedAtSpot]);
+  // A place kept from earlier this visit, not stored: its plants are saved at its site, as at a new location.
+  const keptHere = form.site?.unsaved || !!form.site?.parts.find((p) => p.id === form.parcelId)?.unsaved;
   // What the receipt says isn't stored, as it was when Submit passed (a new location, drawn areas), not as the map is after.
   const [atSubmit, setAtSubmit] = useState<{ unstored?: string | undefined; areas: boolean } | null>(null);
   if (form.preview && !atSubmit) {
     setAtSubmit({
       // A new location at a known site: its plants are saved at that site, the location itself not yet.
-      unstored: spot && form.site ? `The ${spotInfo.asPart ? "new sublocation" : "new location"} isn’t stored yet: its plants are saved at ${place}.` : undefined,
+      unstored: spot && form.site ? `The ${spotInfo.asPart ? "new sublocation" : "new location"} isn’t stored yet: its plants are saved at ${place}.`
+        : keptHere && form.site ? `The new location isn’t stored yet: its plants are saved at ${form.site.name}.` : undefined,
       areas: areas.length > 0,
     });
   }
   if (!form.preview && atSubmit) setAtSubmit(null);
 
   if (locationOnly && spot) {
-    const what = newSite ? "New site" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${form.site!.name}`;
-    return <LocationPreview hidden={hidden} name={spotName} what={what} plantedArea={plantedArea} onBack={() => setLocationOnly(false)} onStartAnother={onStartAnother} />;
+    const what = newSite ? "New site" : spotKind(spotInfo.asPart, form.site!.name);
+    return <LocationPreview hidden={hidden} name={spotName} what={what} plantedArea={plantedArea} onBack={() => setLocationOnly(false)} onSave={props.onKeepLocation ?? onStartAnother} />;
   }
   if (form.preview) {
     return (
@@ -288,7 +319,9 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   const placeErrors = Object.keys(form.errors).some((path) => !path.startsWith("species") && path !== "notes");
 
   return (
-    <form ref={formRef} className={s.form} onSubmit={form.submit} onKeyDown={enterStaysInField} noValidate aria-label="New planting event" hidden={hidden}>
+    <form
+      ref={formRef} className={cn(s.form, slide === "forward" && s.slideIn, slide === "back" && s.slideBack)}
+      onAnimationEnd={(e) => { if (e.target === e.currentTarget) setSlide(null); }} onSubmit={form.submit} onKeyDown={enterStaysInField} noValidate aria-label="New planting event" hidden={hidden}>
       {/* The panel's header already names the site; the tiles below say where and when. On phones the
           top bar says "New planting event" too, so only a new location's question shows there. */}
       <header className={s.head} data-repeat="">
@@ -302,7 +335,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
           </div>
         )}
         {/* Add the location on its own only with nothing entered: its Start another would clear the plants. */}
-        <WhereWhen {...props} form={form} onLocationOnly={entered ? undefined : () => setLocationOnly(true)} />
+        <WhereWhen {...props} form={form} onLocationOnly={entered || areas.length ? undefined : () => setLocationOnly(true)} />
         <WhatPlanted
           ref={listRef} form={form} options={options} suggestions={suggestions} areas={areas} plantIn={plantIn} onDrawArea={props.onDrawArea} onAreaFocus={props.onAreaFocus} hidden={hidden}
           onFocus={props.onListFocus}
@@ -375,17 +408,19 @@ function Notes({ form }: { form: EventFormState }) {
  * part (tap to open the chooser) and the date with its season, then the areas drawn on the map. Past
  * plantings are on the site's page. A new location gets its name and pin instead of the place row.
  */
-function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, spotNear, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly?: (() => void) | undefined }) {
+function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, spotNear, spotKm, areaKm, nearKm = 0, onAddSpot, onRemoveSpot, spotInfo = NO_SPOT, onSpotInfo, areas = NO_AREAS, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & { form: EventFormState; onLocationOnly?: (() => void) | undefined }) {
   const { err } = form;
   // A new location with no site chosen is a new site of its own; it can still be put at one.
   const newSite = !!spot && !form.site;
   const siteProblem = err("placeSlug") ?? err("parcelId");
   const partName = form.site?.parts.find((p) => p.id === form.parcelId)?.name;
+  const far = !!spot && !!form.site && spotKm != null && spotKm > nearKm;
+  const atKnown = newSite && !!spotNear && spotNear.km <= nearKm;
 
   return (
     <>
-      {/* The map first: where it is; then the place and the date under it. */}
-      {plantedArea}
+      {/* The map first: where it is; then the place and the date under it (with a site, in one card). */}
+      {(spot || !form.site) && plantedArea}
       {!spot && !form.site && (
         <section className={s.group} aria-label="Site">
           <button type="button" className={s.choosePrompt} onClick={onChooseSite} data-problem={siteProblem ? "" : undefined}>
@@ -395,23 +430,34 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, sp
         </section>
       )}
       {!spot && form.site ? (
-        // Where and when side by side, each a tile you tap to change: the site and part (the site chooser), then the date.
-        <div className={s.picks}>
-          {(() => {
-            const label = `${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "whole site"}: change the part or site`;
-            const children = (
-              <>
-                <MapPin size={18} strokeWidth={2} aria-hidden="true" />
-                <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "Whole site"}</small></span>
-              </>
-            );
-            return placeMenu && !form.partlySaved
-              ? placeMenu({ className: s.pick!, label, children })
-              : <button type="button" className={s.pick} onClick={onChooseSite} disabled={!onChooseSite || form.partlySaved} aria-label={label}>{children}</button>;
-          })()}
-          <When form={form} today={today} />
+        // One card: the map on top, then where and when side by side, each a tile you tap to change:
+        // the site and part (the site chooser), then the date.
+        <div className={s.whereCard}>
+          {plantedArea}
+          <div className={s.picks}>
+            {(() => {
+              const label = `${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "whole site"}: change the part or site`;
+              const children = (
+                <>
+                  <MapPin size={18} strokeWidth={2} aria-hidden="true" />
+                  <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "Whole site"}</small></span>
+                </>
+              );
+              return placeMenu && !form.partlySaved
+                ? placeMenu({ className: s.pick!, label, children })
+                : <button type="button" className={s.pick} onClick={onChooseSite} disabled={!onChooseSite || form.partlySaved} aria-label={label}>{children}</button>;
+            })()}
+            <When form={form} today={today} />
+          </div>
         </div>
       ) : <When form={form} today={today} />}
+      {/* Drawn areas far from the event's site: the same quiet note as for a location. */}
+      {!spot && form.site && areaKm != null && areaKm > nearKm && (
+        <p className="cn-callout cn-callout--note cn-callout--sm" role="status">
+          That&apos;s {kmLabel(areaKm)} from {form.site.name}: is that the right site?{" "}
+          {onChooseSite && <button type="button" className={s.inlineLink} onClick={onChooseSite}>Choose a known site</button>}
+        </p>
+      )}
       {!spot && form.site && ((areas.length > 0 && !areasListed) || err("parcelId")) && (
         // Parts are switched in the panel's header (or the map's dock); areas are drawn and new locations
         // dropped from the map.
@@ -423,11 +469,11 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, sp
                 const n = plantsIn(form.lines, a.id);
                 return (
                   <li key={a.id}>
-                    <button type="button" onClick={() => onShowArea?.(a.id)} aria-label={`${areaName(a, i)}, ${areaHa(a)}, ${n ? `${formatNumber(n)} plants` : "no plants yet"}: show on the map`}>
+                    <button type="button" onClick={() => onShowArea?.(a.id)} aria-label={`${areaName(a, i)}, ${areaHa(a)}, ${plantsOrNone(n).toLowerCase()}: show on the map`}>
                       <AreaShape pts={a.pts} />
                       <span className={s.cardText}>
                         <b>{areaName(a, i)}</b>
-                        <span>{areaHa(a)} · {n ? `${formatNumber(n)} plants` : "No plants yet"}</span>
+                        <span>{areaHa(a)} · {plantsOrNone(n)}</span>
                       </span>
                       <MapIcon size={18} strokeWidth={2.2} aria-hidden="true" />
                     </button>
@@ -460,31 +506,26 @@ function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, sp
                 <input name="planting-location-label" value={spotInfo.name} placeholder="Location label, e.g. Top terrace" onChange={(e) => onSpotInfo?.({ ...spotInfo, name: e.target.value })} {...NAME_FIELD} enterKeyHint="done" />
                 <Pencil size={16} strokeWidth={2.2} />
               </label>
-              {spotNear && (
-                <span>
-                  {spotNear.matched
-                    ? `${spotNear.km < 0.05 ? "Right at" : `${kmLabel(spotNear.km)} from`} ${spotNear.label}`
-                    : newSite
-                      ? `New site · nearest ${spotNear.label}, ${kmLabel(spotNear.km)}`
-                      : `At ${form.site?.name}, chosen. Nearest pin: ${spotNear.label}, ${kmLabel(spotNear.km)}.`}
-                </span>
-              )}
+              {/* What it is, and how far from its site's pin (a new site: the nearest pin). */}
+              {form.site && spotKm != null ? (
+                <span>{spotKind(spotInfo.asPart, form.site.name)} · {fromPin(spotKm, "its pin")}</span>
+              ) : newSite && spotNear && <span>New site · nearest {spotNear.label}, {kmLabel(spotNear.km)}</span>}
             </span>
           </div>
-          {form.site && (
-            <div role="radiogroup" aria-label={`What this location is to ${form.site.name}`} className={cn(s.segment, s.segmentTwo)}>
-              <button type="button" role="radio" aria-checked={!spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: false })}>
-                New location
-              </button>
-              <button type="button" role="radio" aria-checked={spotInfo.asPart} className={s.segmentItem} onClick={() => onSpotInfo?.({ ...spotInfo, asPart: true })}>
-                New sublocation
-              </button>
-            </div>
+          {/* The kind is a choice only for a plain new location near a site (a sublocation or a new site was asked for). */}
+          {form.site && !spotInfo.decided && (
+            <Segmented
+              label={`What this location is to ${form.site.name}`} options={SPOT_KINDS} value={spotInfo.asPart ? "part" : "near"}
+              onChange={(kind) => onSpotInfo?.({ ...spotInfo, asPart: kind === "part" })}
+            />
           )}
+          {/* Placed far from its site, or a new site right by a known one: said quietly, not blocking. */}
+          {far && <p className="cn-callout cn-callout--note cn-callout--sm" role="status">That&apos;s {kmLabel(spotKm!)} from {form.site?.name}: is that the right site?</p>}
+          {atKnown && <p className="cn-callout cn-callout--note cn-callout--sm" role="status">This is {kmLabel(spotNear!.km)} from {spotNear!.label}: part of it?</p>}
           {/* Back out plainly (the form goes back to the site as it was), or say it's at a site we know. One row. */}
           <div className={s.spotActions}>
             {onRemoveSpot && <button type="button" className={s.spotCancel} onClick={onRemoveSpot} aria-label="Cancel new location"><X size={16} strokeWidth={2.6} />Cancel</button>}
-            {newSite && onChooseSite && <button type="button" className={s.link} onClick={onChooseSite}>Choose a known site</button>}
+            {(newSite || far) && onChooseSite && <button type="button" className={s.link} onClick={onChooseSite}>Choose a known site</button>}
             {onAddSpot && <button type="button" className={s.link} onClick={onAddSpot}>Move pin</button>}
           </div>
         </div>
@@ -533,11 +574,10 @@ function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, onDrawAr
   const whole = picked === WHOLE_SITE_KEY && areas.length > 0;
   const area = whole ? undefined : typeof picked === "number" && areas.some((a) => a.id === picked) ? picked : areas[0]?.id;
   const at = areas.findIndex((a) => a.id === area);
-  const plantsSaid = (n: number) => (n ? `${formatNumber(n)} plants` : "No plants yet");
   /** "0.51 ha · 22 plants". */
-  const areaLine = (a: DrawnArea) => `${areaHa(a)} · ${plantsSaid(plantsIn(form.lines, a.id))}`;
+  const areaLine = (a: DrawnArea) => `${areaHa(a)} · ${plantsOrNone(plantsIn(form.lines, a.id))}`;
   const wholeName = "Whole site";
-  const wholeLine = `Not in a drawn area · ${plantsSaid(plantsIn(form.lines, undefined))}`;
+  const wholeLine = `Not in a drawn area · ${plantsOrNone(plantsIn(form.lines, undefined))}`;
   const current = areas[at]; // undefined for the site as a whole
   const pickName = whole ? wholeName : current ? areaName(current, at) : "";
   // The map shows the area being filled in, so plants never go in the wrong one; leaving the form lets it go.
@@ -617,14 +657,15 @@ function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, onDrawAr
     return (
       <li key={sp.id} className={s.row} data-picked={i >= 0 || undefined} data-invalid={qtyError || (first && nothingYet) ? true : undefined}>
         <ListRow
-          size="md" photo={sg?.photo ?? null} initial={name.charAt(0)}
+          size="md" photo={sg?.photo ?? null} initial={name.charAt(0)} tintKey={sp.id}
           title={italic ? <i>{name}</i> : name} subtitle={second}
-          figure={sg ? formatNumber(sg.here) : ""}
+          // How many went in here before: context, so quiet and unlabelled; hovering (or a screen reader) says what it is.
+          figure={sg ? <span title={`${formatNumber(sg.here)} planted here before`}><span aria-hidden="true">{formatNumber(sg.here)}</span><span className="sr-only">{formatNumber(sg.here)} planted here before</span></span> : ""}
           end={
             <input
               className={s.rowQty} aria-label={`${name}: how many planted`}
               aria-invalid={qtyError || (first && nothingYet) ? true : undefined}
-              {...NUMBER_FIELD} maxLength={6} enterKeyHint="next" data-enter-next="" placeholder="–"
+              {...NUMBER_FIELD} maxLength={6} enterKeyHint="next" data-enter-next="" placeholder="+"
               value={form.lines[i]?.quantity ?? ""}
               onChange={(e) => setPlanted(sp.id, digits(e.target.value))}
             />
@@ -639,7 +680,7 @@ function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, onDrawAr
     <section ref={ref} className={s.group} aria-labelledby="what-planted" onFocus={onFocus}>
       {/* What was planted, and the running count. */}
       <div className={s.titleRow}>
-        <h3 id="what-planted" className={s.groupTitle}>What was planted</h3>
+        <h3 id="what-planted" className={s.listTitle}>What did you plant?</h3>
         <span className={s.total} aria-live="polite">
           <b>{formatNumber(form.total)}</b> plants · {form.lines.filter((l) => l.speciesId).length} species
         </span>
@@ -656,7 +697,7 @@ function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, onDrawAr
           className="mb-2" label="Where the plants went" value={whole ? WHOLE_SITE_KEY : String(area)}
           buttonLabel={`Planted ${whole ? "at" : "area:"} ${pickName}, ${whole ? wholeLine : current ? areaLine(current) : ""}. Change where`}
           onChange={(key) => setPicked(key === WHOLE_SITE_KEY ? WHOLE_SITE_KEY : Number(key))}
-          footer={onDrawArea && { label: "Draw area", onClick: onDrawArea, icon: <Pentagon size={18} strokeWidth={2.2} aria-hidden="true" /> }}
+          footer={onDrawArea && { label: "Draw area", onClick: onDrawArea, icon: <Pencil size={18} strokeWidth={2.4} aria-hidden="true" /> }}
           options={[
             ...areas.map((a, i) => ({ key: String(a.id), title: areaName(a, i), subtitle: areaLine(a), lead: (size: number) => <AreaShape pts={a.pts} size={size} onMap /> })),
             // Plants that went in across the site, not in one of the drawn areas.
@@ -679,22 +720,11 @@ function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, onDrawAr
         {err("species") && <p className={s.problem} role="alert">{err("species")}</p>}
       </div>
 
-      {shown.length > 0 && (
-        <>
-          <div className={s.rowsHead} aria-hidden="true">
-            <span className={s.groupTitle}>
-              {query.trim() ? "On this list" : "Planted here before"}
-              {pickName && ` · ${pickName}`}
-            </span>
-            <span>Here</span>
-            <span>Planted</span>
-          </div>
-          <ul className={s.rows}>{shown.map((sp, n) => row(sp, n === 0))}</ul>
-        </>
-      )}
+      {/* The site's own species first (the order says they were planted here before), then the rest under a quiet divider. */}
+      {shown.length > 0 && <ul className={s.rows}>{shown.map((sp, n) => row(sp, n === 0))}</ul>}
       {more.length > 0 && (
         <>
-          <div className={s.rowsHead} aria-hidden="true"><span className={s.groupTitle}>{query.trim() ? "Other species" : "All species"}</span></div>
+          {shown.length > 0 && <p className={s.rowsDivider}>{query.trim() ? "Other species" : "All species"}</p>}
           <ul className={s.rows}>{more.map((sp, n) => row(sp, shown.length === 0 && n === 0))}</ul>
         </>
       )}
@@ -731,7 +761,7 @@ function Receipt({ hidden, summary, cards, empty, saved, unstored, areasDrawn, o
   useEffect(() => headingRef.current?.focus(), []);
   const where = summary.part === WHOLE_SITE ? summary.site : `${summary.site} · ${partBesideSite(summary.part, summary.site)}`;
   return (
-    <div className={s.form} hidden={hidden}>
+    <div className={cn(s.form, s.slideIn)} hidden={hidden}>
       <header className={s.head}>
         <Badge tone={saved ? "ok" : "review"} className={s.badge}>{saved ? "Saved" : "Not saved"}</Badge>
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>{saved || cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
@@ -758,13 +788,15 @@ function Receipt({ hidden, summary, cards, empty, saved, unstored, areasDrawn, o
 }
 
 /** Add location only: the new location on its own, with no planting. Not saved. */
-function LocationPreview({ hidden, name, what, plantedArea, onBack, onStartAnother }: {
-  hidden?: boolean | undefined; name: string; what: string; plantedArea?: ReactNode | undefined; onBack: () => void; onStartAnother: () => void;
+function LocationPreview({ hidden, name, what, plantedArea, onBack, onSave }: {
+  hidden?: boolean | undefined; name: string; what: string; plantedArea?: ReactNode | undefined; onBack: () => void;
+  /** Keeps the location for this visit (a place to choose, marked "Not saved yet"). */
+  onSave: () => void;
 }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => headingRef.current?.focus(), []);
   return (
-    <div className={s.form} hidden={hidden}>
+    <div className={cn(s.form, s.slideIn)} hidden={hidden}>
       <header className={s.head}>
         <Badge tone="review" className={s.badge}>Not saved</Badge>
         <h2 ref={headingRef} tabIndex={-1} className={s.title}>New location preview</h2>
@@ -779,7 +811,7 @@ function LocationPreview({ hidden, name, what, plantedArea, onBack, onStartAnoth
       </div>
       <footer className={s.foot}>
         <button type="button" className={s.back} onClick={onBack}>Back to the form</button>
-        <button type="button" className={s.next} onClick={onStartAnother}>Start another</button>
+        <button type="button" className={s.next} onClick={onSave}>Save location</button>
       </footer>
     </div>
   );
@@ -790,6 +822,3 @@ function listed(names: string[]) {
   return names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
-function kmLabel(km: number) {
-  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
-}

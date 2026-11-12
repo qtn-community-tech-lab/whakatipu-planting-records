@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 /** What one of our history entries is for: an open season (the browser's back closes it), or unsaved work (back asks first). */
-export type EntryKind = "season" | "guard";
+type EntryKind = "season" | "guard";
 
 /**
  * Our history entries over the page's own, so the browser's back does what the page's Back does.

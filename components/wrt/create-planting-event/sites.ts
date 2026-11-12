@@ -1,4 +1,5 @@
-import { partBesideSite } from "@/lib/wrt/text";
+import { partBesideSite, searchKey } from "@/lib/wrt/text";
+import type { SiteOption } from "@/lib/wrt/events/form-options";
 import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
 /** [longitude, latitude] */
 export type LngLat = [number, number];
@@ -35,20 +36,55 @@ export function sitePins(
   });
 }
 
-/** Where to fly for a site: its part's own pin if it has one, else the site's, else any of its pins. */
-export function pinFor(pins: readonly SitePin[], siteSlug: string, parcelId: string | null = null): LngLat | null {
+/** A site's pin for a part: its own if it has one, else the site's, else any of the site's pins. */
+export function pinOf(pins: readonly SitePin[], siteSlug: string, parcelId: string | null = null): SitePin | undefined {
   const at = pins.filter((p) => p.slug === siteSlug);
-  const pin = (parcelId && at.find((p) => p.parcelId === parcelId)) || at.find((p) => p.parcelId === null) || at[0];
-  return pin ? pin.at : null;
+  return (parcelId && at.find((p) => p.parcelId === parcelId)) || at.find((p) => p.parcelId === null) || at[0];
 }
 
-/** The pin closest to `at`, and how far it is in km (flat-earth maths is fine at this scale). */
+/** Where to fly for a site (see pinOf). */
+export function pinFor(pins: readonly SitePin[], siteSlug: string, parcelId: string | null = null): LngLat | null {
+  return pinOf(pins, siteSlug, parcelId)?.at ?? null;
+}
+
+/** How far apart two points are, in km (flat-earth maths is fine at this scale). */
+export function kmBetween(a: LngLat, b: LngLat): number {
+  return Math.hypot((b[0] - a[0]) * Math.cos((a[1] * Math.PI) / 180) * 111.32, (b[1] - a[1]) * 110.57);
+}
+
+/** How far `at` is from the nearest of these points, in km; null with none. */
+export function kmToNearest(points: readonly LngLat[], at: LngLat): number | null {
+  return points.length ? Math.min(...points.map((p) => kmBetween(at, p))) : null;
+}
+
+/** The pin closest to `at`, and how far it is in km. */
 export function nearestPin(pins: readonly SitePin[], at: LngLat): { pin: SitePin; km: number } | null {
-  const k = Math.cos((at[1] * Math.PI) / 180) * 111.32;
   let best: { pin: SitePin; km: number } | null = null;
   for (const pin of pins) {
-    const km = Math.hypot((pin.at[0] - at[0]) * k, (pin.at[1] - at[1]) * 110.57);
+    const km = kmBetween(at, pin.at);
     if (!best || km < best.km) best = { pin, km };
   }
   return best;
 }
+
+/**
+ * A location added on the map and kept for this visit: a part of its site (`id`), or a site of its own (no `id`).
+ * shortcut: page state only, so a reload loses them; new locations and sites can't be stored yet. Store them
+ * (the areas and sites tables) once the server can, and these go.
+ */
+export interface KeptPlace { site: string; id: string | null; name: string; label: string; at: LngLat }
+
+/** The sites with the kept places in them, each marked unsaved: new sites in A–Z order, then parts at their
+ * site (a kept new site's too). */
+export function withKept(sites: readonly SiteOption[], kept: readonly KeptPlace[]): SiteOption[] {
+  if (!kept.length) return sites as SiteOption[];
+  const added = kept.filter((k) => !k.id).map((k) => ({ slug: k.site, name: k.name, keys: [searchKey(k.name)], parts: [], unsaved: true }));
+  const all = added.length ? [...sites, ...added].sort((a, b) => a.name.localeCompare(b.name)) : sites;
+  return all.map((x) => {
+    const more = kept.filter((k) => k.site === x.slug && k.id);
+    return more.length ? { ...x, parts: [...x.parts, ...more.map((k) => ({ id: k.id!, name: k.name, keys: [searchKey(k.name)], unsaved: true }))] } : x;
+  });
+}
+
+/** A kept place's pin. */
+export const keptPin = (k: KeptPlace): SitePin => ({ slug: k.site, parcelId: k.id, label: k.label, at: k.at, plants: 0 });

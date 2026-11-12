@@ -20,8 +20,10 @@ import type { PlantTotals } from "@/components/wrt/events/map-event-form";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, parcelId, partName, today, totals, onStart, startLabel = "Add new planting event", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
+export function SiteOverview({ slug, parcelId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
+  /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
+  map?: ReactNode;
   /** NZ today, "YYYY-MM-DD": how long ago each season was. */
   today: string;
   /** The chosen part: its own trees and seasons, when it has any recorded. */
@@ -29,6 +31,9 @@ export function SiteOverview({ slug, parcelId, partName, today, totals, onStart,
   partName?: string | undefined;
   /** Plants and species by site and by `site/part`: the tiles at the top. */
   totals: PlantTotals;
+  /** The site's places (its parts), listed under the tiles; `onPlace` opens one's page. `sub` says more (a kept one). */
+  places?: readonly { id: string; name: string; sub?: string | undefined }[] | undefined;
+  onPlace?: ((id: string) => void) | undefined;
   onStart: () => void;
   /** The start button's words: "Back to your planting event" when one with entries is waiting. */
   startLabel?: string | undefined;
@@ -46,6 +51,7 @@ export function SiteOverview({ slug, parcelId, partName, today, totals, onStart,
 
   return (
     <Frame onStart={onStart} label={startLabel} busy={loading}>
+      {map}
       {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
           <div className={s.loading}>
@@ -62,14 +68,25 @@ export function SiteOverview({ slug, parcelId, partName, today, totals, onStart,
         ) : (
           <>
             {fellBack && <p className={f.context}>Nothing recorded at {partName} yet, so this is the whole site.</p>}
-            <StatTiles stats={tiles(totals, slug, o.wholeSite ? null : parcelId)} />
+            <StatTiles stats={tiles(totals, slug, o.wholeSite ? null : parcelId, places.length)} />
+          </>
+        )}
+        {/* Right under the tiles (or with nothing recorded yet): the site's places, each a way to its page. */}
+        {places.length > 0 && (
+          <FigureList
+            title="Places"
+            rows={places.map((p) => ({ key: p.id, name: p.name, sub: p.sub, figure: formatNumber(totals[`${slug}/${p.id}`]?.plants ?? 0), onClick: onPlace && (() => onPlace(p.id)) }))}
+          />
+        )}
+        {o && o.trees.length > 0 && (
+          <>
             {/* Past plantings first: what went in, when, and a way into each season. */}
             <SeasonList
               seasons={o.seasons} today={today} summary={`Latest ${o.seasons.length === 1 ? "season" : `${o.seasons.length} seasons`}`}
               onOpen={onOpenSeason && ((x) => onOpenSeason(x, o.wholeSite))}
             >
               <Link href={parcelId && partName && !o.wholeSite ? partHref(slug, partName) : `/sites/${slug}`} target="_blank" className={s.more}>
-                Every season on the {parcelId && !o.wholeSite ? "part" : "site"} page<ArrowUpRight size={14} strokeWidth={2.4} />
+                Every season on the {parcelId && !o.wholeSite ? "place" : "site"} page<ArrowUpRight size={14} strokeWidth={2.4} />
               </Link>
             </SeasonList>
             <hr className={s.divider} />
@@ -90,14 +107,14 @@ export function SiteOverview({ slug, parcelId, partName, today, totals, onStart,
   );
 }
 
-/** Plants and species, as on a season; for the whole site, also how many of its parts (sites, to WRT) have plants. */
-function tiles(totals: PlantTotals, slug: string, parcelId: string | null) {
+/** Plants and species, as on a season; for the whole site, also how many places it has (as listed under them). */
+function tiles(totals: PlantTotals, slug: string, parcelId: string | null, places: number) {
   const x = totals[parcelId ? `${slug}/${parcelId}` : slug];
-  const parts = parcelId ? 0 : Object.entries(totals).filter(([k, v]) => k.startsWith(`${slug}/`) && v.plants > 0).length;
+  const parts = parcelId ? 0 : places;
   return [
     { label: "Plants", value: formatNumber(x?.plants ?? 0) },
     { label: "Species", value: String(x?.species ?? 0) },
-    ...(parts > 1 ? [{ label: "Sites", value: String(parts) }] : []),
+    ...(parts > 0 ? [{ label: "Places", value: String(parts) }] : []),
   ];
 }
 

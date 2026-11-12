@@ -47,9 +47,9 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   titleOpen?: boolean | undefined;
   /** Instead of onTitle: wraps the title button (pin, title, chevron) in the page's own menu, e.g. a popover. */
   titleMenu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined;
-  /** Phones: a Search button where Map would be (the page opens its search). */
+  /** Phones: a Search button on the bar (the page opens its search). */
   onSearch?: (() => void) | undefined;
-  /** The search is open: the same button reads Close, so closing it is always on purpose. */
+  /** The search is open: the same button reads Close, so the way back is where Search was. */
   searchOpen?: boolean | undefined;
   /** A place beside the title for the page's own button (e.g. Edit), filled through a portal. Phones: it takes Search's place. */
   actionSlot?: ((el: HTMLElement | null) => void) | undefined;
@@ -66,12 +66,12 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
 }) {
   const title_ = wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} menu={titleMenu} icon={titleIcon} />;
   const heading = <>{wide && above}{actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_}{wide && below}</>;
-  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen} hasAction={!!actionSlot}>{children}</Sheet>;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen}>{children}</Sheet>;
 }
 
-function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, hasAction, children }: {
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, children }: {
   wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; hasAction?: boolean | undefined; children: ReactNode;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const visible = useRef<HTMLDivElement>(null);
@@ -214,9 +214,12 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
 
   // The mouse (and a pen): drag the bar. A click without a drag opens it from peek (see openFromBar).
   const dragged = useRef(false);
+  // A mouse press on the handle: dragged, it moves the sheet; clicked, the handle's button (Show the map) has it.
+  const onHandle = useRef(false);
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     dragged.current = false;
-    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button")) || (e.target as HTMLElement).closest("[data-bar-action]") || !spring.current) return;
+    onHandle.current = !!(e.target as HTMLElement).closest("[data-handle]");
+    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button:not([data-handle])")) || (e.target as HTMLElement).closest("[data-bar-action]") || !spring.current) return;
     const bar = e.currentTarget;
     const startY = e.clientY;
     const start = spring.current.value;
@@ -246,15 +249,17 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
   // the site. Caught before the title's own click. A drag that ends on the bar isn't a tap: a touch drag
   // cancels the click, a mouse one is marked. Search does its own thing on the first tap (it raises the sheet itself).
   const opensFromBar = !wide && !locked && snap === "peek";
+  // From half way or full screen, the handle is a button down to the map, so there's always a way back to it
+  // without knowing to drag. Not at peek (the bar opens it) or while the sheet is locked.
+  const showMap = !wide && !locked && snap !== "peek";
   function openFromBar(e: React.MouseEvent<HTMLDivElement>) {
+    // Pulled up, a mouse click on the handle lands on the bar (the press was captured for a drag): Show the map.
+    if (!opensFromBar && showMap && onHandle.current && !dragged.current && !(e.target as HTMLElement).closest("[data-handle]")) return onSnap("peek");
     if (!opensFromBar || (e.target as HTMLElement).closest("[data-bar-action]")) return;
     e.stopPropagation();
     e.preventDefault();
     if (!dragged.current) onSnap("mid");
   }
-  // From half way or full screen, a button down to the map, so there's always a way back to it
-  // without knowing to drag. None at peek (tap the bar) or while the sheet is locked.
-  const showMap = !wide && !locked && snap !== "peek";
 
   return (
     <section
@@ -269,19 +274,15 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
         {!wide && (opensFromBar
           // The handle is the bar's control for a keyboard or screen reader; a tap anywhere on the bar does the same.
           ? <button type="button" data-handle className={s.handle} aria-label={`Open ${label.toLowerCase()}`} aria-expanded={false} />
+          : showMap ? <button type="button" data-handle className={s.handle} aria-label="Show the map" onClick={() => onSnap("peek")} />
           : <span className={s.handle} aria-hidden="true" />)}
         <div className={s.barText}>
           {heading}
         </div>
-        {!wide && !locked && onSearch ? (
-          <button type="button" className={s.barButton} data-bar-action="" onClick={onSearch} aria-label={searchOpen ? "Close the site search" : "Search sites"}>
+        {!wide && !locked && onSearch && (
+          <button type="button" className={s.barButton} data-bar-action="" onClick={onSearch} aria-label={searchOpen ? "Close the site list" : "Search sites"}>
             {searchOpen ? <X size={16} strokeWidth={2.6} aria-hidden="true" /> : <Search size={16} strokeWidth={2.4} aria-hidden="true" />}
             {searchOpen ? "Close" : "Search"}
-          </button>
-        ) : showMap && !hasAction && (
-          <button type="button" className={s.barButton} onClick={() => onSnap("peek")} aria-expanded aria-label="Show the map">
-            <ChevronDown size={16} strokeWidth={2.4} />
-            Map
           </button>
         )}
       </div>

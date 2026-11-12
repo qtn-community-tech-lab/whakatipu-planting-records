@@ -3,7 +3,7 @@ import { ChevronDown, Pencil, Pentagon, Sprout } from "lucide-react";
 import { useState } from "react";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
-import { formatNumber } from "@/lib/wrt/text";
+import { plantsOrNone } from "@/lib/wrt/text";
 import type { Area } from "../draw-area";
 import s from "./navigator.module.css";
 
@@ -33,7 +33,7 @@ export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, on
   const open = toggled?.notStarted === notStarted ? toggled.open : notStarted;
   if (!areas.length) return null;
   const ha = formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0));
-  const plantsOf = (id: number) => (plants[id] ? `${formatNumber(plants[id])} plants` : "No plants yet");
+  const plantsOf = (id: number) => plantsOrNone(plants[id] ?? 0);
 
   return (
     <section className={s.list} aria-label="Planted areas">

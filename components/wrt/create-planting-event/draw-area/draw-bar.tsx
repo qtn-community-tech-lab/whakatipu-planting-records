@@ -18,7 +18,7 @@ import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { PartMenu } from "../part-menu";
 import { NAME_FIELD } from "@/components/wrt/shared/fields";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
-import { formatNumber } from "@/lib/wrt/text";
+import { plantsOrNone } from "@/lib/wrt/text";
 import type { Area, DrawArea, DrawMethod } from "./use-draw-area";
 import s from "./draw-area.module.css";
 
@@ -27,7 +27,7 @@ const METHODS: { id: DrawMethod; label: string }[] = [
   { id: "trace", label: "Trace" },
 ];
 
-export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, choosing = false, onToggleSite, plants, shown, dock = true, style }: {
+export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, onSite, choosing = false, onToggleSite, plants, shown, dock = true, style }: {
   draw: DrawArea;
   /** The area brought forward on the map (its id): the bar steps through the areas from it. */
   shown: number | null;
@@ -55,6 +55,8 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
   onAddPart?: (() => void) | undefined;
   /** The place can't change now (the event's row is saved without its plants): the part shows, without its menu. */
   placeLocked?: boolean | undefined;
+  /** With the menu locked, tapping the site goes to its page (a new location in progress). */
+  onSite?: (() => void) | undefined;
   /** With no site, the dock's Choose a site: opens the chooser, or closes it when it's open (`choosing`). */
   choosing?: boolean | undefined;
   onToggleSite?: (() => void) | undefined;
@@ -74,7 +76,7 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
   const at = ati < 0 ? undefined : areas[ati];
   const atHa = at ? formatHectares(hectares(at.pts)) : "";
   const atCount = at ? plants[at.id] : undefined;
-  const atPlants = atCount ? `${formatNumber(atCount)} plants` : "No plants yet";
+  const atPlants = plantsOrNone(atCount ?? 0);
   // Only shown with an area brought forward, so the list isn't empty.
   const step = (by: number) => onShow(areas[(ati + by + areas.length) % areas.length]!.id);
   const [removing, setRemoving] = useState<number | null>(null);
@@ -203,16 +205,16 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
         <>
           <div className={s.dock} role="group" aria-label="Map tools">
             {siteName && placeLocked ? (
-              <button type="button" className={s.partBtn} disabled>
+              <button type="button" className={s.partBtn} disabled={!onSite} onClick={onSite}>
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
-                <span className={s.areaText}><b>{partName ?? siteName}</b><small>{partName ? siteName : parts.length ? "Whole site" : "Site"}</small></span>
+                <span className={s.areaText}><b>{partName ?? siteName}</b><small>{partName ? siteName : "Whole site"}</small></span>
               </button>
             ) : siteName ? (
               <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onAddPart={onAddPart} onAllSites={onAllSites} side="top" className={s.partBtn} label={`${site}: change the part`}>
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
                 <span className={s.areaText}>
                   <b>{partName ?? siteName}</b>
-                  <small>{partName ? siteName : parts.length ? "Whole site" : "Site"}</small>
+                  <small>{partName ? siteName : "Whole site"}</small>
                 </span>
                 <ChevronUp size={16} strokeWidth={2.4} aria-hidden="true" />
               </PartMenu>

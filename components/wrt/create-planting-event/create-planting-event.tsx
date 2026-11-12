@@ -22,24 +22,25 @@
  * Shared pieces: FormPanel (the form's panel), MiniMap and FigureList (components/wrt/shared).
  */
 import type { Route } from "next";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { MapEventForm, WHOLE_SITE_KEY, type AreaPick, type FormEntries, type MapEventFormProps, type PlantTotals, type SpotInfo } from "@/components/wrt/events/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
-import { partBesideSite } from "@/lib/wrt/text";
+import { fromPin, kmLabel, partBesideSite, spotKind } from "@/lib/wrt/text";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
 import { paddingFor } from "./layout";
-import { nearestPin, pinFor, sitePins, type LngLat, type SitePin } from "./sites";
+import { keptPin, kmBetween, kmToNearest, nearestPin, pinFor, sitePins, withKept, type KeptPlace, type LngLat, type SitePin } from "./sites";
 import { PartMenu } from "./part-menu";
 import { SiteOverview } from "./site-overview";
 import { PastSeason } from "./past-season";
+import { PinTooltip } from "./pin-tooltip";
 import { SiteChooser } from "./site-chooser";
 import { TopBar } from "./top-bar";
 import { usePinMoves } from "./use-pin-moves";
 import { AreaOverlay, AreaSheet, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
-import { highlightSite, mapCentre, useCamera, usePlantingMap, useSpotMarker } from "./use-planting-map";
+import { highlightSite, mapCentre, useCamera, useFindMe, usePlantingMap, useSpotMarker } from "./use-planting-map";
 import { boundsOf, fitArea } from "./map-scene";
 import { useKeyboardFit } from "./use-keyboard-fit";
 import { useHistoryEntries } from "./use-history-entries";
@@ -89,7 +90,15 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // Phones start with the sheet at its bar, so the map shows first; a season from the address opens full screen, as one opened here does.
   const [snap, setSnap] = useState<Snap>(initialSeason ? "full" : "peek");
   const [basePins] = useState(() => sitePins(options.sites, areas, totals));
-  const { pins, pinAt, isMoved, move } = usePinMoves(basePins);
+  // Locations added on the map this visit (Save location, or a planting event saved at one): in the site list,
+  // the menus, the form and on the map, like any other place. See KeptPlace.
+  const [kept, setKept] = useState<KeptPlace[]>([]);
+  const sites = useMemo(() => withKept(options.sites, kept), [options.sites, kept]);
+  const formOptions = useMemo(() => ({ ...options, sites }), [options, sites]);
+  const allPins = useMemo(() => [...basePins, ...kept.map(keptPin)], [basePins, kept]);
+  const { pins, pinAt, isMoved, move } = usePinMoves(allPins);
+  // A site's pins (its own and its places'): distances to a site are to the nearest of them.
+  const pinsOf = (slug: string) => pins.filter((p) => p.slug === slug).map((p) => p.at);
   // A pin clicked on the map (a new object each click, so clicking the same pin again still counts);
   // the form takes it up and reports its choice back as `siteSlug`.
   const [picked, setPicked] = useState<{ slug: string; parcelId: string | null } | null>(null);
@@ -97,11 +106,12 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const [parcel, setParcel] = useState<string | null>(initialPart ?? null);
   // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
   const [focus, setFocus] = useState<LngLat | null>(null);
-  const site = options.sites.find((x) => x.slug === siteSlug);
+  const site = sites.find((x) => x.slug === siteSlug);
   const siteName = site?.name ?? "Choose a site";
   const partName = site ? site.parts.find((p) => p.id === parcel)?.name ?? "Whole site" : undefined;
   // Beside the site's name, the part without the site in front of it: "Morning Star Reserve", not "Arthurs Point - Morning Star Reserve".
   const partShort = partName && site ? partBesideSite(partName, site.name) : partName;
+  const keptPart = !!site?.parts.find((p) => p.id === parcel)?.unsaved;
   // The site title (and the form's "Choose a site") opens the chooser in the panel's place: sites with
   // their parts. On phones the sheet goes full screen for it, and after a choice comes back to at least
   // half way (to show it); closed without one (`back`), it goes back exactly where it was.
@@ -148,11 +158,11 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     // The event is saved: another site or part is a fresh start there, not a change to it.
     if (started && entry.saved) return leaveFor({ slug, parcelId });
     // Saved without its plants: its place can't change, so another one leaves it (asking first).
-    if (entry.partly) return setLeaving({ to: options.sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, parcelId }) });
+    if (entry.partly) return setLeaving({ to: sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, parcelId }) });
     // Another site or part closes an open season: ask first if a past planting there has unsaved changes.
     unlessEditing(() => {
       // Entries kept from an event (after its Back) would go to the other site unseen: leaving clears them, so it asks.
-      if (!started && eventUnsaved && slug !== siteSlug) return setLeaving({ to: options.sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, parcelId }) });
+      if (!started && eventUnsaved && slug !== siteSlug) return setLeaving({ to: sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, parcelId }) });
       moveTo(slug, parcelId);
     });
   }
@@ -161,6 +171,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     if (ask && siteSlug && slug !== siteSlug && eventUnsaved && !pendingSite) return setPendingSite({ slug, parcelId });
     setPendingSite(null);
     setAreaAt(null);
+    // A new site given a known site after all: it's a new location there now, and which kind is a choice again.
+    if (slug && !siteSlug) setSpotInfo((i) => (i.decided ? { ...i, decided: false } : i));
     setPicked({ slug, parcelId });
     // From the list: back to where it was opened from. Otherwise (a pin, the question) half way, to show the choice.
     if (choosing) closeChooser();
@@ -265,16 +277,39 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       const d = depth();
       if (d === null) return; // a back is landing: written again once it has (popped)
       const q = new URLSearchParams(window.location.search);
-      const part = season?.wholeSite ? null : parcel;
-      for (const [key, value] of [["site", siteSlug], ["part", part], ["season", season?.slug]] as const) if (value) q.set(key, value); else q.delete(key);
+      // Places kept on the map aren't stored, so they aren't bookmarked.
+      const part = season?.wholeSite || keptPart ? null : parcel;
+      for (const [key, value] of [["site", site?.unsaved ? "" : siteSlug], ["part", part], ["season", season?.slug]] as const) if (value) q.set(key, value); else q.delete(key);
       const url = `${window.location.pathname}${q.size ? `?${q}` : ""}`;
       if (url === `${window.location.pathname}${window.location.search}` && (window.history.state as { wrtDepth?: unknown } | null)?.wrtDepth === d) return;
+      // In a background tab, keep Next's state and leave its router alone: a router update there starts a view
+      // transition (the layout's ViewTransition), which a hidden document aborts with an error. Told once it shows.
+      if (document.hidden) {
+        unsynced.current = true;
+        return window.history.replaceState({ ...window.history.state, wrtDepth: d }, "", url);
+      }
       window.history.replaceState({ wrtDepth: d }, "", url);
     });
     return () => clearTimeout(id);
-  }, [siteSlug, parcel, season?.slug, season?.wholeSite, popped, depth, totals]);
+  }, [siteSlug, parcel, site?.unsaved, keptPart, season?.slug, season?.wholeSite, popped, depth, totals]);
+  const unsynced = useRef(false);
+  useEffect(() => {
+    const show = () => {
+      if (document.hidden || !unsynced.current) return;
+      unsynced.current = false;
+      const { wrtDepth } = (window.history.state ?? {}) as { wrtDepth?: number };
+      window.history.replaceState({ wrtDepth }, "", `${window.location.pathname}${window.location.search}`);
+    };
+    document.addEventListener("visibilitychange", show);
+    return () => document.removeEventListener("visibilitychange", show);
+  }, []);
   function openSeason(x: { slug: string; label: string }, wholeSite: boolean) {
     endModes();
+    // Listed for the whole site (the part had none): it's the whole site that's shown, so the whole site is chosen.
+    if (wholeSite && parcel) {
+      setParcel(null);
+      setPicked({ slug: siteSlug, parcelId: null });
+    }
     setSeason({ slug: x.slug, label: x.label, wholeSite });
     if (!wide) setSnap("full");
   }
@@ -284,6 +319,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // The area whose plants are being entered on "What was planted", or tapped on the map or in its bar: the map fits it and darkens the rest.
   const [shownArea, setShownArea] = useState<number | null>(null);
   const map = usePlantingMap({ pins, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
+  const { findMe, said } = useFindMe(map);
 
   // A pin chooses its site (and part, for a part's own pin) and brings the phone sheet up halfway.
   function pickPin(pin: SitePin) {
@@ -390,14 +426,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setSpotNear(null);
     setSpotInfo({ name: "", asPart: false });
   }
-  // The form's Cancel new location. With entries, only the location goes: the form stays at the site it matched.
-  // With nothing entered, back to before it was dropped (the site and part, its page or season if the form wasn't open).
+  // The form's Cancel new location: back to the site and part from before it was dropped. With nothing entered,
+  // back to where you were too (its page or season, if the form wasn't open); with entries, the form stays open.
   function cancelSpot() {
     removeSpot();
-    if (entry.entered || draw.areas.length) return;
     const b = beforeSpot.current;
-    setStarted(b.started);
     if (b.slug !== siteSlug || b.parcel !== parcel) setPicked({ slug: b.slug, parcelId: b.parcel });
+    if (entry.entered || draw.areas.length) return;
+    setStarted(b.started);
     if (b.season) setSeason(b.season);
   }
   /** Everything the map holds for the event: its new location, its areas, and the plant list's ask. */
@@ -431,7 +467,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     if (!wide && to !== "peek" && draw.draft && (!draw.draft.closed || !draw.done())) return;
     setSnap(to);
   }
-  function leaveFor(to: { slug: string; parcelId: string | null } | "all") {
+  // `kept`: a location just kept to go to instead (see keepSpot).
+  function leaveFor(to: { slug: string; parcelId: string | null } | "all", kept?: { slug: string; parcelId: string | null } | null) {
     endModes();
     setSearchAsk(0);
     setLeaving(null);
@@ -441,7 +478,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setSeason(null);
     clearEvent();
     setFormKey((k) => k + 1);
-    setPicked(to === "all" ? { slug: "", parcelId: null } : { slug: to.slug, parcelId: to.parcelId });
+    setPicked(kept ?? (to === "all" ? { slug: "", parcelId: null } : { slug: to.slug, parcelId: to.parcelId }));
     setSnap("mid");
   }
   // Unsaved work: a new event's entries (species, a note, drawn areas, a dropped location) until they're saved,
@@ -450,6 +487,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const eventUnsaved = !entry.saved && (entry.entered || draw.areas.length > 0 || !!spot);
   // A drawing counts once something's been drawn (a fresh, empty one has nothing to lose).
   const guarded = eventUnsaved || (!!draw.draft && draw.canUndo);
+  // The same, not counting a dropped location (it can be kept): what leaving one asks about.
+  const entriesUnsaved = (!entry.saved && (entry.entered || draw.areas.length > 0)) || (!!draw.draft && draw.canUndo);
   function unlessUnsaved(to: string, run: () => void) {
     if (entry.saving) return; // mid-save: it finishes first
     unlessEditing(() => (guarded ? setLeaving({ to, run }) : run()));
@@ -471,7 +510,12 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // Back to the page's own entry first (past ours), then replace it: back from the events page then goes to the page before this one.
   const exit = () => unlessUnsaved("the events page", () => { exiting.current = true; toPageEntry(() => window.location.replace(exitHref)); });
   // The header's ×: back to every site. Every "All sites" (the breadcrumb's, and the phone title's and dock's menus) does the same.
+  // A new location with nothing entered is kept, as on the way to its site's page (see showSite).
   function leaveSite() {
+    if (spot && !entriesUnsaved) {
+      keepSpot();
+      return leaveFor("all");
+    }
     unlessUnsaved("every site", () => leaveFor("all"));
   }
   // Starting one thing ends the others: the cross, the site list, an area's sheet and an open season.
@@ -500,13 +544,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setStartedFrom(null);
   }
   // After a save, the receipt's way out: the event ends and the site's page shows, with the new planting in its past plantings.
-  const finish = { label: site ? `Back to ${site.name}` : "Back to all sites", onClick: () => leaveFor(site ? { slug: siteSlug, parcelId: parcel } : "all") };
+  const finish = { label: site ? `Back to ${parcel && partShort ? partShort : site.name}` : "Back to all sites", onClick: () => leaveFor(site ? { slug: siteSlug, parcelId: parcel } : "all") };
   // Under the site in the header: that an event is being entered, or the part, so the map says where you are.
   const hint = started ? "New planting event" : parcel && partShort ? partShort : undefined;
   // What the header, the title and the mini map call this site or location. While a new location is being
   // added, that's what it is: never just the site's name, so it can't be mistaken for the site itself.
+  const spotTitle = spotInfo.name.trim() || (site ? "New location" : "New site");
   const where = spot
-    ? { title: spotInfo.name.trim() || (site ? "New location" : "New site"), sub: !site ? "Not saved yet" : `${spotInfo.asPart ? "Sublocation of" : "New location near"} ${site.name}` }
+    ? { title: spotTitle, sub: site ? spotKind(spotInfo.asPart, site.name) : "Not saved yet" }
     : { title: siteName, sub: partShort ?? (draw.areas.length ? "Your area needs a site" : undefined) };
   // Before an event is started: the chosen site's overview, or with none, the site chooser (All sites).
   const overview = !started && !spot;
@@ -524,6 +569,13 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       endModes();
       draw.stop();
       partOf.current = partSite;
+      // Where the cross starts, and what the hint measures from: the site a new location or sublocation is for,
+      // the new location being moved (measured from its site), the pin being moved. A new site starts where the map is.
+      const forSite = mode === "part" ? partSite : mode === "new" || mode === "spot" ? siteSlug : "";
+      const moving = pinAt(siteSlug, parcel);
+      const start = mode === "spot" ? spot : mode === "part" ? pinAt(partSite, null) : mode === "new" ? moving : null;
+      if (start) setFocus([start[0], start[1]]);
+      setCrossFrom(mode === "move" ? moving && { pins: [moving], label: "" } : forSite ? { pins: pinsOf(forSite), label: sites.find((x) => x.slug === forSite)?.name ?? "" } : null);
       setPlacing(mode);
       setSnap("peek");
     });
@@ -542,6 +594,21 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     if (b.choosing) setChoosing(true);
     if (b.season) setSeason(b.season);
   }
+  // How far the cross is from where it's measured (see startCross), as the map moves; one reading a frame.
+  const [crossFrom, setCrossFrom] = useState<{ pins: LngLat[]; label: string } | null>(null);
+  const [crossKm, setCrossKm] = useState<number | null>(null);
+  useEffect(() => {
+    const m = map.current;
+    if (!placing || !crossFrom || !m) return;
+    let frame = 0;
+    const onMove = () => {
+      frame ||= requestAnimationFrame(() => { frame = 0; const c = mapCentre(map); setCrossKm(c && kmToNearest(crossFrom.pins, c)); });
+    };
+    onMove();
+    m.on("move", onMove);
+    return () => { m.off("move", onMove); cancelAnimationFrame(frame); };
+  }, [placing, crossFrom, map]);
+  const crossDistance = !crossFrom || crossKm === null ? "" : placing === "move" ? ` · moved ${kmLabel(crossKm)}` : ` · ${fromPin(crossKm, crossFrom.label)}`;
   const escape = useRef(cancelCross);
   useEffect(() => { escape.current = cancelCross; });
   useEffect(() => {
@@ -570,10 +637,12 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   }
   function undoMove() {
     move(siteSlug, parcel, null);
-    setFocus(pinFor(basePins, siteSlug, parcel));
+    setFocus(pinFor(allPins, siteSlug, parcel));
   }
-  // Moving a site's pin changes more than this event, so it's asked first.
+  // Moving a site's pin changes more than this event, so it's asked first (saying how far it moves).
   const [pendingMove, setPendingMove] = useState<LngLat | null>(null);
+  const movedFrom = pendingMove && pinAt(siteSlug, parcel);
+  const movedBy = pendingMove && movedFrom ? kmBetween(movedFrom, pendingMove) : null;
   function movePin(at: LngLat) {
     setPendingMove(null);
     setPlacing(false);
@@ -590,7 +659,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     if (placing === "spot") {
       setSpot(at);
       setFocus(at);
-      setSpotNear((n) => { const p = n && nearestPin(pins.filter((x) => x.label === n.label), at); return n && p ? { ...n, km: p.km } : n; });
+      // A new site: the nearest known pin again (is it now right by one?). At a site, its pin's distance is worked out live.
+      if (!site) { const near = nearestPin(pins, at); setSpotNear(near && { label: near.pin.label, km: near.km, matched: false }); }
       return setSnap(beforeCross.current.snap);
     }
     if (!spot) beforeSpot.current = { started, slug: siteSlug, parcel, season: beforeCross.current.season };
@@ -599,21 +669,20 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setSpot(at);
     // A sublocation of the site it was asked for, however near another; its name, if typed, kept.
     if (placing === "part") {
-      const near = nearestPin(pins.filter((x) => x.slug === partOf.current), at);
-      setSpotNear(near && { label: near.pin.label, km: near.km, matched: true });
-      setSpotInfo((i) => ({ ...i, asPart: true }));
+      setSpotNear(null); // its distance is to its site (spotKm)
+      setSpotInfo((i) => ({ ...i, asPart: true, decided: true }));
       return setPicked({ slug: partOf.current, parcelId: null });
     }
     const near = nearestPin(pins, at);
-    // A new site is at no site we know, as "Keep it as a new site" leaves it.
+    // A new site is at no site we know, as "Keep it as a new site" leaves it (with entries at a site, asked first).
     if (placing === "site") {
       setSpotNear(near && { label: near.pin.label, km: near.km, matched: false });
-      setSpotInfo((i) => ({ ...i, asPart: false }));
-      return setPicked({ slug: "", parcelId: null });
+      setSpotInfo((i) => ({ ...i, asPart: false, decided: true }));
+      return moveTo("", null, true);
     }
     const matched = !!near && near.km <= NEAR_KM;
     setSpotNear(near && { label: near.pin.label, km: near.km, matched });
-    setSpotInfo((i) => ({ ...i, asPart: false }));
+    setSpotInfo((i) => ({ ...i, asPart: false, decided: false }));
     // Near another site than an event's with entries: the same question as choosing it.
     if (matched) moveTo(near.pin.slug, near.pin.parcelId, true);
     else changeSite(); // not at a known site: say which it belongs to
@@ -621,7 +690,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // Phones: drop the sheet so the big map shows.
   const showMap = () => setSnap("peek");
   // The site's parts, for the dock's and the breadcrumb's menus; choosing one keeps the phone sheet where it is.
-  const parts = site ? site.parts.map((p) => ({ id: p.id, name: partBesideSite(p.name, site.name) })) : [];
+  const parts = site ? site.parts.map((p) => ({ id: p.id, name: partBesideSite(p.name, site.name), unsaved: p.unsaved })) : [];
+  // The site page's places: a kept one says so, and how far it is from the site's own pins.
+  const places = parts.map((p) => {
+    if (!p.unsaved || !site) return p;
+    const at = pinAt(siteSlug, p.id);
+    const km = at && kmToNearest(pins.filter((x) => x.slug === siteSlug && x.parcelId !== p.id).map((x) => x.at), at);
+    return { ...p, sub: km == null ? "Not saved yet" : `Not saved yet · ${fromPin(km, site.name)}` };
+  });
   // New sublocation, where New location is offered: not once areas are drawn (or one's being drawn), nor for a new
   // location, nor once the event's saved without its plants (its place can't change).
   const addPart = draw.areas.length || draw.draft || spot || entry.partly || !site ? undefined : () => addSublocation(site.slug);
@@ -655,13 +731,37 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setFocus(at ? [at[0], at[1]] : null);
   }
   // The breadcrumb's site: up to the site as a whole, and the map goes to its pin.
+  // With a new location in progress, its site's page: the location is kept (see KeptPlace); with entries, it asks first.
   function showSite() {
+    if (spot && siteSlug) {
+      const go = () => leaveFor({ slug: siteSlug, parcelId: null }, keepSpot());
+      return entriesUnsaved ? setLeaving({ to: siteName, run: go }) : go();
+    }
     unlessEditing(() => {
       if (choosing) closeChooser(true);
       setSeason(null);
       goToPart(null);
     });
   }
+  // Keeps the dropped location for this visit: a part of its site, or a new site of its own (once: again, the same
+  // place). Where it is now. Also after a planting event is saved there, and on Start another.
+  const keptSpot = useRef<{ at: string; place: { slug: string; parcelId: string | null } } | null>(null);
+  function keepSpot() {
+    if (!spot) return null;
+    if (keptSpot.current?.at === `${spot[0]},${spot[1]}`) return keptSpot.current.place;
+    const n = kept.length + 1;
+    const place: KeptPlace = site
+      ? { site: siteSlug, id: `kept-${n}`, name: spotTitle, label: `${site.name} · ${spotTitle}`, at: spot }
+      : { site: `kept-site-${n}`, id: null, name: spotTitle, label: spotTitle, at: spot };
+    setKept((k) => [...k, place]);
+    keptSpot.current = { at: `${spot[0]},${spot[1]}`, place: { slug: place.site, parcelId: place.id } };
+    return keptSpot.current.place;
+  }
+  // A kept part isn't stored: the planting is saved at its site as a whole (the receipt says the location isn't).
+  const saveAtKnownPlace: NonNullable<MapEventFormProps["onSave"]> = (input, id) => {
+    const unsaved = sites.find((x) => x.slug === input.placeSlug)?.parts.find((p) => p.id === input.parcelId)?.unsaved;
+    return onSave!({ ...input, parcelId: unsaved ? null : input.parcelId }, id);
+  };
   // Lets the area go: nothing brought forward, and its sheet closed.
   function letGo() {
     setShownArea(null);
@@ -745,13 +845,21 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // The plant list needs the room: phones take the sheet full screen once it's in use.
   const onListFocus = () => { if (!wide) setSnap("full"); };
 
+  // A mini map of the site or location, at the top of the site's page and of the form (it scrolls up with them): always on
+  // desktop, and on phones when the sheet is full screen (covering the big map). A chosen site is named by the page's own
+  // header, so the map leaves its label off; desktop has the big map beside it, so a slim strip.
+  const miniMap = focus && (wide || snap === "full")
+    ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} noCaption={!!site && !spot} compact={wide} />
+    : undefined;
+
   return (
     <div ref={setScreen} className={s.screen} data-full-screen="" data-drawing={draw.draft || placing ? "" : undefined}>
       <div ref={mapEl} className={s.map} />
+      <PinTooltip map={mapEl} />
       {/* Phones: a see-through green band behind the header; Safari tints its top bar from it. */}
       <div className={s.topBand} aria-hidden="true" />
       <AreaOverlay map={map} draw={draw} shown={shownArea} />
-      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} exitHref={exitHref} onExit={exit} choosing={choosing} onChooseSite={toggleChooser} onLeaveSite={leaveSite} onAddLocation={addLocation} onDrawArea={newArea} />
+      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} exitHref={exitHref} onExit={exit} choosing={choosing} onChooseSite={toggleChooser} onLeaveSite={leaveSite} onAddLocation={addLocation} onDrawArea={newArea} onFindMe={findMe} />
       {wide && (
         <MapTools
           map={map} drawing={!!draw.draft || !!placing} onDraw={newArea} onAddLocation={addLocation}
@@ -760,12 +868,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
           onStep={(by) => { const n = draw.areas.length, i = draw.areas.findIndex((a) => a.id === shownArea); const a = draw.areas[i < 0 ? (by > 0 ? 0 : n - 1) : (i + by + n) % n]; if (a) showArea(a.id); }}
         />
       )}
+      {/* Phones' Find me (the + menu): a short word when it can't, where the placing hint goes. */}
+      {said && !placing && <p className={s.hint} role="status">{said}</p>}
       {placing ? (
         <>
           {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
           {/* On phones, just above the sheet while it's at its bar; under the header once it's pulled up. */}
           <p className={s.hint} role="status" style={!wide && snap === "peek" ? { top: "auto", bottom: SHEET_HEIGHT.peek + 12 } : undefined}>
-            {placing === "move" ? `Line the cross up with ${parcel && partShort ? partShort : "the site"}` : "Move the map to the spot"}
+            {placing === "move" ? `Line the cross up with ${parcel && partShort ? partShort : "the site"}` : "Move the map to the spot"}{crossDistance}
             <button type="button" className={s.hintCancel} onClick={cancelCross}>Cancel</button>
             <button type="button" className={s.hintMain} onClick={dropPinHere}>Drop pin here</button>
           </p>
@@ -775,19 +885,19 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         <DrawBar
           draw={draw} onAdd={newArea} onStop={stopDrawing} onShow={showArea} onClose={letGo} onPlant={plantIfOpen} plants={areaPlants} shown={shownArea}
           siteName={site?.name} partName={parcel ? partShort : undefined} part={parcel} parts={parts}
-          onChoosePart={choosePart} onChangeSite={changeSite} onAllSites={leaveSite} onAddPart={addPart} placeLocked={entry.partly} choosing={choosing} onToggleSite={toggleChooser} dock={!wide}
+          onChoosePart={choosePart} onChangeSite={changeSite} onAllSites={leaveSite} onAddPart={addPart} placeLocked={entry.partly || !!spot} onSite={spot && site ? showSite : undefined} choosing={choosing} onToggleSite={toggleChooser} dock={!wide}
           style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }}
         />
       )}
       <FormPanel
-        wide={wide} open container={screen} snap={snap} onSnap={snapTo} label="New planting event" locked={!!draw.draft || !!placing}
+        wide={wide} open container={screen} snap={snap} onSnap={snapTo} label={started ? "New planting event" : "Planting map"} locked={!!draw.draft || !!placing}
         title={sheetArea ? sheetArea.name || "Planted area" : where.title}
         subtitle={sheetArea ? (site ? `Planted area at ${siteName}` : "Planted area")
           : siteHeader ? [season?.wholeSite ? "Whole site" : partShort, season?.label].filter(Boolean).join(" · ") : where.sub}
         actionSlot={season && seasonButton && !choosing && !sheetArea ? setHeaderAction : undefined}
         onTitle={wide || draw.draft || placing || sheetArea ? undefined : toggleChooser} titleOpen={choosing} titleIcon={allSites || siteHeader}
         // Phones, at a site: the title opens its parts, New sublocation and All sites; Search opens the site search.
-        titleMenu={!wide && site && !placeFixed && !sheetArea && !draw.draft ? (b) => (
+        titleMenu={!wide && site && !placeFixed && !sheetArea && !draw.draft && !choosing ? (b) => (
           <PartMenu
             siteName={site.name} parts={parts} part={parcel} onChoosePart={choosePart} side="bottom"
             onAddPart={addPart} onAllSites={leaveSite} className={b.className} label={b.label}
@@ -795,14 +905,16 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
             {b.children}
           </PartMenu>
         ) : undefined}
+        // Over a site, the list's way back is the same button, reading Close (the list's own header is hidden on phones).
         onSearch={wide || draw.draft ? undefined : choosing && siteSlug ? () => closeChooser(true) : searchSites} searchOpen={choosing && !!siteSlug}
         // Wide: the breadcrumb names the site and part, so in the form the title only shows when it's something else
         // (an area, a new location). With no site, and on a site's overview, it heads the panel as on phones.
-        titleHidden={!sheetArea && !spot && !allSites && !siteHeader}
+        titleHidden={!!site && !sheetArea && !spot && !allSites && !siteHeader}
         above={
           <Crumbs
             siteName={site?.name} parts={parts} part={parcel} partName={parcel ? partShort : undefined}
-            onAllSites={leaveSite} onSite={showSite} onChoosePart={choosePart} onOtherSite={changeSite} onAddPart={addPart} partsLocked={placeFixed}
+            onAllSites={leaveSite} onSite={showSite} onChoosePart={choosePart} onOtherSite={changeSite} onAddPart={addPart}
+            partsLocked={placeFixed || !!draw.draft} locked={!!draw.draft || !!placing} bare={!site && !allSites}
           />
         }
         below={
@@ -824,15 +936,21 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
           <PastSeason
             key={`season-${seasonKey}`} slug={siteSlug} parcelId={season.wholeSite ? null : parcel} season={season} today={today} canEdit={canEdit} species={options.species}
             actionSlot={headerAction} onHeaderButton={setSeasonButton} onDirty={onEditDirty} onSaving={onEditSaving} hidden={choosing || !!sheetArea}
-            onBack={closeSeason} onStart={() => { afterSave(); setStartedFrom({ season, site: siteSlug, parcel }); endModes(); setStarted(true); }}
+            onBack={closeSeason} startLabel={eventUnsaved ? "Back to your planting event" : undefined} onStart={() => { afterSave(); setStartedFrom({ season, site: siteSlug, parcel }); endModes(); setStarted(true); }}
           />
         )}
         {(choosing || (allSites && !season && !sheetArea)) && (
           <SiteChooser
             // With no site there's nothing behind it to close back to.
-            sites={options.sites} totals={totals} value={{ slug: siteSlug, parcelId: parcel }} onChoose={chooseSite} onClose={allSites ? undefined : () => closeChooser(true)}
+            sites={sites} totals={totals} value={{ slug: siteSlug, parcelId: parcel }} onChoose={chooseSite} onClose={allSites ? undefined : () => closeChooser(true)}
             forNew={forNew}
-            onKeepNew={() => { setPicked({ slug: "", parcelId: null }); setSpotInfo((i) => ({ ...i, asPart: false })); closeChooser(); }}
+            onKeepNew={() => {
+              // A new site after all: the nearest known pin again (it may have moved), and with entries at a site, asked first.
+              const near = spot && nearestPin(pins, spot);
+              setSpotNear(near ? { label: near.pin.label, km: near.km, matched: false } : null);
+              setSpotInfo((i) => ({ ...i, asPart: false, decided: true }));
+              moveTo("", null, true);
+            }}
             onAddSublocation={forNew || draw.areas.length || draw.draft || entry.partly ? undefined : addSublocation} searchAsk={searchAsk}
             onNewSite={draw.areas.length || draw.draft || entry.partly ? undefined : startNewSite}
             onPreview={allSites ? previewSite : undefined}
@@ -840,12 +958,16 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         )}
         {overview && siteSlug && !choosing && !sheetArea && !season && (
           <SiteOverview
-            slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} today={today} totals={totals}
+            slug={siteSlug} parcelId={parcel} partName={parcel ? partName : undefined} today={today} totals={totals} map={miniMap}
+            // The site's places (2+): each opens its page, as choosing it in the part menu does.
+            places={parcel ? undefined : places} onPlace={choosePart}
             // With an event's entries kept (after its Back), the button goes back to it.
             onStart={() => { afterSave(); setStartedFrom(null); endModes(); setStarted(true); }} startLabel={eventUnsaved ? "Back to your planting event" : undefined} onOpenSeason={openSeason} pinMoved={isMoved(siteSlug, parcel)} onMovePin={draw.draft ? undefined : startMoving} onUndoPin={undoMove} />
         )}
         <MapEventForm
-          key={`form-${formKey}`} hidden={overview || choosing || !!sheetArea || !!season} options={options} onSave={onSave} today={today} picked={picked}
+          key={`form-${formKey}`} hidden={overview || choosing || !!sheetArea || !!season} options={formOptions} // A site that isn't stored (a new one, or kept from earlier) can't be saved to yet: the receipt says "Not saved".
+          onSave={onSave && site && !site.unsaved ? saveAtKnownPlace : undefined}
+          onKeepLocation={() => leaveFor("all", keepSpot())} onSavedAtSpot={keepSpot} today={today} picked={picked}
           // A fresh form starts where the page is, not where it first opened.
           initialSite={siteSlug} initialPart={parcel} onEntries={setEntry} onChooseSite={changeSite}
           // The place tile: the site's parts and New sublocation in a menu, and Another site for the chooser.
@@ -858,14 +980,18 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
             </PartMenu>
           ) : undefined}
           suggestions={suggestions[siteSlug] ?? []} onListFocus={onListFocus} onSiteChange={onSiteChange}
-          spot={spot} spotNear={spotNear} onAddSpot={draw.draft ? undefined : moveSpot} onRemoveSpot={cancelSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
+          spot={spot} spotNear={spotNear} nearKm={NEAR_KM}
+          // How far the new location is from the pin of the site it's at.
+          spotKm={spot && site ? kmToNearest(pinsOf(siteSlug), spot) : null}
+          // Drawn areas far from the event's site: the furthest one's distance (a quiet note, as for a location).
+          areaKm={site && draw.areas.length ? Math.max(...draw.areas.map((a) => kmToNearest(pinsOf(siteSlug), boundsOf(a.pts).getCenter().toArray() as LngLat) ?? 0)) : null} onAddSpot={draw.draft ? undefined : moveSpot} onRemoveSpot={cancelSpot} spotInfo={spotInfo} onSpotInfo={setSpotInfo}
           // The form's Back: where the form was started, the past season or the site's overview. A new location has no overview to go back to.
-          onBack={spot ? undefined : () => { formBack(); }}
+          // A new location with nothing entered: Back is its Cancel.
+          onBack={spot ? (entriesUnsaved ? undefined : cancelSpot) : () => { formBack(); }}
           onFinish={finish}
           pinMoved={isMoved(siteSlug, parcel)}
-          areas={draw.areas} areasListed={wide} plantIn={plantIn} onPlant={plantArea} onDrawArea={draw.draft ? undefined : () => beginArea(true)} onShowArea={showAreaFromForm} onPlantClose={() => { backTo.current = lastPlanted.current; if (!wide) setSnap("peek"); }} onAreaPlants={setAreaPlants} onAreaFocus={focusArea} onReset={() => { clearEvent(); if (!wide) setSnap("mid"); }}
-          // A mini map of the site or location: always on desktop, and on phones when the sheet is full screen (covering the big map).
-          plantedArea={focus && (wide || snap === "full") ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} /> : undefined}
+          areas={draw.areas} areasListed={wide} plantIn={plantIn} onDrawArea={draw.draft ? undefined : () => beginArea(true)} onShowArea={showAreaFromForm} onPlantClose={() => { backTo.current = lastPlanted.current; if (!wide) setSnap("peek"); }} onAreaPlants={setAreaPlants} onAreaFocus={focusArea} onReset={() => { keepSpot(); clearEvent(); if (!wide) setSnap("mid"); }}
+          plantedArea={miniMap}
         />
       </FormPanel>
       <ConfirmDialog
@@ -873,7 +999,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         confirmLabel="Move pin" onConfirm={() => pendingMove && movePin(pendingMove)} onCancel={() => setPendingMove(null)}
       >
         <ul>
-          <li>{parcel && partShort ? `${partShort}'s` : "The site's main"} location moves here, for every planting recorded at it, not just this one.</li>
+          <li>{parcel && partShort ? `${partShort}'s` : "The site's main"} location moves here{movedBy !== null && `, ${kmLabel(movedBy)} from where it was`}, for every planting recorded at it, not just this one.</li>
           <li>Drawn planting areas stay where they are.</li>
           <li>Distances, and which site a new location counts as near, will use the new spot.</li>
           <li>Not saved yet: this prototype can&apos;t store changes.</li>
@@ -887,7 +1013,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         This planting event is at {siteName}, and an event is at one site. Starting a new event at {areaElsewhere?.pin.label} clears what you&apos;ve entered here and keeps this area{draw.areas.length > 0 && `; ${draw.areas.length === 1 ? "the other area you drew is" : `the other ${draw.areas.length} areas you drew are`} removed`}.
       </ConfirmDialog>
       <ConfirmDialog
-        open={!!pendingSite} title={`Move this event to ${options.sites.find((x) => x.slug === pendingSite?.slug)?.name ?? "another site"}?`}
+        open={!!pendingSite} title={`Move this event to ${sites.find((x) => x.slug === pendingSite?.slug)?.name ?? "another site"}?`}
         confirmLabel="Move event" cancelLabel={`Keep ${siteName}`}
         onConfirm={() => { const p = pendingSite; if (!p) return; setPendingSite(null); if (p.run) p.run(); else moveTo(p.slug, p.parcelId, false); }}
         onCancel={() => { setPendingSite(null); if (choosing) closeChooser(true); }}

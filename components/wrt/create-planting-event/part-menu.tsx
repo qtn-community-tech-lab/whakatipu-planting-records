@@ -11,7 +11,8 @@ import s from "./part-menu.module.css";
  */
 export function PartMenu({ siteName, parts, part, onChoosePart, onAddPart, onOtherSite, onAllSites, side, className, label, children }: {
   siteName: string;
-  parts: { id: string; name: string }[];
+  /** `unsaved`: added on the map this visit, tagged "Not saved yet". */
+  parts: { id: string; name: string; unsaved?: boolean | undefined }[];
   /** The chosen part's id, or null: the site as a whole. */
   part: string | null;
   onChoosePart: (id: string | null) => void;
@@ -36,7 +37,7 @@ export function PartMenu({ siteName, parts, part, onChoosePart, onAddPart, onOth
         {[{ id: null as string | null, name: "Whole site" }, ...parts].map((p) => (
           <button key={p.id ?? ""} type="button" aria-current={p.id === part ? "true" : undefined} onClick={pick(() => onChoosePart(p.id))}>
             <span>{p.id === part && <Check size={16} strokeWidth={2.6} aria-hidden="true" />}</span>
-            {p.name}
+            {p.name}{"unsaved" in p && p.unsaved && <small> · Not saved yet</small>}
           </button>
         ))}
         {onAddPart && (

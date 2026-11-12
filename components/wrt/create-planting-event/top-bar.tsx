@@ -1,5 +1,5 @@
 "use client";
-import { ArrowLeft, ChevronDown, MapPin, Pentagon, Plus, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, LocateFixed, MapPin, Pencil, Plus, X } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import s from "./create-planting-event.module.css";
  * breadcrumb and the map's toolbar do the rest (create-planting-event.module.css). The +, title and part menus
  * are modal, so the tap that closes one doesn't also land on the map (which would leave the site).
  */
-export function TopBar({ siteName, hint, exitHref, onExit, choosing, onChooseSite, onLeaveSite, onAddLocation, onDrawArea }: {
+export function TopBar({ siteName, hint, exitHref, onExit, choosing, onChooseSite, onLeaveSite, onAddLocation, onDrawArea, onFindMe }: {
   siteName?: string | undefined;
   /** Under the site: the part, or "New planting event" once one is started. */
   hint?: string | undefined;
@@ -27,6 +27,8 @@ export function TopBar({ siteName, hint, exitHref, onExit, choosing, onChooseSit
   onLeaveSite?: (() => void) | undefined;
   /** Left out once an area is drawn: a pin as well would only confuse where it was planted. */
   onAddLocation?: (() => void) | undefined; onDrawArea: () => void;
+  /** The map to where you are (as the wide toolbar's Find me). */
+  onFindMe: () => void;
 }) {
   const [menu, setMenu] = useState(false);
   const pick = (fn: () => void) => () => { setMenu(false); fn(); };
@@ -63,8 +65,12 @@ export function TopBar({ siteName, hint, exitHref, onExit, choosing, onChooseSit
             </button>
           )}
           <button type="button" onClick={pick(onDrawArea)}>
-            <Pentagon size={18} strokeWidth={2.2} />
+            <Pencil size={18} strokeWidth={2.4} />
             Draw area
+          </button>
+          <button type="button" onClick={pick(onFindMe)}>
+            <LocateFixed size={18} strokeWidth={2.2} />
+            Find me
           </button>
         </PopoverContent>
       </Popover>

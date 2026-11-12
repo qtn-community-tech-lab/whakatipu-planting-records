@@ -19,7 +19,7 @@ import { insideRing, simplifyTrace, type LngLat } from "@/lib/wrt/areas/planted-
 import { fitArea } from "../map-scene";
 
 export type DrawMethod = "corners" | "trace";
-export interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null; name: string }
+interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null; name: string }
 /** A kept area. `id` stays with it (plants are listed against it); its number on screen is its place in the list. */
 export interface Area { id: number; pts: LngLat[]; name: string }
 

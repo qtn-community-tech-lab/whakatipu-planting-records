@@ -32,7 +32,7 @@ const eventLine = (e: Event, on: string | null) =>
   [on && formatPlantedOn(on), `${e.lines.length} species`, `${formatNumber(plantsIn(e))} plants`]
     .filter(Boolean).join(" · ");
 
-export function PastSeason({ slug, parcelId, season, today, canEdit, species, actionSlot, hidden, onHeaderButton, onDirty, onSaving, onBack, onStart }: {
+export function PastSeason({ slug, parcelId, season, today, canEdit, species, actionSlot, hidden, onHeaderButton, onDirty, onSaving, onBack, onStart, startLabel = "Add new planting event" }: {
   slug: string; parcelId: string | null;
   season: { slug: string; label: string };
   /** NZ today, "YYYY-MM-DD": how long ago the season was, and the latest date an edit can have. */
@@ -52,6 +52,8 @@ export function PastSeason({ slug, parcelId, season, today, canEdit, species, ac
   /** The species register, for adding species to an event being edited. */
   species: SpeciesOption[];
   onBack: () => void; onStart: () => void;
+  /** The start button's words: "Back to your planting event" when one with entries is waiting. */
+  startLabel?: string | undefined;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
   // Read again after a save.
@@ -180,7 +182,7 @@ export function PastSeason({ slug, parcelId, season, today, canEdit, species, ac
         {editing === null ? (
           <>
             <button type="button" className={f.back} onClick={onBack}>Back</button>
-            <button type="button" className={f.next} onClick={onStart}>Add new planting event<ArrowRight size={18} strokeWidth={2.2} /></button>
+            <button type="button" className={f.next} onClick={onStart}>{startLabel}<ArrowRight size={18} strokeWidth={2.2} /></button>
           </>
         ) : (
           <>

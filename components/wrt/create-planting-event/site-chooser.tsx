@@ -1,9 +1,9 @@
 "use client";
 /**
- * Choose where: a search and a sort (A–Z, most planted, most recent), then every site, with its areas
- * and when it was last planted. A site with several areas is an accordion (Radix, one open at a time,
+ * Choose where: a search and a sort (A–Z, most planted, most recent), then every site, with its places
+ * and when it was last planted. A site with places (or New sublocation) is an accordion (Radix, one open at a time,
  * animated) that opens to "Whole site" and its parts, ending with New sublocation (a pin dropped on the
- * map as a part of it); a site with one area or none is a single row. Create a new site is pinned at the bottom. With no site chosen it is the panel (All sites); otherwise it takes the panel's place while
+ * map as a part of it); a site with neither is a single row. Create a new site is pinned at the bottom. With no site chosen it is the panel (All sites); otherwise it takes the panel's place while
  * it's open (the phone sheet goes full screen for it), so there is one sheet, never a dialog over it. Escape or Close closes it.
  * For a new pin or a drawn area (`forNew`) it asks which site that belongs to instead.
  */
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import f from "@/components/wrt/events/map-event-form.module.css";
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { SearchField } from "@/components/wrt/shared/search-field";
-import add from "./add-to-map.module.css";
+import { Segmented } from "@/components/wrt/shared/segmented";
 import s from "./site-chooser.module.css";
 
 type Sort = "az" | "most" | "recent";
@@ -70,11 +70,12 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   // The plants on the right, at a site ("slug") or a part ("slug/part id"); a site's say what they are.
   const plants = (key: string) => formatNumber(totals[key]?.plants ?? 0);
   const sitePlants = (slug: string) => <span className={s.figure}>{plants(slug)}<small>plants</small></span>;
-  // Under a site's name: its areas (when there's more than one) and its last season planted.
+  // Under a site's name: its places (when there's more than one) and its last season planted.
   const about = (site: SiteOption) => {
+    if (site.unsaved) return "Not saved yet";
     const last = totals[site.slug]?.last;
-    if (!last) return site.parts.length > 1 ? `${site.parts.length} areas · No plantings yet` : "No plantings yet";
-    return site.parts.length > 1 ? `${site.parts.length} areas · last planted ${last}` : `Last planted ${last}`;
+    if (!last) return site.parts.length > 1 ? `${site.parts.length} places · No plantings yet` : "No plantings yet";
+    return site.parts.length > 1 ? `${site.parts.length} places · last planted ${last}` : `Last planted ${last}`;
   };
   // Under the heading: what's chosen now, e.g. "Glenorchy, whole site".
   const chosen = sites.find((x) => x.slug === value.slug);
@@ -83,8 +84,8 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
-    // One area or none: the site is the only choice (its one area is the site as a whole).
-    if (site.parts.length <= 1) {
+    // No places, and none to add: the site is the only choice.
+    if (!site.parts.length && !onAddSublocation) {
       return (
         <ul key={site.slug} className={s.chooserRow}>
           <li>
@@ -103,10 +104,10 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
           <Accordion.Trigger asChild>
             <ListRow
               className={s.chooserTrigger} title={site.name} figure={sitePlants(site.slug)} data-chosen={chosenHere || undefined}
-              // What's chosen, or which parts a search matched; otherwise its areas and last season.
+              // What's chosen, or which places a search matched; otherwise its places and last season.
               subtitle={
                 chosenPart ? `Chosen: ${partBesideSite(chosenPart, site.name)}`
-                : q && parts.length < site.parts.length ? `${parts.length} matching ${parts.length === 1 ? "part" : "parts"}`
+                : q && parts.length < site.parts.length ? `${parts.length} matching ${parts.length === 1 ? "place" : "places"}`
                 : about(site)
               }
               end={<ChevronDown size={16} strokeWidth={2.4} />}
@@ -116,7 +117,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         <Accordion.Content className={s.chooserContent}>
           <ul>
             {(!q || rankMatches([site], q).length > 0) && option("Whole site", site.slug, null, plants(site.slug))}
-            {parts.map((p) => option(partBesideSite(p.name, site.name), site.slug, p.id, plants(`${site.slug}/${p.id}`)))}
+            {parts.map((p) => option(partBesideSite(p.name, site.name), site.slug, p.id, plants(`${site.slug}/${p.id}`), p.unsaved))}
             {onAddSublocation && !q && (
               <li>
                 <button type="button" className={s.choice} onClick={() => onAddSublocation(site.slug)}>
@@ -130,13 +131,13 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
     );
   });
 
-  const option = (label: string, slug: string, parcelId: string | null, figure: string) => {
+  const option = (label: string, slug: string, parcelId: string | null, figure: string, unsaved?: boolean) => {
     const on = value.slug === slug && value.parcelId === parcelId;
     return (
       <li key={parcelId ?? "whole"}>
         <ListRow
           className={s.choice} aria-pressed={on} onClick={() => onChoose(slug, parcelId)}
-          title={label} figure={figure} end={on && <span className={s.choiceOn}>Chosen</span>}
+          title={label} subtitle={unsaved ? "Not saved yet" : undefined} figure={figure} end={on && <span className={s.choiceOn}>Chosen</span>}
         />
       </li>
     );
@@ -159,25 +160,21 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         {forNew?.what === "area" && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site.</p>}
         {forNew?.what === "location" && !forNew.atSite && <p className={s.chooserNote}>The pin you dropped isn&apos;t near a site we know. Choose the site it belongs to, or keep it as a new site.</p>}
         {forNew?.what === "location" && onKeepNew && (
-          <button type="button" className={add.button} onClick={onKeepNew}>
+          <button type="button" className={s.keepNew} onClick={onKeepNew}>
             <MapPinPlus size={20} strokeWidth={2.2} aria-hidden="true" />{forNew.atSite ? "Make it a new site instead" : "Keep it as a new site"}
           </button>
         )}
         {/* Pinned while the list scrolls. A form, so the keyboard's Search key (and the button) put the keyboard away. */}
         <form role="search" className={s.chooserSearch} data-pinned="" onSubmit={(e) => { e.preventDefault(); search.current?.blur(); }}>
-          <SearchField ref={search} className={s.chooserField} label="Search sites and parts" placeholder="Search sites and parts" value={query} onChange={setQuery} />
+          <SearchField ref={search} className={s.chooserField} label="Search sites and places" placeholder="Search sites and places" value={query} onChange={setQuery} />
           <button type="submit" className={s.chooserSearchButton}>Search</button>
         </form>
         {/* Browsing order; a search ranks within it. */}
-        <div role="radiogroup" aria-label="Sort sites" className={cn(f.segment, s.sort)}>
-          {SORTS.map(([key, label]) => (
-            <button key={key} type="button" role="radio" aria-checked={sort === key} className={f.segmentItem} onClick={() => setSort(key)}>{label}</button>
-          ))}
-        </div>
+        <Segmented label="Sort sites" options={SORTS} value={sort} onChange={setSort} />
         <div className={s.chooserList}>
           {/* One site open at a time, and only when tapped: typing filters the list but opens nothing. */}
           <Accordion.Root type="single" collapsible value={open} onValueChange={(slug) => { setOpen(slug); onPreview?.(slug); }}>{rows()}</Accordion.Root>
-          {shown.length === 0 && <p className={s.chooserEmpty}>No site or part matches “{q}”.</p>}
+          {shown.length === 0 && <p className={s.chooserEmpty}>No site or place matches “{q}”.</p>}
         </div>
       </div>
       {/* Pinned under the list, like the form's footer. Not while asking about a new pin or area: that has its own way. */}

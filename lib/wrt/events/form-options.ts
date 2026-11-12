@@ -18,12 +18,15 @@ type SearchKeys = { keys: string[] };
 export interface SitePartOption extends SearchKeys {
   id: string;
   name: string;
+  /** Added on the map this visit, not stored yet (see keptPlaces in create-planting-event/sites.ts). */
+  unsaved?: boolean | undefined;
 }
 
 export interface SiteOption extends SearchKeys {
   slug: string;
   name: string;
   parts: SitePartOption[];
+  unsaved?: boolean | undefined;
 }
 
 export interface SpeciesOption extends SearchKeys {

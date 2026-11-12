@@ -31,7 +31,7 @@ export const STEP = { whereWhen: 0, whatPlanted: 1, check: 2 } as const;
 export const LAST_STEP = EVENT_STEPS.length - 1;
 
 /** The step that owns an error path ("species.2.quantity" → step 1). Errors no step owns ("form") go to the first. */
-export function stepOfError(path: string, steps: readonly EventStep[] = EVENT_STEPS): number {
+function stepOfError(path: string, steps: readonly EventStep[] = EVENT_STEPS): number {
   const field = path.split(".")[0];
   const i = steps.findIndex((s) => s.fields.some((f) => f === field));
   return i === -1 ? 0 : i;

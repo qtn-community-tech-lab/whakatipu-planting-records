@@ -26,6 +26,17 @@
 :root {
   --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
+  /* App colours Canopy doesn't have, each used in several places (next to their Canopy family) */
+  --cn-lime-400: #c4dc6a;     /* lime hover, on dark green */
+  --cn-grey-600: #5d6a60;     /* secondary text between grey-700 and grey-500 */
+  --surface-hover: #eef2e8;   /* row and button hover on white */
+  --surface-picked: #f2f6e6;  /* chosen row tint */
+  --surface-risk: #fbefe8;    /* a field's problem tint */
+  --border-soft: #e6e8df;     /* light rule inside panels */
+  --text-on-dark: #f3f6ee;    /* text and icons on the map's dark controls */
+  --text-risk: #9a3f17;       /* a field's problem text */
+  --radius-panel: 28px;       /* the form's panel and sheet, the map's dock and toolbar */
+
   /* shadcn variables mapped to Canopy aliases */
   --background: var(--surface-app);
   --foreground: var(--text-strong);

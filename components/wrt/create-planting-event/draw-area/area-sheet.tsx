@@ -7,7 +7,7 @@
 import { ArrowRight, Sprout } from "lucide-react";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
-import { formatNumber } from "@/lib/wrt/text";
+import { plantsOrNone } from "@/lib/wrt/text";
 import type { Area } from "./use-draw-area";
 import f from "@/components/wrt/events/map-event-form.module.css";
 
@@ -28,7 +28,7 @@ export function AreaSheet({ area, plants, onPlant, onWholeSite, onClose }: {
         <AreaShape pts={area.pts} size={56} onMap />
         <span className={f.cardText}>
           <b>Planting in this area</b>
-          <span>{formatHectares(hectares(area.pts))} · {plants ? `${formatNumber(plants)} plants` : "No plants yet"}</span>
+          <span>{formatHectares(hectares(area.pts))} · {plantsOrNone(plants)}</span>
         </span>
       </div>
       <div className="flex items-center gap-2.5">

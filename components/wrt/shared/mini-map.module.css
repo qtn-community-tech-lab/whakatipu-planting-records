@@ -7,7 +7,7 @@
 @media (prefers-reduced-motion: reduce) { .grow { animation: none; } }
 
 /* A site's pin: a lime dot. */
-.pin { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cn-lime-300); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+.pin { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cn-lime-300); border: 3px solid var(--cn-white); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
 /* A new location: a lime teardrop. MapLibre positions a marker with position and transform, so set neither here. */
 .newPin { padding-bottom: 6px; }
 .newPin::before { content: ""; display: block; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--cn-lime-300); border: 3px solid var(--cn-green-900); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }
