@@ -113,3 +113,12 @@ export async function listPlantingAreas(site: string) {
     .throwOnError();
   return data;
 }
+
+/** A new area: the site-wide one (see wholeSiteAreaSlug), made when a planting is first saved there. */
+export async function createPlantingArea(values: { slug: string; site: string; name: string }) {
+  return (await db())
+    .from("areas")
+    .insert(values)
+    .select("slug")
+    .single();
+}
