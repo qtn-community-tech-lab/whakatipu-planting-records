@@ -1,5 +1,5 @@
 /**
- * The species most planted at each site, for the map view's step 2: each
+ * The species most planted at each site, for the map view's plant list: each
  * with its all-time recorded plants there and a reference photo.
  *
  * Uses getWrtAll(), like eventFormOptions: what was planted at a site should

@@ -13,8 +13,8 @@
  * breakpoint (a window resized, a big phone turned on its side) restyles the panel but keeps the
  * form and what's typed in it. Wide, the sheet's spring and drags are off.
  */
-import { ChevronDown, MapPin } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { ChevronDown, MapPin, Search, X } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
 
@@ -28,7 +28,7 @@ export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
 /** At full, the gap left above the sheet, below the status bar, in px. */
 const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleIcon, titleHidden, locked, above, below, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onSearch, searchOpen, screen, depth, actionSlot, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -45,6 +45,17 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   onTitle?: (() => void) | undefined;
   /** What the title opens is open: its chevron flips, and the button says so (aria-expanded). */
   titleOpen?: boolean | undefined;
+  /** Instead of onTitle: wraps the title button (pin, title, chevron) in the page's own menu, e.g. a popover. */
+  titleMenu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined;
+  /** Phones: a Search button on the bar (the page opens its search). */
+  onSearch?: (() => void) | undefined;
+  /** The search is open: the same button reads Close, so the way back is where Search was. */
+  searchOpen?: boolean | undefined;
+  /** Which screen the panel shows, and how deep it is: a new screen slides in from the right going deeper, from the left coming back. */
+  screen?: string | undefined;
+  depth?: number | undefined;
+  /** A place beside the title for the page's own button (e.g. Edit), filled through a portal. Phones: it takes Search's place. */
+  actionSlot?: ((el: HTMLElement | null) => void) | undefined;
   /** Without onTitle: the pin beside the title anyway, as a plain header (no chevron, not a button). */
   titleIcon?: boolean | undefined;
   /** Wide: the title is read out but not shown, e.g. when a breadcrumb above already says it. */
@@ -56,19 +67,34 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   below?: ReactNode | undefined;
   children: ReactNode;
 }) {
-  const heading = <>{wide && above}{wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} icon={titleIcon} />}{wide && below}</>;
-  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked}>{children}</Sheet>;
+  const title_ = wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} menu={titleMenu} icon={titleIcon} />;
+  const heading = <>{wide && above}{actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_}{wide && below}</>;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen} screen={screen} depth={depth}>{children}</Sheet>;
 }
 
-function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, children }: {
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, screen, depth = 0, children }: {
   wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; children: ReactNode;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; screen?: string | undefined; depth?: number | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const visible = useRef<HTMLDivElement>(null);
   const spring = useRef<Spring | null>(null);
   const fling = useRef(0);
   const safeTop = useRef<HTMLSpanElement>(null);
+  // A new screen slides in: from the right going deeper, from the left coming back. Animated, not remounted,
+  // so nothing in the screens (a form's entries) is lost; not at all with reduced motion.
+  const content = useRef<HTMLDivElement>(null);
+  const shown = useRef({ screen, depth });
+  useLayoutEffect(() => {
+    const was = shown.current;
+    shown.current = { screen, depth };
+    const dir = Math.sign(depth - was.depth);
+    if (screen === was.screen || !dir || !content.current || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    content.current.animate(
+      [{ transform: `translateX(${dir * 32}px)`, opacity: 0 }, { transform: "none", opacity: 1 }],
+      { duration: 260, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+    );
+  }, [screen, depth]);
   const [height, setHeight] = useState(0);
   const [fullY, setFullY] = useState(FULL_GAP);
 
@@ -205,9 +231,12 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
 
   // The mouse (and a pen): drag the bar. A click without a drag opens it from peek (see openFromBar).
   const dragged = useRef(false);
+  // A mouse press on the handle: dragged, it moves the sheet; clicked, the handle's button (Show the map) has it.
+  const onHandle = useRef(false);
   function onPointerDown(e: React.PointerEvent<HTMLDivElement>) {
     dragged.current = false;
-    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button")) || !spring.current) return;
+    onHandle.current = !!(e.target as HTMLElement).closest("[data-handle]");
+    if (wide || locked || e.pointerType === "touch" || (snap !== "peek" && (e.target as HTMLElement).closest("button:not([data-handle])")) || (e.target as HTMLElement).closest("[data-bar-action]") || !spring.current) return;
     const bar = e.currentTarget;
     const startY = e.clientY;
     const start = spring.current.value;
@@ -235,17 +264,19 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
 
   // At peek a tap anywhere on the bar, its title too, opens it half way; once open, the title changes
   // the site. Caught before the title's own click. A drag that ends on the bar isn't a tap: a touch drag
-  // cancels the click, a mouse one is marked.
+  // cancels the click, a mouse one is marked. Search does its own thing on the first tap (it raises the sheet itself).
   const opensFromBar = !wide && !locked && snap === "peek";
+  // From half way or full screen, the handle is a button down to the map, so there's always a way back to it
+  // without knowing to drag. Not at peek (the bar opens it) or while the sheet is locked.
+  const showMap = !wide && !locked && snap !== "peek";
   function openFromBar(e: React.MouseEvent<HTMLDivElement>) {
-    if (!opensFromBar) return;
+    // Pulled up, a mouse click on the handle lands on the bar (the press was captured for a drag): Show the map.
+    if (!opensFromBar && showMap && onHandle.current && !dragged.current && !(e.target as HTMLElement).closest("[data-handle]")) return onSnap("peek");
+    if (!opensFromBar || (e.target as HTMLElement).closest("[data-bar-action]")) return;
     e.stopPropagation();
     e.preventDefault();
     if (!dragged.current) onSnap("mid");
   }
-  // From half way or full screen, a button down to the map, so there's always a way back to it
-  // without knowing to drag. None at peek (tap the bar) or while the sheet is locked.
-  const showMap = !wide && !locked && snap !== "peek";
 
   return (
     <section
@@ -260,20 +291,21 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
         {!wide && (opensFromBar
           // The handle is the bar's control for a keyboard or screen reader; a tap anywhere on the bar does the same.
           ? <button type="button" data-handle className={s.handle} aria-label={`Open ${label.toLowerCase()}`} aria-expanded={false} />
+          : showMap ? <button type="button" data-handle className={s.handle} aria-label="Show the map" onClick={() => onSnap("peek")} />
           : <span className={s.handle} aria-hidden="true" />)}
         <div className={s.barText}>
           {heading}
         </div>
-        {showMap && (
-          <button type="button" className={s.barButton} onClick={() => onSnap("peek")} aria-expanded aria-label="Show the map">
-            <ChevronDown size={16} strokeWidth={2.4} />
-            Map
+        {!wide && !locked && onSearch && (
+          <button type="button" className={s.barButton} data-bar-action="" onClick={onSearch} aria-label={searchOpen ? "Close the site list" : "Search sites"}>
+            {searchOpen ? <X size={16} strokeWidth={2.6} aria-hidden="true" /> : <Search size={16} strokeWidth={2.4} aria-hidden="true" />}
+            {searchOpen ? "Close" : "Search"}
           </button>
         )}
       </div>
       {/* A field focused in the preview takes the sheet full screen, above the keyboard. */}
       <div
-        className={s.scroll}
+        ref={content} className={s.scroll}
         onFocusCapture={(e) => { if (!wide && snap === "mid" && (e.target as HTMLElement).matches("input, textarea")) onSnap("full"); }}
       >
         {/* Mounted once open, like the side panel, so the form starts after whatever opens it. */}
@@ -293,7 +325,10 @@ function scroller(el: HTMLElement | null, sheet: HTMLElement): HTMLElement | nul
 }
 
 /** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
-function Heading({ title, subtitle, onTitle, open, icon }: { title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined; icon?: boolean | undefined }) {
+function Heading({ title, subtitle, onTitle, open, menu, icon }: {
+  title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined;
+  menu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined; icon?: boolean | undefined;
+}) {
   const text = (
     <span className={s.titleText}>
       <b>{title}</b>
@@ -305,12 +340,14 @@ function Heading({ title, subtitle, onTitle, open, icon }: { title: string; subt
       <MapPin size={22} strokeWidth={2.2} />
     </span>
   );
+  const chevron = <ChevronDown size={22} strokeWidth={2.4} />;
+  if (menu) return menu({ className: s.titleButton!, label: `${title}${subtitle ? `, ${subtitle}` : ""}: change`, children: <>{pin}{text}{chevron}</> });
   if (!onTitle) return icon ? <div className={s.titlePlain}>{pin}{text}</div> : text;
   return (
     <button type="button" className={s.titleButton} onClick={onTitle} aria-expanded={open} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
       {pin}
       {text}
-      <ChevronDown size={22} strokeWidth={2.4} />
+      {chevron}
     </button>
   );
 }

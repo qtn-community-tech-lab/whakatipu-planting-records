@@ -134,8 +134,38 @@ export function spanLabel(span: { first: { slug: string; label: string }; last: 
   return span.first.slug === span.last.slug ? span.first.label : `${span.first.label} → ${span.last.label}`;
 }
 
+/**
+ * A part's name for showing beside its site's name: without the site in front
+ * ("Arthurs Point - Morning Star Reserve" at Arthurs Point reads "Morning Star Reserve").
+ */
+export function partBesideSite(part: string, site: string): string {
+  const rest = part.startsWith(site) ? part.slice(site.length).replace(/^\s*[-–—:/]\s*/, "") : part;
+  return rest && rest.length < part.length - site.length ? rest : part;
+}
+
 export function formatNumber(n: number): string {
   return new Intl.NumberFormat("en-NZ").format(n);
+}
+
+/** "1,280 plants", or "No plants yet". */
+export function plantsOrNone(n: number): string {
+  return n ? `${formatNumber(n)} plants` : "No plants yet";
+}
+
+/** "120 m", or "1.2 km" (and "1 km", never "1000 m") from a kilometre on. */
+export function kmLabel(km: number): string {
+  const m = Math.round(km * 1000);
+  return m < 1000 ? `${m} m` : `${Number((m / 1000).toFixed(1))} km`;
+}
+
+/** How far from a pin, the same everywhere: "120 m from Arrow River", or under 50 m "right at Arrow River". */
+export function fromPin(km: number, pin: string): string {
+  return km < 0.05 ? `right at ${pin}` : `${kmLabel(km)} from ${pin}`;
+}
+
+/** What a new location is to its site: "Sublocation of Arrow River", or "New location near Arrow River". */
+export function spotKind(asPart: boolean, site: string): string {
+  return `${asPart ? "Sublocation of" : "New location near"} ${site}`;
 }
 
 /** "12%" style share, never "NaN%". */

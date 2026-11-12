@@ -42,7 +42,7 @@ export function FigureList({ title, head, rows, total, children }: {
       {head ?? <h3 className="m-0 font-sans text-xs font-bold uppercase leading-none tracking-[0.06em] text-[var(--text-eyebrow)]">{title}</h3>}
       <ul className="m-0 list-none p-0">
         {rows.map((r) => (
-          <li key={r.key} className="border-b border-[var(--border-card,#e6e8df)] last:border-b-0">
+          <li key={r.key} className="border-b border-[var(--border-card)] last:border-b-0">
             <ListRow
               title={r.italic ? <i>{r.name}</i> : r.name} initial={r.name.charAt(0)} subtitle={r.sub}
               photo={r.photo} lead={r.lead} onClick={r.onClick}
@@ -56,7 +56,7 @@ export function FigureList({ title, head, rows, total, children }: {
             />
             {r.share !== undefined && (
               // Lined up with the name (past the 32px photo and its gap).
-              <span className="mb-2 ml-11 block h-[3px] overflow-hidden rounded-sm bg-[#eef2e8]" aria-hidden="true">
+              <span className="mb-2 ml-11 block h-[3px] overflow-hidden rounded-sm bg-[var(--surface-hover)]" aria-hidden="true">
                 <span className="block h-full rounded-sm bg-[var(--cn-green-600)]" style={{ width: `${Math.max(2, r.share)}%` }} />
               </span>
             )}
