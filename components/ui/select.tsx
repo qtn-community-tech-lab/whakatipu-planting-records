@@ -42,11 +42,6 @@ function SelectTrigger({
       {...props}
     >
       {children}
-      <SelectPrimitive.Icon asChild>
-        <svg className="wrt-select__icon" width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-          <path d="M1 1l4 4 4-4" />
-        </svg>
-      </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
   )
 }
