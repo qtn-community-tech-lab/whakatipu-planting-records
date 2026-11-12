@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "inaturalist-open-data.s3.amazonaws.com", pathname: "/photos/**" },
     ],
   },
+  // Browsers must always fetch the latest service worker (see public/sw.js).
+  async headers() {
+    return [
+      { source: "/sw.js", headers: [{ key: "Cache-Control", value: "no-cache, no-store, must-revalidate" }] },
+    ];
+  },
 };
 
 export default nextConfig;

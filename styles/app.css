@@ -40,6 +40,19 @@
   .cn-pagehead { flex-direction: column; align-items: flex-start; }
 }
 
+/* ---------------------------------------------------------------- connection status */
+/* Floats above the page so it never shifts the layout or covers sticky toolbars; taps pass through. */
+.wrt-connection {
+  position: fixed; z-index: 40; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: max-content; max-width: calc(100vw - 32px); pointer-events: none;
+}
+.wrt-connection__bar {
+  margin: 0; padding: 10px 16px; border-radius: var(--radius-field); border: 1px solid var(--border-card);
+  box-shadow: 0 6px 20px rgb(21 38 28 / 0.14); font: 600 13.5px/1.4 var(--font-sans);
+}
+.wrt-connection__bar--offline { background: var(--cn-behind-bg); color: var(--cn-note-fg); }
+.wrt-connection__bar--online { background: var(--cn-ok-bg); color: var(--cn-ok-fg); }
+
 /* ---------------------------------------------------------------- recorded-plants notice */
 .wrt-notice {
   display: flex; align-items: center; gap: 12px;
