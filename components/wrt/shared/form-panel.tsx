@@ -14,7 +14,7 @@
  * form and what's typed in it. Wide, the sheet's spring and drags are off.
  */
 import { ChevronDown, MapPin, Search, X } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
 
@@ -28,7 +28,7 @@ export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
 /** At full, the gap left above the sheet, below the status bar, in px. */
 const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onSearch, searchOpen, actionSlot, locked, above, below, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onSearch, searchOpen, screen, depth, actionSlot, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -51,6 +51,9 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   onSearch?: (() => void) | undefined;
   /** The search is open: the same button reads Close, so the way back is where Search was. */
   searchOpen?: boolean | undefined;
+  /** Which screen the panel shows, and how deep it is: a new screen slides in from the right going deeper, from the left coming back. */
+  screen?: string | undefined;
+  depth?: number | undefined;
   /** A place beside the title for the page's own button (e.g. Edit), filled through a portal. Phones: it takes Search's place. */
   actionSlot?: ((el: HTMLElement | null) => void) | undefined;
   /** Without onTitle: the pin beside the title anyway, as a plain header (no chevron, not a button). */
@@ -66,18 +69,32 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
 }) {
   const title_ = wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} menu={titleMenu} icon={titleIcon} />;
   const heading = <>{wide && above}{actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_}{wide && below}</>;
-  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen}>{children}</Sheet>;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen} screen={screen} depth={depth}>{children}</Sheet>;
 }
 
-function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, children }: {
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, screen, depth = 0, children }: {
   wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; children: ReactNode;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; screen?: string | undefined; depth?: number | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const visible = useRef<HTMLDivElement>(null);
   const spring = useRef<Spring | null>(null);
   const fling = useRef(0);
   const safeTop = useRef<HTMLSpanElement>(null);
+  // A new screen slides in: from the right going deeper, from the left coming back. Animated, not remounted,
+  // so nothing in the screens (a form's entries) is lost; not at all with reduced motion.
+  const content = useRef<HTMLDivElement>(null);
+  const shown = useRef({ screen, depth });
+  useLayoutEffect(() => {
+    const was = shown.current;
+    shown.current = { screen, depth };
+    const dir = Math.sign(depth - was.depth);
+    if (screen === was.screen || !dir || !content.current || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    content.current.animate(
+      [{ transform: `translateX(${dir * 32}px)`, opacity: 0 }, { transform: "none", opacity: 1 }],
+      { duration: 260, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" },
+    );
+  }, [screen, depth]);
   const [height, setHeight] = useState(0);
   const [fullY, setFullY] = useState(FULL_GAP);
 
@@ -288,7 +305,7 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
       </div>
       {/* A field focused in the preview takes the sheet full screen, above the keyboard. */}
       <div
-        className={s.scroll}
+        ref={content} className={s.scroll}
         onFocusCapture={(e) => { if (!wide && snap === "mid" && (e.target as HTMLElement).matches("input, textarea")) onSnap("full"); }}
       >
         {/* Mounted once open, like the side panel, so the form starts after whatever opens it. */}

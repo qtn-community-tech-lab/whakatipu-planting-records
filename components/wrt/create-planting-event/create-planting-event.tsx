@@ -561,6 +561,10 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const siteHeader = overview && !!siteSlug && !choosing;
   // The area whose sheet is open (a second tap on it on the map), while nothing else takes the panel.
   const sheetArea = areaSheet !== null && !draw.draft ? draw.areas.find((a) => a.id === areaSheet) : undefined;
+  // What the panel shows, and how deep it sits, for its slide: the site list (the level of every site) 0,
+  // a site's page 1, a season or the form 2 (the form from a season 3), an area's sheet over them 4.
+  const panelScreen = sheetArea ? "area" : choosing || allSites ? "list" : season ? `season:${season.slug}` : overview ? `site:${siteSlug}:${parcel ?? ""}` : "form";
+  const panelDepth = ({ area: 4, list: 0, form: startedFrom ? 3 : 2 } as Record<string, number>)[panelScreen] ?? (season ? 2 : 1);
   // The cross over the map (see `placing`); the map has to show, like Draw area.
   function startCross(mode: NonNullable<typeof placing> & string, partSite = "") {
     unlessEditing(() => {
@@ -894,6 +898,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         title={sheetArea ? sheetArea.name || "Planted area" : where.title}
         subtitle={sheetArea ? (site ? `Planted area at ${siteName}` : "Planted area")
           : siteHeader ? [season?.wholeSite ? "Whole site" : partShort, season?.label].filter(Boolean).join(" · ") : where.sub}
+        screen={panelScreen} depth={panelDepth}
         actionSlot={season && seasonButton && !choosing && !sheetArea ? setHeaderAction : undefined}
         onTitle={wide || draw.draft || placing || sheetArea ? undefined : toggleChooser} titleOpen={choosing} titleIcon={allSites || siteHeader}
         // Phones, at a site: the title opens its parts, New sublocation and All sites; Search opens the site search.
