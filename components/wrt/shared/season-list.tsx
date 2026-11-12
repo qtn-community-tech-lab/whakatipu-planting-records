@@ -1,7 +1,7 @@
 "use client";
 /**
  * Plantings season by season, newest first, each its own row: an icon for the time of year, the season
- * and how long ago (and how many sites, when more than one), a bar for how big it was beside the others,
+ * and how long ago (and how many places, when more than one), a bar for how big it was beside the others,
  * and its plants. Rows open the season when `onOpen` is given. Used for a site's past plantings.
  */
 import { ChevronRight, Leaf, Snowflake, Sprout, Sun } from "lucide-react";
@@ -26,7 +26,7 @@ const KIND = {
 /** "spring-2024" → spring. */
 const kindOf = (slug: string) => KIND[slug.split("-")[0] as keyof typeof KIND] ?? KIND.autumn;
 
-const row = "grid w-full grid-cols-[44px_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-2xl border border-[var(--border-card,#e6e8df)] bg-[var(--surface-card,#fff)] px-3 py-2.5 text-left font-sans text-[var(--cn-green-900)]";
+const row = "grid w-full grid-cols-[44px_minmax(0,1fr)_auto_auto] items-center gap-3 rounded-2xl border border-[var(--border-card)] bg-[var(--surface-card)] px-3 py-2.5 text-left font-sans text-[var(--cn-green-900)]";
 const button = "cursor-pointer transition-colors hover:border-[var(--cn-green-600)] hover:bg-[#f6f9f1] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cn-green-800)]";
 
 export function SeasonList({ seasons, today, onOpen, title = "Past plantings", summary, children }: {
@@ -51,7 +51,7 @@ export function SeasonList({ seasons, today, onOpen, title = "Past plantings", s
       <ul className="m-0 flex list-none flex-col gap-2 p-0">
         {seasons.map((x) => {
           const { Icon, tint } = kindOf(x.slug);
-          const ago = [seasonAgo(x.slug, today), (x.parts ?? 1) > 1 && `${x.parts} sites`].filter(Boolean).join(" · ");
+          const ago = [seasonAgo(x.slug, today), (x.parts ?? 1) > 1 && `${x.parts} places`].filter(Boolean).join(" · ");
           const inner = (
             <>
               <span className={cn("grid size-11 place-items-center rounded-xl", tint)} aria-hidden="true"><Icon size={20} strokeWidth={2} /></span>
@@ -59,7 +59,7 @@ export function SeasonList({ seasons, today, onOpen, title = "Past plantings", s
                 <b className="text-[15px] font-bold leading-tight">{x.label}</b>
                 {ago && <span className="text-[12.5px] font-medium leading-snug text-[var(--text-muted)]">{ago}</span>}
                 {/* how big the season was, beside the biggest in the list */}
-                <span className="mt-1.5 block h-1 overflow-hidden rounded-sm bg-[#eef2e8]" aria-hidden="true">
+                <span className="mt-1.5 block h-1 overflow-hidden rounded-sm bg-[var(--surface-hover)]" aria-hidden="true">
                   <span className="block h-full rounded-sm bg-[var(--cn-green-600)]" style={{ width: `${Math.max(4, (x.plants / most) * 100)}%` }} />
                 </span>
               </span>

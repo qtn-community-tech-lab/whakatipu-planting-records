@@ -7,6 +7,7 @@
  */
 import "server-only";
 import { listSites } from "@/db/queries/sites";
+import { wholeSiteAreaSlug } from "../areas/whole-site";
 import { listSpeciesForPlanting } from "@/db/queries/species";
 import { getWrtAll } from "../server";
 import { searchKey } from "../text";
@@ -17,12 +18,15 @@ type SearchKeys = { keys: string[] };
 export interface SitePartOption extends SearchKeys {
   id: string;
   name: string;
+  /** Added on the map this visit, not stored yet (see keptPlaces in create-planting-event/sites.ts). */
+  unsaved?: boolean | undefined;
 }
 
 export interface SiteOption extends SearchKeys {
   slug: string;
   name: string;
   parts: SitePartOption[];
+  unsaved?: boolean | undefined;
 }
 
 export interface SpeciesOption extends SearchKeys {
@@ -57,7 +61,8 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
         slug: p.slug,
         name: p.name,
         keys: p.searchKeys,
-        parts: p.parcels.map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] })).sort((a, b) => a.name.localeCompare(b.name)),
+        // The site-wide area is the site as a whole ("Whole site"), not a part to choose.
+        parts: p.parcels.filter((x) => x.id !== wholeSiteAreaSlug(p.slug)).map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] })).sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species

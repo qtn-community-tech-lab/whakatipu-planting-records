@@ -2,7 +2,6 @@
 /** Step 1 of the planting-event form: the site, its part, the planted area (placeholder) and the date and season. */
 import { useId } from "react";
 import { FormField, SelectInput, TextInput } from "@/components/ui/inputs";
-import { NUMBER_FIELD, digits } from "@/components/wrt/shared/fields";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { EVENT_SEASONS, type EventSeason } from "@/lib/wrt/events/types";
 import { SitePartPicker, SitePicker } from "./site-picker";
@@ -43,8 +42,8 @@ export function WhereWhenStep({ form, options, today }: { form: EventFormState; 
             {EVENT_SEASONS.map((s) => <option key={s} value={s}>{s}</option>)}
           </SelectInput>
           <TextInput
-            label="Season year" {...NUMBER_FIELD} maxLength={4} value={form.seasonYear} error={err("seasonYear")}
-            onChange={(e) => form.changeSeasonYear(digits(e.target.value))}
+            label="Season year" type="number" inputMode="numeric" min={2015} max={2100} value={form.seasonYear} error={err("seasonYear")}
+            onChange={(e) => form.changeSeasonYear(e.target.value)}
           />
         </div>
       </section>

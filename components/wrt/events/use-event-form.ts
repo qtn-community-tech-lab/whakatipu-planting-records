@@ -10,7 +10,7 @@
 import { useMemo, useState, type RefObject } from "react";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import { errorsForStep, EVENT_STEPS, firstStepWithError, LAST_STEP, type EventStep } from "@/lib/wrt/events/steps";
+import { errorsForStep, firstStepWithError, LAST_STEP } from "@/lib/wrt/events/steps";
 import type { EventSeason, PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
 
@@ -20,22 +20,17 @@ export interface Line {
   speciesId: string;
   /** Kept as typed so a half-typed number is not reformatted under the cursor. */
   quantity: string;
-  /** The drawn area these plants went into (the planting event page's area id), or none. */
-  area?: number | undefined;
 }
 
 export type EventFormState = ReturnType<typeof useEventForm>;
 
 const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
-/** Stands in for a new site (a new location not at any site) while the event is checked. Not saved. */
-export const NEW_SITE = "new-site";
-
 /** Focus an element once React has drawn the change that reveals it. */
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialSite = "", steps = EVENT_STEPS, newSite = false,
+  options, today, formRef, headingRef,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -44,16 +39,10 @@ export function useEventForm({
   formRef: RefObject<HTMLFormElement | null>;
   /** The current step's heading, focused when the step changes. */
   headingRef: RefObject<HTMLHeadingElement | null>;
-  /** Site slug to start on, e.g. when the form opens from the map at a site. */
-  initialSite?: string;
-  /** Which fields each step asks for (EVENT_STEPS, or the map form's order). */
-  steps?: readonly EventStep[];
-  /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
-  newSite?: boolean;
 }) {
   const suggested = seasonFromDate(today)!;
 
-  const [placeSlug, setPlaceSlug] = useState(initialSite);
+  const [placeSlug, setPlaceSlug] = useState("");
   const [parcelId, setParcelId] = useState<string | null>(null);
   const [plantedOn, setPlantedOn] = useState(today);
   const [season, setSeason] = useState<EventSeason>(suggested.season);
@@ -76,24 +65,23 @@ export function useEventForm({
 
   // Reference data for the client-side check: the same shape the server validates against.
   const lookups: EventLookups = useMemo(() => ({
-    places: [...options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })), { slug: NEW_SITE, isScheme: false, parcels: [] }],
+    places: options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })),
     species: options.species,
   }), [options]);
-  const checkedPlace = newSite && !placeSlug ? NEW_SITE : placeSlug;
 
   // Checked on every change (cheap); errors are shown only for checked steps.
   const result = validateEventInput({
-    placeSlug: checkedPlace,
+    placeSlug,
     parcelId,
     plantedOn,
     season,
     seasonYear: seasonYear.trim() === "" ? null : Number(seasonYear),
     polygon: null, // drawn on the map once the map PR lands
-    species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity), ...(l.area === undefined ? {} : { area: l.area }) })),
+    species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity) })),
     notes: notes.trim() || null,
   }, lookups, today);
   const allErrors: FieldErrors = result.ok ? {} : result.errors;
-  const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step, steps) : {};
+  const errors = checkedSteps.has(step) ? errorsForStep(allErrors, step) : {};
 
   const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
 
@@ -110,7 +98,7 @@ export function useEventForm({
   /** Check the current step; move on when its fields are right. */
   function next() {
     markChecked(step);
-    if (Object.keys(errorsForStep(allErrors, step, steps)).length) focusFirstProblem();
+    if (Object.keys(errorsForStep(allErrors, step)).length) focusFirstProblem();
     else goTo(step + 1);
   }
 
@@ -120,7 +108,7 @@ export function useEventForm({
       setPreview(result.value);
       return;
     }
-    const s = firstStepWithError(result.errors, steps) ?? 0;
+    const s = firstStepWithError(result.errors) ?? 0;
     markChecked(s);
     show(s);
     focusFirstProblem();
@@ -163,11 +151,8 @@ export function useEventForm({
     changeSeasonYear(value: string) { setSeasonYear(value); setSeasonChosen(true); },
 
     lines,
-    /** Species already picked on other lines (in the same area), so a species can't be listed twice. */
-    taken: (except: number) => {
-      const area = lines.find((l) => l.key === except)?.area;
-      return new Set(lines.filter((l) => l.key !== except && l.speciesId && l.area === area).map((l) => l.speciesId));
-    },
+    /** Species already picked on other lines, so a species can't be listed twice. */
+    taken: (except: number) => new Set(lines.filter((l) => l.key !== except && l.speciesId).map((l) => l.speciesId)),
     updateLine(key: number, change: Partial<Line>) {
       setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...change } : l)));
     },
@@ -175,35 +160,6 @@ export function useEventForm({
     addLine() {
       setLines((ls) => [...ls, { key: nextKey, speciesId: "", quantity: "" }]);
       setNextKey((k) => k + 1);
-    },
-    /** Add a species in one go (the map view's species rows), in an area if given: fills the empty line if there is one. */
-    addSpecies(speciesId: string, quantity = "", area?: number) {
-      setLines((ls) => {
-        if (ls.some((l) => l.speciesId === speciesId && l.area === area)) return ls;
-        const empty = ls.find((l) => !l.speciesId);
-        if (empty) return ls.map((l) => (l === empty ? { ...l, speciesId, quantity, area } : l));
-        return [...ls, { key: nextKey, speciesId, quantity, area }];
-      });
-      setNextKey((k) => k + 1);
-    },
-    /**
-     * Keep the lines in step with the drawn areas (their ids, in order): a line whose area is gone
-     * moves to the first area, adding to that species there if it's already listed. A line with no
-     * area is for the site as a whole, and stays so. With no areas, lines have none. Nothing typed is lost.
-     */
-    keepAreas(ids: readonly number[]) {
-      setLines((ls) => {
-        const target = (l: Line) => (ids.length === 0 || l.area === undefined ? undefined : ids.includes(l.area) ? l.area : ids[0]);
-        if (ls.every((l) => l.area === target(l))) return ls;
-        const out: Line[] = [];
-        for (const l of ls) {
-          const area = target(l);
-          const same = l.speciesId ? out.find((o) => o.speciesId === l.speciesId && o.area === area) : undefined;
-          if (same) same.quantity = String((Number(same.quantity) || 0) + (Number(l.quantity) || 0));
-          else out.push({ ...l, area });
-        }
-        return out;
-      });
     },
 
     notes, setNotes,

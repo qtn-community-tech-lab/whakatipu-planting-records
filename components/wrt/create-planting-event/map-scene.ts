@@ -6,6 +6,7 @@ import * as maplibregl from "maplibre-gl";
 // The app's map wrapper loads MapLibre's styles and sets its worker up; the mini map uses it too.
 import "@/components/ui/map";
 import { compactPlantCount } from "@/lib/wrt/site-locations";
+import { plantsOrNone } from "@/lib/wrt/text";
 import { SATELLITE } from "@/components/wrt/shared/satellite";
 import type { LngLat, SitePin } from "./sites";
 
@@ -55,7 +56,17 @@ export function pinMarker(members: SitePin[], className: string, onClick: () => 
     button.append(count);
   }
   button.setAttribute("aria-label", group ? `Zoom to ${members.length} nearby locations: ${members.map((p) => p.label).join(", ")}` : `Choose ${members[0]?.label}`);
-  button.title = members.map((p) => p.label).join(", ");
+  // One line each, shown as a list by PinTooltip: a place and its plants; a group, how many, then up to four of
+  // its sites (or, all at one site, its places), then how many more — a click zooms in over them all.
+  const site = (p: SitePin) => p.label.split(" · ")[0]!;
+  const sites = [...new Set(members.map(site))];
+  const rows = sites.length > 1
+    ? sites.map((s) => { const n = members.filter((p) => site(p) === s).length; return n > 1 ? `${s} · ${n} places` : s; })
+    : members.map((p) => p.label.split(" · ")[1] ?? p.label);
+  button.dataset.tip = !group
+    ? `${members[0]?.label}\n${plantsOrNone(members[0]?.plants ?? 0)}`
+    : [sites.length > 1 ? `${members.length} places at ${sites.length} sites` : `${members.length} places at ${sites[0]}`,
+      ...rows.slice(0, 4), ...(rows.length > 4 ? [`and ${rows.length - 4} more · click to zoom in`] : [])].join("\n");
   button.addEventListener("click", onClick);
   el.append(button);
   return new maplibregl.Marker({ element: el }).setLngLat(boundsOf(members.map((p) => p.at)).getCenter());

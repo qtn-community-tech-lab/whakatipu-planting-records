@@ -72,3 +72,40 @@ export function seasonAgo(slug: string, today: string): string | undefined {
   const years = `${Math.floor(halves / 2) || ""}${halves % 2 ? "½" : ""}`;
   return `${years} ${halves === 2 ? "year" : "years"} ago`;
 }
+
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/**
+ * A season's months, by BY_MONTH above: "autumn-2021" → "March to May 2021", and Summer starts the
+ * December before ("summer-2027" → "December 2026 to February 2027"). Undefined for a slug that isn't "<season>-<year>".
+ */
+export function seasonMonths(slug: string): string | undefined {
+  const m = /^(summer|autumn|winter|spring)-(\d{4})$/.exec(slug);
+  if (!m) return undefined;
+  const year = Number(m[2]);
+  // Its middle month (January for Summer), and the months either side.
+  const first = MIDDLE[m[1]!]! - 2; // 0-based; -1 is the December before
+  const last = first + 2;
+  return first < 0 ? `December ${year - 1} to ${MONTHS[last]} ${year}` : `${MONTHS[first]} to ${MONTHS[last]} ${year}`;
+}
+
+/**
+ * What's wrong with a planting date for an event in a season ("autumn-2021"): in the future, or outside
+ * the season. Undefined when it's fine. The edit form and its server action both check with it.
+ */
+export function plantedOnProblem(date: string, season: string, today: string): string | undefined {
+  if (date > today) return "The planting date can't be in the future.";
+  const at = seasonFromDate(date);
+  if (at && `${at.season.toLowerCase()}-${at.seasonYear}` === season) return undefined;
+  const [name = "", year = ""] = season.split("-");
+  return `The date has to be in ${name.charAt(0).toUpperCase()}${name.slice(1)} ${year} (${seasonMonths(season) ?? "that season"}).`;
+}
+
+/** A season's first and last days, "YYYY-MM-DD": "autumn-2021" → 2021-03-01 to 2021-05-31. Undefined for a bad slug. */
+export function seasonDates(slug: string): { first: string; last: string } | undefined {
+  const m = /^(summer|autumn|winter|spring)-(\d{4})$/.exec(slug);
+  if (!m) return undefined;
+  const middle = MIDDLE[m[1]!]! - 1; // 0-based, so Summer's first month (-1) is the December before
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  return { first: iso(new Date(Date.UTC(Number(m[2]), middle - 1, 1))), last: iso(new Date(Date.UTC(Number(m[2]), middle + 2, 0))) };
+}

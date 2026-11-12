@@ -15,6 +15,8 @@ type Props = Omit<ComponentProps<"button">, "title"> & {
   photo?: { src: string; credit?: string | undefined; focalPoint?: string | undefined } | null | undefined;
   /** The letter shown when there's no photo. Defaults to the title's first letter. */
   initial?: string | undefined;
+  /** With no photo, the letter's disc takes a soft colour picked from this (e.g. a species id), the same each time. Without it, grey. */
+  tintKey?: string | undefined;
   /** Instead of a photo: any element before the title, e.g. an area's outline. */
   lead?: ReactNode | undefined;
   /** "sm": a 32px photo, for lists you read. "md": 44px, for lists you pick from. */
@@ -25,10 +27,26 @@ type Props = Omit<ComponentProps<"button">, "title"> & {
   end?: ReactNode | undefined;
 };
 
-const row = "flex min-h-[52px] items-center gap-3 py-1.5 font-sans text-[var(--text-strong)] [&>svg]:shrink-0 [&>svg]:opacity-60";
-const button = "w-full cursor-pointer border-0 bg-transparent text-left focus-visible:rounded-[10px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cn-green-800)]";
+/** Soft discs for a letter with no photo: pale ground, dark letter, in the canopy's greens and earth tones. */
+const TINTS = [
+  "bg-[var(--cn-sage-100)] text-[var(--cn-green-800)]", // green
+  "bg-[#dcebd3] text-[#2f5e3e]", // fern
+  "bg-[#ecf0d2] text-[#55601c]", // olive
+  "bg-[var(--cn-sage-150)] text-[var(--cn-grey-700)]", // sage
+  "bg-[#f4e4da] text-[#8a4a2c]", // clay
+  "bg-[#e2edf0] text-[#2e5a68]", // sky
+];
+/** The same key always gets the same tint. */
+function tintFor(key: string) {
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return TINTS[h % TINTS.length];
+}
 
-export function ListRow({ title, subtitle, photo, initial, lead, size = "sm", figure, end, className, onClick, ...rest }: Props) {
+const row = "flex min-h-[52px] items-center gap-3 py-1.5 font-sans text-[var(--text-strong)] [&>svg]:shrink-0 [&>svg]:opacity-60";
+const button = "w-full cursor-pointer border-0 bg-transparent text-left focus-visible:rounded-[var(--radius-inset)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cn-green-800)]";
+
+export function ListRow({ title, subtitle, photo, initial, tintKey, lead, size = "sm", figure, end, className, onClick, ...rest }: Props) {
   const letter = initial ?? (typeof title === "string" ? title.charAt(0) : "");
   const inner = (
     <>
@@ -37,7 +55,8 @@ export function ListRow({ title, subtitle, photo, initial, lead, size = "sm", fi
         <span
           aria-hidden="true"
           className={cn(
-            "relative grid shrink-0 place-items-center overflow-hidden rounded-full bg-[var(--surface-soft,#e7eee5)] font-extrabold leading-none text-[rgba(21,38,28,0.5)]",
+            "relative grid shrink-0 place-items-center overflow-hidden rounded-full font-extrabold leading-none",
+            !photo && tintKey ? tintFor(tintKey) : "bg-[var(--surface-soft)] text-[rgba(21,38,28,0.5)]",
             size === "md" ? "size-11 text-[17px]" : "size-8 text-[13px]",
           )}
         >

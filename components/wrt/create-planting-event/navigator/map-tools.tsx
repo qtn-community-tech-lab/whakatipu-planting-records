@@ -1,7 +1,8 @@
 "use client";
 import type * as maplibregl from "maplibre-gl";
 import { LocateFixed, MapPinPlus, Minus, Pencil, Plus } from "lucide-react";
-import { useEffect, useState, type RefObject } from "react";
+import type { RefObject } from "react";
+import { useFindMe } from "../use-planting-map";
 import s from "./navigator.module.css";
 
 /**
@@ -24,28 +25,7 @@ export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, on
   /** Let the area brought forward go. */
   onLetGo: () => void;
 }) {
-  // A short word when Find me can't: no location on this browser, or it was refused.
-  const [said, setSaid] = useState("");
-  useEffect(() => {
-    if (!said) return;
-    const t = setTimeout(() => setSaid(""), 4000);
-    return () => clearTimeout(t);
-  }, [said]);
-
-  function findMe() {
-    if (!("geolocation" in navigator)) return setSaid("This browser can't say where you are");
-    setSaid("Finding you…");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setSaid("");
-        const m = map.current;
-        m?.flyTo({ center: [pos.coords.longitude, pos.coords.latitude], zoom: Math.max(m.getZoom(), 15), duration: 1500 });
-      },
-      (e) => setSaid(e.code === e.PERMISSION_DENIED ? "Location is turned off for this site" : "Couldn't find where you are"),
-      // Without a timeout, a dismissed permission prompt would leave it finding forever.
-      { timeout: 10000 },
-    );
-  }
+  const { findMe, said } = useFindMe(map);
 
   return (
     <>
@@ -70,22 +50,15 @@ export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, on
         </button>
       </div>
       <p className={s.toolSaid} role="status">{said}</p>
-      {/* While drawing or placing, the bar along the bottom is theirs. */}
-      {!drawing && (
-        <div className={s.rest} role="group" aria-label="On the map">
-          <button type="button" className={s.restDraw} onClick={onDraw} aria-keyshortcuts="D">
-            <Pencil size={16} strokeWidth={2.4} aria-hidden="true" />Draw area<kbd aria-hidden="true">D</kbd>
-          </button>
-          {areas > 0 && (
-            <>
+      {/* The drawn areas, stepped through (Draw area is the toolbar's pencil, or D). While drawing or placing, the bottom is theirs. */}
+      {!drawing && areas > 0 && (
+        <div className={s.rest} role="group" aria-label="Drawn areas">
               <button type="button" className={s.restKey} onClick={() => onStep(-1)} aria-label="Previous area" aria-keyshortcuts="ArrowUp" title="Previous area"><kbd aria-hidden="true">↑</kbd></button>
               <span className={s.restLabel}>{shown >= 0 ? `Area ${shown + 1} of ${areas}` : areas === 1 ? "1 area" : `${areas} areas`}</span>
               <button type="button" className={s.restKey} onClick={() => onStep(1)} aria-label="Next area" aria-keyshortcuts="ArrowDown" title="Next area"><kbd aria-hidden="true">↓</kbd></button>
               {shown >= 0 && (
                 <button type="button" onClick={onLetGo} aria-keyshortcuts="Escape">Close<kbd aria-hidden="true">Esc</kbd></button>
               )}
-            </>
-          )}
         </div>
       )}
     </>
