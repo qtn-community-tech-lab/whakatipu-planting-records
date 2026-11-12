@@ -53,6 +53,7 @@ export function RecordsFilter({
     <form method="get" action="/records" className="exp-form" aria-label="Filter records">
       <div className="exp-form__selects">
         <FilterChooser
+          key={`place:${f.place ?? ""}`}
           name="place" label="Site" options={siteOptions} value={f.place ?? ""}
           placeholder="All sites" clearLabel="Show all sites" noun="site"
         />
@@ -64,6 +65,7 @@ export function RecordsFilter({
           </select>
         </div>
         <FilterChooser
+          key={`species:${f.species ?? ""}`}
           name="species" label="Species" options={speciesOptions} value={f.species ?? ""}
           placeholder="All species" clearLabel="Show all species" noun="species"
         />

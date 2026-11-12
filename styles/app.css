@@ -184,16 +184,13 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   background: var(--surface-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237d877f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center;
   border: 1px solid var(--border-card); font: 600 13.5px/1 var(--font-sans); color: var(--text-strong); appearance: none; max-width: 100%;
 }
-/* Radix triggers render the arrow as an icon rather than a background image. */
-.wrt-select[data-slot="select-trigger"] { position: relative; background-image: none; }
-.wrt-select__icon { position: absolute; right: 14px; width: 10px; height: 6px; color: var(--text-muted); pointer-events: none; }
 .wrt-select[data-size="sm"] { height: 32px; }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
 /* Form fields (components/ui/field.tsx and components/ui/inputs) */
-/* In a form, a select looks like the text and search fields beside it; toolbar sorts keep the pill. */
+/* Form selects share field spacing and shape; toolbar sorts keep the pill. */
 .cn-field > .wrt-select {
-  width: 100%; padding-left: 12px; border: 0; border-radius: var(--radius-field); background-color: var(--surface-soft);
+  width: 100%; padding-left: 12px; border-radius: var(--radius-field);
   font: 700 14px/1 var(--font-sans);
 }
 .cn-field > .wrt-select:disabled { opacity: .45; cursor: not-allowed; }
