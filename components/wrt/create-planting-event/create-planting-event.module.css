@@ -1,21 +1,46 @@
-/* The record sheet: a full-screen satellite map with site pins; the form sits over it in FormPanel. */
+/* The planting event page: a full-screen satellite map with site pins; the form sits over it in FormPanel. */
 
 /* The map is the whole screen, over the app's sidebar and top bar. */
 .screen {
   /* above the app (top bar is 20), below dropdown popups (50) */
-  position: fixed; inset: 0; z-index: 45;
-  overflow: hidden; isolation: isolate;
-  background: #1b2a1f;
+  /* the whole screen; with a phone keyboard up, the part above it (use-keyboard-fit.ts) */
+  position: fixed; z-index: 45; left: 0; right: 0;
+  top: var(--keyboard-top, 0px); height: var(--keyboard-height, 100%);
+  /* clip, not just hidden: hidden still lets focus scroll it, which shoved the map and the sheet
+     up the screen whenever a button below was focused */
+  overflow: hidden; overflow: clip; isolation: isolate;
+  /* The drawer's cream, not the map's green: iOS Safari tints its top and bottom bars
+     from this fixed element's background, so both bars match the drawer. */
+  background: #fdfcf9;
   font-family: var(--font-sans);
   color: var(--cn-green-900);
 }
-/* The map is the whole screen: the page behind must not scroll, or widen a phone's
-   layout (the app's top bar is wider than 390px), which would push the drawer off the edge. */
+/* The map is the whole screen: the page behind must not scroll. (The same cream behind the browser's
+   bars, and the app's frame not drawn under the map: app/globals.css, by data-full-screen.) */
 :global(html):has(.screen), :global(body):has(.screen) { overflow: hidden; }
+/* Touch: no grey flash on a tap (buttons dim while pressed instead), no text selected or menu opened by a
+   long press on a button, and text keeps its size when the phone is turned on its side. On the page, not
+   .screen, so the dropdowns (drawn outside it) get them too. */
+:global(html):has(.screen) { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+:global(html):has(.screen) :is(button, summary, [role="button"]) { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+:global(html):has(.screen) button:active:enabled { opacity: 0.8; }
 /* `.screen > .map`, not `.map`: MapLibre's own CSS gives .maplibregl-map position: relative,
    and whichever stylesheet loads last would win a tie, collapsing the map to 300px high. */
 .screen > .map { position: absolute; inset: 0; }
 .map :global(.maplibregl-ctrl-attrib) { font-size: 9px; background: rgba(253, 252, 249, 0.6); }
+
+/* Phones: a solid green band along the top, behind the header's buttons. iOS Safari 26 colours its
+   top bar from a solid fixed element at the top edge (older Safari uses the page's theme-color, also
+   this green), so the status bar goes green while the bottom bar keeps the drawer's white.
+   It shows above the drawer at full screen too, behind the drawer's rounded top. */
+.topBand { display: none; }
+@media (max-width: 767px) {
+  .topBand {
+    display: block; position: fixed; z-index: 3; top: 0; left: 0; right: 0; height: calc(60px + env(safe-area-inset-top));
+    background-color: #15261c;
+    pointer-events: none;
+  }
+}
 
 /* the session header, one slim row: a round back button and one pill naming the site */
 .top {
@@ -29,22 +54,33 @@
 /* all three 40px tall; back and + keep a 44px tap area */
 .exit { position: relative; width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; }
 .exit::after, .add::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; }
-/* back and + are the two lime buttons at either end */
-.exit, .add { background: var(--cn-lime-300); color: var(--cn-green-900); }
-/* the site, centred between back and +: a button that opens the site chooser */
-.session {
-  min-width: 0; height: 40px; margin: 0 auto; padding: 0 12px; border: 0; border-radius: 999px; cursor: pointer;
+/* back, the site and + are lime, so they stand out on the green band behind them */
+.exit, .add, .session { background: var(--cn-lime-300); color: var(--cn-green-900); }
+/* the site, centred between back and +: a pill with the site (opens the chooser; a line under it
+   says the part or the step) and, with a site, × to leave it for every site */
+.session { min-width: 0; min-height: 40px; margin: 0 auto; border-radius: 999px; display: flex; align-items: stretch; }
+.sessionMain {
+  min-width: 0; padding: 0 10px 0 12px; border: 0; border-radius: 999px; background: none; color: inherit; cursor: pointer;
   display: flex; align-items: center; gap: 6px; font: 500 14px var(--font-sans); white-space: nowrap;
 }
-.session > svg { flex-shrink: 0; }
-.session > svg:first-child { color: var(--cn-lime-300); }
-.session > svg:last-child { opacity: 0.8; }
-.session:focus-visible, .add:focus-visible, .exit:focus-visible { outline: 2px solid var(--cn-lime-300); outline-offset: 2px; }
-.session b { font-weight: 700; overflow: hidden; text-overflow: ellipsis; }
+.sessionMain > svg { flex-shrink: 0; }
+.sessionMain > svg:first-child { color: var(--cn-green-800); }
+.sessionMain > svg:last-child { opacity: 0.8; transition: transform 150ms ease; }
+/* the chooser open: the chevron points up */
+.sessionMain[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .sessionMain > svg:last-child { transition: none; } }
+.sessionText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+.sessionText b { font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.sessionText small { font: 500 11px var(--font-sans); opacity: 0.8; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.sessionLeave { flex-shrink: 0; width: 36px; margin: 2px 2px 2px -4px; border: 0; border-radius: 50%; background: rgba(21, 38, 28, 0.12); color: var(--cn-green-900); display: grid; place-items: center; cursor: pointer; }
+@media (hover: hover) { .sessionLeave:hover { background: rgba(21, 38, 28, 0.22); } }
+.sessionMain:focus-visible, .sessionLeave:focus-visible, .add:focus-visible, .exit:focus-visible { outline: 2px solid #f3f6ee; outline-offset: 2px; }
 
 /* site pins: the app's plant-count markers (styles/app.css); the chosen site's lime.
    MapLibre places markers with position: absolute and a transform: never set either on .pin itself */
 .pin[data-on] { z-index: 1; }
+/* while drawing an area, taps on the map add corners: the pins stay in sight but don't take them */
+.screen[data-drawing] :is(.pin, .session, .add) { pointer-events: none; opacity: 0.6; }
 .pin[data-on] button { background: var(--cn-lime-300); color: var(--cn-green-900); }
 
 /* the + on the far side of the header: a menu for adding to the map */
@@ -52,8 +88,7 @@
 .add[aria-expanded="true"] { background: #c4dc6a; }
 .addMenu { min-width: 220px; padding: 6px; border-radius: 18px; display: flex; flex-direction: column; }
 .addMenu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border: 0; border-radius: 12px; background: none; color: inherit; font: 600 14.5px var(--font-sans); text-align: left; cursor: pointer; }
-.addMenu button:hover { background: rgba(243, 246, 238, 0.1); }
-.soon { padding: 2px 7px; border-radius: 999px; background: rgba(214, 234, 140, 0.18); color: var(--cn-lime-300); font: 700 10.5px/1.3 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
+@media (hover: hover) { .addMenu button:hover { background: rgba(243, 246, 238, 0.1); } }
 /* while placing: a cross over the centre of the visible map, what to do, and a way out */
 .cross { position: absolute; z-index: 2; width: 64px; height: 64px; transform: translate(-50%, -50%); pointer-events: none; }
 .cross::before, .cross::after { content: ""; position: absolute; background: #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
@@ -68,11 +103,11 @@
   /* one row that always fits: the text wraps, the buttons don't. Above the sheet at its bar (set inline), else under the header. */
   .hint { top: calc(60px + env(safe-area-inset-top)); left: 12px; right: 12px; transform: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; white-space: normal; border-radius: 22px; padding: 8px 8px 8px 16px; font-size: 13.5px; line-height: 1.25; }
 }
-/* wide screens: the form panel is on the left (572px with its inset), so the header,
-   the tools and the placing hint sit in the map beside it */
+/* wide screens: the form panel is on the left (572px with its inset), so the back button
+   and the placing hint sit in the map beside it */
 @media (min-width: 768px) {
-  .top { left: 588px; }
-  .session { margin: 0; }
-  .top { right: auto; }
+  .top { left: 588px; right: auto; }
+  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for the site pill and + */
+  .session, .add { display: none; }
   .hint { left: calc(50% + 286px); }
 }

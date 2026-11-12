@@ -568,11 +568,16 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
   const site = new Map(suggestions.map((x) => [x.speciesId, x]));
   const lineOf = (id: string) => form.lines.findIndex((l) => l.speciesId === id && l.area === area);
 
+  // Species added from "Other species" stay there until the search changes, so the box
+  // being typed in isn't moved (and rebuilt) mid-number.
+  const [kept, setKept] = useState<{ query: string; ids: ReadonlySet<string> }>({ query: "", ids: new Set() });
+  const keptIds = kept.query === query && query.trim() ? kept.ids : new Set<string>();
+
   // The site's species, then anything added from the search. Typing filters them in
   // place and brings in matches from the whole species list underneath.
   const listed = [
     ...suggestions.map((x) => byId.get(x.speciesId)).filter((x): x is SpeciesOption => !!x),
-    ...form.lines.filter((l) => l.area === area).map((l) => byId.get(l.speciesId)).filter((x): x is SpeciesOption => !!x && !site.has(x.id)),
+    ...form.lines.filter((l) => l.area === area).map((l) => byId.get(l.speciesId)).filter((x): x is SpeciesOption => !!x && !site.has(x.id) && !keptIds.has(x.id)),
   ];
   const shown = query.trim() ? rankMatches(listed, query) : listed;
   const listedIds = new Set(listed.map((x) => x.id));
@@ -582,7 +587,9 @@ function WhatPlanted({ form, options, suggestions, areas, plantIn, onDrawArea, o
   const setPlanted = (speciesId: string, value: string) => {
     const i = lineOf(speciesId);
     if (i < 0) {
-      if (value.trim()) form.addSpecies(speciesId, value, area);
+      if (!value.trim()) return;
+      if (!listedIds.has(speciesId)) setKept({ query, ids: new Set([...keptIds, speciesId]) });
+      form.addSpecies(speciesId, value, area);
       return;
     }
     const l = form.lines[i]!; // i >= 0: found above

@@ -54,3 +54,7 @@ next-env.d.ts
 
 # Supabase CLI cache
 supabase/.temp/
+
+# video renders: frames and the renderer's own packages (hundreds of MB)
+/docs/motion/render/out/
+/docs/motion/render/node_modules/

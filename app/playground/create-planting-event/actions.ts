@@ -1,28 +1,28 @@
 "use server";
 /**
- * What a site, or one part of it, has had planted, for the record sheet's overview:
- * its most planted trees and its most recent seasons, from the place_species and
- * place_seasons views.
+ * What a site, or one part of it, has had planted, for the planting event page's overview:
+ * its most planted trees and its most recent seasons, from the site_area_species and
+ * site_area_seasons views.
  */
 import { listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
 import { listSpecies } from "@/db/queries/species";
 import { SLUG } from "@/lib/wrt/text";
 
-const TREES = 5;
-const SEASONS = 6;
+const TREES_SHOWN = 5;
+const SEASONS_SHOWN = 6;
 
-export interface PlacePlantings {
-  trees: { id: string; name: string; italic: boolean; here: number; photo: { src: string; focalPoint: string } | null }[];
+export interface SitePlantings {
+  trees: { id: string; name: string; italic: boolean; here: number; photo: { src: string } | null }[];
   seasons: { slug: string; label: string; plants: number }[];
   /** A part with nothing recorded shows the whole site's instead. */
   wholeSite: boolean;
 }
 
 /** `parcelId` is the part's WRT number, as in the form's parts. */
-export async function placePlantings(slug: string, parcelId: string | null): Promise<PlacePlantings | null> {
+export async function loadSiteOverview(slug: string, parcelId: string | null): Promise<SitePlantings | null> {
   // Trust boundary: server actions are public endpoints.
   if (!SLUG.test(slug) || (parcelId !== null && parcelId.length > 80)) return null;
-  const read = (part: string | null) => Promise.all([listSiteSpecies(slug, part, TREES), listSiteSeasons(slug, part, SEASONS)]);
+  const read = (part: string | null) => Promise.all([listSiteSpecies(slug, part, TREES_SHOWN), listSiteSeasons(slug, part, SEASONS_SHOWN)]);
   const [register, [first, firstSeasons]] = await Promise.all([listSpecies(), read(parcelId)]);
   let [species, seasons] = [first, firstSeasons];
   const wholeSite = !parcelId || species.length === 0;
@@ -34,7 +34,7 @@ export async function placePlantings(slug: string, parcelId: string | null): Pro
       const p = photos.get(x.species ?? "");
       return {
         id: x.species ?? "", name: x.common_name ?? x.scientific_name ?? "", italic: !x.common_name, here: x.plants ?? 0,
-        photo: p ? { src: p.src, focalPoint: "center" } : null,
+        photo: p ? { src: p.src } : null,
       };
     }),
     seasons: seasons.map((x) => ({ slug: x.season ?? "", label: x.season_label ?? "", plants: x.plants ?? 0 })),
