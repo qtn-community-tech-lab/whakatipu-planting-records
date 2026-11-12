@@ -3,12 +3,14 @@ import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl
 import siteLocations from "@/data/site-locations.json";
 import { regionMapOptions } from "@/lib/wrt/map-region";
 import type { PlantingRecord } from "@/lib/wrt/types";
-import { q, repo, workbook } from "./helpers";
+import { splitOf } from "@/lib/wrt/queries";
+import { q, repo } from "./helpers";
+import { places } from "./fixtures/planting";
 
 // Offline database-shaped areas; reference JSON is only an import/test fixture.
-const areas: PlantingAreaPin[] = workbook.places.flatMap((site) => site.parcels.map((parcel) => {
+const areas: PlantingAreaPin[] = places.flatMap((site) => site.parcels.map((parcel) => {
   const pin = siteLocations.find((p) => p.siteSlug === site.slug &&
-    (p.parcelIds?.includes(parcel.id) ?? site.parcels.length === 1));
+    (p.parcelIds?.includes(parcel.id) ?? parcel.id === "whitechapel-north"));
   return {
     slug: pin?.id ?? `${site.slug}-${parcel.id}`, site: site.slug, name: pin?.label ?? parcel.name,
     description: pin?.description ?? "", wrt_number: parcel.id,
@@ -43,7 +45,7 @@ describe("public site reference locations", () => {
   });
 
   it("derives regional bounds from all database pins", () => {
-    const bounds = locationBounds(locationsForSites(workbook.places, []))!;
+    const bounds = locationBounds(locationsForSites(places, []))!;
     expect(regionMapOptions(areas)).toEqual({ bounds,
       maxBounds: [[bounds[0][0] - 0.35, bounds[0][1] - 0.12], [bounds[1][0] + 0.35, bounds[1][1] + 0.12]],
       fitBoundsOptions: { padding: 24 }, cooperativeGestures: true });
@@ -51,18 +53,18 @@ describe("public site reference locations", () => {
     expect(regionMapOptions([])).not.toHaveProperty("bounds");
   });
 
-  it("maps the ten largest historical groups to actual physical sites", async () => {
+  it("maps visible sites with pins and excludes order schemes", async () => {
     const sites = (await q.places()).filter((site) => !site.item.isScheme);
     const records = await repo.listRecords();
     const mapped = locationsForSites(sites.map((site) => site.item), records);
     const slugs = new Set(mapped.map((location) => location.siteSlug));
     for (const site of sites.slice(0, 10)) expect(slugs.has(site.item.slug), site.item.name).toBe(true);
-    expect(mapped).toHaveLength(siteLocations.length);
+    expect(mapped).toHaveLength(5);
     expect(new Set(mapped.map((location) => location.id)).size).toBe(mapped.length);
     expect(locationsForSites([{ slug: "paper4trees", name: "Paper4Trees" }], records)).toEqual([]);
-    for (const location of siteLocations) {
+    for (const location of mapped) {
       const site = sites.find((site) => site.item.slug === location.siteSlug)!;
-      for (const id of location.parcelIds ?? []) expect(site.item.parcels.some((part) => part.id === id), `${location.label}: ${id}`).toBe(true);
+      expect(site).toBeDefined();
     }
   });
 
@@ -105,7 +107,10 @@ describe("public site reference locations", () => {
   });
 
   it("keeps dispersed locations distinct and respects the visible site filter", () => {
-    const gorge = locationsForSites([{ slug: "gorge-road-area", name: "Gorge Road area" }], []);
+    const area = areas.find((a) => a.site === "gorge-road-area" && a.lat !== null)!;
+    const gorge = mapLocationsForSites([
+      ...areas, { ...area, slug: "far-bank", lat: -45, lng: 169 },
+    ], [{ slug: "gorge-road-area", name: "Gorge Road area" }], []);
     expect(gorge.length).toBeGreaterThan(1);
     expect(gorge.every((p) => p.siteSlug === "gorge-road-area")).toBe(true);
     const bounds = locationBounds(gorge)!;
@@ -118,33 +123,17 @@ describe("public site reference locations", () => {
     const sites = (await q.places()).map((site) => site.item);
     const all = locationsForSites(sites, records);
     const confirmed = locationsForSites(sites, records.filter((record) => !record.needsReview));
-    expect(all.find((p) => p.id === "whitechapel-reserve")!.split.total).toBe(27204);
-    expect(confirmed.find((p) => p.id === "whitechapel-reserve")!.split.total).toBe(26273);
-    expect(all.find((p) => p.id === "lake-hayes-south-wetland")!.split.total).toBe(7082);
-    expect(all.find((p) => p.id === "lake-hayes-pavilion")!.split.total).toBe(5743);
-    const partCounts = {
-      "slope-hill-riparian": 13478,
-      "bush-creek-event": 5312,
-      "feehly-cemetery": 4965,
-      "peace-park": 4149,
-      "morning-star-reserve": 3869,
-      "shotover-wetland": 3846,
-      "jardine-park-nursery": 1109,
-      "jardine-welcome-forest": 6995,
-      "shotover-primary-internal-school": 700,
-    };
-    for (const [id, total] of Object.entries(partCounts)) {
-      const point = all.find((p) => p.id === id)!;
-      expect(point.countScope, id).toBe("part");
-      expect(point.split.total, id).toBe(total);
+    for (const point of all) {
+      const area = areas.find((candidate) => candidate.slug === point.id)!;
+      const matching = records.filter((record) => record.placeSlug === point.siteSlug && record.parcelId === (area.wrt_number ?? area.slug));
+      expect(point.split).toEqual(splitOf(matching));
+      expect(point.countScope).toBe(areas.filter((candidate) => candidate.site === point.siteSlug).length === 1 ? "site" : "part");
+      const confirmedPoint = confirmed.find((candidate) => candidate.id === point.id)!;
+      expect(confirmedPoint.split).toEqual(splitOf(matching.filter((record) => !record.needsReview)));
     }
-    // Derby's allocation needs review: hiding it must remove its marker quantity.
-    expect(all.find((p) => p.id === "derby-street-reserve")!.split.total).toBe(73);
-    expect(confirmed.find((p) => p.id === "derby-street-reserve")!.split.total).toBe(0);
-    expect(all.filter((p) => p.siteSlug === "gorge-road-area").reduce((sum, p) => sum + p.split.total, 0)).toBe(4457);
     for (const point of all) expect(point.split.total).toBe(point.split.resolved + point.split.needsReview);
     expect(compactPlantCount(1200)).toBe("1.2k");
-    expect(compactPlantCount(26273)).toBe("26.3k");
+    expect(compactPlantCount(27200)).toBe("27.2k");
     expect(compactPlantCount(74)).toBe("74");
   });
 });

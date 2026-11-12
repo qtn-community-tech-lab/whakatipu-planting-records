@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
-import { notFound } from "next/navigation";
+import { revalidatePath, updateTag } from "next/cache";
+import { SUPABASE_TAG } from "@/db/cache";
+import type { SiteSubmitResult } from "@/db/types";
+import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { notFound, redirect } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
-import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { PageHead, Card, CardLink, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
@@ -16,6 +22,10 @@ import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
+import Link from "next/link";
+import { readSite, deactivateSite } from "@/db/queries/sites";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
 
@@ -28,21 +38,56 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
   const { slug } = await params;
-  const d = await getWrt().place(slug);
-  if (!d || !d.split.records) return { title: "Site not found" };
+  const [site, d] = await Promise.all([readSite(slug), getWrt().place(slug)]);
+  if (!site) return { title: "Site not found" };
+  if (!d || !d.split.records) return { title: site.name, description: site.description };
   return {
-    title: d.place.name,
-    description: `${formatNumber(d.split.total)} recorded plants at ${d.place.name}, ${d.span.first.label} to ${d.span.last.label}, by season, year and species.`,
+    title: site.name,
+    description: site.description.trim() || `${formatNumber(d.split.total)} recorded plants at ${site.name}, ${d.span.first.label} to ${d.span.last.label}, by season, year and species.`,
   };
 }
 
 export default async function SitePage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const d = await getWrt().place(slug);
-  if (!d || !d.split.records) notFound();
+  const [site, d, authenticated] = await Promise.all([readSite(slug), getWrt().place(slug), isAuthenticated()]);
+  if (!site) notFound();
+  async function onDeactivate(): Promise<SiteSubmitResult> {
+    "use server";
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate sites." };
+    try {
+      const { data, error } = await deactivateSite(slug);
+      if (error?.code === "42501") return { error: "You need to sign in with a staff account to deactivate sites." };
+      if (error || !data) return { error: "The site could not be deactivated. Please try again." };
+    } catch {
+      return { error: "The site could not be deactivated. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/sites/${slug}`);
+  }
 
-  const { place, split, span } = d;
+  const status = site.deactivated_at ? <Alert role="status">
+    <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
+    <AlertDescription>
+      <p>This site is unavailable for new planting events. Its historical records and recorded quantities are retained.</p>
+      <Link href="/sites?state=deactivated" className="cn-link">View deactivated sites</Link>
+    </AlertDescription>
+  </Alert> : null;
+  const editButton = authenticated && !site.deactivated_at ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const actions = editButton ? <DeactivateSite name={site.name} onDeactivate={onDeactivate}>{editButton}</DeactivateSite> : null;
+  if (!d || !d.split.records)
+    return (
+      <>
+        {actions}
+        {status}
+        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} />
+        <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
+      </>
+    );
+
+  const { split, span } = d;
+  const place = { ...d.place, name: site.name };
   const yearParam = Number(first(sp.year));
   const year = d.years.some((y) => y.year === yearParam) ? yearParam : undefined;
 
@@ -71,6 +116,8 @@ export default async function SitePage({ params, searchParams }: Props) {
 
   return (
     <>
+      {actions}
+      {status}
       <PageHead
         back={{ href: "/sites", label: "All sites" }}
         eyebrow={eyebrow}
@@ -78,7 +125,7 @@ export default async function SitePage({ params, searchParams }: Props) {
         lead={
           place.isScheme
             ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
-            : place.description?.trim() || undefined
+            : site.description.trim() || undefined
         }
       />
 

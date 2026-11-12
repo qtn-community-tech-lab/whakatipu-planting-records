@@ -1,16 +1,15 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
+import { PhotoMedia } from "@/components/wrt/species/photo-media";
 import type { Species } from "@/lib/wrt/types";
-import { getSpeciesPhoto } from "@/lib/wrt/species-photos";
 
 /** Small round picture for a species in a ranked list: its photo, or its initial. */
-export function SpeciesAvatar({ species }: { species: Pick<Species, "id" | "scientificName" | "displayName" | "displayIsScientific"> }) {
-  const photo = getSpeciesPhoto(species.id);
+export function SpeciesAvatar({ species }: { species: Pick<Species, "photos" | "id" | "scientificName" | "displayName" | "displayIsScientific"> }) {
+  const photo = species.photos[0];
   const initial = (species.displayIsScientific ? species.scientificName : species.displayName).charAt(0).toUpperCase();
   return (
     <span className="wrt-avatar" aria-hidden="true">
       {photo ? (
-        <Image src={photo.src} width={photo.width} height={photo.height} alt="" sizes="40px" style={{ objectPosition: photo.focalPoint }} unoptimized />
+        <PhotoMedia photo={photo} name={species.displayName} variant="avatar" sizes="40px" />
       ) : (
         <span className="wrt-avatar__initial">{initial}</span>
       )}

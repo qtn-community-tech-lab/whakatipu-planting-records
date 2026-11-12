@@ -11,6 +11,9 @@
  * - Parcel: a registered site or sub-site inside a place (WRT's own 9A, 9G…).
  */
 
+import type { SpeciesPhoto } from "./species-photos";
+import type { SpeciesProfile } from "./species-profiles";
+
 export type SeasonName = "Autumn" | "Spring";
 export type Confidence = "high" | "medium" | "low";
 export type Precision = "site" | "subsite" | "area" | "scheme" | "unknown";
@@ -81,6 +84,10 @@ export interface Species {
   /** Macron-free, lower-case keys used for search. */
   searchKeys: string[];
   note: string | null;
+  photos: readonly SpeciesPhoto[];
+  profile: SpeciesProfile | null;
+  /** Deactivated from new selections; historical records still reference this species. */
+  deactivatedAt: string | null;
 }
 
 /** WRT's two threatened-species marks, kept separately because they disagree. */

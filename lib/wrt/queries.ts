@@ -125,7 +125,7 @@ export interface PlaceSummary extends Ranked<Place> {
 }
 
 export interface SpeciesSummary extends Ranked<Species> {
-  span: Span;
+  span: Span | null;
   placeCount: number;
 }
 
@@ -406,14 +406,12 @@ export function createQueries(repo: WrtRepository) {
         a.push(r);
         bySpecies.set(r.speciesId, a);
       }
-      return [...bySpecies.entries()]
-        .map(([id, recs]) => ({
-          item: c.speciesById.get(id)!,
-          split: splitOf(recs),
-          span: spanOf(c, recs)!,
-          placeCount: new Set(recs.map((r) => r.placeSlug)).size,
-        }))
-        .sort(byTotalDesc);
+      return c.species
+        .map((item) => {
+          const recs = bySpecies.get(item.id) ?? [];
+          return { item, split: splitOf(recs), span: spanOf(c, recs), placeCount: new Set(recs.map((r) => r.placeSlug)).size };
+        })
+        .sort((a, b) => byTotalDesc(a, b) || a.item.scientificName.localeCompare(b.item.scientificName));
     },
 
     async species(slug: string): Promise<SpeciesDetail | null> {
@@ -499,7 +497,7 @@ export function createQueries(repo: WrtRepository) {
         b.score - a.score || b.split.total - a.split.total;
       const places = c.places
         .map((p) => ({ item: p, split: placeSplits.get(p.slug) ?? emptySplit(), score: matchScore(q, p.searchKeys) }))
-        .filter((x) => x.score > 0 && x.split.records > 0)
+        .filter((x) => x.score > 0)
         .sort(rank)
         .slice(0, limit);
       const species = c.species

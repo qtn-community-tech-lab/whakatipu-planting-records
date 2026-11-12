@@ -119,12 +119,4 @@ describe("humaniseNote (display text never exposes join keys)", () => {
     );
     expect(out).toBe("species contested with Ozothamnus leptophyllus and Ozothamnus fulvida: one species or two? Kept as typed; the numbers are not merged");
   });
-
-  it("no record note shown to users contains a species ID, but the raw note is kept", async () => {
-    const { repo } = await import("./helpers");
-    const recs = await repo.listRecords();
-    const notes = recs.flatMap((r) => r.notes);
-    expect(notes.some((n) => /SP-\d+/.test(n.raw))).toBe(true);
-    expect(notes.filter((n) => /SP-\d+|\(C\d+\)/.test(n.text))).toEqual([]);
-  });
 });

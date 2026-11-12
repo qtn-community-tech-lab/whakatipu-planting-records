@@ -46,7 +46,7 @@ export interface TopSite {
 
 /** A season's top species: just what the row shows. */
 export interface TopSpecies {
-  species: Pick<Species, "id" | "slug" | "scientificName" | "displayName" | "displayIsScientific">;
+  species: Pick<Species, "photos" | "id" | "slug" | "scientificName" | "displayName" | "displayIsScientific">;
   split: Pick<QuantitySplit, "total">;
 }
 

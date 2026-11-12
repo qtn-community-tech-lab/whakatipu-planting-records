@@ -6,6 +6,8 @@
  * keys); every label shown is a name, as everywhere else in the app.
  */
 import "server-only";
+import { listSites } from "@/db/queries/sites";
+import { listSpeciesForPlanting } from "@/db/queries/species";
 import { getWrtAll } from "../server";
 import { searchKey } from "../text";
 
@@ -37,14 +39,20 @@ export interface EventFormOptions {
 }
 
 /**
- * Uses getWrtAll(), not getWrt(): which sites and species exist must not
- * depend on the reader's "show records needing review" switch.
+ * Uses unscoped data: available sites and species must not depend on the
+ * reader's review switch. New events use active sites and species,
+ * including entries with no planting history; historical lookups retain deactivated ones.
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {
-  const { places, species } = await getWrtAll().lookups();
+  const [{ places }, species, sites] = await Promise.all([
+    getWrtAll().lookups(),
+    listSpeciesForPlanting(),
+    listSites(),
+  ]);
+  const activeSites = new Set(sites.map((site) => site.slug));
   return {
     sites: places
-      .filter((p) => !p.isScheme)
+      .filter((p) => !p.isScheme && activeSites.has(p.slug))
       .map((p) => ({
         slug: p.slug,
         name: p.name,
@@ -53,13 +61,19 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species
-      .map((s) => ({
-        id: s.id,
-        name: s.displayName,
-        scientific: s.scientificName,
-        isScientific: s.displayIsScientific,
-        keys: s.searchKeys,
-      }))
+      .map((s) => {
+        const name = s.maori_name ?? s.common_name ?? s.scientific_name;
+        const keys = [s.scientific_name, s.suggested_spelling, s.common_name, s.maori_name]
+          .filter((value): value is string => !!value)
+          .map(searchKey);
+        return {
+          id: s.register_code ?? s.slug,
+          name,
+          scientific: s.scientific_name,
+          isScientific: name === s.scientific_name,
+          keys: [...new Set(keys)],
+        };
+      })
       .sort((a, b) => a.name.localeCompare(b.name)),
   };
 }
