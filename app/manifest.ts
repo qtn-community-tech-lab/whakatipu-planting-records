@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 /** Makes the app installable. Colours are Canopy's app background and primary green. */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "WRT restoration history",
+    name: "WRT Restoration History",
     short_name: "WRT history",
     description: "Explore and record Whakatipu Reforestation Trust plantings by site, species, year and season.",
     id: "/",
