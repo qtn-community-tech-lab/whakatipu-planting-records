@@ -225,7 +225,6 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
                   <b>Choose a site</b>
                   {areas.length > 0 && <small>{areas.length === 1 ? "Your area needs one" : "Your areas need one"}</small>}
                 </span>
-                <ChevronUp size={16} strokeWidth={2.4} aria-hidden="true" />
               </button>
             )}
             {/* The areas: a tap steps into them, at the first. */}

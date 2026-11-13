@@ -73,6 +73,15 @@ button.handle:focus-visible { outline: 2px solid var(--cn-green-800); outline-of
 .barButton { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border: 0; border-radius: var(--radius-pill); background: var(--cn-sage-100); color: var(--cn-green-800); font: 700 14px var(--font-sans); cursor: pointer; }
 .sheet[data-snap="peek"] .barButton { background: var(--cn-green-800); color: var(--cn-white); }
 .barButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+/* Back: a round ← before the title (wide: before the breadcrumb), one step up */
+.backRow { min-width: 0; display: flex; align-items: center; gap: 8px; }
+.backRow > :last-child { flex: 1; min-width: 0; }
+.back { position: relative; flex-shrink: 0; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--cn-sage-100); color: var(--cn-green-800); cursor: pointer; }
+.back::before { content: ""; position: absolute; inset: -4px; }
+@media (hover: hover) { .back:hover { background: var(--surface-hover); } }
+.back:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+/* phones: Back takes the pin's place beside the title, so the title keeps its room */
+.bar .backRow .titleIcon { display: none; }
 
 /* Typing on a phone (the page is marked data-keyboard while the keyboard is up, see
    create-planting-event/use-keyboard-fit.ts): the bar keeps only its handle, so the form gets the room. */
