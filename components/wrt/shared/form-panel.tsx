@@ -13,7 +13,7 @@
  * breakpoint (a window resized, a big phone turned on its side) restyles the panel but keeps the
  * form and what's typed in it. Wide, the sheet's spring and drags are off.
  */
-import { ChevronDown, MapPin, Search, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, Map as MapIcon, MapPin, Search } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Spring, project, rubberBand } from "./spring";
 import s from "./form-panel.module.css";
@@ -28,7 +28,7 @@ export const sheetHeight = (at: "peek" | "mid", containerHeight: number) =>
 /** At full, the gap left above the sheet, below the status bar, in px. */
 const FULL_GAP = 10;
 
-export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onSearch, searchOpen, screen, depth, actionSlot, locked, above, below, children }: {
+export function FormPanel({ wide, open, container, snap, onSnap, label, title, subtitle, onTitle, titleOpen, titleMenu, titleIcon, titleHidden, onBack, backLabel, onSearch, screen, depth, actionSlot, locked, above, below, children }: {
   wide: boolean;
   open: boolean;
   /** The positioned element the phone sheet sits inside. */
@@ -41,16 +41,18 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   title: string;
   /** A line under the title, e.g. the part of the site. */
   subtitle?: string | undefined;
-  /** Makes the title a chooser (pin, title, chevron), e.g. to change the site. */
+  /** Makes the title a button (pin and title), e.g. to open the site list. */
   onTitle?: (() => void) | undefined;
-  /** What the title opens is open: its chevron flips, and the button says so (aria-expanded). */
+  /** What the title opens is open: the button says so (aria-expanded). */
   titleOpen?: boolean | undefined;
   /** Instead of onTitle: wraps the title button (pin, title, chevron) in the page's own menu, e.g. a popover. */
   titleMenu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined;
-  /** Phones: a Search button on the bar (the page opens its search). */
+  /** A round ← before the title (wide: before `above`): one step back, wherever the panel is. */
+  onBack?: (() => void) | undefined;
+  /** What Back does, for screen readers (default "Back"). */
+  backLabel?: string | undefined;
+  /** Phones: a Search button on the bar (the page opens its search). At full screen it reads Map instead, and lowers the sheet. */
   onSearch?: (() => void) | undefined;
-  /** The search is open: the same button reads Close, so the way back is where Search was. */
-  searchOpen?: boolean | undefined;
   /** Which screen the panel shows, and how deep it is: a new screen slides in from the right going deeper, from the left coming back. */
   screen?: string | undefined;
   depth?: number | undefined;
@@ -68,13 +70,21 @@ export function FormPanel({ wide, open, container, snap, onSnap, label, title, s
   children: ReactNode;
 }) {
   const title_ = wide && titleHidden ? <h2 className="sr-only">{title}</h2> : <Heading title={title} subtitle={subtitle} onTitle={onTitle} open={titleOpen} menu={titleMenu} icon={titleIcon} />;
-  const heading = <>{wide && above}{actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_}{wide && below}</>;
-  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} searchOpen={searchOpen} screen={screen} depth={depth}>{children}</Sheet>;
+  const back = onBack && (
+    <button type="button" className={s.back} data-bar-action="" onClick={onBack} aria-label={backLabel ?? "Back"}>
+      <ArrowLeft size={20} strokeWidth={2.4} aria-hidden="true" />
+    </button>
+  );
+  const row = actionSlot ? <div className={s.headRow}>{title_}<div ref={actionSlot} /></div> : title_;
+  const heading = wide
+    ? <>{(back || above) && <div className={s.backRow}>{back}{above}</div>}{row}{below}</>
+    : back ? <div className={s.backRow}>{back}{row}</div> : row;
+  return <Sheet wide={wide} open={open} container={container} snap={snap} onSnap={onSnap} label={label} title={title} heading={heading} locked={locked} onSearch={actionSlot ? undefined : onSearch} screen={screen} depth={depth}>{children}</Sheet>;
 }
 
-function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, searchOpen, screen, depth = 0, children }: {
+function Sheet({ wide, open, container, snap, onSnap, label, title, heading, locked, onSearch, screen, depth = 0, children }: {
   wide: boolean; open: boolean; container: HTMLElement | null; snap: Snap; onSnap: (snap: Snap) => void;
-  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; searchOpen?: boolean | undefined; screen?: string | undefined; depth?: number | undefined; children: ReactNode;
+  label: string; title: string; heading: ReactNode; locked?: boolean | undefined; onSearch?: (() => void) | undefined; screen?: string | undefined; depth?: number | undefined; children: ReactNode;
 }) {
   const sheet = useRef<HTMLElement>(null);
   const visible = useRef<HTMLDivElement>(null);
@@ -297,9 +307,9 @@ function Sheet({ wide, open, container, snap, onSnap, label, title, heading, loc
           {heading}
         </div>
         {!wide && !locked && onSearch && (
-          <button type="button" className={s.barButton} data-bar-action="" onClick={onSearch} aria-label={searchOpen ? "Close the site list" : "Search sites"}>
-            {searchOpen ? <X size={16} strokeWidth={2.6} aria-hidden="true" /> : <Search size={16} strokeWidth={2.4} aria-hidden="true" />}
-            {searchOpen ? "Close" : "Search"}
+          // Full screen covers the map: the button takes you back to it, its chevron pointing the way the sheet goes.
+          <button type="button" className={s.barButton} data-bar-action="" onClick={snap === "full" ? () => onSnap("peek") : onSearch} aria-label={snap === "full" ? "Show the map" : "Search sites"}>
+            {snap === "full" ? <><MapIcon size={16} strokeWidth={2.4} aria-hidden="true" />Map<ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" /></> : <><Search size={16} strokeWidth={2.4} aria-hidden="true" />Search</>}
           </button>
         )}
       </div>
@@ -324,7 +334,7 @@ function scroller(el: HTMLElement | null, sheet: HTMLElement): HTMLElement | nul
   return null;
 }
 
-/** The title, as a chooser when `onTitle` is given: a pin, the title and its line, a chevron. */
+/** The title, as a button when `onTitle` is given (a pin, the title and its line), or a menu with a chevron. */
 function Heading({ title, subtitle, onTitle, open, menu, icon }: {
   title: string; subtitle?: string | undefined; onTitle?: (() => void) | undefined; open?: boolean | undefined;
   menu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined; icon?: boolean | undefined;
@@ -340,14 +350,13 @@ function Heading({ title, subtitle, onTitle, open, menu, icon }: {
       <MapPin size={22} strokeWidth={2.2} />
     </span>
   );
-  const chevron = <ChevronDown size={22} strokeWidth={2.4} />;
-  if (menu) return menu({ className: s.titleButton!, label: `${title}${subtitle ? `, ${subtitle}` : ""}: change`, children: <>{pin}{text}{chevron}</> });
+  // Only a real menu has the chevron: a title that opens the site list doesn't need one (the bar's Map and Back close it).
+  if (menu) return menu({ className: s.titleButton!, label: `${title}${subtitle ? `, ${subtitle}` : ""}: change`, children: <>{pin}{text}<ChevronDown size={22} strokeWidth={2.4} /></> });
   if (!onTitle) return icon ? <div className={s.titlePlain}>{pin}{text}</div> : text;
   return (
     <button type="button" className={s.titleButton} onClick={onTitle} aria-expanded={open} aria-label={`${title}${subtitle ? `, ${subtitle}` : ""}: change`}>
       {pin}
       {text}
-      {chevron}
     </button>
   );
 }
