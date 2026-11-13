@@ -508,10 +508,10 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     window.addEventListener("beforeunload", ask);
     return () => window.removeEventListener("beforeunload", ask);
   }, [guarded, editing]);
-  // The top bar's ←, off the map: asks first like the rest.
+  // Off the map (Back from every site): asks first like the rest.
   // Back to the page's own entry first (past ours), then replace it: back from the events page then goes to the page before this one.
   const exit = () => unlessUnsaved("the events page", () => { exiting.current = true; toPageEntry(() => window.location.replace(exitHref)); });
-  // The header's ×: back to every site. Every "All sites" (the breadcrumb's, and the phone title's and dock's menus) does the same.
+  // Back to every site. Every "All sites" (the breadcrumb's, and the phone title's and dock's menus) and Back from a site do this.
   // A new location with nothing entered is kept, as on the way to its site's page (see showSite).
   function leaveSite() {
     if (spot && !entriesUnsaved) {
@@ -519,6 +519,18 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       return leaveFor("all");
     }
     unlessUnsaved("every site", () => leaveFor("all"));
+  }
+  // The panel's Back: one step up (the site list, an area's sheet, a season, the form, a part, the site), and off
+  // the map only from every site. Each step asks first where it would lose work, as its own way out does.
+  function goBack() {
+    if (choosing) return closeChooser(true);
+    if (sheetArea) return setAreaSheet(null);
+    if (season) return unlessEditing(closeSeason);
+    if (spot) return entriesUnsaved ? leaveSite() : cancelSpot();
+    if (started) return void formBack();
+    if (site && parcel) return showSite();
+    if (!allSites) return leaveSite();
+    exit();
   }
   // Starting one thing ends the others: the cross, the site list, an area's sheet and an open season.
   function endModes() {
@@ -865,7 +877,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       {/* Phones: a see-through green band behind the header; Safari tints its top bar from it. */}
       <div className={s.topBand} aria-hidden="true" />
       <AreaOverlay map={map} draw={draw} shown={shownArea} />
-      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} exitHref={exitHref} onExit={exit} choosing={choosing} onChooseSite={toggleChooser} onLeaveSite={leaveSite} onAddLocation={addLocation} onDrawArea={newArea} onFindMe={findMe} />
+      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} choosing={choosing} onChooseSite={toggleChooser} onAddLocation={addLocation} onDrawArea={newArea} onFindMe={findMe} />
       {wide && (
         <MapTools
           map={map} drawing={!!draw.draft || !!placing} onDraw={newArea} onAddLocation={addLocation}
@@ -912,8 +924,10 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
             {b.children}
           </PartMenu>
         ) : undefined}
-        // Over a site, the list's way back is the same button, reading Close (the list's own header is hidden on phones).
-        onSearch={wide || draw.draft ? undefined : choosing && siteSlug ? () => closeChooser(true) : searchSites} searchOpen={choosing && !!siteSlug}
+        onSearch={wide || draw.draft ? undefined : searchSites}
+        // Not while drawing or placing (they have their own Cancel), nor on wide at every site (nothing in the page above it).
+        onBack={draw.draft || placing || (wide && allSites && !choosing && !season && !sheetArea) ? undefined : goBack}
+        backLabel={allSites && !choosing && !season && !sheetArea ? "Leave the map" : "Back"}
         // Wide: the breadcrumb names the site and part, so in the form the title only shows when it's something else
         // (an area, a new location). With no site, and on a site's overview, it heads the panel as on phones.
         titleHidden={!!site && !sheetArea && !spot && !allSites && !siteHeader}
