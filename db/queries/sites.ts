@@ -1,7 +1,7 @@
 /** Sites and their areas. */
 import { db } from "@/db/client";
 import { areaPins, areaTotals, siteTotals } from "./views";
-import type { CreateSiteInput, EditSiteInput } from "@/db/types";
+import type { CreateSiteInput, EditSiteInput, CreatePlantingAreaInput, EditPlantingAreaInput } from "@/db/types";
 
 /** The register by lifecycle state, including sites without planting history. */
 export async function listSites(state: "active" | "deactivated" = "active") {
@@ -28,13 +28,59 @@ export async function readSite(slug: string) {
 }
 
 export async function createSite(values: CreateSiteInput) {
-  return (await db()).from("sites").insert(values).select("slug").single();
+  return (await db())
+    .from("sites")
+    .insert({ slug: values.slug, name: values.name, description: values.description })
+    .select("slug")
+    .single();
 }
 
 export async function updateSite(slug: string, values: EditSiteInput) {
   return (await db())
     .from("sites")
-    .update(values)
+    .update({ name: values.name, description: values.description })
+    .eq("slug", slug)
+    .select("slug")
+    .single();
+}
+
+/** The complete active area register, including areas awaiting their first planting. */
+export async function listPlantingAreas(site: string) {
+  const { data } = await (await db())
+    .from("areas")
+    .select("slug, site, name, description, updated_at")
+    .eq("site", site)
+    .is("deactivated_at", null)
+    .order("name")
+    .throwOnError();
+  return data;
+}
+
+export async function readPlantingArea(site: string, slug: string) {
+  const { data } = await (await db())
+    .from("areas")
+    .select("slug, site, name, description, updated_at")
+    .eq("site", site)
+    .eq("slug", slug)
+    .is("deactivated_at", null)
+    .maybeSingle()
+    .throwOnError();
+  return data;
+}
+
+export async function createPlantingArea(site: string, values: CreatePlantingAreaInput) {
+  return (await db())
+    .from("areas")
+    .insert({ slug: values.slug, name: values.name, description: values.description, site })
+    .select("slug")
+    .single();
+}
+
+export async function updatePlantingArea(site: string, slug: string, values: EditPlantingAreaInput) {
+  return (await db())
+    .from("areas")
+    .update({ name: values.name, description: values.description })
+    .eq("site", site)
     .eq("slug", slug)
     .select("slug")
     .single();

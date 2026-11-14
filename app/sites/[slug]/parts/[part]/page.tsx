@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
 import type { PlaceDetail, SeasonPoint } from "@/lib/wrt/queries";
 import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
-import { spanLabel, formatNumber, slugify } from "@/lib/wrt/text";
-import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
+import { Card, CardLink, PageHead, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
 import { RecordsTable } from "@/components/wrt/shared/records";
@@ -13,6 +13,9 @@ import { hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
+import { readPlantingArea, readSite } from "@/db/queries/sites";
+import { isAuthenticated } from "@/db/queries/access";
+import { Button } from "@/components/ui/button";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
@@ -22,34 +25,39 @@ const REVIEW_CAP = 25;
 export async function generateStaticParams() {
   const places = await getWrt().places();
   return places.flatMap((p) =>
-    p.item.parcels.length > 1 ? p.item.parcels.map((parcel) => ({ slug: p.item.slug, part: slugify(parcel.name) })) : [],
+    p.item.parcels.map((parcel) => ({ slug: p.item.slug, part: parcel.slug })),
   );
 }
 
 function findPart(d: PlaceDetail | null, part: string) {
-  return d?.parcels.find((p) => slugify(p.item.name) === part) ?? null;
+  return d?.parcels.find((p) => p.item.slug === part) ?? null;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, part } = await params;
-  const d = await getWrt().place(slug);
-  const p = findPart(d, part);
-  if (!d || !p) return { title: "Part not found" };
-  return {
-    title: `${p.item.name} · ${d.place.name}`,
-    description: `${formatNumber(p.split.total)} recorded plants at ${p.item.name}, part of ${d.place.name}.`,
-  };
+  const [site, area] = await Promise.all([readSite(slug), readPlantingArea(slug, part)]);
+  if (!site || !area) return { title: "Area not found" };
+  return { title: `${area.name} · ${site.name}`, description: area.description || `A named area within ${site.name}.` };
 }
 
 export default async function PartPage({ params }: Props) {
   const { slug, part } = await params;
   const wrt = getWrt();
-  const [d, allSeasons] = await Promise.all([wrt.place(slug), wrt.seasons()]);
+  const [d, allSeasons, site, area, authenticated] = await Promise.all([
+    wrt.place(slug), wrt.seasons(), readSite(slug), readPlantingArea(slug, part), isAuthenticated(),
+  ]);
+  if (!site || !area) notFound();
+  const editButton = authenticated ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit#area-${area.slug}`}>Edit area</Link></Button> : null;
   const p = findPart(d, part);
-  if (!d || !p) notFound();
+  if (!d || !p) return (
+    <>
+      <PageHead back={{ href: hrefs.place(slug), label: site.name }} eyebrow={`Area within ${site.name}`} title={area.name} lead={area.description || undefined} aside={editButton} />
+      <EmptyState title="No planting records yet">This area has no planting records yet.</EmptyState>
+    </>
+  );
 
-  const { place } = d;
-  const parcel = p.item;
+  const place = { ...d.place, name: site.name };
+  const parcel = { ...p.item, name: area.name };
   const recs = d.records.filter((r) => r.record.parcelId === parcel.id);
   const split = splitOf(recs.map((r) => r.record));
   const span = p.span;
@@ -74,11 +82,14 @@ export default async function PartPage({ params }: Props) {
         back={{ href: hrefs.place(place.slug), label: place.name }}
         eyebrow={`Part of ${place.name} · ${spanText} · ${span.seasonsActive} ${span.seasonsActive === 1 ? "season" : "seasons"}`}
         title={`${formatNumber(split.total)} recorded plants at ${parcel.name}`}
-        lead={`${formatNumber(speciesCount)} species on ${formatNumber(split.records)} record${split.records === 1 ? "" : "s"}. No. ${at + 1} of ${d.parcels.length} parts of ${place.name} by recorded plants.`}
+        lead={`${area.description ? `${area.description} ` : ""}${formatNumber(speciesCount)} species on ${formatNumber(split.records)} record${split.records === 1 ? "" : "s"}. No. ${at + 1} of ${d.parcels.length} parts of ${place.name} by recorded plants.`}
         aside={
-          <Link href={recordsFor()} className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
-            All {formatNumber(split.records)} records →
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            {editButton}
+            <Link href={recordsFor()} className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
+              All {formatNumber(split.records)} records →
+            </Link>
+          </div>
         }
       />
 
@@ -153,7 +164,7 @@ export default async function PartPage({ params }: Props) {
             rows={siblings.map((x) => {
               const xr = d.records.filter((r) => r.record.parcelId === x.item.id);
               const species = [...speciesBySite(xr).values()][0]?.species ?? [];
-              const href = partHref(place.slug, x.item.name);
+              const href = partHref(place.slug, x.item.slug);
               return {
                 key: x.item.id,
                 name: x.item.name,

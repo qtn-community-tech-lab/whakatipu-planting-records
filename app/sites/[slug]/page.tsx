@@ -76,12 +76,13 @@ export default async function SitePage({ params, searchParams }: Props) {
   </Alert> : null;
   const editButton = authenticated && !site.deactivated_at ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
   const actions = editButton ? <DeactivateSite name={site.name} onDeactivate={onDeactivate}>{editButton}</DeactivateSite> : null;
+  const savedNotice = first(sp.saved) === "1" ? <Alert role="status"><AlertTitle>Changes saved</AlertTitle><AlertDescription>The site and its areas have been saved.</AlertDescription></Alert> : null;
   if (!d || !d.split.records)
     return (
       <>
-        {actions}
+        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={actions} />
         {status}
-        <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} />
+        {savedNotice}
         <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
       </>
     );
@@ -116,18 +117,22 @@ export default async function SitePage({ params, searchParams }: Props) {
 
   return (
     <>
-      {actions}
-      {status}
       <PageHead
         back={{ href: "/sites", label: "All sites" }}
         eyebrow={eyebrow}
         title={title}
+        aside={actions}
         lead={
           place.isScheme
             ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
             : site.description.trim() || undefined
         }
       />
+
+      {status}
+      {savedNotice}
+
+      {savedNotice}
 
       {!place.isScheme && <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />}
 
@@ -172,7 +177,7 @@ export default async function SitePage({ params, searchParams }: Props) {
             records={d.records}
             seasons={d.seasons.map((p) => p.season)}
             rowsBy="part"
-            rowHref={(r) => partHref(place.slug, r.name)}
+            rowHref={(r) => partHref(place.slug, place.parcels.find((p) => p.id === r.parcelId)!.slug)}
             hrefFor={(r, season) => recordsFor({ parcel: r.parcelId, season: season.name, year: season.year })}
           />
         </Card>
@@ -232,7 +237,7 @@ export default async function SitePage({ params, searchParams }: Props) {
             rows={d.parcels.map((p) => {
               const recs = d.records.filter((r) => r.record.parcelId === p.item.id);
               const species = [...speciesBySite(recs).values()][0]?.species ?? [];
-              const href = partHref(place.slug, p.item.name);
+              const href = partHref(place.slug, p.item.slug);
               return {
                 key: p.item.id,
                 name: p.item.name,

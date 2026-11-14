@@ -1,5 +1,4 @@
 import type { Route } from "next";
-import { slugify } from "./text";
 
 export const hrefs = {
   place: (slug: string): `/sites/${string}` => `/sites/${slug}`,
@@ -15,9 +14,9 @@ export const hrefs = {
   },
 };
 
-/** Address of one part of a site, by its readable name. */
-export function partHref(placeSlug: string, parcelName: string): `/sites/${string}/parts/${string}` {
-  return `/sites/${placeSlug}/parts/${slugify(parcelName)}`;
+/** Address of one part of a site, by its fixed database slug. */
+export function partHref(placeSlug: string, areaSlug: string): `/sites/${string}/parts/${string}` {
+  return `/sites/${placeSlug}/parts/${areaSlug}`;
 }
 
 /** Generated Next.js routes, including the dynamic paths our link builders return. */

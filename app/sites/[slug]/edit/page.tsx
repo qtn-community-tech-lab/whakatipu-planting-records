@@ -3,7 +3,12 @@ import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
 import { isAuthenticated } from "@/db/queries/access";
-import { readSite, updateSite } from "@/db/queries/sites";
+import {
+  readSite,
+  updateSite,
+  listPlantingAreas,
+} from "@/db/queries/sites";
+import { savePlantingAreas } from "@/app/sites/save-planting-areas";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import {
@@ -34,10 +39,15 @@ export default async function EditSitePage({
       </>
     );
   const { slug } = await params;
-  const site = await readSite(slug);
+  const [site, areas] = await Promise.all([
+    readSite(slug),
+    listPlantingAreas(slug),
+  ]);
   if (!site || site.deactivated_at) notFound();
 
-  async function onSubmit(input: EditSiteInput): Promise<SiteSubmitResult> {
+  async function onSubmit(
+    input: EditSiteInput,
+  ): Promise<SiteSubmitResult> {
     "use server";
     if (!(await isAuthenticated())) return { error: "Sign in to edit sites." };
     const parsed = editSiteSchema.safeParse(input);
@@ -50,7 +60,11 @@ export default async function EditSitePage({
       };
     let savedSlug: string;
     try {
-      const { data, error } = await updateSite(slug, parsed.data);
+      const { data, error } = await updateSite(slug, {
+        name: parsed.data.name,
+        description: parsed.data.description,
+        areas: parsed.data.areas,
+      });
       if (error?.code === "42501")
         return {
           error: "You need to sign in with a staff account to edit sites.",
@@ -61,9 +75,17 @@ export default async function EditSitePage({
     } catch {
       return { error: "The site could not be saved. Please try again." };
     }
+    const { savedAreas, issues } = await savePlantingAreas(slug, parsed.data.areas);
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
-    redirect(`/sites/${savedSlug}`);
+    if (issues.length)
+      return {
+        savedAreas,
+        issues,
+        error:
+          "The site and any successful areas were saved. Some areas could not be saved. Your changes are still here; please retry the unsaved areas.",
+      };
+    redirect(`/sites/${savedSlug}?saved=1`);
   }
 
   return (
@@ -78,10 +100,11 @@ export default async function EditSitePage({
         }
       />
       <SiteForm
-        key={site.updated_at}
+        key={slug}
         values={site}
+        areas={areas}
         onSubmit={onSubmit}
-        submitLabel="Save changes"
+        submitLabel="Save site and areas"
         cancelHref={`/sites/${slug}`}
       />
     </>

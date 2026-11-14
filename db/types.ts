@@ -34,17 +34,48 @@ export type SpeciesInput = z.infer<typeof speciesSchema>;
 export type SpeciesEdit = Pick<Tables<"species">, keyof SpeciesInput | "updated_at">;
 export type SpeciesSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
 
+export const editPlantingAreaSchema = z.object({
+  name: text.min(1, "Enter an area name."),
+  description: notes,
+});
+
+export const createPlantingAreaSchema = editPlantingAreaSchema.extend({
+  slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens."),
+});
+
+export const plantingAreaFormSchema = createPlantingAreaSchema.extend({ existing: z.boolean() });
+
+const uniqueAreaSlugs = <T extends { slug: string }>(areas: T[], ctx: z.RefinementCtx) => {
+  const seen = new Set<string>();
+  areas.forEach(({ slug }, index) => {
+    if (seen.has(slug)) ctx.addIssue({ code: "custom", path: [index, "slug"], message: "Each area needs a unique slug." });
+    seen.add(slug);
+  });
+};
+
 export const editSiteSchema = z.object({
   name: text.min(1, "Enter a site name."),
   description: notes,
+  areas: z.array(plantingAreaFormSchema).superRefine(uniqueAreaSlugs),
 });
 
 export const createSiteSchema = editSiteSchema.extend({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
     .refine((value) => value !== "new", "This slug is reserved. Choose another."),
+  areas: z.array(createPlantingAreaSchema).superRefine(uniqueAreaSlugs),
 });
 
 export type CreateSiteInput = z.infer<typeof createSiteSchema>;
 export type EditSiteInput = z.infer<typeof editSiteSchema>;
-export type SiteEdit = Pick<Tables<"sites">, keyof CreateSiteInput | "updated_at">;
-export type SiteSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
+export type SiteEdit = Pick<Tables<"sites">, "slug" | "name" | "description" | "updated_at">;
+export type SiteSubmitResult = {
+  error?: string;
+  issues?: { path: string; message: string }[];
+  savedAreas?: { index: number; slug: string }[];
+  savedSiteSlug?: string;
+};
+
+export type CreatePlantingAreaInput = z.infer<typeof createPlantingAreaSchema>;
+export type EditPlantingAreaInput = z.infer<typeof editPlantingAreaSchema>;
+export type PlantingAreaFormValues = z.infer<typeof plantingAreaFormSchema>;
+export type PlantingAreaEdit = Pick<Tables<"areas">, "slug" | "site" | "name" | "description" | "updated_at">;

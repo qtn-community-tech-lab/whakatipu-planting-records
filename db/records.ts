@@ -51,7 +51,7 @@ export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "phot
   };
   const place: Place = {
     slug: r.site!, name: r.site_name!, siteClasses: [siteClass], isScheme: r.is_scheme === true,
-    parcels: [{ id: r.area!, name: r.area_name!, placeSlug: r.site!, siteClass, aliases: [] }], searchKeys: [],
+    parcels: [{ slug: r.area!, id: r.area!, name: r.area_name!, placeSlug: r.site!, siteClass, aliases: [] }], searchKeys: [],
   };
   return {
     season, species, place,
