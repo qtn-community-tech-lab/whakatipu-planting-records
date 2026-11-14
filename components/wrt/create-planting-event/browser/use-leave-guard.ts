@@ -1,6 +1,6 @@
 "use client";
 /**
- * Leaving unsaved work asks first: a new event's entries, and a past planting's edit.
+ * Leaving unsaved work asks first: a new event's entries (or a drawing under way), and a past planting's edit.
  * The page's own ways out ask with a dialog; the browser's back does too (through our history entries), and
  * closing or reloading the tab lets the browser ask.
  */
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useHistoryEntries } from "./use-history-entries";
 
 export function useLeaveGuard({ guarded, saving, exitHref, seasonOpen, formFromSeason, formBack, closeSeason }: {
-  /** Unsaved work now: a new event's entries. */
+  /** Unsaved work now: a new event's entries, or a drawing with something drawn. */
   guarded: boolean;
   /** A new event saving: the browser's back waits. */
   saving: boolean;
