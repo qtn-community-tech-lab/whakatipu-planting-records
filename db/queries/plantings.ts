@@ -71,3 +71,30 @@ export async function listSeasonLeaders(limit = 3) {
   ]);
   return { species: species.data, sites: sites.data };
 }
+
+/** A season's id by slug, e.g. "autumn-2026". Null when there is no such season. */
+export async function readSeason(slug: string) {
+  const { data } = await (await db())
+    .from("seasons")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle()
+    .throwOnError();
+  return data;
+}
+
+/** A new planting event. Its plants are added with createPlantingLines. */
+export async function createPlantingEvent(values: { area: string; season: number; planted_on: string; notes: string }) {
+  return (await db())
+    .from("planting_events")
+    .insert(values)
+    .select("id")
+    .single();
+}
+
+/** All of one planting event's lines in one insert, so they are saved together or not at all. */
+export async function createPlantingLines(plantingEvent: number, lines: { species: string; quantity: number }[]) {
+  return (await db())
+    .from("planting_lines")
+    .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent })));
+}

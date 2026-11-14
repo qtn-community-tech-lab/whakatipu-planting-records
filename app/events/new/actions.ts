@@ -2,11 +2,21 @@
 /**
  * What a site, or one part of it, has had planted, for the planting event page's overview:
  * its most planted trees and its most recent seasons, from the site_area_species and
- * site_area_seasons views; and one season's planting events there, for its details.
+ * site_area_seasons views; one season's planting events there, for its details; and saving a new
+ * planting event.
  */
-import { listPlantingEventNotes, listSiteSeasonPlantingLines } from "@/db/queries/plantings";
-import { listPlantingAreaSeasons, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
-import { listSpecies } from "@/db/queries/species";
+import { revalidatePath, updateTag } from "next/cache";
+import { SUPABASE_TAG } from "@/db/cache";
+import { isAuthenticated } from "@/db/queries/access";
+import { createPlantingEvent, createPlantingLines, listPlantingEventNotes, listSiteSeasonPlantingLines, readSeason } from "@/db/queries/plantings";
+import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
+import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
+import type { PlantingEventSubmitResult } from "@/db/types";
+import { areaFor, wholeSiteAreaSlug } from "@/lib/wrt/areas/whole-site";
+import { eventFormOptions } from "@/lib/wrt/events/form-options";
+import { todayInNz } from "@/lib/wrt/events/season";
+import type { PlantingEventInput } from "@/lib/wrt/events/types";
+import { validateEventInput } from "@/lib/wrt/events/validate";
 import { SLUG } from "@/lib/wrt/text";
 
 const TREES_SHOWN = 5;
@@ -99,4 +109,79 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
     });
   }
   return { season, events: [...events.values()] };
+}
+
+const NOT_RECORDED = "The planting event could not be saved. Please try again.";
+const NO_PLANTS = "The planting event was saved but its plants were not. Your entries are still here; please try again.";
+
+/**
+ * Save a new planting event and its plants (not drawn areas, new locations or moved pins): the event, then all its lines in one insert. They're separate writes, so
+ * if the lines fail the event's id comes back as `savedPlantingEvent`; the form sends it on retry and only the lines go in.
+ */
+export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEvent?: number): Promise<PlantingEventSubmitResult> {
+  if (!(await isAuthenticated())) return { error: "Sign in to save planting events." };
+  // Trust boundary: the values and the retry id come from the browser.
+  if (savedPlantingEvent !== undefined && !(Number.isSafeInteger(savedPlantingEvent) && savedPlantingEvent > 0)) return { error: NOT_RECORDED };
+  const options = await eventFormOptions();
+  const places = options.sites.map((x) => ({ slug: x.slug, isScheme: false, parcels: x.parts }));
+  const checked = validateEventInput(raw, { places, species: options.species }, todayInNz());
+  if (!checked.ok) return { issues: Object.entries(checked.errors).map(([path, message]) => ({ path, message })) };
+  const event = checked.value;
+
+  let id = savedPlantingEvent;
+  try {
+    // The seasons table has Autumn and Spring only, so Summer and Winter find nothing.
+    const [areas, season, slugOf] = await Promise.all([
+      listPlantingAreas(event.siteSlug), readSeason(`${event.season.toLowerCase()}-${event.seasonYear}`), speciesSlugs(),
+    ]);
+    if (!season) return { issues: [{ path: "season", message: "Only Autumn and Spring seasons can be saved for now." }] };
+    const siteName = options.sites.find((x) => x.slug === event.siteSlug)?.name ?? event.siteSlug;
+    const area = areaFor(areas, event.siteSlug, event.partId)
+      ?? (event.partId === null && id === undefined ? await createWholeSiteArea(event.siteSlug, siteName) : undefined);
+    if (!area) return { issues: [{ path: "partId", message: "Choose where at this site these were planted." }] };
+    // Drawn areas aren't saved, so the same species in several areas is added together (each checked against the register above).
+    const quantities = new Map<string, number>();
+    for (const line of event.species) {
+      const slug = slugOf.get(line.speciesId)!;
+      quantities.set(slug, (quantities.get(slug) ?? 0) + line.quantity);
+    }
+
+    if (id === undefined) {
+      const { data, error } = await createPlantingEvent({ area, season: season.id, planted_on: event.plantedOn, notes: event.notes ?? "" });
+      if (error) throw error;
+      id = data.id;
+    }
+    const { error } = await createPlantingLines(id, [...quantities].map(([species, quantity]) => ({ species, quantity })));
+    if (error) throw error;
+  } catch (error) {
+    return id === undefined ? { error: whyNot(error, NOT_RECORDED) } : { savedPlantingEvent: id, error: whyNot(error, NO_PLANTS) };
+  }
+  refresh();
+  return { savedPlantingEvent: id };
+}
+
+/** A site's site-wide area (see wholeSiteAreaSlug), made the first time plants are saved at the site as a whole. */
+async function createWholeSiteArea(site: string, siteName: string) {
+  const slug = wholeSiteAreaSlug(site);
+  const { error } = await createPlantingArea({ slug, site, name: `${siteName}, whole site` });
+  if (error && error.code !== "23505") throw error; // 23505: another save made it just now, so it's there to use
+  return slug;
+}
+
+/** The register's species slugs by the form's species id: the register code, or the slug when it has none. */
+async function speciesSlugs() {
+  return new Map((await listSpeciesForPlanting()).map((x) => [x.register_code ?? x.slug, x.slug]));
+}
+
+/** Logs a failed write and says why, for the form: a database permission error means a staff sign-in is needed. */
+function whyNot(error: unknown, otherwise: string) {
+  console.error("Failed to save planting event:", error);
+  const denied = !!error && typeof error === "object" && "code" in error && error.code === "42501";
+  return denied ? "You need to sign in with a staff account to save planting events." : otherwise;
+}
+
+/** After a write: every page reading the planting data reads it again. */
+function refresh() {
+  updateTag(SUPABASE_TAG);
+  revalidatePath("/", "layout");
 }

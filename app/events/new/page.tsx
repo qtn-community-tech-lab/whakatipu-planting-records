@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import { CreatePlantingEvent, type PlantTotals } from "@/components/wrt/create-planting-event";
+import { isAuthenticated } from "@/db/queries/access";
 import { listSeasons } from "@/db/queries/plantings";
 import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
+import { savePlantingEvent } from "./actions";
 
 /**
  * /events/new — recording a planting on site. The
@@ -28,8 +30,8 @@ type Props = { searchParams: Promise<{ site?: string | string[]; part?: string |
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, suggestions, sites, areas, pins, { site, part, season }, seasons] = await Promise.all([
-    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, listSeasons(),
+  const [options, suggestions, sites, areas, pins, { site, part, season }, authenticated, seasons] = await Promise.all([
+    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, isAuthenticated(), listSeasons(),
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
   const totals: PlantTotals = {};
@@ -47,7 +49,7 @@ export default async function Page({ searchParams }: Props) {
   const initialSeason = m ? { slug: m[0], label: `${m[1]!.charAt(0).toUpperCase()}${m[1]!.slice(1)} ${m[2]}` } : undefined;
   return (
     <CreatePlantingEvent
-      initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} exitHref="/sites" suggestions={suggestions} totals={totals} areas={pins ?? []}
+      initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} exitHref="/sites" onSave={authenticated ? savePlantingEvent : undefined} suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }
