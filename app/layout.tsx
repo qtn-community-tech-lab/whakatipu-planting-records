@@ -64,7 +64,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
                   <span className="wrt-side__sub">Restoration history</span>
                 </span>
               </Link>
-              <SidebarNav counts={counts} />
+              <SidebarNav counts={counts} authenticated={authenticated} />
               <GrowthRings seasons={rings} />
               <SidebarFootNav />
             </aside>
@@ -79,7 +79,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
                 </span>
               </Link>
               <AuthControl authenticated={authenticated} />
-              <MobileNav counts={counts} />
+              <MobileNav counts={counts} authenticated={authenticated} />
             </div>
             <header className="wrt-topbar">
               <Crumb />

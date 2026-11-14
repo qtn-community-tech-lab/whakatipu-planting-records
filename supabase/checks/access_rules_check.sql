@@ -1,5 +1,5 @@
--- Run as postgres after all migrations. It rolls back its test site, area and event.
--- Staff cases need one confirmed Auth identity linked to an active public.users profile.
+-- Run as postgres after all migrations. It rolls back its test rows.
+-- Active-user cases need one confirmed Auth identity linked to a public.users profile.
 begin;
 
 create temp table rls_check (n int, who text, test text, expected text, got text);
@@ -7,9 +7,16 @@ grant all on rls_check to anon, authenticated;
 
 create function pg_temp.try(n int, who text, test text, expected text, stmt text)
 returns void language plpgsql as $f$
+declare affected bigint;
 begin
   execute stmt;
-  insert into pg_temp.rls_check values (n, who, test, expected, 'allowed');
+  get diagnostics affected = row_count;
+  -- RLS may deny an UPDATE by filtering every row without raising an error.
+  insert into pg_temp.rls_check values (
+    n, who, test, expected,
+    case when affected > 0 or stmt !~* '^[[:space:]]*(insert|update|delete)[[:space:]]'
+      then 'allowed' else 'blocked' end
+  );
 exception when insufficient_privilege then
   insert into pg_temp.rls_check values (n, who, test, expected, 'blocked');
 end $f$;
@@ -30,6 +37,12 @@ insert into public.sites (slug, name) values ('rls-check-staff', 'RLS check');
 insert into public.areas (slug, site, name) values ('rls-check-staff', 'rls-check-staff', 'RLS check');
 insert into public.sites (slug, name, deactivated_at)
   values ('rls-check-history', 'RLS history check', now());
+with fixture as (
+  insert into public.users (name, email)
+  values ('RLS private user fixture', 'rls-private-' || gen_random_uuid()::text || '@example.org')
+  returning id
+)
+select set_config('authcheck.private_user_id', (select id::text from fixture), true);
 
 -- Signed out: history stays readable, the private allowlist and all writes are blocked.
 select set_config('request.jwt.claims', '{"role":"anon"}', true);
@@ -58,7 +71,8 @@ select pg_temp.try(9, 'Unapproved identity', 'add a site', 'blocked',
 select pg_temp.try(10, 'Unapproved identity', 'update a season', 'blocked',
   'update public.seasons set label = label where false');
 select pg_temp.try(11, 'Unapproved identity', 'edit user profile', 'blocked',
-  'update public.users set name = name where auth_user_id = auth.uid()');
+  $$update public.users set name = 'Unapproved edit'
+    where id = current_setting('authcheck.private_user_id')::uuid$$);
 select pg_temp.try(12, 'Unapproved identity', 'delete a site', 'blocked',
   $$delete from public.sites where slug = 'rls-check-staff'$$);
 reset role;
@@ -85,18 +99,38 @@ select set_config('authcheck.app_user_id', coalesce((
   limit 1
 ), ''), true);
 set local role authenticated;
-select pg_temp.try(13, 'Active staff', 'add a site', 'allowed',
+select pg_temp.try(13, 'Active user', 'add a site', 'allowed',
   $$insert into public.sites (slug, name) values ('rls-check-created', 'RLS check')$$);
-select pg_temp.try(14, 'Active staff', 'deactivate a site', 'allowed',
+select pg_temp.try(14, 'Active user', 'deactivate a site', 'allowed',
   $$update public.sites set deactivated_at = now() where slug = 'rls-check-created'$$);
-select pg_temp.try(15, 'Active staff', 'reactivate a site', 'blocked',
+select pg_temp.try(15, 'Active user', 'reactivate a site', 'blocked',
   $$update public.sites set deactivated_at = null where slug = 'rls-check-created'$$);
-select pg_temp.try(16, 'Active staff', 'delete a site', 'blocked',
+select pg_temp.try(16, 'Active user', 'delete a site', 'blocked',
   $$delete from public.sites where slug = 'rls-check-created'$$);
-select pg_temp.try(17, 'Active staff', 'change a season', 'blocked',
+select pg_temp.try(17, 'Active user', 'change a season', 'blocked',
   'update public.seasons set label = label where false');
-select pg_temp.try(18, 'Active staff', 'edit user profile', 'blocked',
+select pg_temp.try(18, 'Active user', 'edit own profile', 'allowed',
   'update public.users set name = name where auth_user_id = auth.uid()');
+select pg_temp.try_visible(19, 'Active user', 'read the user list', 'allowed',
+  'select 1 from public.users');
+select pg_temp.try(20, 'Active user', 'add a user', 'allowed',
+  $$insert into public.users (name, email)
+    values ('RLS check user', 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org')$$);
+select pg_temp.try(21, 'Active user', 'edit another profile', 'allowed',
+  $$update public.users set name = 'Updated RLS check user'
+    where email = 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org'$$);
+select pg_temp.try(22, 'Active user', 'change an app user ID', 'blocked',
+  $$update public.users set id = gen_random_uuid()
+    where email = 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org'$$);
+select pg_temp.try(23, 'Active user', 'change an Auth identity link', 'blocked',
+  $$update public.users set auth_user_id = auth.uid()
+    where email = 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org'$$);
+select pg_temp.try(24, 'Active user', 'deactivate a user', 'allowed',
+  $$update public.users set deactivated_at = now()
+    where email = 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org'$$);
+select pg_temp.try(25, 'Active user', 'reactivate a user', 'blocked',
+  $$update public.users set deactivated_at = null
+    where email = 'rls-check-' || current_setting('authcheck.app_user_id') || '@example.org'$$);
 reset role;
 
 -- touch_row must write the stable public.users ID, even when it differs from auth.uid().

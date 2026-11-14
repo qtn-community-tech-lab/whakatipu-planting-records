@@ -17,9 +17,10 @@ setting local keys and loading the initial data. This README covers database mai
 | `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
 | `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled |
 | `migrations/20261114000000_authentication.sql` | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes |
+| `migrations/20261114000100_user_management.sql` | Lets active approved users manage the allowlist while keeping stable app IDs and Auth identity links protected |
 | `checks/anonymous_crud_check.sql` | Verifies public reads remain available and anonymous writes and user-profile reads are denied |
 | `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
-| `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
+| `checks/access_rules_check.sql` | Tries 25 public, unapproved and active-user operations, including user management, and lists PASS or FAIL. Changes nothing |
 
 ## Migrations
 
@@ -46,12 +47,12 @@ The current project ID in `config.toml` is `wrt-planting-app`. Stopping the stac
 
 ## Authentication and public access
 
-`public.users` is the email allowlist and stays private to each linked profile. Insert an approved profile directly
-through Supabase Studio or SQL Editor; the user signs in for the first time at `/login` and Supabase links the
-confirmed Auth identity by normalized email. All active profiles have the same permissions. Deactivating the
-profile removes write and AI access on the next request.
+`public.users` is the email allowlist. Active users can manage it at `/users`; all active profiles have the same
+permissions. A user signs in for the first time at `/login`, and Supabase links the confirmed Auth identity by
+normalized email. Changing an email resets that link and resolves the new confirmed identity without changing
+the app user ID. Deactivating the profile removes write and AI access on the next request.
 
-The authentication migration seeds the eight initial users. Existing profiles with a matching email are kept
+The authentication migration seeds the nine initial users. Existing profiles with a matching email are kept
 unchanged, including their IDs, names and deactivation state. Entries without a supplied name use their email
 as the display name. Supabase creates their Auth identities when they first sign in.
 
@@ -170,7 +171,7 @@ into SQL Editor. After the workbook import, every row should say PASS. It checks
 imported row counts, workbook provenance and season totals. The import rows say FAIL until the import has run.
 
 [`checks/access_rules_check.sql`](checks/access_rules_check.sql) exercises signed-out, unapproved identity and active
-staff access. Its staff tests need at least one active approved profile with a linked Auth identity. The script
+user access. Its active-user tests need at least one approved profile with a linked Auth identity. The script
 rolls back its test rows.
 
 ### Auth identity regression check
