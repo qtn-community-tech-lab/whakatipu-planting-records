@@ -29,7 +29,7 @@ export function SearchField({ label, value, onChange, children, className, ...in
       <Search size={18} strokeWidth={2.2} aria-hidden="true" />
       <span className="sr-only">{label}</span>
       <input
-        className="min-h-11 min-w-0 flex-1 border-0 bg-transparent p-0 font-sans text-[16px] leading-normal font-medium text-[var(--text-strong)] outline-none [&::-webkit-search-cancel-button]:hidden"
+        className="min-h-11 min-w-0 flex-1 border-0 bg-transparent p-0 font-sans text-[16px] leading-[normal] font-medium text-[var(--text-strong)] outline-none [&::-webkit-search-cancel-button]:hidden"
         type="search" value={value} onChange={(e) => onChange(e.target.value)}
         autoComplete="off" autoCorrect="off" spellCheck={false} autoCapitalize="none" enterKeyHint="search" {...input}
       />
