@@ -1,11 +1,13 @@
 "use client";
 /**
- * The planting event page: a full-screen satellite map with a pin for every site, and a panel over it that
- * lists the sites and shows the chosen one. This file only wires together the parts in the files beside it.
+ * The planting event page: a full-screen satellite map with a pin for every site, and the planting-event
+ * form over it. This file only wires together the parts in the files beside it.
  */
 import type { Route } from "next";
 import { useCallback, useReducer, useRef, useState } from "react";
+import { MapEventForm, type FormEntries, type MapEventFormProps } from "./form/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
+import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { partBesideSite } from "@/lib/wrt/text";
 import { FormPanel, type Snap } from "@/components/wrt/shared/form-panel";
 import { MiniMap } from "@/components/wrt/shared/mini-map";
@@ -18,8 +20,10 @@ import { TopBar } from "./site/top-bar";
 import { highlightSite, useCamera, useFindMe, usePlantingMap } from "./map/use-planting-map";
 import { useKeyboardFit } from "./browser/use-keyboard-fit";
 import { useMedia } from "./browser/use-media";
+import { useLeaveGuard } from "./browser/use-leave-guard";
 import { useAddressSync } from "./browser/use-address-sync";
 import { initialPage, pageReducer, topOf } from "./planting-page";
+import { LeaveDialogs } from "./browser/leave-dialogs";
 import { Crumbs } from "./navigator";
 import s from "./create-planting-event.module.css";
 
@@ -36,20 +40,24 @@ export interface CreatePlantingEventProps {
   /** NZ today, "YYYY-MM-DD". */
   today: string;
   exitHref: Route;
+  /** Each site's most planted species, by site slug, for the plant list. */
+  suggestions: Record<string, SpeciesSuggestion[]>;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
   totals: PlantTotals;
   areas: Parameters<typeof sitePins>[1];
+  onSave?: MapEventFormProps["onSave"];
 }
 
-export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, options, today, exitHref, totals, areas }: CreatePlantingEventProps) {
-  // Where the page opened. Only the first value counts: a new start site would rebuild the map. (The part only seeds state.)
+export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, options, today, exitHref, suggestions, totals, areas, onSave }: CreatePlantingEventProps) {
+  // Where the page opened. Only the first value counts: our address changes make Next's server refreshes (after a
+  // save) render with the new address, and a new start site would rebuild the map. (The part only seeds state.)
   const [initialSite] = useState(siteFromAddress);
   const wide = useMedia(WIDE);
   const mapEl = useRef<HTMLDivElement>(null);
   const [screen, setScreen] = useState<HTMLDivElement | null>(null);
   useKeyboardFit(screen);
   const [page, dispatch] = useReducer(pageReducer, initialPage);
-  const { snap, searchAsk } = page;
+  const { started, snap, searchAsk } = page;
   const setSnap = (to: Snap) => dispatch({ type: "snap", to });
   const top = topOf(page);
   const choosing = top?.kind === "list";
@@ -57,10 +65,12 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const [pins] = useState(() => sitePins(sites, areas, totals));
   // Where a site's (or part's) pin is.
   const pinAt = useCallback((slug: string, partId: string | null) => pinFor(pins, slug, partId), [pins]);
+  // A pin clicked on the map: a new object each click, so clicking the same pin again still counts.
+  const [picked, setPicked] = useState<{ slug: string; partId: string | null } | null>(null);
   const [siteSlug, setSiteSlug] = useState(initialSite);
   const [part, setPart] = useState<string | null>(initialPart ?? null);
   // What the camera centres: the chosen site's (part's) pin.
-  const [focus, setFocus] = useState<LngLat | null>(() => pinAt(initialSite, initialPart ?? null));
+  const [focus, setFocus] = useState<LngLat | null>(null);
   const site = sites.find((x) => x.slug === siteSlug);
   const siteName = site?.name ?? "Choose a site";
   const partName = site ? site.parts.find((p) => p.id === part)?.name ?? "Whole site" : undefined;
@@ -71,21 +81,32 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const searchSites = () => dispatch({ type: "search", wide, allSites });
   // The header pill and the phone title toggle it; everything else that asks for a site only ever opens it.
   const toggleChooser = () => (choosing ? closeChooser(true) : changeSite());
+  // Another site, with an event's entries here, asks first: they move with it.
+  const [pendingSite, setPendingSite] = useState<{ slug: string; partId: string | null } | null>(null);
   function chooseSite(slug: string, partId: string | null) {
-    goToPlace(slug, partId);
+    if (slug === siteSlug && partId === part) return moveTo(slug, partId);
+    // The event is saved: another site or part is a fresh start there, not a change to it.
+    if (started && entry.saved) return leaveFor({ slug, partId });
+    // Saved without its plants: its place can't change, so another one leaves it (asking first).
+    if (entry.partly) return setLeaving({ to: sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, partId }) });
+    // Entries kept from an event (after its Back) would go to the other site unseen: leaving clears them, so it asks.
+    if (!started && eventUnsaved && slug !== siteSlug) return setLeaving({ to: sites.find((x) => x.slug === slug)?.name ?? "that site", run: () => leaveFor({ slug, partId }) });
+    moveTo(slug, partId);
+  }
+  // `ask`: whether entries at another site ask first (the event's open).
+  function moveTo(slug: string, partId: string | null, ask = started) {
+    if (ask && siteSlug && slug !== siteSlug && eventUnsaved && !pendingSite) return setPendingSite({ slug, partId });
+    setPendingSite(null);
+    setPicked({ slug, partId });
     dispatch({ type: "showChoice", wide });
   }
 
+  // What the form holds (see MapEventForm's onEntries): with `eventUnsaved` below, what leaving would lose.
+  const [entry, setEntry] = useState<FormEntries>({ entered: false, saved: false, partly: false, saving: false });
+  const [formKey, setFormKey] = useState(0);
+
   const map = usePlantingMap({ pins, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
   const { findMe, said } = useFindMe(map);
-
-  // The chosen site and part: the map lights the site's pins and goes to the part's (or the site's).
-  function goToPlace(slug: string, partId: string | null) {
-    setSiteSlug(slug);
-    setPart(partId);
-    highlightSite(map, slug);
-    setFocus(pinAt(slug, partId));
-  }
 
   function pickPin(pin: SitePin) {
     // The pin already chosen: as choosing its part again (the map goes there).
@@ -94,50 +115,83 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       if (!wide) setSnap("mid");
       return;
     }
+    goToPin(pin);
+  }
+  function goToPin(pin: SitePin) {
+    if (started && entry.saved) return leaveFor(pin);
+    // Another site's pin, with an event's entries here: mid-event it's the same question as the list's
+    // (the entries move with it); otherwise (or saved without its plants) leaving clears them, so it asks.
+    if (siteSlug && pin.slug !== siteSlug && eventUnsaved) {
+      if (started && !entry.partly) return setPendingSite({ slug: pin.slug, partId: pin.partId });
+      return setLeaving({ to: pin.label, run: () => leaveFor(pin) });
+    }
     dispatch({ type: "endModes", snap: "mid" });
-    goToPlace(pin.slug, pin.partId);
+    setPicked({ slug: pin.slug, partId: pin.partId });
   }
 
-  // Looking at a site, a tap on the map away from its pin goes back to every site.
+  // Looking at a site (before starting an event), a tap on the map away from its pin goes back to every site.
   function tapMap(at: { x: number; y: number }) {
-    if (!siteSlug || !map.current) return;
+    if (started || !siteSlug || !map.current) return;
     const pin = pinAt(siteSlug, part);
     const p = pin && map.current.project(pin);
     if (p && Math.hypot(p.x - at.x, p.y - at.y) < AWAY_PX) return;
-    goToPlace("", null);
+    unlessUnsaved("every site", () => (eventUnsaved ? leaveFor("all") : setPicked({ slug: "", partId: null })));
   }
 
-  useAddressSync({ siteSlug, part });
-  // Back to every site.
-  function leaveSite() {
+  function leaveFor(to: { slug: string; partId: string | null } | "all") {
     dispatch({ type: "leave" });
-    goToPlace("", null);
+    setLeaving(null);
+    setPendingSite(null);
+    setFormKey((k) => k + 1);
+    setPicked(to === "all" ? { slug: "", partId: null } : { slug: to.slug, partId: to.partId });
   }
-  // Off the map (Back from every site): the sites list takes this page's place, so back from there goes to the page before.
-  const exit = () => window.location.replace(exitHref);
-  // The panel's Back: one step up (the site list, a part, the site), and off the map only from every site.
+  // Unsaved work: a new event's entries (species, a note) until they're saved. Leaving them asks first.
+  const eventUnsaved = !entry.saved && entry.entered;
+  const { leaving, setLeaving, unlessUnsaved, exit, depth, popped } = useLeaveGuard({ guarded: eventUnsaved, saving: entry.saving, exitHref });
+  useAddressSync({ siteSlug, part, depth, popped, totals });
+  // Back to every site.
+  const leaveSite = () => unlessUnsaved("every site", () => leaveFor("all"));
+  // The panel's Back: one step up (the site list, the form, a part, the site), and off
+  // the map only from every site. Each step asks first where it would lose work, as its own way out does.
   function goBack() {
     if (choosing) return closeChooser(true);
+    if (started) return dispatch({ type: "formBack" });
     if (site && part) return showSite();
     if (!allSites) return leaveSite();
     exit();
   }
-  const hint = part && partShort ? partShort : undefined;
+  // After a save, starting the next event: the saved one's form goes first.
+  function afterSave() {
+    if (!entry.saved) return;
+    setFormKey((k) => k + 1);
+    setPicked(null);
+    dispatch({ type: "afterSave" });
+  }
+  const finish = { label: site ? `Back to ${part && partShort ? partShort : site.name}` : "Back to all sites", onClick: () => leaveFor(site ? { slug: siteSlug, partId: part } : "all") };
+  const hint = started ? "New planting event" : part && partShort ? partShort : undefined;
   // What the header, the title and the mini map call this site.
   const where = { title: siteName, sub: partShort };
-  // The chosen site's overview, or with none, the site chooser (All sites).
-  const allSites = !siteSlug;
-  const siteHeader = !!siteSlug && !choosing;
-  // What the panel shows, and how deep it sits, for its slide: the site list (the level of every site) 0, a site's page 1.
-  const panelScreen = choosing || allSites ? "list" : `site:${siteSlug}:${part ?? ""}`;
-  const panelDepth = panelScreen === "list" ? 0 : 1;
+  // Before an event is started: the chosen site's overview, or with none, the site chooser (All sites).
+  const overview = !started;
+  const allSites = overview && !siteSlug;
+  const siteHeader = overview && !!siteSlug && !choosing;
+  // What the panel shows, and how deep it sits, for its slide: the site list (the level of every site) 0,
+  // a site's page 1, the form 2.
+  const panelScreen = choosing || allSites ? "list" : overview ? `site:${siteSlug}:${part ?? ""}` : "form";
+  const panelDepth = ({ list: 0, form: 2 } as Record<string, number>)[panelScreen] ?? 1;
   const showMap = () => setSnap("peek");
   const parts = site ? site.parts.map((p) => ({ id: p.id, name: partBesideSite(p.name, site.name) })) : [];
+  // The phone title's and the breadcrumb's part menus: not when the place can't change.
+  const placeFixed = entry.partly;
   // The map goes to the part's pin, even when it's the part already chosen:
   // a new array each time, so the camera moves again.
   function choosePart(id: string | null) {
+    if (id !== part && started && entry.saved) return leaveFor({ slug: siteSlug, partId: id });
+    goToPart(id);
+  }
+  function goToPart(id: string | null) {
     dispatch({ type: "closeOver" });
-    goToPlace(siteSlug, id);
+    setPicked({ slug: siteSlug, partId: id });
     const at = pinAt(siteSlug, id);
     if (at) setFocus([at[0], at[1]]);
   }
@@ -150,12 +204,22 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   }
   function showSite() {
     dispatch({ type: "showSite", wide });
-    choosePart(null);
+    goToPart(null);
   }
 
   useCamera(map, wide, snap, focus, pins);
 
-  // A mini map at the top of the site's page: always on desktop (a slim strip), and on phones when the
+  const onSiteChange = useCallback((slug: string, partId: string | null) => {
+    setSiteSlug(slug);
+    setPart(partId);
+    highlightSite(map, slug);
+    setFocus(pinAt(slug, partId));
+  }, [map, pinAt, setSiteSlug, setPart, setFocus]);
+
+  // The plant list needs the room: phones take the sheet full screen once it's in use.
+  const onListFocus = () => { if (!wide) setSnap("full"); };
+
+  // A mini map at the top of the site's page and of the form: always on desktop (a slim strip), and on phones when the
   // sheet is full screen. A chosen site is named by the page's own header, so the map leaves its label off.
   const miniMap = focus && (wide || snap === "full")
     ? <MiniMap at={focus} label={where.title} sub={where.sub} onOpen={wide ? undefined : showMap} noCaption={!!site} compact={wide} />
@@ -171,12 +235,12 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       {/* Phones' Find me (the + menu): a short word when it can't. */}
       {said && <p className={s.hint} role="status">{said}</p>}
       <FormPanel
-        wide={wide} open container={screen} snap={snap} onSnap={setSnap} label="Planting map"
+        wide={wide} open container={screen} snap={snap} onSnap={setSnap} label={started ? "New planting event" : "Planting map"}
         title={where.title}
         subtitle={where.sub}
         screen={panelScreen} depth={panelDepth}
         onTitle={wide ? undefined : toggleChooser} titleOpen={choosing} titleIcon={allSites || siteHeader}
-        titleMenu={!wide && site && !choosing ? (b) => (
+        titleMenu={!wide && site && !placeFixed && !choosing ? (b) => (
           <PartMenu
             siteName={site.name} parts={parts} part={part} onChoosePart={choosePart} side="bottom"
             onAllSites={leaveSite} className={b.className} label={b.label}
@@ -188,13 +252,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         // Not on wide at every site (nothing in the page above it).
         onBack={wide && allSites && !choosing ? undefined : goBack}
         backLabel={allSites && !choosing ? "Leave the map" : "Back"}
-        // Wide: the breadcrumb names the site and part. With no site, and on a site's overview, the title heads
-        // the panel as on phones.
+        // Wide: the breadcrumb names the site and part, so in the form the title is left out. With no site, and on
+        // a site's overview, it heads the panel as on phones.
         titleHidden={!!site && !allSites && !siteHeader}
         above={
           <Crumbs
             siteName={site?.name} parts={parts} part={part} partName={part ? partShort : undefined}
             onAllSites={leaveSite} onSite={showSite} onChoosePart={choosePart} onOtherSite={changeSite}
+            partsLocked={placeFixed} bare={!site && !allSites}
           />
         }
       >
@@ -206,13 +271,39 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
             onPreview={allSites ? previewSite : undefined}
           />
         )}
-        {siteSlug && !choosing && (
+        {overview && siteSlug && !choosing && (
           <SiteOverview
             slug={siteSlug} partId={part} partName={part ? partName : undefined} today={today} totals={totals} map={miniMap}
             places={part ? undefined : parts} onPlace={choosePart}
-          />
+            // With an event's entries kept (after its Back), the button goes back to it.
+            onStart={() => { afterSave(); dispatch({ type: "startForm" }); }} startLabel={eventUnsaved ? "Back to your planting event" : undefined} />
         )}
+        <MapEventForm
+          key={`form-${formKey}`} hidden={overview || choosing} options={options}
+          onSave={onSave} today={today} picked={picked}
+          // A fresh form starts where the page is, not where it first opened.
+          initialSite={siteSlug} initialPart={part} onEntries={setEntry} onChooseSite={changeSite}
+          placeMenu={site ? (b) => (
+            <PartMenu
+              siteName={site.name} parts={parts} part={part} onChoosePart={choosePart} side="bottom"
+              onOtherSite={changeSite} className={b.className} label={b.label}
+            >
+              {b.children}
+            </PartMenu>
+          ) : undefined}
+          suggestions={suggestions[siteSlug] ?? []} onListFocus={onListFocus} onSiteChange={onSiteChange}
+          onFinish={finish} onReset={() => { if (!wide) setSnap("mid"); }}
+          plantedArea={miniMap}
+        />
       </FormPanel>
+      <LeaveDialogs
+        siteName={siteName}
+        pendingSite={!!pendingSite} pendingSiteName={sites.find((x) => x.slug === pendingSite?.slug)?.name ?? "another site"}
+        onMoveEvent={() => { const p = pendingSite; if (!p) return; setPendingSite(null); moveTo(p.slug, p.partId, false); }}
+        onKeepSite={() => { setPendingSite(null); if (choosing) closeChooser(true); }}
+        leaving={!!leaving} leavingTo={leaving?.to} partly={entry.partly}
+        onLeave={() => { const run = leaving?.run; setLeaving(null); run?.(); }} onStay={() => setLeaving(null)}
+      />
     </div>
   );
 }

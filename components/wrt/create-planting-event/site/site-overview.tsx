@@ -1,9 +1,9 @@
 "use client";
 /**
- * What the panel shows at a chosen site: its (or the chosen part's) last few seasons of plantings, then its most
- * planted species.
+ * What the panel shows at a chosen site before an event is started: its (or the chosen part's) last few seasons
+ * of plantings, then its most planted species.
  */
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { loadSiteOverview } from "@/app/events/new/actions";
@@ -11,7 +11,7 @@ import { partHref } from "@/components/wrt/sites/site-rows";
 import { formatNumber } from "@/lib/wrt/text";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 import { Skeleton } from "@/components/ui/skeleton";
-// The panel's frame, shared by its screens.
+// The form's own frame and Next button, so the overview sits exactly where the form will.
 import * as panel from "../panel-classes";
 import { SeasonList } from "@/components/wrt/shared/season-list";
 import { StatTiles } from "@/components/wrt/shared/stat-tiles";
@@ -19,7 +19,7 @@ import type { PlantTotals } from "../map/sites";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace }: {
+export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event" }: {
   slug: string;
   /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
   map?: ReactNode;
@@ -33,14 +33,17 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   /** The site's places (its parts), listed under the tiles; `onPlace` opens one's page. */
   places?: readonly { id: string; name: string }[] | undefined;
   onPlace?: ((id: string) => void) | undefined;
+  onStart: () => void;
+  /** The start button's words: "Back to your planting event" when one with entries is waiting. */
+  startLabel?: string | undefined;
 }) {
-  // The history couldn't be read: it says so, and Try again asks once more.
+  // The history couldn't be read: it says so (an event can still be added), and Try again asks once more.
   const { loading, failed, data: o, reload: retry } = useLoad(`${slug}/${partId ?? ""}`, () => loadSiteOverview(slug, partId));
   // The header already names the part; only say so when it falls back to the whole site.
   const fellBack = !!partId && !!partName && !!o?.wholeSite;
 
   return (
-    <Frame busy={loading}>
+    <Frame onStart={onStart} label={startLabel} busy={loading}>
       {map}
         {loading ? (
           <div className={s.loading}>
@@ -49,7 +52,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
           </div>
         ) : failed ? (
           <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">
-            Couldn&apos;t load what&apos;s been planted here.{" "}
+            Couldn&apos;t load what&apos;s been planted here. You can still add a planting event.{" "}
             <button type="button" className="cn-btn cn-btn--soft cn-btn--sm" onClick={retry}>Try again</button>
           </div>
         ) : !o || o.trees.length === 0 ? (
@@ -97,11 +100,14 @@ function tiles(totals: PlantTotals, slug: string, partId: string | null, places:
   ];
 }
 
-/** The panel's frame: the page scrolls inside it. */
-function Frame({ children, busy }: { children: ReactNode; busy?: boolean | undefined }) {
+/** The form's frame, with "Add new planting event" where the form's Next sits. */
+function Frame({ children, onStart, label, busy }: { children: ReactNode; onStart: () => void; label: string; busy?: boolean | undefined }) {
   return (
     <div className={panel.form}>
       <div className={panel.scroll} aria-busy={busy}>{children}</div>
+      <footer className={panel.foot}>
+        <button type="button" className={panel.next} onClick={onStart}>{label}<ArrowRight size={18} strokeWidth={2.2} /></button>
+      </footer>
     </div>
   );
 }

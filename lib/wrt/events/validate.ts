@@ -15,13 +15,14 @@
  * put each message next to its field.
  */
 import { z } from "zod";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { SLUG } from "../text";
 import { isClosed, ringSelfIntersects } from "./geo";
 import { isIsoDate } from "./season";
 import { EVENT_SEASONS, type PlantingEventInput } from "./types";
 
 /** Notes are free text; keep them to a sensible length. */
-export const NOTES_MAX = 2000;
+export const NOTES_MAX = INPUT_LIMITS.longText;
 /** A hand-drawn polygon with more corners than this is almost certainly a mistake (or abuse). */
 const MAX_CORNERS = 500;
 /** No single species line should be larger than this (the biggest historical record is far smaller). */
@@ -51,14 +52,14 @@ const polygon = z.object({
 
 export const eventInputSchema = z.object({
   siteSlug: z.string().regex(SLUG, { error: "Choose a site." }),
-  partId: z.string().min(1).max(80).nullable(),
+  partId: z.string().min(1).max(INPUT_LIMITS.identifier).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
   // Optional until the map PR adds drawing; a drawn area is still checked in full.
   polygon: polygon.nullable(),
   species: z.array(z.object({
-    speciesId: z.string().min(1, { error: "Choose a species." }).max(80),
+    speciesId: z.string().min(1, { error: "Choose a species." }).max(INPUT_LIMITS.identifier),
     quantity: z.number({ error: "Enter how many were planted." })
       .int({ error: "Use a whole number." })
       .positive({ error: "Must be at least 1." })
