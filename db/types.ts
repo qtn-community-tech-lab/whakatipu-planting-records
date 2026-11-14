@@ -22,6 +22,15 @@ export const loginEmailSchema = z.string()
   .pipe(z.email({ error: "Enter a valid email address." }))
   .transform((email) => email.toLowerCase());
 
+export const userSchema = z.object({
+  name: text.min(1, "Enter a name."),
+  email: loginEmailSchema,
+});
+
+export type UserInput = z.infer<typeof userSchema>;
+export type UserRecord = Pick<Tables<"users">, "id" | "name" | "email" | "deactivated_at">;
+export type UserSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
+
 /** Writable species data, validated in both page submit handlers. */
 export const speciesSchema = z.object({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
