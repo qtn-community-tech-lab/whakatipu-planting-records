@@ -101,3 +101,24 @@ export async function listPlantingAreaSeasons(site: string) {
     .throwOnError();
   return data;
 }
+
+/** A site's active areas, by name: to list and edit them, and (by WRT number) to save a planting event against one. */
+export async function listPlantingAreas(site: string) {
+  const { data } = await (await db())
+    .from("areas")
+    .select("slug, site, name, description, updated_at, wrt_number")
+    .eq("site", site)
+    .is("deactivated_at", null)
+    .order("name")
+    .throwOnError();
+  return data;
+}
+
+/** A new area at a site. The same signature as #77's, which adds the area forms; here it makes the site-wide area (see wholeSiteAreaSlug). */
+export async function createPlantingArea(site: string, values: { slug: string; name: string; description: string }) {
+  return (await db())
+    .from("areas")
+    .insert({ slug: values.slug, name: values.name, description: values.description, site })
+    .select("slug")
+    .single();
+}
