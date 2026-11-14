@@ -65,7 +65,7 @@ export function UserForm({
   }
 
   return (
-    <Card title={user ? `Edit ${user.name}` : "Add user"}>
+    <Card title={user ? `Edit ${user.name}` : "Add user"} className='!bg-transparent'>
       <form onSubmit={form.handleSubmit(handleSubmit)} noValidate>
         <FieldSet disabled={isSubmitting} aria-busy={isSubmitting}>
           <FieldGroup>
