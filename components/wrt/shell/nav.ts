@@ -1,5 +1,5 @@
 import type { AppRoute } from "@/lib/wrt/routes";
-export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "events" | "ask" | "about";
+export type NavIcon = "overview" | "sites" | "species" | "seasons" | "records" | "events" | "users" | "ask" | "about";
 export type NavCountKey = "sites" | "species" | "seasons" | "records";
 export type NavCounts = Partial<Record<NavCountKey, string>>;
 
@@ -8,6 +8,7 @@ export interface NavItem {
   label: string;
   icon: NavIcon;
   count?: NavCountKey;
+  requiresAuth?: boolean;
 }
 
 export const NAV_MAIN: readonly NavItem[] = [
@@ -18,6 +19,7 @@ export const NAV_MAIN: readonly NavItem[] = [
   { href: "/records", label: "Records", icon: "records", count: "records" },
   // Prototype data entry (lib/wrt/events). The list of saved events is linked from the form page.
   { href: "/events/new", label: "New planting event", icon: "events" },
+  { href: "/users", label: "Users", icon: "users", requiresAuth: true },
 ];
 
 export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];

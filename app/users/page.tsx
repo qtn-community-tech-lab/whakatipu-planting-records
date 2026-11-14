@@ -108,6 +108,14 @@ export default async function UsersPage({
           <AlertDescription>The change has been saved.</AlertDescription>
         </Alert>
       )}
+      {(showNew || selected) && (
+        <UserForm
+          key={selected?.id ?? "new"}
+          user={selected}
+          onSubmit={onSubmit}
+          onDeactivate={selected ? onDeactivate : undefined}
+        />
+      )}
       <Card title={`${activeUsers.length} active users`}>
         {activeUsers.length ? (
           <DataTable
@@ -158,14 +166,6 @@ export default async function UsersPage({
             />
           </details>
         </Card>
-      )}
-      {(showNew || selected) && (
-        <UserForm
-          key={selected?.id ?? "new"}
-          user={selected}
-          onSubmit={onSubmit}
-          onDeactivate={selected ? onDeactivate : undefined}
-        />
       )}
     </>
   );

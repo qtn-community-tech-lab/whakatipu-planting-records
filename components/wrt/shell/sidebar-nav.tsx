@@ -74,8 +74,8 @@ function NavGroup({
   );
 }
 
-export function SidebarNav({ onNavigate, counts }: { onNavigate?: (() => void) | undefined; counts?: NavCounts | undefined }) {
-  return <NavGroup items={NAV_MAIN} label="Main" counts={counts} onNavigate={onNavigate} />;
+export function SidebarNav({ onNavigate, counts, authenticated = false }: { onNavigate?: (() => void) | undefined; counts?: NavCounts | undefined; authenticated?: boolean }) {
+  return <NavGroup items={NAV_MAIN.filter((item) => !item.requiresAuth || authenticated)} label="Main" counts={counts} onNavigate={onNavigate} />;
 }
 
 export function SidebarFootNav({ onNavigate }: { onNavigate?: (() => void) | undefined }) {

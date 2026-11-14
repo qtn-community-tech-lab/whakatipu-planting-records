@@ -13,15 +13,10 @@ export function AuthControl({ authenticated }: { authenticated: boolean }) {
     );
 
   return (
-    <div className="flex items-center gap-2">
-      <Button asChild variant="soft" size="sm">
-        <Link href="/users">Users</Link>
+    <form action={logOut}>
+      <Button type="submit" variant="soft" size="sm">
+        Sign out
       </Button>
-      <form action={logOut}>
-        <Button type="submit" variant="soft" size="sm">
-          Sign out
-        </Button>
-      </form>
-    </div>
+    </form>
   );
 }
