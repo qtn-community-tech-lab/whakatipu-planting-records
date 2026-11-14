@@ -1,0 +1,19 @@
+/* each planting event's where: the site, its line, and Edit on the right; a rule between events */
+.events { display: flex; flex-direction: column; gap: 18px; }
+.eventHead { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.eventIcon { width: 40px; height: 40px; border-radius: var(--radius-row); display: grid; place-items: center; background: var(--surface-soft); color: var(--cn-green-800); }
+.eventText { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.eventText b { font: 800 17px/1.2 var(--font-sans); color: var(--cn-green-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eventText span { font: 500 12.5px/1.3 var(--font-sans); color: var(--text-muted); }
+.edit {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px;
+  border: 0; border-radius: var(--radius-pill); background: var(--surface-soft); color: var(--cn-green-800); font: 700 13.5px var(--font-sans); cursor: pointer;
+}
+@media (hover: hover) { .edit:hover { background: #dce7d6; } }
+.edit:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+/* one event: its place and date on the left, Edit on the right, above the tiles */
+.topRow { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; }
+.topRow > span { min-width: 0; font: 600 14px/1.3 var(--font-sans); color: var(--cn-green-900); }
+
+.note { margin: 0; padding: 10px 12px; border-radius: var(--radius-row); background: #f6f5ef; font: 500 13.5px/1.45 var(--font-sans); color: var(--cn-green-900); }
+.rule { margin: 0; border: 0; border-top: 1px solid var(--border-card); }

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from "react";
 
-/** What one of our history entries is for: unsaved work (the browser's back asks first). */
-type EntryKind = "guard";
+/** What one of our history entries is for: an open season (the browser's back closes it), or unsaved work (back asks first). */
+type EntryKind = "season" | "guard";
 
 /**
  * Why this exists: the planting event page is one address with several screens, so the browser's Back would
@@ -25,7 +25,7 @@ type EntryKind = "guard";
  * and a popstate between two entries holding the same router state restores nothing from the server.
  */
 /** `onBack` gets each of ours the browser's back popped; true when it did something (it may push the entry back first). */
-export function useHistoryEntries(onBack: (kind: EntryKind, again: { push: (kind: EntryKind) => void; leave: () => void }) => boolean) {
+export function useHistoryEntries(onBack: (kind: EntryKind, again: { push: (kind: EntryKind) => void; leave: () => void; has: (kind: EntryKind) => boolean }) => boolean) {
   const entries = useRef<(EntryKind | "dead")[]>([]);
   // Backs asked for and not yet landed, and pushes waiting on them (pushed before the back lands, it would be the one popped).
   const backs = useRef(0);
@@ -72,7 +72,7 @@ export function useHistoryEntries(onBack: (kind: EntryKind, again: { push: (kind
   const home = useCallback((then: () => void) => {
     const by = entries.current.length;
     entries.current = [];
-    // A back already on its way (e.g. a guard just dropped) lands on the page's entry too: wait for it, or it undoes `then`.
+    // A back already on its way (e.g. a season just closed) lands on the page's entry too: wait for it, or it undoes `then`.
     if (!by && !backs.current) return then();
     landed.current = then;
     if (by) back(by);
@@ -106,7 +106,7 @@ export function useHistoryEntries(onBack: (kind: EntryKind, again: { push: (kind
         const gone = list.splice(d).reverse();
         // Only skipped entries (or nothing left to keep): back again, as if they weren't there.
         // At the page's own entry with no page before it, there's nowhere further to go.
-        const handled = gone.some((kind) => kind !== "dead" && handler(kind, { push, leave }));
+        const handled = gone.some((kind) => kind !== "dead" && handler(kind, { push, leave, has }));
         if (gone.length && !handled && (d > 0 || pageBefore.current)) back();
       }
       flush();
@@ -125,7 +125,7 @@ export function useHistoryEntries(onBack: (kind: EntryKind, again: { push: (kind
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, [back, push, leave]);
+  }, [back, push, leave, has]);
 
   return { push, drop, has, leave, home, depth, popped };
 }
