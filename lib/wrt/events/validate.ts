@@ -1,27 +1,26 @@
 /**
- * One validator for planting events. The form uses it to show errors as the
- * user types. Once events are saved, the server must run it again before
- * storing anything: Server Actions are public POST endpoints, so everything
- * from the browser is untrusted.
+ * One schema for planting events. The form checks with it to show errors as the
+ * user types, and the server runs it again before storing anything: Server
+ * Actions are public POST endpoints, so everything from the browser is untrusted.
  *
  * Two layers:
  *   1. eventInputSchema — shape and value rules (zod). No data needed.
- *   2. validateEventInput — the schema plus reference checks against the
+ *   2. eventSchema(lookups, today) — the schema plus reference checks against the
  *      species register and site list (the site exists and is a real one,
  *      the part belongs to it, every species exists, no duplicates), and
  *      "not in the future".
  *
- * Errors come back keyed by field path ("species.2.quantity") so the form can
- * put each message next to its field.
+ * validateEventInput runs it and keys the errors by field path ("species.2.quantity").
  */
 import { z } from "zod";
+import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { SLUG } from "../text";
 import { isClosed, ringSelfIntersects } from "./geo";
 import { isIsoDate } from "./season";
 import { EVENT_SEASONS, type PlantingEventInput } from "./types";
 
 /** Notes are free text; keep them to a sensible length. */
-export const NOTES_MAX = 2000;
+export const NOTES_MAX = INPUT_LIMITS.longText;
 /** A hand-drawn polygon with more corners than this is almost certainly a mistake (or abuse). */
 const MAX_CORNERS = 500;
 /** No single species line should be larger than this (the biggest historical record is far smaller). */
@@ -51,14 +50,14 @@ const polygon = z.object({
 
 export const eventInputSchema = z.object({
   siteSlug: z.string().regex(SLUG, { error: "Choose a site." }),
-  partId: z.string().min(1).max(80).nullable(),
+  partId: z.string().min(1).max(INPUT_LIMITS.identifier).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
   // Optional until the map PR adds drawing; a drawn area is still checked in full.
   polygon: polygon.nullable(),
   species: z.array(z.object({
-    speciesId: z.string().min(1, { error: "Choose a species." }).max(80),
+    speciesId: z.string().min(1, { error: "Choose a species." }).max(INPUT_LIMITS.identifier),
     quantity: z.number({ error: "Enter how many were planted." })
       .int({ error: "Use a whole number." })
       .positive({ error: "Must be at least 1." })
@@ -80,48 +79,43 @@ export type ValidationResult =
   | { ok: true; value: PlantingEventInput }
   | { ok: false; errors: FieldErrors };
 
+/** eventInputSchema plus the reference checks, giving the event as stored (trimmed notes, no altitude). */
+export function eventSchema(lookups: EventLookups, today: string) {
+  const known = new Set(lookups.species.map((s) => s.id));
+  return eventInputSchema.superRefine((v, ctx) => {
+    const add = (path: (string | number)[], message: string) => ctx.addIssue({ code: "custom", path, message });
+    // ISO dates compare correctly as strings.
+    if (v.plantedOn > today) add(["plantedOn"], "The planting date can't be in the future.");
+
+    const site = lookups.places.find((p) => p.slug === v.siteSlug);
+    if (!site) add(["siteSlug"], "That site is not in the site list.");
+    else if (site.isScheme) add(["siteSlug"], "Order schemes are not a physical site; choose the site where the planting happened.");
+    else if (v.partId !== null && !site.parcels.some((p) => p.id === v.partId)) {
+      add(["partId"], "That part does not belong to the chosen site.");
+    }
+
+    const seen = new Set<string>();
+    v.species.forEach((line, i) => {
+      if (!known.has(line.speciesId)) add(["species", i, "speciesId"], "That species is not in the register.");
+      else if (seen.has(line.speciesId)) add(["species", i, "speciesId"], "This species is already listed; add the quantities together.");
+      seen.add(line.speciesId);
+    });
+  }).transform((v): PlantingEventInput => ({
+    ...v,
+    // Drop any altitude so stored shapes are always [lon, lat].
+    polygon: v.polygon && { type: "Polygon", coordinates: v.polygon.coordinates.map((ring) => ring.map((p) => [p[0], p[1]])) },
+    notes: v.notes?.trim() || null,
+  }));
+}
+
 /**
- * Validate an event from the browser.
+ * Validate an event from the browser: the first problem for each field.
  * @param today "YYYY-MM-DD" in NZ (see todayInNz); planting dates after it are rejected.
  */
 export function validateEventInput(raw: unknown, lookups: EventLookups, today: string): ValidationResult {
+  const parsed = eventSchema(lookups, today).safeParse(raw);
+  if (parsed.success) return { ok: true, value: parsed.data };
   const errors: FieldErrors = {};
-  const add = (path: string, message: string) => { if (!errors[path]) errors[path] = message; };
-
-  const parsed = eventInputSchema.safeParse(raw);
-  if (!parsed.success) {
-    for (const issue of parsed.error.issues) add(issue.path.join(".") || "form", issue.message);
-    return { ok: false, errors };
-  }
-  const v = parsed.data;
-
-  // ISO dates compare correctly as strings.
-  if (v.plantedOn > today) add("plantedOn", "The planting date can't be in the future.");
-
-  const site = lookups.places.find((p) => p.slug === v.siteSlug);
-  if (!site) add("siteSlug", "That site is not in the site list.");
-  else if (site.isScheme) add("siteSlug", "Order schemes are not a physical site; choose the site where the planting happened.");
-  else if (v.partId !== null && !site.parcels.some((p) => p.id === v.partId)) {
-    add("partId", "That part does not belong to the chosen site.");
-  }
-
-  const known = new Set(lookups.species.map((s) => s.id));
-  const seen = new Set<string>();
-  v.species.forEach((line, i) => {
-    if (!known.has(line.speciesId)) add(`species.${i}.speciesId`, "That species is not in the register.");
-    else if (seen.has(line.speciesId)) add(`species.${i}.speciesId`, "This species is already listed; add the quantities together.");
-    seen.add(line.speciesId);
-  });
-
-  if (Object.keys(errors).length) return { ok: false, errors };
-
-  return {
-    ok: true,
-    value: {
-      ...v,
-      // Drop any altitude so stored shapes are always [lon, lat].
-      polygon: v.polygon && { type: "Polygon", coordinates: v.polygon.coordinates.map((ring) => ring.map((p) => [p[0], p[1]])) },
-      notes: v.notes?.trim() || null,
-    },
-  };
+  for (const issue of parsed.error.issues) errors[issue.path.join(".") || "form"] ??= issue.message;
+  return { ok: false, errors };
 }
