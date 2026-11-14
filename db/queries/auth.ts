@@ -1,4 +1,6 @@
 import { cache } from "react";
+import { redirect } from "next/navigation";
+import { loginHref } from "@/lib/auth/redirect";
 import { db } from "@/db/client";
 
 /** Checked per request. The database maps this Auth identity to an active approved staff row. */
@@ -9,6 +11,11 @@ export const isAuthenticated = cache(async () => {
   const { data, error } = await client.rpc("current_app_user_id");
   return !error && data !== null;
 });
+
+/** Send unauthenticated visitors to sign-in, preserving their destination. */
+export async function requireAuthenticated(next: string): Promise<void> {
+  if (!(await isAuthenticated())) redirect(loginHref(next));
+}
 
 /** Ask Supabase Auth to email a magic link; its signup hook enforces the allowlist. */
 export async function sendMagicLink(email: string, emailRedirectTo: string) {

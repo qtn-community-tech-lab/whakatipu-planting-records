@@ -2,11 +2,10 @@ import type { Metadata, Route } from "next";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
-import { isAuthenticated } from "@/db/queries/auth";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 import { readSpeciesForEdit, updateSpecies } from "@/db/queries/species";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SpeciesForm } from "@/components/wrt/species/SpeciesForm";
-import { StaffAccessRequired } from "@/components/wrt/auth/staff-access-required";
 import { speciesSchema, type SpeciesInput, type SpeciesSubmitResult } from "@/db/types";
 import { PageHead } from "@/components/wrt/shared/page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -22,15 +21,7 @@ export default async function EditSpeciesPage({
   searchParams: Promise<{ saved?: string }>;
 }) {
   const { slug } = await params;
-  if (!(await isAuthenticated()))
-    return (
-      <StaffAccessRequired
-        title="Edit species"
-        back={{ href: "/species", label: "All species" }}
-        message="Sign in to edit species."
-        next={`/species/${slug}/edit`}
-      />
-    );
+  await requireAuthenticated(`/species/${slug}/edit`);
   const [species, query] = await Promise.all([
     readSpeciesForEdit(slug),
     searchParams,

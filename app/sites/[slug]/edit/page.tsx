@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
-import { isAuthenticated } from "@/db/queries/auth";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 import { readSite, updateSite } from "@/db/queries/sites";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
-import { StaffAccessRequired } from "@/components/wrt/auth/staff-access-required";
 import {
   editSiteSchema,
   type EditSiteInput,
@@ -21,15 +20,7 @@ export default async function EditSitePage({
   params,
 }: Readonly<PageProps<"/sites/[slug]/edit">>) {
   const { slug } = await params;
-  if (!(await isAuthenticated()))
-    return (
-      <StaffAccessRequired
-        title="Edit site"
-        back={{ href: "/sites", label: "All sites" }}
-        message="Sign in to edit sites."
-        next={`/sites/${slug}/edit`}
-      />
-    );
+  await requireAuthenticated(`/sites/${slug}/edit`);
   const site = await readSite(slug);
   if (!site || site.deactivated_at) notFound();
 

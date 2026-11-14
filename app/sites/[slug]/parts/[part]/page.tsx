@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
 
@@ -82,8 +81,6 @@ export default async function PartPage({ params }: Props) {
           </Link>
         }
       />
-
-      {parcel.deactivatedAt && <Alert role="status"><AlertTitle>Deactivated</AlertTitle><AlertDescription>This part is unavailable for new planting records. Its historical records and quantities are retained.</AlertDescription></Alert>}
 
       <Card
         title="Recorded plants by season"

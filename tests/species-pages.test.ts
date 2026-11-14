@@ -4,7 +4,7 @@ import type * as SpeciesFormModule from "@/components/wrt/species/SpeciesForm";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 
 const mocks = vi.hoisted(() => ({ authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn() }));
-vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated, requireAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/species", () => ({ createSpecies: mocks.create, updateSpecies: mocks.update, readSpeciesForEdit: mocks.read }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); } }));

@@ -11,11 +11,6 @@ const repo = new SupabaseWrtRepository();
 let queries: WrtQueries | null = null;
 let allQueries: WrtQueries | null = null;
 
-/** The live app reads from Supabase; imports and offline fixtures use their own repositories. */
-export function dataSource(): "supabase" {
-  return "supabase";
-}
-
 /** Is this reader seeing records still needing review? On unless they switched it off. */
 export async function reviewShown(): Promise<boolean> {
   try {

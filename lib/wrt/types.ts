@@ -119,8 +119,6 @@ export interface Place {
   name: string;
   /** Available when the site itself is read, rather than a planting-line summary. */
   description?: string;
-  /** Deactivated from the public register, while its history remains readable. */
-  deactivatedAt?: string | null;
   /** Distinct site classes of the parcels in this place, most plants first. */
   siteClasses: SiteClass[];
   /** True for order schemes (Paper4Trees) that are not a physical place. */

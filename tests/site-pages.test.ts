@@ -7,7 +7,7 @@ const mocks = vi.hoisted(() => ({
   deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
   revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
 }));
-vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated, requireAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
 vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));

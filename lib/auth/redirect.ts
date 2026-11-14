@@ -1,3 +1,5 @@
+import type { Route } from "next";
+
 /** Keep callback and login return destinations on this app's origin. */
 export function safeReturnPath(value: unknown): string {
   if (typeof value !== "string" || !value.startsWith("/") || value.startsWith("//") || value.includes("\\"))
@@ -10,4 +12,8 @@ export function safeReturnPath(value: unknown): string {
   } catch {
     return "/";
   }
+}
+
+export function loginHref(next: string): Route {
+  return `/login?next=${encodeURIComponent(safeReturnPath(next))}` as Route;
 }

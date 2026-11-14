@@ -68,7 +68,7 @@ describe("Supabase repository without workbook files", () => {
     expect(places).toMatchObject([
       { slug: "empty-site", parcels: [], siteClasses: [], searchKeys: ["empty site"] },
       { slug: "new-site", parcels: [{ id: "new-area", name: "Riverbank" }], siteClasses: ["keystone"] },
-      { slug: "old-site", deactivatedAt: "2026-11-01T00:00:00Z", description: "Historical site.",
+      { slug: "old-site", description: "Historical site.",
         parcels: [{ id: "old-area", deactivatedAt: "2026-11-01T00:00:00Z" }] },
       { slug: "reserve", description: "Planting beside the river.", siteClasses: ["community", "school"],
         parcels: [{ id: "1A" }, { id: "reserve-west" }] },
@@ -81,7 +81,7 @@ describe("Supabase repository without workbook files", () => {
     const queries = createQueries(repo);
     expect((await queries.lookups()).places).toEqual(places);
     expect((await queries.place("old-site"))?.split.total).toBe(5);
-    expect((await queries.search("Old site")).places[0]?.item.deactivatedAt).toBe("2026-11-01T00:00:00Z");
+    expect((await queries.search("Old site")).places[0]?.item.slug).toBe("old-site");
     for (const term of ["New site", "Riverbank", "Empty site"]) {
       const result = await queries.search(term);
       expect(result.places[0]).toMatchObject({ split: emptySplit() });

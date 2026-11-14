@@ -16,7 +16,7 @@ setting local keys and loading the initial data. This README covers database mai
 | `migrations/20261105000000_line_records.sql` | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details` |
 | `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
 | `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled |
-| `migrations/20261111000000_authentication.sql` | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes |
+| `migrations/20261114000000_authentication.sql` | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes |
 | `checks/anonymous_crud_check.sql` | Verifies public reads remain available and anonymous writes and user-profile reads are denied |
 | `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
 | `checks/access_rules_check.sql` | Tries 17 things as signed out, volunteer and staff, and lists PASS or FAIL. Changes nothing |
@@ -168,3 +168,13 @@ imported row counts, workbook provenance and season totals. The import rows say 
 [`checks/access_rules_check.sql`](checks/access_rules_check.sql) exercises signed-out, unapproved identity and active
 staff access. Its staff tests need at least one active approved profile with a linked Auth identity. The script
 rolls back its test rows.
+
+### Auth identity regression check
+
+Run `checks/auth_identity_check.sql` as postgres after applying all migrations. It uses isolated
+fixtures and rolls them back, checking email normalization, changed-email relinking, revoked access
+for the old identity, deactivation and stable audit attribution.
+
+The app requires `NEXT_PUBLIC_APP_URL` outside local development. Set it to the intended app origin
+and allow its `/auth/confirm` callback in Supabase Auth. Preview deployments need an explicitly
+configured, allowlisted origin too; the app does not fall back to `VERCEL_URL`.

@@ -76,6 +76,11 @@ create function public.link_existing_auth_user_to_staff() returns trigger
 language plpgsql security definer set search_path = '' as $$
 begin
   new.email := lower(btrim(new.email));
+  if tg_op = 'UPDATE' then
+    if new.email is distinct from lower(btrim(old.email)) then
+      new.auth_user_id := null;
+    end if;
+  end if;
   if new.auth_user_id is null then
     select auth_user.id into new.auth_user_id
     from auth.users as auth_user
