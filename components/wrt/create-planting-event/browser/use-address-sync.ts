@@ -5,9 +5,12 @@
  */
 import { useEffect, useRef } from "react";
 
-export function useAddressSync({ siteSlug, part, season, depth, popped, totals }: {
+export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, depth, popped, totals }: {
   siteSlug: string;
   part: string | null;
+  /** The site isn't stored (a new one, or kept from earlier). */
+  unsavedSite: boolean | undefined;
+  keptPart: boolean;
   season: { slug: string; wholeSite: boolean } | null;
   /** How many of our history entries are under this one (see useHistoryEntries); null while a back is landing. */
   depth: () => number | null;
@@ -27,8 +30,9 @@ export function useAddressSync({ siteSlug, part, season, depth, popped, totals }
       const d = depth();
       if (d === null) return; // a back is landing: written again once it has (popped)
       const q = new URLSearchParams(window.location.search);
-      const shownPart = wholeSite ? null : part;
-      for (const [key, value] of [["site", siteSlug], ["part", shownPart], ["season", seasonSlug]] as const) if (value) q.set(key, value); else q.delete(key);
+      // Places kept on the map aren't stored, so they aren't bookmarked.
+      const shownPart = wholeSite || keptPart ? null : part;
+      for (const [key, value] of [["site", unsavedSite ? "" : siteSlug], ["part", shownPart], ["season", seasonSlug]] as const) if (value) q.set(key, value); else q.delete(key);
       const url = `${window.location.pathname}${q.size ? `?${q}` : ""}`;
       if (url === `${window.location.pathname}${window.location.search}` && (window.history.state as { wrtDepth?: unknown } | null)?.wrtDepth === d) return;
       // In a background tab, keep Next's state and leave its router alone: a router update there starts a view
@@ -40,7 +44,7 @@ export function useAddressSync({ siteSlug, part, season, depth, popped, totals }
       window.history.replaceState({ wrtDepth: d }, "", url);
     });
     return () => clearTimeout(id);
-  }, [siteSlug, part, seasonSlug, wholeSite, popped, depth, totals]);
+  }, [siteSlug, part, unsavedSite, keptPart, seasonSlug, wholeSite, popped, depth, totals]);
   useEffect(() => {
     const show = () => {
       if (document.hidden || !unsynced.current) return;

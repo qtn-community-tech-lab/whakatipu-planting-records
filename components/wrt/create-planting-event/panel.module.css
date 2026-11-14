@@ -60,6 +60,12 @@
 .whereCard .pick:focus-visible { outline-offset: -2px; } /* inside the card's edge, which clips */
 .whereCard .pick[aria-invalid="true"] { background: var(--surface-risk); }
 .whereCard .problem { margin: 0 8px 8px; }
+/* a new location near the site, or a sublocation of it */
+/* the new location's name: reads as the card's title, with a pencil and a dashed line to show it can be typed in */
+.spotName { display: flex; align-items: center; gap: 6px; border-bottom: 1.5px dashed #c9d3bf; color: var(--text-muted); cursor: text; }
+.spotName:focus-within { border-bottom-style: solid; border-color: var(--cn-green-800); color: var(--cn-green-800); }
+.spotName input { flex: 1; min-width: 0; min-height: 32px; padding: 0; border: 0; background: none; outline: none; font: 700 16.5px/1.2 var(--font-sans); color: var(--text-strong); }
+.spotName input::placeholder { color: var(--text-strong); opacity: 0.55; }
 /* the drawn areas by name, each one tap from the map */
 .areaList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .areaList button { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px 10px 12px; border: 1px solid var(--border-card); border-radius: var(--radius-tile); background: var(--surface-card); text-align: left; color: var(--cn-green-800); cursor: pointer; }

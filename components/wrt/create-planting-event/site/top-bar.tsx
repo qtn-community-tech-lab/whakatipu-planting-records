@@ -9,12 +9,13 @@ import s from "../create-planting-event.module.css";
  * adding to the map. Wide screens show none of it. The menus are modal, so the tap that closes one doesn't also
  * land on the map (which would leave the site).
  */
-export function TopBar({ siteName, hint, choosing, onChooseSite, onDrawArea, onFindMe }: {
+export function TopBar({ siteName, hint, choosing, onChooseSite, onAddLocation, onDrawArea, onFindMe }: {
   siteName?: string | undefined;
   /** Under the site: the part, or "New planting event" once one is started. */
   hint?: string | undefined;
   choosing: boolean; onChooseSite: () => void;
-  onDrawArea: () => void;
+  /** Left out once an area is drawn: a pin as well would only confuse where it was planted. */
+  onAddLocation?: (() => void) | undefined; onDrawArea: () => void;
   onFindMe: () => void;
 }) {
   const [menu, setMenu] = useState(false);
@@ -36,6 +37,12 @@ export function TopBar({ siteName, hint, choosing, onChooseSite, onDrawArea, onF
         </PopoverTrigger>
         {/* Opens rightwards, into the map, so on desktop it never covers the form; on phones it shifts back on screen. */}
         <PopoverContent align="start" sideOffset={8} collisionPadding={12} className={s.addMenu}>
+          {onAddLocation && (
+            <button type="button" onClick={pick(onAddLocation)}>
+              <MapPin size={18} strokeWidth={2.2} />
+              New location
+            </button>
+          )}
           <button type="button" onClick={pick(onDrawArea)}>
             <Pencil size={18} strokeWidth={2.4} />
             Draw area

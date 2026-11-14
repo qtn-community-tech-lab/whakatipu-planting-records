@@ -3,7 +3,7 @@
  * What the panel shows at a chosen site before an event is started: its (or the chosen part's) last few seasons
  * of plantings, then its most planted species.
  */
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, MapPinned } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { loadSiteOverview } from "@/app/events/new/actions";
@@ -19,7 +19,7 @@ import type { PlantTotals } from "../map/sites";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event", onOpenSeason }: {
+export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
   /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
   map?: ReactNode;
@@ -30,14 +30,18 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   partName?: string | undefined;
   /** Plants and species by site and by `site/part`: the tiles at the top. */
   totals: PlantTotals;
-  /** The site's places (its parts), listed under the tiles; `onPlace` opens one's page. */
-  places?: readonly { id: string; name: string }[] | undefined;
+  /** The site's places (its parts), listed under the tiles; `onPlace` opens one's page. `sub` says more (a kept one). */
+  places?: readonly { id: string; name: string; sub?: string | undefined }[] | undefined;
   onPlace?: ((id: string) => void) | undefined;
   onStart: () => void;
   /** The start button's words: "Back to your planting event" when one with entries is waiting. */
   startLabel?: string | undefined;
   /** A season's row: open its planting events. `wholeSite` when the seasons shown are the whole site's (the part has none). */
   onOpenSeason?: ((season: { slug: string; label: string }, wholeSite: boolean) => void) | undefined;
+  /** The site's pin is in the wrong spot: move it here, first, before an event is started there. Not saved yet. */
+  pinMoved?: boolean | undefined;
+  onMovePin?: (() => void) | undefined;
+  onUndoPin?: (() => void) | undefined;
 }) {
   // The history couldn't be read: it says so (an event can still be added), and Try again asks once more.
   const { loading, failed, data: o, reload: retry } = useLoad(`${slug}/${partId ?? ""}`, () => loadSiteOverview(slug, partId));
@@ -47,6 +51,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   return (
     <Frame onStart={onStart} label={startLabel} busy={loading}>
       {map}
+      {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
           <div className={s.loading}>
             <span className="sr-only">Loading what&apos;s been planted here</span>
@@ -69,7 +74,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
         {places.length > 0 && (
           <FigureList
             title="Places"
-            rows={places.map((p) => ({ key: p.id, name: p.name, figure: formatNumber(totals[`${slug}/${p.id}`]?.plants ?? 0), onClick: onPlace && (() => onPlace(p.id)) }))}
+            rows={places.map((p) => ({ key: p.id, name: p.name, sub: p.sub, figure: formatNumber(totals[`${slug}/${p.id}`]?.plants ?? 0), onClick: onPlace && (() => onPlace(p.id)) }))}
           />
         )}
         {o && o.trees.length > 0 && (
@@ -90,6 +95,13 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
             />
           </>
         )}
+      {/* Last and quiet: rarely needed, and it changes more than this event. */}
+      {onMovePin && !pinMoved && (
+        <>
+          <hr className={s.divider} />
+          <PinFix moved={false} onMove={onMovePin} />
+        </>
+      )}
     </Frame>
   );
 }
@@ -103,6 +115,21 @@ function tiles(totals: PlantTotals, slug: string, partId: string | null, places:
     { label: "Species", value: String(x?.species ?? 0) },
     ...(parts > 0 ? [{ label: "Places", value: String(parts) }] : []),
   ];
+}
+
+/** The site's pin in the wrong spot: a quiet link to move it, or once moved (not saved yet), Move again and Undo. */
+function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () => void; onUndo?: (() => void) | undefined }) {
+  return moved ? (
+    <p className={s.pinMoved} role="status">
+      <span>Pin moved, not saved yet.</span>
+      <button type="button" onClick={onMove}>Move again</button>
+      <button type="button" onClick={onUndo}>Undo</button>
+    </p>
+  ) : (
+    <button type="button" className={s.movePin} onClick={onMove}>
+      <MapPinned size={15} strokeWidth={2.2} aria-hidden="true" />Pin in the wrong spot? Move it
+    </button>
+  );
 }
 
 /** The form's frame, with "Add new planting event" where the form's Next sits. */
