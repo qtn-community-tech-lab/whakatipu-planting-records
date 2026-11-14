@@ -1,28 +1,39 @@
 "use client";
 /**
- * State, validation and submit for the planting-event form (map-event-form.tsx). Submit checks
- * everything and, when it all passes, saves it with `save` (when given) and shows the receipt;
- * without `save` it shows a "Not saved" preview. Errors show from the first Submit on, and update live.
+ * State, validation and submit for the planting-event form (map-event-form.tsx): React Hook Form, checked with the
+ * server's own schema (eventSchema). Submit checks everything and, when it all passes, saves it with `save` (when
+ * given) and shows the receipt; without `save` it shows a "Not saved" preview. Errors show from the first Submit on,
+ * and update live.
  */
+import { zodResolver } from "@hookform/resolvers/zod";
 import { unstable_rethrow } from "next/navigation";
-import { useMemo, useState, type RefObject } from "react";
+import { useMemo, useState, type FormEvent, type RefObject } from "react";
+import { useFieldArray, useForm, useWatch, type FieldPath } from "react-hook-form";
+import { z } from "zod";
 import type { PlantingEventSubmitResult } from "@/db/types";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
-import type { EventSeason, PlantingEventInput } from "@/lib/wrt/events/types";
-import { validateEventInput, type EventLookups, type FieldErrors } from "@/lib/wrt/events/validate";
+import type { PlantingEventInput } from "@/lib/wrt/events/types";
+import { eventSchema, type EventLookups } from "@/lib/wrt/events/validate";
 
-export interface Line {
-  /** Stable React key for the row (not stored). */
-  key: number;
-  speciesId: string;
-  /** Kept as typed so a half-typed number is not reformatted under the cursor. */
-  quantity: string;
-}
+/** What the controls hold, as the event the server takes: quantities as typed (a half-typed number isn't reformatted), the date's season. */
+const formSchema = (lookups: EventLookups, today: string) => z.object({
+  siteSlug: z.string(),
+  partId: z.string().nullable(),
+  plantedOn: z.string(),
+  species: z.array(z.object({ speciesId: z.string(), quantity: z.string() })),
+  notes: z.string(),
+}).transform((v): unknown => ({
+  ...v,
+  season: seasonFromDate(v.plantedOn)?.season,
+  seasonYear: seasonFromDate(v.plantedOn)?.seasonYear ?? null,
+  polygon: null, // drawn areas aren't stored yet
+  species: v.species.map((l) => ({ ...l, quantity: l.quantity === "" ? null : Number(l.quantity) })),
+  notes: v.notes.trim() || null,
+})).pipe(eventSchema(lookups, today));
 
+type FormValues = z.input<ReturnType<typeof formSchema>>;
 export type EventFormState = ReturnType<typeof useEventForm>;
-
-const isWholeAboveZero = (n: number) => Number.isInteger(n) && n > 0;
 
 /** Focus an element once React has drawn the change that reveals it. */
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
@@ -44,76 +55,42 @@ export function useEventForm({
   /** Saves the checked event (a server action); `savedPlantingEvent` is passed back on a retry. Without it, Submit only previews. */
   save?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }) {
-  const suggested = seasonFromDate(today)!;
-
-  const [siteSlug, setPlaceSlug] = useState(initialSite);
-  const [partId, setParcelId] = useState<string | null>(initialPart);
-  const [plantedOn, setPlantedOn] = useState(today);
-  const [season, setSeason] = useState<EventSeason>(suggested.season);
-  const [seasonYear, setSeasonYear] = useState(String(suggested.seasonYear));
-  // Once the user picks a season themselves, changing the date stops overwriting it.
-  const [seasonChosen, setSeasonChosen] = useState(false);
-  const [lines, setLines] = useState<Line[]>([{ key: 0, speciesId: "", quantity: "" }]);
-  const [nextKey, setNextKey] = useState(1);
-  const [notes, setNotes] = useState("");
-
-  // Submitted once: errors then show, and update live as the user fixes them.
-  const [checked, setChecked] = useState(false);
-  // The checked event once Submit passes: shown as the "Not saved" preview.
-  const [preview, setPreview] = useState<PlantingEventInput | null>(null);
-  // Saving: in progress, the general failure to show by Submit, and the event's id once its row
-  // exists (sent back on retry so it isn't created twice).
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [savedPlantingEvent, setSavedPlantingEvent] = useState<number | undefined>(undefined);
-  // Goes up each time problems are shown (Submit, or the server's), so the view can bring the first into sight.
-  const [problemAsk, setProblemAsk] = useState(0);
-  // Field problems the server found, for the input it was sent: they go once anything is edited.
-  const [server, setServer] = useState<{ input: string; errors: FieldErrors } | null>(null);
-
-  const site = options.sites.find((s) => s.slug === siteSlug);
-
-  // Reference data for the client-side check: the same shape the server validates against.
+  // Reference data for the check: the same shape the server validates against.
   const lookups: EventLookups = useMemo(() => ({
     places: options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })),
     species: options.species,
   }), [options]);
+  const schema = useMemo(() => formSchema(lookups, today), [lookups, today]);
+  const form = useForm<FormValues, unknown, PlantingEventInput>({
+    resolver: zodResolver(schema), mode: "onSubmit", reValidateMode: "onChange", shouldFocusError: false,
+    defaultValues: { siteSlug: initialSite, partId: initialPart, plantedOn: today, species: [], notes: "" },
+  });
+  const { control, formState } = form;
+  const lines = useFieldArray({ control, name: "species" });
+  const [siteSlug, partId, species, notes] = useWatch({ control, name: ["siteSlug", "partId", "species", "notes"] });
 
-  // Checked on every change (cheap); errors are shown once the form has been submitted.
-  const input = {
-    siteSlug,
-    partId,
-    plantedOn,
-    season,
-    seasonYear: seasonYear.trim() === "" ? null : Number(seasonYear),
-    polygon: null, // drawn on the map once the map PR lands
-    species: lines.map((l) => ({ speciesId: l.speciesId, quantity: l.quantity.trim() === "" ? null : Number(l.quantity) })),
-    notes: notes.trim() || null,
+  // The checked event once Submit passes: shown as the "Not saved" preview, or the receipt once saved.
+  const [preview, setPreview] = useState<PlantingEventInput | null>(null);
+  // The general save failure to show by Submit, and the event's id once its row exists (sent back on retry so it isn't created twice).
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [savedPlantingEvent, setSavedPlantingEvent] = useState<number | undefined>(undefined);
+  // Goes up each time problems are shown (Submit, or the server's), so the view can bring the first into sight.
+  const [problemAsk, setProblemAsk] = useState(0);
+  // The species rows aren't inputs the form knows, so once submitted a change to the lines checks them all again (errors stay live).
+  const thenCheck = <A extends unknown[]>(change: (...a: A) => void) => (...a: A) => {
+    change(...a);
+    if (form.formState.isSubmitted) void form.trigger("species");
   };
-  const result = validateEventInput(input, lookups, today);
-  const inputKey = JSON.stringify(input);
-  const serverErrors = server?.input === inputKey ? server.errors : {};
-  const allErrors: FieldErrors = { ...serverErrors, ...(result.ok ? {} : result.errors) };
-  const errors = checked ? allErrors : {};
-
-  const total = lines.reduce((s, l) => s + (isWholeAboveZero(Number(l.quantity)) ? Number(l.quantity) : 0), 0);
-
-  const focusFirstProblem = () => focusSoon(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [data-problem]"));
 
   /** Show the problems and bring the first into sight. */
   function showProblems() {
     setProblemAsk((n) => n + 1);
-    setChecked(true);
-    focusFirstProblem();
+    focusSoon(() => formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [data-problem]"));
   }
 
-  /** Check everything; save it (when the form saves) and show the receipt, or show what needs fixing. */
-  async function finish() {
-    if (!result.ok) return showProblems();
-    if (!save) return setPreview(result.value);
-    if (saving) return;
-    const value = result.value;
-    setSaving(true);
+  /** Save the checked event (when the form saves) and show the receipt, or show what needs fixing. */
+  async function finish(value: PlantingEventInput) {
+    if (!save) return setPreview(value);
     setSaveError(null);
     let outcome: PlantingEventSubmitResult;
     try {
@@ -121,13 +98,11 @@ export function useEventForm({
     } catch (error) {
       unstable_rethrow(error);
       outcome = { error: "The planting event could not be saved. Your entries are still here; please try again." };
-    } finally {
-      setSaving(false);
     }
     if (outcome.savedPlantingEvent !== undefined) setSavedPlantingEvent(outcome.savedPlantingEvent);
     if (outcome.issues?.length) {
-      const errs: FieldErrors = Object.fromEntries(outcome.issues.map((x) => [x.path, x.message]));
-      setServer({ input: inputKey, errors: errs });
+      // The season comes from the date, so its problem is the date's.
+      for (const { path, message } of outcome.issues) form.setError((path.startsWith("season") ? "plantedOn" : path) as FieldPath<FormValues>, { message });
       return showProblems();
     }
     if (outcome.error) return setSaveError(outcome.error);
@@ -135,16 +110,21 @@ export function useEventForm({
   }
 
   return {
-    site, total, errors, problemAsk,
-    /** The message for one field path (e.g. "species.0.quantity"), if it has one. */
-    err: (path: string): string | undefined => errors[path],
+    control, errors: formState.errors, problemAsk, notes,
+    site: options.sites.find((s) => s.slug === siteSlug),
+    siteSlug, partId,
+    /** The site (and part) picked on the map. */
+    chooseSite(slug: string, part: string | null) {
+      const opts = { shouldValidate: form.formState.isSubmitted };
+      form.setValue("siteSlug", slug, opts);
+      form.setValue("partId", part, opts);
+    },
 
-    /** The checked event for "Check and submit", or null while something needs fixing. */
-    checkedEvent: result.ok ? result.value : null,
+    /** The species lines, as typed, and changing them. */
+    lines: species, append: thenCheck(lines.append), update: thenCheck(lines.update), remove: thenCheck(lines.remove),
     preview,
     /** Saving now; the general save failure (shown by Submit); true once the event and its plants are saved. */
-    // With `save`, the receipt only shows once everything is saved.
-    saving, saveError, saved: !!save && preview !== null,
+    saving: formState.isSubmitting, saveError, saved: !!save && preview !== null,
     /** The event's row was saved but not its plants: a retry only adds the plants, so where and when can't change now. */
     partlySaved: savedPlantingEvent !== undefined && preview === null,
     /** Leave the preview and return to the form, values kept. */
@@ -152,51 +132,7 @@ export function useEventForm({
       setPreview(null);
       focusSoon(() => headingRef.current);
     },
-
-    siteSlug,
-    chooseSite(slug: string) { setPlaceSlug(slug); setParcelId(null); },
-    partId, setParcelId,
-
-    plantedOn,
-    changeDate(value: string) {
-      setPlantedOn(value);
-      const s = seasonFromDate(value);
-      if (s && !seasonChosen) {
-        setSeason(s.season);
-        setSeasonYear(String(s.seasonYear));
-      }
-    },
-    season,
-    chooseSeason(value: EventSeason) { setSeason(value); setSeasonChosen(true); },
-    seasonYear,
-    changeSeasonYear(value: string) { setSeasonYear(value); setSeasonChosen(true); },
-
-    lines,
-    updateLine(key: number, change: Partial<Line>) {
-      setLines((ls) => ls.map((l) => (l.key === key ? { ...l, ...change } : l)));
-    },
-    removeLine(key: number) { setLines((ls) => ls.filter((l) => l.key !== key)); },
-    addLine() {
-      setLines((ls) => [...ls, { key: nextKey, speciesId: "", quantity: "" }]);
-      setNextKey((k) => k + 1);
-    },
-    /** Add a species in one go (the map view's species rows): fills the empty line if there is one. */
-    addSpecies(speciesId: string, quantity = "") {
-      setLines((ls) => {
-        if (ls.some((l) => l.speciesId === speciesId)) return ls;
-        const empty = ls.find((l) => !l.speciesId);
-        if (empty) return ls.map((l) => (l === empty ? { ...l, speciesId, quantity } : l));
-        return [...ls, { key: nextKey, speciesId, quantity }];
-      });
-      setNextKey((k) => k + 1);
-    },
-
-    notes, setNotes,
-
     /** Enter or the main button. */
-    submit(e: React.FormEvent) {
-      e.preventDefault();
-      void finish();
-    },
+    submit(e: FormEvent) { void form.handleSubmit(finish, showProblems)(e); },
   };
 }
