@@ -48,13 +48,15 @@ Keep these values in the git-ignored `.env.local`: the import scripts load that 
 it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
 Restart Next.js after changing environment variables.
 
-### 3. Load the planting history and map pins
+### 3. Load the planting history, species register and map pins
 
 Check that the URL in `.env.local` is local, then run the workbook import before the pins import:
 
 ```bash
 npm run import-workbook             # preview changes
 npm run import-workbook -- --write
+npm run seed-species                # preview the maintained species register
+npm run seed-species -- --write --backfill
 npm run import-pins                 # preview changes
 npm run import-pins -- --write
 ```
@@ -62,6 +64,10 @@ npm run import-pins -- --write
 The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
 against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+Run the species seed after the workbook import: that legacy importer restores names and threat flags from the
+workbook CSVs. The seed preserves the original slugs, refreshes the existing scientific-name and `threatened`
+fields, and fills only empty common/Māori names, profiles and photos. It does not change `over_5m` or store
+NZTCS assessment details. See [species seed and backfill](supabase/README.md#species-seed-and-backfill).
 
 ### 4. Start the app
 
