@@ -166,7 +166,7 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
 /** A site's site-wide area (see wholeSiteAreaSlug), made the first time plants are saved at the site as a whole. */
 async function createWholeSiteArea(site: string, siteName: string) {
   const slug = wholeSiteAreaSlug(site);
-  const { error } = await createPlantingArea({ slug, site, name: `${siteName}, whole site` });
+  const { error } = await createPlantingArea(site, { slug, name: `${siteName}, whole site`, description: "" });
   if (error && error.code !== "23505") throw error; // 23505: another save made it just now, so it's there to use
   return slug;
 }

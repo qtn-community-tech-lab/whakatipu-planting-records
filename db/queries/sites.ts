@@ -114,11 +114,11 @@ export async function listPlantingAreas(site: string) {
   return data;
 }
 
-/** A new area: the site-wide one (see wholeSiteAreaSlug), made when a planting is first saved there. */
-export async function createPlantingArea(values: { slug: string; site: string; name: string }) {
+/** A new area at a site. The same signature as #77's, which adds the area forms; here it makes the site-wide area (see wholeSiteAreaSlug). */
+export async function createPlantingArea(site: string, values: { slug: string; name: string; description: string }) {
   return (await db())
     .from("areas")
-    .insert(values)
+    .insert({ slug: values.slug, name: values.name, description: values.description, site })
     .select("slug")
     .single();
 }
