@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * shadcn Combobox (the Base UI version), rendered with Canopy classes in
- * styles/app.css ("Combobox"). Only the parts this app uses; Canopy is
- * icon-free, so the clear and open buttons are text glyphs.
+ * styles/app.css ("Combobox"). Only the parts this app uses; the clear and
+ * open buttons use small, centered marks.
  *
  * The input is the control: you type where you clicked, and the list opens
  * directly underneath it.
@@ -22,7 +22,9 @@ function ComboboxInput({
       <span className="wrt-combobox__actions">
         {showClear && (
           <ComboboxPrimitive.Clear data-slot="combobox-clear" className="wrt-combobox__button" aria-label={clearLabel}>
-            ×
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true" focusable="false">
+              <path d="m2 2 8 8m0-8-8 8" />
+            </svg>
           </ComboboxPrimitive.Clear>
         )}
         <ComboboxPrimitive.Trigger data-slot="combobox-trigger" className="wrt-combobox__button wrt-combobox__chevron" aria-label={triggerLabel} />

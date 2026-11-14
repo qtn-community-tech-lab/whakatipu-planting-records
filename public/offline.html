@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1f4d34">
+  <title>You're offline · WRT restoration history</title>
+  <style>
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; box-sizing: border-box;
+      background: #f3f1ea; color: #15261c; font: 16px/1.5 "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    }
+    main { max-width: 26rem; text-align: center; }
+    img { width: 72px; height: 72px; }
+    h1 { font-size: 26px; line-height: 1.2; margin: 16px 0 8px; color: #1f4d34; }
+    p { margin: 0 0 24px; color: #4a4f4b; }
+    button {
+      font-family: inherit; font-size: 15px; font-weight: 600; line-height: 1; color: #fff; background: #1f4d34; border: 0; border-radius: 999px;
+      min-height: 44px; padding: 0 24px; cursor: pointer;
+    }
+    button:focus-visible { outline: 2px solid #15261c; outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/icons/icon-192.png" alt="">
+    <h1>You're offline</h1>
+    <p>This page needs a connection. It will load again as soon as you're back online.</p>
+    <button type="button" onclick="location.reload()">Try again</button>
+  </main>
+  <script>window.addEventListener("online", () => location.reload());</script>
+</body>
+</html>

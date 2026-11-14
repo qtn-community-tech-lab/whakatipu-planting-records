@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
-import { formatNumber } from "@/lib/wrt/text";
+import { formatNumber, rankMatches, searchKey } from "@/lib/wrt/text";
+import { ComboboxInput } from "@/components/ui/inputs";
 import type { RegionMapOptions } from "@/lib/wrt/map-region";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
 
@@ -77,8 +78,28 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
   });
 }
 
+type LocationOption = MappedSiteLocation & { name: string; keys: string[] };
+
+const optionValue = (o: LocationOption) => o.id;
+const optionLabel = (o: LocationOption) => o.label;
+const noLocation = (q: string) => `No location matches “${q}”.`;
+
+/** A location row: its name, then its site (when that differs) and plants. */
+function LocationRow(o: LocationOption) {
+  const where = o.siteName === o.label ? "" : `${o.siteName} · `;
+  return (
+    <span className="cn-species min-w-0">
+      <span className="cn-species__common truncate">{o.label}</span>
+      <span className="cn-species__latin is-plain truncate">{where}{compactPlantCount(o.split.total)} recorded plants</span>
+    </span>
+  );
+}
+
 export function RegionMap({ locations, siteName, mapOptions }: { locations: MappedSiteLocation[]; siteName?: string | undefined; mapOptions: RegionMapOptions }) {
-  const selectId = useId();
+  // Grouped by site, so a site's parts sit together; the site name also matches in search.
+  const options = useMemo(() => locations
+    .map((l) => ({ ...l, name: l.label, keys: [searchKey(l.label), searchKey(l.siteName)] }))
+    .sort((a, b) => a.siteName.localeCompare(b.siteName) || a.label.localeCompare(b.label)), [locations]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = locations.find((location) => location.id === selectedId);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -91,18 +112,12 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="wrt-location-picker">
-        <label htmlFor={selectId}>Choose a location</label>
-        <select id={selectId} className="wrt-select" value={selected?.id ?? ""}
-          onChange={(event) => setSelectedId(event.target.value || null)}>
-          <option value="">Show all reference locations</option>
-          {locations.map((location) => (
-            <option key={location.id} value={location.id}>
-              {location.label} · {compactPlantCount(location.split.total)} recorded plants
-            </option>
-          ))}
-        </select>
-      </div>
+      <ComboboxInput
+        label="Choose a location" fieldClassName="wrt-location-picker"
+        items={options} value={selected?.id ?? ""} onChange={(id) => setSelectedId(id || null)}
+        getValue={optionValue} getLabel={optionLabel} rank={rankMatches} renderItem={LocationRow}
+        placeholder={`Search ${options.length} locations`} clearLabel="Show all locations" empty={noLocation}
+      />
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
         role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
         <Map {...mapOptions} theme="light">
