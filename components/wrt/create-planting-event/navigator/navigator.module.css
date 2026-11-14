@@ -1,0 +1,18 @@
+/* Wide screens: the breadcrumb in the panel. */
+
+/* All sites › site › part: small, quiet links over the title */
+.crumbs { min-width: 0; display: flex; align-items: center; gap: 2px; margin: -6px 0 2px -8px; color: var(--cn-grey-600); font: 600 13.5px var(--font-sans); }
+.crumbs > svg { flex-shrink: 0; opacity: 0.6; }
+.crumbs button { min-width: 0; min-height: 36px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; border: 0; border-radius: var(--radius-inset); background: none; color: var(--cn-green-800); font: inherit; cursor: pointer; }
+.crumbs button > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumbs button > svg { flex-shrink: 0; }
+/* the part takes what's left, so a long name ellipsizes before the site's does */
+.crumbs .partCrumb { flex: 1 1 auto; justify-content: flex-start; max-width: max-content; }
+.crumbs .partCrumb > svg { transition: transform 150ms ease; }
+/* open (the part's menu, or the site chooser): the chevron flips, the crumb tinted */
+.crumbs .partCrumb[data-state="open"] > svg { transform: rotate(180deg); }
+.crumbs button:is([data-state="open"], [aria-expanded="true"]) { background: var(--surface-hover); }
+@media (prefers-reduced-motion: reduce) { .crumbs .partCrumb > svg { transition: none; } }
+@media (hover: hover) { .crumbs button:hover { background: var(--surface-hover); } }
+.crumbs button:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 1px; }
+

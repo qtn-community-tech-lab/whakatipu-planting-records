@@ -13,7 +13,8 @@ import { QuantityFigure, SplitKey, plants } from "@/components/wrt/shared/quanti
 import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
 import { hrefs } from "@/components/wrt/shared/names";
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { isAuthenticated } from "@/db/queries/access";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
 
@@ -44,7 +45,7 @@ function list(items: string[]) {
 
 export default async function SeasonPage({ params }: Props) {
   const { slug } = await params;
-  const { d, all, showReview } = await loadSeason(slug);
+  const [{ d, all, showReview }, authenticated] = await Promise.all([loadSeason(slug), isAuthenticated()]);
   if (!d) notFound();
 
   const { season, split, reconciliation: recon } = d;
@@ -81,6 +82,11 @@ export default async function SeasonPage({ params }: Props) {
 
   return (
     <>
+      {authenticated && (
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button asChild variant="secondary"><Link href={hrefs.newEvent()}>Add planting event</Link></Button>
+        </div>
+      )}
       <PageHead
         back={{ href: "/seasons", label: "All seasons" }}
         eyebrow={`What went in during ${season.label}?`}
