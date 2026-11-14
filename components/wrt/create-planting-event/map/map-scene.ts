@@ -69,3 +69,9 @@ export function pinMarker(members: SitePin[], className: string, onClick: () => 
   el.append(button);
   return new maplibregl.Marker({ element: el }).setLngLat(boundsOf(members.map((p) => p.at)).getCenter());
 }
+
+export function spotMarker(at: LngLat, className: string) {
+  const el = document.createElement("div");
+  el.className = className;
+  return new maplibregl.Marker({ element: el, anchor: "bottom" }).setLngLat(at);
+}

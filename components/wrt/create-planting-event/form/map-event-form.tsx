@@ -12,11 +12,11 @@ import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
 import { describeEvent } from "@/lib/wrt/events/summary";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
-import { partBesideSite } from "@/lib/wrt/text";
+import { partBesideSite, spotKind } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 import { NoteButton } from "./note-button";
-import { Receipt, type PlaceCard } from "./receipt";
-import { areaHa, areaName, plantsIn, useEventForm, WHOLE_SITE_KEY, type AreaPick, type DrawnArea } from "./use-event-form";
+import { LocationPreview, Receipt, type PlaceCard } from "./receipt";
+import { areaHa, areaName, NEW_SITE, plantsIn, useEventForm, WHOLE_SITE_KEY, type AreaPick, type DrawnArea } from "./use-event-form";
 import { useHideOnScroll } from "./use-hide-on-scroll";
 import { WhatPlanted } from "./what-planted";
 import { WhereWhen } from "./where-when";
@@ -43,15 +43,33 @@ export interface MapEventFormProps {
   onListFocus?: (() => void) | undefined;
   /** Open the host's site chooser (no site yet, or a site problem to fix). */
   onChooseSite?: (() => void) | undefined;
-  /** The place tile's menu (the site's parts, Another site), wrapping the tile button. Without it the tile opens the site chooser. */
+  /** The place tile's menu (the site's parts, New sublocation, Another site), wrapping the tile button. Without it the tile opens the site chooser. */
   placeMenu?: ((button: { className: string; label: string; children: ReactNode }) => ReactNode) | undefined;
   /** A site (and part) picked outside the form, from a pin on the map: the form switches to it. */
   picked?: { slug: string; partId: string | null } | null;
   /** Tells the host when the site or part changes, so the map can move its pin. */
   onSiteChange?: ((siteSlug: string, partId: string | null) => void) | undefined;
-  /** The drawn areas' furthest distance from the event's site, and how far counts as at a site: further gets a quiet note. */
+  /** A new location dropped on the map, [longitude, latitude]. Shown in the form; not saved yet. */
+  spot?: [number, number] | null | undefined;
+  /** The pin nearest the new location; `matched` when it was close enough to fill in the site. */
+  spotNear?: { label: string; km: number; matched: boolean } | null;
+  /** How far the new location is from its site's pin, and how far counts as at a site: further warns (no block). */
+  spotKm?: number | null | undefined;
+  /** The drawn areas' furthest distance from the event's site: further than `nearKm` gets the same quiet note. */
   areaKm?: number | null | undefined;
   nearKm?: number | undefined;
+  /** Keep the new location for this visit (Add the location on its own: Save location). */
+  onKeepLocation?: (() => void) | undefined;
+  /** A planting event was saved at the new location: the host keeps it for this visit. */
+  onSavedAtSpot?: (() => void) | undefined;
+  /** Start dropping a new location on the map, and take it off again. */
+  onAddSpot?: (() => void) | undefined;
+  onRemoveSpot?: (() => void) | undefined;
+  /** The new location's name, and whether it's a new location near the site or a sublocation of it. Not saved yet. */
+  spotInfo?: SpotInfo | undefined;
+  onSpotInfo?: ((info: SpotInfo) => void) | undefined;
+  /** The chosen site's pin was in the wrong spot and has been moved (not saved yet; moved from the site's overview): the summary says so. */
+  pinMoved?: boolean | undefined;
   /** The planted areas drawn on the map (not saved yet), in order, and drawing another. Plants are listed per area. */
   areas?: readonly DrawnArea[] | undefined;
   onDrawArea?: (() => void) | undefined;
@@ -80,7 +98,10 @@ export interface MapEventFormProps {
   onSave?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }
 
+/** `decided`: started as a sublocation or a new site, so the kind isn't asked again. */
+export interface SpotInfo { name: string; asPart: boolean; decided?: boolean | undefined }
 export interface FormEntries { entered: boolean; saved: boolean; partly: boolean; saving: boolean }
+const NO_SPOT: SpotInfo = { name: "", asPart: false };
 const NO_AREAS: readonly DrawnArea[] = [];
 
 export function MapEventForm(props: MapEventFormProps) {
@@ -97,22 +118,36 @@ export function MapEventForm(props: MapEventFormProps) {
 }
 
 function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick: (p: MapEventFormProps["picked"]) => boolean }) {
-  const { options, today, initialSite, suggestions, picked, onSiteChange, hidden, onStartAnother } = props;
+  const { options, today, initialSite, plantedArea, suggestions, picked, onSiteChange, spot, spotInfo = NO_SPOT, pinMoved, hidden, onStartAnother } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, save: props.onSave });
+  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, newSite: !!spot, save: props.onSave });
   // Phones: the footer gets out of the way while the page scrolls down the plant list.
   const scrollRef = useRef<HTMLDivElement>(null);
   const footRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLElement>(null);
   useHideOnScroll(scrollRef, footRef, true);
+  // A new location with no site chosen is a new site of its own.
+  const newSite = !!spot && !form.site;
+  const spotName = spotInfo.name.trim();
+  // How the summary describes a new location: no coordinates, just what it is to the site.
+  const location = newSite ? null
+    : spot ? `${spotInfo.asPart ? "New sublocation" : "New location"}${spotName ? `: ${spotName}` : ""}`
+    : pinMoved ? "Site's pin moved (not saved yet)" : null;
+  // The summary's site: a new site's name, as the site list doesn't have it.
+  const describe = (input: Parameters<typeof describeEvent>[0]) => {
+    const out = describeEvent(input, options);
+    return input.siteSlug === NEW_SITE ? { ...out, site: spotName ? `${spotName} (new site)` : "New site" } : out;
+  };
+  // Add location only: the new location without a planting (not every location has one yet).
+  const [locationOnly, setLocationOnly] = useState(false);
 
   // Page changes slide in a little from the side they come from: forward from the right (the form shown again, a
   // receipt), back from the left (the form after its receipt). Plays once, then the class is taken off again.
   const [slide, setSlide] = useState<"forward" | "back" | null>(null);
   const [wasHidden, setWasHidden] = useState(!!hidden);
   const [wasOnReceipt, setWasOnReceipt] = useState(false);
-  const onReceipt = form.preview !== null;
+  const onReceipt = form.preview !== null || (locationOnly && !!spot);
   if (!!hidden !== wasHidden) {
     setWasHidden(!!hidden);
     if (!hidden) setSlide("forward");
@@ -125,7 +160,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   const areas = props.areas ?? NO_AREAS;
   // The part, or the site: what an area is a piece of, and where plants in no area count.
   const partName = form.site?.parts.find((p) => p.id === form.partId)?.name;
-  const place = form.site ? (partName ? partBesideSite(partName, form.site.name) : form.site.name) : "";
+  const place = form.site ? (partName ? partBesideSite(partName, form.site.name) : form.site.name) : spotName || "New site";
   // What was planted, place by place: each drawn area with plants, then any for the site as a whole.
   // Each is, in effect, a planting event of its own. With no areas, one card for the site (and part).
   const cardsFor = (input: PlantingEventInput | null): PlaceCard[] => {
@@ -133,6 +168,11 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     const card = (key: string, title: string, sub: string | undefined, lines: PlantingEventInput["species"], pts?: DrawnArea["pts"]): PlaceCard => ({
       key, title, sub, pts, total: lines.reduce((t, l) => t + l.quantity, 0),
     });
+    // A new location names its own card, as the panel's title does.
+    if (!areas.length && spot) {
+      const what = newSite ? "New site" : spotKind(spotInfo.asPart, form.site?.name ?? "");
+      return [card("all", spotName || (spotInfo.asPart ? "New sublocation" : "New location"), what, input.species)];
+    }
     if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
     return [
       ...areas.map((a, i) => card(String(a.id), areaName(a, i), `${areaHa(a)} · ${place}`, input.species.filter((l) => l.area === a.id), a.pts)),
@@ -198,16 +238,32 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     requestAnimationFrame(() => listRef.current?.scrollIntoView({ block: "start" }));
   }, [plantIn, form]);
 
-  // What the receipt says isn't stored, as it was when Submit passed (drawn areas), not as the map is after.
-  const [atSubmit, setAtSubmit] = useState<{ areas: boolean } | null>(null);
-  if (form.preview && !atSubmit) setAtSubmit({ areas: areas.length > 0 });
+  const { onSavedAtSpot } = props;
+  const savedAtSpot = form.saved && !!spot;
+  useEffect(() => { if (savedAtSpot) onSavedAtSpot?.(); }, [savedAtSpot, onSavedAtSpot]);
+  // A place kept from earlier this visit, not stored: its plants are saved at its site, as at a new location.
+  const keptHere = form.site?.unsaved || !!form.site?.parts.find((p) => p.id === form.partId)?.unsaved;
+  // What the receipt says isn't stored, as it was when Submit passed (a new location, drawn areas), not as the map is after.
+  const [atSubmit, setAtSubmit] = useState<{ unstored?: string | undefined; areas: boolean } | null>(null);
+  if (form.preview && !atSubmit) {
+    setAtSubmit({
+      // A new location at a known site: its plants are saved at that site, the location itself not yet.
+      unstored: spot && form.site ? `The ${spotInfo.asPart ? "new sublocation" : "new location"} isn’t stored yet: its plants are saved at ${place}.`
+        : keptHere && form.site ? `The new location isn’t stored yet: its plants are saved at ${form.site.name}.` : undefined,
+      areas: areas.length > 0,
+    });
+  }
   if (!form.preview && atSubmit) setAtSubmit(null);
 
+  if (locationOnly && spot) {
+    const what = newSite ? "New site" : spotKind(spotInfo.asPart, form.site!.name);
+    return <LocationPreview hidden={hidden} name={spotName} what={what} plantedArea={plantedArea} onBack={() => setLocationOnly(false)} onSave={props.onKeepLocation ?? onStartAnother} />;
+  }
   if (form.preview) {
     return (
       <Receipt
-        hidden={hidden} summary={describeEvent(form.preview, options)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} saved={form.saved}
-        areasDrawn={!!atSubmit?.areas} onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish}
+        hidden={hidden} summary={describe(form.preview)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} saved={form.saved}
+        unstored={form.saved ? atSubmit?.unstored : undefined} areasDrawn={!!atSubmit?.areas} onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish}
       />
     );
   }
@@ -222,9 +278,9 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
       ref={formRef} className={cn(panel.form, slide === "forward" && s.slideIn, slide === "back" && s.slideBack)}
       onAnimationEnd={(e) => { if (e.target === e.currentTarget) setSlide(null); }} onSubmit={form.submit} onKeyDown={enterStaysInField} noValidate aria-label="New planting event" hidden={hidden}>
       {/* The panel's header already names the site; the tiles below say where and when. On phones the
-          top bar says "New planting event" too, so the heading is for screen readers there. */}
+          top bar says "New planting event" too, so only a new location's question shows there. */}
       <header className={panel.head} data-repeat="">
-        <h2 ref={headingRef} tabIndex={-1} className={panel.title}>New planting event</h2>
+        <h2 ref={headingRef} tabIndex={-1} className={panel.title}>{spot ? "Where is it?" : "New planting event"}</h2>
       </header>
 
       <div ref={scrollRef} className={panel.scroll}>
@@ -233,13 +289,16 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
             Some details need fixing. They are marked below.
           </div>
         )}
-        <WhereWhen {...props} form={form} areas={areas} />
+        {/* Add the location on its own only with nothing entered: its Start another would clear the plants. */}
+        <WhereWhen {...props} form={form} spotInfo={spotInfo} areas={areas} onLocationOnly={entered || areas.length ? undefined : () => setLocationOnly(true)} />
         <WhatPlanted
           ref={listRef} form={form} options={options} suggestions={suggestions} areas={areas} plantIn={plantIn} onDrawArea={props.onDrawArea} onAreaFocus={props.onAreaFocus} hidden={hidden}
           onFocus={props.onListFocus}
           // Opened from an area's Add plants: a way back to the map (on phones) that isn't Back.
           onDone={fromMap ? () => { setFromMap(false); props.onPlantClose?.(); } : undefined}
         />
+        {/* After the list: a new location or a moved pin said quietly, then Submit. */}
+        {location && <p className={panel.quiet}>{location}</p>}
       </div>
 
       {form.saveError && <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">{form.saveError}</div>}

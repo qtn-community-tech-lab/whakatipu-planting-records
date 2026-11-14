@@ -1,7 +1,7 @@
 "use client";
-/** What Submit shows: the receipt. */
+/** What Submit shows (Receipt), and a new location added on its own (LocationPreview). */
 import { MapPin } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { FigureList } from "@/components/wrt/shared/figure-list";
@@ -18,10 +18,12 @@ const plantsLabel = (n: number) => `${formatNumber(n)} ${n === 1 ? "plant" : "pl
 const cardLead = (c: PlaceCard) => (c.pts ? <AreaShape pts={c.pts} size={44} onMap /> : <span className="grid size-11 shrink-0 place-items-center rounded-[var(--radius-row)] bg-[var(--surface-soft)] text-[var(--cn-green-800)]"><MapPin size={20} strokeWidth={2.2} /></span>);
 
 /** What Submit shows: a short receipt, marked "Saved", or plainly "Not saved" when the form can't save. */
-export function Receipt({ hidden, summary, cards, empty, saved, areasDrawn, onBack, onStartAnother, onFinish }: {
+export function Receipt({ hidden, summary, cards, empty, saved, unstored, areasDrawn, onBack, onStartAnother, onFinish }: {
   hidden?: boolean | undefined;
   /** Areas were drawn: they aren't stored yet, so it says so. */
   areasDrawn: boolean;
+  /** Said under the heading: what of it isn't stored (a new location's own record). */
+  unstored?: string | undefined;
   summary: EventSummary; cards: PlaceCard[];
   /** Areas kept with no plants (their names): said in a line, so they aren't silently dropped. */
   empty: string[];
@@ -41,6 +43,7 @@ export function Receipt({ hidden, summary, cards, empty, saved, areasDrawn, onBa
         <h2 ref={headingRef} tabIndex={-1} className={panel.title}>{saved || cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
         <p className={panel.context} role="status">
           <span>{saved ? `The planting event and its plants are saved.${areasDrawn ? " Drawn areas aren’t stored yet." : ""}` : "Everything checks out. This prototype can’t store events yet."}</span>
+          {unstored && <span>{unstored}</span>}
         </p>
       </header>
       <div className={panel.scroll}>
@@ -55,6 +58,36 @@ export function Receipt({ hidden, summary, cards, empty, saved, areasDrawn, onBa
         {!saved && <button type="button" className={panel.back} onClick={onBack}>Back to the form</button>}
         {saved && onFinish && <button type="button" className={panel.back} onClick={onFinish.onClick}>{onFinish.label}</button>}
         <button type="button" className={panel.next} onClick={onStartAnother}>Start another</button>
+      </footer>
+    </div>
+  );
+}
+
+/** Add location only: the new location on its own, with no planting. Not saved. */
+export function LocationPreview({ hidden, name, what, plantedArea, onBack, onSave }: {
+  hidden?: boolean | undefined; name: string; what: string; plantedArea?: ReactNode | undefined; onBack: () => void;
+  /** Keeps the location for this visit (a place to choose, marked "Not saved yet"). */
+  onSave: () => void;
+}) {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => headingRef.current?.focus(), []);
+  return (
+    <div className={cn(panel.form, s.slideIn)} hidden={hidden}>
+      <header className={panel.head}>
+        <Badge tone="review" className="self-start">Not saved</Badge>
+        <h2 ref={headingRef} tabIndex={-1} className={panel.title}>New location preview</h2>
+        <p className={panel.context} role="status"><span>No planting yet: that can be added later. This prototype can’t store locations yet.</span></p>
+      </header>
+      <div className={panel.scroll}>
+        {plantedArea}
+        <FigureList
+          title="Where"
+          rows={[{ key: "spot", name: name || "Not named yet", sub: what, figure: "No plants yet", lead: <span className="grid size-11 shrink-0 place-items-center rounded-[var(--radius-row)] bg-[var(--surface-soft)] text-[var(--cn-green-800)]"><MapPin size={20} strokeWidth={2.2} /></span> }]}
+        />
+      </div>
+      <footer className={panel.foot}>
+        <button type="button" className={panel.back} onClick={onBack}>Back to the form</button>
+        <button type="button" className={panel.next} onClick={onSave}>Save location</button>
       </footer>
     </div>
   );

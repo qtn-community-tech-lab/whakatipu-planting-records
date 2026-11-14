@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
 import { groupNearbyLocations } from "@/lib/wrt/site-locations";
-import { boundsOf, createMap, pinMarker } from "./map-scene";
+import { boundsOf, createMap, pinMarker, spotMarker } from "./map-scene";
 import { pinFor, type LngLat, type SitePin } from "./sites";
 
 const SITE_ZOOM = 15;
@@ -138,6 +138,21 @@ export function highlightSite(map: RefObject<maplibregl.Map | null>, siteSlug: s
   box.querySelectorAll<HTMLElement>("[data-site]").forEach((el) => {
     el.toggleAttribute("data-on", !!siteSlug && el.dataset.site!.split(" ").includes(siteSlug));
   });
+}
+
+/** The map's centre: with padding set, the middle of the part the form leaves. */
+export function mapCentre(map: RefObject<maplibregl.Map | null>): LngLat | null {
+  const c = map.current?.getCenter();
+  return c ? [c.lng, c.lat] : null;
+}
+
+export function useSpotMarker(map: RefObject<maplibregl.Map | null>, at: LngLat | null, className: string) {
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !at) return;
+    const marker = spotMarker(at, className).addTo(m);
+    return () => { marker.remove(); };
+  }, [map, at, className]);
 }
 
 /** Find me: the map flies to where you are, and a short word when it can't (no location here, or it was refused). */
