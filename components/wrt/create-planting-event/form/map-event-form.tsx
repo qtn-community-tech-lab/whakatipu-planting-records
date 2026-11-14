@@ -22,7 +22,6 @@ import { NUMBER_FIELD, digits, enterStaysInField } from "@/components/wrt/shared
 import type { EventFormOptions, SpeciesOption } from "@/lib/wrt/events/form-options";
 import { formatPlantedOn } from "@/lib/wrt/events/season";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
-import { MAP_EVENT_STEPS } from "@/lib/wrt/events/steps";
 import { describeEvent, WHOLE_SITE, type EventSummary } from "@/lib/wrt/events/summary";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
@@ -96,7 +95,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   const { options, today, initialSite, suggestions, picked, onSiteChange, hidden, onStartAnother } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, steps: MAP_EVENT_STEPS, save: props.onSave });
+  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, save: props.onSave });
   // Phones: the footer gets out of the way while the page scrolls down the plant list.
   const scrollRef = useRef<HTMLDivElement>(null);
   const footRef = useRef<HTMLElement>(null);
