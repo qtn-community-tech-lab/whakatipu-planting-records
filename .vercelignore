@@ -17,3 +17,7 @@ docs/
 scripts/
 data/research/
 tests/
+
+# Local agent worktrees and video renders: gigabytes the app never reads.
+.claude/
+docs/motion/

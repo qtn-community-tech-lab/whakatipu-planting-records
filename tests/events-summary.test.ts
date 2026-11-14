@@ -9,8 +9,8 @@ const options: EventFormOptions = {
 };
 
 const input: PlantingEventInput = {
-  placeSlug: "lake-hayes",
-  parcelId: null,
+  siteSlug: "lake-hayes",
+  partId: null,
   plantedOn: "2026-10-07",
   season: "Spring",
   seasonYear: 2026,
@@ -27,7 +27,7 @@ describe("describeEvent", () => {
   });
 
   it("never shows a raw id", () => {
-    const s = describeEvent({ ...input, placeSlug: "nowhere", parcelId: "9Z" }, options);
+    const s = describeEvent({ ...input, siteSlug: "nowhere", partId: "9Z" }, options);
     const text = JSON.stringify(s);
     for (const id of ["nowhere", "9Z", "SP-2"]) expect(text).not.toContain(id);
   });
