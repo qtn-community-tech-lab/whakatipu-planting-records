@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
@@ -12,6 +12,8 @@ import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
 import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
 import { AuthControl } from "@/components/wrt/shell/auth-control";
+import { ConnectionStatus } from "@/components/wrt/shell/connection-status";
+import { ServiceWorker } from "@/components/wrt/shell/service-worker";
 import type { NavCounts } from "@/components/wrt/shell/nav";
 import { formatNumber } from "@/lib/wrt/text";
 import { isAuthenticated } from "@/db/queries/auth";
@@ -19,6 +21,11 @@ import { isAuthenticated } from "@/db/queries/auth";
 export const metadata: Metadata = {
   title: { default: "Restoration history · Whakatipu Reforestation Trust", template: "%s · WRT restoration history" },
   description: "Explore the WRT planting history by site, species, year and season.",
+  appleWebApp: { capable: true, title: "WRT history", statusBarStyle: "default" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1f4d34",
 };
 
 export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
@@ -82,6 +89,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
                 {range}
               </span>
             </header>
+            <ConnectionStatus />
             <ViewTransition default="wrt-page-fade">
               <main id="main" className="wrt-main">
                 {children}
@@ -89,6 +97,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
             </ViewTransition>
           </div>
         </div>
+        <ServiceWorker />
       </body>
     </html>
   );

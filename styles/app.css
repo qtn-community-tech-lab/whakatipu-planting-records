@@ -41,6 +41,19 @@
   .cn-pagehead { flex-direction: column; align-items: flex-start; }
 }
 
+/* ---------------------------------------------------------------- connection status */
+/* Floats above the page so it never shifts the layout or covers sticky toolbars; taps pass through. */
+.wrt-connection {
+  position: fixed; z-index: 40; left: 50%; bottom: 16px; transform: translateX(-50%);
+  width: max-content; max-width: calc(100vw - 32px); pointer-events: none;
+}
+.wrt-connection__bar {
+  margin: 0; padding: 10px 16px; border-radius: var(--radius-field); border: 1px solid var(--border-card);
+  box-shadow: 0 6px 20px rgb(21 38 28 / 0.14); font: 600 13.5px/1.4 var(--font-sans);
+}
+.wrt-connection__bar--offline { background: var(--cn-behind-bg); color: var(--cn-note-fg); }
+.wrt-connection__bar--online { background: var(--cn-ok-bg); color: var(--cn-ok-fg); }
+
 /* ---------------------------------------------------------------- recorded-plants notice */
 .wrt-notice {
   display: flex; align-items: center; gap: 12px;
@@ -185,13 +198,22 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   background: var(--surface-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237d877f' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat right 14px center;
   border: 1px solid var(--border-card); font: 600 13.5px/1 var(--font-sans); color: var(--text-strong); appearance: none; max-width: 100%;
 }
-/* Radix triggers render the arrow as an icon rather than a background image. */
-.wrt-select[data-slot="select-trigger"] { position: relative; background-image: none; }
-.wrt-select__icon { position: absolute; right: 14px; width: 10px; height: 6px; color: var(--text-muted); pointer-events: none; }
 .wrt-select[data-size="sm"] { height: 32px; }
 .wrt-select:focus-visible, .cn-search:focus-visible, .cn-input:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 
 /* Form fields (components/ui/field.tsx and components/ui/inputs) */
+/* Form selects share field spacing and shape; toolbar sorts keep the pill. */
+.cn-field > .wrt-select {
+  width: 100%; padding-left: 12px; border-radius: var(--radius-field);
+  font: 700 14px/1 var(--font-sans);
+}
+.cn-field > .wrt-select:disabled { opacity: .45; cursor: not-allowed; }
+/* iPhone Safari zooms the page into any field under 16px when it is tapped. */
+@media (pointer: coarse) {
+  :is(input, select, textarea):not([type="checkbox"]):not([type="radio"]) { font-size: 16px; }
+}
+/* A card's title and action share a row while they fit, then the action wraps below. */
+.cn-card__head { flex-wrap: wrap; }
 .cn-input { background: var(--surface-card); }
 .cn-field > .wrt-select { width: 100%; }
 .wrt-textarea { height: auto; padding: 12px; font-weight: 500; line-height: 1.4; resize: vertical; }
@@ -238,9 +260,7 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-combobox__empty:not(:empty) { padding: 10px; font: var(--type-small); color: var(--text-muted); }
 
 /* Public reference locations are distinct from planting quantities and review flags. */
-.wrt-location-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
-.wrt-location-picker label { color: var(--text-muted); font: var(--type-small); }
-.wrt-location-picker select { flex: 1; min-width: 0; max-width: 100%; }
+.wrt-location-picker { max-width: 560px; }
 .wrt-location-marker {
   position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 56px; height: 36px; padding: 0 9px;
@@ -269,7 +289,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .cn-app a.wrt-mappop__go { color: var(--cn-white); }
 .wrt-mappop__go:hover { background: var(--cn-green-900); }
 .wrt-mappop__go:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 2px; }
-@media (max-width: 480px) { .wrt-location-picker { flex-direction: column; align-items: stretch; } }
 .wrt-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
@@ -493,7 +512,8 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-scard__unsure { margin-left: 6px; font: 600 11px/1 var(--font-sans); color: var(--cn-behind-fg); }
 .wrt-scard2__figure .wrt-scard__unsure { color: var(--cn-behind-fg); font-size: 11.5px; }
 .wrt-sgrid .wrt-scard__media {
-  grid-column: 2; grid-row: 1; aspect-ratio: auto; min-height: 0;
+  /* Size containment: tall photos fill the row the text sets, instead of stretching the card. */
+  grid-column: 2; grid-row: 1; aspect-ratio: auto; min-height: 0; contain: size;
   display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 6px; background: none;
 }
 .wrt-sgrid .wrt-scard__media:not([data-count]) { background: var(--surface-media); }
@@ -1032,7 +1052,6 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
 .wrt-scard2__figure { display: flex; align-items: baseline; gap: 6px; }
 .wrt-scard2__figure b { font: 800 26px/1 var(--font-sans); letter-spacing: var(--tracking-tight); color: var(--text-strong); }
 .wrt-scard2__figure span { font: 600 12.5px/1 var(--font-sans); color: var(--text-muted); }
-.wrt-scard2__line { margin: 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 10px; font: 600 12px/1.3 var(--font-sans); color: var(--text-muted); }
 .wrt-scard2__sp {
   position: relative; z-index: 1; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px;
   padding: 4px 6px 4px 2px; border-radius: var(--radius-row); text-decoration: none; transition: background var(--dur);
@@ -1055,19 +1074,14 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
   box-shadow: 0 1px 2px rgba(21, 38, 28, .04), 0 12px 32px rgba(21, 38, 28, .06); transition: transform var(--dur-slow) var(--ease), box-shadow var(--dur-slow) var(--ease);
 }
 .wrt-srow:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(21, 38, 28, .05), 0 20px 44px rgba(21, 38, 28, .10); }
-.wrt-srow--missing { box-shadow: none; background: none; border-style: dashed; }
-.wrt-srow--missing:hover { transform: none; box-shadow: none; }
-.wrt-srow--missing { display: flex; flex-direction: column; gap: 6px; }
 /* A dot in the chart's autumn or spring colour instead of a side bar. */
 .wrt-srow__title::before { content: ""; display: inline-block; width: 9px; height: 9px; margin: 0 9px 2px 0; border-radius: 50%; background: var(--action-primary); vertical-align: middle; }
 .wrt-srow[data-season="spring"] .wrt-srow__title::before { background: var(--cn-green-400); }
-.wrt-srow--missing .wrt-srow__title::before { background: var(--border-strong); }
 .wrt-srow .wrt-scard__facts { margin-top: 4px; }
 .wrt-srow__main { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
 .wrt-srow__title { margin: 0; font: 800 22px/1.15 var(--font-sans); letter-spacing: -0.01em; color: var(--text-strong); }
 .cn-app .wrt-srow__title a { color: var(--text-strong); text-decoration: none; }
 .wrt-srow__title a:hover { color: var(--text-brand); text-decoration: underline; text-underline-offset: 3px; }
-.wrt-srow--missing .wrt-srow__title { color: var(--text-muted); }
 .wrt-srow__col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .wrt-srow__label { font: 700 11.5px/1 var(--font-sans); color: var(--text-eyebrow); }
 .wrt-srow__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
