@@ -2,19 +2,22 @@
 /**
  * What a site, or one part of it, has had planted, for the planting event page's overview:
  * its most planted trees and its most recent seasons, from the site_area_species and
- * site_area_seasons views; one season's planting events there, for its details; and saving a new
- * planting event.
+ * site_area_seasons views; one season's planting events there, for its details; saving a new
+ * planting event; and saving one of those events once edited.
  */
 import { revalidatePath, updateTag } from "next/cache";
 import { SUPABASE_TAG } from "@/db/cache";
 import { isAuthenticated } from "@/db/queries/access";
-import { createPlantingEvent, createPlantingLines, listPlantingEventNotes, listSiteSeasonPlantingLines, readSeason } from "@/db/queries/plantings";
+import {
+  createPlantingEvent, createPlantingLines, deactivatePlantingLines, listPlantingEventNotes, listPlantingEventLines,
+  listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, updatePlantingLine,
+} from "@/db/queries/plantings";
 import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
-import type { PlantingEventSubmitResult } from "@/db/types";
+import { plantingEventEditSchema, type PlantingEventEditResult, type PlantingEventSubmitResult } from "@/db/types";
 import { areaFor, wholeSiteAreaSlug } from "@/lib/wrt/areas/whole-site";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
-import { todayInNz } from "@/lib/wrt/events/season";
+import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 import { SLUG } from "@/lib/wrt/text";
@@ -180,8 +183,75 @@ function whyNot(error: unknown, otherwise: string) {
   return denied ? "You need to sign in with a staff account to save planting events." : otherwise;
 }
 
+const NOT_SAVED = "The planting event could not be saved. Your changes are still here. Please try again.";
+
+/**
+ * Save an edited past planting event: its date and notes, then its lines (quantities changed,
+ * species added, species taken off, which are deactivated). These are separate writes, not one
+ * transaction, so a failure part way says some changes were saved; saving again finishes the rest.
+ */
+export async function savePlantingEventEdit(id: number, raw: unknown): Promise<PlantingEventEditResult> {
+  if (!(await isAuthenticated())) return { error: "Sign in to edit planting events." };
+  // Trust boundary: the id and values come from the browser.
+  if (!(Number.isSafeInteger(id) && id > 0)) return { error: NOT_SAVED };
+  const parsed = plantingEventEditSchema.safeParse(raw);
+  if (!parsed.success)
+    return { issues: parsed.error.issues.map(({ path, message }) => ({ path: path.join("."), message })) };
+  const edit = parsed.data;
+
+  let saved = false;
+  try {
+    const [stored, current, slugOf] = await Promise.all([readPlantingEventSeason(id), listPlantingEventLines(id), speciesSlugs()]);
+    if (!stored) return { error: NOT_SAVED };
+    // The date is only checked once it's changed: an old one outside today's rules doesn't block the rest.
+    const problem = edit.plantedOn && edit.plantedOn !== stored.plantedOn ? plantedOnProblem(edit.plantedOn, stored.season, todayInNz()) : undefined;
+    if (problem) return { issues: [{ path: "plantedOn", message: problem }] };
+    // Only this event's own active lines can be changed.
+    const byId = new Map(current.map((l) => [l.id, l]));
+    if (edit.lines.some((l) => l.id !== null && !byId.has(l.id))) return { error: NOT_SAVED };
+    // A species added is one in the active register.
+    const unknown = edit.lines.findIndex((l) => l.id === null && !slugOf.has(l.species));
+    if (unknown >= 0) return { issues: [{ path: `lines.${unknown}.species`, message: "Choose a species from the list." }] };
+    // A species added that already has a line here (sent again after a save that stopped part way) keeps that line.
+    const named = new Set(edit.lines.map((l) => l.id));
+    const lines = edit.lines.map((l) => {
+      const slug = l.id === null ? slugOf.get(l.species)! : byId.get(l.id)!.species; // both checked above
+      return { id: l.id ?? current.find((c) => c.species === slug && !named.has(c.id))?.id ?? null, species: slug, quantity: l.quantity };
+    });
+    const kept = new Set(lines.map((l) => l.id));
+
+    const event = await updatePlantingEvent(id, { planted_on: edit.plantedOn, notes: edit.notes });
+    if (event.error) return failed(event.error, false);
+    saved = true;
+    for (const line of lines) {
+      if (line.id === null || byId.get(line.id)?.quantity === line.quantity) continue;
+      const { error } = await updatePlantingLine(id, line.id, { quantity: line.quantity });
+      if (error) return failed(error, true);
+    }
+    const removed = current.filter((c) => !kept.has(c.id)).map((c) => c.id);
+    if (removed.length) {
+      const { error } = await deactivatePlantingLines(id, removed);
+      if (error) return failed(error, true);
+    }
+    const added = lines.filter((l) => l.id === null).map((l) => ({ species: l.species, quantity: l.quantity }));
+    if (added.length) {
+      const { error } = await createPlantingLines(id, added);
+      if (error) return failed(error, true);
+    }
+  } catch (error) {
+    return failed(error, saved);
+  }
+  refresh();
+  return {};
+}
+
 /** After a write: every page reading the planting data reads it again. */
 function refresh() {
   updateTag(SUPABASE_TAG);
   revalidatePath("/", "layout");
+}
+
+function failed(error: unknown, someSaved: boolean): PlantingEventEditResult {
+  if (someSaved) refresh();
+  return { error: whyNot(error, someSaved ? "Some changes were saved, but not all. Your changes are still here. Please save again." : NOT_SAVED) };
 }

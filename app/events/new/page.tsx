@@ -7,7 +7,7 @@ import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
-import { savePlantingEvent } from "./actions";
+import { savePlantingEvent, savePlantingEventEdit } from "./actions";
 
 /**
  * /events/new — recording a planting on site. The
@@ -49,7 +49,7 @@ export default async function Page({ searchParams }: Props) {
   const initialSeason = m ? { slug: m[0], label: `${m[1]!.charAt(0).toUpperCase()}${m[1]!.slice(1)} ${m[2]}` } : undefined;
   return (
     <CreatePlantingEvent
-      initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} exitHref="/sites" onSave={authenticated ? savePlantingEvent : undefined} suggestions={suggestions} totals={totals} areas={pins ?? []}
+      initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} exitHref="/sites" onSave={authenticated ? savePlantingEvent : undefined} onSaveEdit={authenticated ? savePlantingEventEdit : undefined} suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }
