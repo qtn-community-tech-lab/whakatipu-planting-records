@@ -1,11 +1,12 @@
 "use client";
-import { Calendar, ChevronRight, MapPin } from "lucide-react";
+import { Calendar, ChevronRight, Map as MapIcon, MapPin } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { DatePicker } from "@/components/ui/date-picker";
+import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { formatPlantedOn, seasonFromDate } from "@/lib/wrt/events/season";
-import { partBesideSite } from "@/lib/wrt/text";
+import { kmLabel, partBesideSite, plantsOrNone } from "@/lib/wrt/text";
 import type { MapEventFormProps } from "./map-event-form";
-import type { EventFormState } from "./use-event-form";
+import { areaHa, areaName, plantsIn, type DrawnArea, type EventFormState } from "./use-event-form";
 import s from "../panel.module.css";
 import * as panel from "../panel-classes";
 
@@ -48,9 +49,12 @@ function When({ form, today }: { form: EventFormState; today: string }) {
 
 /**
  * Where and when, confirmed up front. The site on a mini map first, then under it the site and
- * part (tap to open the chooser) and the date with its season. Past plantings are on the site's page.
+ * part (tap to open the chooser) and the date with its season, then the areas drawn on the map. Past
+ * plantings are on the site's page.
  */
-export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu }: MapEventFormProps & { form: EventFormState }) {
+export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, areaKm, nearKm = 0, areas, onShowArea, areasListed }: MapEventFormProps & {
+  form: EventFormState; areas: readonly DrawnArea[];
+}) {
   const { errors } = form;
   const siteProblem = errors.siteSlug?.message ?? errors.partId?.message;
   const partName = form.site?.parts.find((p) => p.id === form.partId)?.name;
@@ -89,10 +93,37 @@ export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu }:
           </div>
         </div>
       ) : <When form={form} today={today} />}
-      {form.site && errors.partId && (
-        // Parts are switched in the panel's header.
+      {/* Drawn areas far from the event's site: said quietly, not blocking. */}
+      {form.site && areaKm != null && areaKm > nearKm && (
+        <p className="cn-callout cn-callout--note cn-callout--sm" role="status">
+          That&apos;s {kmLabel(areaKm)} from {form.site.name}: is that the right site?{" "}
+          {onChooseSite && <button type="button" className={panel.inlineLink} onClick={onChooseSite}>Choose a known site</button>}
+        </p>
+      )}
+      {form.site && ((areas.length > 0 && !areasListed) || errors.partId) && (
+        // Parts are switched in the panel's header (or the map's dock); areas are drawn on the map.
         <section className={panel.group} aria-label="Where it was planted">
-          <p className={s.problem} role="alert">{errors.partId.message}</p>
+          {/* The drawn areas by name, not a count: tap one to see it on the map (where its pencil and Add plants are). */}
+          {areas.length > 0 && !areasListed && (
+            <ul className={s.areaList} aria-label="Planted areas">
+              {areas.map((a, i) => {
+                const n = plantsIn(form.lines, a.id);
+                return (
+                  <li key={a.id}>
+                    <button type="button" onClick={() => onShowArea?.(a.id)} aria-label={`${areaName(a, i)}, ${areaHa(a)}, ${plantsOrNone(n).toLowerCase()}: show on the map`}>
+                      <AreaShape pts={a.pts} />
+                      <span className={panel.cardText}>
+                        <b>{areaName(a, i)}</b>
+                        <span>{areaHa(a)} · {plantsOrNone(n)}</span>
+                      </span>
+                      <MapIcon size={18} strokeWidth={2.2} aria-hidden="true" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          {errors.partId && <p className={s.problem} role="alert">{errors.partId.message}</p>}
         </section>
       )}
     </>

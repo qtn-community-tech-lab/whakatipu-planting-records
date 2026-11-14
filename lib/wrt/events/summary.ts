@@ -12,7 +12,8 @@ export interface EventSummary {
   part: string;
   date: string;
   season: string;
-  species: { name: string; quantity: number }[];
+  /** With `area` when the event has drawn areas: the planting event page's area id. */
+  species: { name: string; quantity: number; area?: number | undefined }[];
   total: number;
   notes: string | null;
 }
@@ -29,7 +30,7 @@ export function describeEvent(input: PlantingEventInput, options: EventFormOptio
     part: input.partId === null ? WHOLE_SITE : part?.name ?? "Unknown part",
     date: formatPlantedOn(input.plantedOn),
     season: `${input.season} ${input.seasonYear}`,
-    species: input.species.map((l) => ({ name: speciesName.get(l.speciesId) ?? "Unknown species", quantity: l.quantity })),
+    species: input.species.map((l) => ({ name: speciesName.get(l.speciesId) ?? "Unknown species", quantity: l.quantity, area: l.area })),
     total: input.species.reduce((sum, l) => sum + l.quantity, 0),
     notes: input.notes,
   };

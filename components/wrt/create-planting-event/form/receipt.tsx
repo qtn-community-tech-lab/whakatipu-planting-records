@@ -3,22 +3,28 @@
 import { MapPin } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
+import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 import { WHOLE_SITE, type EventSummary } from "@/lib/wrt/events/summary";
 import { formatNumber, partBesideSite } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
+import type { DrawnArea } from "./use-event-form";
 import s from "../panel.module.css";
 import * as panel from "../panel-classes";
 
-/** The place planted (its pin), and what went in there. */
-export interface PlaceCard { key: string; title: string; total: number }
+/** One place planted: a drawn area (its outline), or the site as a whole (its pin). Each is, in effect, a planting event. */
+export interface PlaceCard { key: string; title: string; sub?: string | undefined; pts?: DrawnArea["pts"] | undefined; total: number }
 const plantsLabel = (n: number) => `${formatNumber(n)} ${n === 1 ? "plant" : "plants"}`;
-const cardLead = <span className="grid size-11 shrink-0 place-items-center rounded-[var(--radius-row)] bg-[var(--surface-soft)] text-[var(--cn-green-800)]"><MapPin size={20} strokeWidth={2.2} /></span>;
+const cardLead = (c: PlaceCard) => (c.pts ? <AreaShape pts={c.pts} size={44} onMap /> : <span className="grid size-11 shrink-0 place-items-center rounded-[var(--radius-row)] bg-[var(--surface-soft)] text-[var(--cn-green-800)]"><MapPin size={20} strokeWidth={2.2} /></span>);
 
 /** What Submit shows: a short receipt, marked "Saved", or plainly "Not saved" when the form can't save. */
-export function Receipt({ hidden, summary, cards, saved, onBack, onStartAnother, onFinish }: {
+export function Receipt({ hidden, summary, cards, empty, saved, areasDrawn, onBack, onStartAnother, onFinish }: {
   hidden?: boolean | undefined;
+  /** Areas were drawn: they aren't stored yet, so it says so. */
+  areasDrawn: boolean;
   summary: EventSummary; cards: PlaceCard[];
+  /** Areas kept with no plants (their names): said in a line, so they aren't silently dropped. */
+  empty: string[];
   /** The event and its plants were saved: no going back to the form (it would save them again). */
   saved: boolean;
   onBack: () => void; onStartAnother: () => void;
@@ -32,9 +38,9 @@ export function Receipt({ hidden, summary, cards, saved, onBack, onStartAnother,
     <div className={cn(panel.form, s.slideIn)} hidden={hidden}>
       <header className={panel.head}>
         <Badge tone={saved ? "ok" : "review"} className="self-start">{saved ? "Saved" : "Not saved"}</Badge>
-        <h2 ref={headingRef} tabIndex={-1} className={panel.title}>1 planting event</h2>
+        <h2 ref={headingRef} tabIndex={-1} className={panel.title}>{saved || cards.length === 1 ? "1 planting event" : `${cards.length} planting events`}</h2>
         <p className={panel.context} role="status">
-          <span>{saved ? "The planting event and its plants are saved." : "Everything checks out. This prototype can’t store events yet."}</span>
+          <span>{saved ? `The planting event and its plants are saved.${areasDrawn ? " Drawn areas aren’t stored yet." : ""}` : "Everything checks out. This prototype can’t store events yet."}</span>
         </p>
       </header>
       <div className={panel.scroll}>
@@ -42,7 +48,8 @@ export function Receipt({ hidden, summary, cards, saved, onBack, onStartAnother,
           <b>{plantsLabel(summary.total)}</b> at {where}
           <span>{summary.date} · {summary.season}</span>
         </p>
-        <FigureList title="Where" rows={cards.map((c) => ({ key: c.key, name: c.title, lead: cardLead, figure: plantsLabel(c.total) }))} />
+        <FigureList title="Where" rows={cards.map((c) => ({ key: c.key, name: c.title, sub: c.sub, lead: cardLead(c), figure: plantsLabel(c.total) }))} />
+        {empty.length > 0 && <p className={panel.quiet}>{listed(empty)} kept with no plants.</p>}
       </div>
       <footer className={panel.foot}>
         {!saved && <button type="button" className={panel.back} onClick={onBack}>Back to the form</button>}
@@ -51,4 +58,9 @@ export function Receipt({ hidden, summary, cards, saved, onBack, onStartAnother,
       </footer>
     </div>
   );
+}
+
+/** "A", "A and B", "A, B and C". */
+function listed(names: string[]) {
+  return names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }

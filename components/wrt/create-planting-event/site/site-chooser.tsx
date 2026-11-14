@@ -2,7 +2,8 @@
 /**
  * Choose where: a search and a sort, then every site with its places. A site with places is an accordion; one
  * without is a single row. With no site chosen it is the panel (All sites); otherwise it takes the panel's place
- * while open, so there is one sheet, never a dialog over it.
+ * while open, so there is one sheet, never a dialog over it. For a drawn area (`forArea`) it asks which site that
+ * belongs to instead.
  */
 import { ChevronDown, MapPin } from "lucide-react";
 import { Accordion } from "radix-ui";
@@ -19,13 +20,15 @@ import s from "./site-chooser.module.css";
 type Sort = "az" | "most" | "recent";
 const SORTS: [Sort, string][] = [["az", "A–Z"], ["most", "Most planted"], ["recent", "Recent"]];
 
-export function SiteChooser({ sites, totals, value, onChoose, onClose, onPreview, searchAsk = 0 }: {
+export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, onPreview, searchAsk = 0 }: {
   sites: readonly SiteOption[];
   totals: PlantTotals;
   value: { slug: string; partId: string | null };
   onChoose: (slug: string, partId: string | null) => void;
   /** Left out when there's nothing to close back to (no site chosen yet): no heading or ×, the panel's title says it. */
   onClose?: (() => void) | undefined;
+  /** An area drawn but not at any site yet: the chooser asks for its site. */
+  forArea?: boolean | undefined;
   /** A site opened in the list ("" when closed again): the map shows it before anything is chosen. */
   onPreview?: ((siteSlug: string) => void) | undefined;
   /** Goes up each time the page's Search is tapped: the search box takes focus. */
@@ -124,15 +127,16 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, onPreview
       <div className={panel.scroll}>
         {onClose && (
           // The same pin header as the panel's other screens, with Close back to where you were (as the phone bar's Close).
-          <header className={s.chooserHead}>
+          <header className={s.chooserHead} data-question={forArea ? "" : undefined}>
             <span className={s.chooserIcon} aria-hidden="true"><MapPin size={22} strokeWidth={2.2} /></span>
             <span>
-              <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>Choose a site</h2>
-              {now && <p>Now: {now}</p>}
+              <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forArea ? "Which site is this area at?" : "Choose a site"}</h2>
+              {!forArea && now && <p>Now: {now}</p>}
             </span>
             <button type="button" className={s.chooserBack} onClick={onClose}>Close</button>
           </header>
         )}
+        {forArea && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site.</p>}
         {/* Pinned while the list scrolls. A form, so the keyboard's Search key (and the button) put the keyboard away. */}
         <form role="search" className={s.chooserSearch} data-pinned="" onSubmit={(e) => { e.preventDefault(); search.current?.blur(); }}>
           <SearchField ref={search} className={s.chooserField} label="Search sites and places" placeholder="Search sites and places" value={query} onChange={setQuery} />
