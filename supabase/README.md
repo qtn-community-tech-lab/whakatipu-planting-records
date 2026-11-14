@@ -51,6 +51,10 @@ through Supabase Studio or SQL Editor; the user signs in for the first time at `
 confirmed Auth identity by normalized email. All active profiles have the same permissions. Deactivating the
 profile removes write and AI access on the next request.
 
+The authentication migration seeds the eight initial users. Existing profiles with a matching email are kept
+unchanged, including their IDs, names and deactivation state. Entries without a supplied name use their email
+as the display name. Supabase creates their Auth identities when they first sign in.
+
 Anonymous visitors can read all planting history, including deactivated pages, search and CSV exports. They cannot
 read user profiles, write data or use AI Chat. Supabase's Before User Created hook checks the email allowlist for
 direct Auth requests as well as app sign-in requests. Database writes also check active membership through RLS.

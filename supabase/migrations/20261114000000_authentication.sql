@@ -182,4 +182,19 @@ create policy "read self" on public.users for select to authenticated
 -- The old role helper references the removed is_staff column and is no longer used.
 drop function if exists public.is_staff();
 
+-- Initial users all have full app access. Existing profiles are left unchanged.
+-- Use the email as the display name where no name was supplied.
+insert into public.users (name, email)
+values
+  ('James Bayly', 'bayly.james@gmail.com'),
+  ('Pradeesh Parameswaran', 'pradeesh@prasys.info'),
+  ('Sararose Brown', 'volunteer@wrtqt.org.nz'),
+  ('clarkjj@gmail.com', 'clarkjj@gmail.com'),
+  ('dre.cavalcanti@gmail.com', 'dre.cavalcanti@gmail.com'),
+  ('Anna Amos', 'field@wrtqt.org.nz'),
+  ('Kyle Grattan', 'ktgcreative@gmail.com'),
+  ('Giovanni Stephens', 'stephens.giovanni@gmail.com'),
+  ('jessa.swedin@gmail.com', 'jessa.swedin@gmail.com')
+on conflict (lower(email)) do nothing;
+
 commit;

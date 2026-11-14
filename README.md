@@ -53,8 +53,8 @@ Restart Next.js after changing environment variables.
 
 ### 3. Add a staff email and test sign-in
 
-Approved staff emails are managed in `public.users`. Add a profile in Supabase Studio's SQL Editor, replacing the
-name and email with the approved person's details:
+The authentication migration creates the initial eight users in `public.users`. To add another user, insert a
+profile in Supabase Studio's SQL Editor, replacing the name and email with the person's details:
 
 ```sql
 insert into public.users (name, email)
