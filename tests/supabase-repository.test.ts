@@ -17,25 +17,30 @@ describe("Supabase repository without workbook files", () => {
       species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", profile: {}, photos: [] }],
       sites: [
         { slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false, deactivated_at },
-        { slug: "new-site", name: "New site", description: "", is_scheme: false },
-        { slug: "empty-site", name: "Empty site", description: "", is_scheme: false },
+        { slug: "new-site", name: "New site", description: "", is_scheme: false, deactivated_at: null },
+        { slug: "empty-site", name: "Empty site", description: "", is_scheme: false, deactivated_at: null },
+        { slug: "old-site", name: "Old site", description: "Historical site.", is_scheme: false, deactivated_at: "2026-11-01T00:00:00Z" },
       ],
       areas: [
-        { slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community" },
-        { slug: "reserve-west", site: "reserve", name: "West", wrt_number: null, class: "school" },
-        { slug: "new-area", site: "new-site", name: "Riverbank", wrt_number: null, class: "keystone" },
+        { slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community", deactivated_at: null },
+        { slug: "reserve-west", site: "reserve", name: "West", wrt_number: null, class: "school", deactivated_at: "2026-11-01T00:00:00Z" },
+        { slug: "new-area", site: "new-site", name: "Riverbank", wrt_number: null, class: "keystone", deactivated_at: null },
+        { slug: "old-area", site: "old-site", name: "Old area", wrt_number: null, class: "community", deactivated_at: "2026-11-01T00:00:00Z" },
       ],
       line_details: [{
         line_id: 1, legacy_code: "PH-1", season: "autumn-2030", area: "reserve-east", area_name: "East",
         species: "kowhai", quantity: 12, needs_review: false, notes: [], source_cell: "A1",
+      }, {
+        line_id: 2, legacy_code: "PH-2", season: "autumn-2030", area: "old-area", area_name: "Old area",
+        species: "kowhai", quantity: 5, needs_review: false, notes: [], source_cell: "B1",
       }],
       totals_by_season: [{
-        season_label: "Autumn 2030", plants: 12, lines: 1, workbook_total: 10, workbook_cell: "MASTER!A2",
+        season_label: "Autumn 2030", plants: 17, lines: 2, workbook_total: 10, workbook_cell: "MASTER!A2",
       }],
     };
     const fetch = vi.fn(async (input: RequestInfo | URL) => {
       const table = new URL(input instanceof Request ? input.url : input.toString()).pathname.split("/").at(-1)!;
-      if (table === "sites") {
+      if (table === "sites" || table === "areas") {
         const url = new URL(input instanceof Request ? input.url : input.toString());
         expect(url.searchParams.has("deactivated_at")).toBe(false);
       }
@@ -50,38 +55,45 @@ describe("Supabase repository without workbook files", () => {
       repo.listRecords(), repo.listReconciliation(), repo.getSourceInfo(),
     ]);
 
-    expect(records).toMatchObject([{ id: "PH-1", year: 2030, quantity: 12, placeSlug: "reserve", parcelId: "1A" }]);
+    expect(records).toMatchObject([
+      { id: "PH-1", year: 2030, quantity: 12, placeSlug: "reserve", parcelId: "1A" },
+      { id: "PH-2", year: 2030, quantity: 5, placeSlug: "old-site", parcelId: "old-area" },
+    ]);
     expect(reconciliation).toEqual([{
-      kind: "season", label: "Autumn 2030", generated: 12, stated: 10, difference: 2,
-      statedCell: "MASTER!A2", records: 1, cause: null,
+      kind: "season", label: "Autumn 2030", generated: 17, stated: 10, difference: 7,
+      statedCell: "MASTER!A2", records: 2, cause: null,
     }]);
-    expect(info.tables).toContainEqual({ name: "planting lines", rows: 1 });
+    expect(info.tables).toContainEqual({ name: "planting lines", rows: 2 });
     const places = await repo.listPlaces();
     expect(places).toMatchObject([
       { slug: "empty-site", parcels: [], siteClasses: [], searchKeys: ["empty site"] },
       { slug: "new-site", parcels: [{ id: "new-area", name: "Riverbank" }], siteClasses: ["keystone"] },
+      { slug: "old-site", description: "Historical site.",
+        parcels: [{ id: "old-area", deactivatedAt: "2026-11-01T00:00:00Z" }] },
       { slug: "reserve", description: "Planting beside the river.", siteClasses: ["community", "school"],
         parcels: [{ id: "1A" }, { id: "reserve-west" }] },
     ]);
-    expect(info.tables).toContainEqual({ name: "sites", rows: 3 });
+    expect(info.tables).toContainEqual({ name: "sites", rows: 4 });
     expect(new Set(fetch.mock.calls.map(([input]) =>
       new URL(input instanceof Request ? input.url : input.toString()).pathname.split("/").at(-1),
     ))).toEqual(new Set(Object.keys(rows)));
 
     const queries = createQueries(repo);
     expect((await queries.lookups()).places).toEqual(places);
+    expect((await queries.place("old-site"))?.split.total).toBe(5);
+    expect((await queries.search("Old site")).places[0]?.item.slug).toBe("old-site");
     for (const term of ["New site", "Riverbank", "Empty site"]) {
       const result = await queries.search(term);
       expect(result.places[0]).toMatchObject({ split: emptySplit() });
       expect(result.places[0]?.item.slug).toBe(term === "Empty site" ? "empty-site" : "new-site");
     }
-    expect((await queries.overview()).split.total).toBe(12);
+    expect((await queries.overview()).split.total).toBe(17);
     expect((await queries.place("reserve"))!.split.total).toBe(12);
     expect((await queries.records({ place: "reserve" })).rows).toHaveLength(1);
-    expect((await queries.species("kowhai"))!.split.total).toBe(12);
-    expect((await queries.season("autumn-2030"))!.split.total).toBe(12);
+    expect((await queries.species("kowhai"))!.split.total).toBe(17);
+    expect((await queries.season("autumn-2030"))!.split.total).toBe(17);
     // Historical rankings still describe recorded planting, rather than the register.
-    expect((await queries.places()).map((p) => p.item.slug)).toEqual(["reserve"]);
+    expect((await queries.places()).map((p) => p.item.slug)).toEqual(["reserve", "old-site"]);
     expect(locationsForSites([{
       slug: "new-area", site: "new-site", name: "Riverbank", description: "", wrt_number: null,
       lat: -45, lng: 168.5, pin_source_url: null, pin_checked_on: null,

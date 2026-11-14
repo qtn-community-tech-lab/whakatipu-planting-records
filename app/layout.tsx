@@ -12,10 +12,12 @@ import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-ring
 import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
 import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
+import { AuthControl } from "@/components/wrt/shell/auth-control";
 import { ConnectionStatus } from "@/components/wrt/shell/connection-status";
 import { ServiceWorker } from "@/components/wrt/shell/service-worker";
 import type { NavCounts } from "@/components/wrt/shell/nav";
 import { formatNumber } from "@/lib/wrt/text";
+import { isAuthenticated } from "@/db/queries/auth";
 
 export const metadata: Metadata = {
   title: { default: "Restoration history · Whakatipu Reforestation Trust", template: "%s · WRT restoration history" },
@@ -28,8 +30,8 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
-  const [overview, index, showReview] = await Promise.all([
-    getWrt().overview(), buildSearchIndex(), reviewShown(),
+  const [overview, index, showReview, authenticated] = await Promise.all([
+    getWrt().overview(), buildSearchIndex(), reviewShown(), isAuthenticated(),
   ]);
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
   const counts: NavCounts = {
@@ -76,12 +78,14 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
                   <span className="cn-sidebar__sub">Restoration history</span>
                 </span>
               </Link>
+              <AuthControl authenticated={authenticated} />
               <MobileNav counts={counts} />
             </div>
             <header className="wrt-topbar">
               <Crumb />
               <GlobalSearch index={index} />
               <ReviewSwitch shown={showReview} />
+              <div className="wrt-topbar__auth"><AuthControl authenticated={authenticated} /></div>
               <span className="cn-topbar__date !ml-0 hidden xl:inline-flex whitespace-nowrap" title="Seasons covered by the records">
                 {range}
               </span>

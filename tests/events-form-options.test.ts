@@ -43,7 +43,11 @@ describe("new planting species options", () => {
     mocks.lookups.mockResolvedValue({ places: [
       { slug: "empty", name: "Empty site", isScheme: false, searchKeys: ["empty site"], parcels: [] },
       { slug: "new", name: "New site", isScheme: false, searchKeys: ["new site", "riverbank"],
-        parcels: [{ id: "new-area", name: "Riverbank" }] },
+        parcels: [
+          { id: "new-area", name: "Riverbank" },
+          { id: "retired-area", name: "Retired area", deactivatedAt: "2026-11-09" },
+        ] },
+      { slug: "retired", name: "Retired site", isScheme: false, deactivatedAt: "2026-11-09", searchKeys: [], parcels: [] },
       { slug: "scheme", name: "Order scheme", isScheme: true, searchKeys: [], parcels: [] },
     ] });
     mocks.species.mockResolvedValue([]);

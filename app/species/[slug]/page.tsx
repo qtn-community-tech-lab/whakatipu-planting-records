@@ -14,7 +14,7 @@ import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { deactivateSpecies } from "@/db/queries/species";
 import { SUPABASE_TAG } from "@/db/cache";
 import type { SpeciesSubmitResult } from "@/db/types";

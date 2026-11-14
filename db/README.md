@@ -12,7 +12,9 @@ const sites = await listSites();
 - `database.types.ts` is generated from the database schema. Column names in `.select("…")` are checked against it.
 - `queries/views.ts` holds one base query per view or table. The other files add a filter or a limit.
 - Queries are named `list<Entity>s`, `read<Entity>`, and later `create<Entity>`, `update<Entity>` and `deactivate<Entity>`, with the entity spelled out (`listPlantingAreaTotals`, not `listAreaTotals`). `findPlantingLines` is the one exception: it pages through lines that match a filter. The rule is in `CLAUDE.md`.
-- Rows are never deleted. A row with `deactivated_at` set is hidden from the public key and from volunteers.
+- Rows are never deleted. Public reads include deactivated history; active selectors continue to filter it out.
+- `public.users` is a private allowlist. `email` is normalized and case-insensitively unique; `auth_user_id`
+  links a profile to Supabase Auth while audit rows keep the app's stable user ID.
 - In app code, only `db/` imports Supabase, and ESLint enforces it. `lib/supabase/`, `scripts/` and `tests/` are exempt.
 
 ## Generate types after a migration

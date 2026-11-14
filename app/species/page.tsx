@@ -9,7 +9,7 @@ import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,

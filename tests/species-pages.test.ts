@@ -4,7 +4,12 @@ import type * as SpeciesFormModule from "@/components/wrt/species/SpeciesForm";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 
 const mocks = vi.hoisted(() => ({ authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn() }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({
+  isAuthenticated: mocks.authenticated,
+  requireAuthenticated: async (next: string) => {
+    if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
+  },
+}));
 vi.mock("@/db/queries/species", () => ({ createSpecies: mocks.create, updateSpecies: mocks.update, readSpeciesForEdit: mocks.read }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); } }));
@@ -51,7 +56,8 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     const form = await pageForm(kind);
     mocks.authenticated.mockResolvedValue(false);
     expect(await form!.props.onSubmit(values)).toHaveProperty("error");
-    expect(await pageForm(kind)).toBeUndefined();
+    await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
+    expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/species/new" : "/species/old-slug/edit")}`);
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });

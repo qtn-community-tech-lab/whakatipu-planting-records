@@ -7,11 +7,13 @@ const { streamText } = vi.hoisted(() => ({
     toUIMessageStreamResponse: () => new Response("stream"),
   })),
 }));
+const { isAuthenticated } = vi.hoisted(() => ({ isAuthenticated: vi.fn(() => Promise.resolve(true)) }));
 
 vi.mock("ai", async (original) => ({
   ...await original<typeof AI>(),
   streamText,
 }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated }));
 vi.mock("@/lib/wrt/chat-tools", () => ({
   SYSTEM: "Test system prompt",
   scopeLine: vi.fn(() => "Test scope"),
@@ -29,7 +31,17 @@ const request = (body: unknown) => new Request("http://localhost/api/chat", {
 });
 
 describe("typed chat request boundary", () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    isAuthenticated.mockResolvedValue(true);
+  });
+
+  it("denies AI access before parsing or streaming for a signed-out visitor", async () => {
+    isAuthenticated.mockResolvedValue(false);
+    const response = await POST(request({ messages: [message] }));
+    expect(response.status).toBe(401);
+    expect(streamText).not.toHaveBeenCalled();
+  });
 
   it.each([null, 42, {}, { messages: [] }, { messages: Array.from({ length: 61 }, () => message) }])(
     "rejects missing or oversized histories: %j", async (body) => {

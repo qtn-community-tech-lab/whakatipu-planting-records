@@ -10,7 +10,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/wrt/server", () => ({
   getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate }));
 vi.mock("next/cache", () => ({ updateTag: mocks.tag, revalidatePath: mocks.revalidate }));
 vi.mock("next/navigation", () => ({

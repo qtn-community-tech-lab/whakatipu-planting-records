@@ -57,7 +57,10 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
         slug: p.slug,
         name: p.name,
         keys: p.searchKeys,
-        parts: p.parcels.map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] })).sort((a, b) => a.name.localeCompare(b.name)),
+        parts: p.parcels
+          .filter((x) => !x.deactivatedAt)
+          .map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] }))
+          .sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species

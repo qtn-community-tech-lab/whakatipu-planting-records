@@ -1,14 +1,13 @@
 # WRT restoration history explorer (V0)
 
-A read-only web app that lets Whakatipu Reforestation Trust staff and volunteers explore every recorded
-planting season since Autumn 2015 by **site, species, year and season**, without opening an old spreadsheet.
+A public web app that lets anyone explore every recorded planting season since Autumn 2015 by **site, species,
+year and season**, without opening an old spreadsheet. Approved staff can sign in to use AI Chat and make changes.
 
 5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species planted (164 in the register).
 
 ## Local development
 
-Run Next.js against a local Supabase database. A hosted Supabase project is not provisioned yet and is not
-required for local development.
+Run Next.js against a local Supabase database. A hosted Supabase project is not required for local development.
 
 Prerequisites: Node.js 22, npm and Docker running. Run all commands from the repository root. The npm scripts
 use a pinned Supabase CLI, so you do not need a global CLI installation or a Supabase account.
@@ -25,6 +24,9 @@ npm run supabase:start
 On later starts, only pending migrations run; existing data is kept. You do not need to paste each file into
 SQL Editor. This creates the schema and seasons; the workbook data is imported in step 3.
 
+After changing `supabase/config.toml`, run `npm run supabase:stop` followed by `npm run supabase:start`
+to reload Auth settings and hooks. Applying database migrations alone does not reload the running Auth service.
+
 ### 2. Configure the local environment
 
 Copy the template if you do not already have `.env.local`:
@@ -38,6 +40,7 @@ Fill in `.env.local` with the **local** values printed by Supabase:
 ```dotenv
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<local publishable key, or anon key>
+NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
 SUPABASE_SECRET_KEY=<local secret key, or service_role key>
 ```
 
@@ -48,7 +51,22 @@ Keep these values in the git-ignored `.env.local`: the import scripts load that 
 it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
 Restart Next.js after changing environment variables.
 
-### 3. Load the planting history and map pins
+### 3. Add a staff email and test sign-in
+
+The authentication migration creates the initial eight users in `public.users`. To add another user, insert a
+profile in Supabase Studio's SQL Editor, replacing the name and email with the person's details:
+
+```sql
+insert into public.users (name, email)
+values ('Staff name', 'staff@example.org');
+```
+
+Start the app and open [`/login`](http://127.0.0.1:3000/login). Local Supabase captures sign-in messages in its
+email inbox at [http://127.0.0.1:54324](http://127.0.0.1:54324); no email is delivered to a real inbox. Open the
+message link to sign in. Use `http://127.0.0.1:3000` consistently: `localhost` has separate browser cookies.
+Public pages and CSV downloads work without an account.
+
+### 4. Load the planting history and map pins
 
 Check that the URL in `.env.local` is local, then run the workbook import before the pins import:
 
@@ -63,13 +81,13 @@ The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally 
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
 against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
 
-### 4. Start the app
+### 5. Start the app
 
 ```bash
 npm run dev
 ```
 
-Open [the app](http://localhost:3000). Local [Supabase Studio](http://127.0.0.1:54323) provides the table browser
+Open [the app](http://127.0.0.1:3000). Local [Supabase Studio](http://127.0.0.1:54323) provides the table browser
 and SQL Editor. Reference photos and map tiles still need internet access.
 
 ### Everyday commands
@@ -83,6 +101,10 @@ npm run lint
 npm test                # parser, validation, repository and query invariants, search
 npm run build && npm start
 ```
+
+Local Supabase Auth captures email in its inbox at `http://127.0.0.1:54324`. Production uses Resend through
+Supabase's custom SMTP settings, with `noreply@wrtqt.org.nz` as the sender. Follow the
+[production email setup](supabase/README.md#production-email-with-resend) to activate it in the hosted project.
 
 Start Supabase before running the app or the full test suite. Live database tests use `.env.local` and expect
 the workbook import to have run. The [database checks](supabase/README.md#checking-it-all-ran) verify the schema
@@ -114,6 +136,9 @@ Use the Next.js preset and `npm run build`. Set `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the deployment environment to the hosted project's values before
 building. These public values are bundled at build time; local URLs and legacy `.env` values are not production configuration.
 The app does not need `SUPABASE_SECRET_KEY`.
+Set `NEXT_PUBLIC_APP_URL` to the production app origin and configure
+[Resend SMTP in hosted Supabase](supabase/README.md#production-email-with-resend). Supabase owns email delivery;
+the app does not need a Resend SDK or API key.
 `.vercelignore` excludes local build output, import scripts and research material from CLI uploads.
 
 ## Pages

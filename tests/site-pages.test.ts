@@ -7,7 +7,12 @@ const mocks = vi.hoisted(() => ({
   deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
   revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({
+  isAuthenticated: mocks.authenticated,
+  requireAuthenticated: async (next: string) => {
+    if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
+  },
+}));
 vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
 vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
@@ -59,7 +64,8 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
     const submit = (await pageForm(kind))!.props.onSubmit;
     mocks.authenticated.mockResolvedValue(false);
     expect(await submit(values)).toHaveProperty("error");
-    expect(await pageForm(kind)).toBeUndefined();
+    await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
+    expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/sites/new" : `/sites/${values.slug}/edit`)}`);
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });

@@ -56,7 +56,7 @@ async function load(db: Db): Promise<Loaded> {
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
       .throwOnError(),
     db.from("sites").select("slug, name, description, is_scheme").throwOnError(),
-    db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
+    db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
   ]);
@@ -151,14 +151,20 @@ async function load(db: Db): Promise<Loaded> {
       for (const area of areaRows.data) {
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        parcels.set(area.slug, { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] });
+        parcels.set(area.slug, {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        });
         plantsByClass.set(siteClass, 0);
       }
       for (const l of lines) {
         const area = areaBySlug.get(l.area!)!;
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        const parcel = parcels.get(area.slug) ?? { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] };
+        const parcel = parcels.get(area.slug) ?? {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        };
         if (l.site_original && !parcel.aliases.includes(l.site_original)) parcel.aliases.push(l.site_original);
         parcels.set(area.slug, parcel);
         plantsByClass.set(siteClass, (plantsByClass.get(siteClass) ?? 0) + (l.quantity ?? 0));

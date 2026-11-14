@@ -39,6 +39,10 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    files: ["proxy.ts"],
+    rules: { "no-restricted-imports": "off" },
+  },
   // Generated Supabase types and shadcn UI components.
   globalIgnores(["db/database.types.ts", "components/ui/**"]),
   // Override default ignores of eslint-config-next.

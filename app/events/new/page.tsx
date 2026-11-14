@@ -5,6 +5,7 @@ import { todayInNz } from "@/lib/wrt/events/season";
 import { PageHead } from "@/components/wrt/shared/page";
 import { EventForm } from "@/components/wrt/events/event-form";
 import { PrototypeNotice } from "@/components/wrt/events/prototype-notice";
+import { requireAuthenticated } from "@/db/queries/auth";
 
 export const metadata: Metadata = {
   title: "New planting event",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NewEventPage() {
+  await requireAuthenticated("/events/new");
   await connection(); // "today" is per request
   const options = await eventFormOptions();
   return (

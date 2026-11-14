@@ -14,7 +14,7 @@ import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SiteRows } from "@/components/wrt/sites/site-rows";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 import { listSites } from "@/db/queries/sites";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
