@@ -1,7 +1,7 @@
 "use client";
 /**
- * The page's questions before it changes more than the form: moving the event to another site, and leaving
- * unsaved work.
+ * The page's questions before it changes more than the form: moving the event to another site, discarding a
+ * past planting's changes, and leaving unsaved work.
  */
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
@@ -9,6 +9,7 @@ export function LeaveDialogs(p: {
   siteName: string;
   /** Another site, with the event's entries here: they'd move with it. */
   pendingSite: boolean; pendingSiteName: string; onMoveEvent: () => void; onKeepSite: () => void;
+  discard: boolean; editTried: boolean; onDiscard: () => void; onKeepEditing: () => void;
   leaving: boolean; leavingTo: string | undefined; partly: boolean; onLeave: () => void; onStay: () => void;
 }) {
   const { siteName } = p;
@@ -20,6 +21,12 @@ export function LeaveDialogs(p: {
         onConfirm={p.onMoveEvent} onCancel={p.onKeepSite}
       >
         What you&apos;ve entered moves with it.
+      </ConfirmDialog>
+      <ConfirmDialog
+        open={p.discard} title="Discard your changes?" confirmLabel="Discard changes" cancelLabel="Keep editing"
+        onConfirm={p.onDiscard} onCancel={p.onKeepEditing}
+      >
+        {p.editTried ? "Some of your changes were saved; the rest will be lost." : "Your changes to this past planting haven't been saved, and will be lost."}
       </ConfirmDialog>
       {/* A new event's entries. */}
       <ConfirmDialog

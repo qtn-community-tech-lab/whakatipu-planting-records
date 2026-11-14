@@ -12,7 +12,7 @@ import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
  * map fills the screen with a pin for every site, and the planting-event form
  * (one page: where and when, then what was planted) opens over it: a panel on the left on
  * wide screens, a drawer from the bottom on phones. `?site=<slug>` starts at
- * that site and `&part=<wrt number>` at that part of it; the address follows both, for bookmarks.
+ * that site, `&part=<wrt number>` at that part of it, and `&season=autumn-2025` with that past season open; the address follows all three, for bookmarks.
  * Other pages link here with `hrefs.newEvent` (lib/wrt/routes.ts).
  */
 export const metadata: Metadata = {
@@ -24,11 +24,11 @@ export const metadata: Metadata = {
 // keyboard shrinks the page instead of covering it.
 export const viewport: Viewport = { themeColor: "#15261c", interactiveWidget: "resizes-content" };
 
-type Props = { searchParams: Promise<{ site?: string | string[]; part?: string | string[] }> };
+type Props = { searchParams: Promise<{ site?: string | string[]; part?: string | string[]; season?: string | string[] }> };
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, suggestions, sites, areas, pins, { site, part }, seasons] = await Promise.all([
+  const [options, suggestions, sites, areas, pins, { site, part, season }, seasons] = await Promise.all([
     eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, listSeasons(),
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
@@ -42,9 +42,12 @@ export default async function Page({ searchParams }: Props) {
   const initialSite = options.sites.some((x) => x.slug === site) ? String(site) : "";
   // Only one of that site's parts; anything else starts at the site as a whole.
   const initialPart = typeof part === "string" && options.sites.find((x) => x.slug === initialSite)?.parts.some((p) => p.id === part) ? part : undefined;
+  // "autumn-2025" → Autumn 2025, at a site only.
+  const m = initialSite && typeof season === "string" ? /^(summer|autumn|winter|spring)-(\d{4})$/.exec(season) : null;
+  const initialSeason = m ? { slug: m[0], label: `${m[1]!.charAt(0).toUpperCase()}${m[1]!.slice(1)} ${m[2]}` } : undefined;
   return (
     <CreatePlantingEvent
-      initialSite={initialSite} initialPart={initialPart} options={options} today={todayInNz()} exitHref="/sites" suggestions={suggestions} totals={totals} areas={pins ?? []}
+      initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} exitHref="/sites" suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }
