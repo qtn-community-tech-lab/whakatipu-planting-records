@@ -74,7 +74,10 @@ export default async function SitePage({ params, searchParams }: Props) {
       <Link href="/sites?state=deactivated" className="cn-link">View deactivated sites</Link>
     </AlertDescription>
   </Alert> : null;
-  const editButton = authenticated && !site.deactivated_at ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const editButton = authenticated && !site.deactivated_at ? <>
+    <Button asChild variant="secondary"><Link href={hrefs.newEvent({ site: slug })}>Add planting event</Link></Button>
+    <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button>
+  </> : undefined;
   const actions = editButton ? <DeactivateSite name={site.name} onDeactivate={onDeactivate}>{editButton}</DeactivateSite> : null;
   if (!d || !d.split.records)
     return (

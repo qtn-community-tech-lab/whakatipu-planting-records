@@ -7,7 +7,7 @@ import { defined } from "./assertions";
 const TODAY = "2026-11-01";
 let lookups: EventLookups;
 let site: { slug: string; parcels: { id: string }[] };
-let otherParcel: string;
+let otherPart: string;
 let speciesA: string;
 let speciesB: string;
 
@@ -16,14 +16,14 @@ beforeAll(async () => {
   lookups = l;
   const sites = l.places.filter((p) => !p.isScheme && p.parcels.length > 1);
   site = defined(sites[0]);
-  otherParcel = defined(defined(sites[1]).parcels[0]).id;
+  otherPart = defined(defined(sites[1]).parcels[0]).id;
   speciesA = defined(l.species[0]).id;
   speciesB = defined(l.species[1]).id;
 });
 
 const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => ({
-  placeSlug: site.slug,
-  parcelId: null,
+  siteSlug: site.slug,
+  partId: null,
   plantedOn: "2026-05-10",
   season: "Autumn",
   seasonYear: 2026,
@@ -34,9 +34,9 @@ const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => (
 });
 
 describe("validateEventInput", () => {
-  it("accepts a well-formed event (with or without a parcel)", () => {
+  it("accepts a well-formed event (with or without a part)", () => {
     expect(validateEventInput(valid(), lookups, TODAY).ok).toBe(true);
-    expect(validateEventInput(valid({ parcelId: defined(site.parcels[0]).id }), lookups, TODAY).ok).toBe(true);
+    expect(validateEventInput(valid({ partId: defined(site.parcels[0]).id }), lookups, TODAY).ok).toBe(true);
   });
 
   it("trims notes and turns blank notes into null", () => {
@@ -57,9 +57,9 @@ describe("validateEventInput", () => {
   });
 
   const cases: [string, Record<string, unknown>, string][] = [
-    ["unknown site", { placeSlug: "nowhere" }, "placeSlug"],
-    ["malformed slug", { placeSlug: "Not A Slug!" }, "placeSlug"],
-    ["parcel from another site", { parcelId: "__other__" }, "parcelId"],
+    ["unknown site", { siteSlug: "nowhere" }, "siteSlug"],
+    ["malformed slug", { siteSlug: "Not A Slug!" }, "siteSlug"],
+    ["part from another site", { partId: "__other__" }, "partId"],
     ["future date", { plantedOn: "2026-11-02" }, "plantedOn"],
     ["impossible date", { plantedOn: "2026-02-30" }, "plantedOn"],
     ["bad season", { season: "Monsoon" }, "season"],
@@ -78,7 +78,7 @@ describe("validateEventInput", () => {
 
   it.each(cases)("rejects %s", (_name, over, field) => {
     const sub = (v: unknown): unknown =>
-      v === "__other__" ? otherParcel : v === "__a__" ? speciesA : Array.isArray(v) ? v.map(sub)
+      v === "__other__" ? otherPart : v === "__a__" ? speciesA : Array.isArray(v) ? v.map(sub)
         : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, sub(x)])) : v;
     const r = validateEventInput(valid(sub(over) as Record<string, unknown>), lookups, TODAY);
     expect(r.ok).toBe(false);
@@ -88,8 +88,8 @@ describe("validateEventInput", () => {
   it("rejects an order scheme as the site", () => {
     const scheme = lookups.places.find((p) => p.isScheme);
     if (!scheme) return;
-    const r = validateEventInput(valid({ placeSlug: scheme.slug }), lookups, TODAY);
-    expect(!r.ok && r.errors.placeSlug).toBeTruthy();
+    const r = validateEventInput(valid({ siteSlug: scheme.slug }), lookups, TODAY);
+    expect(!r.ok && r.errors.siteSlug).toBeTruthy();
   });
 
   it("allows different species on one event", () => {

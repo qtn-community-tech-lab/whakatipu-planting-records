@@ -2,11 +2,12 @@
  * What the planting-event form needs from the historical data: the site list
  * (with parts) and the species register, trimmed to client-safe fields.
  *
- * Species and parcel ids travel to the browser only as form VALUES (join
+ * Species and part ids travel to the browser only as form VALUES (join
  * keys); every label shown is a name, as everywhere else in the app.
  */
 import "server-only";
 import { listSites } from "@/db/queries/sites";
+import { wholeSiteAreaSlug } from "../areas/whole-site";
 import { listSpeciesForPlanting } from "@/db/queries/species";
 import { getWrtAll } from "../server";
 import { searchKey } from "../text";
@@ -17,12 +18,15 @@ type SearchKeys = { keys: string[] };
 export interface SitePartOption extends SearchKeys {
   id: string;
   name: string;
+  /** Added on the map this visit, not stored yet (see keptPlaces in create-planting-event/sites.ts). */
+  unsaved?: boolean | undefined;
 }
 
 export interface SiteOption extends SearchKeys {
   slug: string;
   name: string;
   parts: SitePartOption[];
+  unsaved?: boolean | undefined;
 }
 
 export interface SpeciesOption extends SearchKeys {
@@ -57,8 +61,9 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
         slug: p.slug,
         name: p.name,
         keys: p.searchKeys,
+        // The site-wide area is the site as a whole ("Whole site"), not a part to choose.
         parts: p.parcels
-          .filter((x) => !x.deactivatedAt)
+          .filter((x) => !x.deactivatedAt && x.id !== wholeSiteAreaSlug(p.slug))
           .map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] }))
           .sort((a, b) => a.name.localeCompare(b.name)),
       }))
