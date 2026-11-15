@@ -56,8 +56,10 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     const form = await pageForm(kind);
     mocks.authenticated.mockResolvedValue(false);
     expect(await form!.props.onSubmit(values)).toHaveProperty("error");
+    mocks.read.mockClear();
     await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
     expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/species/new" : "/species/old-slug/edit")}`);
+    expect(mocks.read).not.toHaveBeenCalled();
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });

@@ -51,6 +51,12 @@ const PATHS: Record<NavIcon, ReactNode> = {
       <path d="M18.5 14v6M15.5 17h6" />
     </>
   ),
+  users: (
+    <>
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6M21 20v-2a6 6 0 0 0-4-5.7" />
+    </>
+  ),
   // Speech bubble with a leaf inside
   ask: (
     <>

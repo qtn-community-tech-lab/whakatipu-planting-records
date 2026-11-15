@@ -34,18 +34,21 @@ with expected (part, item, want, got) as (
       where n.nspname = 'public' and p.proname in
         ('current_app_user_id', 'authorize_staff_signup', 'link_auth_user_to_staff',
          'link_existing_auth_user_to_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
-  union all select 'access rules', 'row policies (active membership writes and public history reads)', 31,
+  union all select 'access rules', 'row policies (active membership writes and public history reads)', 33,
     (select count(*)::int from pg_policies where schemaname = 'public')
-  union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
+  union all select 'access rules', 'guard triggers (deactivated 8, history 2)', 10,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
   union all select 'access rules', 'signed in can delete from no table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'
         and has_table_privilege('authenticated', c.oid, 'delete'))
-  union all select 'access rules', 'signed in cannot write seasons or users', 0,
-    (select count(*)::int from (values ('public.seasons'), ('public.users')) v (t)
-      where has_table_privilege('authenticated', v.t, 'insert')
-         or has_table_privilege('authenticated', v.t, 'update'))
+  union all select 'access rules', 'signed in cannot write seasons', 0,
+    (select (has_table_privilege('authenticated', 'public.seasons', 'insert')
+          or has_table_privilege('authenticated', 'public.seasons', 'update'))::int)
+  union all select 'user management', 'protected user identity columns are not writable', 0,
+    (select count(*)::int from (values ('id'), ('auth_user_id'), ('created_at')) v (column_name)
+      where has_column_privilege('authenticated', 'public.users', v.column_name, 'update')
+         or has_column_privilege('authenticated', 'public.users', v.column_name, 'insert'))
   -- Anonymous public read access; all write grants were removed ------------
   union all select 'public reads', 'signed out can write no application table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace

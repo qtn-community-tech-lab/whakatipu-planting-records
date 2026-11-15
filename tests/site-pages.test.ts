@@ -64,8 +64,10 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
     const submit = (await pageForm(kind))!.props.onSubmit;
     mocks.authenticated.mockResolvedValue(false);
     expect(await submit(values)).toHaveProperty("error");
+    mocks.read.mockClear();
     await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
     expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/sites/new" : `/sites/${values.slug}/edit`)}`);
+    expect(mocks.read).not.toHaveBeenCalled();
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });

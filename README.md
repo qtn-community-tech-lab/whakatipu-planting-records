@@ -51,15 +51,10 @@ Keep these values in the git-ignored `.env.local`: the import scripts load that 
 it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
 Restart Next.js after changing environment variables.
 
-### 3. Add a staff email and test sign-in
+### 3. Sign in and manage users
 
-The authentication migration creates the initial eight users in `public.users`. To add another user, insert a
-profile in Supabase Studio's SQL Editor, replacing the name and email with the person's details:
-
-```sql
-insert into public.users (name, email)
-values ('Staff name', 'staff@example.org');
-```
+The authentication migration creates the initial user accounts. Sign in as an active user, then open
+[`/users`](http://127.0.0.1:3000/users) to add, edit or deactivate accounts.
 
 Start the app and open [`/login`](http://127.0.0.1:3000/login). Local Supabase captures sign-in messages in its
 email inbox at [http://127.0.0.1:54324](http://127.0.0.1:54324); no email is delivered to a real inbox. Open the
