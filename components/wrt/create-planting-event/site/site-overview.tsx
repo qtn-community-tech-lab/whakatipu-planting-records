@@ -19,7 +19,7 @@ import type { PlantTotals } from "../map/sites";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event" }: {
+export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event", onOpenSeason }: {
   slug: string;
   /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
   map?: ReactNode;
@@ -36,6 +36,8 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   onStart: () => void;
   /** The start button's words: "Back to your planting event" when one with entries is waiting. */
   startLabel?: string | undefined;
+  /** A season's row: open its planting events. `wholeSite` when the seasons shown are the whole site's (the part has none). */
+  onOpenSeason?: ((season: { slug: string; label: string }, wholeSite: boolean) => void) | undefined;
 }) {
   // The history couldn't be read: it says so (an event can still be added), and Try again asks once more.
   const { loading, failed, data: o, reload: retry } = useLoad(`${slug}/${partId ?? ""}`, () => loadSiteOverview(slug, partId));
@@ -72,8 +74,11 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
         )}
         {o && o.trees.length > 0 && (
           <>
-            {/* Past plantings first: what went in, and when. */}
-            <SeasonList seasons={o.seasons} today={today} summary={`Latest ${o.seasons.length === 1 ? "season" : `${o.seasons.length} seasons`}`}>
+            {/* Past plantings first: what went in, when, and a way into each season. */}
+            <SeasonList
+              seasons={o.seasons} today={today} summary={`Latest ${o.seasons.length === 1 ? "season" : `${o.seasons.length} seasons`}`}
+              onOpen={onOpenSeason && ((x) => onOpenSeason(x, o.wholeSite))}
+            >
               <Link href={partId && partName && !o.wholeSite ? partHref(slug, partName) : `/sites/${slug}`} target="_blank" className={s.more}>
                 Every season on the {partId && !o.wholeSite ? "place" : "site"} page<ArrowUpRight size={14} strokeWidth={2.4} />
               </Link>

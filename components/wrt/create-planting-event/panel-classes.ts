@@ -22,6 +22,10 @@ export const scroll =
 /** A block of related fields. */
 export const group = "flex flex-col gap-3";
 
+/** A text button. */
+export const link =
+  "min-h-11 cursor-pointer self-center border-0 bg-transparent px-2.5 py-0 font-sans text-[14px] leading-[normal] font-semibold text-[var(--text-brand)] max-md:[.spot-actions_&]:px-1";
+
 /** A list of plant rows. */
 export const rows = "m-0 flex list-none flex-col border-t border-[var(--border-card)] p-0";
 
@@ -45,3 +49,6 @@ export const context = "m-0 font-sans text-[13.5px] leading-[1.4] font-medium te
 
 /** What a list says when it has nothing. */
 export const empty = "m-0 px-0 py-3 font-sans text-[14px] leading-[normal] font-normal text-[var(--text-muted)]";
+
+/** One quiet line of explanation. */
+export const quiet = "m-0 font-sans text-[13px] leading-[1.4] font-normal text-[var(--text-muted)]";

@@ -27,6 +27,30 @@ export async function listSeasonPlantingLines(season: string) {
   return data;
 }
 
+/** A site's lines in one season, or one area's (by WRT number), area by area and most planted first. */
+export async function listSiteSeasonPlantingLines(site: string, season: string, wrtNumber: string | null) {
+  const query = (await db())
+    .from("line_details")
+    .select("line_id, planting_id, area_name, wrt_number, planted_on, source, species, register_code, scientific_name, common_name, maori_name, quantity")
+    .eq("site", site)
+    .eq("season", season);
+  const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query)
+    .order("area_name")
+    .order("quantity", { ascending: false })
+    .throwOnError();
+  return data;
+}
+
+/** Planting events' notes, by id. (line_details' notes are each line's open review notes, not the event's.) */
+export async function listPlantingEventNotes(ids: number[]) {
+  const { data } = await (await db())
+    .from("planting_events")
+    .select("id, notes")
+    .in("id", ids)
+    .throwOnError();
+  return data;
+}
+
 /** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
 export async function listSeasons() {
   const { data } = await seasonTotals(await db())

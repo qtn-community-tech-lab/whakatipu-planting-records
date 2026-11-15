@@ -1,12 +1,14 @@
 "use client";
 /**
- * The address follows the site and the part, so either can be bookmarked.
+ * The address follows the site, the part and the open season, so any of them can be bookmarked. A season
+ * listed for the whole site (the part had none) is bookmarked without the part, so it opens with its plantings.
  */
 import { useEffect, useRef } from "react";
 
-export function useAddressSync({ siteSlug, part, depth, popped, totals }: {
+export function useAddressSync({ siteSlug, part, season, depth, popped, totals }: {
   siteSlug: string;
   part: string | null;
+  season: { slug: string; wholeSite: boolean } | null;
   /** How many of our history entries are under this one (see useHistoryEntries); null while a back is landing. */
   depth: () => number | null;
   popped: number;
@@ -14,6 +16,8 @@ export function useAddressSync({ siteSlug, part, depth, popped, totals }: {
   totals: unknown;
 }) {
   const unsynced = useRef(false);
+  const seasonSlug = season?.slug;
+  const wholeSite = season?.wholeSite;
   // Plain `{ wrtDepth }` with the URL: Next's replaceState adds its own state and learns the URL. A task later,
   // so Next has patched history by then (on mount this runs first), and only when something differs. Written
   // again after a server refresh (`totals` is new each server render), which rewrites the entry at Next's URL.
@@ -23,7 +27,8 @@ export function useAddressSync({ siteSlug, part, depth, popped, totals }: {
       const d = depth();
       if (d === null) return; // a back is landing: written again once it has (popped)
       const q = new URLSearchParams(window.location.search);
-      for (const [key, value] of [["site", siteSlug], ["part", part]] as const) if (value) q.set(key, value); else q.delete(key);
+      const shownPart = wholeSite ? null : part;
+      for (const [key, value] of [["site", siteSlug], ["part", shownPart], ["season", seasonSlug]] as const) if (value) q.set(key, value); else q.delete(key);
       const url = `${window.location.pathname}${q.size ? `?${q}` : ""}`;
       if (url === `${window.location.pathname}${window.location.search}` && (window.history.state as { wrtDepth?: unknown } | null)?.wrtDepth === d) return;
       // In a background tab, keep Next's state and leave its router alone: a router update there starts a view
@@ -35,7 +40,7 @@ export function useAddressSync({ siteSlug, part, depth, popped, totals }: {
       window.history.replaceState({ wrtDepth: d }, "", url);
     });
     return () => clearTimeout(id);
-  }, [siteSlug, part, popped, depth, totals]);
+  }, [siteSlug, part, seasonSlug, wholeSite, popped, depth, totals]);
   useEffect(() => {
     const show = () => {
       if (document.hidden || !unsynced.current) return;

@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   // Lets a phone load the dev server through an ngrok tunnel.
   allowedDevOrigins: ["*.ngrok-free.app", "*.ngrok-free.dev", "*.ngrok.app", "*.ngrok.dev"],
-  // The planting event page's old playground address; the query (?site, &part) carries over.
+  // The planting event page's old playground address; the query (?site, &part, &season) carries over.
   redirects: async () => [{ source: "/playground/create-planting-event", destination: "/events/new", permanent: false }],
   // Reference images load directly in the browser (components use unoptimized).
   images: {

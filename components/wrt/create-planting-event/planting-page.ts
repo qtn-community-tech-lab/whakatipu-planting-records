@@ -1,28 +1,35 @@
 /**
- * Where you are on the planting event page, as one state: what's over the panel's own page, whether the form is
- * open, and where the phone sheet sits. Each way of moving about is one action.
+ * Where you are on the planting event page, as one state: what's over the panel's own page, the past season
+ * open, whether the form is open, and where the phone sheet sits. Each way of moving about is one action.
  *
  * `over` is a back stack of what covers the page: the site list, which keeps where the sheet was for its Back, so
  * closing it is a pop. Starting most things clears the stack.
  *
- * The form (`started`) isn't on the stack: it outlives what's over it, so the form and its entries stay through
- * the list and back.
+ * The season and the form (`started`) aren't on the stack: they outlive what's over them. A season stays open,
+ * hidden, under the list, so an edit in it survives; the form and its entries stay through the list and back.
  */
 import type { Snap } from "@/components/wrt/shared/form-panel";
 
+/** A past season opened at the site. `wholeSite` when the part had none, so the whole site's were listed. */
+export type Season = { slug: string; label: string; wholeSite: boolean };
 export type Over = { kind: "list"; snap: Snap };
 
 export interface PageState {
   over: Over[];
+  season: Season | null;
   /** The form is open (or its entries kept, under the list). */
   started: boolean;
+  /** "Add new planting event" from a past season: the form's Back (and the browser's) opens it again (at the same site and part). */
+  startedFrom: { season: Season; site: string; part: string | null } | null;
   snap: Snap;
   /** Phones' Search: the site list with its search box focused (each tap asks again). */
   searchAsk: number;
 }
 
-// Phones start with the sheet at its bar, so the map shows first.
-export const initialPage: PageState = { over: [], started: false, snap: "peek", searchAsk: 0 };
+// Phones start with the sheet at its bar, so the map shows first; a season from the address opens full screen, as one opened here does.
+export const initialPage = (season: Season | null): PageState => ({
+  over: [], season, started: false, startedFrom: null, snap: season ? "full" : "peek", searchAsk: 0,
+});
 
 export type PageAction =
   | { type: "snap"; to: Snap }
@@ -32,10 +39,12 @@ export type PageAction =
   | { type: "showChoice"; wide: boolean }
   | { type: "closeOver" }
   | { type: "endModes"; snap: Snap }
+  | { type: "openSeason"; season: Season; wide: boolean }
+  | { type: "closeSeason" }
   | { type: "showSite"; wide: boolean }
-  | { type: "startForm" }
+  | { type: "startForm"; from: PageState["startedFrom"] }
   | { type: "afterSave" }
-  | { type: "formBack" }
+  | { type: "formBack"; season: Season | null; wide: boolean }
   | { type: "leave" };
 
 export const topOf = (s: PageState) => s.over[s.over.length - 1];
@@ -51,6 +60,8 @@ function closeList(s: PageState, wide: boolean, back: boolean): PageState {
   if (top?.kind !== "list") return { ...s, searchAsk: 0 };
   return { ...s, over: s.over.slice(0, -1), searchAsk: 0, snap: wide ? s.snap : !back && top.snap === "peek" ? "mid" : top.snap };
 }
+// A season takes the panel's place; anything over the page goes.
+const openSeason = (s: PageState, season: Season, wide: boolean): PageState => ({ ...s, over: [], season, snap: wide ? s.snap : "full" });
 
 export function pageReducer(s: PageState, a: PageAction): PageState {
   const top = topOf(s);
@@ -66,13 +77,18 @@ export function pageReducer(s: PageState, a: PageAction): PageState {
     // A site chosen: from the list, back to where it was opened from. Otherwise (a pin, the question) half way, to show the choice.
     case "showChoice": return top?.kind === "list" ? closeList(s, a.wide, false) : { ...s, snap: a.wide ? s.snap : "mid" };
     case "closeOver": return { ...s, over: [] };
-    // Starting one thing ends the others: the site list.
-    case "endModes": return { ...s, over: [], snap: a.snap };
-    // Up to the site as a whole: the list closes as its Back does.
-    case "showSite": return { ...(top?.kind === "list" ? closeList(s, a.wide, true) : s), over: [] };
-    case "startForm": return { ...s, over: [], started: true };
-    case "afterSave": return { ...s, started: false };
-    case "formBack": return { ...s, started: false };
-    case "leave": return { ...s, over: [], searchAsk: 0, started: false, snap: "mid" };
+    // Starting one thing ends the others: the site list and an open season.
+    case "endModes": return { ...s, over: [], season: null, snap: a.snap };
+    case "openSeason": return openSeason(s, a.season, a.wide);
+    case "closeSeason": return { ...s, season: null };
+    // Up to the site as a whole: the list closes as its Back does, and the season goes.
+    case "showSite": return { ...(top?.kind === "list" ? closeList(s, a.wide, true) : s), over: [], season: null };
+    case "startForm": return { ...s, over: [], season: null, started: true, startedFrom: a.from };
+    case "afterSave": return { ...s, started: false, startedFrom: null };
+    case "formBack": {
+      const n = { ...s, started: false, startedFrom: null };
+      return a.season ? openSeason(n, a.season, a.wide) : n;
+    }
+    case "leave": return { ...s, over: [], season: null, searchAsk: 0, started: false, startedFrom: null, snap: "mid" };
   }
 }
