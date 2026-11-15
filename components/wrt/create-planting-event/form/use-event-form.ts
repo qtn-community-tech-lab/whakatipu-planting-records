@@ -7,7 +7,7 @@
  */
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unstable_rethrow } from "next/navigation";
-import { useMemo, useState, type FormEvent, type RefObject } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type RefObject } from "react";
 import { useFieldArray, useForm, useWatch, type FieldPath } from "react-hook-form";
 import { z } from "zod";
 import type { PlantingEventSubmitResult } from "@/db/types";
@@ -17,8 +17,11 @@ import { seasonFromDate } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { eventSchema, type EventLookups } from "@/lib/wrt/events/validate";
 
+/** Stands in for a new site (a new location not at any site) while the event is checked. Not saved. */
+export const NEW_SITE = "new-site";
+
 /** What the controls hold, as the event the server takes: quantities as typed (a half-typed number isn't reformatted), the date's season. */
-const formSchema = (lookups: EventLookups, today: string) => z.object({
+const formSchema = (lookups: EventLookups, today: string, newSite: boolean) => z.object({
   siteSlug: z.string(),
   partId: z.string().nullable(),
   plantedOn: z.string(),
@@ -26,6 +29,8 @@ const formSchema = (lookups: EventLookups, today: string) => z.object({
   notes: z.string(),
 }).transform((v): unknown => ({
   ...v,
+  // A new location with no site chosen is a new site of its own.
+  siteSlug: newSite && !v.siteSlug ? NEW_SITE : v.siteSlug,
   season: seasonFromDate(v.plantedOn)?.season,
   seasonYear: seasonFromDate(v.plantedOn)?.seasonYear ?? null,
   polygon: null, // drawn areas aren't stored yet
@@ -54,7 +59,7 @@ export const plantsIn = (lines: Line[], id: number | undefined) => lines.reduce(
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialSite = "", initialPart = null, save,
+  options, today, formRef, headingRef, initialSite = "", initialPart = null, newSite = false, save,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -67,15 +72,17 @@ export function useEventForm({
   initialSite?: string;
   /** The part of that site to start on (its id), or null for the site as a whole. */
   initialPart?: string | null | undefined;
+  /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
+  newSite?: boolean;
   /** Saves the checked event (a server action); `savedPlantingEvent` is passed back on a retry. Without it, Submit only previews. */
   save?: ((input: PlantingEventInput, savedPlantingEvent?: number) => Promise<PlantingEventSubmitResult>) | undefined;
 }) {
   // Reference data for the check: the same shape the server validates against.
   const lookups: EventLookups = useMemo(() => ({
-    places: options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })),
+    places: [...options.sites.map((s) => ({ slug: s.slug, isScheme: false, parcels: s.parts })), { slug: NEW_SITE, isScheme: false, parcels: [] }],
     species: options.species,
   }), [options]);
-  const schema = useMemo(() => formSchema(lookups, today), [lookups, today]);
+  const schema = useMemo(() => formSchema(lookups, today, newSite), [lookups, today, newSite]);
   const form = useForm<FormValues, unknown, PlantingEventInput>({
     resolver: zodResolver(schema), mode: "onSubmit", reValidateMode: "onChange", shouldFocusError: false,
     defaultValues: { siteSlug: initialSite, partId: initialPart, plantedOn: today, species: [], notes: "" },
@@ -91,6 +98,8 @@ export function useEventForm({
   const [savedPlantingEvent, setSavedPlantingEvent] = useState<number | undefined>(undefined);
   // Goes up each time problems are shown (Submit, or the server's), so the view can bring the first into sight.
   const [problemAsk, setProblemAsk] = useState(0);
+  // A new location dropped or taken off changes whether no site is a problem.
+  useEffect(() => { if (form.formState.isSubmitted) void form.trigger("siteSlug"); }, [newSite, form]);
   // The species rows aren't inputs the form knows, so once submitted a change to the lines checks them all again (errors stay live).
   const thenCheck = <A extends unknown[]>(change: (...a: A) => void) => (...a: A) => {
     change(...a);

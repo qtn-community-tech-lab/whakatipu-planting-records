@@ -1,16 +1,17 @@
 "use client";
 /**
- * Choose where: a search and a sort, then every site with its places. A site with places is an accordion; one
- * without is a single row. With no site chosen it is the panel (All sites); otherwise it takes the panel's place
- * while open, so there is one sheet, never a dialog over it. For a drawn area (`forArea`) it asks which site that
- * belongs to instead.
+ * Choose where: a search and a sort, then every site with its places. A site with places (or New sublocation) is an
+ * accordion; one with neither is a single row. With no site chosen it is the panel (All sites); otherwise it takes the
+ * panel's place while open, so there is one sheet, never a dialog over it. For a new pin or a drawn area (`forNew`)
+ * it asks which site that belongs to instead.
  */
-import { ChevronDown, MapPin } from "lucide-react";
+import { ChevronDown, MapPin, MapPinPlus, Plus } from "lucide-react";
 import { Accordion } from "radix-ui";
 import { useEffect, useRef, useState } from "react";
 import type { PlantTotals } from "../map/sites";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import { formatNumber, partBesideSite, rankMatches } from "@/lib/wrt/text";
+import { cn } from "@/lib/utils";
 import * as panel from "../panel-classes";
 import { ListRow } from "@/components/wrt/shared/list-row";
 import { SearchField } from "@/components/wrt/shared/search-field";
@@ -20,15 +21,19 @@ import s from "./site-chooser.module.css";
 type Sort = "az" | "most" | "recent";
 const SORTS: [Sort, string][] = [["az", "A–Z"], ["most", "Most planted"], ["recent", "Recent"]];
 
-export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, onPreview, searchAsk = 0 }: {
+export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, onKeepNew, onAddSublocation, onNewSite, onPreview, searchAsk = 0 }: {
   sites: readonly SiteOption[];
   totals: PlantTotals;
   value: { slug: string; partId: string | null };
   onChoose: (slug: string, partId: string | null) => void;
   /** Left out when there's nothing to close back to (no site chosen yet): no heading or ×, the panel's title says it. */
   onClose?: (() => void) | undefined;
-  /** An area drawn but not at any site yet: the chooser asks for its site. */
-  forArea?: boolean | undefined;
+  /** A new pin, or an area drawn but not at any site yet: the chooser asks for its site. */
+  forNew?: { what: "area" | "location"; atSite: boolean } | undefined;
+  /** A new location: keep it as a new site of its own, at no site we know. */
+  onKeepNew?: (() => void) | undefined;
+  onAddSublocation?: ((siteSlug: string) => void) | undefined;
+  onNewSite?: (() => void) | undefined;
   /** A site opened in the list ("" when closed again): the map shows it before anything is chosen. */
   onPreview?: ((siteSlug: string) => void) | undefined;
   /** Goes up each time the page's Search is tapped: the search box takes focus. */
@@ -60,6 +65,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, 
   const plants = (key: string) => formatNumber(totals[key]?.plants ?? 0);
   const sitePlants = (slug: string) => <span className={s.figure}>{plants(slug)}<small>plants</small></span>;
   const about = (site: SiteOption) => {
+    if (site.unsaved) return "Not saved yet";
     const last = totals[site.slug]?.last;
     if (!last) return site.parts.length > 1 ? `${site.parts.length} places · No plantings yet` : "No plantings yet";
     return site.parts.length > 1 ? `${site.parts.length} places · last planted ${last}` : `Last planted ${last}`;
@@ -70,8 +76,8 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, 
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
-    // No places: the site is the only choice.
-    if (!site.parts.length) {
+    // No places, and none to add: the site is the only choice.
+    if (!site.parts.length && !onAddSublocation) {
       return (
         <ul key={site.slug} className={s.chooserRow}>
           <li>
@@ -103,20 +109,27 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, 
         <Accordion.Content className={s.chooserContent}>
           <ul>
             {(!q || rankMatches([site], q).length > 0) && option("Whole site", site.slug, null, plants(site.slug))}
-            {parts.map((p) => option(partBesideSite(p.name, site.name), site.slug, p.id, plants(`${site.slug}/${p.id}`)))}
+            {parts.map((p) => option(partBesideSite(p.name, site.name), site.slug, p.id, plants(`${site.slug}/${p.id}`), p.unsaved))}
+            {onAddSublocation && !q && (
+              <li>
+                <button type="button" className={s.choice} onClick={() => onAddSublocation(site.slug)}>
+                  <span className={s.chooserText}><b className={s.addPart}><Plus size={16} strokeWidth={2.6} aria-hidden="true" />New sublocation of {site.name}</b></span>
+                </button>
+              </li>
+            )}
           </ul>
         </Accordion.Content>
       </Accordion.Item>
     );
   });
 
-  const option = (label: string, slug: string, partId: string | null, figure: string) => {
+  const option = (label: string, slug: string, partId: string | null, figure: string, unsaved?: boolean) => {
     const on = value.slug === slug && value.partId === partId;
     return (
       <li key={partId ?? "whole"}>
         <ListRow
           className={s.choice} aria-pressed={on} onClick={() => onChoose(slug, partId)}
-          title={label} figure={figure} end={on && <span className={s.choiceOn}>Chosen</span>}
+          title={label} subtitle={unsaved ? "Not saved yet" : undefined} figure={figure} end={on && <span className={s.choiceOn}>Chosen</span>}
         />
       </li>
     );
@@ -127,16 +140,22 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, 
       <div className={panel.scroll}>
         {onClose && (
           // The same pin header as the panel's other screens, with Close back to where you were (as the phone bar's Close).
-          <header className={s.chooserHead} data-question={forArea ? "" : undefined}>
+          <header className={s.chooserHead} data-question={forNew ? "" : undefined}>
             <span className={s.chooserIcon} aria-hidden="true"><MapPin size={22} strokeWidth={2.2} /></span>
             <span>
-              <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forArea ? "Which site is this area at?" : "Choose a site"}</h2>
-              {!forArea && now && <p>Now: {now}</p>}
+              <h2 ref={heading} id="site-chooser-title" tabIndex={-1}>{forNew ? `Which site is this ${forNew.what === "area" ? "area" : "new location"} at?` : "Choose a site"}</h2>
+              {!forNew && now && <p>Now: {now}</p>}
             </span>
             <button type="button" className={s.chooserBack} onClick={onClose}>Close</button>
           </header>
         )}
-        {forArea && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site.</p>}
+        {forNew?.what === "area" && <p className={s.chooserNote}>The area you drew isn&apos;t near a site we know. Choose its site.</p>}
+        {forNew?.what === "location" && !forNew.atSite && <p className={s.chooserNote}>The pin you dropped isn&apos;t near a site we know. Choose the site it belongs to, or keep it as a new site.</p>}
+        {forNew?.what === "location" && onKeepNew && (
+          <button type="button" className={s.keepNew} onClick={onKeepNew}>
+            <MapPinPlus size={20} strokeWidth={2.2} aria-hidden="true" />{forNew.atSite ? "Make it a new site instead" : "Keep it as a new site"}
+          </button>
+        )}
         {/* Pinned while the list scrolls. A form, so the keyboard's Search key (and the button) put the keyboard away. */}
         <form role="search" className={s.chooserSearch} data-pinned="" onSubmit={(e) => { e.preventDefault(); search.current?.blur(); }}>
           <SearchField ref={search} className={s.chooserField} label="Search sites and places" placeholder="Search sites and places" value={query} onChange={setQuery} />
@@ -150,6 +169,14 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forArea, 
           {shown.length === 0 && <p className={s.chooserEmpty}>No site or place matches “{q}”.</p>}
         </div>
       </div>
+      {/* Pinned under the list, like the form's footer. Not while asking about a new pin or area: that has its own way. */}
+      {onNewSite && !forNew && (
+        <footer className={panel.foot}>
+          <button type="button" className={cn(panel.back, s.newSite)} onClick={onNewSite}>
+            <MapPinPlus size={18} strokeWidth={2.2} aria-hidden="true" />Create a new site
+          </button>
+        </footer>
+      )}
     </section>
   );
 }

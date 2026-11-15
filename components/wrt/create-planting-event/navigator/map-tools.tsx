@@ -1,6 +1,6 @@
 "use client";
 import type * as maplibregl from "maplibre-gl";
-import { LocateFixed, Minus, Pencil, Plus } from "lucide-react";
+import { LocateFixed, MapPinPlus, Minus, Pencil, Plus } from "lucide-react";
 import type { RefObject } from "react";
 import { useFindMe } from "../map/use-planting-map";
 import s from "./navigator.module.css";
@@ -9,11 +9,13 @@ import s from "./navigator.module.css";
  * Wide screens: a toolbar down the map's right edge, and a bar along the bottom for stepping through the areas.
  * Each button in the bar shows its key, so the keys are learned from the buttons that do the same thing.
  */
-export function MapTools({ map, drawing, onDraw, areas, shown, onStep, onLetGo }: {
+export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, onStep, onLetGo }: {
   map: RefObject<maplibregl.Map | null>;
   /** While drawing, only the zoom and Find me work. */
   drawing: boolean;
   onDraw: () => void;
+  /** Left out once an area is drawn, as in the header's + menu on phones. */
+  onAddLocation?: (() => void) | undefined;
   /** How many areas are kept, and which is brought forward (its place in the list, or -1). */
   areas: number;
   shown: number;
@@ -29,6 +31,11 @@ export function MapTools({ map, drawing, onDraw, areas, shown, onStep, onLetGo }
         <button type="button" className={s.toolDraw} onClick={onDraw} disabled={drawing} aria-label="Draw area" aria-keyshortcuts="D" title="Draw area (D)" data-draws="">
           <Pencil size={18} strokeWidth={2.4} aria-hidden="true" />
         </button>
+        {onAddLocation && (
+          <button type="button" onClick={onAddLocation} disabled={drawing} aria-label="New location" title="New location">
+            <MapPinPlus size={18} strokeWidth={2.2} aria-hidden="true" />
+          </button>
+        )}
         <button type="button" onClick={findMe} aria-label="Find me" title="Find me">
           <LocateFixed size={18} strokeWidth={2.2} aria-hidden="true" />
         </button>

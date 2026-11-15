@@ -83,13 +83,22 @@
 .addMenu { min-width: 220px; padding: 6px; border-radius: var(--radius-tile-lg); display: flex; flex-direction: column; }
 .addMenu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border: 0; border-radius: var(--radius-row); background: none; color: inherit; font: 600 14.5px var(--font-sans); text-align: left; cursor: pointer; }
 @media (hover: hover) { .addMenu button:hover { background: rgba(243, 246, 238, 0.1); } }
-/* a short word over the map: Find me's, when it can't */
+/* while placing: a cross over the centre of the visible map, what to do, and a way out */
+.cross { position: absolute; z-index: 2; width: 64px; height: 64px; transform: translate(-50%, -50%); pointer-events: none; }
+.cross::before, .cross::after { content: ""; position: absolute; background: var(--cn-white); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4); }
+.cross::before { left: 50%; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; }
+.cross::after { top: 50%; left: 0; right: 0; height: 3px; margin-top: -1.5px; }
 .hint { position: absolute; z-index: 3; left: 50%; top: 60px; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 18px; border-radius: var(--radius-pill); background: var(--cn-lime-300); color: var(--cn-green-900); font: 700 14.5px var(--font-sans); white-space: nowrap; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
-/* phones: the word sits under the header, and wraps */
+.hint .hintMain { background: var(--cn-green-800); }
+.hint button { min-height: 40px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: var(--cn-green-900); color: var(--text-on-dark); font: 600 13.5px var(--font-sans); white-space: nowrap; cursor: pointer; }
+.hint .hintCancel { background: none; color: var(--cn-green-900); box-shadow: inset 0 0 0 1.5px rgba(21, 38, 28, 0.35); }
+/* phones: the placing hint sits under the header */
 @media (max-width: 767px) {
-  .hint { top: calc(60px + env(safe-area-inset-top)); left: 12px; right: 12px; transform: none; white-space: normal; border-radius: var(--radius-card); padding: 8px 8px 8px 16px; font-size: 13.5px; line-height: 1.25; }
+  /* one row that always fits: the text wraps, the buttons don't. Above the sheet at its bar (set inline), else under the header. */
+  .hint { top: calc(60px + env(safe-area-inset-top)); left: 12px; right: 12px; transform: none; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 8px; white-space: normal; border-radius: var(--radius-card); padding: 8px 8px 8px 16px; font-size: 13.5px; line-height: 1.25; }
 }
-/* wide screens: the panel is on the left (572px with its inset), so the word sits in the map beside it */
+/* wide screens: the form panel is on the left (572px with its inset), so the placing hint
+   sits in the map beside it */
 @media (min-width: 768px) {
   .top { left: 588px; right: auto; }
   /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for the site pill, + and back */

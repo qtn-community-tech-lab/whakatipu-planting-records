@@ -1,13 +1,19 @@
 "use client";
 /**
- * The page's questions before it changes more than the form: an area drawn at another site, moving the event
- * to another site, discarding a past planting's changes, and leaving unsaved work.
+ * The page's questions before it changes more than the form: moving a site's pin, an area drawn at another
+ * site, moving the event to another site, discarding a past planting's changes, and leaving unsaved work.
  */
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { kmLabel } from "@/lib/wrt/text";
 
 export function LeaveDialogs(p: {
   siteName: string;
+  /** The part beside the site's name (see partBesideSite), or "Whole site". */
+  partShort: string | undefined;
+  part: string | null;
   areas: number;
+  /** A site's pin about to move, and how far (km). */
+  pinMove: boolean; movedBy: number | null; onMovePin: () => void; onKeepPin: () => void;
   /** An area drawn at another site than the event's: that site's name. */
   areaElsewhere: boolean; areaSite: string | undefined; onNewEventThere: () => void; onKeepDrawing: () => void;
   /** Another site, with the event's entries here: they'd move with it. */
@@ -15,9 +21,20 @@ export function LeaveDialogs(p: {
   discard: boolean; editTried: boolean; onDiscard: () => void; onKeepEditing: () => void;
   leaving: boolean; leavingTo: string | undefined; eventUnsaved: boolean; partly: boolean; onLeave: () => void; onStay: () => void;
 }) {
-  const { siteName, areas } = p;
+  const { siteName, partShort, part, areas } = p;
   return (
     <>
+      <ConfirmDialog
+        open={p.pinMove} title={`Move the pin for ${partShort && partShort !== "Whole site" ? `${siteName} · ${partShort}` : siteName}?`}
+        confirmLabel="Move pin" onConfirm={p.onMovePin} onCancel={p.onKeepPin}
+      >
+        <ul>
+          <li>{part && partShort ? `${partShort}'s` : "The site's main"} location moves here{p.movedBy !== null && `, ${kmLabel(p.movedBy)} from where it was`}, for every planting recorded at it, not just this one.</li>
+          <li>Drawn planting areas stay where they are.</li>
+          <li>Distances, and which site a new location counts as near, will use the new spot.</li>
+          <li>Not saved yet: this prototype can&apos;t store changes.</li>
+        </ul>
+      </ConfirmDialog>
       <ConfirmDialog
         open={p.areaElsewhere} title={`This area is at ${p.areaSite}`}
         confirmLabel="Start a new event there" cancelLabel="Keep drawing"
