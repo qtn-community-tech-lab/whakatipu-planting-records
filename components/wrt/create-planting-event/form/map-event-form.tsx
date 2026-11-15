@@ -16,12 +16,14 @@ import { partBesideSite } from "@/lib/wrt/text";
 import { cn } from "@/lib/utils";
 import { NoteButton } from "./note-button";
 import { Receipt, type PlaceCard } from "./receipt";
-import { useEventForm } from "./use-event-form";
+import { areaHa, areaName, plantsIn, useEventForm, WHOLE_SITE_KEY, type AreaPick, type DrawnArea } from "./use-event-form";
 import { useHideOnScroll } from "./use-hide-on-scroll";
 import { WhatPlanted } from "./what-planted";
 import { WhereWhen } from "./where-when";
 import s from "../panel.module.css";
 import * as panel from "../panel-classes";
+
+export { WHOLE_SITE_KEY, type AreaPick };
 
 export interface MapEventFormProps {
   options: EventFormOptions;
@@ -47,10 +49,28 @@ export interface MapEventFormProps {
   picked?: { slug: string; partId: string | null } | null;
   /** Tells the host when the site or part changes, so the map can move its pin. */
   onSiteChange?: ((siteSlug: string, partId: string | null) => void) | undefined;
+  /** The drawn areas' furthest distance from the event's site, and how far counts as at a site: further gets a quiet note. */
+  areaKm?: number | null | undefined;
+  nearKm?: number | undefined;
+  /** The planted areas drawn on the map (not saved yet), in order, and drawing another. Plants are listed per area. */
+  areas?: readonly DrawnArea[] | undefined;
+  onDrawArea?: (() => void) | undefined;
+  /** Show a drawn area on the map (its id): the host goes there, and on phones lowers the sheet so the map shows. */
+  onShowArea?: ((id: number) => void) | undefined;
+  /** The host lists the areas itself (the wide panel's navigator): the form leaves its own list out. */
+  areasListed?: boolean | undefined;
+  /** Tells the host how many plants are listed in each area (by area id), for the map's area buttons. */
+  onAreaPlants?: ((plants: Record<number, number>) => void) | undefined;
+  /** An area picked outside the form (the map's bar) to list its plants: the form scrolls to its list, on that area. A new object each time. */
+  plantIn?: { id: AreaPick } | null;
+  /** Tells the host which area's plants are being entered (its id), or null: the map shows that one. */
+  onAreaFocus?: ((id: number | null) => void) | undefined;
   /** After a save, the receipt's way out beside Start another: e.g. back to the site's page. */
   onFinish?: { label: string; onClick: () => void } | undefined;
-  /** Start another was pressed: the form starts over, and the host can follow (phones bring the sheet back up). */
+  /** Start another was pressed: the form starts over, and the host clears what it holds for the event (its areas). */
   onReset?: (() => void) | undefined;
+  /** The plant list opened from an area's Add plants was closed with Done: the host shows the map again (phones). */
+  onPlantClose?: (() => void) | undefined;
   /** Tells the host what the form holds: anything entered (a species, a note), saved, saved without its plants
    * (`partly`: where and when can't change now), or saving now. Unsaved entries make leaving ask. */
   onEntries?: ((state: FormEntries) => void) | undefined;
@@ -61,6 +81,7 @@ export interface MapEventFormProps {
 }
 
 export interface FormEntries { entered: boolean; saved: boolean; partly: boolean; saving: boolean }
+const NO_AREAS: readonly DrawnArea[] = [];
 
 export function MapEventForm(props: MapEventFormProps) {
   const [round, setRound] = useState(0);
@@ -83,6 +104,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   // Phones: the footer gets out of the way while the page scrolls down the plant list.
   const scrollRef = useRef<HTMLDivElement>(null);
   const footRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLElement>(null);
   useHideOnScroll(scrollRef, footRef, true);
 
   // Page changes slide in a little from the side they come from: forward from the right (the form shown again, a
@@ -100,13 +122,39 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     if (!onReceipt) setSlide("back");
   }
 
-  // What was planted: one card for the site (and part).
+  const areas = props.areas ?? NO_AREAS;
+  // The part, or the site: what an area is a piece of, and where plants in no area count.
   const partName = form.site?.parts.find((p) => p.id === form.partId)?.name;
   const place = form.site ? (partName ? partBesideSite(partName, form.site.name) : form.site.name) : "";
-  const cardsFor = (input: PlantingEventInput): PlaceCard[] => [{
-    key: "all", title: form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place,
-    total: input.species.reduce((t, l) => t + l.quantity, 0),
-  }];
+  // What was planted, place by place: each drawn area with plants, then any for the site as a whole.
+  // Each is, in effect, a planting event of its own. With no areas, one card for the site (and part).
+  const cardsFor = (input: PlantingEventInput | null): PlaceCard[] => {
+    if (!input) return [];
+    const card = (key: string, title: string, sub: string | undefined, lines: PlantingEventInput["species"], pts?: DrawnArea["pts"]): PlaceCard => ({
+      key, title, sub, pts, total: lines.reduce((t, l) => t + l.quantity, 0),
+    });
+    if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
+    return [
+      ...areas.map((a, i) => card(String(a.id), areaName(a, i), `${areaHa(a)} · ${place}`, input.species.filter((l) => l.area === a.id), a.pts)),
+      card("whole", "Whole site", `${place}, not in a drawn area`, input.species.filter((l) => l.area === undefined)),
+    ].filter((c) => c.total > 0);
+  };
+  const cards = cardsFor(form.checkedEvent);
+  // Areas with no plants aren't planting events: the check notes each (fill it, or take it off), but Submit doesn't wait.
+  const emptyAreas = areas.filter((a) => plantsIn(form.lines, a.id) === 0);
+  // Plants are listed per area: keep every line in an area that still exists (nothing typed is lost).
+  const areaIds = areas.map((a) => a.id).join();
+  const { keepAreas } = form;
+  useEffect(() => { keepAreas(areaIds ? areaIds.split(",").map(Number) : []); }, [areaIds, keepAreas]);
+  // How many plants are in each area, for the buttons on the map.
+  const { onAreaPlants } = props;
+  const plantsKey = form.lines.map((l) => `${l.area}:${l.quantity}`).join();
+  useEffect(() => {
+    const out: Record<number, number> = {};
+    for (const l of form.lines) if (l.area !== undefined) out[l.area] = (out[l.area] ?? 0) + (Number(l.quantity) || 0);
+    onAreaPlants?.(out);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- plantsKey is what the lines say
+  }, [plantsKey, onAreaPlants]);
 
   const { onEntries } = props;
   const entered = form.lines.length > 0 || !!form.notes.trim();
@@ -123,20 +171,49 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     if (form.partlySaved) return; // the event's row is saved at its place
     form.chooseSite(picked.slug, picked.partId);
   });
-  // Opened again (it stays mounted while hidden): from the top, not where it was left.
+  // Opened again (it stays mounted while hidden): from the top, not where it was left. Before the
+  // Add plants effect below, so that one's scroll to the list wins.
   useEffect(() => {
     if (!hidden) scrollRef.current?.scrollTo(0, 0);
   }, [hidden]);
+  // The same for an area's Add plants on the map: take each one up once (from the receipt too), and scroll to the list.
+  const { plantIn } = props;
+  // Starts at the request already there: a fresh form (e.g. remounted when the screen crosses the wide
+  // breakpoint) mustn't jump to the plant list for an old Add plants.
+  const plantApplied = useRef<typeof plantIn>(plantIn);
+  // Opened from the map: the list has Done, back to the map (phones), until it's used or the form is put away.
+  const [fromMap, setFromMap] = useState(false);
+  if (hidden && fromMap) setFromMap(false);
+  // Saved: the receipt stays (back in the form, Submit would save it again); Start another begins the next.
+  const [askedIn, setAskedIn] = useState(plantIn);
+  if (plantIn !== askedIn) {
+    setAskedIn(plantIn);
+    if (plantIn && !form.saved) setFromMap(true);
+  }
+  useEffect(() => {
+    if (!plantIn || plantIn === plantApplied.current) return;
+    plantApplied.current = plantIn;
+    if (form.saved) return;
+    if (form.preview) form.closePreview();
+    requestAnimationFrame(() => listRef.current?.scrollIntoView({ block: "start" }));
+  }, [plantIn, form]);
+
+  // What the receipt says isn't stored, as it was when Submit passed (drawn areas), not as the map is after.
+  const [atSubmit, setAtSubmit] = useState<{ areas: boolean } | null>(null);
+  if (form.preview && !atSubmit) setAtSubmit({ areas: areas.length > 0 });
+  if (!form.preview && atSubmit) setAtSubmit(null);
 
   if (form.preview) {
     return (
       <Receipt
-        hidden={hidden} summary={describeEvent(form.preview, options)} cards={cardsFor(form.preview)} saved={form.saved}
-        onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish}
+        hidden={hidden} summary={describeEvent(form.preview, options)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} saved={form.saved}
+        areasDrawn={!!atSubmit?.areas} onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish}
       />
     );
   }
 
+  // Saving makes one event (its areas' plants added together); the preview counts each area's as one.
+  const submit = cards.length > 1 && !props.onSave ? `Submit ${cards.length} planting events` : "Submit planting event";
   // The plant list says what's wrong with it there; anything else is said at the top.
   const placeErrors = Object.keys(form.errors).some((path) => path !== "species" && path !== "notes");
 
@@ -156,8 +233,13 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
             Some details need fixing. They are marked below.
           </div>
         )}
-        <WhereWhen {...props} form={form} />
-        <WhatPlanted form={form} options={options} suggestions={suggestions} onFocus={props.onListFocus} />
+        <WhereWhen {...props} form={form} areas={areas} />
+        <WhatPlanted
+          ref={listRef} form={form} options={options} suggestions={suggestions} areas={areas} plantIn={plantIn} onDrawArea={props.onDrawArea} onAreaFocus={props.onAreaFocus} hidden={hidden}
+          onFocus={props.onListFocus}
+          // Opened from an area's Add plants: a way back to the map (on phones) that isn't Back.
+          onDone={fromMap ? () => { setFromMap(false); props.onPlantClose?.(); } : undefined}
+        />
       </div>
 
       {form.saveError && <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">{form.saveError}</div>}
@@ -165,7 +247,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
         {props.onBack && <button type="button" className={panel.back} onClick={props.onBack}>Back</button>}
         <NoteButton form={form} />
         <button type="submit" className={panel.next} disabled={form.saving} aria-busy={form.saving}>
-          {form.saving ? <><Spinner aria-hidden="true" />Saving…</> : "Submit planting event"}
+          {form.saving ? <><Spinner aria-hidden="true" />Saving…</> : submit}
         </button>
       </footer>
       {!props.onSave && <p className="m-0 px-0 pt-0 pb-2 text-center font-sans text-[12.5px] leading-[1.4] font-normal text-[var(--text-muted)] max-md:[[data-away]+&]:hidden [html[data-keyboard]_&]:hidden">Prototype: Submit checks everything, but nothing is saved yet.</p>}

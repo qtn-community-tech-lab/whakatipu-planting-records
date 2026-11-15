@@ -7,7 +7,7 @@ import s from "./part-menu.module.css";
 /**
  * The site's parts in a dark menu, "Whole site" first, the chosen one ticked; then, when given,
  * "Another site" and "All sites". Opened by the button it wraps (`children`, styled by `className`):
- * the panel's breadcrumb and title, and the form's place tile.
+ * the map's dock on phones (opens upwards), the panel's breadcrumb and title, and the form's place tile.
  */
 export function PartMenu({ siteName, parts, part, onChoosePart, onOtherSite, onAllSites, side, className, label, children }: {
   siteName: string;

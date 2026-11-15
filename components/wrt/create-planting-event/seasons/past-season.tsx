@@ -38,7 +38,7 @@ export function PastSeason({ slug, partId, season, today, onSaveEdit, species, a
   actionSlot?: HTMLElement | null | undefined;
   /** Says whether there's a button for that place (one event, and Edit allowed), so the host only makes room for one then. */
   onHeaderButton?: ((has: boolean) => void) | undefined;
-  /** Kept mounted but out of sight while something shows over it (the site list), so an edit survives. */
+  /** Kept mounted but out of sight while something shows over it (the site list, an area's sheet), so an edit survives. */
   hidden?: boolean | undefined;
   onDirty?: ((dirty: boolean) => void) | undefined;
   /** While an edit is being saved (the browser's back waits). */

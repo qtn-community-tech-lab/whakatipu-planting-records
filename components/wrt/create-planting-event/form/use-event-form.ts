@@ -11,6 +11,7 @@ import { useMemo, useState, type FormEvent, type RefObject } from "react";
 import { useFieldArray, useForm, useWatch, type FieldPath } from "react-hook-form";
 import { z } from "zod";
 import type { PlantingEventSubmitResult } from "@/db/types";
+import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import { seasonFromDate } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
@@ -21,7 +22,7 @@ const formSchema = (lookups: EventLookups, today: string) => z.object({
   siteSlug: z.string(),
   partId: z.string().nullable(),
   plantedOn: z.string(),
-  species: z.array(z.object({ speciesId: z.string(), quantity: z.string() })),
+  species: z.array(z.object({ speciesId: z.string(), quantity: z.string(), area: z.number().optional() })),
   notes: z.string(),
 }).transform((v): unknown => ({
   ...v,
@@ -33,7 +34,21 @@ const formSchema = (lookups: EventLookups, today: string) => z.object({
 })).pipe(eventSchema(lookups, today));
 
 type FormValues = z.input<ReturnType<typeof formSchema>>;
+/** One species line; `area` is the drawn area its plants went into (the planting event page's area id), or none. */
+export type Line = FormValues["species"][number];
 export type EventFormState = ReturnType<typeof useEventForm>;
+
+/** A drawn planted area: `id` stays with it; its number on screen is its place in the list; `name` if it was given one. */
+export interface DrawnArea { id: number; pts: readonly (readonly [number, number])[]; name?: string | undefined }
+export const areaHa = (a: DrawnArea) => formatHectares(hectares(a.pts));
+/** What an area is called: its name, or "Area 2". */
+export const areaName = (a: DrawnArea, i: number) => a.name || `Area ${i + 1}`;
+/** With drawn areas, plants can also go to the site as a whole: in no area (a line with no `area`). */
+export const WHOLE_SITE_KEY = "site";
+/** Where a list of plants goes: a drawn area (its id), or the site as a whole. */
+export type AreaPick = number | typeof WHOLE_SITE_KEY;
+/** Plants listed in one area so far (or, with no id, for the site as a whole). */
+export const plantsIn = (lines: Line[], id: number | undefined) => lines.reduce((t, l) => t + (l.area === id ? Number(l.quantity) || 0 : 0), 0);
 
 /** Focus an element once React has drawn the change that reveals it. */
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
@@ -67,7 +82,7 @@ export function useEventForm({
   });
   const { control, formState } = form;
   const lines = useFieldArray({ control, name: "species" });
-  const [siteSlug, partId, species, notes] = useWatch({ control, name: ["siteSlug", "partId", "species", "notes"] });
+  const [siteSlug, partId, plantedOn, species, notes] = useWatch({ control, name: ["siteSlug", "partId", "plantedOn", "species", "notes"] });
 
   // The checked event once Submit passes: shown as the "Not saved" preview, or the receipt once saved.
   const [preview, setPreview] = useState<PlantingEventInput | null>(null);
@@ -122,6 +137,27 @@ export function useEventForm({
 
     /** The species lines, as typed, and changing them. */
     lines: species, append: thenCheck(lines.append), update: thenCheck(lines.update), remove: thenCheck(lines.remove),
+    /**
+     * Keep the lines in step with the drawn areas (their ids, in order): a line whose area is gone
+     * moves to the first area, adding to that species there if it's already listed. A line with no
+     * area is for the site as a whole, and stays so. With no areas, lines have none. Nothing typed is lost.
+     */
+    keepAreas(ids: readonly number[]) {
+      const ls = form.getValues("species");
+      const target = (l: Line) => (ids.length === 0 || l.area === undefined ? undefined : ids.includes(l.area) ? l.area : ids[0]);
+      if (ls.every((l) => l.area === target(l))) return;
+      const out: Line[] = [];
+      for (const l of ls) {
+        const area = target(l);
+        const same = out.find((o) => o.speciesId === l.speciesId && o.area === area);
+        if (same) same.quantity = String((Number(same.quantity) || 0) + (Number(l.quantity) || 0));
+        else out.push({ ...l, area });
+      }
+      thenCheck(lines.replace)(out);
+    },
+
+    /** The checked event for "Check and submit", or null while something needs fixing. */
+    checkedEvent: schema.safeParse({ siteSlug, partId, plantedOn, species, notes }).data ?? null,
     preview,
     /** Saving now; the general save failure (shown by Submit); true once the event and its plants are saved. */
     saving: formState.isSubmitting, saveError, saved: !!save && preview !== null,

@@ -51,3 +51,21 @@ function pinOf(pins: readonly SitePin[], siteSlug: string, partId: string | null
 export function pinFor(pins: readonly SitePin[], siteSlug: string, partId: string | null = null): LngLat | null {
   return pinOf(pins, siteSlug, partId)?.at ?? null;
 }
+
+/** How far apart two points are, in km (flat-earth maths is fine at this scale). */
+function kmBetween(a: LngLat, b: LngLat): number {
+  return Math.hypot((b[0] - a[0]) * Math.cos((a[1] * Math.PI) / 180) * 111.32, (b[1] - a[1]) * 110.57);
+}
+
+export function kmToNearest(points: readonly LngLat[], at: LngLat): number | null {
+  return points.length ? Math.min(...points.map((p) => kmBetween(at, p))) : null;
+}
+
+export function nearestPin(pins: readonly SitePin[], at: LngLat): { pin: SitePin; km: number } | null {
+  let best: { pin: SitePin; km: number } | null = null;
+  for (const pin of pins) {
+    const km = kmBetween(at, pin.at);
+    if (!best || km < best.km) best = { pin, km };
+  }
+  return best;
+}

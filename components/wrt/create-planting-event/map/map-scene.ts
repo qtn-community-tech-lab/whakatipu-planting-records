@@ -10,6 +10,15 @@ import { plantsOrNone } from "@/lib/wrt/text";
 import { SATELLITE } from "@/components/wrt/shared/satellite";
 import type { LngLat, SitePin } from "./sites";
 
+/**
+ * Fit a drawn area in view, with room on phones for the bar along the bottom. Only the margin goes here:
+ * MapLibre adds it to the map's own padding, which already leaves out the form.
+ */
+export function fitArea(m: maplibregl.Map, pts: readonly LngLat[]) {
+  const bottom = matchMedia("(min-width: 768px)").matches ? 40 : 170;
+  m.fitBounds(boundsOf(pts), { padding: { top: 40, bottom, left: 40, right: 40 }, maxZoom: 17, duration: 800 });
+}
+
 export const boundsOf = (points: readonly LngLat[]) => points.reduce((b, p) => b.extend(p), new maplibregl.LngLatBounds());
 
 export function createMap(container: HTMLElement, start: maplibregl.LngLatLike): maplibregl.Map {

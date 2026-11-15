@@ -22,9 +22,21 @@ export const scroll =
 /** A block of related fields. */
 export const group = "flex flex-col gap-3";
 
+/** A bordered card. */
+export const card =
+  "relative flex items-center gap-[14px] rounded-[var(--radius-tile-lg)] border border-[var(--border-card)] bg-[var(--surface-card)] py-[14px] pr-2.5 pl-4 focus-within:border-[var(--cn-green-800)] focus-within:shadow-[0_0_0_3px_rgba(31,77,52,0.12)]";
+
+/** A card's two lines: a bold name and a quiet line under it. */
+export const cardText =
+  "flex min-w-0 flex-1 flex-col gap-[3px] [&_b]:font-sans [&_b]:text-[16.5px] [&_b]:leading-[1.2] [&_b]:font-bold [&_b]:text-[var(--text-strong)] [&_span]:font-sans [&_span]:text-[13px] [&_span]:leading-[1.3] [&_span]:font-normal [&_span]:text-[var(--text-muted)]";
+
 /** A text button. */
 export const link =
   "min-h-11 cursor-pointer self-center border-0 bg-transparent px-2.5 py-0 font-sans text-[14px] leading-[normal] font-semibold text-[var(--text-brand)] max-md:[.spot-actions_&]:px-1";
+
+/** An underlined link inside a sentence. */
+export const inlineLink =
+  "min-h-8 cursor-pointer border-0 bg-transparent px-0.5 py-1 font-sans text-[13.5px] leading-[normal] font-semibold text-[var(--text-brand)] underline underline-offset-[3px]";
 
 /** A list of plant rows. */
 export const rows = "m-0 flex list-none flex-col border-t border-[var(--border-card)] p-0";

@@ -60,3 +60,9 @@
 .whereCard .pick:focus-visible { outline-offset: -2px; } /* inside the card's edge, which clips */
 .whereCard .pick[aria-invalid="true"] { background: var(--surface-risk); }
 .whereCard .problem { margin: 0 8px 8px; }
+/* the drawn areas by name, each one tap from the map */
+.areaList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.areaList button { width: 100%; display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px 10px 12px; border: 1px solid var(--border-card); border-radius: var(--radius-tile); background: var(--surface-card); text-align: left; color: var(--cn-green-800); cursor: pointer; }
+@media (hover: hover) { .areaList button:hover { background: var(--surface-hover); } }
+.areaList button:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.areaList svg { flex-shrink: 0; }

@@ -73,6 +73,8 @@
 /* site pins: the app's plant-count markers (styles/app.css); the chosen site's lime.
    MapLibre places markers with position: absolute and a transform: never set either on .pin itself */
 .pin[data-on] { z-index: 1; }
+/* while drawing an area, taps on the map add corners: the pins stay in sight but don't take them */
+.screen[data-drawing] :is(.pin, .session, .add) { pointer-events: none; opacity: 0.6; }
 .pin[data-on] button { background: var(--cn-lime-300); color: var(--cn-green-900); }
 
 /* the + on the far side of the header: a menu for adding to the map */
@@ -90,7 +92,7 @@
 /* wide screens: the panel is on the left (572px with its inset), so the word sits in the map beside it */
 @media (min-width: 768px) {
   .top { left: 588px; right: auto; }
-  /* the panel's breadcrumb stands in for the site pill, + and back */
+  /* the panel's breadcrumb and the map's toolbar (navigator/) stand in for the site pill, + and back */
   .session, .add { display: none; }
   .hint { left: calc(50% + 286px); }
 }
