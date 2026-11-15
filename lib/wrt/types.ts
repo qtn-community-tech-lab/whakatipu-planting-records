@@ -163,6 +163,7 @@ export interface Provenance {
 export interface PlantingRecord {
   /** Stable record id from the transformation, e.g. "PH-2019A-FK12". */
   id: string;
+  plantingEventId?: number | null;
   seasonSlug: string;
   year: number;
   seasonName: SeasonName;

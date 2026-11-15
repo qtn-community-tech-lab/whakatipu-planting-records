@@ -16,7 +16,7 @@ import { z } from "zod";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { SLUG } from "../text";
 import { isClosed, ringSelfIntersects } from "./geo";
-import { isIsoDate } from "./season";
+import { plantedOnProblem, isIsoDate } from "./season";
 import { EVENT_SEASONS, type PlantingEventInput } from "./types";
 
 /** Notes are free text; keep them to a sensible length. */
@@ -49,6 +49,7 @@ const polygon = z.object({
 });
 
 export const eventInputSchema = z.object({
+  contextSeason: z.string().regex(/^(autumn|spring)-\d{4}$/).optional(),
   siteSlug: z.string().regex(SLUG, { error: "Choose a site." }),
   partId: z.string().min(1).max(INPUT_LIMITS.identifier).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
@@ -88,6 +89,7 @@ export function eventSchema(lookups: EventLookups, today: string) {
     // ISO dates compare correctly as strings.
     if (v.plantedOn > today) add(["plantedOn"], "The planting date can't be in the future.");
 
+    if (v.contextSeason) { const problem = plantedOnProblem(v.plantedOn, v.contextSeason, today); if (problem) add(["plantedOn"], problem); }
     const site = lookups.places.find((p) => p.slug === v.siteSlug);
     if (!site) add(["siteSlug"], "That site is not in the site list.");
     else if (site.isScheme) add(["siteSlug"], "Order schemes are not a physical site; choose the site where the planting happened.");

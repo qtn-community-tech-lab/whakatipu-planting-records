@@ -84,6 +84,7 @@ export function SidebarFootNav({ onNavigate }: { onNavigate?: (() => void) | und
 
 export function Crumb() {
   const pathname = usePathname();
+  if (pathname.startsWith("/events")) return <Link href="/records" className="wrt-topbar__crumb">Records</Link>;
   const label = [...NAV_MAIN, ...NAV_FOOT].find((n) => n.href !== "/" && pathname.startsWith(n.href));
   if (pathname === "/") return <span className="wrt-topbar__crumb">Overview</span>;
   if (!label) return <span className="wrt-topbar__crumb" />;

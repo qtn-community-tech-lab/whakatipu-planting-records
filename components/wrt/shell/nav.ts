@@ -23,5 +23,5 @@ export const NAV_MAIN: readonly NavItem[] = [
 export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];
 
 export function isActive(pathname: string, href: AppRoute) {
-  return href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
+  return href === "/records" && pathname.startsWith("/events") ? true : href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");
 }

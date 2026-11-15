@@ -113,7 +113,7 @@ Keep shared conventions here; `CLAUDE.md` imports this file.
   Set the existing `deactivated_at` column instead of deleting rows. Reuse existing storage;
   a new CRUD action alone does not require a migration or a database trigger.
 - Require a named confirmation with Cancel, pending feedback and a retryable error.
-  Group Deactivate with Edit on the detail page; show the resulting deactivated state.
+  Place Deactivate in edit mode; keep Edit on the detail page and show the resulting deactivated state.
 - Exclude deactivated entries from normal active lists and new-record selectors. Keep
   historical identities and quantities intact. Reference entities such as species and sites
   must remain resolvable in historical records without silently reducing their planting totals.

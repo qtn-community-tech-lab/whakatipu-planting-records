@@ -40,7 +40,7 @@ async function allLines(db: Db) {
   for (let from = 0; ; from += PAGE_SIZE) {
     const { data } = await db
       .from("line_details")
-      .select("line_id, legacy_code, season, area, area_name, class, species, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
+      .select("line_id, planting_id, legacy_code, season, area, area_name, class, species, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
       .order("line_id")
       .range(from, from + PAGE_SIZE - 1)
       .throwOnError();
@@ -115,6 +115,7 @@ async function load(db: Db): Promise<Loaded> {
     const notes = (l.notes as { question: string; kind: ReviewNoteKind; text: string }[] | null) ?? [];
     return {
       id: l.legacy_code ?? `line-${l.line_id}`,
+      plantingEventId: l.planting_id,
       seasonSlug: season.slug,
       year: season.year,
       seasonName: season.name,

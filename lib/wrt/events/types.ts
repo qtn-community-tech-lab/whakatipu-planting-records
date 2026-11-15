@@ -33,6 +33,7 @@ export interface PlantingEventInput {
   partId: string | null;
   /** Planting date, ISO "YYYY-MM-DD" (a calendar day, no time zone). */
   plantedOn: string;
+  contextSeason?: string | undefined;
   /** Suggested from plantedOn (see season.ts) but the user can override it. */
   season: EventSeason;
   /** The year the season belongs to (December counts toward the next year's Summer). */

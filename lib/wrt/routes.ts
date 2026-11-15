@@ -13,13 +13,8 @@ export const hrefs = {
     const query = sp.toString();
     return query ? `/records?${query}` : "/records";
   },
-  /** The planting event page, at a site or one of its parts (its WRT number). */
-  newEvent: ({ site, part }: { site?: string; part?: string } = {}): `/events/new${"" | `?${string}`}` => {
-    const sp = new URLSearchParams();
-    for (const [key, value] of Object.entries({ site, part })) if (value) sp.set(key, value);
-    const query = sp.toString();
-    return query ? `/events/new?${query}` : "/events/new";
-  },
+  events: (context: EventContext = {}): `/events${"" | `?${string}`}` => eventHref("/events", context),
+  newEvent: (context: EventContext = {}): `/events/new${"" | `?${string}`}` => eventHref("/events/new", context),
 };
 
 /** Address of one part of a site, by its readable name. */
@@ -29,3 +24,16 @@ export function partHref(placeSlug: string, parcelName: string): `/sites/${strin
 
 /** Generated Next.js routes, including the dynamic paths our link builders return. */
 export type AppRoute = Route<ReturnType<(typeof hrefs)[keyof typeof hrefs]> | ReturnType<typeof partHref>>;
+
+export interface EventContext { site?: string | undefined; part?: string | undefined; season?: string | undefined; event?: number | undefined; returnTo?: string | undefined }
+function eventHref<T extends "/events" | "/events/new">(path: T, context: EventContext): `${T}${"" | `?${string}`}` {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(context)) if (value !== undefined && value !== "") query.set(key, String(value));
+  return `${path}${query.size ? `?${query}` : ""}` as `${T}${"" | `?${string}`}`;
+}
+export function eventReturn(value: unknown): { href: Route; label: string } {
+  if (value === "/") return { href: "/", label: "Return to Overview" };
+  if (typeof value !== "string" || !/^\/(?:records|sites|seasons)(?:[/?#]|$)/.test(value) || /[\\\r\n]/.test(value)) return { href: "/records", label: "Return to Records" };
+  const pathname = value.split(/[?#]/)[0]!;
+  return { href: value as Route, label: pathname === "/records" ? "Return to Records" : pathname.startsWith("/seasons") ? "Return to season" : pathname === "/sites" ? "Return to Sites" : "Return to site" };
+}

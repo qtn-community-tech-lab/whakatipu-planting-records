@@ -1,5 +1,7 @@
 import type { AppRoute } from "@/lib/wrt/routes";
 import type { Metadata } from "next";
+import { isAuthenticated } from "@/db/queries/access";
+import { hrefs } from "@/lib/wrt/routes";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -94,7 +96,6 @@ export default async function RecordsPage({ searchParams }: Props) {
   if (filter.species) hide.push("species");
   if (filter.year && filter.season) hide.push("season");
 
-
   // Pages that tell the bigger story behind this filter.
   const contextLinks: { href: AppRoute; kind: string; label: string }[] = [];
   if (selectedPart && selectedPlace) contextLinks.push({ href: partHref(selectedPlace.slug, selectedPart.name), kind: "Part of site", label: selectedPart.name });
@@ -103,6 +104,9 @@ export default async function RecordsPage({ searchParams }: Props) {
   const selectedSpecies = filter.species ? lookups.species.find((s) => s.slug === filter.species) : undefined;
   if (selectedSpecies) contextLinks.push({ href: `/species/${selectedSpecies.slug}`, kind: "Species", label: selectedSpecies.displayName });
 
+  const authenticated = await isAuthenticated();
+  const returnTo = recordsHref(view);
+  const context = { site: filter.place, part: filter.parcel, season: filter.year && filter.season ? `${filter.season.toLowerCase()}-${filter.year}` : undefined, returnTo };
   return (
     <>
       <PageHead
@@ -115,6 +119,18 @@ export default async function RecordsPage({ searchParams }: Props) {
         }
         eyebrow="Records"
         title={recordsHeadline(filter, split, lookups)}
+        aside={
+          <div className="flex flex-wrap items-center gap-2">
+            <Link className="cn-btn cn-btn--soft" href={hrefs.events(context)}>
+              View on map
+            </Link>
+            {authenticated && (
+              <Link className="cn-btn cn-btn--primary" href={hrefs.newEvent(context)}>
+                Record a planting
+              </Link>
+            )}
+          </div>
+        }
       />
 
       {total > 0 && (
@@ -214,7 +230,7 @@ export default async function RecordsPage({ searchParams }: Props) {
             <div className="px-2.5 pb-2">
               <SortLinks view={view} />
             </div>
-            <RecordsTable
+            <RecordsTable returnTo={returnTo}
               rows={pageRows}
               hide={hide}
               focusTheme={filter.theme}

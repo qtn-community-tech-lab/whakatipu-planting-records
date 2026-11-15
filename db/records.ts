@@ -56,6 +56,7 @@ export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "phot
   return {
     season, species, place,
     record: {
+      plantingEventId: r.planting_id,
       id: r.legacy_code ?? `line-${r.line_id}`, seasonSlug: season.slug, year: season.year, seasonName: season.name,
       placeSlug: place.slug, parcelId: r.area!, parcelName: r.area_name!, siteClass, speciesId: species.id,
       quantity: r.quantity ?? 0, hasQuantity: r.quantity !== null,

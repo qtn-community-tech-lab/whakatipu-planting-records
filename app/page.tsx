@@ -48,6 +48,11 @@ export default async function Home() {
 
   return (
     <>
+      <div className="flex flex-wrap justify-end gap-2">
+        <Link className="cn-btn cn-btn--primary" href={hrefs.newEvent({ returnTo: "/" })}>
+          Record a planting
+        </Link>
+      </div>
       <OverviewHero
         split={split}
         eyebrow={`${o.firstSeason.label} → ${o.lastSeason.label} · ${o.seasons.length} planting seasons`}

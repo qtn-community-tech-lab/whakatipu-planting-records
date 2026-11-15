@@ -1,4 +1,4 @@
-import { Children, isValidElement, type ReactElement } from "react";
+import { Children, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { q } from "./helpers";
@@ -149,12 +149,27 @@ it("opens a site's detail and metadata before any planting history exists", asyn
 });
 
 async function deactivationAction() {
-  const page = await SitePage({ params, searchParams });
-  const control = Children.toArray(page.props.children).find((child): child is ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> =>
-    isValidElement(child) && child.type === DeactivateSite);
+  const page = await EditSitePage({ params, searchParams });
+  function findControl(children: ReactNode): ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> | undefined {
+    for (const child of Children.toArray(children)) {
+      if (!isValidElement<{ children?: ReactNode; aside?: ReactNode }>(child)) continue;
+      if (child.type === DeactivateSite) return child as ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }>;
+      const nested = findControl(child.props.children) ?? findControl(child.props.aside);
+      if (nested) return nested;
+    }
+    return undefined;
+  }
+  const control = findControl(page.props.children);
   if (!control) throw new Error("Missing deactivation control");
   return control.props.onDeactivate;
 }
+
+it("offers deactivation only in the authenticated edit page", async () => {
+  expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Deactivate site");
+  expect(renderToStaticMarkup(await EditSitePage({ params, searchParams }))).toContain("Deactivate site");
+  mocks.authenticated.mockResolvedValue(false);
+  expect(renderToStaticMarkup(await EditSitePage({ params, searchParams }))).not.toContain("Deactivate site");
+});
 
 it("deactivates the captured site and refreshes shared reads before redirecting", async () => {
   await expect((await deactivationAction())()).rejects.toThrow("REDIRECT");

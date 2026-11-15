@@ -26,6 +26,7 @@ const formSchema = (lookups: EventLookups, today: string, newSite: boolean) => z
   partId: z.string().nullable(),
   plantedOn: z.string(),
   species: z.array(z.object({ speciesId: z.string(), quantity: z.string(), area: z.number().optional() })),
+  contextSeason: z.string().optional(),
   notes: z.string(),
 }).transform((v): unknown => ({
   ...v,
@@ -59,7 +60,7 @@ export const plantsIn = (lines: Line[], id: number | undefined) => lines.reduce(
 const focusSoon = (pick: () => HTMLElement | null | undefined) => requestAnimationFrame(() => pick()?.focus());
 
 export function useEventForm({
-  options, today, formRef, headingRef, initialSite = "", initialPart = null, newSite = false, save,
+  options, today, formRef, headingRef, initialSite = "", initialPart = null, initialSeason, newSite = false, save,
 }: {
   options: EventFormOptions;
   /** NZ today, "YYYY-MM-DD" (from the server so it matches the validator). */
@@ -70,6 +71,7 @@ export function useEventForm({
   headingRef: RefObject<HTMLHeadingElement | null>;
   /** Site slug to start on, e.g. when the form opens from the map at a site. */
   initialSite?: string;
+  initialSeason?: string | undefined;
   /** The part of that site to start on (its id), or null for the site as a whole. */
   initialPart?: string | null | undefined;
   /** A new location has been dropped: with no site chosen, it is a new site of its own (NEW_SITE). */
@@ -85,9 +87,10 @@ export function useEventForm({
   const schema = useMemo(() => formSchema(lookups, today, newSite), [lookups, today, newSite]);
   const form = useForm<FormValues, unknown, PlantingEventInput>({
     resolver: zodResolver(schema), mode: "onSubmit", reValidateMode: "onChange", shouldFocusError: false,
-    defaultValues: { siteSlug: initialSite, partId: initialPart, plantedOn: today, species: [], notes: "" },
+    defaultValues: { siteSlug: initialSite, partId: initialPart, plantedOn: !initialSeason || `${seasonFromDate(today)?.season.toLowerCase()}-${seasonFromDate(today)?.seasonYear}` === initialSeason ? today : "", contextSeason: initialSeason, species: [], notes: "" },
   });
   const { control, formState } = form;
+  const contextSeason = useWatch({ control, name: "contextSeason" });
   const lines = useFieldArray({ control, name: "species" });
   const [siteSlug, partId, plantedOn, species, notes] = useWatch({ control, name: ["siteSlug", "partId", "plantedOn", "species", "notes"] });
 
@@ -134,6 +137,9 @@ export function useEventForm({
   }
 
   return {
+    contextSeason: contextSeason,
+    changeSeason() { form.setValue("contextSeason", undefined); },
+    savedPlantingEvent,
     control, errors: formState.errors, problemAsk, notes,
     site: options.sites.find((s) => s.slug === siteSlug),
     siteSlug, partId,
@@ -166,7 +172,7 @@ export function useEventForm({
     },
 
     /** The checked event for "Check and submit", or null while something needs fixing. */
-    checkedEvent: schema.safeParse({ siteSlug, partId, plantedOn, species, notes }).data ?? null,
+    checkedEvent: schema.safeParse({ siteSlug, partId, plantedOn, species, notes, contextSeason: contextSeason }).data ?? null,
     preview,
     /** Saving now; the general save failure (shown by Submit); true once the event and its plants are saved. */
     saving: formState.isSubmitting, saveError, saved: !!save && preview !== null,
