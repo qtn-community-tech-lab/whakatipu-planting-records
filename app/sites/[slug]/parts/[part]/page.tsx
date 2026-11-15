@@ -78,6 +78,11 @@ export default async function PartPage({ params }: Props) {
 
   return (
     <>
+      {authenticated && site && !site.deactivated_at && (
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button asChild variant="secondary"><Link href={hrefs.newEvent({ site: place.slug, part: parcel.id })}>Add planting event</Link></Button>
+        </div>
+      )}
       <PageHead
         back={{ href: hrefs.place(place.slug), label: place.name }}
         eyebrow={`Part of ${place.name} · ${spanText} · ${span.seasonsActive} ${span.seasonsActive === 1 ? "season" : "seasons"}`}

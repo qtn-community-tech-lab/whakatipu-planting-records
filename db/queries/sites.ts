@@ -1,7 +1,7 @@
 /** Sites and their areas. */
 import { db } from "@/db/client";
-import { areaPins, areaTotals, siteTotals } from "./views";
 import type { CreateSiteInput, EditSiteInput, CreatePlantingAreaInput, EditPlantingAreaInput } from "@/db/types";
+import { areaPins, areaTotals, siteAreaSeasons, siteAreaSpecies, siteTotals } from "./views";
 
 /** The register by lifecycle state, including sites without planting history. */
 export async function listSites(state: "active" | "deactivated" = "active") {
@@ -44,11 +44,11 @@ export async function updateSite(slug: string, values: EditSiteInput) {
     .single();
 }
 
-/** The complete active area register, including areas awaiting their first planting. */
+/** A site's active areas, by name: to list and edit them, and (by WRT number) to save a planting event against one. */
 export async function listPlantingAreas(site: string) {
   const { data } = await (await db())
     .from("areas")
-    .select("slug, site, name, description, updated_at")
+    .select("slug, site, name, description, updated_at, wrt_number")
     .eq("site", site)
     .is("deactivated_at", null)
     .order("name")
@@ -117,4 +117,33 @@ export async function deactivateSite(slug: string) {
     .eq("slug", slug)
     .select("slug")
     .single();
+}
+
+/** A site's `limit` most planted species, or one area's (by WRT number). */
+export async function listSiteSpecies(site: string, wrtNumber: string | null, limit: number) {
+  const query = siteAreaSpecies(await db())
+    .eq("site", site)
+    .lte("rank", limit);
+  const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query.is("area", null)).throwOnError();
+  return data;
+}
+
+/** A site's `limit` most recent seasons with plants, or one area's (by WRT number), newest first. */
+export async function listSiteSeasons(site: string, wrtNumber: string | null, limit: number) {
+  const query = siteAreaSeasons(await db())
+    .eq("site", site)
+    .gt("plants", 0)
+    .limit(limit);
+  const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query.is("area", null)).throwOnError();
+  return data;
+}
+
+/** Each of a site's areas with plants in a season: a row per area and season, for counting the sites planted each season. */
+export async function listPlantingAreaSeasons(site: string) {
+  const { data } = await siteAreaSeasons(await db())
+    .eq("site", site)
+    .not("area", "is", null)
+    .gt("plants", 0)
+    .throwOnError();
+  return data;
 }

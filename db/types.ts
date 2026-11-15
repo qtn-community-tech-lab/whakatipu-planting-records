@@ -6,6 +6,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables } from "./database.types";
 import { z } from "zod";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
+import { isIsoDate } from "@/lib/wrt/events/season";
 
 export type { Database, Tables };
 export type Db = SupabaseClient<Database>;
@@ -65,17 +66,43 @@ export const createSiteSchema = editSiteSchema.extend({
   areas: z.array(createPlantingAreaSchema).superRefine(uniqueAreaSlugs),
 });
 
+export type CreatePlantingAreaInput = z.infer<typeof createPlantingAreaSchema>;
+export type EditPlantingAreaInput = z.infer<typeof editPlantingAreaSchema>;
+export type PlantingAreaFormValues = z.infer<typeof plantingAreaFormSchema>;
+export type PlantingAreaEdit = Pick<Tables<"areas">, "slug" | "site" | "name" | "description" | "updated_at">;
+
 export type CreateSiteInput = z.infer<typeof createSiteSchema>;
 export type EditSiteInput = z.infer<typeof editSiteSchema>;
 export type SiteEdit = Pick<Tables<"sites">, "slug" | "name" | "description" | "updated_at">;
+
 export type SiteSubmitResult = {
   error?: string;
   issues?: { path: string; message: string }[];
   savedAreas?: { index: number; slug: string }[];
   savedSiteSlug?: string;
 };
+/** A planting event's save: `savedPlantingEvent` once the event row exists, even if its plants failed (sent back on retry). */
+export type PlantingEventSubmitResult = { error?: string; issues?: { path: string; message: string }[]; savedPlantingEvent?: number };
 
-export type CreatePlantingAreaInput = z.infer<typeof createPlantingAreaSchema>;
-export type EditPlantingAreaInput = z.infer<typeof editPlantingAreaSchema>;
-export type PlantingAreaFormValues = z.infer<typeof plantingAreaFormSchema>;
-export type PlantingAreaEdit = Pick<Tables<"areas">, "slug" | "site" | "name" | "description" | "updated_at">;
+/**
+ * A past planting event's writable fields, as its edit form sends them. A line's `id` is its
+ * planting_lines id, or null for a species added in the form; `species` is the event form's species
+ * id (the register code, or the slug when there is none). Lines left out are deactivated. The date
+ * is checked against the event's season separately.
+ */
+export const plantingEventEditSchema = z.object({
+  plantedOn: z.string().refine(isIsoDate, "Enter a real date.").nullable(),
+  notes,
+  lines: z.array(z.object({
+    id: z.number().int().positive().nullable(),
+    species: identifier.min(1, "Choose a species."),
+    quantity: z.number({ error: "Enter how many were planted." })
+      .int("Use a whole number.")
+      .min(1, "Must be at least 1.")
+      .max(100_000, "At most 100,000 per species."),
+  })).min(1, "Keep at least one species.").max(200)
+    .refine((lines) => new Set(lines.map((l) => l.species)).size === lines.length, "Each species can only be listed once."),
+});
+
+export type PlantingEventEdit = z.infer<typeof plantingEventEditSchema>;
+export type PlantingEventEditResult = { error?: string; issues?: { path: string; message: string }[] };

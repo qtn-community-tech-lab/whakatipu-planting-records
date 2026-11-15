@@ -1,0 +1,133 @@
+/* Drawing the planted area: the shape over the map, and the bar along the bottom. */
+
+/* the shape, over the map and under the header and bar */
+/* touch-action on the svg too, not just its corners: phones honour it on boxes more reliably than on SVG parts.
+   Only corners and + handles take touches (the rest lets them through to the map), so the map still pans. */
+.overlay { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; overflow: visible; touch-action: none; }
+.shape, .shapeClosed { fill: none; stroke: var(--cn-lime-300); stroke-width: 2.5; stroke-linejoin: round; }
+.shapeClosed { fill: rgba(214, 234, 140, 0.3); }
+/* the area whose plants are being entered: the map round it darkens a little, the others fade */
+.dim { fill: rgba(8, 16, 11, 0.42); transition: opacity 200ms ease; }
+.focused .kept { fill: rgba(214, 234, 140, 0.16); stroke-width: 3; }
+.faded { opacity: 0.45; }
+/* a kept area's name on the map, under its number */
+.nameLabel { fill: var(--cn-white); stroke: rgba(8, 16, 11, 0.85); stroke-width: 3.5px; paint-order: stroke; font: 700 12.5px var(--font-sans); text-anchor: middle; dominant-baseline: hanging; }
+/* naming the shape, above the pill once it's closed */
+.nameField {
+  width: min(100%, 640px); box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 16px; border-radius: var(--radius-card);
+  background: rgba(21, 38, 28, 0.92); color: var(--cn-lime-300); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.nameField input { flex: 1; min-width: 0; min-height: 44px; border: 0; background: none; outline: none; color: var(--text-on-dark); font: 600 16px var(--font-sans); }
+.nameField input::placeholder { color: rgba(243, 246, 238, 0.6); }
+/* no name yet: a lime ring that draws the eye, since Done waits on it */
+.nameField[data-missing] { box-shadow: inset 0 0 0 1.5px rgba(214, 234, 140, 0.7), 0 8px 24px rgba(0, 0, 0, 0.3); }
+.nameField:focus-within { box-shadow: 0 0 0 2px var(--cn-lime-300), 0 8px 24px rgba(0, 0, 0, 0.3); }
+
+/* kept areas, not being drawn: a quieter outline, numbered when there are several */
+.kept { fill: rgba(214, 234, 140, 0.22); stroke: var(--cn-lime-300); stroke-width: 2; stroke-linejoin: round; }
+.badge { fill: var(--cn-green-900); stroke: var(--cn-lime-300); stroke-width: 2; }
+.badgeText { fill: var(--text-on-dark); font: 800 13px var(--font-sans); text-anchor: middle; dominant-baseline: central; }
+.preview { fill: rgba(214, 234, 140, 0.14); }
+.ghost { fill: none; stroke: var(--cn-lime-300); stroke-width: 1.8; stroke-dasharray: 6 6; }
+.trace { fill: none; stroke: var(--cn-lime-300); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
+.hit { fill: transparent; }
+.corner, .cornerClose, .mid { cursor: grab; touch-action: none; }
+/* The overlay lets taps through to the map; the + handles take them back (corners do it inline). */
+.mid { pointer-events: auto; }
+.corner:active, .mid:active { cursor: grabbing; }
+.dot { fill: var(--cn-green-900); stroke: var(--cn-white); stroke-width: 2.6; }
+.corner:active .dot { fill: var(--cn-white); stroke: var(--cn-green-900); }
+/* the first corner, once tapping it closes the shape: lime, with a ring that pulses */
+.cornerClose { cursor: pointer; }
+.cornerClose .dot { fill: var(--cn-lime-300); stroke: var(--cn-green-900); }
+.ring { fill: none; stroke: var(--cn-lime-300); stroke-width: 2.4; transform-box: fill-box; transform-origin: center; animation: ring 1.4s ease-out infinite; }
+@keyframes ring { from { transform: scale(0.7); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+.midDot { fill: rgba(255, 255, 255, 0.92); stroke: var(--cn-green-900); stroke-width: 1.6; }
+.plus { stroke: var(--cn-green-900); stroke-width: 2; }
+
+/* the bar: centred at the bottom of the map you can see (beside the desktop panel, above the phone sheet) */
+.bar {
+  position: absolute; z-index: 3; left: 12px; right: 12px; bottom: calc(24px + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column-reverse; align-items: center; gap: 8px; pointer-events: none;
+  /* the pill stacks by the room the bar has, not the screen's width: beside the desktop panel it can be as narrow as a phone */
+  container-type: inline-size;
+}
+.bar > * { pointer-events: auto; }
+@media (min-width: 768px) { .bar { left: 584px; right: 12px; } }
+
+.dock, .pill, .methods {
+  background: rgba(21, 38, 28, 0.92); color: var(--text-on-dark); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+/* read out, not shown */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* the dock: the site's part (a menu of its parts), the areas, and the pencil that draws one.
+   With an area brought forward it turns into a stepper through the areas. */
+.dock { width: min(100%, 420px); box-sizing: border-box; display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: var(--radius-panel); }
+.dock button, .pill button, .actions button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; flex-shrink: 0;
+  min-height: 44px; min-width: 44px; padding: 0 14px; border: 0; border-radius: var(--radius-pill);
+  background: rgba(243, 246, 238, 0.14); color: var(--text-on-dark); font: 600 14px var(--font-sans); white-space: nowrap; cursor: pointer;
+}
+@media (hover: hover) { .dock button:hover:enabled, .pillBtn:hover:enabled, .pillCancel:hover { background: rgba(243, 246, 238, 0.24); } }
+.dock button:disabled { opacity: 0.45; cursor: default; }
+.dock svg, .actions svg { flex-shrink: 0; color: var(--cn-lime-300); }
+.dock b { font-variant-numeric: tabular-nums; }
+.areaText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+.areaText b, .areaText small { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.areaText small { font: 500 11.5px var(--font-sans); color: rgba(243, 246, 238, 0.7); }
+/* the part: takes the room that's left; its chevron sits at the far end */
+.dock .partBtn { flex: 1; min-width: 0; justify-content: flex-start; padding: 0 10px 0 12px; }
+.partBtn > svg:last-child { margin-left: auto; color: inherit; opacity: 0.8; transition: transform 150ms ease; }
+/* its menu (or the chooser) open: the chevron points down, towards the button */
+.partBtn:is([data-state="open"], [aria-expanded="true"]) > svg:last-child { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .partBtn > svg:last-child { transition: none; } }
+/* areas with no site yet: the warm warning colour */
+.dock .partBtn[data-missing] { background: #fdf3e2; color: #6b4300; }
+.partBtn[data-missing] svg { color: inherit; }
+/* the pencil: draw an area, in lime */
+.dock .addBtn { padding: 0; background: var(--cn-lime-300); color: var(--cn-green-900); }
+.dock .addBtn svg { color: inherit; }
+@media (hover: hover) { .dock .addBtn:hover { background: var(--cn-lime-400); } }
+/* the stepper: the area in lime between back and next, then a way out */
+.dock .areaBtn { flex: 1; min-width: 0; justify-content: flex-start; padding: 0 14px 0 6px; background: var(--cn-lime-300); color: var(--cn-green-900); }
+.dock .areaBtn small { color: rgba(21, 38, 28, 0.75); }
+@media (hover: hover) { .dock .areaBtn:hover:enabled { background: var(--cn-lime-400); } }
+.dock .stepBtn { padding: 0; background: none; }
+.dock .stepBtn svg { color: inherit; }
+.dock .closeBtn { padding: 0; }
+.dock .closeBtn svg { color: inherit; }
+/* above the stepper: what to do with the area in view */
+.actions { display: flex; gap: 6px; }
+.actions button { background: rgba(21, 38, 28, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); font-size: 13.5px; }
+@media (hover: hover) { .actions button:hover { background: var(--cn-green-800); } }
+.actions button:focus-visible { outline: 3px solid var(--cn-lime-300); outline-offset: 2px; }
+/* Remove: a warm red that still reads on the dark bar */
+.pill .danger { color: #ffb4a6; }
+@media (hover: hover) { .pill .danger:hover { background: rgba(255, 140, 120, 0.18); } }
+
+/* drawing: the guided pill. One row with room; in a narrow bar (phones, a small window) the step reads on top and the buttons sit under it. */
+.pill { width: min(100%, 640px); box-sizing: border-box; display: flex; align-items: center; gap: 6px; padding: 6px 6px 6px 18px; border-radius: var(--radius-dialog); }
+.msg { flex: 1; min-width: 0; font: 600 14px/1.35 var(--font-sans); }
+.num { color: var(--cn-lime-300); font-variant-numeric: tabular-nums; }
+.pillButtons { display: flex; align-items: center; gap: 6px; }
+.pill button:disabled { opacity: 0.45; cursor: default; }
+.pillCancel { padding: 0 !important; }
+.pill .pillGo { background: var(--cn-lime-300); color: var(--cn-green-900); padding: 0 18px; }
+.dock button:focus-visible, .pill button:focus-visible, .methods button:focus-visible { outline: 3px solid var(--cn-lime-300); outline-offset: 2px; }
+
+/* before the first corner: tap corners or trace */
+.methods { display: inline-flex; gap: 2px; padding: 4px; border-radius: var(--radius-pill); }
+.methods button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: none; color: inherit; font: 600 13.5px var(--font-sans); cursor: pointer; }
+.methods button[aria-pressed="true"] { background: var(--cn-lime-300); color: var(--cn-green-900); }
+
+@container (max-width: 559px) {
+  .pill { flex-direction: column; align-items: stretch; gap: 8px; padding: 12px 8px 8px; border-radius: var(--radius-banner); }
+  .msg { padding: 0 8px; font-size: 14px; }
+  .pillButtons { justify-content: space-between; }
+  .pill .pillGo { flex: 1; }
+  .pill button { padding: 0 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
