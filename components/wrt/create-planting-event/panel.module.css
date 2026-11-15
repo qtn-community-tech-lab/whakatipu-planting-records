@@ -1,0 +1,62 @@
+/* What Tailwind can't do neatly for the panel's screens: the slide when a screen changes (keyframes), and the
+   pieces whose look depends on something around them (a plant row and its quantity box, the where-and-when
+   card and its tiles). Everything else is Tailwind: shared strings in panel-classes.ts, one-offs inline. */
+
+/* A page change: the new page slides in a little from the side it comes from and fades up. Short, no bounce.
+   Forward from the right; back from the left (the form after its receipt). */
+.slideIn { animation: slide-in 240ms var(--ease) both; }
+.slideBack { animation: slide-back 240ms var(--ease) both; }
+@keyframes slide-in { from { opacity: 0; transform: translateX(18px); } }
+@keyframes slide-back { from { opacity: 0; transform: translateX(-18px); } }
+@media (prefers-reduced-motion: reduce) { .slideIn, .slideBack { animation: none; } }
+/* No side padding: rows line up with the search and the headings. A picked row's tint
+   spreads outward (box-shadow), so it reads as a margin round the row, not padding inside it. */
+.row { padding: 4px 0; border-bottom: 1px solid var(--border-card); border-radius: var(--radius-hairline); transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.row[data-picked] { background: var(--surface-picked); box-shadow: -8px 0 0 var(--surface-picked), 8px 0 0 var(--surface-picked); }
+.row[data-invalid] { background: var(--surface-risk); box-shadow: -8px 0 0 var(--surface-risk), 8px 0 0 var(--surface-risk); }
+.rowQty {
+  flex-shrink: 0; width: 92px; min-height: 44px; box-sizing: border-box; border-radius: var(--radius-row); border: var(--border-input);
+  background: var(--surface-card); padding: 0 6px; text-align: center;
+  font: 700 16px var(--font-sans); color: var(--text-strong); font-variant-numeric: tabular-nums;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.rowQty:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 1px; }
+/* Nothing typed yet: a soft chip with a green +, not a box in every row. Focused, filled or with a
+   problem it is the white box again. The border stays (transparent), so nothing moves. */
+.row:not([data-invalid]) .rowQty:placeholder-shown:not(:focus) { background: var(--surface-soft); border-color: transparent; }
+@media (hover: hover) { .row:not([data-invalid]) .rowQty:placeholder-shown:not(:focus):hover { background: var(--surface-tint); } }
+.rowQty::placeholder { font-size: 20px; color: var(--cn-green-800); opacity: 1; }
+.rowQty:focus::placeholder { color: transparent; }
+.row[data-picked] .rowQty { border-color: var(--cn-green-800); }
+.row[data-invalid] .rowQty { border-color: var(--text-risk); }
+/* The species list's ListRow: the count planted here before is context, so quieter. */
+.row [data-slot="figure"] { width: 64px; font-size: 13px; font-weight: 500; color: var(--text-muted); }
+/* narrow (a phone): that count is hidden */
+@container (max-width: 380px) {
+  .row [data-slot="figure"] { display: none; }
+  .rowQty { width: 84px; }
+}
+.problem { margin: 0; padding: 10px 12px; border-radius: var(--radius-row); background: var(--surface-risk); font: 600 13.5px/1.35 var(--font-sans); color: var(--text-risk); }
+/* where and when: tiles you tap to change, side by side */
+.picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.picks > section { min-width: 0; }
+.pick { width: 100%; min-height: 56px; display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--border-card); border-radius: var(--radius-field); background: var(--surface-card); color: var(--cn-green-800); text-align: left; font: inherit; cursor: pointer; }
+.pick > svg { flex-shrink: 0; }
+.pick > span { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.pick b { font: 700 14.5px/1.25 var(--font-sans); color: var(--text-strong); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick small { font: 500 12.5px/1.3 var(--font-sans); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (hover: hover) { .pick:hover:enabled { border-color: var(--cn-green-600); } }
+.pick:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.pick[aria-invalid="true"] { border-color: #b42318; }
+/* the whole date row opens the calendar, not just its Change */
+/* With a site: the map and the two tiles in one card, the map as its top edge and hairlines between */
+.whereCard { flex-shrink: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-card); border-radius: var(--radius-tile-lg); background: var(--surface-card); }
+.whereCard > :first-child:not(.picks) { border-radius: 0; } /* the map: the card rounds its top corners */
+.whereCard > * + .picks { border-top: 1px solid var(--border-card); }
+.whereCard .picks { gap: 0; }
+.whereCard .picks > * + * { border-left: 1px solid var(--border-card); }
+.whereCard .pick { min-height: 60px; border: 0; border-radius: 0; }
+@media (hover: hover) { .whereCard .pick:hover:enabled { background: var(--surface-hover); } }
+.whereCard .pick:focus-visible { outline-offset: -2px; } /* inside the card's edge, which clips */
+.whereCard .pick[aria-invalid="true"] { background: var(--surface-risk); }
+.whereCard .problem { margin: 0 8px 8px; }

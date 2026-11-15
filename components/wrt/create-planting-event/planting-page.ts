@@ -1,9 +1,12 @@
 /**
- * Where you are on the planting event page, as one state: what's over the panel's own page, and where the
- * phone sheet sits. Each way of moving about is one action.
+ * Where you are on the planting event page, as one state: what's over the panel's own page, whether the form is
+ * open, and where the phone sheet sits. Each way of moving about is one action.
  *
  * `over` is a back stack of what covers the page: the site list, which keeps where the sheet was for its Back, so
  * closing it is a pop. Starting most things clears the stack.
+ *
+ * The form (`started`) isn't on the stack: it outlives what's over it, so the form and its entries stay through
+ * the list and back.
  */
 import type { Snap } from "@/components/wrt/shared/form-panel";
 
@@ -11,13 +14,15 @@ export type Over = { kind: "list"; snap: Snap };
 
 export interface PageState {
   over: Over[];
+  /** The form is open (or its entries kept, under the list). */
+  started: boolean;
   snap: Snap;
   /** Phones' Search: the site list with its search box focused (each tap asks again). */
   searchAsk: number;
 }
 
 // Phones start with the sheet at its bar, so the map shows first.
-export const initialPage: PageState = { over: [], snap: "peek", searchAsk: 0 };
+export const initialPage: PageState = { over: [], started: false, snap: "peek", searchAsk: 0 };
 
 export type PageAction =
   | { type: "snap"; to: Snap }
@@ -28,6 +33,9 @@ export type PageAction =
   | { type: "closeOver" }
   | { type: "endModes"; snap: Snap }
   | { type: "showSite"; wide: boolean }
+  | { type: "startForm" }
+  | { type: "afterSave" }
+  | { type: "formBack" }
   | { type: "leave" };
 
 export const topOf = (s: PageState) => s.over[s.over.length - 1];
@@ -62,7 +70,9 @@ export function pageReducer(s: PageState, a: PageAction): PageState {
     case "endModes": return { ...s, over: [], snap: a.snap };
     // Up to the site as a whole: the list closes as its Back does.
     case "showSite": return { ...(top?.kind === "list" ? closeList(s, a.wide, true) : s), over: [] };
-    // Back to every site.
-    case "leave": return { ...s, over: [], searchAsk: 0, snap: "mid" };
+    case "startForm": return { ...s, over: [], started: true };
+    case "afterSave": return { ...s, started: false };
+    case "formBack": return { ...s, started: false };
+    case "leave": return { ...s, over: [], searchAsk: 0, started: false, snap: "mid" };
   }
 }

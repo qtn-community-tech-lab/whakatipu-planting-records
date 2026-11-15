@@ -20,7 +20,7 @@ const input: PlantingEventInput = {
 };
 
 describe("describeEvent", () => {
-  it("describes an event in names, with the site as a whole when no part is chosen", () => {
+  it("describes an event in names, with the whole site when no part is chosen", () => {
     const s = describeEvent(input, options);
     expect(s).toMatchObject({ site: "Lake Hayes", part: WHOLE_SITE, date: "Wed 7 Oct 2026", season: "Spring 2026", total: 150 });
     expect(s.species[0]).toEqual({ name: "Kōwhai", quantity: 120 });

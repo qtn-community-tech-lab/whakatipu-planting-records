@@ -4,7 +4,7 @@ import { PartMenu } from "../site/part-menu";
 import s from "./navigator.module.css";
 
 /** Where you are, at the top of the wide panel once a site is chosen: All sites › the site › its part (a menu). */
-export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, onChoosePart, onOtherSite }: {
+export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, onChoosePart, onOtherSite, partsLocked, bare }: {
   /** None yet: no trail (the panel is All sites, and its heading says so). */
   siteName?: string | undefined;
   parts: { id: string; name: string }[];
@@ -15,8 +15,12 @@ export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, on
   onChoosePart: (id: string | null) => void;
   /** The part menu's Another site (the site list). */
   onOtherSite: () => void;
+  /** No part menu: the place can't change now. */
+  partsLocked?: boolean | undefined;
+  /** No site, and not at All sites (the form open without one): only the way back to All sites. */
+  bare?: boolean | undefined;
 }) {
-  if (!siteName) return null;
+  if (!siteName) return bare ? <nav className={s.crumbs} aria-label="Where you are"><button type="button" onClick={onAllSites}>All sites</button></nav> : null;
   const sep = <ChevronRight size={14} strokeWidth={2.4} aria-hidden="true" />;
   return (
     <nav className={s.crumbs} aria-label="Where you are">
@@ -26,14 +30,14 @@ export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, on
         <span>{siteName}</span>
       </button>
       {/* Every site has the menu: its parts (a site with none is only ever the whole site) and Another site. */}
-      {sep}
-      <PartMenu
+      {!partsLocked && sep}
+      {!partsLocked && <PartMenu
         siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onOtherSite={onOtherSite}
         side="bottom" className={s.partCrumb} label={`${partName ?? "Whole site"}: change the part`}
       >
         <span>{partName ?? "Whole site"}</span>
         <ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" />
-      </PartMenu>
+      </PartMenu>}
     </nav>
   );
 }

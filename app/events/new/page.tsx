@@ -5,17 +5,19 @@ import { listSeasons } from "@/db/queries/plantings";
 import { listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
+import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
 
 /**
- * /events/new — the planting event page. The map fills the screen with a pin for every
- * site, and a panel over it lists the sites and shows the chosen one's plantings: on the
- * left on wide screens, a drawer from the bottom on phones. `?site=<slug>` starts at
+ * /events/new — recording a planting on site. The
+ * map fills the screen with a pin for every site, and the planting-event form
+ * (one page: where and when, then what was planted) opens over it: a panel on the left on
+ * wide screens, a drawer from the bottom on phones. `?site=<slug>` starts at
  * that site and `&part=<wrt number>` at that part of it; the address follows both, for bookmarks.
  * Other pages link here with `hrefs.newEvent` (lib/wrt/routes.ts).
  */
 export const metadata: Metadata = {
   title: "New planting event",
-  description: "Every site on a map, with what has been planted at each.",
+  description: "Record a planting on the map: the site and part, the date and season, and each species planted.",
 };
 
 // The status bar in the header's green (the bottom bar takes the page's white); on Android the
@@ -26,8 +28,8 @@ type Props = { searchParams: Promise<{ site?: string | string[]; part?: string |
 
 export default async function Page({ searchParams }: Props) {
   await connection(); // "today" is per request
-  const [options, sites, areas, pins, { site, part }, seasons] = await Promise.all([
-    eventFormOptions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, listSeasons(),
+  const [options, suggestions, sites, areas, pins, { site, part }, seasons] = await Promise.all([
+    eventFormOptions(), siteSpeciesSuggestions(), listSiteTotals(), listPlantingAreaTotals(), listPlantingAreaPins(), searchParams, listSeasons(),
   ]);
   // Plants and species recorded at each site ("slug") and each part ("slug/wrt number"), for the site chooser.
   const totals: PlantTotals = {};
@@ -42,7 +44,8 @@ export default async function Page({ searchParams }: Props) {
   const initialPart = typeof part === "string" && options.sites.find((x) => x.slug === initialSite)?.parts.some((p) => p.id === part) ? part : undefined;
   return (
     <CreatePlantingEvent
-      initialSite={initialSite} initialPart={initialPart} options={options} today={todayInNz()} exitHref="/sites" totals={totals} areas={pins ?? []}
+      initialSite={initialSite} initialPart={initialPart} options={options} today={todayInNz()} exitHref="/sites" suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );
 }
+
