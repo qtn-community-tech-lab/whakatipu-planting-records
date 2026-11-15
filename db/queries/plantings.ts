@@ -34,7 +34,7 @@ export async function listSiteSeasonPlantingLines(site: string, season: string, 
     .select("line_id, planting_id, area_name, wrt_number, planted_on, source, species, register_code, scientific_name, common_name, maori_name, quantity")
     .eq("site", site)
     .eq("season", season);
-  const { data } = await (wrtNumber ? query.eq("wrt_number", wrtNumber) : query)
+  const { data } = await (wrtNumber ? query.or(`wrt_number.eq.${JSON.stringify(wrtNumber)},area.eq.${JSON.stringify(wrtNumber)}`) : query)
     .order("area_name")
     .order("quantity", { ascending: false })
     .throwOnError();
@@ -149,4 +149,15 @@ export async function deactivatePlantingLines(plantingEvent: number, ids: number
     .update({ deactivated_at: new Date().toISOString() })
     .in("id", ids)
     .eq("planting_event", plantingEvent);
+}
+
+/** Resolve a planting event's location and season for a deep link. */
+export async function readPlantingEvent(id: number) {
+  const { data } = await (await db())
+    .from("planting_events")
+    .select("id, areas(slug, site, wrt_number), seasons(slug, label)")
+    .eq("id", id)
+    .maybeSingle()
+    .throwOnError();
+  return data;
 }

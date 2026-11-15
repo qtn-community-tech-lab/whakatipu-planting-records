@@ -79,22 +79,24 @@ export default async function PartPage({ params }: Props) {
 
   return (
     <>
-      {authenticated && site && !site.deactivated_at && (
-        <div className="flex flex-wrap justify-end gap-2">
-          <Button asChild variant="secondary"><Link href={hrefs.newEvent({ site: place.slug, part: parcel.id })}>Add planting event</Link></Button>
-        </div>
-      )}
       <PageHead
         back={{ href: hrefs.place(place.slug), label: place.name }}
         eyebrow={`Part of ${place.name} · ${spanText} · ${span.seasonsActive} ${span.seasonsActive === 1 ? "season" : "seasons"}`}
         title={`${formatNumber(split.total)} recorded plants at ${parcel.name}`}
         lead={`${area.description ? `${area.description} ` : ""}${formatNumber(speciesCount)} species on ${formatNumber(split.records)} record${split.records === 1 ? "" : "s"}. No. ${at + 1} of ${d.parcels.length} parts of ${place.name} by recorded plants.`}
         aside={
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {editButton}
             <Link href={recordsFor()} className="cn-btn cn-btn--soft cn-btn--sm !no-underline">
               All {formatNumber(split.records)} records →
             </Link>
+            {authenticated && site && !site.deactivated_at && (
+              <Button asChild variant="primary">
+                <Link href={hrefs.newEvent({ site: place.slug, part: parcel.id, returnTo: partHref(place.slug, parcel.slug) })}>
+                  Record a planting
+                </Link>
+              </Button>
+            )}
           </div>
         }
       />

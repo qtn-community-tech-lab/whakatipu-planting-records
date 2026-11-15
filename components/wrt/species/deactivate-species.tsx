@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useId, useRef, useState, type ReactNode } from "react";
+import { useActionState, useId, useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { SpeciesSubmitResult } from "@/db/types";
@@ -8,31 +8,26 @@ import type { SpeciesSubmitResult } from "@/db/types";
 export function DeactivateSpecies({
   name,
   onDeactivate,
-  children,
 }: {
   name: string;
   onDeactivate: () => Promise<SpeciesSubmitResult>;
-  children?: ReactNode;
 }) {
   const [confirming, setConfirming] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const confirmationId = useId();
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap justify-end gap-2">
-        {children}
-        <Button
-          ref={trigger}
-          type="button"
-          variant="secondary"
-          aria-expanded={confirming}
-          aria-controls={confirming ? confirmationId : undefined}
-          onClick={() => setConfirming(true)}
-        >
-          Deactivate species
-        </Button>
-      </div>
+    <>
+      <Button
+        ref={trigger}
+        type="button"
+        variant="secondary"
+        aria-expanded={confirming}
+        aria-controls={confirming ? confirmationId : undefined}
+        onClick={() => setConfirming(true)}
+      >
+        Deactivate species
+      </Button>
       {confirming && (
         <div id={confirmationId} className="w-full">
           <DeactivationConfirmation
@@ -45,7 +40,7 @@ export function DeactivateSpecies({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -70,6 +70,16 @@ Reject overlong values with field errors; never truncate. Unwrap nullable server
 
 ## PR screenshots
 
+- Use **Deactivate**, **Deactivated** and **Reactivate** consistently in UI text and code.
+  Set the existing `deactivated_at` column instead of deleting rows. Reuse existing storage;
+  a new CRUD action alone does not require a migration or a database trigger.
+- Require a named confirmation with Cancel, pending feedback and a retryable error.
+  Place Deactivate in edit mode; keep Edit on the detail page and show the resulting deactivated state.
+- Exclude deactivated entries from normal active lists and new-record selectors. Keep
+  historical identities and quantities intact. Reference entities such as species and sites
+  must remain resolvable in historical records without silently reducing their planting totals.
+  Aggregate behavior for deactivating an event or line follows that feature's requirements.
+
 Every visual PR includes screenshots taken by the author for each changed screen/state at desktop 1280px and phone 390px. Upload through the GitHub comment box and include a table in the PR description.
 
 For shared UI/form changes, also capture a temporary component sheet: one card per part with its name, purpose and real filled, empty, hint, error and disabled states, using actual form labels. Delete the temporary page before committing.

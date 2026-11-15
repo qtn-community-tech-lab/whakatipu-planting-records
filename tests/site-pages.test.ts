@@ -37,7 +37,6 @@ import SitesPage from "@/app/sites/page";
 import SitePage, { generateMetadata } from "@/app/sites/[slug]/page";
 import PartPage, { generateMetadata as areaMetadata } from "@/app/sites/[slug]/parts/[part]/page";
 import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
-import { PageHead } from "@/components/wrt/shared/page";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import type { CreateSiteInput, EditSiteInput, SiteSubmitResult, PlantingAreaEdit } from "@/db/types";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
@@ -265,6 +264,7 @@ it("finds historical areas by fixed slug after correcting their display names", 
   expect(html).toContain("recorded plants at Corrected area name");
   expect(html).toContain("Corrected description");
   expect(html).toContain(`parcel=${encodeURIComponent(parcel.id)}`);
+  expect(html).toContain(`returnTo=${encodeURIComponent(`/sites/${place.slug}/parts/${parcel.slug}`)}`);
 });
 
 it("creates a site before its areas and returns its fixed slug after a partial save", async () => {
@@ -302,18 +302,27 @@ it("rejects changing the fixed site slug when retrying a partial creation", asyn
 });
 
 async function deactivationAction() {
-  const page = await SitePage({ params, searchParams });
-  const header = Children.toArray(page.props.children).find(
-    (child): child is ReactElement<{ aside?: ReactNode }> =>
-      isValidElement(child) && child.type === PageHead,
-  );
-  const control = Children.toArray(header?.props.aside).find(
-    (child): child is ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> =>
-      isValidElement(child) && child.type === DeactivateSite,
-  );
+  const page = await EditSitePage({ params, searchParams });
+  function findControl(children: ReactNode): ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }> | undefined {
+    for (const child of Children.toArray(children)) {
+      if (!isValidElement<{ children?: ReactNode; aside?: ReactNode }>(child)) continue;
+      if (child.type === DeactivateSite) return child as ReactElement<{ onDeactivate: () => Promise<SiteSubmitResult> }>;
+      const nested = findControl(child.props.children) ?? findControl(child.props.aside);
+      if (nested) return nested;
+    }
+    return undefined;
+  }
+  const control = findControl(page.props.children);
   if (!control) throw new Error("Missing deactivation control");
   return control.props.onDeactivate;
 }
+
+it("offers deactivation only in the authenticated edit page", async () => {
+  expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Deactivate site");
+  expect(renderToStaticMarkup(await EditSitePage({ params, searchParams }))).toContain("Deactivate site");
+  mocks.authenticated.mockResolvedValue(false);
+  await expect(EditSitePage({ params, searchParams })).rejects.toThrow("REDIRECT");
+});
 
 it("deactivates the captured site and refreshes shared reads before redirecting", async () => {
   await expect((await deactivationAction())()).rejects.toThrow("REDIRECT");

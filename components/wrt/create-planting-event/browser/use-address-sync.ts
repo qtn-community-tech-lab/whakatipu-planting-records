@@ -5,7 +5,9 @@
  */
 import { useEffect, useRef } from "react";
 
-export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, depth, popped, totals }: {
+export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, depth, popped, totals, eventId, recordingSeason }: {
+  recordingSeason?: string | undefined;
+  eventId?: number | undefined;
   siteSlug: string;
   part: string | null;
   /** The site isn't stored (a new one, or kept from earlier). */
@@ -19,7 +21,7 @@ export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, 
   totals: unknown;
 }) {
   const unsynced = useRef(false);
-  const seasonSlug = season?.slug;
+  const seasonSlug = season?.slug ?? recordingSeason;
   const wholeSite = season?.wholeSite;
   // Plain `{ wrtDepth }` with the URL: Next's replaceState adds its own state and learns the URL. A task later,
   // so Next has patched history by then (on mount this runs first), and only when something differs. Written
@@ -32,7 +34,7 @@ export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, 
       const q = new URLSearchParams(window.location.search);
       // Places kept on the map aren't stored, so they aren't bookmarked.
       const shownPart = wholeSite || keptPart ? null : part;
-      for (const [key, value] of [["site", unsavedSite ? "" : siteSlug], ["part", shownPart], ["season", seasonSlug]] as const) if (value) q.set(key, value); else q.delete(key);
+      for (const [key, value] of [["site", unsavedSite ? "" : siteSlug], ["part", shownPart], ["season", seasonSlug], ["event", seasonSlug && eventId ? String(eventId) : null]] as const) if (value) q.set(key, value); else q.delete(key);
       const url = `${window.location.pathname}${q.size ? `?${q}` : ""}`;
       if (url === `${window.location.pathname}${window.location.search}` && (window.history.state as { wrtDepth?: unknown } | null)?.wrtDepth === d) return;
       // In a background tab, keep Next's state and leave its router alone: a router update there starts a view
@@ -44,7 +46,7 @@ export function useAddressSync({ siteSlug, part, unsavedSite, keptPart, season, 
       window.history.replaceState({ wrtDepth: d }, "", url);
     });
     return () => clearTimeout(id);
-  }, [siteSlug, part, unsavedSite, keptPart, seasonSlug, wholeSite, popped, depth, totals]);
+  }, [siteSlug, part, unsavedSite, keptPart, seasonSlug, wholeSite, popped, depth, totals, eventId]);
   useEffect(() => {
     const show = () => {
       if (document.hidden || !unsynced.current) return;

@@ -19,7 +19,7 @@ import type { PlantTotals } from "../map/sites";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, startLabel = "Add new planting event", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
+export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, canRecord = true, startLabel = "Record a planting", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
   /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
   map?: ReactNode;
@@ -34,6 +34,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   places?: readonly { id: string; name: string; sub?: string | undefined }[] | undefined;
   onPlace?: ((id: string) => void) | undefined;
   onStart: () => void;
+  canRecord?: boolean | undefined;
   /** The start button's words: "Back to your planting event" when one with entries is waiting. */
   startLabel?: string | undefined;
   /** A season's row: open its planting events. `wholeSite` when the seasons shown are the whole site's (the part has none). */
@@ -49,7 +50,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   const fellBack = !!partId && !!partName && !!o?.wholeSite;
 
   return (
-    <Frame onStart={onStart} label={startLabel} busy={loading}>
+    <Frame onStart={onStart} label={canRecord ? startLabel : "Unavailable for new plantings"} canRecord={canRecord} busy={loading}>
       {map}
       {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
@@ -132,13 +133,13 @@ function PinFix({ moved, onMove, onUndo }: { moved: boolean; onMove: () => void;
   );
 }
 
-/** The form's frame, with "Add new planting event" where the form's Next sits. */
-function Frame({ children, onStart, label, busy }: { children: ReactNode; onStart: () => void; label: string; busy?: boolean | undefined }) {
+/** The form's frame, with "Record a planting" where the form's Next sits. */
+function Frame({ children, onStart, label, busy, canRecord }: { children: ReactNode; onStart: () => void; label: string; busy?: boolean | undefined; canRecord: boolean }) {
   return (
     <div className={panel.form}>
       <div className={panel.scroll} aria-busy={busy}>{children}</div>
       <footer className={panel.foot}>
-        <button type="button" className={panel.next} onClick={onStart}>{label}<ArrowRight size={18} strokeWidth={2.2} /></button>
+        <button type="button" className={panel.next} onClick={onStart} disabled={!canRecord}>{label}<ArrowRight size={18} strokeWidth={2.2} /></button>
       </footer>
     </div>
   );

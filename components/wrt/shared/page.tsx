@@ -11,14 +11,20 @@ export function PageHead({
   eyebrow, title, lead, aside, back,
 }: { eyebrow?: ReactNode; title: ReactNode; lead?: ReactNode; aside?: ReactNode; back?: { href: AppRoute; label: string } | undefined }) {
   return (
-    <header className="cn-pagehead">
-      <div className="cn-pagehead__text">
-        {back && <Link href={back.href} className="wrt-back">← {back.label}</Link>}
-        {eyebrow && <span className="cn-eyebrow">{eyebrow}</span>}
-        <h1 className="cn-h1 cn-h1--compact">{title}</h1>
-        {lead && <p className="wrt-prose m-0">{lead}</p>}
+    <header className="cn-pagehead wrt-pagehead">
+      {(back || eyebrow) && (
+        <div className="wrt-pagehead__meta">
+          {back && <Link href={back.href} className="wrt-back">← {back.label}</Link>}
+          {eyebrow && <span className="cn-eyebrow">{eyebrow}</span>}
+        </div>
+      )}
+      <div className="wrt-pagehead__layout">
+        <div className="cn-pagehead__text">
+          <h1 className="cn-h1 cn-h1--compact">{title}</h1>
+          {lead && <p className="wrt-prose m-0">{lead}</p>}
+        </div>
+        {aside && <div className="wrt-pagehead__actions">{aside}</div>}
       </div>
-      {aside && <div className="flex flex-wrap gap-2 flex-none">{aside}</div>}
     </header>
   );
 }

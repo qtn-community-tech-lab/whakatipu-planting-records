@@ -30,7 +30,7 @@
   will-change: transform;
 }
 /* the status bar's height, read by the sheet so full screen stops below it */
-.safeTop { position: absolute; top: 0; height: env(safe-area-inset-top, 0px); visibility: hidden; pointer-events: none; }
+.safeTop { position: absolute; top: 0; height: calc(env(safe-area-inset-top, 0px) + var(--app-return-height, 0px)); visibility: hidden; pointer-events: none; }
 .visible { display: flex; flex-direction: column; padding: 0 18px; }
 /* Below full screen every drag moves the sheet, so nothing inside scrolls by itself: otherwise a phone can
    start scrolling the list before the sheet takes the drag, and then both move. */

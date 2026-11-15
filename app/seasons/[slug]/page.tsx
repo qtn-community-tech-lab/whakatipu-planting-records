@@ -79,11 +79,6 @@ export default async function SeasonPage({ params }: Props) {
 
   return (
     <>
-      {authenticated && (
-        <div className="flex flex-wrap justify-end gap-2">
-          <Button asChild variant="secondary"><Link href={hrefs.newEvent()}>Add planting event</Link></Button>
-        </div>
-      )}
       <PageHead
         back={{ href: "/seasons", label: "All seasons" }}
         eyebrow={`What went in during ${season.label}?`}
@@ -99,10 +94,17 @@ export default async function SeasonPage({ params }: Props) {
           </>
         }
         aside={
-          <>
+          <div className="flex flex-wrap items-center gap-2">
             {navLink(d.previous, "previous")}
             {navLink(d.next, "next")}
-          </>
+            {authenticated && (
+              <Button asChild variant="primary">
+                <Link href={hrefs.newEvent({ season: season.slug, returnTo: hrefs.season(season.slug) })}>
+                  Record a planting
+                </Link>
+              </Button>
+            )}
+          </div>
         }
       />
 

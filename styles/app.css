@@ -41,6 +41,20 @@
   .cn-pagehead { flex-direction: column; align-items: flex-start; }
 }
 
+/* ---------------------------------------------------------------- page headings */
+/* Measure the header itself: sidebar and content padding reduce the room available. */
+.cn-pagehead.wrt-pagehead { display: block; container: wrt-pagehead / inline-size; }
+.wrt-pagehead__meta { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 8px; overflow-wrap: anywhere; }
+.wrt-pagehead__layout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 20px; }
+.wrt-pagehead .cn-pagehead__text { min-width: 0; overflow-wrap: anywhere; }
+.wrt-pagehead .cn-h1 { text-wrap: balance; }
+.wrt-pagehead__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; max-width: 100%; }
+.wrt-pagehead__actions > div { min-width: 0; max-width: 100%; }
+.wrt-pagehead__actions .cn-btn { max-width: 100%; white-space: normal; overflow-wrap: anywhere; text-align: center; }
+@container wrt-pagehead (min-width: 64rem) {
+  .wrt-pagehead__layout:has(.wrt-pagehead__actions) { grid-template-columns: minmax(0, 1fr) fit-content(24rem); gap: 32px; }
+}
+
 /* ---------------------------------------------------------------- connection status */
 /* Floats above the page so it never shifts the layout or covers sticky toolbars; taps pass through. */
 .wrt-connection {

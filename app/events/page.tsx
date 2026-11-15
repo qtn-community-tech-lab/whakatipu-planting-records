@@ -1,10 +1,6 @@
-import { redirect } from "next/navigation";
-
-/**
- * Temporary: there is no list of planting events until the database is
- * connected, so /events sends people to the form. Revisit then: /events may
- * become the events list again, with "new" under it.
- */
-export default function EventsPage() {
-  redirect("/events/new");
+import type { Metadata } from "next";
+import { PlantingPage } from "./planting-page";
+export const metadata: Metadata = { title: "Records on the map" };
+export default async function Page(props: Readonly<PageProps<"/events">>) {
+  return PlantingPage({ searchParams: props.searchParams, recording: false });
 }

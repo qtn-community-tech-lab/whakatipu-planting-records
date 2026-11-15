@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesReferencePanel } from "@/components/wrt/species/species-reference";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { revalidatePath, updateTag } from "next/cache";
+import { notFound } from "next/navigation";
 import { getPublicWrt } from "@/lib/wrt/public-server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
@@ -15,11 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { isAuthenticated } from "@/db/queries/auth";
-import { deactivateSpecies } from "@/db/queries/species";
-import { SUPABASE_TAG } from "@/db/cache";
-import type { SpeciesSubmitResult } from "@/db/types";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
@@ -66,26 +61,14 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const prev = at > 0 ? ranked[at - 1] : null;
   const next = at >= 0 && at < ranked.length - 1 ? ranked[at + 1] : null;
 
-  async function onDeactivate(): Promise<SpeciesSubmitResult> {
-    "use server";
-    if (!(await isAuthenticated())) return { error: "Sign in to deactivate species." };
-    try {
-      const { error } = await deactivateSpecies(slug);
-      if (error) return { error: "The species could not be deactivated. Please try again." };
-    } catch {
-      return { error: "The species could not be deactivated. Please try again." };
-    }
-    updateTag(SUPABASE_TAG);
-    revalidatePath("/", "layout");
-    redirect(`/species/${slug}`);
-  }
-
-  const editButton = <Button asChild variant="secondary"><Link href={`/species/${slug}/edit`}>Edit species</Link></Button>;
-
   return (
     <>
       {authenticated && !sp.deactivatedAt && (
-        <DeactivateSpecies name={sp.displayName} onDeactivate={onDeactivate}>{editButton}</DeactivateSpecies>
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button asChild variant="secondary">
+            <Link href={`/species/${slug}/edit`}>Edit species</Link>
+          </Button>
+        </div>
       )}
       {sp.deactivatedAt && <Alert role="status">
         <AlertTitle><Badge tone="soft">Deactivated</Badge></AlertTitle>
