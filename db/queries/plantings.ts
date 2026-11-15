@@ -71,3 +71,82 @@ export async function listSeasonLeaders(limit = 3) {
   ]);
   return { species: species.data, sites: sites.data };
 }
+
+/** A season's id by slug, e.g. "autumn-2026". Null when there is no such season. */
+export async function readSeason(slug: string) {
+  const { data } = await (await db())
+    .from("seasons")
+    .select("id")
+    .eq("slug", slug)
+    .maybeSingle()
+    .throwOnError();
+  return data;
+}
+
+/** A new planting event. Its plants are added with createPlantingLines. */
+export async function createPlantingEvent(values: { area: string; season: number; planted_on: string; notes: string }) {
+  return (await db())
+    .from("planting_events")
+    .insert(values)
+    .select("id")
+    .single();
+}
+
+/** All of one planting event's lines in one insert, so they are saved together or not at all. */
+export async function createPlantingLines(plantingEvent: number, lines: { species: string; quantity: number }[]) {
+  return (await db())
+    .from("planting_lines")
+    .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent })));
+}
+
+/** A planting event's season slug (e.g. "autumn-2021") and stored date, to check an edited date against. Null when there is no such event. */
+export async function readPlantingEventSeason(id: number) {
+  const { data } = await (await db())
+    .from("planting_events")
+    .select("planted_on, seasons(slug)")
+    .eq("id", id)
+    .maybeSingle()
+    .throwOnError();
+  return data?.seasons?.slug ? { season: data.seasons.slug, plantedOn: data.planted_on } : null;
+}
+
+/** A planting event's active lines: each one's id, species slug and quantity. */
+export async function listPlantingEventLines(plantingEvent: number) {
+  const { data } = await (await db())
+    .from("planting_lines")
+    .select("id, species, quantity")
+    .eq("planting_event", plantingEvent)
+    .is("deactivated_at", null)
+    .throwOnError();
+  return data;
+}
+
+/** A planting event's date and notes. The import's source stays as it is. */
+export async function updatePlantingEvent(id: number, values: { planted_on: string | null; notes: string }) {
+  return (await db())
+    .from("planting_events")
+    .update(values)
+    .eq("id", id)
+    .select("id")
+    .single();
+}
+
+/** One line's quantity, only within its own planting event. */
+export async function updatePlantingLine(plantingEvent: number, id: number, values: { quantity: number }) {
+  return (await db())
+    .from("planting_lines")
+    .update(values)
+    .eq("id", id)
+    .eq("planting_event", plantingEvent)
+    .select("id")
+    .single();
+}
+
+/** Deactivate lines taken off a planting event, only within that event. */
+export async function deactivatePlantingLines(plantingEvent: number, ids: number[]) {
+  return (await db())
+    .from("planting_lines")
+    .update({ deactivated_at: new Date().toISOString() })
+    .in("id", ids)
+    .eq("planting_event", plantingEvent);
+}
