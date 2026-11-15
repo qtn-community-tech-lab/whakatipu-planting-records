@@ -6,16 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
 import { DataTable } from "@/components/wrt/shared/data-table";
-import { UserForm } from "@/components/wrt/users/UserForm";
+import { UserForm, UserStatusAction } from "@/components/wrt/users/UserForm";
 import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 import {
   createUser,
   deactivateUser,
+  reactivateUser,
   listUsers,
   updateUser,
 } from "@/db/queries/users";
 import { SUPABASE_TAG } from "@/db/cache";
 import { userSchema, type UserInput, type UserSubmitResult } from "@/db/types";
+
 
 export const metadata: Metadata = { title: "Users" };
 
@@ -103,7 +105,7 @@ export default async function UsersPage({
       {saved && (
         <Alert role="status">
           <AlertTitle>
-            {saved === "deactivated" ? "User deactivated" : "User saved"}
+            {saved === "deactivated" ? "User deactivated" : saved === "reactivated" ? "User reactivated" : "User saved"}
           </AlertTitle>
           <AlertDescription>The change has been saved.</AlertDescription>
         </Alert>
@@ -162,6 +164,22 @@ export default async function UsersPage({
               columns={[
                 { key: "name", header: "Name", cell: (user) => user.name },
                 { key: "email", header: "Email", cell: (user) => user.email },
+                { key: "actions", header: "Actions", cell: (user) => {
+                  async function onReactivate(): Promise<UserSubmitResult> {
+                    "use server";
+                    if (!(await isAuthenticated())) return { error: "Sign in to manage users." };
+                    try {
+                      const { data, error } = await reactivateUser(user.id);
+                      if (error || !data) return { error: "The user could not be reactivated. Please try again." };
+                    } catch {
+                      return { error: "The user could not be reactivated. Please try again." };
+                    }
+                    updateTag(SUPABASE_TAG);
+                    revalidatePath("/", "layout");
+                    redirect("/users?saved=reactivated");
+                  }
+                  return <UserStatusAction name={user.name} reactivate onAction={onReactivate} />;
+                } },
               ]}
             />
           </details>

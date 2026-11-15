@@ -35,3 +35,12 @@ export async function deactivateUser(id: string) {
     .select("id")
     .single();
 }
+
+export async function reactivateUser(id: string) {
+  return (await db())
+    .from("users")
+    .update({ deactivated_at: null })
+    .eq("id", id)
+    .select("id")
+    .single();
+}

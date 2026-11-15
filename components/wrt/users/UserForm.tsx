@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { useForm, type FieldPath } from "react-hook-form";
@@ -38,6 +47,7 @@ export function UserForm({
     resolver: zodResolver(userSchema),
     defaultValues: { name: user?.name ?? "", email: user?.email ?? "" },
   });
+  const [confirmation, setConfirmation] = useState<UserInput | null>(null);
   const { isSubmitting, errors } = form.formState;
 
   async function handleSubmit(input: UserInput) {
@@ -55,8 +65,10 @@ export function UserForm({
             form.setFocus(first.path as FieldPath<UserInput>),
           );
       } else if (result.error) form.setError("root", { message: result.error });
+      setConfirmation(null);
     } catch (error) {
       unstable_rethrow(error);
+      setConfirmation(null);
       form.setError("root", {
         message:
           "The user could not be saved. Your changes are still here. Please try again.",
@@ -65,8 +77,14 @@ export function UserForm({
   }
 
   return (
-    <Card title={user ? `Edit ${user.name}` : "Add user"} className='!bg-transparent'>
-      <form onSubmit={form.handleSubmit(handleSubmit)} noValidate>
+    <Card
+      title={user ? `Edit ${user.name}` : "Add user"}
+      className="!bg-transparent"
+    >
+      <form
+        onSubmit={form.handleSubmit((input) => setConfirmation(input))}
+        noValidate
+      >
         <FieldSet disabled={isSubmitting} aria-busy={isSubmitting}>
           <FieldGroup>
             <FormField
@@ -116,68 +134,159 @@ export function UserForm({
           </FieldGroup>
         </FieldSet>
       </form>
+      {!user && (
+        <AlertDialog
+          open={confirmation !== null}
+          onOpenChange={(open) => {
+            if (!isSubmitting && !open) setConfirmation(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Create user?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {confirmation?.name} ({confirmation?.email}) will be able to
+                sign in.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isSubmitting}>
+                Cancel
+              </AlertDialogCancel>
+              <Button
+                disabled={isSubmitting}
+                onClick={() => {
+                  if (confirmation) void form.handleSubmit(handleSubmit)();
+                }}
+              >
+                {isSubmitting && <Spinner data-icon="inline-start" />}
+                Confirm creation
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+      {user && (
+        <AlertDialog
+          open={confirmation !== null}
+          onOpenChange={(open) => {
+            if (!isSubmitting && !open) setConfirmation(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Save changes to {user.name}?</AlertDialogTitle>
+              <AlertDialogDescription>
+                {confirmation?.name} ({confirmation?.email}). Their updated
+                details will be saved.
+                {user.email !== confirmation?.email && (
+                  <span> Changing the email resets their sign-in link.</span>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isSubmitting}>
+                Cancel
+              </AlertDialogCancel>
+              <Button
+                disabled={isSubmitting}
+                onClick={() => {
+                  if (confirmation) void form.handleSubmit(handleSubmit)();
+                }}
+              >
+                {isSubmitting && <Spinner data-icon="inline-start" />}
+                Confirm changes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       {user && onDeactivate && (
-        <DeactivateUser name={user.name} onDeactivate={onDeactivate} />
+        <div className="mt-6 border-t pt-4">
+          <UserStatusAction name={user.name} onAction={onDeactivate} />
+        </div>
       )}
     </Card>
   );
 }
 
-function DeactivateUser({
+export function UserStatusAction({
   name,
-  onDeactivate,
+  reactivate = false,
+  onAction,
 }: {
   name: string;
-  onDeactivate: (
+  reactivate?: boolean;
+  onAction: (
     previousState: UserSubmitResult,
     formData: FormData,
   ) => Promise<UserSubmitResult>;
 }) {
-  const [confirming, setConfirming] = useState(false);
-  const [result, action, pending] = useActionState(onDeactivate, {});
-
-  if (!confirming)
+  const [open, setOpen] = useState(false);
+  const [result, action, pending] = useActionState(onAction, {});
+  if (reactivate) {
     return (
-      <div className="mt-6 border-t pt-4">
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => setConfirming(true)}
-        >
-          Deactivate user
+      <AlertDialog
+        open={open}
+        onOpenChange={(next) => {
+          if (!pending) setOpen(next);
+        }}
+      >
+        <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
+          Reactivate
         </Button>
-      </div>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reactivate {name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This restores their access to make changes into the system. Their
+              planting history and attribution will remain.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+            <form action={action}>
+              <Button type="submit" disabled={pending}>
+                {pending && <Spinner data-icon="inline-start" />}
+                Confirm reactivation
+              </Button>
+              {result.error && <p role="alert">{result.error}</p>}
+            </form>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     );
-
+  }
   return (
-    <form
-      action={action}
-      aria-label={`Deactivate ${name}`}
-      aria-busy={pending}
-      className="mt-6 border-t pt-4"
+    <AlertDialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!pending) setOpen(next);
+      }}
     >
-      <Alert role="region" aria-label="Confirm user deactivation">
-        <AlertTitle>Deactivate {name}?</AlertTitle>
-        <AlertDescription>
-          This removes their access. Their planting history and attribution will
-          remain.
-          {result.error && <p role="alert">{result.error}</p>}
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="secondary"
-              disabled={pending}
-              onClick={() => setConfirming(false)}
-            >
-              Cancel
-            </Button>
+      <Button type="button" variant="secondary" onClick={() => setOpen(true)}>
+        Deactivate user
+      </Button>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Deactivate {name}?</AlertDialogTitle>
+          <AlertDialogDescription>
+            They will no longer be able to login and make changes to planting
+            records and data within the system. Their planting history and
+            attribution will remain.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+          <form action={action}>
             <Button type="submit" disabled={pending}>
               {pending && <Spinner data-icon="inline-start" />}
-              {pending ? "Deactivating…" : "Confirm deactivation"}
+              Confirm deactivation
             </Button>
-          </div>
-        </AlertDescription>
-      </Alert>
-    </form>
+            {result.error && <p role="alert">{result.error}</p>}
+          </form>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
