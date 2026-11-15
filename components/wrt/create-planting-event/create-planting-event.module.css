@@ -1,0 +1,97 @@
+/* The planting event page: a full-screen satellite map with site pins; the form sits over it in FormPanel. */
+
+/* The map is the whole screen, over the app's sidebar and top bar. */
+.screen {
+  /* above the app (top bar is 20), below dropdown popups (50) */
+  /* the whole screen; with a phone keyboard up, the part above it (use-keyboard-fit.ts) */
+  position: fixed; z-index: 45; left: 0; right: 0;
+  top: var(--keyboard-top, 0px); height: var(--keyboard-height, 100%);
+  /* clip, not just hidden: hidden still lets focus scroll it, which shoved the map and the sheet
+     up the screen whenever a button below was focused */
+  overflow: hidden; overflow: clip; isolation: isolate;
+  /* The drawer's cream, not the map's green: iOS Safari tints its top and bottom bars
+     from this fixed element's background, so both bars match the drawer. */
+  background: var(--cn-paper);
+  font-family: var(--font-sans);
+  color: var(--cn-green-900);
+}
+/* The map is the whole screen: the page behind must not scroll. (The same cream behind the browser's
+   bars, and the app's frame not drawn under the map: app/globals.css, by data-full-screen.) */
+:global(html):has(.screen), :global(body):has(.screen) { overflow: hidden; }
+/* Touch: no grey flash on a tap (buttons dim while pressed instead), no text selected or menu opened by a
+   long press on a button, and text keeps its size when the phone is turned on its side. On the page, not
+   .screen, so the dropdowns (drawn outside it) get them too. */
+:global(html):has(.screen) { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+:global(html):has(.screen) :is(button, summary, [role="button"]) { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+:global(html):has(.screen) button:active:enabled { opacity: 0.8; }
+/* `.screen > .map`, not `.map`: MapLibre's own CSS gives .maplibregl-map position: relative,
+   and whichever stylesheet loads last would win a tie, collapsing the map to 300px high. */
+.screen > .map { position: absolute; inset: 0; }
+.map :global(.maplibregl-ctrl-attrib) { font-size: 9px; background: rgba(253, 252, 249, 0.6); }
+
+/* Phones: a solid green band along the top, behind the header's buttons. iOS Safari 26 colours its
+   top bar from a solid fixed element at the top edge (older Safari uses the page's theme-color, also
+   this green), so the status bar goes green while the bottom bar keeps the drawer's white.
+   It shows above the drawer at full screen too, behind the drawer's rounded top. */
+.topBand { display: none; }
+@media (max-width: 767px) {
+  .topBand {
+    display: block; position: fixed; z-index: 3; top: 0; left: 0; right: 0; height: calc(60px + env(safe-area-inset-top));
+    background-color: var(--cn-green-900);
+    pointer-events: none;
+  }
+}
+
+/* the session header (phones), one slim row: a pill naming the site, and + */
+.top {
+  position: absolute; z-index: 3; left: 12px; right: 12px; top: calc(10px + env(safe-area-inset-top));
+  display: flex; align-items: center; gap: 8px;
+}
+.session, .add, .addMenu {
+  background: rgba(21, 38, 28, 0.9); color: var(--text-on-dark); backdrop-filter: blur(12px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+/* an empty 40px on the left balances + on the right, so the pill sits in the middle */
+.top::before { content: ""; width: 40px; flex-shrink: 0; }
+/* both 40px tall; + keeps a 44px tap area */
+.add::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; }
+/* the site and + are lime, so they stand out on the green band behind them */
+.add, .session { background: var(--cn-lime-300); color: var(--cn-green-900); }
+/* the site, centred: a pill with the site (opens the chooser; a line under it says the part or the step) */
+.session { min-width: 0; min-height: 40px; margin: 0 auto; border-radius: var(--radius-pill); display: flex; align-items: stretch; }
+.sessionMain {
+  min-width: 0; padding: 0 10px 0 12px; border: 0; border-radius: var(--radius-pill); background: none; color: inherit; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; font: 500 14px var(--font-sans); white-space: nowrap;
+}
+.sessionMain > svg { flex-shrink: 0; }
+.sessionMain > svg:first-child { color: var(--cn-green-800); }
+.sessionText { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+.sessionText b { font-weight: 700; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.sessionText small { font: 500 11px var(--font-sans); opacity: 0.8; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.sessionMain:focus-visible, .add:focus-visible { outline: 2px solid var(--text-on-dark); outline-offset: 2px; }
+
+/* site pins: the app's plant-count markers (styles/app.css); the chosen site's lime.
+   MapLibre places markers with position: absolute and a transform: never set either on .pin itself */
+.pin[data-on] { z-index: 1; }
+.pin[data-on] button { background: var(--cn-lime-300); color: var(--cn-green-900); }
+
+/* the + on the far side of the header: a menu for adding to the map */
+.add { position: relative; flex-shrink: 0; width: 40px; height: 40px; border: 0; border-radius: 50%; display: grid; place-items: center; cursor: pointer; }
+.add[aria-expanded="true"] { background: var(--cn-lime-400); }
+.addMenu { min-width: 220px; padding: 6px; border-radius: var(--radius-tile-lg); display: flex; flex-direction: column; }
+.addMenu button { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border: 0; border-radius: var(--radius-row); background: none; color: inherit; font: 600 14.5px var(--font-sans); text-align: left; cursor: pointer; }
+@media (hover: hover) { .addMenu button:hover { background: rgba(243, 246, 238, 0.1); } }
+/* a short word over the map: Find me's, when it can't */
+.hint { position: absolute; z-index: 3; left: 50%; top: 60px; transform: translateX(-50%); margin: 0; display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 18px; border-radius: var(--radius-pill); background: var(--cn-lime-300); color: var(--cn-green-900); font: 700 14.5px var(--font-sans); white-space: nowrap; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); }
+/* phones: the word sits under the header, and wraps */
+@media (max-width: 767px) {
+  .hint { top: calc(60px + env(safe-area-inset-top)); left: 12px; right: 12px; transform: none; white-space: normal; border-radius: var(--radius-card); padding: 8px 8px 8px 16px; font-size: 13.5px; line-height: 1.25; }
+}
+/* wide screens: the panel is on the left (572px with its inset), so the word sits in the map beside it */
+@media (min-width: 768px) {
+  .top { left: 588px; right: auto; }
+  /* the panel's breadcrumb stands in for the site pill, + and back */
+  .session, .add { display: none; }
+  .hint { left: calc(50% + 286px); }
+}
+

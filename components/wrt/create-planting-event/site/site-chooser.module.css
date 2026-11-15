@@ -1,0 +1,46 @@
+/* the site chooser: takes the panel's place (the phone sheet, or the desktop panel) while a site is chosen */
+.chooserHead { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-bottom: -6px; }
+.chooserHead > span:nth-child(2) { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.chooserBack { flex-shrink: 0; min-height: 36px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: var(--cn-sage-100); color: var(--cn-green-800); font: 700 13.5px var(--font-sans); cursor: pointer; }
+@media (hover: hover) { .chooserBack:hover { background: #dce7d6; } }
+.chooserBack:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.chooserIcon { width: 40px; height: 40px; flex-shrink: 0; display: grid; place-items: center; border-radius: var(--radius-row); background: var(--cn-sage-100); color: var(--cn-green-800); }
+.chooserHead h2 { margin: 0; font: 800 19px/1.15 var(--font-sans); color: var(--cn-green-900); }
+.chooserHead h2:focus { outline: none; }
+/* phones: the sheet's own title already names the site with the chooser open, so the heading is for screen readers */
+@media (max-width: 767px) {
+  .chooserHead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+}
+.chooserHead p { margin: 0; font: 500 12.5px/1.3 var(--font-sans); color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* the search: pinned to the top of the list as it scrolls, the list passing under it */
+.chooserSearch { position: sticky; top: 0; z-index: 1; display: flex; gap: 8px; padding: 0 0 10px; border-bottom: 1px solid var(--border-card); background: var(--surface-app); box-shadow: 0 -18px 0 var(--surface-app); }
+.chooserField { flex: 1; min-width: 0; }
+.chooserSearchButton { flex-shrink: 0; min-height: 48px; padding: 0 16px; border: 0; border-radius: var(--radius-field); background: var(--cn-green-800); color: var(--cn-white); font: 700 14px var(--font-sans); cursor: pointer; }
+.chooserSearchButton:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; }
+.chooserList { margin-top: -14px; }
+.chooserList ul { list-style: none; margin: 0; padding: 0; }
+.chooserItem, .chooserRow { border-bottom: 1px solid var(--border-soft); }
+.chooserHeader { margin: 0; display: flex; }
+.chooserTrigger { flex: 1; min-height: 64px; padding: 8px 4px; }
+.chooserTrigger:focus-visible { outline: 2px solid var(--cn-green-800); outline-offset: 2px; border-radius: var(--radius-inset); }
+.chooserTrigger svg { transition: transform 200ms ease; }
+.chooserTrigger[data-state="open"] svg { transform: rotate(180deg); }
+/* Radix gives the content's height as a variable, so opening and closing can animate. */
+.chooserContent { overflow: hidden; }
+.chooserContent[data-state="open"] { animation: chooser-open 220ms cubic-bezier(0.32, 0.72, 0, 1); }
+.chooserContent[data-state="closed"] { animation: chooser-close 180ms ease-in; }
+@keyframes chooser-open { from { height: 0; opacity: 0; } to { height: var(--radix-accordion-content-height); opacity: 1; } }
+@keyframes chooser-close { from { height: var(--radix-accordion-content-height); opacity: 1; } to { height: 0; opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .chooserContent { animation: none !important; } }
+/* the parts, indented under their site */
+.chooserContent ul { padding: 0 0 10px 16px; }
+.choice { padding: 6px 12px; border-radius: var(--radius-row); }
+.chooserRow .choice { padding: 8px 4px; min-height: 64px; }
+.chooserTrigger[data-chosen] [data-slot="title"] { color: var(--cn-green-800); }
+@media (hover: hover) { .choice:hover { background: var(--surface-hover); } }
+.choice[aria-pressed="true"] { background: var(--surface-picked); color: var(--cn-green-800); }
+.choiceOn { flex-shrink: 0; font: 700 12px var(--font-sans); color: var(--cn-green-800); }
+.chooserEmpty { padding: 16px 0; font: 400 14px var(--font-sans); color: var(--cn-grey-600); }
+/* a site's plants, and what they are under them */
+.figure { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.figure small { font: 500 11.5px/1.2 var(--font-sans); color: var(--text-muted); }

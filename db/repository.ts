@@ -101,7 +101,7 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: Object.keys(s.profile).length ? s.profile as unknown as Species["profile"] : null,
+      profile: Object.keys(s.profile ?? {}).length ? s.profile as unknown as Species["profile"] : null,
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));

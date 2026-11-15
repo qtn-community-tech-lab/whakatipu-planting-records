@@ -20,13 +20,13 @@ export interface EventSummary {
 export const WHOLE_SITE = "The site as a whole";
 
 export function describeEvent(input: PlantingEventInput, options: EventFormOptions): EventSummary {
-  const site = options.sites.find((s) => s.slug === input.placeSlug);
-  const part = input.parcelId === null ? null : site?.parts.find((p) => p.id === input.parcelId);
+  const site = options.sites.find((s) => s.slug === input.siteSlug);
+  const part = input.partId === null ? null : site?.parts.find((p) => p.id === input.partId);
   const speciesName = new Map(options.species.map((s) => [s.id, s.name]));
 
   return {
     site: site?.name ?? "Unknown site",
-    part: input.parcelId === null ? WHOLE_SITE : part?.name ?? "Unknown part",
+    part: input.partId === null ? WHOLE_SITE : part?.name ?? "Unknown part",
     date: formatPlantedOn(input.plantedOn),
     season: `${input.season} ${input.seasonYear}`,
     species: input.species.map((l) => ({ name: speciesName.get(l.speciesId) ?? "Unknown species", quantity: l.quantity })),

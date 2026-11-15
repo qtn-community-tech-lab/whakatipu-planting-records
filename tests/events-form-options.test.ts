@@ -33,11 +33,11 @@ describe("new planting species options", () => {
     expect(options.sites.some((p) => p.slug === deactivated.slug)).toBe(false);
     expect(places).toContain(deactivated);
     const result = validateEventInput({
-      placeSlug: deactivated.slug, parcelId: null, plantedOn: "2026-11-09", season: "Spring",
+      siteSlug: deactivated.slug, partId: null, plantedOn: "2026-11-09", season: "Spring",
       seasonYear: 2026, polygon: null, notes: null, species: [{ speciesId: "test", quantity: 12 }],
     }, { places: options.sites.map((p) => ({ ...p, isScheme: false, parcels: p.parts })), species: [{ id: "test" }] }, "2026-11-09");
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.errors).toHaveProperty("placeSlug");
+    if (!result.ok) expect(result.errors).toHaveProperty("siteSlug");
   });
   it("includes sites and areas without history while excluding order schemes", async () => {
     mocks.lookups.mockResolvedValue({ places: [
@@ -72,7 +72,7 @@ describe("new planting species options", () => {
     expect(lookups.species).toEqual([deactivated]);
 
     const result = validateEventInput({
-      placeSlug: options.sites[0]!.slug, parcelId: null, plantedOn: "2026-11-09", season: "Spring",
+      siteSlug: options.sites[0]!.slug, partId: null, plantedOn: "2026-11-09", season: "Spring",
       seasonYear: 2026, polygon: null, notes: null, species: [{ speciesId: deactivated.id, quantity: 12 }],
     }, { places: lookups.places, species: options.species }, "2026-11-09");
     expect(result.ok).toBe(false);

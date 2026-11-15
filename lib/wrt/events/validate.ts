@@ -7,8 +7,8 @@
  * Two layers:
  *   1. eventInputSchema — shape and value rules (zod). No data needed.
  *   2. validateEventInput — the schema plus reference checks against the
- *      species register and site list (the place exists and is a real site,
- *      the parcel belongs to it, every species exists, no duplicates), and
+ *      species register and site list (the site exists and is a real one,
+ *      the part belongs to it, every species exists, no duplicates), and
  *      "not in the future".
  *
  * Errors come back keyed by field path ("species.2.quantity") so the form can
@@ -50,8 +50,8 @@ const polygon = z.object({
 });
 
 export const eventInputSchema = z.object({
-  placeSlug: z.string().regex(SLUG, { error: "Choose a site." }),
-  parcelId: z.string().min(1).max(80).nullable(),
+  siteSlug: z.string().regex(SLUG, { error: "Choose a site." }),
+  partId: z.string().min(1).max(80).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
@@ -68,6 +68,7 @@ export const eventInputSchema = z.object({
 });
 
 /** The minimum the reference checks need: works with the server's Lookups or a client-side copy. */
+/** The site list and species register to check against. The shape (places, parcels) is the older repository's lookups, passed in as they are. */
 export interface EventLookups {
   places: { slug: string; isScheme: boolean; parcels: { id: string }[] }[];
   species: { id: string }[];
@@ -97,11 +98,11 @@ export function validateEventInput(raw: unknown, lookups: EventLookups, today: s
   // ISO dates compare correctly as strings.
   if (v.plantedOn > today) add("plantedOn", "The planting date can't be in the future.");
 
-  const place = lookups.places.find((p) => p.slug === v.placeSlug);
-  if (!place) add("placeSlug", "That site is not in the site list.");
-  else if (place.isScheme) add("placeSlug", "Order schemes are not a physical site; choose the site where the planting happened.");
-  else if (v.parcelId !== null && !place.parcels.some((p) => p.id === v.parcelId)) {
-    add("parcelId", "That part does not belong to the chosen site.");
+  const site = lookups.places.find((p) => p.slug === v.siteSlug);
+  if (!site) add("siteSlug", "That site is not in the site list.");
+  else if (site.isScheme) add("siteSlug", "Order schemes are not a physical site; choose the site where the planting happened.");
+  else if (v.partId !== null && !site.parcels.some((p) => p.id === v.partId)) {
+    add("partId", "That part does not belong to the chosen site.");
   }
 
   const known = new Set(lookups.species.map((s) => s.id));

@@ -25,10 +25,10 @@ export interface EventSpecies {
 
 /** What the form submits, and what create/update accept. */
 export interface PlantingEventInput {
-  /** Place.slug, e.g. "lake-hayes". */
-  placeSlug: string;
-  /** Parcel.id inside that place, or null for "the site as a whole". */
-  parcelId: string | null;
+  /** The site's slug, e.g. "lake-hayes". */
+  siteSlug: string;
+  /** The part of that site (its WRT number, or its area's slug when it has none), or null for the site as a whole. */
+  partId: string | null;
   /** Planting date, ISO "YYYY-MM-DD" (a calendar day, no time zone). */
   plantedOn: string;
   /** Suggested from plantedOn (see season.ts) but the user can override it. */

@@ -14,6 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
+import { Button } from "@/components/ui/button";
+import { isAuthenticated } from "@/db/queries/access";
+import { readSite } from "@/db/queries/sites";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
 
@@ -44,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PartPage({ params }: Props) {
   const { slug, part } = await params;
   const wrt = getWrt();
-  const [d, allSeasons] = await Promise.all([wrt.place(slug), wrt.seasons()]);
+  const [d, allSeasons, site, authenticated] = await Promise.all([wrt.place(slug), wrt.seasons(), readSite(slug), isAuthenticated()]);
   const p = findPart(d, part);
   if (!d || !p) notFound();
 
@@ -70,6 +73,11 @@ export default async function PartPage({ params }: Props) {
 
   return (
     <>
+      {authenticated && site && !site.deactivated_at && (
+        <div className="flex flex-wrap justify-end gap-2">
+          <Button asChild variant="secondary"><Link href={hrefs.newEvent({ site: place.slug, part: parcel.id })}>Add planting event</Link></Button>
+        </div>
+      )}
       <PageHead
         back={{ href: hrefs.place(place.slug), label: place.name }}
         eyebrow={`Part of ${place.name} · ${spanText} · ${span.seasonsActive} ${span.seasonsActive === 1 ? "season" : "seasons"}`}
