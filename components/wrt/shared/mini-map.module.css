@@ -1,0 +1,13 @@
+/* What Tailwind can't do here: the opening animation (keyframes), and the pins, which MapLibre draws
+   (the new-location pin's class is also used for the big map's marker, outside React). */
+/* It opens on a sheet's curve while the map pops in with a small overshoot. */
+.grow { animation: mini-grow 380ms cubic-bezier(0.32, 0.72, 0, 1), mini-pop 560ms cubic-bezier(.34, 1.4, .5, 1); }
+@keyframes mini-grow { from { height: 0; margin-bottom: -12px; } }
+@keyframes mini-pop { from { opacity: 0; transform: translateY(10px) scale(0.96); } }
+@media (prefers-reduced-motion: reduce) { .grow { animation: none; } }
+
+/* A site's pin: a lime dot. */
+.pin { display: block; width: 22px; height: 22px; border-radius: 50%; background: var(--cn-lime-300); border: 3px solid var(--cn-white); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+/* A new location: a lime teardrop. MapLibre positions a marker with position and transform, so set neither here. */
+.newPin { padding-bottom: 6px; }
+.newPin::before { content: ""; display: block; width: 26px; height: 26px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--cn-lime-300); border: 3px solid var(--cn-green-900); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); }

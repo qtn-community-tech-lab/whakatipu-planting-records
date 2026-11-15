@@ -26,6 +26,17 @@
 :root {
   --font-sans: "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 
+  /* App colours Canopy doesn't have, each used in several places (next to their Canopy family) */
+  --cn-lime-400: #c4dc6a;     /* lime hover, on dark green */
+  --cn-grey-600: #5d6a60;     /* secondary text between grey-700 and grey-500 */
+  --surface-hover: #eef2e8;   /* row and button hover on white */
+  --surface-picked: #f2f6e6;  /* chosen row tint */
+  --surface-risk: #fbefe8;    /* a field's problem tint */
+  --border-soft: #e6e8df;     /* light rule inside panels */
+  --text-on-dark: #f3f6ee;    /* text and icons on the map's dark controls */
+  --text-risk: #9a3f17;       /* a field's problem text */
+  --radius-panel: 28px;       /* the form's panel and sheet, the map's dock and toolbar */
+
   /* shadcn variables mapped to Canopy aliases */
   --background: var(--surface-app);
   --foreground: var(--text-strong);
@@ -132,3 +143,17 @@
   ::view-transition-old(*),
   ::view-transition-new(*) { animation: none !important; }
 }
+/* Touch screens: iOS zooms the page in on a focused field whose text is under 16px, and doesn't
+   zoom back. Canopy's fields are 13.5 to 14px, so they go up to 16px there. */
+@media (pointer: coarse) {
+  .cn-input:not(.cn-input--number), .cn-search, .wrt-select, .wrt-stool__search .cn-input { font-size: 16px; }
+}
+
+/* A page that is the whole screen (it marks itself data-full-screen: the planting event page's map). The app's
+   frame under it (side bar, top bars, the white data notice) isn't drawn at all, and the page doesn't
+   take part in the page fade: otherwise a phone can show the notice for a moment while the page loads,
+   like a dialog flashing up. Here, not in the page's own stylesheet, so it holds from the first paint. */
+/* the sheet's cream behind the browser's own bars */
+html:has([data-full-screen]), body:has([data-full-screen]) { background: #fdfcf9; }
+.wrt-shell:has([data-full-screen]) :is(.wrt-shell__side, .wrt-mobilebar, .wrt-topbar, .wrt-notice) { display: none; }
+main:has([data-full-screen]) { view-transition-name: none !important; }
