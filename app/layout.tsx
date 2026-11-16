@@ -13,6 +13,7 @@ import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
 import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
 import { AuthControl } from "@/components/wrt/shell/auth-control";
+import { AuthErrorRedirect } from "@/components/wrt/shell/auth-error-redirect";
 import { ConnectionStatus } from "@/components/wrt/shell/connection-status";
 import { ServiceWorker } from "@/components/wrt/shell/service-worker";
 import type { NavCounts } from "@/components/wrt/shell/nav";
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
   return (
     <html lang="en-NZ" data-review={showReview ? "shown" : "hidden"}>
       <body className="cn-app">
+        <AuthErrorRedirect />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 cn-btn cn-btn--primary cn-btn--sm">
           Skip to content
         </a>

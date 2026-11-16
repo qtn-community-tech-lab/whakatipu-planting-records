@@ -3,6 +3,7 @@ import type { Route } from "next";
 import { redirect } from "next/navigation";
 import { isAuthenticated } from "@/db/queries/auth";
 import { safeReturnPath } from "@/lib/auth/redirect";
+import { signInError } from "@/lib/auth/sign-in-errors";
 import { PageHead } from "@/components/wrt/shared/page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LoginForm } from "./login-form";
@@ -27,7 +28,7 @@ export default async function LoginPage({ searchParams }: Readonly<PageProps<"/l
           <AlertDescription>That page requires an approved WRT account, please sign in with an approved email to continue.</AlertDescription>
         </Alert>
       )}
-      <LoginForm next={next} expired={params.error === "expired"} inactive={params.error === "not-approved"} />
+      <LoginForm next={next} error={params.error ? signInError(params.error_code || params.error) : undefined} />
     </>
   );
 }

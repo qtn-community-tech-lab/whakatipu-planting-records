@@ -8,12 +8,22 @@ import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/ui/inputs/form-field";
 import { Spinner } from "@/components/ui/spinner";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
+import { SIGN_IN_ERRORS, type SignInError } from "@/lib/auth/sign-in-errors";
 import { requestMagicLink, type LoginState } from "./actions";
 
 const INITIAL: LoginState = { status: "idle", email: "", next: "/" };
 
-export function LoginForm({ next, expired = false, inactive = false }: { next: string; expired?: boolean; inactive?: boolean }) {
-  const [state, action, pending] = useActionState(requestMagicLink, { ...INITIAL, next });
+export function LoginForm({
+  next,
+  error,
+}: {
+  next: string;
+  error?: SignInError | undefined;
+}) {
+  const [state, action, pending] = useActionState(requestMagicLink, {
+    ...INITIAL,
+    next,
+  });
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
@@ -32,22 +42,22 @@ export function LoginForm({ next, expired = false, inactive = false }: { next: s
 
   return (
     <div className="flex max-w-xl flex-col gap-6">
-      {expired && (
-        <Alert>
-          <AlertTitle>That sign-in link has expired or was already used</AlertTitle>
-          <AlertDescription>Request a new link below.</AlertDescription>
-        </Alert>
-      )}
-      {inactive && (
-        <Alert>
-          <AlertTitle>This email does not have active staff access</AlertTitle>
-          <AlertDescription>Contact a WRT administrator if you think this is a mistake.</AlertDescription>
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle className="line-clamp-none">
+            {SIGN_IN_ERRORS[error].title}
+          </AlertTitle>
+          <AlertDescription>
+            {SIGN_IN_ERRORS[error].description}
+          </AlertDescription>
         </Alert>
       )}
       {state.status === "sent" && (
         <Alert role="status">
           <AlertTitle>Check your email</AlertTitle>
-          <AlertDescription>{state.message} Check your spam folder if it does not appear.</AlertDescription>
+          <AlertDescription>
+            {state.message} Check your spam folder if it does not appear.
+          </AlertDescription>
         </Alert>
       )}
       {state.status === "error" && state.message && (
@@ -58,7 +68,11 @@ export function LoginForm({ next, expired = false, inactive = false }: { next: s
       )}
       <form action={action} className="flex flex-col gap-6">
         <input type="hidden" name="next" value={next} />
-        <FormField label="Email" hint="Use the email address approved by the Whakatipu Reforestation Trust." error={state.fieldError}>
+        <FormField
+          label="Email"
+          hint="Use the email address approved by the Whakatipu Reforestation Trust."
+          error={state.fieldError}
+        >
           {(control) => (
             <Input
               {...control}
@@ -75,13 +89,27 @@ export function LoginForm({ next, expired = false, inactive = false }: { next: s
         </FormField>
         <div className="flex flex-wrap items-center gap-4">
           <Button type="submit" disabled={pending || remaining > 0}>
-            {pending ? <><Spinner data-icon="inline-start" /> Sending link</> : state.status === "sent" ? "Resend sign-in link" : "Email me a sign-in link"}
+            {pending ? (
+              <>
+                <Spinner data-icon="inline-start" /> Sending link
+              </>
+            ) : state.status === "sent" ? (
+              "Resend sign-in link"
+            ) : (
+              "Email me a sign-in link"
+            )}
           </Button>
-          {remaining > 0 && <span className="text-sm text-muted-foreground">Resend in {remaining}s</span>}
+          {remaining > 0 && (
+            <span className="text-sm text-muted-foreground">
+              Resend in {remaining}s
+            </span>
+          )}
         </div>
       </form>
       <p className="m-0 text-sm text-muted-foreground">
-        <Link href="/" className="cn-link">Return to public planting records</Link>
+        <Link href="/" className="cn-link">
+          Return to public planting records
+        </Link>
       </p>
     </div>
   );

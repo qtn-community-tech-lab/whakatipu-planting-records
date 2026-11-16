@@ -69,6 +69,11 @@ server-only `SUPABASE_SECRET_KEY`. This check also applies to existing Supabase 
 Created hook remains the database-side guard for creating new identities. Configure the secret key in each app
 environment and never expose it with a `NEXT_PUBLIC_` prefix.
 
+Failed sign-in links show an alert on `/login`. This includes Supabase errors returned to the site URL in a
+`#error=...` fragment, which is only visible to the browser. Expired or consumed links prompt a fresh request;
+incomplete links, verification failures and inactive staff access have separate messages. If links repeatedly
+fail, check that both email templates use the token-hash callback below and that the callback origin is allowed.
+
 | Environment       | Delivery                                                                   | Configuration                                                                 |
 | ----------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | Local development | Captured in the [local inbox](http://127.0.0.1:54324); no real emails sent | `config.toml`: `local_smtp.enabled = true`, `auth.email.smtp.enabled = false` |
