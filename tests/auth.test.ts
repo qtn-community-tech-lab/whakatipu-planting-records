@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const { sendMagicLink } = vi.hoisted(() => ({ sendMagicLink: vi.fn() }));
-vi.mock("@/db/queries/auth", () => ({ sendMagicLink }));
+const { hasActiveStaffEmail, sendMagicLink } = vi.hoisted(() => ({
+  hasActiveStaffEmail: vi.fn(),
+  sendMagicLink: vi.fn(),
+}));
+vi.mock("@/db/queries/auth", () => ({ hasActiveStaffEmail, sendMagicLink }));
 
 const { requestMagicLink } = await import("@/app/login/actions");
 const { loginEmailSchema } = await import("@/db/types");
@@ -18,6 +21,7 @@ describe("magic-link sign-in", () => {
   afterEach(() => vi.unstubAllEnvs());
   beforeEach(() => {
     vi.clearAllMocks();
+    hasActiveStaffEmail.mockResolvedValue(true);
     vi.stubEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000");
   });
 
@@ -59,6 +63,18 @@ describe("magic-link sign-in", () => {
     );
     expect(result.status).toBe("sent");
     expect(result.message).toContain("If this email is approved");
+  });
+
+  it("does not request a link when there is no active staff row", async () => {
+    hasActiveStaffEmail.mockResolvedValue(false);
+    const result = await requestMagicLink(
+      { status: "idle", email: "", next: "/" },
+      form("visitor@example.org"),
+    );
+
+    expect(result.status).toBe("sent");
+    expect(result.message).toContain("If this email is approved");
+    expect(sendMagicLink).not.toHaveBeenCalled();
   });
 
   it.each(["production", "test"])("requires an explicit callback origin in %s", async (environment) => {

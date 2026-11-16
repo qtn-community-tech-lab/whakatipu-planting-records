@@ -7,20 +7,20 @@ setting local keys and loading the initial data. This README covers database mai
 
 ## Files
 
-| File | What it does |
-|---|---|
-| `migrations/20261102000000_schema.sql` | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027 |
-| `migrations/20261102000100_access_rules.sql` | Access rules: signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app |
-| `migrations/20261103000000_public_reads.sql` | Signed-out visitors read live rows and the totals views, the same as a signed-in volunteer. They can't write, and can't see `users` |
-| `migrations/20261104000000_seasons_page.sql` | Adds year, half, workbook cell and review counts to the season totals, and the views `season_species`, `season_sites` and `totals_by_question` |
-| `migrations/20261105000000_line_records.sql` | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details` |
-| `migrations/20261106000000_naming.sql` | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
-| `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled |
-| `migrations/20261114000000_authentication.sql` | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes |
-| `migrations/20261114000100_user_management.sql` | Lets active approved users manage the allowlist while keeping stable app IDs and Auth identity links protected |
-| `checks/anonymous_crud_check.sql` | Verifies public reads remain available and anonymous writes and user-profile reads are denied |
-| `checks/schema_check.sql` | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads |
-| `checks/access_rules_check.sql` | Tries 25 public, unapproved and active-user operations, including user management, and lists PASS or FAIL. Changes nothing |
+| File                                               | What it does                                                                                                                                                                                                                                                   |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `migrations/20261102000000_schema.sql`             | Creates the 9 tables (sites, areas, species, seasons, plantings, planting_lines, questions, notes, users), the edit trail, the totals views and the 25 seasons from Autumn 2015 to Autumn 2027                                                                 |
+| `migrations/20261102000100_access_rules.sql`       | Access rules: signed in reads live rows, staff add and edit. Nobody deletes, makes anyone staff, changes seasons or creates spreadsheet-history rows from the app                                                                                              |
+| `migrations/20261103000000_public_reads.sql`       | Signed-out visitors read live rows and the totals views, the same as a signed-in volunteer. They can't write, and can't see `users`                                                                                                                            |
+| `migrations/20261104000000_seasons_page.sql`       | Adds year, half, workbook cell and review counts to the season totals, and the views `season_species`, `season_sites` and `totals_by_question`                                                                                                                 |
+| `migrations/20261105000000_line_records.sql`       | Adds each line's workbook file, sheet, original spellings, precision and confidence to `line_details`                                                                                                                                                          |
+| `migrations/20261106000000_naming.sql`             | Renames `plantings` to `planting_events`, `planting_lines.planting` to `planting_event`, and `retired_at` to `deactivated_at` on every table, with the functions, triggers, indexes and constraints that named them. No row changes. From James Bayly's review |
+| `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled                                                                                                                              |
+| `migrations/20261114000000_authentication.sql`     | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes                                                                                      |
+| `migrations/20261114000100_user_management.sql`    | Lets active approved users manage the allowlist while keeping stable app IDs and Auth identity links protected                                                                                                                                                 |
+| `checks/anonymous_crud_check.sql`                  | Verifies public reads remain available and anonymous writes and user-profile reads are denied                                                                                                                                                                  |
+| `checks/schema_check.sql`                          | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads                                                                                 |
+| `checks/access_rules_check.sql`                    | Tries 25 public, unapproved and active-user operations, including user management, and lists PASS or FAIL. Changes nothing                                                                                                                                     |
 
 ## Migrations
 
@@ -57,16 +57,22 @@ unchanged, including their IDs, names and deactivation state. Entries without a 
 as the display name. Supabase creates their Auth identities when they first sign in.
 
 Anonymous visitors can read all planting history, including deactivated pages, search and CSV exports. They cannot
-read user profiles, write data or use AI Chat. Supabase's Before User Created hook checks the email allowlist for
-direct Auth requests as well as app sign-in requests. Database writes also check active membership through RLS.
+read user profiles, write data or use AI Chat. The app checks the active email allowlist before requesting a
+sign-in link, and Supabase's Before User Created hook blocks unapproved new Auth identities, including direct
+Auth signups. Database writes also check active membership through RLS.
 
 Supabase generates and verifies magic links in every environment. Email delivery is configured per Supabase
 project, rather than selected by `NODE_ENV` in the app:
 
-| Environment | Delivery | Configuration |
-|---|---|---|
+Before requesting a link, the server checks `public.users` for an active matching email using the
+server-only `SUPABASE_SECRET_KEY`. This check also applies to existing Supabase Auth identities; the Before User
+Created hook remains the database-side guard for creating new identities. Configure the secret key in each app
+environment and never expose it with a `NEXT_PUBLIC_` prefix.
+
+| Environment       | Delivery                                                                   | Configuration                                                                 |
+| ----------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
 | Local development | Captured in the [local inbox](http://127.0.0.1:54324); no real emails sent | `config.toml`: `local_smtp.enabled = true`, `auth.email.smtp.enabled = false` |
-| Production | Resend SMTP, from `noreply@wrtqt.org.nz` | Hosted Supabase Auth SMTP settings below |
+| Production        | Resend SMTP, from `noreply@wrtqt.org.nz`                                   | Hosted Supabase Auth SMTP settings below                                      |
 
 Point development at local Supabase. Connecting a development server to the production Supabase project uses
 that project's real email delivery. Local startup and database migrations do not apply hosted SMTP settings.
@@ -76,16 +82,16 @@ that project's real email delivery. Local startup and database migrations do not
 Configure the **production Supabase project** under **Authentication → Email → SMTP Settings**, following
 [Resend's Supabase SMTP guide](https://resend.com/docs/send-with-supabase-smtp):
 
-| Setting | Value |
-|---|---|
-| Custom SMTP | Enabled |
-| Sender email | `noreply@wrtqt.org.nz` |
-| Sender name | `Whakatipu Reforestation Trust` |
-| Host | `smtp.resend.com` |
-| Port | `465` (TLS) |
-| Username | `resend` |
-| Password | A dedicated Resend API key with sending access to `wrtqt.org.nz` |
-| Minimum interval per user | `60` seconds |
+| Setting                   | Value                                                            |
+| ------------------------- | ---------------------------------------------------------------- |
+| Custom SMTP               | Enabled                                                          |
+| Sender email              | `noreply@wrtqt.org.nz`                                           |
+| Sender name               | `Whakatipu Reforestation Trust`                                  |
+| Host                      | `smtp.resend.com`                                                |
+| Port                      | `465` (TLS)                                                      |
+| Username                  | `resend`                                                         |
+| Password                  | A dedicated Resend API key with sending access to `wrtqt.org.nz` |
+| Minimum interval per user | `60` seconds                                                     |
 
 Keep the key in Supabase's SMTP password setting. It is not an application environment variable or an Edge
 Function secret. No Resend SDK, email webhook or database migration is needed. Domain verification is deferred;

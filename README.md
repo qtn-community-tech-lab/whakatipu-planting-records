@@ -44,8 +44,9 @@ NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
 SUPABASE_SECRET_KEY=<local secret key, or service_role key>
 ```
 
-To see the values again, run `npx --yes supabase@2.121.0 status`. The publishable/anon key is used by the app;
-the secret/service-role key is used only by the import scripts and must never have a `NEXT_PUBLIC_` prefix.
+To see the values again, run `npx --yes supabase@2.121.0 status`. The publishable/anon key is used by
+request-bound app queries. The secret/service-role key is used only on the server for the active staff email
+check before sending a sign-in link, and by the import scripts. It must never have a `NEXT_PUBLIC_` prefix.
 
 Keep these values in the git-ignored `.env.local`: the import scripts load that file directly, and Next.js uses
 it to override `.env`. The tracked `.env` contains legacy hosted settings; they are not a working local setup.
@@ -130,7 +131,9 @@ deploying Next.js alone does not create it. See [hosted database setup](supabase
 Use the Next.js preset and `npm run build`. Set `NEXT_PUBLIC_SUPABASE_URL` and
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in the deployment environment to the hosted project's values before
 building. These public values are bundled at build time; local URLs and legacy `.env` values are not production configuration.
-The app does not need `SUPABASE_SECRET_KEY`.
+Set the server-only `SUPABASE_SECRET_KEY` to the hosted project's secret/service-role key. The login action uses
+it to check `public.users` for an active account before asking Supabase Auth to send a magic link; never expose
+it through a `NEXT_PUBLIC_` variable.
 Set `NEXT_PUBLIC_APP_URL` to the production app origin and configure
 [Resend SMTP in hosted Supabase](supabase/README.md#production-email-with-resend). Supabase owns email delivery;
 the app does not need a Resend SDK or API key.
