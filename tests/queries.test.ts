@@ -33,8 +33,11 @@ describe("overview", () => {
     expect(o.seasons.length).toBeGreaterThan(0);
     expect(o.firstSeason.label).toBe("Autumn 2015");
     expect(o.lastSeason.order).toBe(o.seasons.length - 1);
-    expect(o.placeCount).toBeGreaterThan(0);
+    expect(o.siteCount).toBeGreaterThanOrEqual(o.siteCountWithPlantings);
+    expect(o.siteCountWithPlantings).toBeGreaterThan(0);
     expect(o.speciesCount).toBeGreaterThan(0);
+    expect(o.speciesCount).toBeGreaterThanOrEqual(o.speciesCountWithPlantings);
+    expect(o.speciesCountWithPlantings).toBeGreaterThan(0);
   });
 
   it("splits add up wherever they appear", async () => {

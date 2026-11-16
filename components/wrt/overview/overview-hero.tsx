@@ -22,17 +22,19 @@ interface Stat {
  * reference photos.
  */
 export function OverviewHero({
-  split, eyebrow, placeCount, speciesCount, seasonCount, topSpecies,
+  split, eyebrow, siteCount, speciesCount, siteCountWithPlantings, speciesCountWithPlantings, seasonCount, topSpecies,
 }: {
   split: QuantitySplit;
   eyebrow: string;
-  placeCount: number;
+  siteCount: number;
   speciesCount: number;
+  siteCountWithPlantings: number;
+  speciesCountWithPlantings: number;
   seasonCount: number;
   topSpecies: Ranked<Species>[];
 }) {
   const stats: Stat[] = [
-    { href: "/sites", icon: "sites", label: "Sites", value: formatNumber(placeCount) },
+    { href: "/sites", icon: "sites", label: "Sites", value: formatNumber(siteCount) },
     { href: "/species", icon: "species", label: "Species", value: formatNumber(speciesCount) },
     { href: "/seasons", icon: "seasons", label: "Seasons", value: formatNumber(seasonCount) },
     { href: "/records", icon: "records", label: "Records", value: formatNumber(split.records) },
@@ -50,7 +52,7 @@ export function OverviewHero({
           <span className="wrt-ohero__big tabular-nums">{formatNumber(split.total)}</span>
           <span className="wrt-ohero__line">recorded plants</span>
           <span className="wrt-ohero__sub">
-            across {formatNumber(placeCount)} sites and {formatNumber(speciesCount)} species
+            across {formatNumber(siteCountWithPlantings)} sites and {formatNumber(speciesCountWithPlantings)} species
           </span>
         </h1>
         <p className="wrt-ohero__lead">
