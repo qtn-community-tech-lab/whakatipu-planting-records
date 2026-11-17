@@ -150,7 +150,7 @@ the app does not need a Resend SDK or API key.
 | `/records` | Filter every record by site, species, year, season, review status or question; CSV export |
 | `/search?q=` | Sites, species and seasons. Ignores macrons and tolerates typos ("kowhia", "white chapel") |
 | `/about-the-data` | How to read every number: recorded vs verified, open rulings, precision, reconciliation |
-| `/export` | Signed-in staff only. Every stored row as six linked CSVs (sites, areas, species, planting events, planting lines, notes), one at a time or zipped with a README. Deactivated rows are included and dated; a blank quantity means unknown. Columns are defined once in `lib/wrt/export/files.ts` |
+| `/export` | Signed-in staff only. Every stored row as six linked CSVs (sites, site areas, species, planting events, planting lines, notes). Deactivated rows are included and dated; a blank quantity means unknown. Columns are defined once in `lib/wrt/export/files.ts` |
 
 ## How to read the numbers (product rules, enforced in code)
 
