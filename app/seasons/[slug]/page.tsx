@@ -14,9 +14,9 @@ import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
 import { hrefs } from "@/components/wrt/shared/names";
 import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { isAuthenticated } from "@/db/queries/access";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
+import { isAuthenticated } from "@/db/queries/auth";
 
 type Props = Readonly<PageProps<"/seasons/[slug]">>;
 
