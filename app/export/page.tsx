@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Calendar, Map as MapIcon, MapPin, Sprout } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, PageHead } from "@/components/wrt/shared/page";
 import { requireAuthenticated } from "@/db/queries/auth";
 import { countExportRows } from "@/db/queries/export";
@@ -16,26 +14,21 @@ const GROUPS: readonly ExportFile["group"][] = ["Plantings", "Places and species
 /** How the files link, in the order a planting is recorded. */
 const STEPS = [
   { icon: MapPin, title: "A site", text: "A place WRT plants, like a reserve or a scheme.", file: "sites.csv" },
-  { icon: MapIcon, title: "Has areas", text: "Parts of the site, each with a pin on the map.", file: "areas.csv" },
-  { icon: Calendar, title: "Planted in a season", text: "Each time an area was planted, e.g. Autumn 2019.", file: "planting_events.csv" },
+  { icon: MapIcon, title: "Has site areas", text: "Parts of the site, each with a pin on the map.", file: "site_areas.csv" },
+  { icon: Calendar, title: "Planted in a season", text: "Each time a site area was planted, e.g. Autumn 2019.", file: "planting_events.csv" },
   { icon: Sprout, title: "With these plants", text: "Which species went in, and how many of each.", file: "planting_lines.csv" },
 ];
 
 export default async function ExportPage() {
   await requireAuthenticated("/export");
-  const rows = await Promise.all(EXPORT_FILES.map(async (file) => ({ file, count: await countExportRows(file.name) })));
+  const rows = await Promise.all(EXPORT_FILES.map(async (file) => ({ file, count: await countExportRows(file.table) })));
 
   return (
     <>
       <PageHead
         eyebrow="Export data"
         title="Export planting data"
-        lead="Everything stored in the register as six CSV files that open in Excel or Numbers: workbook history, app entries and deactivated rows."
-        aside={
-          <Button asChild>
-            <a href="/export/all" download>Download all data (.zip)</a>
-          </Button>
-        }
+        lead="Everything stored in the app can be exported as a CSV. These files can be opened in Excel or sent to other systems. Exports include deactivated rows."
       />
 
       <p className="cn-callout cn-callout--note cn-callout--sm m-0" role="note">
@@ -80,12 +73,7 @@ export default async function ExportPage() {
                 {rows.filter(({ file }) => file.group === group).map(({ file, count }) => (
                   <tr key={file.name} className="text-[var(--text-body)] [font:var(--type-body)]">
                     <td>
-                      <span className="flex flex-wrap items-center gap-1.5">
-                        <code className="[font:var(--type-annotation)]">{file.name}.csv</code>
-                        {file.startHere && (
-                          <Badge tone="ok" className="!px-2 !py-0.5 ![font:var(--type-label)]">Start here</Badge>
-                        )}
-                      </span>
+                      <code className="[font:var(--type-annotation)]">{file.name}.csv</code>
                     </td>
                     <td className="first-letter:uppercase">{file.rowPer}</td>
                     <td className="cn-num">{formatNumber(count)}</td>
@@ -124,16 +112,12 @@ export default async function ExportPage() {
       <Card title="Good to know before you start">
         <div className="wrt-prose flex flex-col gap-3">
           <p className="m-0">
-            <b>Some rows are no longer in use.</b> We keep them so nothing is lost. They have a date in the
-            “deactivated_at” column. To see today’s picture, filter out any row where that column has a date.
+            <b>Some rows in your output data could be deactivated.</b> We always export everything, including deactivated data. Deactivated data will have a date in the
+            “deactivated_at” column. To see only active data, filter out any row where that column has a date.
           </p>
           <p className="m-0">
-            <b>Old records and new ones are both here.</b> The “source” column in planting events tells you whether a
+            <b>Where the data came from.</b> The “source” column in planting events tells you whether a
             planting came from the original workbook or was entered in this app.
-          </p>
-          <p className="m-0">
-            <b>Your totals will match the app.</b> Add up the “quantity” column in planting lines, leaving out any line
-            with a date in “deactivated_at” or “event_deactivated_at”. You’ll get the same numbers the app shows.
           </p>
           <p className="m-0">
             <b>Opens cleanly in Excel or Numbers.</b> Names keep their macrons, and nothing in the file can run as
