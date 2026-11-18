@@ -1,5 +1,6 @@
 /** Server-only queries over Supabase, scoped by the reader’s review switch. */
 import "server-only";
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { unstable_rethrow } from "next/navigation";
 import { SupabaseWrtRepository } from "@/db/repository";
@@ -7,9 +8,7 @@ import { createQueries, type WrtQueries } from "./queries";
 import type { WrtRepository } from "./repository";
 import { REVIEW_COOKIE, REVIEW_HIDDEN, confirmedOnly } from "./review-scope";
 
-const repo = new SupabaseWrtRepository();
-let queries: WrtQueries | null = null;
-let allQueries: WrtQueries | null = null;
+const requestRepository = cache(() => new SupabaseWrtRepository());
 
 /** Is this reader seeing records still needing review? On unless they switched it off. */
 export async function reviewShown(): Promise<boolean> {
@@ -24,7 +23,7 @@ export async function reviewShown(): Promise<boolean> {
 
 /** The repository for this request: everything, or confirmed records only, by the reader's switch. */
 function scopedRepository(): WrtRepository {
-  const all = repo;
+  const all = requestRepository();
   const confirmed = confirmedOnly(all);
   const pick = async () => ((await reviewShown()) ? all : confirmed);
   return {
@@ -38,13 +37,7 @@ function scopedRepository(): WrtRepository {
 }
 
 /** What the reader has chosen to see. Every page uses this. */
-export function getWrt(): WrtQueries {
-  if (!queries) queries = createQueries(scopedRepository());
-  return queries;
-}
+export const getWrt = cache((): WrtQueries => createQueries(scopedRepository()));
 
 /** Every record whatever the switch says: for pages that explain the data itself. */
-export function getWrtAll(): WrtQueries {
-  if (!allQueries) allQueries = createQueries(repo);
-  return allQueries;
-}
+export const getWrtAll = cache((): WrtQueries => createQueries(requestRepository()));

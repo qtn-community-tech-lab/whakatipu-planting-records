@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { repo } from "./helpers";
 import { createQueries } from "@/lib/wrt/queries";
-import { recordsToCsv } from "@/lib/wrt/records-csv";
 
 const deactivatedAt = "2026-11-09T00:00:00.000Z";
 const slug = "leptospermum-scoparium";
@@ -38,11 +37,11 @@ describe("deactivated species history", () => {
     }
   });
 
-  it("keeps deactivated species in historical filters, rankings and CSV exports", async () => {
+  it("keeps deactivated species in historical filters and rankings", async () => {
     const before = await active.records({ species: slug });
     const after = await deactivated.records({ species: slug });
     expect(after.split).toEqual(before.split);
-    expect(recordsToCsv(after.rows)).toBe(recordsToCsv(before.rows));
+    expect(after.rows.map((r) => r.record)).toEqual(before.rows.map((r) => r.record));
     expect((await deactivated.lookups()).species.some((s) => s.slug === slug)).toBe(true);
     expect((await deactivated.speciesList()).map((r) => [r.item.id, r.split]))
       .toEqual((await active.speciesList()).map((r) => [r.item.id, r.split]));

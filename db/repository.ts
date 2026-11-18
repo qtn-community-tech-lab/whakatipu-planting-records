@@ -1,6 +1,5 @@
 /** The planting history and season-total checks from Supabase. */
 import { createClient } from "@supabase/supabase-js";
-import { cache } from "react";
 import { SUPABASE_TAG } from "@/db/cache";
 import type { Database, Db } from "@/db/types";
 import { PAGE_SIZE } from "@/db/queries/views";
@@ -19,7 +18,7 @@ export function publicDb(): Db {
     {
       auth: { persistSession: false },
       global: { fetch: (input, init) => fetch(input, {
-        ...init, next: { revalidate: 300, tags: [SUPABASE_TAG] },
+        ...init, next: { revalidate: 3600, tags: [SUPABASE_TAG] },
       }) },
     },
   );
@@ -212,7 +211,11 @@ async function load(db: Db): Promise<Loaded> {
 export class SupabaseWrtRepository implements WrtRepository {
   constructor(private readonly db: () => Db = publicDb) {}
 
-  private data = cache(() => load(this.db()));
+  // Each instance belongs to one request, so all its reads share the same load.
+  private loaded?: Promise<Loaded>;
+  private data() {
+    return this.loaded ??= load(this.db());
+  }
 
   private read = <K extends keyof Loaded>(key: K) => async () => (await this.data())[key];
 
