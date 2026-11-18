@@ -106,6 +106,8 @@ export interface Parcel {
   name: string;
   placeSlug: string;
   siteClass: SiteClass;
+  /** Deactivated from new planting selections; visible in historical detail pages. */
+  deactivatedAt?: string | null;
   /** Every header spelling seen for this parcel in the MASTER grid. */
   aliases: string[];
 }

@@ -5,10 +5,12 @@
  */
 import { placeDetail, speciesAt } from "@/lib/wrt/chat-tools";
 import { SLUG } from "@/lib/wrt/text";
+import { isAuthenticated } from "@/db/queries/auth";
 
 
 export async function openDetail(kind: "place" | "species", slug: string, place?: string | null, part?: string | null) {
   // Trust boundary: server actions are public endpoints.
+  if (!(await isAuthenticated())) return { found: false as const };
   if (!SLUG.test(slug)) return { found: false as const };
   if (kind === "place") return placeDetail(slug);
   // Opened from a card about a site: also show how many were recorded there, and when.

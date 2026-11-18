@@ -62,7 +62,10 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
         name: p.name,
         keys: p.searchKeys,
         // The site-wide area is the site as a whole ("Whole site"), not a part to choose.
-        parts: p.parcels.filter((x) => x.id !== wholeSiteAreaSlug(p.slug)).map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] })).sort((a, b) => a.name.localeCompare(b.name)),
+        parts: p.parcels
+          .filter((x) => !x.deactivatedAt && x.id !== wholeSiteAreaSlug(p.slug))
+          .map((x) => ({ id: x.id, name: x.name, keys: [searchKey(x.name)] }))
+          .sort((a, b) => a.name.localeCompare(b.name)),
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     species: species

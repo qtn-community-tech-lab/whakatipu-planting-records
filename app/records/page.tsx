@@ -25,11 +25,12 @@ type Props = Readonly<PageProps<"/records">>;
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const wrt = getWrt();
-  const view = parseRecordParams(await searchParams, await wrt.lookups());
+  const lookups = await wrt.lookups();
+  const view = parseRecordParams(await searchParams, lookups);
   const f = view.filter;
   const bits: string[] = [];
-  if (f.place) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.name ?? "");
-  if (f.parcel) bits.push((await wrt.lookups()).places.find((p) => p.slug === f.place)?.parcels.find((p) => p.id === f.parcel)?.name ?? "");
+  if (f.place) bits.push(lookups.places.find((p) => p.slug === f.place)?.name ?? "");
+  if (f.parcel) bits.push(lookups.places.find((p) => p.slug === f.place)?.parcels.find((p) => p.id === f.parcel)?.name ?? "");
   if (f.year) bits.push(String(f.year));
   return { title: bits.filter(Boolean).length ? `Records · ${bits.filter(Boolean).join(" · ")}` : "Records" };
 }
@@ -66,7 +67,9 @@ export default async function RecordsPage({ searchParams }: Props) {
   }
 
   const wrt = getWrt();
-  const [lookups, places, allSeasons, showReview] = await Promise.all([wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown()]);
+  const [lookups, places, allSeasons, showReview] = await Promise.all([
+    wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown(),
+  ]);
   const parsed = parseRecordParams(raw, lookups);
   const result = await wrt.records(parsed.filter);
   const { filter, split } = result;

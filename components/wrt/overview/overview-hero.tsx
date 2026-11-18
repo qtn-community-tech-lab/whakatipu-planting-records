@@ -52,14 +52,13 @@ export function OverviewHero({
           <span className="wrt-ohero__big tabular-nums">{formatNumber(split.total)}</span>
           <span className="wrt-ohero__line">recorded plants</span>
           <span className="wrt-ohero__sub">
-            across {formatNumber(siteCountWithPlantings)} sites and {formatNumber(speciesCountWithPlantings)} species
+            from {formatNumber(speciesCountWithPlantings)} species across {formatNumber(siteCountWithPlantings)} planted sites
           </span>
         </h1>
         <p className="wrt-ohero__lead">
-          WRT’s planting history in one place for the first time. Every figure is a recorded plant from the allocation
+          Whakatipu Reforestation Trust&apos;s planting history in one place for the first time. Every figure is a recorded plant from the allocation
           sheets, not a verified planting.
         </p>
-
         <div className="wrt-ohero__figure">
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-ohero__split">
