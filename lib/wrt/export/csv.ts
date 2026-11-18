@@ -1,7 +1,12 @@
 /** Spreadsheet-safe CSV text and dated file names for the staff data export. */
-// csvField comes from the public /records/export. Keep (or move) it when that export is removed.
-import { csvField } from "@/lib/wrt/records-csv";
 import { todayInNz } from "@/lib/wrt/events/season";
+
+/** Quote for CSV, and defuse spreadsheet formulas in text that starts with = + @. */
+export function csvField(v: string | number | null | undefined): string {
+  let s = v === null || v === undefined ? "" : String(v);
+  if (/^[=+@\t\r]/.test(s)) s = `'${s}`;
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
 
 /** A value in one CSV cell. Null and undefined are written blank, which means unknown. */
 export type Cell = string | number | boolean | null | undefined;

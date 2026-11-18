@@ -126,7 +126,7 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
   // Trust boundary: the values and the retry id come from the browser.
   if (savedPlantingEvent !== undefined && !(Number.isSafeInteger(savedPlantingEvent) && savedPlantingEvent > 0)) return { error: NOT_RECORDED };
   const options = await eventFormOptions();
-  const places = options.sites.map((x) => ({ slug: x.slug, isScheme: false, parcels: x.parts }));
+  const places = options.sites.map((x) => ({ slug: x.slug, parcels: x.parts }));
   const checked = validateEventInput(raw, { places, species: options.species }, todayInNz());
   if (!checked.ok) return { issues: Object.entries(checked.errors).map(([path, message]) => ({ path, message })) };
   const event = checked.value;

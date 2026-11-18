@@ -14,7 +14,7 @@ let speciesB: string;
 beforeAll(async () => {
   const l = await q.lookups();
   lookups = l;
-  const sites = l.places.filter((p) => !p.isScheme && p.parcels.length > 1);
+  const sites = l.places.filter((p) => p.parcels.length > 1);
   site = defined(sites[0]);
   otherPart = defined(defined(sites[1]).parcels[0]).id;
   speciesA = defined(l.species[0]).id;
@@ -85,11 +85,11 @@ describe("validateEventInput", () => {
     if (!r.ok) expect(Object.keys(r.errors)).toContain(field);
   });
 
-  it("rejects an order scheme as the site", () => {
-    const scheme = lookups.places.find((p) => p.isScheme);
-    if (!scheme) return;
-    const r = validateEventInput(valid({ siteSlug: scheme.slug }), lookups, TODAY);
-    expect(!r.ok && r.errors.siteSlug).toBeTruthy();
+  it("allows Paper4Trees as a site", () => {
+    const scheme = lookups.places.find((p) => p.slug === "paper4trees");
+    expect(scheme).toBeDefined();
+    const r = validateEventInput(valid({ siteSlug: scheme!.slug }), lookups, TODAY);
+    expect(r.ok).toBe(true);
   });
 
   it("allows different species on one event", () => {

@@ -3,7 +3,7 @@
 A public web app that lets anyone explore every recorded planting season since Autumn 2015 by **site, species,
 year and season**, without opening an old spreadsheet. Approved staff can sign in to use AI Chat and make changes.
 
-5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species planted (164 in the register).
+5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 39 sites · 95 species planted (164 in the register).
 
 ## Local development
 
@@ -69,6 +69,8 @@ Check that the URL in `.env.local` is local, then run the workbook import before
 ```bash
 npm run import-workbook             # preview changes
 npm run import-workbook -- --write
+npm run seed-species                # preview the maintained species register
+npm run seed-species -- --write --backfill
 npm run import-pins                 # preview changes
 npm run import-pins -- --write
 ```
@@ -76,6 +78,10 @@ npm run import-pins -- --write
 The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
 against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+Run the species seed after the workbook import: that legacy importer restores names and threat flags from the
+workbook CSVs. The seed preserves the original slugs, refreshes the existing scientific-name and `threatened`
+fields, and fills only empty common/Māori names, profiles and photos. It does not change `over_5m` or store
+NZTCS assessment details. See [species seed and backfill](supabase/README.md#species-seed-and-backfill).
 
 ### 5. Start the app
 

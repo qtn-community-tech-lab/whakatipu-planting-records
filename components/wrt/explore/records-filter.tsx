@@ -42,7 +42,7 @@ export function RecordsFilter({
   for (const s of lookups.species) nameCount.set(s.displayName, (nameCount.get(s.displayName) ?? 0) + 1);
 
   const siteOptions: FilterOption[] = sites.map((p) => ({
-    value: p.slug, name: p.isScheme ? `${p.name} (order scheme)` : p.name, keys: p.searchKeys,
+    value: p.slug, name: p.name, keys: p.searchKeys,
   }));
   const speciesOptions: FilterOption[] = lookups.species.map((s) => ({
     value: s.slug, keys: s.searchKeys, detail: s.displayIsScientific ? undefined : s.scientificName,

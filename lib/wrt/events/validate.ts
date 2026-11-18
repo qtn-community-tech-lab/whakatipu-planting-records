@@ -71,7 +71,7 @@ export const eventInputSchema = z.object({
 /** The minimum the reference checks need: works with the server's Lookups or a client-side copy. */
 /** The site list and species register to check against. The shape (places, parcels) is the older repository's lookups, passed in as they are. */
 export interface EventLookups {
-  places: { slug: string; isScheme: boolean; parcels: { id: string }[] }[];
+  places: { slug: string; parcels: { id: string }[] }[];
   species: { id: string }[];
 }
 
@@ -92,7 +92,6 @@ export function eventSchema(lookups: EventLookups, today: string) {
     if (v.contextSeason) { const problem = plantedOnProblem(v.plantedOn, v.contextSeason, today); if (problem) add(["plantedOn"], problem); }
     const site = lookups.places.find((p) => p.slug === v.siteSlug);
     if (!site) add(["siteSlug"], "That site is not in the site list.");
-    else if (site.isScheme) add(["siteSlug"], "Order schemes are not a physical site; choose the site where the planting happened.");
     else if (v.partId !== null && !site.parcels.some((p) => p.id === v.partId)) {
       add(["partId"], "That part does not belong to the chosen site.");
     }

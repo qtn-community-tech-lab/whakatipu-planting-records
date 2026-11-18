@@ -45,7 +45,7 @@ beforeEach(async () => {
   mocks.deactivate.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.create.mockResolvedValue({ data: { slug: values.slug }, error: null });
   mocks.update.mockResolvedValue({ data: { slug: values.slug }, error: null });
-  mocks.read.mockResolvedValue({ ...values, is_scheme: false, updated_at: "2026-11-10T00:00:00Z" });
+  mocks.read.mockResolvedValue({ ...values, updated_at: "2026-11-10T00:00:00Z" });
   mocks.redirect.mockImplementation(() => { throw new Error("REDIRECT"); });
   const history = await q.places();
   mocks.places.mockResolvedValue(history);
@@ -53,9 +53,9 @@ beforeEach(async () => {
   mocks.overview.mockResolvedValue(await q.overview());
   mocks.records.mockResolvedValue(await q.records());
   mocks.list.mockResolvedValue([
-    ...history.map(({ item }) => ({ slug: item.slug, name: item.name, is_scheme: item.isScheme })),
-    { slug: "aaa-new", name: "AAA new site", is_scheme: false },
-    { slug: "zzz-new", name: "ZZZ new site", is_scheme: false },
+    ...history.map(({ item }) => ({ slug: item.slug, name: item.name })),
+    { slug: "aaa-new", name: "AAA new site" },
+    { slug: "zzz-new", name: "ZZZ new site" },
   ]);
 });
 
@@ -90,7 +90,7 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   });
 
   it("writes only allowed fields and invalidates shared data before redirecting", async () => {
-    const input = { ...values, slug: "changed-slug", is_scheme: true, updated_by: "spoofed", deactivated_at: "now" };
+    const input = { ...values, slug: "changed-slug", updated_by: "spoofed", deactivated_at: "now" };
     await expect((await pageForm(kind))!.props.onSubmit(input)).rejects.toThrow("REDIRECT");
     if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...values, slug: "changed-slug" });
     else expect(mocks.update).toHaveBeenCalledWith(values.slug, { name: values.name, description: values.description });
@@ -229,7 +229,7 @@ it("keeps a deactivated site's historical records and quantities on its detail",
 });
 
 it("requests the deactivated register and preserves lifecycle state through filters", async () => {
-  mocks.list.mockResolvedValue([{ slug: values.slug, name: values.name, is_scheme: false }]);
+  mocks.list.mockResolvedValue([{ slug: values.slug, name: values.name }]);
   const html = renderToStaticMarkup(await SitesPage({ params: Promise.resolve({}), searchParams: Promise.resolve({ state: "deactivated", sort: "name" }) }));
   expect(mocks.list).toHaveBeenCalledWith("deactivated");
   expect(html).toContain('name="state" value="deactivated"');
