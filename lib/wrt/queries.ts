@@ -140,12 +140,10 @@ export interface Overview {
   firstSeason: Season;
   lastSeason: Season;
   seasons: SeasonPoint[];
-  /** Active physical sites in the register, excluding order schemes. */
+  /** Active sites in the register. */
   siteCount: number;
-  /** Active physical sites with planting records, excluding order schemes. */
+  /** Sites with planting records. */
   siteCountWithPlantings: number;
-  /** Order schemes recorded alongside sites (not places). */
-  schemeCount: number;
   parcelCount: number;
   /** Active species in the register. */
   speciesCount: number;
@@ -348,9 +346,8 @@ export function createQueries(repo: WrtRepository) {
         firstSeason,
         lastSeason,
         seasons: seasonSeries(c, c.records),
-        siteCount: c.places.filter((place) => !place.isScheme && place.deactivatedAt == null).length,
-        siteCountWithPlantings: new Set(c.records.filter((r) => !c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
-        schemeCount: new Set(c.records.filter((r) => c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
+        siteCount: c.places.filter((place) => place.deactivatedAt == null).length,
+        siteCountWithPlantings: new Set(c.records.map((r) => r.placeSlug)).size,
         parcelCount: c.places.reduce((n, p) => n + p.parcels.length, 0),
         speciesCount: c.species.filter((species) => species.deactivatedAt === null).length,
         speciesCountWithPlantings: new Set(c.records.map((r) => r.speciesId)).size,

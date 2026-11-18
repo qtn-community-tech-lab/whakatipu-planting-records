@@ -38,7 +38,7 @@ describe("site schemas", () => {
   });
 
   it("limits creation and editing to their own writable fields", () => {
-    const extra = { ...site, slug: "another-slug", is_scheme: true, updated_by: "spoofed", deactivated_at: "now", lat: -45 };
+    const extra = { ...site, slug: "another-slug", updated_by: "spoofed", deactivated_at: "now", lat: -45 };
     expect(createSiteSchema.parse(extra)).toEqual({ ...site, slug: "another-slug" });
     expect(editSiteSchema.parse(extra)).toEqual({ name: site.name, description: "" });
     expect(editSiteSchema.parse({ name: site.name, description: "" })).toEqual({ name: site.name, description: "" });

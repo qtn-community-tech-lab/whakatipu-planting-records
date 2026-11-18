@@ -4,7 +4,7 @@
  * matchScore (macron- and typo-tolerant). Contains names only, never IDs.
  */
 export interface SearchIndex {
-  places: { slug: string; name: string; keys: string[]; total: number; isScheme: boolean }[];
+  places: { slug: string; name: string; keys: string[]; total: number }[];
   species: { slug: string; name: string; scientific: string; isScientific: boolean; keys: string[]; total: number }[];
   seasons: { slug: string; label: string; year: number; total: number }[];
 }

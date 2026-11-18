@@ -123,8 +123,6 @@ export interface Place {
   deactivatedAt?: string | null;
   /** Distinct site classes of the parcels in this place, most plants first. */
   siteClasses: SiteClass[];
-  /** True for order schemes (Paper4Trees) that are not a physical place. */
-  isScheme: boolean;
   parcels: Parcel[];
   searchKeys: string[];
 }

@@ -36,7 +36,6 @@ export function PlaceName({ place, link = false }: { place: Place; link?: boolea
   const label = (
     <span className="cn-species">
       <span className="cn-species__common">{place.name}</span>
-      {place.isScheme && <span className="cn-species__latin is-plain">Order scheme, not a place</span>}
     </span>
   );
   return link ? (

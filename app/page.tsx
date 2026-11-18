@@ -105,7 +105,7 @@ export default async function Home() {
         <Card
           title="Sites with the most recorded plants"
           action={<CardLink href="/sites">All sites</CardLink>}
-          foot={`${topPlaces.length} of ${o.siteCountWithPlantings} sites${o.schemeCount ? ` and ${o.schemeCount} order scheme` : ""} with plantings, ranked by recorded plants.`}
+          foot={`${topPlaces.length} of ${o.siteCountWithPlantings} sites with plantings, ranked by recorded plants.`}
         >
           <RankedBars
             aligned
@@ -140,7 +140,7 @@ export default async function Home() {
       </div>
 
       <div className="wrt-grid wrt-grid--2">
-        <Card title="Where the plants went" foot="Keystone sites are the large restoration sites. Order-scheme plants are not tied to a place.">
+        <Card title="Where the plants went" foot="Keystone sites are the large restoration sites.">
           <ClassBreakdown rows={o.byClass} />
         </Card>
         <Card

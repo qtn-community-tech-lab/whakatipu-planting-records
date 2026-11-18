@@ -1,4 +1,4 @@
-import type { Parcel, Place, PlantingRecord, Season, Species } from "@/lib/wrt/types";
+import type { Parcel, Place, SiteClass, PlantingRecord, Season, Species } from "@/lib/wrt/types";
 import { searchKey, slugify } from "@/lib/wrt/text";
 
 // Invented quantities and identities for behaviour tests, not a snapshot of client data.
@@ -27,12 +27,12 @@ export const species: Species[] = [
   note: null, photos: [], profile: null, deactivatedAt: null,
 }));
 
-function place(name: string, parts: [string, string][], isScheme = false): Place {
+function place(name: string, parts: [string, string][], siteClass: SiteClass = "keystone"): Place {
   const slug = slugify(name);
   const parcels: Parcel[] = parts.map(([id, name]) => ({
-    id, name, placeSlug: slug, siteClass: isScheme ? "unknown" : "keystone", aliases: [],
+    id, name, placeSlug: slug, siteClass, aliases: [],
   }));
-  return { slug, name, isScheme, parcels, siteClasses: [isScheme ? "unknown" : "keystone"],
+  return { slug, name, parcels, siteClasses: [siteClass],
     searchKeys: [name, ...parcels.map((p) => p.name), ...(slug === "whitechapel" ? ["wcr"] : [])].map(searchKey) };
 }
 
@@ -41,7 +41,7 @@ export const places = [
   place("Lake Hayes", [["9A", "Lake Hayes South"], ["9G", "Lake Hayes Pavilion"]]),
   place("Gorge Road area", [["wetlands", "Gorge Rd Wetlands"], ["5B", "Harvest Gardens"]]),
   place("Slope Hill", [["11", "Slope Hill Road"]]),
-  place("Paper4Trees", [["scheme", "Paper4Trees"]], true),
+  place("Paper4Trees", [["scheme", "Paper4Trees"]], "unknown"),
 ];
 
 function record(site: number, part: number, speciesIndex: number, seasonIndex: number, quantity: number,
@@ -53,7 +53,7 @@ function record(site: number, part: number, speciesIndex: number, seasonIndex: n
     id: `test-${site}-${part}-${speciesIndex}-${seasonIndex}`, placeSlug: place.slug,
     parcelId: parcel.id, parcelName: parcel.name, siteClass: parcel.siteClass,
     speciesId: species[speciesIndex]!.id, seasonSlug: season.slug, year: season.year, seasonName: season.name,
-    quantity, hasQuantity: true, precision: place.isScheme ? "scheme" : "site", confidence: "high",
+    quantity, hasQuantity: true, precision: "site", confidence: "high",
     needsReview: false, notes: [], provenance: { sourceFile: "fixture.xlsx", sourceSheet: "Test",
       sourceCell: "A1", seasonLabelOriginal: season.label, siteOriginal: place.name,
       speciesOriginal: species[speciesIndex]!.scientificName }, ...overrides,
@@ -70,7 +70,7 @@ export const records: PlantingRecord[] = [
   record(2, 1, 0, 4, 15),
   record(3, 0, 0, 4, 25, { notes: [{ kind: "fyi", theme: "other", text: "Planting confirmed", raw: "Planting confirmed" }] }),
   record(3, 0, 1, 5, 35),
-  record(4, 0, 0, 5, 45, { needsReview: true, notes: [{
+  record(4, 0, 0, 5, 45, { precision: "scheme", needsReview: true, notes: [{
     kind: "ruling", theme: "order-scheme", text: "Order scheme needs a ruling", raw: "Order scheme needs a ruling",
   }] }),
   record(0, 0, 0, 6, 0, { hasQuantity: false, needsReview: true, notes: [{
