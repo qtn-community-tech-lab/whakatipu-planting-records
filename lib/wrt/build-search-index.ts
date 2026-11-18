@@ -1,9 +1,8 @@
 import "server-only";
-import { getWrt } from "./server";
+import type { WrtQueries } from "./queries";
 import type { SearchIndex } from "./search-index";
 
-export async function buildSearchIndex(): Promise<SearchIndex> {
-  const wrt = getWrt();
+export async function buildSearchIndex(wrt: WrtQueries): Promise<SearchIndex> {
   const [places, species, seasons] = await Promise.all([wrt.places(), wrt.speciesList(), wrt.seasons()]);
   return {
     places: places.map((p) => ({

@@ -362,9 +362,15 @@ export function createQueries(repo: WrtRepository) {
 
     async places(): Promise<PlaceSummary[]> {
       const c = await ctx();
+      const byPlace = new Map<string, PlantingRecord[]>();
+      for (const record of c.records) {
+        const rows = byPlace.get(record.placeSlug);
+        if (rows) rows.push(record);
+        else byPlace.set(record.placeSlug, [record]);
+      }
       return c.places
         .map((place) => {
-          const recs = c.records.filter((r) => r.placeSlug === place.slug);
+          const recs = byPlace.get(place.slug) ?? [];
           return {
             item: place,
             split: splitOf(recs),

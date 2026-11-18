@@ -3,12 +3,12 @@ import type { Metadata, Viewport } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
-import { buildSearchIndex } from "@/lib/wrt/build-search-index";
+import { reviewShown } from "@/lib/wrt/server";
+import { readLayoutData } from "@/lib/wrt/layout-data";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
 import { GlobalSearch } from "@/components/wrt/shell/global-search";
-import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
+import { GrowthRings } from "@/components/wrt/shell/growth-rings";
 import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
 import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
@@ -16,8 +16,6 @@ import { AuthControl } from "@/components/wrt/shell/auth-control";
 import { AuthErrorRedirect } from "@/components/wrt/shell/auth-error-redirect";
 import { ConnectionStatus } from "@/components/wrt/shell/connection-status";
 import { ServiceWorker } from "@/components/wrt/shell/service-worker";
-import type { NavCounts } from "@/components/wrt/shell/nav";
-import { formatNumber } from "@/lib/wrt/text";
 import { isAuthenticated } from "@/db/queries/auth";
 
 export const metadata: Metadata = {
@@ -31,23 +29,8 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
-  const [overview, index, showReview, authenticated] = await Promise.all([
-    getWrt().overview(), buildSearchIndex(), reviewShown(), isAuthenticated(),
-  ]);
-  const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
-  const counts: NavCounts = {
-    sites: formatNumber(overview.siteCount),
-    species: formatNumber(overview.speciesCount),
-    seasons: formatNumber(overview.seasons.length),
-    records: formatNumber(overview.split.records),
-  };
-  const rings: RingSeason[] = overview.seasons.map((p) => ({
-    slug: p.season.slug,
-    label: p.season.label,
-    autumn: p.season.name === "Autumn",
-    total: p.split.total,
-    needsReview: p.split.needsReview,
-  }));
+  const [showReview, authenticated] = await Promise.all([reviewShown(), isAuthenticated()]);
+  const { counts, rings, range, index } = await readLayoutData(showReview);
   return (
     <html lang="en-NZ" data-review={showReview ? "shown" : "hidden"}>
       <body className="cn-app">

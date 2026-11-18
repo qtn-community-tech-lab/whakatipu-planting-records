@@ -12,7 +12,7 @@ import { RecordsTable } from "@/components/wrt/shared/records";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
-  PAGE_SIZE, PARAM_KEYS, type RecordsView, exportHref, hasFilters, parseRecordParams, recordsHref,
+  PAGE_SIZE, PARAM_KEYS, type RecordsView, hasFilters, parseRecordParams, recordsHref,
 } from "@/components/wrt/explore/filters";
 import { RecordsFilter } from "@/components/wrt/explore/records-filter";
 import { ActiveFilters } from "@/components/wrt/explore/active-filters";
@@ -20,20 +20,12 @@ import { RecordsPager } from "@/components/wrt/explore/records-pager";
 import { SortLinks } from "@/components/wrt/explore/sort-links";
 import { recordsHeadline } from "@/components/wrt/explore/records-headline";
 import type { RecordView } from "@/lib/wrt/queries";
+import { requireAuthenticated } from "@/db/queries/auth";
+import { hrefs } from "@/lib/wrt/routes";
 
 type Props = Readonly<PageProps<"/records">>;
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const wrt = getWrt();
-  const lookups = await wrt.lookups();
-  const view = parseRecordParams(await searchParams, lookups);
-  const f = view.filter;
-  const bits: string[] = [];
-  if (f.place) bits.push(lookups.places.find((p) => p.slug === f.place)?.name ?? "");
-  if (f.parcel) bits.push(lookups.places.find((p) => p.slug === f.place)?.parcels.find((p) => p.id === f.parcel)?.name ?? "");
-  if (f.year) bits.push(String(f.year));
-  return { title: bits.filter(Boolean).length ? `Records · ${bits.filter(Boolean).join(" · ")}` : "Records" };
-}
+export const metadata: Metadata = { title: "Records" };
 
 function sortRows(rows: RecordView[], sort: RecordsView["sort"]): RecordView[] {
   const bySeason = (a: RecordView, b: RecordView) => a.season.order - b.season.order;
@@ -58,6 +50,8 @@ function sortRows(rows: RecordView[], sort: RecordsView["sort"]): RecordView[] {
 
 export default async function RecordsPage({ searchParams }: Props) {
   const raw = await searchParams;
+  const next = hrefs.records(Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, first(value)])));
+  await requireAuthenticated(next);
 
   // A GET form sends empty fields (?place=&year=…). Redirect to the clean URL so the link is shareable.
   if (PARAM_KEYS.some((k) => first(raw[k]) === "")) {
@@ -205,11 +199,6 @@ export default async function RecordsPage({ searchParams }: Props) {
             id="records"
             title={<span className="rx-records-title">Records <small>{formatNumber(total)} · {from}–{to} shown</small></span>}
             variant="table"
-            action={
-              <a href={exportHref(view)} className="cn-btn cn-btn--soft cn-btn--sm !no-underline" download>
-                Download these records (CSV)
-              </a>
-            }
             foot="Open Source on any row to see the original spreadsheet cell and the words as typed."
           >
             <div className="px-2.5 pb-2">

@@ -55,6 +55,7 @@ describe("Supabase repository without workbook files", () => {
       repo.listRecords(), repo.listReconciliation(), repo.getSourceInfo(),
     ]);
 
+    expect(fetch.mock.calls.filter(([url]) => String(url).includes("/line_details?"))).toHaveLength(1);
     expect(records).toMatchObject([
       { id: "PH-1", year: 2030, quantity: 12, placeSlug: "reserve", parcelId: "1A" },
       { id: "PH-2", year: 2030, quantity: 5, placeSlug: "old-site", parcelId: "old-area" },
