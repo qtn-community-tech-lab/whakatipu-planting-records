@@ -14,9 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 import { SiteRows, partHref } from "@/components/wrt/sites/site-rows";
 import { readPlantingArea, readSite } from "@/db/queries/sites";
-import { isAuthenticated } from "@/db/queries/access";
 import { Button } from "@/components/ui/button";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
+import { isAuthenticated } from "@/db/queries/auth";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
 

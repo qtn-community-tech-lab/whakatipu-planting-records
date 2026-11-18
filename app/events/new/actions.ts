@@ -7,7 +7,6 @@
  */
 import { revalidatePath, updateTag } from "next/cache";
 import { SUPABASE_TAG } from "@/db/cache";
-import { isAuthenticated } from "@/db/queries/access";
 import {
   createPlantingEvent, createPlantingLines, deactivatePlantingLines, listPlantingEventNotes, listPlantingEventLines,
   listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, updatePlantingLine,
@@ -21,6 +20,7 @@ import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 import { SLUG } from "@/lib/wrt/text";
+import { requireAuthenticated } from "@/db/queries/auth";
 
 const TREES_SHOWN = 5;
 const SEASONS_SHOWN = 6;
@@ -122,7 +122,7 @@ const NO_PLANTS = "The planting event was saved but its plants were not. Your en
  * if the lines fail the event's id comes back as `savedPlantingEvent`; the form sends it on retry and only the lines go in.
  */
 export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEvent?: number): Promise<PlantingEventSubmitResult> {
-  if (!(await isAuthenticated())) return { error: "Sign in to save planting events." };
+  await requireAuthenticated("/events/new");
   // Trust boundary: the values and the retry id come from the browser.
   if (savedPlantingEvent !== undefined && !(Number.isSafeInteger(savedPlantingEvent) && savedPlantingEvent > 0)) return { error: NOT_RECORDED };
   const options = await eventFormOptions();
@@ -191,7 +191,7 @@ const NOT_SAVED = "The planting event could not be saved. Your changes are still
  * transaction, so a failure part way says some changes were saved; saving again finishes the rest.
  */
 export async function savePlantingEventEdit(id: number, raw: unknown): Promise<PlantingEventEditResult> {
-  if (!(await isAuthenticated())) return { error: "Sign in to edit planting events." };
+  await requireAuthenticated("/events/new");
   // Trust boundary: the id and values come from the browser.
   if (!(Number.isSafeInteger(id) && id > 0)) return { error: NOT_SAVED };
   const parsed = plantingEventEditSchema.safeParse(raw);

@@ -17,6 +17,7 @@ const { listSites, listSiteTotals, readSite, listPlantingAreaTotals, listPlantin
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
 const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
 const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
+const { countExportRows, exportNotes, exportPlantingLines } = await import("@/db/queries/export");
 
 const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.plants ?? 0), 0);
 
@@ -108,5 +109,14 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     const questions = await listOpenQuestions();
     expect(questions.length).toBeGreaterThan(0);
     expect(questions.every((q) => q.openNotes > 0)).toBe(true);
+  });
+
+  it("exports every line and note, and active line quantities add up to the app's totals", async () => {
+    const lines = await exportPlantingLines();
+    expect(lines.length).toBeGreaterThan(PAGE_SIZE);
+    expect(lines.length).toBe(await countExportRows("planting_lines"));
+    expect((await exportNotes()).length).toBe(await countExportRows("notes"));
+    const active = lines.filter((line) => !line.deactivated_at && !line.event?.deactivated_at);
+    expect(active.reduce((n, line) => n + (line.quantity ?? 0), 0)).toBe(sum(await listSeasons()));
   });
 });

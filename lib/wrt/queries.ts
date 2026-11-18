@@ -551,7 +551,10 @@ export function createQueries(repo: WrtRepository) {
       return {
         seasons: c.seasons,
         years: [...new Set(c.seasons.map((s) => s.year))],
-        places: c.places,
+        places: c.places.map((place) => ({
+            ...place,
+            parcels: place.parcels,
+          })),
         species: c.species
           .filter((s) => usedSpecies.has(s.id))
           .sort((a, b) => a.displayName.localeCompare(b.displayName)),

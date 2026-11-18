@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { isAuthenticated } from "@/db/queries/access";
 import { createSite, updateSite } from "@/db/queries/sites";
 import { savePlantingAreas } from "@/app/sites/save-planting-areas";
 import { SUPABASE_TAG } from "@/db/cache";
@@ -12,20 +11,19 @@ import {
   type SiteSubmitResult,
 } from "@/db/types";
 import { PageHead } from "@/components/wrt/shared/page";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 
 export const metadata: Metadata = { title: "Create site" };
 
 export default async function NewSitePage() {
-  const authenticated = await isAuthenticated();
+  await requireAuthenticated("/sites/new");
 
   async function onSubmit(
     input: CreateSiteInput,
     savedSiteSlug?: string,
   ): Promise<SiteSubmitResult> {
     "use server";
-    if (!(await isAuthenticated()))
-      return { error: "Sign in to create sites." };
+    if (!(await isAuthenticated())) return { error: "Sign in to create sites." };
     const parsed = createSiteSchema.safeParse(input);
     if (!parsed.success)
       return {
@@ -93,22 +91,12 @@ export default async function NewSitePage() {
 
   return (
     <>
-      <PageHead
-        title="Create site"
-        back={{ href: "/sites", label: "All sites" }}
-      />
-      {authenticated ? (
+      <PageHead title="Create site" back={{ href: "/sites", label: "All sites" }} />
         <SiteForm
           onSubmit={onSubmit}
           submitLabel="Create site"
           cancelHref="/sites"
         />
-      ) : (
-        <Alert>
-          <AlertTitle>Sign-in required</AlertTitle>
-          <AlertDescription>Sign in to create sites.</AlertDescription>
-        </Alert>
-      )}
     </>
   );
 }

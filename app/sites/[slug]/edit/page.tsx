@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
-import { isAuthenticated } from "@/db/queries/access";
 import {
   readSite,
   updateSite,
   listPlantingAreas,
 } from "@/db/queries/sites";
 import { savePlantingAreas } from "@/app/sites/save-planting-areas";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import {
@@ -17,7 +17,6 @@ import {
   type SiteSubmitResult,
 } from "@/db/types";
 import { PageHead } from "@/components/wrt/shared/page";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = { title: "Edit site" };
@@ -25,20 +24,8 @@ export const metadata: Metadata = { title: "Edit site" };
 export default async function EditSitePage({
   params,
 }: Readonly<PageProps<"/sites/[slug]/edit">>) {
-  if (!(await isAuthenticated()))
-    return (
-      <>
-        <PageHead
-          title="Edit site"
-          back={{ href: "/sites", label: "All sites" }}
-        />
-        <Alert>
-          <AlertTitle>Sign-in required</AlertTitle>
-          <AlertDescription>Sign in to edit sites.</AlertDescription>
-        </Alert>
-      </>
-    );
   const { slug } = await params;
+  await requireAuthenticated(`/sites/${slug}/edit`);
   const [site, areas] = await Promise.all([
     readSite(slug),
     listPlantingAreas(slug),
