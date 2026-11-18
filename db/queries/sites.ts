@@ -20,7 +20,7 @@ export async function listSites(state: "active" | "deactivated" = "active") {
 export async function readSite(slug: string) {
   const { data } = await (await db())
     .from("sites")
-    .select("slug, name, description, is_scheme, updated_at, deactivated_at")
+    .select("slug, name, description, is_scheme, deactivated_at, updated_at")
     .eq("slug", slug)
     .maybeSingle()
     .throwOnError();

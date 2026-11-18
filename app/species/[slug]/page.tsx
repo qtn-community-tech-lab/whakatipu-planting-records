@@ -13,7 +13,7 @@ import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
 

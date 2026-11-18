@@ -684,24 +684,27 @@ export type Database = {
       };
       users: {
         Row: {
+          auth_user_id: string | null;
           created_at: string;
           deactivated_at: string | null;
+          email: string;
           id: string;
-          is_staff: boolean;
           name: string;
         };
         Insert: {
+          auth_user_id?: string | null;
           created_at?: string;
           deactivated_at?: string | null;
-          id: string;
-          is_staff?: boolean;
+          email: string;
+          id?: string;
           name: string;
         };
         Update: {
+          auth_user_id?: string | null;
           created_at?: string;
           deactivated_at?: string | null;
+          email?: string;
           id?: string;
-          is_staff?: boolean;
           name?: string;
         };
         Relationships: [];
@@ -883,7 +886,11 @@ export type Database = {
       };
     };
     Functions: {
-      is_staff: { Args: never; Returns: boolean };
+      authorize_staff_signup: { Args: { event: Json }; Returns: Json };
+      current_app_user_id: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
     };
     Enums: {
       note_kind: "ruling" | "confirm" | "fyi";

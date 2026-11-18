@@ -10,7 +10,12 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/lib/wrt/server", () => ({
   getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({
+  isAuthenticated: mocks.authenticated,
+  requireAuthenticated: async (next: string) => {
+    if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
+  },
+}));
 vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate, readSpeciesForEdit: mocks.read, updateSpecies: mocks.update }));
 vi.mock("next/cache", () => ({ updateTag: mocks.tag, revalidatePath: mocks.revalidate }));
 vi.mock("next/navigation", () => ({
@@ -64,7 +69,7 @@ describe("species deactivation action", () => {
     expect(renderToStaticMarkup(await page())).not.toContain("Deactivate species");
     expect(renderToStaticMarkup(await EditPage(props))).toContain("Deactivate species");
     mocks.authenticated.mockResolvedValue(false);
-    expect(renderToStaticMarkup(await EditPage(props))).not.toContain("Deactivate species");
+    await expect(EditPage(props)).rejects.toThrow("REDIRECT");
   });
 
   it("deactivates the selected species, invalidates shared reads and opens its detail", async () => {

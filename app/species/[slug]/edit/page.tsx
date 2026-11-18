@@ -1,9 +1,8 @@
-import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 import { readSpeciesForEdit, updateSpecies, deactivateSpecies } from "@/db/queries/species";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SpeciesForm } from "@/components/wrt/species/SpeciesForm";
@@ -11,6 +10,7 @@ import { speciesSchema, type SpeciesInput, type SpeciesSubmitResult } from "@/db
 import { PageHead } from "@/components/wrt/shared/page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 
 export const metadata: Metadata = { title: "Edit species" };
 
@@ -21,25 +21,14 @@ export default async function EditSpeciesPage({
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ saved?: string }>;
 }) {
-  if (!(await isAuthenticated()))
-    return (
-      <>
-        <PageHead
-          title="Edit species"
-          back={{ href: "/species", label: "All species" }}
-        />
-        <Alert>
-          <AlertTitle>Sign-in required</AlertTitle>
-          <AlertDescription>Sign in to edit species.</AlertDescription>
-        </Alert>
-      </>
-    );
   const { slug } = await params;
+  await requireAuthenticated(`/species/${slug}/edit`);
   const [species, query] = await Promise.all([
     readSpeciesForEdit(slug),
     searchParams,
   ]);
   if (!species) notFound();
+  const speciesHref = `/species/${slug}` as Route;
 
   async function onSubmit(input: SpeciesInput): Promise<SpeciesSubmitResult> {
     "use server";
@@ -93,7 +82,7 @@ export default async function EditSpeciesPage({
         aside={
           <div className="flex flex-wrap items-center gap-2">
             <Button asChild variant="secondary">
-              <Link href={`/species/${slug}`}>View species</Link>
+              <Link href={speciesHref}>View species</Link>
             </Button>
             <DeactivateSpecies name={species.maori_name ?? species.common_name ?? species.scientific_name} onDeactivate={onDeactivate} />
           </div>
@@ -110,7 +99,7 @@ export default async function EditSpeciesPage({
         values={species}
         onSubmit={onSubmit}
         submitLabel="Save changes"
-        cancelHref={`/species/${slug}`}
+        cancelHref={speciesHref}
       />
     </>
   );

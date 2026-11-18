@@ -3,8 +3,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import SeasonsPage from "@/app/seasons/page";
 import SeasonPage from "@/app/seasons/[slug]/page";
 
-const { readDb } = vi.hoisted(() => ({ readDb: vi.fn() }));
+const { readDb, authenticated } = vi.hoisted(() => ({ readDb: vi.fn(), authenticated: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: readDb }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: authenticated }));
 vi.mock("@/lib/wrt/server", () => ({
   reviewShown: async () => true,
   getWrt: () => { throw new Error("Season photos must not load the full repository"); },
@@ -35,6 +36,7 @@ const reads: { table: string; columns?: string; season?: string }[] = [];
 
 beforeEach(() => {
   reads.length = 0;
+  authenticated.mockResolvedValue(false);
   readDb.mockResolvedValue({
     from(table: string) {
       if (!tables[table]) throw new Error(`Unexpected full repository read: ${table}`);

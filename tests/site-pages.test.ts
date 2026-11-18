@@ -7,7 +7,12 @@ const mocks = vi.hoisted(() => ({
   deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
   revalidate: vi.fn(), tag: vi.fn(), redirect: vi.fn(), places: vi.fn(), place: vi.fn(), overview: vi.fn(), records: vi.fn(),
 }));
-vi.mock("@/db/queries/access", () => ({ isAuthenticated: mocks.authenticated }));
+vi.mock("@/db/queries/auth", () => ({
+  isAuthenticated: mocks.authenticated,
+  requireAuthenticated: async (next: string) => {
+    if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
+  },
+}));
 vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
 vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
@@ -59,7 +64,10 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
     const submit = (await pageForm(kind))!.props.onSubmit;
     mocks.authenticated.mockResolvedValue(false);
     expect(await submit(values)).toHaveProperty("error");
-    expect(await pageForm(kind)).toBeUndefined();
+    mocks.read.mockClear();
+    await expect(pageForm(kind)).rejects.toThrow("REDIRECT");
+    expect(mocks.redirect).toHaveBeenCalledWith(`/login?next=${encodeURIComponent(kind === "new" ? "/sites/new" : `/sites/${values.slug}/edit`)}`);
+    expect(mocks.read).not.toHaveBeenCalled();
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
   });
@@ -168,7 +176,7 @@ it("offers deactivation only in the authenticated edit page", async () => {
   expect(renderToStaticMarkup(await SitePage({ params, searchParams }))).not.toContain("Deactivate site");
   expect(renderToStaticMarkup(await EditSitePage({ params, searchParams }))).toContain("Deactivate site");
   mocks.authenticated.mockResolvedValue(false);
-  expect(renderToStaticMarkup(await EditSitePage({ params, searchParams }))).not.toContain("Deactivate site");
+  await expect(EditSitePage({ params, searchParams })).rejects.toThrow("REDIRECT");
 });
 
 it("deactivates the captured site and refreshes shared reads before redirecting", async () => {

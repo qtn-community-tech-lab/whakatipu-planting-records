@@ -5,7 +5,7 @@ import { readPlantingEvent } from "@/db/queries/plantings";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import { CreatePlantingEvent, type PlantTotals } from "@/components/wrt/create-planting-event";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { listSeasons } from "@/db/queries/plantings";
 import { listPlantingAreas, listPlantingAreaPins, listPlantingAreaTotals, listSiteTotals } from "@/db/queries/sites";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
