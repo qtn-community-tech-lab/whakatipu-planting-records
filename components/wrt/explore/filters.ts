@@ -2,8 +2,8 @@
  * Records explorer: URL search params in, validated filter out.
  *
  * Every view of /records is a URL, so every param is validated here and
- * invalid values are ignored rather than raising an error. Shared by the
- * page and the CSV route handler, so both read the same filter.
+ * invalid values are ignored rather than raising an error. The page uses the
+ * resulting filters for its records and summaries.
  *
  * Server and client safe: no data access.
  */
@@ -128,13 +128,4 @@ export function recordsHref(view: RecordsView, over: Partial<Record<ParamKey, st
   const resetsPage = Object.keys(over).some((k) => k !== "page");
   const params = viewParams(view, resetsPage && !("page" in over) ? { ...over, page: undefined } : over);
   return hrefs.records(params);
-}
-
-/** `/records/export?…` for a view: same filter, no sort or page. */
-export function exportHref(view: RecordsView): `/records/export${"" | `?${string}`}` {
-  const params = viewParams({ ...view, sort: "season", page: 1, ignored: [] });
-  const sp = new URLSearchParams();
-  for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== "") sp.set(k, String(v));
-  const s = sp.toString();
-  return s ? `/records/export?${s}` : "/records/export";
 }

@@ -1,5 +1,5 @@
 The planting fixture is a small invented dataset for application behaviour tests.
-It contains nine species (one unplanted), five sites including an order scheme,
+It contains nine species (one unplanted), five sites including Paper4Trees,
 eight seasons and sixteen records totalling 370 plants: 290 resolved and 80
 needing review. One record has an unknown quantity.
 

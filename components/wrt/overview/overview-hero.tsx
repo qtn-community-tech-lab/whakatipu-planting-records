@@ -22,17 +22,19 @@ interface Stat {
  * reference photos.
  */
 export function OverviewHero({
-  split, eyebrow, placeCount, speciesCount, seasonCount, topSpecies,
+  split, eyebrow, siteCount, speciesCount, siteCountWithPlantings, speciesCountWithPlantings, seasonCount, topSpecies,
 }: {
   split: QuantitySplit;
   eyebrow: string;
-  placeCount: number;
+  siteCount: number;
   speciesCount: number;
+  siteCountWithPlantings: number;
+  speciesCountWithPlantings: number;
   seasonCount: number;
   topSpecies: Ranked<Species>[];
 }) {
   const stats: Stat[] = [
-    { href: "/sites", icon: "sites", label: "Sites", value: formatNumber(placeCount) },
+    { href: "/sites", icon: "sites", label: "Sites", value: formatNumber(siteCount) },
     { href: "/species", icon: "species", label: "Species", value: formatNumber(speciesCount) },
     { href: "/seasons", icon: "seasons", label: "Seasons", value: formatNumber(seasonCount) },
     { href: "/records", icon: "records", label: "Records", value: formatNumber(split.records) },
@@ -50,14 +52,13 @@ export function OverviewHero({
           <span className="wrt-ohero__big tabular-nums">{formatNumber(split.total)}</span>
           <span className="wrt-ohero__line">recorded plants</span>
           <span className="wrt-ohero__sub">
-            across {formatNumber(placeCount)} sites and {formatNumber(speciesCount)} species
+            from {formatNumber(speciesCountWithPlantings)} species across {formatNumber(siteCountWithPlantings)} planted sites
           </span>
         </h1>
         <p className="wrt-ohero__lead">
-          WRT’s planting history in one place for the first time. Every figure is a recorded plant from the allocation
+          Whakatipu Reforestation Trust&apos;s planting history in one place for the first time. Every figure is a recorded plant from the allocation
           sheets, not a verified planting.
         </p>
-
         <div className="wrt-ohero__figure">
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-ohero__split">

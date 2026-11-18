@@ -159,7 +159,7 @@ function SearchChips({ o, onAsk }: { o: Out<"search">; onAsk: (q: string) => voi
 /** Sites page: the site row with its most recorded species as photo chips, then the season columns. */
 export function PlaceCard({ o }: { o: Found<"place"> }) {
   const row: SiteRowData = {
-    key: o.place.slug, name: o.place.name, href: hrefs.place(o.place.slug), isScheme: o.place.isScheme, split: o.split,
+    key: o.place.slug, name: o.place.name, href: hrefs.place(o.place.slug), split: o.split,
     species: o.species.map((r) => ({ species: r.item, split: r.split })),
     meta: `${o.span.first.label} → ${o.span.last.label} · ${o.span.seasonsActive} seasons · ${o.species.length} species`
       + (o.parcels.length > 1 ? ` · ${o.parcels.length} parts` : ""),

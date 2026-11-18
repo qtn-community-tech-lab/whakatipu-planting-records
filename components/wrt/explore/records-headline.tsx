@@ -4,9 +4,8 @@ import type { QuantitySplit } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 
 /**
- * The H1 as a sentence read from the filters:
- * "2,105 recorded plants at Whitechapel in 2019",
- * "44,290 recorded plants on records needing review".
+ * The H1 as a sentence read from the filters, distinguishing plant totals
+ * from the number of record entries represented by those totals.
  */
 export function recordsHeadline(
   f: RecordFilter, split: QuantitySplit, lookups: Lookups,
@@ -36,6 +35,7 @@ export function recordsHeadline(
   return (
     <>
       {formatNumber(n)} {noun}
+      {" "}across {formatNumber(split.records)} {split.records === 1 ? "record" : "records"}
       {speciesText && <> of {speciesText}</>}
       {place && <> at {parcel ? <>{parcel.name} ({place.name})</> : place.name}</>}
       {when && <> in {when}</>}

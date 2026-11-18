@@ -7,11 +7,6 @@ export type Json =
   | Json[];
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
-  __InternalSupabase: {
-    PostgrestVersion: "14.18";
-  };
   public: {
     Tables: {
       areas: {
@@ -33,6 +28,7 @@ export type Database = {
           updated_by: string | null;
           wrt_number: string | null;
         };
+        ComputedFields: never;
         Insert: {
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
@@ -88,6 +84,13 @@ export type Database = {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
+            referencedRelation: "season_sites";
+            referencedColumns: ["site"];
+          },
+          {
+            foreignKeyName: "areas_site_fkey";
+            columns: ["site"];
+            isOneToOne: false;
             referencedRelation: "site_area_seasons";
             referencedColumns: ["site"];
           },
@@ -96,13 +99,6 @@ export type Database = {
             columns: ["site"];
             isOneToOne: false;
             referencedRelation: "site_area_species";
-            referencedColumns: ["site"];
-          },
-          {
-            foreignKeyName: "areas_site_fkey";
-            columns: ["site"];
-            isOneToOne: false;
-            referencedRelation: "season_sites";
             referencedColumns: ["site"];
           },
           {
@@ -149,6 +145,7 @@ export type Database = {
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           created_by?: string | null;
@@ -228,6 +225,7 @@ export type Database = {
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           area: string;
           created_at?: string;
@@ -310,15 +308,15 @@ export type Database = {
             foreignKeyName: "planting_events_season_fkey";
             columns: ["season"];
             isOneToOne: false;
-            referencedRelation: "site_area_seasons";
-            referencedColumns: ["season_order"];
+            referencedRelation: "seasons";
+            referencedColumns: ["id"];
           },
           {
             foreignKeyName: "planting_events_season_fkey";
             columns: ["season"];
             isOneToOne: false;
-            referencedRelation: "seasons";
-            referencedColumns: ["id"];
+            referencedRelation: "site_area_seasons";
+            referencedColumns: ["season_order"];
           },
           {
             foreignKeyName: "planting_events_season_fkey";
@@ -357,6 +355,7 @@ export type Database = {
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           confidence?: string | null;
           created_at?: string;
@@ -430,14 +429,14 @@ export type Database = {
             foreignKeyName: "planting_lines_species_fkey";
             columns: ["species"];
             isOneToOne: false;
-            referencedRelation: "site_area_species";
+            referencedRelation: "season_species";
             referencedColumns: ["species"];
           },
           {
             foreignKeyName: "planting_lines_species_fkey";
             columns: ["species"];
             isOneToOne: false;
-            referencedRelation: "season_species";
+            referencedRelation: "site_area_species";
             referencedColumns: ["species"];
           },
           {
@@ -476,6 +475,7 @@ export type Database = {
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           created_by?: string | null;
@@ -527,6 +527,7 @@ export type Database = {
           workbook_total: number | null;
           year: number;
         };
+        ComputedFields: never;
         Insert: {
           half: Database["public"]["Enums"]["season_half"];
           id: number;
@@ -553,18 +554,17 @@ export type Database = {
           created_by: string | null;
           deactivated_at: string | null;
           description: string;
-          is_scheme: boolean;
           name: string;
           slug: string;
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
           description?: string;
-          is_scheme?: boolean;
           name: string;
           slug: string;
           updated_at?: string;
@@ -575,7 +575,6 @@ export type Database = {
           created_by?: string | null;
           deactivated_at?: string | null;
           description?: string;
-          is_scheme?: boolean;
           name?: string;
           slug?: string;
           updated_at?: string;
@@ -608,8 +607,8 @@ export type Database = {
           maori_name: string | null;
           needs_decision: boolean;
           over_5m: boolean | null;
-          photos: Json;
-          profile: Json;
+          photos: NonNullable<Json>;
+          profile: NonNullable<Json>;
           register_code: string | null;
           register_note: string | null;
           scientific_name: string;
@@ -621,6 +620,7 @@ export type Database = {
           updated_at: string;
           updated_by: string | null;
         };
+        ComputedFields: never;
         Insert: {
           common_name?: string | null;
           contested_group?: string | null;
@@ -630,8 +630,8 @@ export type Database = {
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
-          photos?: Json;
-          profile?: Json;
+          photos?: NonNullable<Json>;
+          profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
           scientific_name: string;
@@ -652,8 +652,8 @@ export type Database = {
           maori_name?: string | null;
           needs_decision?: boolean;
           over_5m?: boolean | null;
-          photos?: Json;
-          profile?: Json;
+          photos?: NonNullable<Json>;
+          profile?: NonNullable<Json>;
           register_code?: string | null;
           register_note?: string | null;
           scientific_name?: string;
@@ -691,6 +691,7 @@ export type Database = {
           id: string;
           name: string;
         };
+        ComputedFields: never;
         Insert: {
           auth_user_id?: string | null;
           created_at?: string;
@@ -719,7 +720,6 @@ export type Database = {
           common_name: string | null;
           confidence: string | null;
           contested_group: string | null;
-          is_scheme: boolean | null;
           legacy_code: string | null;
           line_id: number | null;
           maori_name: string | null;
@@ -749,6 +749,32 @@ export type Database = {
           wrt_number: string | null;
           year: number | null;
         };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      season_sites: {
+        Row: {
+          plants: number | null;
+          rank: number | null;
+          season: string | null;
+          site: string | null;
+          site_name: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      season_species: {
+        Row: {
+          common_name: string | null;
+          maori_name: string | null;
+          plants: number | null;
+          rank: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          season: string | null;
+          species: string | null;
+        };
+        ComputedFields: never;
         Relationships: [];
       };
       site_area_seasons: {
@@ -761,6 +787,7 @@ export type Database = {
           site: string | null;
           wrt_number: string | null;
         };
+        ComputedFields: never;
         Relationships: [];
       };
       site_area_species: {
@@ -776,29 +803,7 @@ export type Database = {
           species: string | null;
           wrt_number: string | null;
         };
-        Relationships: [];
-      };
-      season_sites: {
-        Row: {
-          plants: number | null;
-          rank: number | null;
-          season: string | null;
-          site: string | null;
-          site_name: string | null;
-        };
-        Relationships: [];
-      };
-      season_species: {
-        Row: {
-          common_name: string | null;
-          maori_name: string | null;
-          plants: number | null;
-          rank: number | null;
-          register_code: string | null;
-          scientific_name: string | null;
-          season: string | null;
-          species: string | null;
-        };
+        ComputedFields: never;
         Relationships: [];
       };
       totals_by_area: {
@@ -816,6 +821,7 @@ export type Database = {
           species: number | null;
           wrt_number: string | null;
         };
+        ComputedFields: never;
         Relationships: [];
       };
       totals_by_question: {
@@ -824,6 +830,7 @@ export type Database = {
           plants: number | null;
           question: string | null;
         };
+        ComputedFields: never;
         Relationships: [
           {
             foreignKeyName: "notes_question_fkey";
@@ -851,12 +858,12 @@ export type Database = {
           workbook_total: number | null;
           year: number | null;
         };
+        ComputedFields: never;
         Relationships: [];
       };
       totals_by_site: {
         Row: {
           first_season: number | null;
-          is_scheme: boolean | null;
           last_season: number | null;
           lines: number | null;
           lines_unknown: number | null;
@@ -867,6 +874,7 @@ export type Database = {
           site_name: string | null;
           species: number | null;
         };
+        ComputedFields: never;
         Relationships: [];
       };
       totals_by_species: {
@@ -882,6 +890,7 @@ export type Database = {
           sites: number | null;
           species: string | null;
         };
+        ComputedFields: never;
         Relationships: [];
       };
     };

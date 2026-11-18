@@ -242,13 +242,12 @@ export function loadFromDirectory(dir: string): Loaded {
       issues.push({ file: "planting_history", line: 0, severity: "error", message: `${r.recordId}: species ${r.speciesIdProposed} not in species master` });
       continue;
     }
-    const isScheme = r.precision === "scheme" || /\(scheme\)/i.test(r.siteGroupProposed);
     const placeName = placeNameFromGroup(r.siteGroupProposed);
     const placeSlug = slugify(placeName);
     let entry = placeMap.get(placeSlug);
     if (!entry) {
       entry = {
-        place: { slug: placeSlug, name: placeName, siteClasses: [], isScheme, parcels: [], searchKeys: [] },
+        place: { slug: placeSlug, name: placeName, siteClasses: [], parcels: [], searchKeys: [] },
         plantsByClass: new Map(),
         parcels: new Map(),
       };
@@ -258,7 +257,7 @@ export function loadFromDirectory(dir: string): Loaded {
     if (!xw) {
       issues.push({ file: "planting_history", line: 0, severity: "warning", message: `${r.recordId}: site '${cleanLabel(r.siteOriginal)}' not in site crosswalk` });
     }
-    const parcelName = isScheme ? placeName : cleanLabel(xw?.site_name_proposed || r.siteOriginal);
+    const parcelName = cleanLabel(xw?.site_name_proposed || r.siteOriginal);
     const parcelId = r.siteIdProposed || null;
     const parcelKey = parcelId ?? `unnumbered-${slugify(parcelName)}`;
     const siteClass = r.siteClass !== "unknown" ? r.siteClass : toSiteClass(xw?.class ?? "");

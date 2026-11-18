@@ -130,7 +130,6 @@ export function RecordsInsights({
     ? group(rows, (v) => v.place.slug, (v) => v.place).map(({ meta, split }) => ({
         key: meta.slug,
         name: meta.name,
-        sub: meta.isScheme ? "Order scheme, not a place" : undefined,
         avatar: <Pin className="rx-pin" />,
         split,
         href: recordsHref(view, { place: meta.slug }),

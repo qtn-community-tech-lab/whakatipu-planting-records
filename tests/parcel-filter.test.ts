@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { q, expectCoherentSplit } from "./helpers";
-import { parseRecordParams, recordsHref, exportHref } from "@/components/wrt/explore/filters";
+import { parseRecordParams, recordsHref } from "@/components/wrt/explore/filters";
 
 describe("exact site-part filtering", () => {
   it("opens Gorge Rd Wetlands alone, retaining its unresolved location notes", async () => {
@@ -42,7 +42,7 @@ describe("exact site-part filtering", () => {
     expect((await q.records({ place: site.place.slug, parcel, review: "resolved" })).rows).toHaveLength(0);
   });
 
-  it("validates part URLs and preserves them in sorting, paging and CSV links", async () => {
+  it("validates part URLs and preserves them in sorting and paging links", async () => {
     const lookups = await q.lookups();
     const site = lookups.places.find((p) => p.slug === "gorge-road-area")!;
     const parcel = site.parcels.find((p) => p.name.includes("Wetlands"))!.id;
@@ -51,7 +51,6 @@ describe("exact site-part filtering", () => {
     expect(view.filter.parcel).toBe(parcel);
     expect(new URL(recordsHref(view, { sort: "plants" }), "http://localhost").searchParams.get("parcel")).toBe(parcel);
     expect(new URL(recordsHref(view, { page: 2 }), "http://localhost").searchParams.get("parcel")).toBe(parcel);
-    expect(new URL(exportHref(view), "http://localhost").searchParams.get("parcel")).toBe(parcel);
     const removePart = new URL(recordsHref(view, { parcel: undefined }), "http://localhost");
     expect(removePart.searchParams.get("place")).toBe(site.slug);
     expect(removePart.searchParams.has("parcel")).toBe(false);

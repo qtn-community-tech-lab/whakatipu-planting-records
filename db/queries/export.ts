@@ -20,7 +20,7 @@ export async function exportSites() {
   return readAllPages((from, to) =>
     client
       .from("sites")
-      .select("slug, name, description, is_scheme, deactivated_at")
+      .select("slug, name, description, deactivated_at")
       .order("slug")
       .range(from, to)
       .throwOnError(),

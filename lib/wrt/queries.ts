@@ -140,12 +140,15 @@ export interface Overview {
   firstSeason: Season;
   lastSeason: Season;
   seasons: SeasonPoint[];
-  /** Physical sites (places), excluding order schemes such as Paper4Trees. */
-  placeCount: number;
-  /** Order schemes recorded alongside sites (not places). */
-  schemeCount: number;
+  /** Active sites in the register. */
+  siteCount: number;
+  /** Sites with planting records. */
+  siteCountWithPlantings: number;
   parcelCount: number;
+  /** Active species in the register. */
   speciesCount: number;
+  /** Species with planting records. */
+  speciesCountWithPlantings: number;
   places: Ranked<Place>[];
   species: Ranked<Species>[];
   byClass: Ranked<SiteClass>[];
@@ -343,10 +346,11 @@ export function createQueries(repo: WrtRepository) {
         firstSeason,
         lastSeason,
         seasons: seasonSeries(c, c.records),
-        placeCount: new Set(c.records.filter((r) => !c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
-        schemeCount: new Set(c.records.filter((r) => c.placeBySlug.get(r.placeSlug)?.isScheme).map((r) => r.placeSlug)).size,
+        siteCount: c.places.filter((place) => place.deactivatedAt == null).length,
+        siteCountWithPlantings: new Set(c.records.map((r) => r.placeSlug)).size,
         parcelCount: c.places.reduce((n, p) => n + p.parcels.length, 0),
-        speciesCount: new Set(c.records.map((r) => r.speciesId)).size,
+        speciesCount: c.species.filter((species) => species.deactivatedAt === null).length,
+        speciesCountWithPlantings: new Set(c.records.map((r) => r.speciesId)).size,
         places: rankPlaces(c, c.records),
         species: rankSpecies(c, c.records),
         byClass: rankBy(c.records, (r) => r.siteClass),
@@ -358,9 +362,15 @@ export function createQueries(repo: WrtRepository) {
 
     async places(): Promise<PlaceSummary[]> {
       const c = await ctx();
+      const byPlace = new Map<string, PlantingRecord[]>();
+      for (const record of c.records) {
+        const rows = byPlace.get(record.placeSlug);
+        if (rows) rows.push(record);
+        else byPlace.set(record.placeSlug, [record]);
+      }
       return c.places
         .map((place) => {
-          const recs = c.records.filter((r) => r.placeSlug === place.slug);
+          const recs = byPlace.get(place.slug) ?? [];
           return {
             item: place,
             split: splitOf(recs),

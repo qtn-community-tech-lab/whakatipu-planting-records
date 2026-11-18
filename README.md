@@ -3,7 +3,7 @@
 A public web app that lets anyone explore every recorded planting season since Autumn 2015 by **site, species,
 year and season**, without opening an old spreadsheet. Approved staff can sign in to use AI Chat and make changes.
 
-5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 38 sites and 1 order scheme · 95 species planted (164 in the register).
+5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 39 sites · 95 species planted (164 in the register).
 
 ## Local development
 
