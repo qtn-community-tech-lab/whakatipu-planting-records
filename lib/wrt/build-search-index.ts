@@ -1,13 +1,12 @@
 import "server-only";
-import { getWrt } from "./server";
+import type { WrtQueries } from "./queries";
 import type { SearchIndex } from "./search-index";
 
-export async function buildSearchIndex(): Promise<SearchIndex> {
-  const wrt = getWrt();
+export async function buildSearchIndex(wrt: WrtQueries): Promise<SearchIndex> {
   const [places, species, seasons] = await Promise.all([wrt.places(), wrt.speciesList(), wrt.seasons()]);
   return {
     places: places.map((p) => ({
-      slug: p.item.slug, name: p.item.name, keys: p.item.searchKeys, total: p.split.total, isScheme: p.item.isScheme,
+      slug: p.item.slug, name: p.item.name, keys: p.item.searchKeys, total: p.split.total,
     })),
     species: species.map((s) => ({
       slug: s.item.slug, name: s.item.displayName, scientific: s.item.scientificName,

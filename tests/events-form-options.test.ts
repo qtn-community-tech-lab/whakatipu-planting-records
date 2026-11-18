@@ -15,42 +15,48 @@ import { repo } from "./helpers";
 
 beforeEach(async () => {
   mocks.sites.mockResolvedValue([
-    ...(await repo.listPlaces()).map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme })),
-    { slug: "empty", name: "Empty site", is_scheme: false },
-    { slug: "new", name: "New site", is_scheme: false },
+    ...(await repo.listPlaces()).map((p) => ({ slug: p.slug, name: p.name })),
+    { slug: "empty", name: "Empty site" },
+    { slug: "new", name: "New site" },
   ]);
 });
 
 describe("new planting species options", () => {
   it("omits deactivated sites while preserving historical lookups", async () => {
     const places = await repo.listPlaces();
-    const deactivated = places.find((p) => !p.isScheme)!;
+    const deactivated = places[0]!;
     mocks.lookups.mockResolvedValue({ places });
     mocks.species.mockResolvedValue([]);
     mocks.sites.mockResolvedValue(places.filter((p) => p.slug !== deactivated.slug)
-      .map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme })));
+      .map((p) => ({ slug: p.slug, name: p.name })));
     const options = await eventFormOptions();
     expect(options.sites.some((p) => p.slug === deactivated.slug)).toBe(false);
     expect(places).toContain(deactivated);
     const result = validateEventInput({
-      placeSlug: deactivated.slug, parcelId: null, plantedOn: "2026-11-09", season: "Spring",
+      siteSlug: deactivated.slug, partId: null, plantedOn: "2026-11-09", season: "Spring",
       seasonYear: 2026, polygon: null, notes: null, species: [{ speciesId: "test", quantity: 12 }],
-    }, { places: options.sites.map((p) => ({ ...p, isScheme: false, parcels: p.parts })), species: [{ id: "test" }] }, "2026-11-09");
+    }, { places: options.sites.map((p) => ({ ...p, parcels: p.parts })), species: [{ id: "test" }] }, "2026-11-09");
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.errors).toHaveProperty("placeSlug");
+    if (!result.ok) expect(result.errors).toHaveProperty("siteSlug");
   });
-  it("includes sites and areas without history while excluding order schemes", async () => {
+  it("includes all active sites and areas, including those without history", async () => {
     mocks.lookups.mockResolvedValue({ places: [
-      { slug: "empty", name: "Empty site", isScheme: false, searchKeys: ["empty site"], parcels: [] },
-      { slug: "new", name: "New site", isScheme: false, searchKeys: ["new site", "riverbank"],
-        parcels: [{ id: "new-area", name: "Riverbank" }] },
-      { slug: "scheme", name: "Order scheme", isScheme: true, searchKeys: [], parcels: [] },
+      { slug: "empty", name: "Empty site", searchKeys: ["empty site"], parcels: [] },
+      { slug: "new", name: "New site", searchKeys: ["new site", "riverbank"],
+        parcels: [
+          { id: "new-area", name: "Riverbank" },
+          { id: "retired-area", name: "Retired area", deactivatedAt: "2026-11-09" },
+        ] },
+      { slug: "retired", name: "Retired site", deactivatedAt: "2026-11-09", searchKeys: [], parcels: [] },
+      { slug: "scheme", name: "Order scheme", searchKeys: [], parcels: [] },
     ] });
+    mocks.sites.mockResolvedValue([{ slug: "empty" }, { slug: "new" }, { slug: "scheme" }]);
     mocks.species.mockResolvedValue([]);
     expect((await eventFormOptions()).sites).toEqual([
       { slug: "empty", name: "Empty site", keys: ["empty site"], parts: [] },
       { slug: "new", name: "New site", keys: ["new site", "riverbank"],
         parts: [{ id: "new-area", name: "Riverbank", keys: ["riverbank"] }] },
+      { slug: "scheme", name: "Order scheme", keys: [], parts: [] },
     ]);
   });
 
@@ -72,7 +78,7 @@ describe("new planting species options", () => {
     expect(lookups.species).toEqual([deactivated]);
 
     const result = validateEventInput({
-      placeSlug: options.sites[0]!.slug, parcelId: null, plantedOn: "2026-11-09", season: "Spring",
+      siteSlug: options.sites[0]!.slug, partId: null, plantedOn: "2026-11-09", season: "Spring",
       seasonYear: 2026, polygon: null, notes: null, species: [{ speciesId: deactivated.id, quantity: 12 }],
     }, { places: lookups.places, species: options.species }, "2026-11-09");
     expect(result.ok).toBe(false);

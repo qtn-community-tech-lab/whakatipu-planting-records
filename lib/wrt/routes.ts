@@ -13,6 +13,13 @@ export const hrefs = {
     const query = sp.toString();
     return query ? `/records?${query}` : "/records";
   },
+  /** The planting event page, at a site or one of its parts (its WRT number). */
+  newEvent: ({ site, part }: { site?: string; part?: string } = {}): `/events/new${"" | `?${string}`}` => {
+    const sp = new URLSearchParams();
+    for (const [key, value] of Object.entries({ site, part })) if (value) sp.set(key, value);
+    const query = sp.toString();
+    return query ? `/events/new?${query}` : "/events/new";
+  },
 };
 
 /** Address of one part of a site, by its readable name. */

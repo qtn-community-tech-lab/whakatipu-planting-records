@@ -282,7 +282,7 @@ export default async function AboutTheData() {
       </Card>
 
       <Rule>
-        {formatNumber(overview.placeCount)} sites, {formatNumber(overview.speciesCount)} species, {overview.seasons.length} seasons loaded.
+        {formatNumber(overview.siteCount)} active sites, {formatNumber(overview.speciesCount)} active species, {overview.seasons.length} seasons loaded.
       </Rule>
     </>
   );

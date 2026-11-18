@@ -91,6 +91,20 @@ export type Database = {
             foreignKeyName: "areas_site_fkey";
             columns: ["site"];
             isOneToOne: false;
+            referencedRelation: "site_area_seasons";
+            referencedColumns: ["site"];
+          },
+          {
+            foreignKeyName: "areas_site_fkey";
+            columns: ["site"];
+            isOneToOne: false;
+            referencedRelation: "site_area_species";
+            referencedColumns: ["site"];
+          },
+          {
+            foreignKeyName: "areas_site_fkey";
+            columns: ["site"];
+            isOneToOne: false;
             referencedRelation: "sites";
             referencedColumns: ["slug"];
           },
@@ -259,6 +273,20 @@ export type Database = {
             foreignKeyName: "planting_events_area_fkey";
             columns: ["area"];
             isOneToOne: false;
+            referencedRelation: "site_area_seasons";
+            referencedColumns: ["area"];
+          },
+          {
+            foreignKeyName: "planting_events_area_fkey";
+            columns: ["area"];
+            isOneToOne: false;
+            referencedRelation: "site_area_species";
+            referencedColumns: ["area"];
+          },
+          {
+            foreignKeyName: "planting_events_area_fkey";
+            columns: ["area"];
+            isOneToOne: false;
             referencedRelation: "totals_by_area";
             referencedColumns: ["area"];
           },
@@ -282,6 +310,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "seasons";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "planting_events_season_fkey";
+            columns: ["season"];
+            isOneToOne: false;
+            referencedRelation: "site_area_seasons";
+            referencedColumns: ["season_order"];
           },
           {
             foreignKeyName: "planting_events_season_fkey";
@@ -401,6 +436,13 @@ export type Database = {
             foreignKeyName: "planting_lines_species_fkey";
             columns: ["species"];
             isOneToOne: false;
+            referencedRelation: "site_area_species";
+            referencedColumns: ["species"];
+          },
+          {
+            foreignKeyName: "planting_lines_species_fkey";
+            columns: ["species"];
+            isOneToOne: false;
             referencedRelation: "species";
             referencedColumns: ["slug"];
           },
@@ -512,7 +554,6 @@ export type Database = {
           created_by: string | null;
           deactivated_at: string | null;
           description: string;
-          is_scheme: boolean;
           name: string;
           slug: string;
           updated_at: string;
@@ -524,7 +565,6 @@ export type Database = {
           created_by?: string | null;
           deactivated_at?: string | null;
           description?: string;
-          is_scheme?: boolean;
           name: string;
           slug: string;
           updated_at?: string;
@@ -535,7 +575,6 @@ export type Database = {
           created_by?: string | null;
           deactivated_at?: string | null;
           description?: string;
-          is_scheme?: boolean;
           name?: string;
           slug?: string;
           updated_at?: string;
@@ -645,25 +684,28 @@ export type Database = {
       };
       users: {
         Row: {
+          auth_user_id: string | null;
           created_at: string;
           deactivated_at: string | null;
+          email: string;
           id: string;
-          is_staff: boolean;
           name: string;
         };
         ComputedFields: never;
         Insert: {
+          auth_user_id?: string | null;
           created_at?: string;
           deactivated_at?: string | null;
-          id: string;
-          is_staff?: boolean;
+          email: string;
+          id?: string;
           name: string;
         };
         Update: {
+          auth_user_id?: string | null;
           created_at?: string;
           deactivated_at?: string | null;
+          email?: string;
           id?: string;
-          is_staff?: boolean;
           name?: string;
         };
         Relationships: [];
@@ -678,7 +720,6 @@ export type Database = {
           common_name: string | null;
           confidence: string | null;
           contested_group: string | null;
-          is_scheme: boolean | null;
           legacy_code: string | null;
           line_id: number | null;
           maori_name: string | null;
@@ -732,6 +773,35 @@ export type Database = {
           scientific_name: string | null;
           season: string | null;
           species: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      site_area_seasons: {
+        Row: {
+          area: string | null;
+          plants: number | null;
+          season: string | null;
+          season_label: string | null;
+          season_order: number | null;
+          site: string | null;
+          wrt_number: string | null;
+        };
+        ComputedFields: never;
+        Relationships: [];
+      };
+      site_area_species: {
+        Row: {
+          area: string | null;
+          common_name: string | null;
+          maori_name: string | null;
+          plants: number | null;
+          rank: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          site: string | null;
+          species: string | null;
+          wrt_number: string | null;
         };
         ComputedFields: never;
         Relationships: [];
@@ -794,7 +864,6 @@ export type Database = {
       totals_by_site: {
         Row: {
           first_season: number | null;
-          is_scheme: boolean | null;
           last_season: number | null;
           lines: number | null;
           lines_unknown: number | null;
@@ -826,7 +895,11 @@ export type Database = {
       };
     };
     Functions: {
-      is_staff: { Args: Record<PropertyKey, never>; Returns: boolean };
+      authorize_staff_signup: { Args: { event: Json }; Returns: Json };
+      current_app_user_id: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
     };
     Enums: {
       note_kind: "ruling" | "confirm" | "fyi";

@@ -14,7 +14,7 @@ import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SiteRows } from "@/components/wrt/sites/site-rows";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 import { listSites } from "@/db/queries/sites";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
@@ -65,17 +65,14 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
   const all: ListedSite[] = register.map((site) => {
     const summary = historyBySlug.get(site.slug);
     return {
-      item: { ...summary?.item, slug: site.slug, name: site.name, isScheme: site.is_scheme,
+      item: { ...summary?.item, slug: site.slug, name: site.name,
         siteClasses: summary?.item.siteClasses ?? [], parcels: summary?.item.parcels ?? [], searchKeys: summary?.item.searchKeys ?? [] },
       split: summary?.split ?? emptySplit(), span: summary?.span ?? null, speciesCount: summary?.speciesCount ?? 0,
     };
   });
   const bySite = speciesBySite(records.rows);
-  const realSites = all.filter((p) => !p.item.isScheme);
-  const schemes = all.filter((p) => p.item.isScheme);
-
   const filtered = cls
-    ? all.filter((p) => !p.item.isScheme && p.item.siteClasses.includes(cls))
+    ? all.filter((p) => p.item.siteClasses.includes(cls))
     : all;
   const rows = sortSites(filtered, sort);
   const max = Math.max(1, ...all.map((p) => p.split.total));
@@ -83,28 +80,18 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
   for (const p of rows) for (const k of Object.keys(shown) as (keyof typeof shown)[]) shown[k] += p.split[k];
 
   const countFor = (c: ClassFilter) =>
-    realSites.filter((p) => p.item.siteClasses.includes(c)).length;
-
-  const schemeNote =
-    schemes.length > 0
-      ? ` and ${schemes.length} order scheme${schemes.length === 1 ? "" : "s"}`
-      : "";
-  const lead =
-    schemes.length > 0
-      ? `${schemes.map((s) => s.item.name).join(", ")} ${schemes.length === 1 ? "is" : "are"} an order scheme, not a place, so ${schemes.length === 1 ? "it is" : "they are"} listed here but not counted as a site.`
-      : undefined;
+    all.filter((p) => p.item.siteClasses.includes(c)).length;
 
   const CLASS_NOTE: Record<SiteClass, string> = { keystone: "Keystone", community: "Community", school: "School", unknown: "" };
 
   return (
     <>
       <PageHead
-        title={`${realSites.length} ${state === "deactivated" ? "deactivated " : ""}site${realSites.length === 1 ? "" : "s"}${schemeNote}`}
+        title={`${all.length} ${state === "deactivated" ? "deactivated " : ""}site${all.length === 1 ? "" : "s"}`}
         aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
             {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"} since {overview.firstSeason.label} where available.
-            {lead && <> {lead}</>}
           </>
         }
       />
@@ -114,7 +101,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         <Link href={href(cls, sort, "deactivated")} className="wrt-stool__opt" aria-current={state === "deactivated" ? "true" : undefined}>Deactivated</Link>
       </nav>
 
-      <LocationCard sites={rows.filter((p) => !p.item.isScheme).map((p) => p.item)} records={records.rows.map((row) => row.record)} />
+      <LocationCard sites={rows.map((p) => p.item)} records={records.rows.map((row) => row.record)} />
 
       <Card
         foot={
@@ -168,12 +155,11 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
             max={max}
             rows={rows.map((p) => {
               const g = bySite.get(p.item.slug);
-              const classes = p.item.isScheme ? "" : p.item.siteClasses.map((c) => CLASS_NOTE[c]).filter(Boolean).join(" and ");
+              const classes = p.item.siteClasses.map((c) => CLASS_NOTE[c]).filter(Boolean).join(" and ");
               return {
                 key: p.item.slug,
                 name: p.item.name,
                 href: hrefs.place(p.item.slug),
-                isScheme: p.item.isScheme,
                 split: p.split,
                 species: g?.species ?? [],
                 meta: (

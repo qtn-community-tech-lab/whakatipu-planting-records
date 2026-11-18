@@ -11,7 +11,7 @@ export const PAGE_SIZE = 1000;
 export const siteTotals = (db: Db) =>
   db
     .from("totals_by_site")
-    .select("site, site_name, is_scheme, plants, plants_confirmed, plants_needs_review, species, first_season, last_season")
+    .select("site, site_name, plants, plants_confirmed, plants_needs_review, species, first_season, last_season")
     .order("plants", { ascending: false });
 
 /** Every area with its totals, by site then area. */
@@ -61,6 +61,20 @@ export const seasonSites = (db: Db) =>
     .order("season")
     .order("rank");
 
+/** Species at each site and each of its areas, most planted first. Whole-site rows have no area. */
+export const siteAreaSpecies = (db: Db) =>
+  db
+    .from("site_area_species")
+    .select("site, area, wrt_number, species, register_code, scientific_name, common_name, maori_name, plants, rank")
+    .order("rank");
+
+/** Plants in each season at each site and each of its areas, newest season first. Whole-site rows have no area. */
+export const siteAreaSeasons = (db: Db) =>
+  db
+    .from("site_area_seasons")
+    .select("site, area, wrt_number, season, season_label, season_order, plants")
+    .order("season_order", { ascending: false });
+
 /** Plants still waiting on each question. */
 export const questionTotals = (db: Db) =>
   db
@@ -71,7 +85,7 @@ export const questionTotals = (db: Db) =>
 export const lines = (db: Db) =>
   db
     .from("line_details")
-    .select("line_id, planting_id, legacy_code, season, season_label, season_order, year, planted_on, site, site_name, is_scheme, area, area_name, class, species, scientific_name, common_name, maori_name, threatened, threatened_te_kakano, contested_group, register_code, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
+    .select("line_id, planting_id, legacy_code, season, season_label, season_order, year, planted_on, site, site_name, area, area_name, class, species, scientific_name, common_name, maori_name, threatened, threatened_te_kakano, contested_group, register_code, quantity, needs_review, notes, source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original")
     .order("season_order")
     .order("area_name")
     .order("scientific_name")

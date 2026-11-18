@@ -106,6 +106,8 @@ export interface Parcel {
   name: string;
   placeSlug: string;
   siteClass: SiteClass;
+  /** Deactivated from new planting selections; visible in historical detail pages. */
+  deactivatedAt?: string | null;
   /** Every header spelling seen for this parcel in the MASTER grid. */
   aliases: string[];
 }
@@ -117,10 +119,10 @@ export interface Place {
   name: string;
   /** Available when the site itself is read, rather than a planting-line summary. */
   description?: string;
+  /** Deactivated sites remain resolvable for historical records. */
+  deactivatedAt?: string | null;
   /** Distinct site classes of the parcels in this place, most plants first. */
   siteClasses: SiteClass[];
-  /** True for order schemes (Paper4Trees) that are not a physical place. */
-  isScheme: boolean;
   parcels: Parcel[];
   searchKeys: string[];
 }

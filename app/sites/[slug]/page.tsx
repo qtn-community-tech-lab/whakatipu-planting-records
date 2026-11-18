@@ -24,7 +24,7 @@ import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { LocationCard } from "@/components/wrt/sites/location-card";
 import Link from "next/link";
 import { readSite, deactivateSite } from "@/db/queries/sites";
-import { isAuthenticated } from "@/db/queries/access";
+import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
@@ -74,7 +74,10 @@ export default async function SitePage({ params, searchParams }: Props) {
       <Link href="/sites?state=deactivated" className="cn-link">View deactivated sites</Link>
     </AlertDescription>
   </Alert> : null;
-  const editButton = authenticated && !site.deactivated_at ? <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button> : undefined;
+  const editButton = authenticated && !site.deactivated_at ? <>
+    <Button asChild variant="secondary"><Link href={hrefs.newEvent({ site: slug })}>Add planting event</Link></Button>
+    <Button asChild variant="secondary"><Link href={`/sites/${slug}/edit`}>Edit site</Link></Button>
+  </> : undefined;
   const actions = editButton ? <DeactivateSite name={site.name} onDeactivate={onDeactivate}>{editButton}</DeactivateSite> : null;
   if (!d || !d.split.records)
     return (
@@ -93,12 +96,10 @@ export default async function SitePage({ params, searchParams }: Props) {
 
   const classes = place.siteClasses.map((c) => SITE_CLASS_LABELS[c]).join(" and ");
   const spanText = spanLabel(span);
-  const eyebrow = place.isScheme ? `Order scheme, not a place · ${spanText}` : `${classes} site · ${spanText}`;
-  const title = place.isScheme
-    ? `${formatNumber(split.total)} recorded plants through ${place.name} since ${span.first.label}`
-    : span.first.slug === span.last.slug
-      ? `${formatNumber(split.total)} recorded plants at ${place.name} in ${span.first.label}`
-      : `${formatNumber(split.total)} recorded plants at ${place.name} since ${span.first.label}`;
+  const eyebrow = `${classes} site · ${spanText}`;
+  const title = span.first.slug === span.last.slug
+    ? `${formatNumber(split.total)} recorded plants at ${place.name} in ${span.first.label}`
+    : `${formatNumber(split.total)} recorded plants at ${place.name} since ${span.first.label}`;
 
   const recordsFor = (extra: Record<string, string | number | undefined> = {}) =>
     hrefs.records({ place: place.slug, ...extra });
@@ -122,20 +123,16 @@ export default async function SitePage({ params, searchParams }: Props) {
         back={{ href: "/sites", label: "All sites" }}
         eyebrow={eyebrow}
         title={title}
-        lead={
-          place.isScheme
-            ? "Paper4Trees is an order scheme, not a place. Its plants are recorded against the scheme and WRT has not yet ruled on how they count."
-            : site.description.trim() || undefined
-        }
+        lead={site.description.trim() || undefined}
       />
 
-      {!place.isScheme && <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />}
+      <LocationCard key={place.slug} sites={[place]} records={d.records.map((row) => row.record)} siteName={place.name} />
 
       <Card title="Recorded plants by season" action={<SplitKey spring />}
         foot={
           <>
             Recorded in {activeSeasons} of {d.seasons.length} seasons; empty columns are seasons with no records for this
-            {place.isScheme ? " scheme" : " site"}. Each column opens that season’s records.
+            {" site"}. Each column opens that season’s records.
           </>
         }
       >
@@ -156,7 +153,7 @@ export default async function SitePage({ params, searchParams }: Props) {
       </Card>
 
       <Card
-        title={`Trees recorded ${place.isScheme ? "through" : "at"} ${place.name} (${formatNumber(d.species.length)} species)`}
+        title={`Trees recorded at ${place.name} (${formatNumber(d.species.length)} species)`}
         action={<CardLink href={recordsFor()}>All {formatNumber(split.records)} records</CardLink>}
         foot="Largest first, across every season. Select a species for its records here. Pick a year below to see what went in that year."
       >
@@ -180,7 +177,7 @@ export default async function SitePage({ params, searchParams }: Props) {
 
       <Card
         title="When each tree went in"
-        foot={`Every species recorded ${place.isScheme ? "through" : "at"} ${place.name}, largest first, season by season.`}
+        foot={`Every species recorded at ${place.name}, largest first, season by season.`}
       >
         <PlantingTimeline
           records={d.records}

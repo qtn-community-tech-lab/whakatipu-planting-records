@@ -1,6 +1,5 @@
 /** The planting history and season-total checks from Supabase. */
 import { createClient } from "@supabase/supabase-js";
-import { cache } from "react";
 import { SUPABASE_TAG } from "@/db/cache";
 import type { Database, Db } from "@/db/types";
 import { PAGE_SIZE } from "@/db/queries/views";
@@ -19,7 +18,7 @@ export function publicDb(): Db {
     {
       auth: { persistSession: false },
       global: { fetch: (input, init) => fetch(input, {
-        ...init, next: { revalidate: 300, tags: [SUPABASE_TAG] },
+        ...init, next: { revalidate: 3600, tags: [SUPABASE_TAG] },
       }) },
     },
   );
@@ -55,8 +54,8 @@ async function load(db: Db): Promise<Loaded> {
     db.from("species")
       .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
       .throwOnError(),
-    db.from("sites").select("slug, name, description, is_scheme").throwOnError(),
-    db.from("areas").select("slug, site, name, wrt_number, class").is("deactivated_at", null).throwOnError(),
+    db.from("sites").select("slug, name, description, deactivated_at").throwOnError(),
+    db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
     allLines(db),
     db.from("totals_by_season").select("season_label, plants, lines, workbook_total, workbook_cell").order("season_order").throwOnError(),
   ]);
@@ -101,7 +100,7 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: Object.keys(s.profile).length ? s.profile as unknown as Species["profile"] : null,
+      profile: Object.keys(s.profile ?? {}).length ? s.profile as unknown as Species["profile"] : null,
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));
@@ -151,14 +150,20 @@ async function load(db: Db): Promise<Loaded> {
       for (const area of areaRows.data) {
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        parcels.set(area.slug, { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] });
+        parcels.set(area.slug, {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        });
         plantsByClass.set(siteClass, 0);
       }
       for (const l of lines) {
         const area = areaBySlug.get(l.area!)!;
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        const parcel = parcels.get(area.slug) ?? { id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [] };
+        const parcel = parcels.get(area.slug) ?? {
+          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
+          deactivatedAt: area.deactivated_at, aliases: [],
+        };
         if (l.site_original && !parcel.aliases.includes(l.site_original)) parcel.aliases.push(l.site_original);
         parcels.set(area.slug, parcel);
         plantsByClass.set(siteClass, (plantsByClass.get(siteClass) ?? 0) + (l.quantity ?? 0));
@@ -170,8 +175,8 @@ async function load(db: Db): Promise<Loaded> {
         slug: site.slug,
         name: site.name,
         description: site.description,
+        deactivatedAt: site.deactivated_at,
         siteClasses: [...plantsByClass].sort((a, b) => b[1] - a[1]).map(([c]) => c),
-        isScheme: site.is_scheme,
         parcels: parts,
         searchKeys: [...keys],
       };
@@ -206,7 +211,11 @@ async function load(db: Db): Promise<Loaded> {
 export class SupabaseWrtRepository implements WrtRepository {
   constructor(private readonly db: () => Db = publicDb) {}
 
-  private data = cache(() => load(this.db()));
+  // Each instance belongs to one request, so all its reads share the same load.
+  private loaded?: Promise<Loaded>;
+  private data() {
+    return this.loaded ??= load(this.db());
+  }
 
   private read = <K extends keyof Loaded>(key: K) => async () => (await this.data())[key];
 

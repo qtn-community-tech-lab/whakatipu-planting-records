@@ -35,11 +35,10 @@ export function SeasonSiteSpecies({ season, records }: { season: Season; records
         key: g.place.slug,
         name: g.place.name,
         href: hrefs.place(g.place.slug),
-        isScheme: g.place.isScheme,
         split: g.split,
         species: g.species,
         totalHref: hrefs.records({ ...seasonQuery(season), place: g.place.slug }),
-        moreHref: g.place.isScheme ? hrefs.place(g.place.slug) : `${hrefs.place(g.place.slug)}?year=${season.year}#year-view`,
+        moreHref: `${hrefs.place(g.place.slug)}?year=${season.year}#year-view`,
         speciesHref: (s) => hrefs.records({ ...seasonQuery(season), place: g.place.slug, species: s.slug }),
       }))}
     />
