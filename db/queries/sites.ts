@@ -7,7 +7,7 @@ import type { CreateSiteInput, EditSiteInput } from "@/db/types";
 export async function listSites(state: "active" | "deactivated" = "active") {
   const query = (await db())
     .from("sites")
-    .select("slug, name, is_scheme")
+    .select("slug, name")
     .order("name");
   const { data } = await (
     state === "deactivated"
@@ -20,7 +20,7 @@ export async function listSites(state: "active" | "deactivated" = "active") {
 export async function readSite(slug: string) {
   const { data } = await (await db())
     .from("sites")
-    .select("slug, name, description, is_scheme, deactivated_at, updated_at")
+    .select("slug, name, description, deactivated_at, updated_at")
     .eq("slug", slug)
     .maybeSingle()
     .throwOnError();

@@ -50,7 +50,7 @@ export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "phot
     needsDecision: r.contested_group !== null, contestedWith: [], aliases: [], searchKeys: [], note: null,
   };
   const place: Place = {
-    slug: r.site!, name: r.site_name!, siteClasses: [siteClass], isScheme: r.is_scheme === true,
+    slug: r.site!, name: r.site_name!, siteClasses: [siteClass],
     parcels: [{ id: r.area!, name: r.area_name!, placeSlug: r.site!, siteClass, aliases: [] }], searchKeys: [],
   };
   return {

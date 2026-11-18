@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
   ]);
   const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
   const counts: NavCounts = {
-    sites: formatNumber(overview.placeCount),
+    sites: formatNumber(overview.siteCount),
     species: formatNumber(overview.speciesCount),
     seasons: formatNumber(overview.seasons.length),
     records: formatNumber(overview.split.records),

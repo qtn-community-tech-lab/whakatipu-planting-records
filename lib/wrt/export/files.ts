@@ -102,7 +102,6 @@ export const EXPORT_FILES: readonly ExportFile[] = [
       { header: "site_slug", value: (r) => r.slug },
       { header: "name", value: (r) => r.name },
       { header: "description", value: (r) => r.description },
-      { header: "is_scheme", value: (r) => r.is_scheme },
       { header: "deactivated_at", value: (r) => r.deactivated_at },
     ],
   ),

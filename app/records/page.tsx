@@ -84,8 +84,7 @@ export default async function RecordsPage({ searchParams }: Props) {
   const to = Math.min(page * PAGE_SIZE, total);
 
   const speciesCount = new Set(result.rows.map((v) => v.species.id)).size;
-  const siteCount = new Set(result.rows.filter((v) => !v.place.isScheme).map((v) => v.place.slug)).size;
-  const schemeCount = new Set(result.rows.filter((v) => v.place.isScheme).map((v) => v.place.slug)).size;
+  const siteCount = new Set(result.rows.map((v) => v.place.slug)).size;
   const filtered = hasFilters(filter);
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
   const selectedPart = filter.parcel && selectedPlace && selectedPlace.parcels.length > 1
@@ -127,7 +126,6 @@ export default async function RecordsPage({ searchParams }: Props) {
             <SplitLine split={split} />
             <p className="wrt-muted m-0">
               {formatNumber(total)} record{total === 1 ? "" : "s"} · {formatNumber(speciesCount)} species · {formatNumber(siteCount)} site{siteCount === 1 ? "" : "s"}
-              {schemeCount > 0 && ` · ${schemeCount} order scheme`}
             </p>
           </div>
           {contextLinks.length > 0 && (

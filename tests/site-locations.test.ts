@@ -53,12 +53,13 @@ describe("public site reference locations", () => {
     expect(regionMapOptions([])).not.toHaveProperty("bounds");
   });
 
-  it("maps visible sites with pins and excludes order schemes", async () => {
-    const sites = (await q.places()).filter((site) => !site.item.isScheme);
+  it("maps visible sites with pins", async () => {
+    const sites = await q.places();
     const records = await repo.listRecords();
     const mapped = locationsForSites(sites.map((site) => site.item), records);
     const slugs = new Set(mapped.map((location) => location.siteSlug));
-    for (const site of sites.slice(0, 10)) expect(slugs.has(site.item.slug), site.item.name).toBe(true);
+    expect(slugs.size).toBe(4);
+    expect([...slugs].every((slug) => sites.some((site) => site.item.slug === slug))).toBe(true);
     expect(mapped).toHaveLength(5);
     expect(new Set(mapped.map((location) => location.id)).size).toBe(mapped.length);
     expect(locationsForSites([{ slug: "paper4trees", name: "Paper4Trees" }], records)).toEqual([]);

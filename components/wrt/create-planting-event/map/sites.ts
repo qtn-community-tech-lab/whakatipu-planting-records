@@ -23,7 +23,7 @@ export type PlantTotals = Record<string, {
   last?: string | undefined; lastOrder?: number | undefined;
 }>;
 
-/** The pins of the sites the form knows (order schemes have no location, so no pin).
+/** The pins of the sites the form knows, where coordinates are available.
  * A site with one area gets one pin for the whole site. */
 export function sitePins(
   sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[],

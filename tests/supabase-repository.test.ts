@@ -16,10 +16,10 @@ describe("Supabase repository without workbook files", () => {
       seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
       species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", profile: {}, photos: [] }],
       sites: [
-        { slug: "reserve", name: "Reserve", description: "Planting beside the river.", is_scheme: false, deactivated_at },
-        { slug: "new-site", name: "New site", description: "", is_scheme: false, deactivated_at: null },
-        { slug: "empty-site", name: "Empty site", description: "", is_scheme: false, deactivated_at: null },
-        { slug: "old-site", name: "Old site", description: "Historical site.", is_scheme: false, deactivated_at: "2026-11-01T00:00:00Z" },
+        { slug: "reserve", name: "Reserve", description: "Planting beside the river.", deactivated_at },
+        { slug: "new-site", name: "New site", description: "", deactivated_at: null },
+        { slug: "empty-site", name: "Empty site", description: "", deactivated_at: null },
+        { slug: "old-site", name: "Old site", description: "Historical site.", deactivated_at: "2026-11-01T00:00:00Z" },
       ],
       areas: [
         { slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community", deactivated_at: null },

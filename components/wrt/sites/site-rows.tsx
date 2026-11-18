@@ -21,7 +21,6 @@ export interface SiteRowData {
   name: string;
   /** Where the name links: the site or part page. */
   href: AppRoute;
-  isScheme?: boolean;
   split: QuantitySplit;
   species: SiteSpecies[];
   /** Small facts under the name: class badges, seasons, parcels. */
@@ -46,7 +45,6 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
                 <Link href={r.href} className="wrt-sitesp__name">{r.name}</Link>
                 <span className="wrt-sitesp__meta">
                   {r.meta ?? <>{r.species.length} species</>}
-                  {r.isScheme && " · order scheme, not a place"}
                 </span>
               </span>
               <SplitBar split={r.split} max={max} size="sm" className="wrt-sitesp__bar" />

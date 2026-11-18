@@ -28,7 +28,7 @@ const write = process.argv.includes("--write");
 // ------------------------------------------------------------------ 1. what the CSVs say
 const data = loadFromDirectory(DEFAULT_DATA_DIR);
 
-const sites: Row[] = data.places.map((p) => ({ slug: p.slug, name: p.name, is_scheme: p.isScheme }));
+const sites: Row[] = data.places.map((p) => ({ slug: p.slug, name: p.name }));
 
 // Area slugs are unique across sites: the area name, else site-area, else numbered.
 const areaOf = new Map<string, string>();

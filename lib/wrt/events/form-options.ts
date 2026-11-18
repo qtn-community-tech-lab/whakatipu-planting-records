@@ -56,7 +56,7 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
   const activeSites = new Set(sites.map((site) => site.slug));
   return {
     sites: places
-      .filter((p) => !p.isScheme && activeSites.has(p.slug))
+      .filter((p) => activeSites.has(p.slug))
       .map((p) => ({
         slug: p.slug,
         name: p.name,
