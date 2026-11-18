@@ -21,6 +21,7 @@ setting local keys and loading the initial data. This README covers database mai
 | `checks/anonymous_crud_check.sql`                  | Verifies public reads remain available and anonymous writes and user-profile reads are denied                                                                                                                                                                  |
 | `checks/schema_check.sql`                          | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads                                                                                 |
 | `checks/access_rules_check.sql`                    | Tries 25 public, unapproved and active-user operations, including user management, and lists PASS or FAIL. Changes nothing                                                                                                                                     |
+| `../data/species.json` and `../scripts/seed-species.ts` | Maintained species seed and repeatable insert/backfill command; uses only existing species columns |
 
 ## Migrations
 
@@ -139,6 +140,29 @@ npm run import-workbook -- --write   # makes the changes
 
 Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. Species profiles and photos are imported from `data/species-profiles.json` and `data/species-photos.json`, matched by register code. These files are import inputs only: the app reads this data from the species table. Rerunning the import replaces these columns when the source data changes, including clearing missing references to `{}` and `[]`. Each saved photo contains only `src` and a plain-text `attribution` combining photographer and licence. Photo order and profile sources are preserved. Descriptions, pins, rulings and notes a person wrote are kept, and lines that leave the CSV are deactivated.
 
+## Species seed and backfill
+
+[`data/species.json`](../data/species.json) is the maintained species register, created from the source CSVs in this checkout. Use it after `import-workbook`: the workbook importer restores its original scientific names and threat marks. This seed retains each original register code and slug and does not depend on a development database export or on the source CSVs being present at runtime.
+
+```bash
+npm run seed-species                         # validate and preview offline
+npm run seed-species -- --write              # insert missing species only
+npm run seed-species -- --write --backfill   # insert missing rows and backfill existing rows
+```
+
+The backfill uses existing species columns only. It updates `scientific_name`, `suggested_spelling` and
+`threatened`, and fills `common_name`, `maori_name`, `profile` and `photos` only when those fields are empty.
+It never changes slugs or register codes, overwrites populated names or reference content, or stores NZTCS
+assessment details. A verified NZTCS Threatened match is `threatened = true`; verified At Risk or Not Threatened
+matches are `false`; unresolved matches remain `null`. For existing rows, the backfill leaves `over_5m`
+untouched. Newly inserted rows take its value from the original CSV seed. This field has not been independently
+height-audited; workbook-imported `false` values mean unmarked in the source register, not necessarily
+botanically verified as under five metres.
+
+The seed command requires `.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` only when
+`--write` is used. It checks slug/register-code conflicts before writing, is safe to rerun, and preserves
+deactivated rows. Run it after every workbook import that should receive the maintained names and threat flags.
+
 ## The map pins
 
 [`scripts/import-pins.ts`](../scripts/import-pins.ts) copies the researched pins in `data/site-locations.json`
@@ -162,7 +186,7 @@ When provisioning a hosted environment:
 1. Create the Supabase project and apply all migrations in timestamp order. Configure the Auth Before User Created
    hook, `/auth/confirm` redirect allowlist, one-hour email expiry and both magic-link email templates to match
    `config.toml`.
-2. Run the workbook import, then the pins import, with that project's URL and secret key. The scripts read
+2. Run the workbook import, species seed/backfill, then the pins import, with that project's URL and secret key. The scripts read
    `.env.local`; restore your local values before resuming local development.
 3. Run the SQL checks below against the hosted database.
 4. Set the hosted URL, publishable key and app origin (`NEXT_PUBLIC_APP_URL`) in the Next.js deployment environment
