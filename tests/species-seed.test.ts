@@ -13,14 +13,19 @@ const emptyReferences = { maori_name_alternatives: [], summary: null, look_for: 
 describe("complete PostgreSQL species seed", () => {
   it("uses complete species.json rows without replacing their saved content", () => {
     expect(seed).toEqual(catalogue);
-    expect(seed.filter((entry) => entry.summary !== null)).toHaveLength(95);
+    expect(seed.filter((entry) => entry.summary !== null)).toHaveLength(93);
     expect(seed.every((entry) => Object.keys(entry).every((key) => !key.startsWith("profile_") && key !== "name_note"))).toBe(true);
   });
 
-  it("retains the 95 planted species without merging accepted names", () => {
-    expect(seed).toHaveLength(95);
-    expect(new Set(seed.map((entry) => entry.slug)).size).toBe(95);
-    expect(seed.filter((entry) => entry.scientific_name === "Veronica cupressoides").map((entry) => entry.register_code)).toEqual(["SP-086", "SP-155"]);
+  it("retains 93 planted species after the confirmed C1 and C2 merges", () => {
+    expect(seed).toHaveLength(93);
+    expect(new Set(seed.map((entry) => entry.slug)).size).toBe(93);
+    for (const [code, name] of [["SP-086", "Leonohebe cupressoides"], ["SP-087", "Leptecophylla juniperina"]]) {
+      expect(seed.find((entry) => entry.register_code === code)).toMatchObject({
+        scientific_name: name, needs_decision: false, contested_group: null,
+      });
+    }
+    expect(seed.some((entry) => ["SP-060", "SP-155"].includes(entry.register_code!))).toBe(false);
   });
 
   it("corrects verified names while preserving historical slugs", () => {
@@ -33,9 +38,9 @@ describe("complete PostgreSQL species seed", () => {
   });
 
   it("distinguishes verified Threatened flags from unresolved matches and At Risk", () => {
-    expect(seed.filter((entry) => entry.threatened === true)).toHaveLength(4);
+    expect(seed.filter((entry) => entry.threatened === true)).toHaveLength(3);
     expect(seed.filter((entry) => entry.threatened === false)).toHaveLength(80);
-    expect(seed.filter((entry) => entry.threatened === null)).toHaveLength(11);
+    expect(seed.filter((entry) => entry.threatened === null)).toHaveLength(10);
     // At Risk is distinct from Threatened.
     expect(seed.find((entry) => entry.register_code === "SP-147")?.threatened).toBe(false);
   });
@@ -87,7 +92,7 @@ describe("complete PostgreSQL species seed", () => {
   });
 
   it("includes researched common and Māori names while leaving unresolved names blank", () => {
-    expect(seed.filter((entry) => entry.common_name).length).toBe(90);
+    expect(seed.filter((entry) => entry.common_name).length).toBe(89);
     expect(seed.filter((entry) => entry.maori_name).length).toBe(66);
     expect(seed.find((entry) => entry.register_code === "SP-088")).toMatchObject({ common_name: "Mānuka", maori_name: "Mānuka" });
     expect(seed.find((entry) => entry.register_code === "SP-041")).toMatchObject({ common_name: null, maori_name: null });
@@ -118,7 +123,7 @@ describe("complete PostgreSQL species seed", () => {
   });
 
   it.each([
-    ["SP-086", "leonohebe-cupressoides", "Veronica cupressoides"],
+    ["SP-086", "leonohebe-cupressoides", "Leonohebe cupressoides"],
     ["SP-103", "muehlenbeckia-complexa", "Muehlenbeckia complexa"],
     ["SP-117", "olearia-nummularifolia", "Olearia nummulariifolia"],
     ["SP-124", "parsonia-heterophylla", "Parsonsia heterophylla"],
@@ -176,10 +181,11 @@ describe("complete PostgreSQL species seed", () => {
 });
 
 describe.skipIf(!existsSync(`${DEFAULT_DATA_DIR}/species_master_proposed.csv`) || !existsSync(`${DEFAULT_DATA_DIR}/planting_history.csv`))("original CSV audit (when restored locally)", () => {
-  it("retains exactly the species referenced by planting history, with their original codes and slugs", () => {
+  it("retains the historical species identities after applying the confirmed merges", () => {
     const original = parseCsv(readFileSync(`${DEFAULT_DATA_DIR}/species_master_proposed.csv`, "utf8"));
     const history = parseCsv(readFileSync(`${DEFAULT_DATA_DIR}/planting_history.csv`, "utf8"));
-    const planted = new Set(history.rows.map((row) => row.species_id_proposed));
+    const mergedCodes = new Map([["SP-060", "SP-087"], ["SP-155", "SP-086"]]);
+    const planted = new Set(history.rows.map((row) => mergedCodes.get(row.species_id_proposed ?? "") ?? row.species_id_proposed));
     expect(new Set(seed.map((entry) => entry.register_code))).toEqual(planted);
     const usedSlugs = new Set<string>();
     const identities = original.rows.filter((row) => row.species_id).map((row) => {

@@ -33,7 +33,7 @@
   },
   {
     "speciesId": "SP-142",
-    "scientificName": "Prumnopitys taxifolius",
+    "scientificName": "Prumnopitys taxifolia",
     "status": "confirmed",
     "reason": "Species-specific sources and three distinct licensed files were checked; selected hosted photos were visually inspected in the browser.",
     "photoCount": 3,
@@ -162,7 +162,7 @@
   },
   {
     "speciesId": "SP-117",
-    "scientificName": "Olearia nummularifolia",
+    "scientificName": "Olearia nummulariifolia",
     "status": "partial",
     "reason": "Botanical references confirmed; WRT database boundary or spelling decision remains unresolved.",
     "photoCount": 3,
@@ -229,7 +229,7 @@
   },
   {
     "speciesId": "SP-164",
-    "scientificName": "Weinmania racemosa",
+    "scientificName": "Pterophylla racemosa",
     "status": "confirmed",
     "reason": "Species source and three distinct openly licensed images visually checked.",
     "photoCount": 3,
@@ -294,7 +294,7 @@
   },
   {
     "speciesId": "SP-022",
-    "scientificName": "Carmichaelia crassicaulis",
+    "scientificName": "Carmichaelia crassicaulis var racemosa",
     "status": "partial",
     "reason": "Species-level identity confirmed; WRT subspecies or database-boundary ruling remains unresolved.",
     "photoCount": 3,
@@ -318,15 +318,6 @@
     "checkedAt": "2026-10-04"
   },
   {
-    "speciesId": "SP-060",
-    "scientificName": "Cyathoides juniperina",
-    "status": "unresolved",
-    "reason": "Exact recorded spelling not verified; the similar historical name Cyathodes juniperina is a confirmed synonym, but mapping SP-060 to it would be an unsupported assumption.",
-    "photoCount": 0,
-    "checkedAt": "2026-10-04",
-    "summary": "The name is unverified as written. Confirm the intended species before attaching identification features or photos."
-  },
-  {
     "speciesId": "SP-154",
     "scientificName": "Veronica biggarii",
     "status": "partial",
@@ -345,7 +336,7 @@
   },
   {
     "speciesId": "SP-150",
-    "scientificName": "Scheflera digitata",
+    "scientificName": "Schefflera digitata",
     "status": "confirmed",
     "reason": "Species source and three distinct openly licensed images visually checked.",
     "photoCount": 3,
@@ -353,7 +344,7 @@
   },
   {
     "speciesId": "SP-124",
-    "scientificName": "Parsonia heterophylla",
+    "scientificName": "Parsonsia heterophylla",
     "status": "confirmed",
     "reason": "Species source and three distinct openly licensed images visually checked.",
     "photoCount": 3,

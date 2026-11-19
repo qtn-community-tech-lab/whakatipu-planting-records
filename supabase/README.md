@@ -32,7 +32,7 @@ npm run import-workbook             # validate seeds and preview missing rows; r
 npm run import-workbook -- --write  # insert missing rows
 ```
 
-The seed contains 39 sites, 78 areas, 95 species, 9 questions, 28 seasons, 360 events, 5,449 lines and 1,339 notes. Planting quantities total 140,068.
+The seed contains 41 sites, 75 areas, 93 species, 9 questions, 28 seasons, 359 events, 5,444 lines and 1,334 notes. Planting quantities total 140,068.
 
 The importer validates seed references before connecting, inserts parent rows first, and uses returned IDs to link events, lines and notes. These three tables retain `GENERATED ALWAYS` identities. Season seeds supply explicit IDs for new rows; existing season IDs are resolved by slug.
 
@@ -117,7 +117,7 @@ Local startup does not configure a hosted project. Automated migration deploymen
 
 Run SQL checks through Studio's SQL Editor. Read each file's prerequisites before running it.
 
-- [`schema_check.sql`](checks/schema_check.sql): schema, provenance and historical import checks. Its fixed season assertions still use the original 25-season baseline; the current JSON seed contains 28 seasons.
+- [`schema_check.sql`](checks/schema_check.sql): schema, provenance, seed counts and historical season totals after a fresh import.
 - [`access_rules_check.sql`](checks/access_rules_check.sql): public, unapproved and active-user permissions; requires a linked active Auth identity and rolls back fixtures.
 - [`anonymous_crud_check.sql`](checks/anonymous_crud_check.sql): public reads and denied anonymous writes.
 - [`auth_identity_check.sql`](checks/auth_identity_check.sql): identity linking, email changes, deactivation and audit attribution; run as postgres, fixtures roll back.

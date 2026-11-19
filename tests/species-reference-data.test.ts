@@ -31,6 +31,6 @@ describe("species reference fields in the canonical seed", () => {
     }
     expect(species.find((row) => row.register_code === "SP-116")?.maori_name).toBeNull();
     expect(species.find((row) => row.register_code === "SP-046")?.common_name).toBeNull();
-    expect(species.find((row) => row.register_code === "SP-155")?.maori_name).toBeNull();
+    expect(species.find((row) => row.register_code === "SP-086")?.maori_name).toBeNull();
   });
 });

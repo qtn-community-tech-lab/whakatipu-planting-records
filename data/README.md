@@ -4,11 +4,11 @@
 
 | File | Contents |
 | --- | --- |
-| `sites.json` | 39 sites |
-| `site_areas.json` | 78 areas, including map pins and source links |
-| `species.json` | 95 species with canonical names, reference content, photos and attribution |
+| `sites.json` | 41 sites |
+| `site_areas.json` | 75 areas, including map pins and source links |
+| `species.json` | 93 species with canonical names, reference content, photos and attribution |
 | `seasons.json` | 28 seasons, Autumn 2015–Spring 2028; future workbook totals are null |
-| `plantings.json` | 360 events with nested `lines` and each line's review `notes` |
+| `plantings.json` | 359 events with nested `lines` and each line's review `notes` |
 
 Review question definitions come from [`lib/wrt/review-themes.ts`](../lib/wrt/review-themes.ts). No CSVs are read by the seed command. Legacy workbook parsing helpers remain for source analysis and tests.
 
