@@ -8,8 +8,8 @@
  * passes the access rules, so keep it out of the app and out of git.
  *
  * Safe to run again: rows match on slug, or spreadsheet code for lines, and only
- * differences are written. Complete species rows come from data/species.json.
- * It keeps descriptions, pins, rulings and notes a person wrote, and deactivates
+ * differences are written. Sites, areas and species come from data/*.json, including pins
+ * and descriptions. Audit fields are assigned by database triggers. It keeps rulings and notes, and deactivates
  * lines that leave the CSV.
  */
 import { isDeepStrictEqual } from "node:util";
@@ -17,7 +17,7 @@ import type { Json } from "../db/database.types";
 import { createClient } from "@supabase/supabase-js";
 import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
 import { REVIEW_THEMES } from "../lib/wrt/review-themes";
-import { slugify } from "../lib/wrt/text";
+import { readPlaceSeeds, workbookAreaSlugs } from "./workbook/places";
 import type { ReviewNoteKind } from "../lib/wrt/types";
 
 type Row = Record<string, Json>;
@@ -26,27 +26,8 @@ const write = process.argv.includes("--write");
 // ------------------------------------------------------------------ 1. what the CSVs say
 const data = loadFromDirectory(DEFAULT_DATA_DIR);
 
-const sites: Row[] = data.places.map((p) => ({ slug: p.slug, name: p.name }));
-
-// Area slugs are unique across sites: the area name, else site-area, else numbered.
-const areaOf = new Map<string, string>();
-const usedAreaSlugs = new Set<string>();
-const areas: Row[] = [];
-for (const place of data.places) {
-  for (const parcel of place.parcels) {
-    const base = slugify(parcel.name) || "area";
-    let slug = usedAreaSlugs.has(base) ? `${place.slug}-${base}` : base;
-    for (let n = 2; usedAreaSlugs.has(slug); n++) slug = `${place.slug}-${base}-${n}`;
-    usedAreaSlugs.add(slug);
-    areaOf.set(`${place.slug}|${parcel.id}`, slug);
-    areas.push({
-      slug, site: place.slug, name: parcel.name,
-      // "unnumbered-…" and provisional "NEW-…" ids are not WRT numbers.
-      wrt_number: /^(unnumbered-|NEW-)/.test(parcel.id) ? null : parcel.id,
-      class: parcel.siteClass === "unknown" ? null : parcel.siteClass,
-    });
-  }
-}
+const { sites, areas } = readPlaceSeeds();
+const areaOf = workbookAreaSlugs(data.places, { sites, areas });
 
 const species: Row[] = data.species;
 const byId = new Map(data.species.map((s) => [s.register_code ?? s.slug, s]));
@@ -208,7 +189,7 @@ async function main() {
   // ------------------------------------------------------------------ 3. report
   console.log(write ? "Written:" : "Dry run, nothing written. Would change:");
   for (const [table, added, changed] of report) console.log(`  ${table.padEnd(30)} +${added} new, ${changed} changed`);
-  console.log(`  (CSV: ${sites.length} sites, ${areas.length} areas, ${lines.length} lines, ${notes.length} notes; species.json: ${species.length} species)`);
+  console.log(`  (JSON: ${sites.length} sites, ${areas.length} areas, ${species.length} species; CSV: ${lines.length} lines, ${notes.length} notes)`);
 
   if (write) {
     // Read the totals back from the database and compare with the workbook's own TOTAL cells, as the CSV states them.

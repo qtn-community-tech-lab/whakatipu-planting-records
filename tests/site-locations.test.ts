@@ -1,23 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, locationsForSites as mapLocationsForSites, type PlantingAreaPin } from "@/lib/wrt/site-locations";
-import siteLocations from "@/data/site-locations.json";
+import areaSeed from "@/data/site_areas.json";
 import { regionMapOptions } from "@/lib/wrt/map-region";
 import type { PlantingRecord } from "@/lib/wrt/types";
 import { splitOf } from "@/lib/wrt/queries";
 import { q, repo } from "./helpers";
 import { places } from "./fixtures/planting";
 
-// Offline database-shaped areas; reference JSON is only an import/test fixture.
-const areas: PlantingAreaPin[] = places.flatMap((site) => site.parcels.map((parcel) => {
-  const pin = siteLocations.find((p) => p.siteSlug === site.slug &&
-    (p.parcelIds?.includes(parcel.id) ?? parcel.id === "whitechapel-north"));
-  return {
-    slug: pin?.id ?? `${site.slug}-${parcel.id}`, site: site.slug, name: pin?.label ?? parcel.name,
-    description: pin?.description ?? "", wrt_number: parcel.id,
-    lat: pin?.latitude ?? null, lng: pin?.longitude ?? null,
-    pin_source_url: pin?.coordinateSourceUrl ?? null, pin_checked_on: pin?.checkedOn ?? null,
-  };
-}));
+// Map behaviour uses the invented planting fixture and explicit database-shaped pins.
+const fixturePins: Record<string, [number, number]> = {
+  "whitechapel-north": [-44.9736, 168.8546], "9A": [-44.9949, 168.8019],
+  "9G": [-44.9907, 168.8082], "5B": [-45.014, 168.6666], "11": [-44.9716, 168.7985],
+};
+const areas: PlantingAreaPin[] = places.flatMap((site) => site.parcels.map((parcel) => ({
+  slug: `${site.slug}-${parcel.id}`, site: site.slug, name: parcel.name, description: "", wrt_number: parcel.id,
+  lat: fixturePins[parcel.id]?.[0] ?? null, lng: fixturePins[parcel.id]?.[1] ?? null,
+  pin_source_url: null, pin_checked_on: null,
+})));
 const locationsForSites = (sites: readonly { slug: string; name: string }[], records: readonly PlantingRecord[]) =>
   mapLocationsForSites(areas, sites, records);
 
@@ -69,37 +68,20 @@ describe("public site reference locations", () => {
     }
   });
 
-  it("keeps every point in the wider Whakatipu area with public source provenance", () => {
-    for (const location of siteLocations) {
-      expect(location.latitude, location.label).toBeGreaterThan(-45.6);
-      expect(location.latitude, location.label).toBeLessThan(-44.6);
-      expect(location.longitude, location.label).toBeGreaterThan(168.1);
-      expect(location.longitude, location.label).toBeLessThan(169);
-      expect(["historic-event", "landmark"]).toContain(location.precision);
-      expect(new URL(location.sourceUrl).protocol).toBe("https:");
-      expect(new URL(location.coordinateSourceUrl).protocol).toBe("https:");
-      expect(location.description.length).toBeGreaterThan(30);
-      expect(location.coordinateMethod?.length, location.label).toBeGreaterThan(30);
-      expect(location.checkedOn).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-    }
-  });
-
-  it("uses disjoint parcel counts for every site with several reference points", () => {
-    const slugs = new Set(siteLocations.map((location) => location.siteSlug));
-    for (const slug of slugs) {
-      const points = siteLocations.filter((location) => location.siteSlug === slug);
-      if (points.length < 2) continue;
-      const ids = points.flatMap((point) => {
-        expect(point.parcelIds?.length, point.label).toBeGreaterThan(0);
-        return point.parcelIds ?? [];
-      });
-      expect(new Set(ids).size, slug).toBe(ids.length);
+  it("keeps seeded pins in the wider Whakatipu area with source provenance", () => {
+    for (const area of areaSeed.filter((row) => row.lat !== null && row.lng !== null)) {
+      expect(area.lat).toBeGreaterThan(-45.6);
+      expect(area.lat).toBeLessThan(-44.6);
+      expect(area.lng).toBeGreaterThan(168.1);
+      expect(area.lng).toBeLessThan(169);
+      expect(new URL(area.pin_source_url!).protocol).toBe("https:");
+      expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
   });
 
   it("preserves the organizer's historic anchor points and coordinate axis order", () => {
-    const whitechapel = siteLocations.find((p) => p.id === "whitechapel-reserve")!;
-    const slopeHill = siteLocations.find((p) => p.id === "slope-hill-riparian")!;
+    const whitechapel = { latitude: areaSeed.find((p) => p.slug === "whitechapel-reserve")!.lat!, longitude: areaSeed.find((p) => p.slug === "whitechapel-reserve")!.lng! };
+    const slopeHill = { latitude: areaSeed.find((p) => p.slug === "slope-hill-road")!.lat!, longitude: areaSeed.find((p) => p.slug === "slope-hill-road")!.lng! };
     expect([whitechapel.latitude, whitechapel.longitude]).toEqual([-44.9736, 168.8546]);
     expect([slopeHill.latitude, slopeHill.longitude]).toEqual([-44.9716, 168.7985]);
     expect(locationBounds([whitechapel, slopeHill])).toEqual([[168.7985, -44.9736], [168.8546, -44.9716]]);

@@ -64,18 +64,17 @@ Public pages and CSV downloads work without an account.
 
 ### 4. Load the planting history and map pins
 
-Check that the URL in `.env.local` is local, then run the workbook import before the pins import:
+Check that the URL in `.env.local` is local, then run the workbook import:
 
 ```bash
 npm run import-workbook             # preview changes
 npm run import-workbook -- --write
-npm run import-pins                 # preview changes
-npm run import-pins -- --write
 ```
 
 The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
-against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+against its source total. The import can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
+Sites and areas (including descriptions and pins) come entirely from `data/sites.json` and `data/site_areas.json`.
 The workbook import seeds species entirely from `data/species.json`, including names, flags, profile columns,
 photos and deactivation state. This complete seed was exported from PostgreSQL; database triggers manage audit
 fields. The species CSVs and separate reference JSON files are not needed for importing. To seed species without
@@ -171,7 +170,7 @@ the app does not need a Resend SDK or API key.
 ```text
 local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
  data/species.json                 ↗
- data/site-locations.json     → scripts/import-pins.ts     → Supabase
+ data/sites.json, data/site_areas.json ↗
                                                              ↓
                                                      db/repository.ts
                                                              ↓
@@ -208,7 +207,7 @@ display only. Delete it once the species register has its own display-name colum
 
 ## Site reference maps
 
-The Sites map and individual site pages show approximate public reference locations across 29 historical site groups (50 points). `data/site-locations.json` keeps these points separate from the planting ledger, with explicit latitude/longitude, location and coordinate source URLs, derivation notes and a checked date. Points come from WRT's historic event map, council geometry or public landmarks; they do not claim historical planting boundaries. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. Whole-site references use the group count; references for identified parts use distinct registered parcel IDs so quantities are not duplicated or assigned to unmapped parts. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
+The Sites map and individual site pages show approximate public reference locations across 29 historical site groups (50 points). `data/site_areas.json` seeds the area coordinates, source URLs and checked dates through the workbook import. Points are approximate references and do not claim historical planting boundaries. Marker labels show compact recorded plant counts (such as 1.2k), calculated from the reader's current record scope. Whole-site references use the group count; references for identified parts use distinct registered parcel IDs so quantities are not duplicated or assigned to unmapped parts. An amber dot preserves the presence of review quantities, with the full split shown on selection. Map groups expand on click; the location picker also exposes every point, coordinates, sources and a Google Maps link. Site-class filters limit map coverage to the visible sites. Unmapped sites show an explicit empty state; Paper4Trees has no map.
 
 ## Species photo guide
 

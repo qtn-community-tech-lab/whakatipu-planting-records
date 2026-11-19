@@ -147,7 +147,8 @@ photos and deactivation state. The importer needs only the planting history, sit
 CSVs; it does not read the species CSVs or archived catalogue snapshots. Species are linked to
 history by register code, falling back to slug for app-created entries. Rerunning the workbook import applies
 changed species seed values, including clearing references when their saved values are null or empty lists.
-Database-managed audit fields are excluded. Site descriptions, pins, rulings and notes a person wrote are kept,
+Database-managed audit fields are excluded. Sites and areas come from `data/sites.json` and `data/site_areas.json`,
+including descriptions, pins and deactivation state. Reruns apply all non-audit seed values. Rulings and notes a person wrote are kept,
 and lines that leave the CSV are deactivated.
 
 Species names are stored once in `scientific_name`, `common_name` and the preferred `maori_name`.
@@ -199,18 +200,15 @@ where exists (select 1 from public.planting_lines l where l.species = s.slug);
 
 Run `npm run seed-species` to validate the exported data before using either importer.
 
-## The map pins
+## Sites, areas and map pins
 
-[`scripts/import-pins.ts`](../scripts/import-pins.ts) copies the researched pins in `data/site-locations.json`
-onto their areas: latitude, longitude, the link the coordinates came from, and the date they were checked.
-It uses the same `.env.local` settings as the workbook import. Import the workbook first so the areas exist.
+The workbook import seeds complete site and area rows from `data/sites.json` and `data/site_areas.json`.
+These are direct table dumps. The importer excludes `created_at`, `created_by`, `updated_at` and `updated_by`,
+so database triggers manage audit fields. All other fields, including pins, descriptions and deactivation state,
+follow the seed on reruns. No separate pin import is needed.
 
-```bash
-npm run import-pins              # dry run
-npm run import-pins -- --write
-```
-
-A pin with a WRT number goes on that area of its site. A pin for a whole site goes on the site's area only when the site has just one. It fills empty pins only, so a pin someone has set or moved is never changed.
+Workbook parcel identities are matched to the saved area slugs by site and WRT number, or by site and area name
+for unnumbered parcels. Missing or ambiguous matches fail before any database writes.
 
 ## Hosted database setup
 

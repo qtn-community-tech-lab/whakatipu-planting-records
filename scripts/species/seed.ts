@@ -22,7 +22,7 @@ export const speciesSeedSchema = z.array(z.strictObject({
   threatened: z.boolean().nullable(),
   threatened_te_kakano: z.boolean(),
   needs_decision: z.boolean(),
-  contested_group: identifier.regex(/^C\d+$/).nullable(),
+  contested_group: identifier.regex(/^C\d+$/).or(z.literal("")).nullable(),
   register_note: longText.nullable(),
   maori_name_alternatives: z.array(name),
   summary: longText.nullable(),
