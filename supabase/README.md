@@ -49,6 +49,11 @@ Existing rows are skipped; rows absent from the seed are kept. This command prep
 
 Audit fields are assigned by database triggers. Seed deactivation state, review resolution and provenance are retained. No separate pin import, PostgreSQL npm driver or identity override is needed.
 
+If a secret key receives `permission denied for table sites`, apply
+`migrations/20261120000000_historical_seed_access.sql` to that database. It explicitly
+grants the seed role table, sequence and totals-view access instead of relying on
+Supabase's default privileges. RLS bypass alone does not grant table access.
+
 ## Species data
 
 The historical seed import loads complete species rows from `data/species.json` along with all other reference data and planting history. Use this single command after applying migrations to a fresh database.
@@ -113,6 +118,7 @@ Run SQL checks through Studio's SQL Editor. Read each file's prerequisites befor
 - [`access_rules_check.sql`](checks/access_rules_check.sql): public, unapproved and active-user permissions; requires a linked active Auth identity and rolls back fixtures.
 - [`anonymous_crud_check.sql`](checks/anonymous_crud_check.sql): public reads and denied anonymous writes.
 - [`auth_identity_check.sql`](checks/auth_identity_check.sql): identity linking, email changes, deactivation and audit attribution; run as postgres, fixtures roll back.
+- [`historical_seed_access_test.sql`](checks/historical_seed_access_test.sql): seed-role reads, linked inserts, generated IDs and totals access; fixtures roll back.
 - Other `*_test.sql` files cover species references and historical deactivation behaviour.
 
 `npm test` includes JSON validation and relationship tests. Live database tests use the configured Supabase environment; see `tests/live-env.ts`.
