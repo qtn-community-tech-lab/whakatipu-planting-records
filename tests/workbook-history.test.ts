@@ -17,15 +17,55 @@ describe("nested planting seed", () => {
     expect(plantings).toEqual(dump);
     const lines = plantings.flatMap((planting) => planting.lines);
     const notes = lines.flatMap((line) => line.notes);
-    expect(plantings).toHaveLength(360);
-    expect(lines).toHaveLength(5449);
-    expect(notes).toHaveLength(1339);
+    expect(plantings).toHaveLength(359);
+    expect(lines).toHaveLength(5444);
+    expect(notes).toHaveLength(1334);
     expect(lines.reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(140068);
+    for (const season of references.seasons) {
+      if (season.workbook_total === null) continue;
+      const total = plantings
+        .filter((planting) => planting.season === season.slug && planting.deactivated_at === null)
+        .flatMap((planting) => planting.lines)
+        .filter((line) => line.deactivated_at === null)
+        .reduce((sum, line) => sum + (line.quantity ?? 0), 0);
+      expect(total, season.slug).toBe(season.workbook_total);
+    }
     for (const row of [...plantings, ...lines, ...notes]) {
       expect(row).not.toHaveProperty("id");
       expect(row).not.toHaveProperty("planting_event");
       expect(row).not.toHaveProperty("line");
       expect(row).not.toHaveProperty("created_by");
+    }
+  });
+
+  it("combines duplicate species while retaining source records and unknown-quantity review", () => {
+    const plantings = readHistorySeeds(references);
+    const quailRise = plantings.find((planting) => planting.area === "quail-rise" && planting.season === "spring-2025")!;
+    const mingimingi = quailRise.lines.filter((line) => line.species === "leptecophylla-juniperina");
+    expect(mingimingi).toHaveLength(1);
+    expect(mingimingi[0]).toMatchObject({
+      quantity: 19, confidence: "low", source_cell: "OP106, OP50",
+    });
+    expect(mingimingi[0]!.notes.find((note) => note.question === "not-a-number")).toMatchObject({
+      resolved_at: null, deactivated_at: null,
+    });
+    const sourceNote = mingimingi[0]!.notes.find((note) => note.question === "other")!.text;
+    expect(sourceNote).toContain("PH-2025S-OP106");
+    expect(sourceNote).toContain("PH-2025S-OP50");
+    expect(sourceNote).toContain("unknown (TBC)");
+
+    const welcomeForest = plantings.find((planting) => planting.area === "jardine-park-welcome-forest" && planting.season === "autumn-2026")!;
+    for (const [species, quantity, row] of [
+      ["carmichaelia-petriei", 15, 16], ["coprosma-propinqua", 25, 29],
+      ["cordyline-australis", 13, 35], ["sophora-microphylla", 11, 96],
+    ] as const) {
+      const matches = welcomeForest.lines.filter((line) => line.species === species);
+      expect(matches).toHaveLength(1);
+      expect(matches[0]).toMatchObject({ quantity, source_cell: `PG${row}, PP${row}` });
+      const provenance = matches[0]!.notes.find((note) => note.question === "other")!;
+      expect(provenance.text).toContain(`PH-2026A-PG${row}`);
+      expect(provenance.text).toContain(`PH-2026A-PP${row}`);
+      expect(matches[0]!.notes.find((note) => note.question === "new-site")!.resolved_at).not.toBeNull();
     }
   });
 
@@ -39,6 +79,9 @@ describe("nested planting seed", () => {
   it("rejects duplicate identities and invalid quantities", () => {
     const planting = structuredClone(dump[0]!);
     expect(() => readHistorySeeds(references, [planting, planting])).toThrow("Duplicate planting");
+    expect(() => readHistorySeeds(references, [{
+      ...planting, lines: [planting.lines[0]!, { ...planting.lines[0]!, legacy_code: "duplicate-species" }],
+    }])).toThrow("Duplicate active species");
     planting.lines.push(planting.lines[0]!);
     expect(() => readHistorySeeds(references, [planting])).toThrow("Duplicate legacy_code");
     expect(() => readHistorySeeds(references, [{ ...planting, lines: [{ ...planting.lines[0]!, quantity: -1 }] }])).toThrow();

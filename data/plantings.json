@@ -89974,27 +89974,34 @@
         "species": "leptecophylla-juniperina",
         "quantity": 19,
         "legacy_code": "PH-2025S-OP106",
-        "source_cell": "OP106",
+        "source_cell": "OP106, OP50",
         "deactivated_at": null,
         "precision": "site",
-        "confidence": "medium",
+        "confidence": "low",
         "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
         "source_sheet": "MASTER",
         "season_original": "Spring 2025",
         "site_original": "Quail Rise",
-        "species_original": "Cyathoides juniperina",
+        "species_original": "Cyathoides juniperina; Leptecophylla juniperina",
         "notes": [
           {
             "question": "contested-species",
             "kind": "ruling",
-            "text": "species contested with Leptecophylla juniperina: one species or two? Kept as typed; the numbers are not merged\nResolution: C1: Cyathoides juniperina and Leptecophylla juniperina are one line, Leptecophylla juniperina. JB moved the Cyathoides planting records to this line.",
+            "text": "PH-2025S-OP106: species contested with Leptecophylla juniperina: one species or two? Kept as typed; the numbers are not merged\nResolution: C1: Cyathoides juniperina and Leptecophylla juniperina are one line, Leptecophylla juniperina. JB moved the Cyathoides planting records to this line.\n\nPH-2025S-OP50: species contested with Cyathoides juniperina: one species or two? Kept as typed; the numbers are not merged\nResolution: C1: Cyathoides juniperina and Leptecophylla juniperina are one line, Leptecophylla juniperina. JB moved the Cyathoides planting records to this line.",
             "resolved_at": "2026-11-19T21:34:05Z",
             "deactivated_at": null
           },
           {
             "question": "other",
             "kind": "fyi",
-            "text": "species row 106 is below the numbered list and outside the PY107 grand-total range",
+            "text": "species row 106 is below the numbered list and outside the PY107 grand-total range\n\nMerged source records:\nPH-2025S-OP106: MASTER!OP106; recorded quantity 19; original site \"Quail Rise\"; original species \"Cyathoides juniperina\"; precision site; confidence medium.\nPH-2025S-OP50: MASTER!OP50; recorded quantity unknown (TBC); original site \"Quail Rise\"; original species \"Leptecophylla juniperina\"; precision site; confidence low.",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "not-a-number",
+            "kind": "ruling",
+            "text": "cell holds text 'TBC', not a number; no quantity imported\nMerge: The combined line retains 19 recorded plants from the numeric source. The TBC source quantity remains unknown; it has not been treated as zero or resolved.",
             "resolved_at": null,
             "deactivated_at": null
           }
@@ -90127,36 +90134,6 @@
         "site_original": "Quail Rise",
         "species_original": "Corokia cotoneaster",
         "notes": []
-      },
-      {
-        "species": "leptecophylla-juniperina",
-        "quantity": null,
-        "legacy_code": "PH-2025S-OP50",
-        "source_cell": "OP50",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "low",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Spring 2025",
-        "site_original": "Quail Rise",
-        "species_original": "Leptecophylla juniperina",
-        "notes": [
-          {
-            "question": "contested-species",
-            "kind": "ruling",
-            "text": "species contested with Cyathoides juniperina: one species or two? Kept as typed; the numbers are not merged\nResolution: C1: Cyathoides juniperina and Leptecophylla juniperina are one line, Leptecophylla juniperina. JB moved the Cyathoides planting records to this line.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          },
-          {
-            "question": "not-a-number",
-            "kind": "ruling",
-            "text": "cell holds text 'TBC', not a number; no quantity imported",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
       },
       {
         "species": "melicytus-alpinus",
@@ -93516,23 +93493,30 @@
     "lines": [
       {
         "species": "carmichaelia-petriei",
-        "quantity": 10,
+        "quantity": 15,
         "legacy_code": "PH-2026A-PG16",
-        "source_cell": "PG16",
+        "source_cell": "PG16, PP16",
         "deactivated_at": null,
-        "precision": "subsite",
+        "precision": "site",
         "confidence": "medium",
         "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
         "source_sheet": "MASTER",
         "season_original": "Autumn 2026",
-        "site_original": "JP Welcome Forest",
+        "site_original": "JP Welcome Forest; Paererewa",
         "species_original": "Carmichaelia petriei",
         "notes": [
           {
             "question": "other",
             "kind": "fyi",
-            "text": "MASTER site number blank in source; site mapped by header text",
+            "text": "PH-2026A-PG16: MASTER site number blank in source; site mapped by header text\n\nPH-2026A-PP16: provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.\n\nMerged source records:\nPH-2026A-PG16: MASTER!PG16; recorded quantity 10; original site \"JP Welcome Forest\"; original species \"Carmichaelia petriei\"; precision subsite; confidence medium.\nPH-2026A-PP16: MASTER!PP16; recorded quantity 5; original site \"Paererewa\"; original species \"Carmichaelia petriei\"; precision site; confidence medium.",
             "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
+            "resolved_at": "2026-11-19T21:34:05Z",
             "deactivated_at": null
           }
         ]
@@ -93585,23 +93569,30 @@
       },
       {
         "species": "coprosma-propinqua",
-        "quantity": 20,
+        "quantity": 25,
         "legacy_code": "PH-2026A-PG29",
-        "source_cell": "PG29",
+        "source_cell": "PG29, PP29",
         "deactivated_at": null,
-        "precision": "subsite",
+        "precision": "site",
         "confidence": "medium",
         "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
         "source_sheet": "MASTER",
         "season_original": "Autumn 2026",
-        "site_original": "JP Welcome Forest",
+        "site_original": "JP Welcome Forest; Paererewa",
         "species_original": "Coprosma propinqua",
         "notes": [
           {
             "question": "other",
             "kind": "fyi",
-            "text": "MASTER site number blank in source; site mapped by header text",
+            "text": "PH-2026A-PG29: MASTER site number blank in source; site mapped by header text\n\nPH-2026A-PP29: provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.\n\nMerged source records:\nPH-2026A-PG29: MASTER!PG29; recorded quantity 20; original site \"JP Welcome Forest\"; original species \"Coprosma propinqua\"; precision subsite; confidence medium.\nPH-2026A-PP29: MASTER!PP29; recorded quantity 5; original site \"Paererewa\"; original species \"Coprosma propinqua\"; precision site; confidence medium.",
             "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
+            "resolved_at": "2026-11-19T21:34:05Z",
             "deactivated_at": null
           }
         ]
@@ -93631,23 +93622,30 @@
       },
       {
         "species": "cordyline-australis",
-        "quantity": 10,
+        "quantity": 13,
         "legacy_code": "PH-2026A-PG35",
-        "source_cell": "PG35",
+        "source_cell": "PG35, PP35",
         "deactivated_at": null,
-        "precision": "subsite",
+        "precision": "site",
         "confidence": "medium",
         "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
         "source_sheet": "MASTER",
         "season_original": "Autumn 2026",
-        "site_original": "JP Welcome Forest",
+        "site_original": "JP Welcome Forest; Paererewa",
         "species_original": "Cordyline australis",
         "notes": [
           {
             "question": "other",
             "kind": "fyi",
-            "text": "MASTER site number blank in source; site mapped by header text",
+            "text": "PH-2026A-PG35: MASTER site number blank in source; site mapped by header text\n\nPH-2026A-PP35: provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.\n\nMerged source records:\nPH-2026A-PG35: MASTER!PG35; recorded quantity 10; original site \"JP Welcome Forest\"; original species \"Cordyline australis\"; precision subsite; confidence medium.\nPH-2026A-PP35: MASTER!PP35; recorded quantity 3; original site \"Paererewa\"; original species \"Cordyline australis\"; precision site; confidence medium.",
             "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
+            "resolved_at": "2026-11-19T21:34:05Z",
             "deactivated_at": null
           }
         ]
@@ -94091,23 +94089,30 @@
       },
       {
         "species": "sophora-microphylla",
-        "quantity": 10,
+        "quantity": 11,
         "legacy_code": "PH-2026A-PG96",
-        "source_cell": "PG96",
+        "source_cell": "PG96, PP96",
         "deactivated_at": null,
-        "precision": "subsite",
+        "precision": "site",
         "confidence": "medium",
         "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
         "source_sheet": "MASTER",
         "season_original": "Autumn 2026",
-        "site_original": "JP Welcome Forest",
+        "site_original": "JP Welcome Forest; Paererewa",
         "species_original": "Sophora microphylla",
         "notes": [
           {
             "question": "other",
             "kind": "fyi",
-            "text": "MASTER site number blank in source; site mapped by header text",
+            "text": "PH-2026A-PG96: MASTER site number blank in source; site mapped by header text\n\nPH-2026A-PP96: provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.\n\nMerged source records:\nPH-2026A-PG96: MASTER!PG96; recorded quantity 10; original site \"JP Welcome Forest\"; original species \"Sophora microphylla\"; precision subsite; confidence medium.\nPH-2026A-PP96: MASTER!PP96; recorded quantity 1; original site \"Paererewa\"; original species \"Sophora microphylla\"; precision site; confidence medium.",
             "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
+            "resolved_at": "2026-11-19T21:34:05Z",
             "deactivated_at": null
           }
         ]
@@ -94125,36 +94130,6 @@
         "season_original": "Autumn 2026",
         "site_original": "Paererewa",
         "species_original": "Veronica odora",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "carmichaelia-petriei",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP16",
-        "source_cell": "PP16",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Carmichaelia petriei",
         "notes": [
           {
             "question": "new-site",
@@ -94293,36 +94268,6 @@
         ]
       },
       {
-        "species": "coprosma-propinqua",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP29",
-        "source_cell": "PP29",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma propinqua",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
         "species": "coprosma-rugosa",
         "quantity": 5,
         "legacy_code": "PH-2026A-PP33",
@@ -94335,36 +94280,6 @@
         "season_original": "Autumn 2026",
         "site_original": "Paererewa",
         "species_original": "Coprosma rugosa",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "cordyline-australis",
-        "quantity": 3,
-        "legacy_code": "PH-2026A-PP35",
-        "source_cell": "PP35",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Cordyline australis",
         "notes": [
           {
             "question": "new-site",
@@ -94492,36 +94407,6 @@
         "season_original": "Autumn 2026",
         "site_original": "Paererewa",
         "species_original": "Poa cita",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one\nResolution: Paererewa was the project name for Jardine Park - Welcome Forest, existing site 23B. JB moved the Autumn 2026 plantings under that area.",
-            "resolved_at": "2026-11-19T21:34:05Z",
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "sophora-microphylla",
-        "quantity": 1,
-        "legacy_code": "PH-2026A-PP96",
-        "source_cell": "PP96",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Sophora microphylla",
         "notes": [
           {
             "question": "new-site",
