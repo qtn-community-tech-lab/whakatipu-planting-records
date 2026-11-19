@@ -8,7 +8,6 @@ import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
 import { EmptyState, PageHead, Rule } from "@/components/wrt/shared/page";
 import { AutoSubmit } from "@/components/wrt/explore/auto-submit";
 import { SpeciesCard } from "@/components/wrt/species/species-card";
-import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -73,10 +72,6 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
   const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
   const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "deactivated"));
   const guideCount = register.filter((r) => r.item.photos[0] && r.item.summary).length;
-  const referenceGapCount = register.filter((r) => {
-    const review = getSpeciesReferenceReview(r.item.id);
-    return review && review.status !== "confirmed";
-  }).length;
   const allSplit = splitOf([]);
   for (const r of all) for (const k of Object.keys(allSplit) as (keyof typeof allSplit)[]) allSplit[k] += r.split[k];
 
@@ -105,7 +100,6 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
           <>
             {formatNumber(allSplit.total)} recorded plants across all historical species.
             {" "}{guideCount} species have reference photos and identification notes.
-            {referenceGapCount > 0 && <> {referenceGapCount} reference sets have gaps or unresolved identities.</>}
             {contested > 0 && (
               <>
                 {" "}

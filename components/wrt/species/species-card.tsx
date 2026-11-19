@@ -4,7 +4,6 @@ import { formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
 import { PhotoMedia } from "./photo-media";
 import { SpeciesMarkers } from "./species-meta";
-import { SpeciesReferenceStatus } from "./species-reference-status";
 import { SpeciesReferenceSources } from "./species-reference-preview";
 
 const TILE_TONES = 4;
@@ -95,7 +94,6 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
 
         {sp.summary && <p className="wrt-scard__summary">{sp.summary}</p>}
         {sp.lookFor && <p className="wrt-scard__look"><b>Look for</b> {sp.lookFor}</p>}
-        <SpeciesReferenceStatus speciesId={sp.id} />
         <SpeciesReferenceSources species={sp} includeLookFor={false} />
 
         <dl className="wrt-scard__facts">

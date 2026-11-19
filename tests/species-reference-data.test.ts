@@ -1,18 +1,10 @@
 import { describe, expect, it } from "vitest";
 import species from "@/data/species.json";
-import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
 describe("species reference fields in the canonical seed", () => {
-  it("uses unique species identities and links reviewed identities to seed rows", () => {
+  it("uses unique canonical species identities", () => {
     expect(new Set(species.map((row) => row.register_code)).size).toBe(species.length);
-    for (const review of speciesReferenceReviews) {
-      const row = species.find((candidate) => candidate.register_code === review.speciesId);
-      expect(row).toBeDefined();
-    }
-    for (const row of species) {
-      const review = getSpeciesReferenceReview(row.register_code!);
-      if (review) expect(row.scientific_name).toBe(review.scientificName);
-    }
+    expect(new Set(species.map((row) => row.slug)).size).toBe(species.length);
   });
 
   it("keeps sourced identification fields complete and Māori names distinct", () => {

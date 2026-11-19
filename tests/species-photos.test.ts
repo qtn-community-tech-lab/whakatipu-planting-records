@@ -2,9 +2,8 @@ import { describe, expect, it } from "vitest";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import species from "@/data/species.json";
 import { q } from "./helpers";
-import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
-describe("reviewed Wiki photo catalogue", () => {
+describe("species photo references", () => {
   it("ranks recorded quantities and leaves unplanted species out", async () => {
     const rows = topPlantedSpecies(await q.speciesList());
     expect(rows.map((r) => [r.item.scientificName, r.split.total])).toEqual([
@@ -14,21 +13,11 @@ describe("reviewed Wiki photo catalogue", () => {
     ]);
   });
 
-  it("keeps photo sets consistent with their published identity reviews", () => {
-    const photosBySpecies = new Map(species.map((row) => [row.register_code!, row.photos]));
-    const ids = new Set([...photosBySpecies.keys(), ...speciesReferenceReviews.map((r) => r.speciesId)]);
-    for (const id of ids) {
-      const photos = photosBySpecies.get(id) ?? [];
-      const review = getSpeciesReferenceReview(id);
-      expect(photos).toHaveLength(review?.photoCount ?? 3);
+  it("keeps distinct photo sources without substituting a related species or forcing a photo quota", () => {
+    for (const { photos } of species) {
       expect(new Set(photos.map((p) => p.sourceUrl)).size).toBe(photos.length);
-      if (review) {
-        expect(review.reason.trim()).not.toBe("");
-        expect(species.find((row) => row.register_code === id)?.scientific_name).toBe(review.scientificName);
-        if (review.status === "confirmed") expect(photos).toHaveLength(3);
-        if (review.status === "unresolved") expect(photos).toHaveLength(0);
-      }
     }
+    expect(species.find((row) => row.register_code === "SP-154")?.photos).toHaveLength(1);
     const sectaSources = new Set(species.find((row) => row.scientific_name === "Carex secta")?.photos.map((p) => p.sourceUrl));
     expect(species.find((row) => row.scientific_name === "Carex maorica")?.photos.every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
   });

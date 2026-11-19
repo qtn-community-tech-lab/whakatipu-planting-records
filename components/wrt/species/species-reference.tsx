@@ -1,7 +1,5 @@
 import type { Species } from "@/lib/wrt/types";
 import { Card } from "@/components/wrt/shared/page";
-import { SpeciesReferenceStatus } from "./species-reference-status";
-import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
 /** Reused by the photo guide and species detail pages. */
 export function SpeciesReferenceContent({ species }: { species: Species }) {
@@ -26,16 +24,10 @@ export function SpeciesReferenceContent({ species }: { species: Species }) {
 
 export function SpeciesReferencePanel({ species }: { species: Species }) {
   const hasReference = species.summary !== null || species.lookFor !== null || species.sources.length > 0;
-  if (!hasReference && !getSpeciesReferenceReview(species.id)) return null;
-  if (!hasReference) return (
-    <Card id="about-species" title="Species reference review">
-      <SpeciesReferenceStatus speciesId={species.id} />
-    </Card>
-  );
+  if (!hasReference) return null;
   return (
     <Card id="about-species" title={`About ${species.commonName ?? species.scientificName}`}>
       <SpeciesReferenceContent species={species} />
-      <SpeciesReferenceStatus speciesId={species.id} />
     </Card>
   );
 }
