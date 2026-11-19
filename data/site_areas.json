@@ -848,7 +848,7 @@
   {
     "slug": "tucker-beach-and-shotover-river-shotover-river",
     "site": "tucker-beach-and-shotover-river",
-    "name": "Shotover River",
+    "name": "Shotover River Tucker Beach",
     "description": "",
     "wrt_number": "28A",
     "class": "community",
@@ -1028,7 +1028,7 @@
   {
     "slug": "tucker-beach",
     "site": "tucker-beach-and-shotover-river",
-    "name": "Tucker Beach",
+    "name": "Shotover River (Hans)",
     "description": "",
     "wrt_number": "28",
     "class": "community",
