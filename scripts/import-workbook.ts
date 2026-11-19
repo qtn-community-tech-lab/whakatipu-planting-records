@@ -8,7 +8,7 @@
  * passes the access rules, so keep it out of the app and out of git.
  *
  * Safe to run again: rows match on slug, or spreadsheet code for lines, and only
- * differences are written. Sites, areas and species come from data/*.json, including pins
+ * differences are written. Sites, areas, seasons and species come from data/*.json, including pins
  * and descriptions. Audit fields are assigned by database triggers. It keeps rulings and notes, and deactivates
  * lines that leave the CSV.
  */
@@ -18,6 +18,7 @@ import { createClient } from "@supabase/supabase-js";
 import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
 import { REVIEW_THEMES } from "../lib/wrt/review-themes";
 import { readPlaceSeeds, workbookAreaSlugs } from "./workbook/places";
+import { readSeasonSeeds } from "./workbook/seasons";
 import type { ReviewNoteKind } from "../lib/wrt/types";
 
 type Row = Record<string, Json>;
@@ -33,8 +34,9 @@ const species: Row[] = data.species;
 const byId = new Map(data.species.map((s) => [s.register_code ?? s.slug, s]));
 
 const questions: Row[] = Object.entries(REVIEW_THEMES).map(([slug, t]) => ({ slug, question: `${t.label}: ${t.question}` }));
-const seasonTotals = data.reconciliation.filter((r) => r.kind === "season")
-  .map((r) => ({ label: r.label, workbook_total: r.stated, workbook_cell: r.statedCell || null }));
+const seasons = readSeasonSeeds(data.records);
+const seasonTotals = seasons.filter((season) => season.workbook_total !== null);
+const seasonId = new Map(seasons.map((season) => [season.slug, season.id]));
 
 /** Where each line came from in the workbook, kept on the line. */
 const PROVENANCE = "source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original";
@@ -112,18 +114,7 @@ async function main() {
   await sync("areas", areas);
   await sync("species", species);
   await sync("questions", questions);
-
-  const seasons = check(await db.from("seasons").select("id, slug, label, workbook_total, workbook_cell"), "read seasons") as Row[];
-  const seasonId = new Map(seasons.map((s) => [s.slug as string, s.id as number]));
-  const seasonChanges = seasonTotals.filter((t) => {
-    const s = seasons.find((x) => x.label === t.label);
-    if (!s) throw new Error(`season ${t.label} is not in the seasons table`);
-    return s.workbook_total !== t.workbook_total || s.workbook_cell !== t.workbook_cell;
-  });
-  report.push(["seasons (totals)", 0, seasonChanges.length]);
-  if (write) for (const t of seasonChanges) {
-    check(await db.from("seasons").update({ workbook_total: t.workbook_total, workbook_cell: t.workbook_cell }).eq("label", t.label), "write seasons");
-  }
+  await sync("seasons", seasons);
 
   // Planting events: one "workbook" event per area per season.
   const eventKey = (area: unknown, season: unknown) => `${area}|${season}`;
@@ -189,10 +180,10 @@ async function main() {
   // ------------------------------------------------------------------ 3. report
   console.log(write ? "Written:" : "Dry run, nothing written. Would change:");
   for (const [table, added, changed] of report) console.log(`  ${table.padEnd(30)} +${added} new, ${changed} changed`);
-  console.log(`  (JSON: ${sites.length} sites, ${areas.length} areas, ${species.length} species; CSV: ${lines.length} lines, ${notes.length} notes)`);
+  console.log(`  (JSON: ${sites.length} sites, ${areas.length} areas, ${species.length} species, ${seasons.length} seasons; CSV: ${lines.length} lines, ${notes.length} notes)`);
 
   if (write) {
-    // Read the totals back from the database and compare with the workbook's own TOTAL cells, as the CSV states them.
+    // Compare database totals with the workbook totals saved in seasons.json.
     // A season the database doesn't return counts as a mismatch, so none can be skipped quietly.
     const totals = check(await db.from("totals_by_season").select("season_label, plants").order("season_order"), "read totals") as Row[];
     const plantsOf = new Map(totals.map((t) => [t.season_label, t.plants]));

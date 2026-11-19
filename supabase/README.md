@@ -148,7 +148,9 @@ CSVs; it does not read the species CSVs or archived catalogue snapshots. Species
 history by register code, falling back to slug for app-created entries. Rerunning the workbook import applies
 changed species seed values, including clearing references when their saved values are null or empty lists.
 Database-managed audit fields are excluded. Sites and areas come from `data/sites.json` and `data/site_areas.json`,
-including descriptions, pins and deactivation state. Reruns apply all non-audit seed values. Rulings and notes a person wrote are kept,
+including descriptions, pins and deactivation state. Seasons come entirely from `data/seasons.json`, including IDs,
+labels and workbook totals. Future seasons through 2028 have null totals and are skipped by the totals check.
+Reruns apply all non-audit seed values. Rulings and notes a person wrote are kept,
 and lines that leave the CSV are deactivated.
 
 Species names are stored once in `scientific_name`, `common_name` and the preferred `maori_name`.

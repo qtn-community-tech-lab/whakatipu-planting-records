@@ -75,6 +75,7 @@ The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally 
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
 against its source total. The import can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
 Sites and areas (including descriptions and pins) come entirely from `data/sites.json` and `data/site_areas.json`.
+Seasons, their IDs and saved workbook totals come from `data/seasons.json`, including future seasons through 2028.
 The workbook import seeds species entirely from `data/species.json`, including names, flags, profile columns,
 photos and deactivation state. This complete seed was exported from PostgreSQL; database triggers manage audit
 fields. The species CSVs and separate reference JSON files are not needed for importing. To seed species without
