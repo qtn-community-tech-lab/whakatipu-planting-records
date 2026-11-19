@@ -139,8 +139,8 @@ describe("species form", () => {
   });
 
   it("accepts only the core writable columns", () => {
-    const species = speciesSchema.parse({ ...speciesWriteValues(valid()), profile: { summary: "Ignored" }, updated_at: "Ignored" });
-    expect(species).not.toHaveProperty("profile");
+    const species = speciesSchema.parse({ ...speciesWriteValues(valid()), summary: "Ignored", updated_at: "Ignored" });
+    expect(species).not.toHaveProperty("summary");
     expect(species).not.toHaveProperty("updated_at");
   });
 });

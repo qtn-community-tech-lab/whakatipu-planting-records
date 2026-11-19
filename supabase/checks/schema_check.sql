@@ -36,7 +36,7 @@ with expected (part, item, want, got) as (
          'link_existing_auth_user_to_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
   union all select 'access rules', 'row policies (active membership writes and public history reads)', 33,
     (select count(*)::int from pg_policies where schemaname = 'public')
-  union all select 'access rules', 'guard triggers (deactivated 8, history 2)', 10,
+  union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
   union all select 'access rules', 'signed in can delete from no table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
@@ -105,7 +105,7 @@ with expected (part, item, want, got) as (
   -- Import (run by scripts/import-workbook.ts) ------------------------------
   union all select 'import', 'sites', 39, (select count(*)::int from public.sites)
   union all select 'import', 'areas', 78, (select count(*)::int from public.areas)
-  union all select 'import', 'species with workbook register codes', 164,
+  union all select 'import', 'species with workbook register codes', 95,
     (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)
   union all select 'import', 'planting events', 360, (select count(*)::int from public.planting_events where source = 'workbook')

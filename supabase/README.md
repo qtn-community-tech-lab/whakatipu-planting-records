@@ -18,10 +18,13 @@ setting local keys and loading the initial data. This README covers database mai
 | `migrations/20261109000000_dev_anonymous_crud.sql` | Early development: anonymous CRUD on species, sites, areas, planting events, planting lines, seasons and users; keeps RLS enabled                                                                                                                              |
 | `migrations/20261114000000_authentication.sql`     | Adds the email allowlist and Auth identity link, signup hook, active-membership writes and audit attribution; preserves public history reads and removes anonymous writes                                                                                      |
 | `migrations/20261114000100_user_management.sql`    | Lets active approved users manage the allowlist while keeping stable app IDs and Auth identity links protected                                                                                                                                                 |
+| `migrations/20261119000100_species_reference_columns.sql` | Replaces species profile JSON with reference fields, reusing the canonical species names and preserving audit fields |
+| `migrations/20261119000200_remove_species_name_note.sql` | Removes the species name note; canonical names and identification content remain on the species row |
+| `checks/species_profile_test.sql` | Checks empty profiles, separate reference names, ordered sources, typed dates and public reads with fixtures that roll back |
 | `checks/anonymous_crud_check.sql`                  | Verifies public reads remain available and anonymous writes and user-profile reads are denied                                                                                                                                                                  |
 | `checks/schema_check.sql`                          | Checks everything the migrations create, the imported row counts, that every line has its workbook file, sheet and cell, and the season totals. Lists PASS or FAIL. Only reads                                                                                 |
 | `checks/access_rules_check.sql`                    | Tries 25 public, unapproved and active-user operations, including user management, and lists PASS or FAIL. Changes nothing                                                                                                                                     |
-| `../data/species.json` and `../scripts/seed-species.ts` | Maintained species seed and repeatable insert/backfill command; uses only existing species columns |
+| `../data/species.json` and `../scripts/seed-species.ts` | Complete PostgreSQL-derived species seed used by the workbook import and standalone insert/backfill command |
 
 ## Migrations
 
@@ -127,7 +130,7 @@ continues through the local inbox without Resend credentials.
 ## The workbook import
 
 [`scripts/import-workbook.ts`](../scripts/import-workbook.ts) loads the history from `docs/planning/prototype/*.csv`:
-39 sites, 78 areas, 164 species, 5,449 lines and 1,339 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and
+39 sites, 78 areas, 95 species, 5,449 lines and 1,339 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and
 `SUPABASE_SECRET_KEY` in `.env.local`. For local development, use the local URL and secret/service-role key.
 Migrations create the schema and seasons; they do not import the workbook (`db.seed` is disabled in `config.toml`).
 
@@ -138,11 +141,30 @@ npm run import-workbook -- --write   # makes the changes
 
 `tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
-Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written. Species profiles and photos are imported from `data/species-profiles.json` and `data/species-photos.json`, matched by register code. These files are import inputs only: the app reads this data from the species table. Rerunning the import replaces these columns when the source data changes, including clearing missing references to `{}` and `[]`. Each saved photo contains only `src` and a plain-text `attribution` combining photographer and licence. Photo order and profile sources are preserved. Descriptions, pins, rulings and notes a person wrote are kept, and lines that leave the CSV are deactivated.
+Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written.
+All species columns come directly from `data/species.json`, including names, threat flags, notes, profiles,
+photos and deactivation state. The importer needs only the planting history, site crosswalk and reconciliation
+CSVs; it does not read the species CSVs, `species-profiles.json` or `species-photos.json`. Species are linked to
+history by register code, falling back to slug for app-created entries. Rerunning the workbook import applies
+changed species seed values, including clearing references when their saved values are null or empty lists.
+Database-managed audit fields are excluded. Site descriptions, pins, rulings and notes a person wrote are kept,
+and lines that leave the CSV are deactivated.
+
+Species names are stored once in `scientific_name`, `common_name` and the preferred `maori_name`.
+`maori_name_alternatives` (`text[]`) contains other documented Māori names, excluding the preferred name and
+duplicates. Reference content uses `summary`, `look_for`, `sources` and `checked_at` (`date`).
+The ordered list of source labels and URLs remains a JSON array in `sources`. The app builds its profile
+from these fields and the canonical names, so editing a species name also updates the profile's names.
+The species identity comes from `register_code`, falling back to `slug`.
 
 ## Species seed and backfill
 
-[`data/species.json`](../data/species.json) is the maintained species register, created from the source CSVs in this checkout. Use it after `import-workbook`: the workbook importer restores its original scientific names and threat marks. This seed retains each original register code and slug and does not depend on a development database export or on the source CSVs being present at runtime.
+[`data/species.json`](../data/species.json) contains complete species rows exported from the local PostgreSQL
+table after the profile-column migration, with reconciled names and only the 95 species referenced by planting
+records. It retains all 20 non-audit columns, including register identities,
+profile fields, ordered sources, photos with attribution and URLs, and deactivation state. Both import commands
+use this file as their species source. `created_at`, `created_by`, `updated_at` and `updated_by` are omitted so
+database triggers assign the audit values when importing into another database.
 
 ```bash
 npm run seed-species                         # validate and preview offline
@@ -151,17 +173,31 @@ npm run seed-species -- --write --backfill   # insert missing rows and backfill 
 ```
 
 The backfill uses existing species columns only. It updates `scientific_name`, `suggested_spelling` and
-`threatened`, and fills `common_name`, `maori_name`, `profile` and `photos` only when those fields are empty.
+`threatened`, and fills `common_name`, `maori_name`, reference content and `photos` only when empty.
+Reference fields are filled together only when all are empty, preserving any existing editorial reference content.
 It never changes slugs or register codes, overwrites populated names or reference content, or stores NZTCS
 assessment details. A verified NZTCS Threatened match is `threatened = true`; verified At Risk or Not Threatened
 matches are `false`; unresolved matches remain `null`. For existing rows, the backfill leaves `over_5m`
-untouched. Newly inserted rows take its value from the original CSV seed. This field has not been independently
+untouched. Newly inserted rows take its value from the complete JSON seed. This field has not been independently
 height-audited; workbook-imported `false` values mean unmarked in the source register, not necessarily
 botanically verified as under five metres.
 
 The seed command requires `.env.local` with `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` only when
 `--write` is used. It checks slug/register-code conflicts before writing, is safe to rerun, and preserves
-deactivated rows. Run it after every workbook import that should receive the maintained names and threat flags.
+deactivated rows. Use the standalone command when species are needed without importing planting history, or
+when applying its limited backfill instead of the workbook import's full species sync.
+
+To refresh the seed from PostgreSQL, export the result of this query to `data/species.json`:
+
+```sql
+select jsonb_pretty(jsonb_agg(
+  to_jsonb(s) - array['created_at', 'created_by', 'updated_at', 'updated_by']
+  order by register_code nulls last, slug
+)) from public.species s
+where exists (select 1 from public.planting_lines l where l.species = s.slug);
+```
+
+Run `npm run seed-species` to validate the exported data before using either importer.
 
 ## The map pins
 

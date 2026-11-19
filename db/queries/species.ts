@@ -41,7 +41,7 @@ export async function readSpecies(slug: string) {
     client
       .from("species")
       .select(
-        "slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, register_note, profile, photos, deactivated_at",
+        "slug, register_code, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, register_note, maori_name_alternatives, summary, look_for, sources, checked_at, photos, deactivated_at",
       )
       .eq("slug", slug)
       .maybeSingle()

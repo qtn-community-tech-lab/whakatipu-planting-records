@@ -1,4 +1,4 @@
-import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
+import type { SpeciesProfile } from "@/lib/wrt/types";
 import { Card } from "@/components/wrt/shared/page";
 import { SpeciesReferenceStatus } from "./species-reference-status";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
@@ -14,7 +14,6 @@ export function SpeciesProfileContent({ profile }: { profile: SpeciesProfile }) 
           <dd>{profile.maoriNames.length ? profile.maoriNames.join(" · ") : <span className="wrt-profile__unknown">Not recorded in the sources checked.</span>}</dd>
         </div>
       </dl>
-      {profile.nameNote && <p className="wrt-profile__note">{profile.nameNote}</p>}
       <p>{profile.summary}</p>
       <p><strong>What to look for.</strong> {profile.lookFor}</p>
       <p className="wrt-profile__sources">Sources: {profile.sources.map((source, i) => (

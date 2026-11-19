@@ -2,27 +2,25 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { parseCsv, type CsvTable } from "./parse";
-import { checkColumns, toSiteClass, validateHistoryRow, yn, type DataIssue, type HistoryRow, type SourceName, type SourceRow } from "./validate";
+import { checkColumns, toSiteClass, validateHistoryRow, type DataIssue, type HistoryRow, type SourceName, type SourceRow } from "./validate";
 import type {
   Parcel, Place, PlantingRecord, ReconciliationRow, ReviewNote, ReviewNoteKind,
-  ReviewTheme, Season, SeasonName, SiteClass, Species,
+  ReviewTheme, Season, SeasonName, SiteClass,
 } from "../../lib/wrt/types";
 import { cleanLabel, searchKey, slugify } from "../../lib/wrt/text";
-import { primaryName, withMacrons } from "../../lib/wrt/display-names";
+import { readSpeciesSeed, type SpeciesSeedEntry } from "../species/seed";
 
 export const DEFAULT_DATA_DIR = path.join(process.cwd(), "docs", "planning", "prototype");
 
-const FILES: Record<SourceName, string> = {
+const FILES = {
   planting_history: "planting_history.csv",
-  species_master_proposed: "species_master_proposed.csv",
-  species_crosswalk: "species_crosswalk.csv",
   site_crosswalk: "site_crosswalk.csv",
   history_reconciliation: "history_reconciliation.csv",
-};
+} satisfies Partial<Record<SourceName, string>>;
 
 interface Loaded {
   seasons: Season[];
-  species: Species[];
+  species: SpeciesSeedEntry[];
   places: Place[];
   records: PlantingRecord[];
   reconciliation: ReconciliationRow[];
@@ -108,20 +106,13 @@ function seasonSlug(year: number, name: SeasonName) {
   return `${name.toLowerCase()}-${year}`;
 }
 
-function splitNames(v: string): string[] {
-  return v
-    .split(/,\s*or\s+|\s+or\s+|,\s*/i)
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
 function placeNameFromGroup(group: string) {
   return group.replace(/\s*\(scheme\)\s*$/i, "").trim();
 }
 
 export function loadFromDirectory(dir: string): Loaded {
   const issues: DataIssue[] = [];
-  function readTable<Name extends SourceName>(name: Name): CsvTable<SourceRow<Name>> {
+  function readTable<Name extends keyof typeof FILES>(name: Name): CsvTable<SourceRow<Name>> {
     const file = FILES[name];
     let text: string;
     try {
@@ -135,8 +126,6 @@ export function loadFromDirectory(dir: string): Loaded {
   }
   const tables = {
     planting_history: readTable("planting_history"),
-    species_master_proposed: readTable("species_master_proposed"),
-    species_crosswalk: readTable("species_crosswalk"),
     site_crosswalk: readTable("site_crosswalk"),
     history_reconciliation: readTable("history_reconciliation"),
   };
@@ -157,68 +146,9 @@ export function loadFromDirectory(dir: string): Loaded {
     seenIds.add(r.recordId);
   }
 
-  // ---- species
-  const aliasesBySpecies = new Map<string, { raw: string[]; keys: string[] }>();
-  // A leading "#" on a crosswalk spelling is the threatened marker in the Te Kakano list.
-  const teKakanoThreatened = new Set<string>();
-  for (const a of tables.species_crosswalk.rows) {
-    if (!a.species_id) continue;
-    if (a.raw_name?.trim().startsWith("#")) teKakanoThreatened.add(a.species_id);
-    const entry = aliasesBySpecies.get(a.species_id) ?? { raw: [], keys: [] };
-    if (a.raw_name) entry.raw.push(cleanLabel(a.raw_name.replace(/^\s*#\s*/, "")));
-    if (a.match_key) entry.keys.push(searchKey(a.match_key));
-    aliasesBySpecies.set(a.species_id, entry);
-  }
-  const speciesById = new Map<string, Species>();
-  const usedSlugs = new Set<string>();
-  for (const s of tables.species_master_proposed.rows) {
-    if (!s.species_id) continue;
-    const scientificName = cleanLabel(s.canonical_handle);
-    const commonAll = splitNames(s.common_name ?? "");
-    const maoriAll = splitNames(s.maori_name ?? "");
-    const commonName = withMacrons(primaryName(s.common_name ?? ""));
-    const maoriName = withMacrons(primaryName(s.maori_name ?? ""));
-    const displayName = maoriName ?? commonName ?? scientificName;
-    let slug = slugify(scientificName) || slugify(s.species_id);
-    if (usedSlugs.has(slug)) {
-      issues.push({ file: "species_master_proposed", line: 0, severity: "warning", message: `slug collision ${slug}` });
-      slug = `${slug}-${slugify(s.species_id)}`;
-    }
-    usedSlugs.add(slug);
-    const alias = aliasesBySpecies.get(s.species_id) ?? { raw: [], keys: [] };
-    const suggested = cleanLabel(s.suggested_spelling ?? "") || null;
-    const status = (["core", "appended", "contested", "seedlog_only"] as const).find((x) => x === s.status) ?? "unknown";
-    const searchKeys = new Set<string>(
-      [scientificName, suggested ?? "", ...commonAll, ...maoriAll, ...alias.raw].map(searchKey).concat(alias.keys),
-    );
-    searchKeys.delete("");
-    speciesById.set(s.species_id, {
-      id: s.species_id,
-      slug,
-      scientificName,
-      suggestedSpelling:
-        suggested && suggested !== scientificName ? suggested : null,
-      commonName,
-      maoriName,
-      displayName,
-      displayIsScientific: displayName === scientificName,
-      status,
-      over5m: yn(s.over_5m),
-      threatened: yn(s.threatened),
-      threatenedMarks: {
-        plantsOutMaster: s.threatened === "Y",
-        teKakano: teKakanoThreatened.has(s.species_id),
-      },
-      needsDecision: s.needs_wrt_decision === "Y",
-      contestedWith: (s.contested_with ?? "").split(/\s+/).filter(Boolean),
-      aliases: [...new Set(alias.raw)].filter((a) => a !== scientificName),
-      searchKeys: [...searchKeys],
-      note: s.note?.trim() || null,
-      photos: [],
-      profile: null,
-      deactivatedAt: null,
-    });
-  }
+  // Species and all their reference content come from the complete maintained seed.
+  const species = readSpeciesSeed();
+  const speciesById = new Map(species.map((entry) => [entry.register_code ?? entry.slug, entry]));
 
   // ---- sites
   const siteXwalk = new Map<string, SourceRow<"site_crosswalk">>();
@@ -239,7 +169,7 @@ export function loadFromDirectory(dir: string): Loaded {
   for (const r of hist) {
     const species = speciesById.get(r.speciesIdProposed);
     if (!species) {
-      issues.push({ file: "planting_history", line: 0, severity: "error", message: `${r.recordId}: species ${r.speciesIdProposed} not in species master` });
+      issues.push({ file: "planting_history", line: 0, severity: "error", message: `${r.recordId}: species ${r.speciesIdProposed} not in data/species.json` });
       continue;
     }
     const placeName = placeNameFromGroup(r.siteGroupProposed);
@@ -280,7 +210,7 @@ export function loadFromDirectory(dir: string): Loaded {
       parcelId: parcelKey,
       parcelName,
       siteClass,
-      speciesId: species.id,
+      speciesId: species.register_code ?? species.slug,
       quantity: qty,
       hasQuantity: r.quantity !== null,
       precision: r.precision,
@@ -288,7 +218,7 @@ export function loadFromDirectory(dir: string): Loaded {
       needsReview: r.needsReview,
       notes: parseReviewNotes(r.reviewReason).map((n) => ({
         ...n,
-        text: humaniseNote(n.text, (id) => speciesById.get(id)?.scientificName),
+        text: humaniseNote(n.text, (id) => speciesById.get(id)?.scientific_name),
       })),
       provenance: {
         sourceFile: r.sourceFile,
@@ -332,7 +262,7 @@ export function loadFromDirectory(dir: string): Loaded {
 
   return {
     seasons,
-    species: [...speciesById.values()],
+    species,
     places,
     records,
     reconciliation,

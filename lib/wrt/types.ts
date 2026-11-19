@@ -12,7 +12,6 @@
  */
 
 import type { SpeciesPhoto } from "./species-photos";
-import type { SpeciesProfile } from "./species-profiles";
 
 export type SeasonName = "Autumn" | "Spring";
 export type Confidence = "high" | "medium" | "low";
@@ -45,6 +44,18 @@ export interface Season {
   label: string;
   /** Chronological index, 0 = earliest season in the data. */
   order: number;
+}
+
+/** Display profile built from the species row's canonical names and reference fields. */
+export interface SpeciesProfile {
+  speciesId: string;
+  scientificName: string;
+  commonName: string | null;
+  maoriNames: string[];
+  summary: string;
+  lookFor: string;
+  sources: { label: string; url: string }[];
+  checkedAt: string;
 }
 
 export interface Species {

@@ -3,7 +3,7 @@
 A public web app that lets anyone explore every recorded planting season since Autumn 2015 by **site, species,
 year and season**, without opening an old spreadsheet. Approved staff can sign in to use AI Chat and make changes.
 
-5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 39 sites · 95 species planted (164 in the register).
+5,449 records · 23 seasons (Autumn 2015 → Autumn 2026) · 140,068 recorded plants · 39 sites · 95 planted species in the seed.
 
 ## Local development
 
@@ -69,8 +69,6 @@ Check that the URL in `.env.local` is local, then run the workbook import before
 ```bash
 npm run import-workbook             # preview changes
 npm run import-workbook -- --write
-npm run seed-species                # preview the maintained species register
-npm run seed-species -- --write --backfill
 npm run import-pins                 # preview changes
 npm run import-pins -- --write
 ```
@@ -78,10 +76,10 @@ npm run import-pins -- --write
 The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
 [Client documentation](#client-documentation) before running the workbook import. It checks each season
 against its source total. These imports can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
-Run the species seed after the workbook import: that legacy importer restores names and threat flags from the
-workbook CSVs. The seed preserves the original slugs, refreshes the existing scientific-name and `threatened`
-fields, and fills only empty common/Māori names, profiles and photos. It does not change `over_5m` or store
-NZTCS assessment details. See [species seed and backfill](supabase/README.md#species-seed-and-backfill).
+The workbook import seeds species entirely from `data/species.json`, including names, flags, profile columns,
+photos and deactivation state. This complete seed was exported from PostgreSQL; database triggers manage audit
+fields. The species CSVs and separate reference JSON files are not needed for importing. To seed species without
+the planting history, use the standalone [species seed and backfill](supabase/README.md#species-seed-and-backfill) command.
 
 ### 5. Start the app
 
@@ -172,6 +170,7 @@ the app does not need a Resend SDK or API key.
 
 ```text
 local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
+ data/species.json                 ↗
  data/site-locations.json     → scripts/import-pins.ts     → Supabase
                                                              ↓
                                                      db/repository.ts
@@ -186,9 +185,10 @@ local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
 The live app reads only Supabase. `SupabaseWrtRepository` implements `WrtRepository` for the shared query layer;
 the seasons pages also read database views through `db/queries`.
 
-CSV parsing and validation live under `scripts/workbook/` for the one-off workbook import. Client source CSVs
-must be restored locally before importing. `tests/supabase-parity.test.ts` checks live database figures against
-the import fixture, including season-total checks. The app never reads source files at runtime.
+CSV parsing and validation live under `scripts/workbook/` for the workbook import. Restore the planting history,
+site crosswalk and reconciliation CSVs locally before importing. Species come from the complete JSON seed.
+`tests/workbook-import.test.ts` checks that history resolves through this seed without species CSVs, while
+`tests/db-reads.test.ts` checks live database reads and totals. The app never reads source files at runtime.
 
 ## Design system
 

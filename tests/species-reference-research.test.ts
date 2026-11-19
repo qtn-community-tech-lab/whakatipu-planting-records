@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { SpeciesProfile } from "@/lib/wrt/species-profiles";
+import type { SpeciesProfile } from "@/lib/wrt/types";
 import speciesProfiles from "@/data/species-profiles.json";
 import speciesPhotos from "@/data/species-photos.json";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";

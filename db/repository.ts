@@ -6,7 +6,7 @@ import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
 import type {
   Confidence, Parcel, Place, PlantingRecord, Precision, ReconciliationRow,
-  ReviewNoteKind, ReviewTheme, Season, SiteClass, Species,
+  ReviewNoteKind, ReviewTheme, Season, SiteClass, Species, SpeciesProfile,
 } from "@/lib/wrt/types";
 import { searchKey } from "@/lib/wrt/text";
 
@@ -52,7 +52,7 @@ async function load(db: Db): Promise<Loaded> {
   const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, maori_name_alternatives, summary, look_for, sources, checked_at, photos, deactivated_at")
       .throwOnError(),
     db.from("sites").select("slug, name, description, deactivated_at").throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
@@ -100,7 +100,16 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: Object.keys(s.profile ?? {}).length ? s.profile as unknown as Species["profile"] : null,
+      profile: s.summary === null || s.look_for === null || s.checked_at === null ? null : {
+        speciesId: idOf(s.slug, s.register_code),
+        scientificName: s.scientific_name,
+        commonName: s.common_name,
+        maoriNames: [...new Set([...(s.maori_name ? [s.maori_name] : []), ...s.maori_name_alternatives])],
+        summary: s.summary,
+        lookFor: s.look_for,
+        sources: s.sources as SpeciesProfile["sources"],
+        checkedAt: s.checked_at,
+      },
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));

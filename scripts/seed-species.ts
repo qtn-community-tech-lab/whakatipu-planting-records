@@ -6,21 +6,20 @@
  * npm run seed-species -- --write --backfill    also update maintained scientific names and threat flags,
  *                                             and fill empty common/Māori names, profiles and photos
  *
- * Run after import-workbook: that legacy importer can restore its original names
- * and spreadsheet threat marks. This script never reads planting history or
- * uses development-database values to construct the seed.
+ * Both this command and import-workbook use the complete data/species.json seed.
+ * This command never reads planting history; use --backfill to preserve filled
+ * editorial fields while applying the maintained names and threat flags.
  */
 import { createClient } from "@supabase/supabase-js";
 import { isDeepStrictEqual } from "node:util";
 import type { Database } from "../db/database.types";
-import { readSpeciesSeed, speciesBackfillValues, speciesSeedRows } from "./species/seed";
+import { readSpeciesSeed, speciesBackfillValues } from "./species/seed";
 
 async function main() {
   const write = process.argv.includes("--write");
   const backfill = process.argv.includes("--backfill");
-  const seed = readSpeciesSeed();
-  const rows = speciesSeedRows();
-  const verified = seed.filter((entry) => entry.threatened !== null);
+  const rows = readSpeciesSeed();
+  const verified = rows.filter((entry) => entry.threatened !== null);
   console.log(`${rows.length} species from data/species.json; ${verified.length} verified NZTCS flags, ${rows.length - verified.length} unresolved matches.`);
   console.log(`${verified.filter((entry) => entry.threatened).length} register entries have a verified Threatened flag. Unresolved matches have no threatened flag.`);
   if (!write) {
@@ -37,7 +36,7 @@ async function main() {
   // Check identities and current values before changing any rows.
   const { data: existing, error: readError } = await db
     .from("species")
-    .select("slug, register_code, scientific_name, suggested_spelling, threatened, common_name, maori_name, profile, photos")
+    .select("slug, register_code, scientific_name, suggested_spelling, threatened, common_name, maori_name, maori_name_alternatives, summary, look_for, sources, checked_at, photos")
     .order("slug")
     .limit(1000);
   if (readError) throw new Error(`read species identifiers: ${readError.message}`);
@@ -45,7 +44,7 @@ async function main() {
   for (const row of rows) {
     const conflict = existing.find((item) =>
       (item.slug === row.slug && item.register_code !== row.register_code)
-      || (item.register_code === row.register_code && item.slug !== row.slug));
+      || (row.register_code !== null && item.register_code === row.register_code && item.slug !== row.slug));
     if (conflict) throw new Error(`Identifier conflict for ${row.register_code} / ${row.slug}; resolve it before seeding.`);
   }
 
@@ -70,12 +69,12 @@ async function main() {
         .from("species")
         .update(values)
         .eq("slug", row.slug)
-        .eq("register_code", row.register_code)
         .select("slug")
         .single();
       if (error) throw new Error(`backfill ${row.slug}: ${error.message}. Earlier updates may have completed; rerunning is safe.`);
       changed++;
-      for (const key of Object.keys(filled) as (keyof typeof filled)[]) {
+      if (values.summary !== undefined) filled.profile++;
+      for (const key of ["common_name", "maori_name", "photos"] as const) {
         if (values[key] !== undefined) filled[key]++;
       }
     }
