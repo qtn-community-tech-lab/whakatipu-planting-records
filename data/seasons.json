@@ -1,0 +1,254 @@
+[
+  {
+    "id": 0,
+    "slug": "autumn-2015",
+    "label": "Autumn 2015",
+    "year": 2015,
+    "half": "autumn",
+    "workbook_total": 2068,
+    "workbook_cell": "MASTER!T107"
+  },
+  {
+    "id": 1,
+    "slug": "spring-2015",
+    "label": "Spring 2015",
+    "year": 2015,
+    "half": "spring",
+    "workbook_total": 3483,
+    "workbook_cell": "MASTER!AP107"
+  },
+  {
+    "id": 2,
+    "slug": "autumn-2016",
+    "label": "Autumn 2016",
+    "year": 2016,
+    "half": "autumn",
+    "workbook_total": 3176,
+    "workbook_cell": "MASTER!BG107"
+  },
+  {
+    "id": 3,
+    "slug": "spring-2016",
+    "label": "Spring 2016",
+    "year": 2016,
+    "half": "spring",
+    "workbook_total": 4331,
+    "workbook_cell": "MASTER!CI107"
+  },
+  {
+    "id": 4,
+    "slug": "autumn-2017",
+    "label": "Autumn 2017",
+    "year": 2017,
+    "half": "autumn",
+    "workbook_total": 4516,
+    "workbook_cell": "MASTER!CY107"
+  },
+  {
+    "id": 5,
+    "slug": "spring-2017",
+    "label": "Spring 2017",
+    "year": 2017,
+    "half": "spring",
+    "workbook_total": 4667,
+    "workbook_cell": "MASTER!DR107"
+  },
+  {
+    "id": 6,
+    "slug": "autumn-2018",
+    "label": "Autumn 2018",
+    "year": 2018,
+    "half": "autumn",
+    "workbook_total": 4589,
+    "workbook_cell": "MASTER!EJ107"
+  },
+  {
+    "id": 7,
+    "slug": "spring-2018",
+    "label": "Spring 2018",
+    "year": 2018,
+    "half": "spring",
+    "workbook_total": 3458,
+    "workbook_cell": "MASTER!EY107"
+  },
+  {
+    "id": 8,
+    "slug": "autumn-2019",
+    "label": "Autumn 2019",
+    "year": 2019,
+    "half": "autumn",
+    "workbook_total": 5078,
+    "workbook_cell": "MASTER!FR107"
+  },
+  {
+    "id": 9,
+    "slug": "spring-2019",
+    "label": "Spring 2019",
+    "year": 2019,
+    "half": "spring",
+    "workbook_total": 5400,
+    "workbook_cell": "MASTER!GJ107"
+  },
+  {
+    "id": 10,
+    "slug": "autumn-2020",
+    "label": "Autumn 2020",
+    "year": 2020,
+    "half": "autumn",
+    "workbook_total": 996,
+    "workbook_cell": "MASTER!GR107"
+  },
+  {
+    "id": 11,
+    "slug": "spring-2020",
+    "label": "Spring 2020",
+    "year": 2020,
+    "half": "spring",
+    "workbook_total": 7572,
+    "workbook_cell": "MASTER!HN107"
+  },
+  {
+    "id": 12,
+    "slug": "autumn-2021",
+    "label": "Autumn 2021",
+    "year": 2021,
+    "half": "autumn",
+    "workbook_total": 5133,
+    "workbook_cell": "MASTER!IF107"
+  },
+  {
+    "id": 13,
+    "slug": "spring-2021",
+    "label": "Spring 2021",
+    "year": 2021,
+    "half": "spring",
+    "workbook_total": 5356,
+    "workbook_cell": "MASTER!IZ107"
+  },
+  {
+    "id": 14,
+    "slug": "autumn-2022",
+    "label": "Autumn 2022",
+    "year": 2022,
+    "half": "autumn",
+    "workbook_total": 5869,
+    "workbook_cell": "MASTER!JR107"
+  },
+  {
+    "id": 15,
+    "slug": "spring-2022",
+    "label": "Spring 2022",
+    "year": 2022,
+    "half": "spring",
+    "workbook_total": 5014,
+    "workbook_cell": "MASTER!KJ107"
+  },
+  {
+    "id": 16,
+    "slug": "autumn-2023",
+    "label": "Autumn 2023",
+    "year": 2023,
+    "half": "autumn",
+    "workbook_total": 4886,
+    "workbook_cell": "MASTER!KZ107"
+  },
+  {
+    "id": 17,
+    "slug": "spring-2023",
+    "label": "Spring 2023",
+    "year": 2023,
+    "half": "spring",
+    "workbook_total": 5720,
+    "workbook_cell": "MASTER!LW107"
+  },
+  {
+    "id": 18,
+    "slug": "autumn-2024",
+    "label": "Autumn 2024",
+    "year": 2024,
+    "half": "autumn",
+    "workbook_total": 13657,
+    "workbook_cell": "MASTER!MO107"
+  },
+  {
+    "id": 19,
+    "slug": "spring-2024",
+    "label": "Spring 2024",
+    "year": 2024,
+    "half": "spring",
+    "workbook_total": 29826,
+    "workbook_cell": "MASTER!NI107"
+  },
+  {
+    "id": 20,
+    "slug": "autumn-2025",
+    "label": "Autumn 2025",
+    "year": 2025,
+    "half": "autumn",
+    "workbook_total": 4469,
+    "workbook_cell": "MASTER!OE107"
+  },
+  {
+    "id": 21,
+    "slug": "spring-2025",
+    "label": "Spring 2025",
+    "year": 2025,
+    "half": "spring",
+    "workbook_total": 6248,
+    "workbook_cell": "MASTER!PA107"
+  },
+  {
+    "id": 22,
+    "slug": "autumn-2026",
+    "label": "Autumn 2026",
+    "year": 2026,
+    "half": "autumn",
+    "workbook_total": 4556,
+    "workbook_cell": "MASTER!PW107"
+  },
+  {
+    "id": 23,
+    "slug": "spring-2026",
+    "label": "Spring 2026",
+    "year": 2026,
+    "half": "spring",
+    "workbook_total": null,
+    "workbook_cell": null
+  },
+  {
+    "id": 24,
+    "slug": "autumn-2027",
+    "label": "Autumn 2027",
+    "year": 2027,
+    "half": "autumn",
+    "workbook_total": null,
+    "workbook_cell": null
+  },
+  {
+    "id": 25,
+    "slug": "spring-2027",
+    "label": "Spring 2027",
+    "year": 2027,
+    "half": "spring",
+    "workbook_total": null,
+    "workbook_cell": null
+  },
+  {
+    "id": 26,
+    "slug": "autumn-2028",
+    "label": "Autumn 2028",
+    "year": 2028,
+    "half": "autumn",
+    "workbook_total": null,
+    "workbook_cell": null
+  },
+  {
+    "id": 27,
+    "slug": "spring-2028",
+    "label": "Spring 2028",
+    "year": 2028,
+    "half": "spring",
+    "workbook_total": null,
+    "workbook_cell": null
+  }
+]

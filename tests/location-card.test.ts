@@ -9,7 +9,7 @@ const { read } = vi.hoisted(() => ({ read: vi.fn() }));
 vi.mock("@/db/queries/sites", () => ({ listPlantingAreaPins: read }));
 vi.mock("@/components/wrt/sites/region-map", () => ({ RegionMap: () => null }));
 // A runtime import would fail the test, including one used only for regional bounds.
-vi.mock("@/data/site-locations.json", () => { throw new Error("Local reference locations must not be loaded"); });
+vi.mock("@/data/site_areas.json", () => { throw new Error("Local reference locations must not be loaded"); });
 
 const areas: PlantingAreaPin[] = [
   { slug: "east", site: "reserve", name: "East", description: "", wrt_number: null,

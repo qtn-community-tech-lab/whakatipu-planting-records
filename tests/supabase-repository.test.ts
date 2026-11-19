@@ -14,7 +14,7 @@ describe("Supabase repository without workbook files", () => {
   it.each([null, "2026-11-11T00:00:00Z"])("preserves database history when the site deactivation timestamp is %s", async (deactivated_at) => {
     const rows: Record<string, unknown[]> = {
       seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
-      species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", profile: {}, photos: [] }],
+      species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", maori_name_alternatives: [], summary: null, look_for: null, sources: [], checked_at: null, photos: [] }],
       sites: [
         { slug: "reserve", name: "Reserve", description: "Planting beside the river.", deactivated_at },
         { slug: "new-site", name: "New site", description: "", deactivated_at: null },

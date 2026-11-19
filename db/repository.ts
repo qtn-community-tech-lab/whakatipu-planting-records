@@ -52,7 +52,7 @@ async function load(db: Db): Promise<Loaded> {
   const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, maori_name_alternatives, summary, look_for, sources, checked_at, photos, deactivated_at")
       .throwOnError(),
     db.from("sites").select("slug, name, description, deactivated_at").throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
@@ -86,6 +86,11 @@ async function load(db: Db): Promise<Loaded> {
       suggestedSpelling: s.suggested_spelling,
       commonName: s.common_name,
       maoriName: s.maori_name,
+      maoriNameAlternatives: s.maori_name_alternatives,
+      summary: s.summary,
+      lookFor: s.look_for,
+      sources: s.sources as Species["sources"],
+      checkedAt: s.checked_at,
       displayName,
       displayIsScientific: displayName === s.scientific_name,
       status: s.status ?? "unknown",
@@ -100,7 +105,6 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: Object.keys(s.profile ?? {}).length ? s.profile as unknown as Species["profile"] : null,
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));
