@@ -129,29 +129,32 @@ continues through the local inbox without Resend credentials.
 
 ## The workbook import
 
-[`scripts/import-workbook.ts`](../scripts/import-workbook.ts) loads the history from `docs/planning/prototype/*.csv`:
-39 sites, 78 areas, 95 species, 5,449 lines and 1,339 review notes. It needs `NEXT_PUBLIC_SUPABASE_URL` and
-`SUPABASE_SECRET_KEY` in `.env.local`. For local development, use the local URL and secret/service-role key.
-Migrations create the schema and seasons; they do not import the workbook (`db.seed` is disabled in `config.toml`).
+[`scripts/import-workbook.ts`](../scripts/import-workbook.ts) seeds entirely from `data/*.json`:
+39 sites, 78 areas, 95 species, 28 seasons, 360 events, 5,449 lines and 1,339 review notes.
+No local CSVs are required. Set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`.
+Migrations must run first. The existing Supabase client handles every database read and write.
 
 ```bash
-npm run import-workbook              # dry run: lists what would change, writes nothing
-npm run import-workbook -- --write   # makes the changes
+npm run import-workbook              # read-only preview of missing rows
+npm run import-workbook -- --write   # insert missing rows, skip existing rows
 ```
 
-`tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
+The importer uses complete `sites.json`, `site_areas.json`, `species.json` and `seasons.json` rows.
+`plantings.json` contains workbook events with nested `lines`; each line has a `notes` array. Event `notes`
+remains the event's free-text field. Seasons are referenced by slug, and no event, line or note identity IDs
+are stored in the seed. Audit fields and source user references are excluded; PostgreSQL assigns them.
+Deactivation state, resolution dates and provenance are retained.
 
-Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written.
-All species columns come directly from `data/species.json`, including names, threat flags, notes, reference text,
-photos and deactivation state. The importer needs only the planting history, site crosswalk and reconciliation
-CSVs; it does not read the species CSVs or archived catalogue snapshots. Species are linked to
-history by register code, falling back to slug for app-created entries. Rerunning the workbook import applies
-changed species seed values, including clearing references when their saved values are null or empty lists.
-Database-managed audit fields are excluded. Sites and areas come from `data/sites.json` and `data/site_areas.json`,
-including descriptions, pins and deactivation state. Seasons come entirely from `data/seasons.json`, including IDs,
-labels and workbook totals. Future seasons through 2028 have null totals and are skipped by the totals check.
-Reruns apply all non-audit seed values. Rulings and notes a person wrote are kept,
-and lines that leave the CSV are deactivated.
+Every seed reference and stable identity is validated before connecting. Reference tables match by slug;
+workbook events match by source, area and season, lines by `legacy_code`, and notes by line and question.
+Events are inserted first, lines use the returned event IDs, then notes use the returned line IDs.
+Ordinary inserts leave `GENERATED ALWAYS` IDs to PostgreSQL, so no sequence reset or special SQL is needed.
+Only workbook events are supported in this seed because their area/season identity is unique.
+
+This command seeds fresh databases. Reruns insert missing rows without changing existing values, allowing safe
+retries after partial imports. Rows absent from the seed are left untouched.
+Writes run in batches; a failure does not undo completed batches, and rerunning is safe. After importing,
+season totals are checked against `seasons.json`; mismatches fail the command. Check the seed and existing database records if totals differ. Future seasons with null workbook totals are skipped.
 
 Species names are stored once in `scientific_name`, `common_name` and the preferred `maori_name`.
 `maori_name_alternatives` (`text[]`) contains other documented Māori names, excluding the preferred name and
@@ -222,8 +225,8 @@ When provisioning a hosted environment:
 1. Create the Supabase project and apply all migrations in timestamp order. Configure the Auth Before User Created
    hook, `/auth/confirm` redirect allowlist, one-hour email expiry and both magic-link email templates to match
    `config.toml`.
-2. Run the workbook import, species seed/backfill, then the pins import, with that project's URL and secret key. The scripts read
-   `.env.local`; restore your local values before resuming local development.
+2. Run the workbook import with that project's Supabase URL and secret/service-role key in `.env.local`. It seeds
+   all reference data, history, review notes and pins. Restore your local settings before resuming local development.
 3. Run the SQL checks below against the hosted database.
 4. Set the hosted URL, publishable key and app origin (`NEXT_PUBLIC_APP_URL`) in the Next.js deployment environment
    before building the app. Configure [Resend SMTP](#production-email-with-resend) before broad email use.

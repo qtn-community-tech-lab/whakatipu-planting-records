@@ -71,15 +71,14 @@ npm run import-workbook             # preview changes
 npm run import-workbook -- --write
 ```
 
-The client workbook-derived CSVs are not stored in Git. Restore `docs/` locally as described in
-[Client documentation](#client-documentation) before running the workbook import. It checks each season
-against its source total. The import can be rerun; see [import behaviour](supabase/README.md#the-workbook-import).
-Sites and areas (including descriptions and pins) come entirely from `data/sites.json` and `data/site_areas.json`.
-Seasons, their IDs and saved workbook totals come from `data/seasons.json`, including future seasons through 2028.
-The workbook import seeds species entirely from `data/species.json`, including names, flags, profile columns,
-photos and deactivation state. This complete seed was exported from PostgreSQL; database triggers manage audit
-fields. The species CSVs and separate reference JSON files are not needed for importing. To seed species without
-the planting history, use the standalone [species seed and backfill](supabase/README.md#species-seed-and-backfill) command.
+The importer reads only the JSON seeds in `data/`; local CSVs and `docs/` are not required.
+Set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`. Check the destination before using `--write`.
+Sites, areas, species and seasons come from their complete JSON seeds. `plantings.json` nests each event's lines
+and each line's review notes. The importer uses ordinary Supabase inserts, then links child rows using the IDs
+returned by the database. No PostgreSQL npm driver, sequence resets or identity migrations are needed.
+The seed command inserts missing rows and skips existing rows, so interrupted imports can be rerun.
+Writes run in batches and can be retried. See [import behaviour](supabase/README.md#the-workbook-import).
+To seed species alone, use the standalone [species seed and backfill](supabase/README.md#species-seed-and-backfill) command.
 
 ### 5. Start the app
 
@@ -169,9 +168,7 @@ the app does not need a Resend SDK or API key.
 ## Architecture
 
 ```text
-local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
- data/species.json                 ↗
- data/sites.json, data/site_areas.json ↗
+data/*.json → scripts/import-workbook.ts → Supabase
                                                              ↓
                                                      db/repository.ts
                                                              ↓
@@ -185,10 +182,9 @@ local docs/planning/prototype/*.csv → scripts/import-workbook.ts → Supabase
 The live app reads only Supabase. `SupabaseWrtRepository` implements `WrtRepository` for the shared query layer;
 the seasons pages also read database views through `db/queries`.
 
-CSV parsing and validation live under `scripts/workbook/` for the workbook import. Restore the planting history,
-site crosswalk and reconciliation CSVs locally before importing. Species come from the complete JSON seed.
-`tests/workbook-import.test.ts` checks that history resolves through this seed without species CSVs, while
-`tests/db-reads.test.ts` checks live database reads and totals. The app never reads source files at runtime.
+The seed importer validates JSON references before writing and maps related rows using generated database IDs.
+Legacy CSV parsing utilities remain under `scripts/workbook/` for source analysis; the seed command does not use them.
+`tests/workbook-history.test.ts` checks the exported history and relationships. The app reads database records at runtime.
 
 ## Design system
 

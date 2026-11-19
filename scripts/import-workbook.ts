@@ -1,206 +1,99 @@
 /**
- * Import the workbook history (docs/planning/prototype/*.csv) into Supabase.
- *
- *   npm run import-workbook              # dry run: shows what would change, writes nothing
- *   npm run import-workbook -- --write   # makes the changes, then checks the totals
- *
- * Needs NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local. The secret key
- * passes the access rules, so keep it out of the app and out of git.
- *
- * Safe to run again: rows match on slug, or spreadsheet code for lines, and only
- * differences are written. Sites, areas, seasons and species come from data/*.json, including pins
- * and descriptions. Audit fields are assigned by database triggers. It keeps rulings and notes, and deactivates
- * lines that leave the CSV.
+ * Seed entirely from data/*.json using the Supabase client and generated history IDs.
+ * npm run import-workbook                          # read-only preview
+ * npm run import-workbook -- --write               # insert missing rows
+ * Uses NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY from .env.local.
  */
-import { isDeepStrictEqual } from "node:util";
-import type { Json } from "../db/database.types";
 import { createClient } from "@supabase/supabase-js";
-import { DEFAULT_DATA_DIR, loadFromDirectory } from "./workbook/load";
-import { REVIEW_THEMES } from "../lib/wrt/review-themes";
-import { readPlaceSeeds, workbookAreaSlugs } from "./workbook/places";
+import type { Database, Json } from "../db/database.types";
+import { readPlaceSeeds } from "./workbook/places";
 import { readSeasonSeeds } from "./workbook/seasons";
-import type { ReviewNoteKind } from "../lib/wrt/types";
+import { readSpeciesSeed } from "./species/seed";
+import { readHistorySeeds } from "./workbook/history";
+import { REVIEW_THEMES } from "../lib/wrt/review-themes";
 
 type Row = Record<string, Json>;
 const write = process.argv.includes("--write");
-
-// ------------------------------------------------------------------ 1. what the CSVs say
-const data = loadFromDirectory(DEFAULT_DATA_DIR);
-
 const { sites, areas } = readPlaceSeeds();
-const areaOf = workbookAreaSlugs(data.places, { sites, areas });
+const seasons = readSeasonSeeds([]);
+const species = readSpeciesSeed();
+const questions = Object.entries(REVIEW_THEMES).map(([slug, theme]) => ({ slug, question: `${theme.label}: ${theme.question}` }));
+const plantings = readHistorySeeds({ areas, seasons, species, questions });
 
-const species: Row[] = data.species;
-const byId = new Map(data.species.map((s) => [s.register_code ?? s.slug, s]));
-
-const questions: Row[] = Object.entries(REVIEW_THEMES).map(([slug, t]) => ({ slug, question: `${t.label}: ${t.question}` }));
-const seasons = readSeasonSeeds(data.records);
-const seasonTotals = seasons.filter((season) => season.workbook_total !== null);
-const seasonId = new Map(seasons.map((season) => [season.slug, season.id]));
-
-/** Where each line came from in the workbook, kept on the line. */
-const PROVENANCE = "source_cell, precision, confidence, source_file, source_sheet, season_original, site_original, species_original";
-
-// Lines, and one note per line per question (same-question notes merged, strongest kind kept).
-const RANK: Record<ReviewNoteKind, number> = { ruling: 0, confirm: 1, fyi: 2 };
-const lines = data.records.map((r) => ({
-  legacy_code: r.id, area: areaOf.get(`${r.placeSlug}|${r.parcelId}`)!, season: r.seasonSlug,
-  species: byId.get(r.speciesId)!.slug, quantity: r.hasQuantity ? r.quantity : null, // "TBC" is unknown, never 0
-  source_cell: r.provenance.sourceCell, precision: r.precision, confidence: r.confidence,
-  source_file: r.provenance.sourceFile, source_sheet: r.provenance.sourceSheet,
-  season_original: r.provenance.seasonLabelOriginal, site_original: r.provenance.siteOriginal,
-  species_original: r.provenance.speciesOriginal,
-}));
-const notes = data.records.flatMap((r) => {
-  const merged = new Map<string, { kind: ReviewNoteKind; text: string[] }>();
-  for (const n of r.notes) {
-    const m = merged.get(n.theme) ?? { kind: n.kind, text: [] };
-    if (RANK[n.kind] < RANK[m.kind]) m.kind = n.kind;
-    m.text.push(n.text);
-    merged.set(n.theme, m);
-  }
-  return [...merged].map(([question, m]) => ({ legacy_code: r.id, question, kind: m.kind, text: m.text.join("\n") }));
-});
-
-const seen = new Map<string, string>();
-for (const l of lines) {
-  const key = `${l.area}|${l.season}|${l.species}`;
-  if (seen.has(key)) throw new Error(`${l.legacy_code} and ${seen.get(key)} would be one line (same area, season, species)`);
-  seen.set(key, l.legacy_code);
-}
-
-// ------------------------------------------------------------------ 2. what the database has
 async function main() {
   try { process.loadEnvFile(".env.local"); } catch {}
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL, key = process.env.SUPABASE_SECRET_KEY;
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SECRET_KEY;
   if (!url || !key) throw new Error("Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY in .env.local");
   const db = createClient(url, key, { auth: { persistSession: false } });
-
-  function check<T>(res: { data?: T | null; error: { message: string } | null }, what: string): T {
-    if (res.error) throw new Error(`${what}: ${res.error.message}`);
-    return res.data as T;
+  function check<T>(result: { data: T; error: { message: string } | null }, context: string) {
+    if (result.error) throw new Error(`${context}: ${result.error.message}. Earlier batches may have completed; rerunning is safe.`);
+    return result.data;
   }
-  /** Every row of a table; Supabase returns at most 1,000 per request. */
-  async function readAll<T = Row>(table: string, columns: string, orderBy: string): Promise<T[]> {
-    const out: T[] = [];
+  const report: [string, number][] = [];
+  /** Match stable identities, let PostgreSQL assign IDs, and return IDs for child rows. */
+  async function sync(table: keyof Database["public"]["Tables"], rows: Row[], identity: (row: Row) => string, primaryKey = "slug") {
+    if (!rows.length) return [];
+    const columns = [...new Set([...Object.keys(rows[0]!), primaryKey])].join(", ");
+    const current: Row[] = [];
     for (let from = 0; ; from += 1000) {
-      const page = check(await db.from(table).select(columns).order(orderBy).range(from, from + 999), `read ${table}`) as T[];
-      out.push(...page);
-      if (page.length < 1000) return out;
+      const page = check(await db.from(table).select(columns).order(primaryKey).range(from, from + 999), `read ${table}`) as unknown as Row[];
+      current.push(...page);
+      if (page.length < 1000) break;
     }
+    const have = new Map(current.map((row) => [identity(row), row]));
+    const added = rows.filter((row) => !have.has(identity(row)));
+    report.push([table, added.length]);
+    for (let i = 0; i < added.length; i += 500) {
+      const batch = added.slice(i, i + 500);
+      const inserted = write
+        ? check(await db.from(table).insert(batch).select(columns), `insert ${table}`) as unknown as Row[]
+        : batch.map((row, index) => ({ ...row, ...(primaryKey === "id" ? { id: -(i + index + 1) } : {}) }));
+      for (const row of inserted) have.set(identity(row), row);
+    }
+    return rows.map((row) => {
+      const saved = have.get(identity(row));
+      if (!saved) throw new Error(`No saved ${table} identity for ${identity(row)}`);
+      return saved;
+    });
   }
-  async function inBatches<T>(rows: T[], fn: (batch: T[]) => PromiseLike<{ error: { message: string } | null }>, what: string) {
-    for (let i = 0; i < rows.length; i += 500) check(await fn(rows.slice(i, i + 500)), what);
-  }
-  /** Rows that are new, or differ from the database in any column we own. */
-  function diff(want: Row[], have: Row[], key = "slug") {
-    const current = new Map(have.map((r) => [r[key], r]));
-    const added = want.filter((r) => !current.has(r[key]));
-    const changed = want.filter((r) => current.has(r[key]) && Object.keys(r).some((k) => !isDeepStrictEqual(r[k] ?? null, current.get(r[key])![k] ?? null)));
-    return { added, changed, all: [...added, ...changed] };
-  }
-
-  const report: [string, number, number][] = [];
-  async function sync(table: string, want: Row[]) {
-    const first = want[0];
-    if (!first) return;
-    const have = await readAll(table, Object.keys(first).join(", "), "slug");
-    const d = diff(want, have);
-    report.push([table, d.added.length, d.changed.length]);
-    if (write) await inBatches(d.all, (b) => db.from(table).upsert(b, { onConflict: "slug" }), `write ${table}`);
-  }
-
-  await sync("sites", sites);
-  await sync("areas", areas);
-  await sync("species", species);
-  await sync("questions", questions);
-  await sync("seasons", seasons);
-
-  // Planting events: one "workbook" event per area per season.
-  const eventKey = (area: unknown, season: unknown) => `${area}|${season}`;
-  let events = await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id")
-    .then((rows) => rows.filter((p) => p.source === "workbook"));
-  const wantEvents = [...new Map(lines.map((l) => {
-    const season = seasonId.get(l.season);
-    if (season === undefined) throw new Error(`${l.legacy_code}: season ${l.season} is not in the seasons table`);
-    return [eventKey(l.area, season), { area: l.area, season, source: "workbook" }];
-  })).values()];
-  const haveEvents = new Set(events.map((p) => eventKey(p.area, p.season)));
-  const newEvents = wantEvents.filter((p) => !haveEvents.has(eventKey(p.area, p.season)));
-  report.push(["planting_events", newEvents.length, 0]);
-  if (write && newEvents.length) {
-    await inBatches(newEvents, (b) => db.from("planting_events").insert(b), "write planting_events");
-    events = (await readAll<{ id: number; area: string; season: number; source: string }>("planting_events", "id, area, season, source", "id"))
-      .filter((p) => p.source === "workbook");
-  }
-  const eventId = new Map(events.map((p) => [eventKey(p.area, p.season), p.id]));
-
-  // Lines, matched on their spreadsheet code. Unknown planting events only exist in a dry run.
-  const haveLines = await readAll("planting_lines", `id, planting_event, species, quantity, legacy_code, ${PROVENANCE}, deactivated_at`, "id")
-    .then((rows) => rows.filter((l) => l.legacy_code !== null));
-  const wantLines: Row[] = lines.map((l) => ({
-    legacy_code: l.legacy_code, planting_event: eventId.get(eventKey(l.area, seasonId.get(l.season))) ?? -1,
-    species: l.species, quantity: l.quantity, deactivated_at: null,
-    ...Object.fromEntries(PROVENANCE.split(", ").map((c) => [c, l[c as keyof typeof l]])),
-  }));
-  const lineDiff = diff(wantLines, haveLines, "legacy_code");
-  const codes = new Set(lines.map((l) => l.legacy_code));
-  const toDeactivate = haveLines.filter((l) => l.deactivated_at === null && !codes.has(l.legacy_code as string));
-  report.push(["planting_lines", lineDiff.added.length, lineDiff.changed.length], ["planting_lines (deactivated)", 0, toDeactivate.length]);
-  if (write) {
-    await inBatches(lineDiff.all, (b) => db.from("planting_lines").upsert(b, { onConflict: "legacy_code" }), "write planting_lines");
-    await inBatches(toDeactivate.map((l) => l.id as number), (ids) =>
-      db.from("planting_lines").update({ deactivated_at: new Date().toISOString() }).in("id", ids), "deactivate planting_lines");
-  }
-
-  // Notes: the import's own notes (no author, not resolved) follow the CSV; anything else is kept.
-  const lineId = new Map((write
-    ? await readAll("planting_lines", "id, legacy_code", "id").then((r) => r.filter((l) => l.legacy_code !== null))
-    : haveLines).map((l) => [l.legacy_code as string, l.id as number]));
-  const codeOf = new Map([...lineId].map(([code, id]) => [id, code]));
-  const haveNotes = (await readAll("notes", "id, line, question, kind, text, created_by, resolved_at", "id"))
-    .filter((n) => codeOf.has(n.line as number));
-  const noteKey = (code: unknown, q: unknown) => `${code}|${q}`;
-  const wantNotes = new Map(notes.map((n) => [noteKey(n.legacy_code, n.question), n]));
-  const haveNoteKeys = new Set(haveNotes.map((n) => noteKey(codeOf.get(n.line as number), n.question)));
-  const staleNotes = haveNotes.filter((n) => {
-    const w = wantNotes.get(noteKey(codeOf.get(n.line as number), n.question));
-    return n.created_by === null && n.resolved_at === null && (!w || w.kind !== n.kind || w.text !== n.text);
+  const slugKey = (row: Row) => String(row.slug);
+  await sync("sites", sites, slugKey);
+  await sync("areas", areas, slugKey);
+  await sync("species", species, slugKey);
+  await sync("questions", questions, slugKey);
+  const savedSeasons = await sync("seasons", seasons, slugKey);
+  const seasonIds = new Map(savedSeasons.map((row) => [row.slug, row.id]));
+  const eventKey = (row: Row) => `${row.source}|${row.area}|${row.season}`;
+  const eventRows = plantings.map(({ lines, season, ...event }) => {
+    void lines;
+    return { ...event, season: seasonIds.get(season)! };
   });
-  const isWanted = (n: Row) => wantNotes.has(noteKey(codeOf.get(n.line as number), n.question));
-  const replaced = new Set(staleNotes.filter(isWanted).map((n) => noteKey(codeOf.get(n.line as number), n.question)));
-  const newNotes = notes.filter((n) => !haveNoteKeys.has(noteKey(n.legacy_code, n.question)) || replaced.has(noteKey(n.legacy_code, n.question)));
-  report.push(["notes", newNotes.length - replaced.size, replaced.size], ["notes (removed)", 0, staleNotes.length - replaced.size]);
-  if (write) {
-    await inBatches(staleNotes.map((n) => n.id as number), (ids) => db.from("notes").delete().in("id", ids), "remove old notes");
-    await inBatches(newNotes.map((n) => ({ line: lineId.get(n.legacy_code)!, question: n.question, kind: n.kind, text: n.text })),
-      (b) => db.from("notes").insert(b), "write notes");
-  }
+  const savedEvents = await sync("planting_events", eventRows, eventKey, "id");
+  const eventIds = new Map(savedEvents.map((row) => [eventKey(row), row.id]));
+  const lineRows = plantings.flatMap((planting, index) => planting.lines.map(({ notes, ...line }) => {
+    void notes;
+    return { ...line, planting_event: eventIds.get(eventKey(eventRows[index]!))! };
+  }));
+  const savedLines = await sync("planting_lines", lineRows, (row) => String(row.legacy_code), "id");
+  const lineIds = new Map(savedLines.map((row) => [row.legacy_code, row.id]));
+  const noteRows = plantings.flatMap((planting) => planting.lines.flatMap((line) => line.notes.map((note) => ({
+    ...note, line: lineIds.get(line.legacy_code)!,
+  }))));
+  await sync("notes", noteRows, (row) => `${row.line}|${row.question}`, "id");
 
-  // ------------------------------------------------------------------ 3. report
   console.log(write ? "Written:" : "Dry run, nothing written. Would change:");
-  for (const [table, added, changed] of report) console.log(`  ${table.padEnd(30)} +${added} new, ${changed} changed`);
-  console.log(`  (JSON: ${sites.length} sites, ${areas.length} areas, ${species.length} species, ${seasons.length} seasons; CSV: ${lines.length} lines, ${notes.length} notes)`);
-
+  for (const [table, added] of report) console.log(`  ${table.padEnd(30)} +${added} new`);
+  console.log(`  JSON: ${plantings.length} events, ${lineRows.length} lines, ${noteRows.length} notes`);
   if (write) {
-    // Compare database totals with the workbook totals saved in seasons.json.
-    // A season the database doesn't return counts as a mismatch, so none can be skipped quietly.
-    const totals = check(await db.from("totals_by_season").select("season_label, plants").order("season_order"), "read totals") as Row[];
-    const plantsOf = new Map(totals.map((t) => [t.season_label, t.plants]));
-    let off = 0;
-    console.log("\nSeason        database   workbook   difference");
-    for (const t of seasonTotals) {
-      const got = plantsOf.get(t.label);
-      const d = got == null ? null : Number(got) - Number(t.workbook_total);
-      if (d !== 0) off++;
-      console.log(`  ${String(t.label).padEnd(12)}${String(got ?? "missing").padStart(9)}${String(t.workbook_total).padStart(11)}${String(d ?? "-").padStart(13)}`);
-    }
-    console.log(off ? `\n${off} of ${seasonTotals.length} season(s) do not match the workbook.` : `\nAll ${seasonTotals.length} seasons match the workbook.`);
-    if (off) process.exitCode = 1;
+    const totals = check(await db.from("totals_by_season").select("season_label, plants"), "read season totals") ?? [];
+    const plantsOf = new Map(totals.map((row) => [row.season_label, Number(row.plants)]));
+    const mismatches = seasons.filter((season) => season.workbook_total !== null && plantsOf.get(season.label) !== season.workbook_total);
+    if (mismatches.length) throw new Error(`Season totals differ from the seed: ${mismatches.map((season) => season.label).join(", ")}. Earlier writes remain; check the seed and existing database records.`);
+    console.log("All saved season totals match. PostgreSQL generated the event, line and note IDs.");
   }
 }
-
-main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
-  process.exit(1);
+main().catch((error) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
 });

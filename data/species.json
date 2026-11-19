@@ -199,7 +199,7 @@
     "threatened": false,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -245,7 +245,7 @@
     "threatened": false,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -342,7 +342,7 @@
     "threatened": null,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -2985,7 +2985,7 @@
     "threatened": false,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -3077,7 +3077,7 @@
     "threatened": false,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -3123,7 +3123,7 @@
     "threatened": false,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
@@ -4324,7 +4324,7 @@
     "threatened": null,
     "threatened_te_kakano": false,
     "needs_decision": false,
-    "contested_group": "",
+    "contested_group": null,
     "register_note": "",
     "photos": [
       {
