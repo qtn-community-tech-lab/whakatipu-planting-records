@@ -10,6 +10,12 @@ import { REVIEW_COOKIE, REVIEW_HIDDEN, confirmedOnly } from "./review-scope";
 
 const requestRepository = cache(() => new SupabaseWrtRepository());
 
+/** Layout and pages share the same history load within this request. */
+export const getWrtForReview = cache((showReview: boolean): WrtQueries => {
+  const repo = requestRepository();
+  return createQueries(showReview ? repo : confirmedOnly(repo));
+});
+
 /** Is this reader seeing records still needing review? On unless they switched it off. */
 export async function reviewShown(): Promise<boolean> {
   try {

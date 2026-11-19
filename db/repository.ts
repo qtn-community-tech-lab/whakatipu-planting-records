@@ -1,6 +1,5 @@
 /** The planting history and season-total checks from Supabase. */
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_TAG } from "@/db/cache";
 import type { Database, Db } from "@/db/types";
 import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
@@ -18,7 +17,7 @@ export function publicDb(): Db {
     {
       auth: { persistSession: false },
       global: { fetch: (input, init) => fetch(input, {
-        ...init, next: { revalidate: 3600, tags: [SUPABASE_TAG] },
+        ...init, cache: "no-store",
       }) },
     },
   );
@@ -66,6 +65,17 @@ async function load(db: Db): Promise<Loaded> {
     .filter((s) => withLines.has(s.slug))
     .map((s, order) => ({ slug: s.slug, label: s.label, year: s.year, name: s.half === "autumn" ? "Autumn" : "Spring", order }));
   const seasonBySlug = new Map(seasons.map((s) => [s.slug, s]));
+  const availableSpecies = new Set(speciesRows.data.map((s) => s.slug));
+  const availableSites = new Set(siteRows.data.map((s) => s.slug));
+  const availableAreas = new Map(areaRows.data.map((a) => [a.slug, a]));
+  for (const line of lines) {
+    const area = availableAreas.get(line.area!);
+    const missing = !seasonBySlug.has(line.season!) ? `season ${line.season}`
+      : !availableSpecies.has(line.species!) ? `species ${line.species}`
+      : !area ? `area ${line.area}`
+      : !availableSites.has(area.site) ? `site ${area.site}` : null;
+    if (missing) throw new Error(`Planting history is incomplete: line ${line.legacy_code ?? line.line_id} references unavailable ${missing}. Retry after the import completes.`);
+  }
 
   // Species: keep the original register code as the historical join key.
   const spellings = new Map<string, Set<string>>();
