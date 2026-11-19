@@ -1319,37 +1319,6 @@
     "checked_at": "2026-10-04"
   },
   {
-    "slug": "cyathoides-juniperina",
-    "register_code": "SP-060",
-    "scientific_name": "Cyathoides juniperina",
-    "suggested_spelling": null,
-    "common_name": null,
-    "maori_name": null,
-    "status": "contested",
-    "over_5m": null,
-    "threatened": null,
-    "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C1",
-    "register_note": "C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts.",
-    "photos": [],
-    "deactivated_at": null,
-    "maori_name_alternatives": [],
-    "summary": "This recorded botanical name remains unverified. A possible spelling correction points to an older name for Leptecophylla juniperina, but WRT must confirm the intended identity before botanical traits or reference photos are assigned.",
-    "look_for": "Confirm the intended botanical identity against WRT’s original records or a verified specimen before using identification features.",
-    "sources": [
-      {
-        "url": "https://nzor.org.nz/names/4f5ed3ff-b4cb-4074-8182-2c5768a04e72",
-        "label": "NZOR · Cyathodes synonym record"
-      },
-      {
-        "url": "https://powo.science.kew.org/taxon/1012580-1",
-        "label": "Kew · Leptecophylla juniperina"
-      }
-    ],
-    "checked_at": "2026-10-04"
-  },
-  {
     "slug": "dacrycarpus-dacrydioides",
     "register_code": "SP-061",
     "scientific_name": "Dacrycarpus dacrydioides",
@@ -1983,7 +1952,7 @@
   {
     "slug": "leonohebe-cupressoides",
     "register_code": "SP-086",
-    "scientific_name": "Veronica cupressoides",
+    "scientific_name": "Leonohebe cupressoides",
     "suggested_spelling": null,
     "common_name": "Cypress hebe",
     "maori_name": null,
@@ -1991,9 +1960,9 @@
     "over_5m": false,
     "threatened": true,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C2",
-    "register_note": "C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only.",
+    "needs_decision": false,
+    "contested_group": null,
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Veronica_cupressoides2_at_WBG.jpg/960px-Veronica_cupressoides2_at_WBG.jpg",
@@ -2020,7 +1989,7 @@
     "look_for": "Slender green to blue-green branchlets with small triangular leaves clasping the stem. Small pale blue or mauve flowers occur near the tips.",
     "sources": [
       {
-        "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
+        "url": "https://www.nzpcn.org.nz/flora/species/leonohebe-cupressoides/",
         "label": "NZPCN"
       }
     ],
@@ -2037,9 +2006,9 @@
     "over_5m": false,
     "threatened": null,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C1",
-    "register_note": "C1: Same nursery line as Cyathoides juniperina (allocation, stocktake, history)? Merging changes counts.",
+    "needs_decision": false,
+    "contested_group": null,
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Leptecophylla_juniperina_11.jpg/960px-Leptecophylla_juniperina_11.jpg",
@@ -4261,52 +4230,6 @@
     "sources": [
       {
         "url": "https://www.nzpcn.org.nz/flora/species/veronica-biggarii/",
-        "label": "New Zealand Plant Conservation Network"
-      }
-    ],
-    "checked_at": "2026-10-04"
-  },
-  {
-    "slug": "veronica-cupressoides",
-    "register_code": "SP-155",
-    "scientific_name": "Veronica cupressoides",
-    "suggested_spelling": null,
-    "common_name": "Cypress hebe",
-    "maori_name": null,
-    "status": "contested",
-    "over_5m": false,
-    "threatened": true,
-    "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C2",
-    "register_note": "C2: One species written twice in every master list (Master Plant List rows 44 and 92)? Threatened flag is on the Veronica row only.",
-    "photos": [
-      {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Veronica_cupressoides_at_WBG.jpg/960px-Veronica_cupressoides_at_WBG.jpg",
-        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_at_WBG.jpg",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
-        "attribution": "Siobhan Leachman · CC0"
-      },
-      {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6c/Veronica_cupressoides2_at_WBG.jpg/960px-Veronica_cupressoides2_at_WBG.jpg",
-        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides2_at_WBG.jpg",
-        "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/deed.en",
-        "attribution": "Siobhan Leachman · CC0"
-      },
-      {
-        "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Veronica_cupressoides_kz01.jpg/960px-Veronica_cupressoides_kz01.jpg",
-        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_cupressoides_kz01.jpg",
-        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-        "attribution": "Krzysztof Ziarnek, Kenraiz · CC BY-SA 4.0"
-      }
-    ],
-    "deactivated_at": null,
-    "maori_name_alternatives": [],
-    "summary": "An aromatic, bushy native shrub of eastern South Island grey scrub. Its fine branchlets and tiny scale leaves give it a cypress-like appearance, despite being a flowering shrub.",
-    "look_for": "Slender blue-green branchlets with widely spaced, triangular scale leaves. Small pale pink, mauve or blue flowers occur near the shoot tips.",
-    "sources": [
-      {
-        "url": "https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/",
         "label": "New Zealand Plant Conservation Network"
       }
     ],
