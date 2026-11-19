@@ -198,9 +198,9 @@
     "over_5m": false,
     "threatened": false,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C3",
-    "register_note": "C3: Separate stock lines, or one a local form of the other (nickname \"oio\")?",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Carex_maorica_Hamlin_%28AM_AK294597%29.jpg/960px-Carex_maorica_Hamlin_%28AM_AK294597%29.jpg",
@@ -244,9 +244,9 @@
     "over_5m": false,
     "threatened": false,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C3",
-    "register_note": "C3: Separate stock lines, or one a local form of the other (nickname \"oio\")?",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Carex_secta.tif/lossy-page1-960px-Carex_secta.tif.jpg",
@@ -333,7 +333,7 @@
   {
     "slug": "carmichaelia-crassicaulis",
     "register_code": "SP-022",
-    "scientific_name": "Carmichaelia crassicaulis",
+    "scientific_name": "Carmichaelia crassicaulis var racemosa",
     "suggested_spelling": null,
     "common_name": "Coral broom",
     "maori_name": null,
@@ -341,9 +341,9 @@
     "over_5m": false,
     "threatened": null,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C6",
-    "register_note": "C6: Is the racemosa variety its own line, and is Carmichaelia racemosa (potting Summary) the same as it? Also named on Plants Out Master > \"plants removed from list\"; status of that list is unexplained.",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5a/Carmichaelia_crassicaulis_463247951.jpg/960px-Carmichaelia_crassicaulis_463247951.jpg",
@@ -2984,9 +2984,9 @@
     "over_5m": false,
     "threatened": false,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C7",
-    "register_note": "C7: Is the cymbifolia variety its own line or folded into the parent?",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b9/Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg/960px-Olearia_nummulariifolia_in_Dunedin_Botanic_Garden_10.jpg",
@@ -3076,9 +3076,9 @@
     "over_5m": false,
     "threatened": false,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C5",
-    "register_note": "C5: Three lines or one? Core rows carry a stray bracket; one string reads \"leptophyllus inc. vauvilliersii and fulvida\".",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/02/Ozothamnus_leptophyllus_11.JPG/960px-Ozothamnus_leptophyllus_11.JPG",
@@ -3122,9 +3122,9 @@
     "over_5m": false,
     "threatened": false,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C5",
-    "register_note": "C5: Three lines or one? Core rows carry a stray bracket; one string reads \"leptophyllus inc. vauvilliersii and fulvida\".",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Ozothamnus_vauvilliersii_in_Egmont_NP_01.jpg/960px-Ozothamnus_vauvilliersii_in_Egmont_NP_01.jpg",
@@ -4323,9 +4323,9 @@
     "over_5m": false,
     "threatened": null,
     "threatened_te_kakano": false,
-    "needs_decision": true,
-    "contested_group": "C8",
-    "register_note": "C8: Is the demissa variety its own line or folded into the parent?",
+    "needs_decision": false,
+    "contested_group": "",
+    "register_note": "",
     "photos": [
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg/960px-Veronica_hectorii_in_Christchurch_Botanic_Gardens_01.jpg",

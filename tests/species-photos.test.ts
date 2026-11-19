@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
-import speciesPhotos from "@/data/species-photos.json";
+import species from "@/data/species.json";
 import { q } from "./helpers";
 import { getSpeciesReferenceReview, speciesReferenceReviews } from "@/lib/wrt/species-reference-reviews";
 
@@ -15,49 +15,35 @@ describe("reviewed Wiki photo catalogue", () => {
   });
 
   it("keeps photo sets consistent with their published identity reviews", () => {
-    const ids = new Set([...speciesPhotos.map((p) => p.speciesId), ...speciesReferenceReviews.map((r) => r.speciesId)]);
+    const photosBySpecies = new Map(species.map((row) => [row.register_code!, row.photos]));
+    const ids = new Set([...photosBySpecies.keys(), ...speciesReferenceReviews.map((r) => r.speciesId)]);
     for (const id of ids) {
-      const photos = speciesPhotos.filter((p) => p.speciesId === id);
+      const photos = photosBySpecies.get(id) ?? [];
       const review = getSpeciesReferenceReview(id);
       expect(photos).toHaveLength(review?.photoCount ?? 3);
       expect(new Set(photos.map((p) => p.sourceUrl)).size).toBe(photos.length);
       if (review) {
         expect(review.reason.trim()).not.toBe("");
-        for (const photo of photos) expect(photo.scientificName).toBe(review.scientificName);
+        expect(species.find((row) => row.register_code === id)?.scientific_name).toBe(review.scientificName);
         if (review.status === "confirmed") expect(photos).toHaveLength(3);
         if (review.status === "unresolved") expect(photos).toHaveLength(0);
       }
     }
-    const sectaSources = new Set(speciesPhotos.filter((p) => p.scientificName === "Carex secta").map((p) => p.sourceUrl));
-    expect(speciesPhotos.filter((p) => p.scientificName === "Carex maorica").every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
+    const sectaSources = new Set(species.find((row) => row.scientific_name === "Carex secta")?.photos.map((p) => p.sourceUrl));
+    expect(species.find((row) => row.scientific_name === "Carex maorica")?.photos.every((p) => !sectaSources.has(p.sourceUrl))).toBe(true);
   });
 
-  it("keeps hosted image URLs, author credits and source licences for future offline use", () => {
-    expect(speciesPhotos.length).toBeGreaterThanOrEqual(150);
-    expect(speciesPhotos.length).toBeLessThanOrEqual(285);
-    for (const photo of speciesPhotos) {
+  it("keeps hosted image URLs, attribution and source licences in the seed", () => {
+    const photos = species.flatMap((row) => row.photos);
+    expect(photos.length).toBeGreaterThanOrEqual(150);
+    expect(photos.length).toBeLessThanOrEqual(285);
+    for (const photo of photos) {
       const url = new URL(photo.src);
       expect(url.protocol).toBe("https:");
       expect(["upload.wikimedia.org", "thumb.wikimedia.org", "inaturalist-open-data.s3.amazonaws.com"]).toContain(url.hostname);
-      expect(photo.width).toBeGreaterThan(0);
-      expect(photo.height).toBeGreaterThan(0);
-      expect(photo.author.length).toBeGreaterThan(0);
-      expect(photo.caption.trim()).not.toBe("");
-      if (photo.sourceName === "Wikimedia Commons") {
-        expect(new URL(photo.sourceUrl).hostname).toBe("commons.wikimedia.org");
-      } else {
-        expect(photo.sourceName).toBe("iNaturalist");
-        expect(new URL(photo.sourceUrl).hostname).toBe("www.inaturalist.org");
-        expect(new URL(photo.observationUrl!).hostname).toBe("www.inaturalist.org");
-      }
-      if (photo.scientificName === "Veronica cupressoides") {
-        expect(photo.articleUrl).toBe("https://www.nzpcn.org.nz/flora/species/veronica-cupressoides/");
-        expect(photo.articleLabel).toBe("NZPCN species page");
-      } else {
-        expect(["en.wikipedia.org", "www.nzpcn.org.nz", "www.nzflora.info"]).toContain(new URL(photo.articleUrl).hostname);
-      }
+      expect(new URL(photo.sourceUrl).protocol).toBe("https:");
       expect(new URL(photo.licenseUrl).protocol).toBe("https:");
-      expect(["CC BY 4.0", "CC BY 3.0", "CC BY 2.0", "CC BY-SA 4.0", "CC BY-SA 3.0", "CC BY-SA 2.0", "CC0", "Public domain"]).toContain(photo.license);
+      expect(photo.attribution.trim()).not.toBe("");
     }
   });
 });

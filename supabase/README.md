@@ -142,9 +142,9 @@ npm run import-workbook -- --write   # makes the changes
 `tsx`, which runs the script, is a dev dependency pinned in `package-lock.json`. After `--write`, it reads each season's total back from the database and compares it with the workbook's TOTAL cell; every difference should be 0.
 
 Running it again is safe. Rows match on slug, or spreadsheet code for lines, and only differences are written.
-All species columns come directly from `data/species.json`, including names, threat flags, notes, profiles,
+All species columns come directly from `data/species.json`, including names, threat flags, notes, reference text,
 photos and deactivation state. The importer needs only the planting history, site crosswalk and reconciliation
-CSVs; it does not read the species CSVs, `species-profiles.json` or `species-photos.json`. Species are linked to
+CSVs; it does not read the species CSVs or archived catalogue snapshots. Species are linked to
 history by register code, falling back to slug for app-created entries. Rerunning the workbook import applies
 changed species seed values, including clearing references when their saved values are null or empty lists.
 Database-managed audit fields are excluded. Site descriptions, pins, rulings and notes a person wrote are kept,
@@ -153,8 +153,8 @@ and lines that leave the CSV are deactivated.
 Species names are stored once in `scientific_name`, `common_name` and the preferred `maori_name`.
 `maori_name_alternatives` (`text[]`) contains other documented Māori names, excluding the preferred name and
 duplicates. Reference content uses `summary`, `look_for`, `sources` and `checked_at` (`date`).
-The ordered list of source labels and URLs remains a JSON array in `sources`. The app builds its profile
-from these fields and the canonical names, so editing a species name also updates the profile's names.
+The ordered list of source labels and URLs remains a JSON array in `sources`. The app reads these fields directly
+from the species row, so editing a species name updates the displayed names.
 The species identity comes from `register_code`, falling back to `slug`.
 
 ## Species seed and backfill
