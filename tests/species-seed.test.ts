@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { readSpeciesSeed, speciesBackfillValues, speciesSeedSchema } from "@/scripts/species/seed";
+import { readSpeciesSeed, speciesSeedSchema } from "@/scripts/species/seed";
 import { DEFAULT_DATA_DIR } from "@/scripts/workbook/load";
 import { parseCsv } from "@/scripts/workbook/parse";
 import { cleanLabel, slugify } from "@/lib/wrt/text";
@@ -8,7 +8,6 @@ import { INPUT_LIMITS } from "@/lib/forms/limits";
 import catalogue from "@/data/species.json";
 
 const seed = readSpeciesSeed();
-const emptyReferences = { maori_name_alternatives: [], summary: null, look_for: null, sources: [], checked_at: null };
 
 describe("complete PostgreSQL species seed", () => {
   it("uses complete species.json rows without replacing their saved content", () => {
@@ -98,7 +97,7 @@ describe("complete PostgreSQL species seed", () => {
     expect(seed.find((entry) => entry.register_code === "SP-041")).toMatchObject({ common_name: null, maori_name: null });
   });
 
-  it("retains existing reference content and limits backfill writes", () => {
+  it("includes complete reference content and photos for planted species", () => {
     const rows = readSpeciesSeed();
     const saved = rows.find((entry) => entry.register_code === "SP-050")!;
     expect(saved.summary).toBeTruthy();
@@ -107,14 +106,6 @@ describe("complete PostgreSQL species seed", () => {
     expect(rows.every((entry) => !("profile" in entry))).toBe(true);
     expect(rows.some((entry) => entry.register_code === "SP-101")).toBe(false);
     expect(rows.find((entry) => entry.register_code === "SP-050")?.photos.length).toBeGreaterThan(0);
-    const values = speciesBackfillValues(seed.find((entry) => entry.register_code === "SP-124")!);
-    expect(values).toMatchObject({
-      scientific_name: "Parsonsia heterophylla", suggested_spelling: null, threatened: false,
-    });
-    expect(values).not.toHaveProperty("slug");
-    expect(values).not.toHaveProperty("register_code");
-    expect(values).not.toHaveProperty("register_note");
-    expect(values).not.toHaveProperty("deactivated_at");
   });
 
   it("rejects Māori alternatives that repeat the preferred name or another alternative", () => {
@@ -151,32 +142,6 @@ describe("complete PostgreSQL species seed", () => {
       expect(seed.find((entry) => entry.register_code === code)?.maori_name).toBe(name);
     }
     expect(seed.find((entry) => entry.register_code === "SP-150")?.maori_name_alternatives).toEqual(["Patē"]);
-  });
-
-  it("fills empty names and references while preserving existing editorial content", () => {
-    const row = readSpeciesSeed().find((entry) => entry.register_code === "SP-050")!;
-    const empty = speciesBackfillValues(row, { common_name: " ", maori_name: null, ...emptyReferences, photos: [] });
-    expect(empty).toMatchObject({
-      common_name: row.common_name, maori_name: row.maori_name,
-      summary: row.summary, sources: row.sources, photos: row.photos,
-    });
-
-    const filled = speciesBackfillValues(row, {
-      common_name: "Local nursery name", maori_name: "Local Māori name",
-      summary: "Edited description", photos: [{ src: "https://example.com/edited.jpg", attribution: "Editor" }],
-    });
-    expect(filled).toEqual({ scientific_name: row.scientific_name, suggested_spelling: row.suggested_spelling, threatened: row.threatened });
-    expect(speciesBackfillValues(row, { ...row, common_name: null, maori_name: null })).not.toHaveProperty("photos");
-  });
-
-  it.each([
-    { maori_name_alternatives: ["Local name"] },
-    { sources: [{ label: "Local source", url: "https://example.com" }] },
-    { checked_at: "2026-11-19" },
-  ])("preserves partially populated profile content: %j", (current) => {
-    const row = readSpeciesSeed().find((entry) => entry.register_code === "SP-050")!;
-    const values = speciesBackfillValues(row, { ...emptyReferences, ...current });
-    for (const key of Object.keys(emptyReferences)) expect(values).not.toHaveProperty(key);
   });
 });
 

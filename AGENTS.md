@@ -15,9 +15,9 @@ Use the species create, edit and deactivate flows as the CRUD reference. `CLAUDE
 ## Data and seeding
 
 - Schema changes belong in new `supabase/migrations/` files. Regenerate `db/database.types.ts`; never edit generated types by hand. Database triggers maintain audit fields.
-- `import-workbook` seeds from `data/{sites,site_areas,species,seasons,plantings}.json` and `lib/wrt/review-themes.ts`. It reads no CSVs. See [seed behaviour](supabase/README.md#the-workbook-import).
+- `import-historical-seed-data` seeds from `data/{sites,site_areas,species,seasons,plantings}.json` and `lib/wrt/review-themes.ts`. It reads no CSVs. See [seed behaviour](supabase/README.md#historical-seed-import).
 - Keep events, lines and review notes nested in `plantings.json`, without their database identity IDs or audit fields. Use returned Supabase insert IDs to link children. Season references in this file are slugs.
-- The seed command inserts missing rows and preserves existing values. It has no `--backfill` option; the standalone `seed-species` command has a separate limited backfill.
+- Use `import-historical-seed-data` as the single seed command for a fresh, migrated database. It inserts missing rows and preserves existing values so interrupted imports can be retried. Do not add per-entity seed or backfill commands.
 - Species names and reference content live directly on `species`; do not restore separate profile names, a profile object or legacy catalogues.
 
 ## Database queries

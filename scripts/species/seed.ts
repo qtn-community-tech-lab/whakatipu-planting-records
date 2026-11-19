@@ -1,7 +1,7 @@
 /** Complete species seed, exported from PostgreSQL without database-managed audit fields. */
 import { z } from "zod";
 import catalogue from "../../data/species.json";
-import type { Database, Tables } from "../../db/database.types";
+import type { Tables } from "../../db/database.types";
 import { INPUT_LIMITS } from "../../lib/forms/limits";
 
 const name = z.string().min(1).max(INPUT_LIMITS.shortText);
@@ -60,38 +60,4 @@ export function readSpeciesSeed(): SpeciesSeedEntry[] {
   return speciesSeedSchema.parse(catalogue) satisfies Omit<Tables<"species">,
     "created_at" | "created_by" | "updated_at" | "updated_by"
   >[];
-}
-
-const referenceColumns = ["maori_name_alternatives", "summary", "look_for", "sources", "checked_at"] as const;
-type ExistingReferences = Partial<Pick<Tables<"species">, typeof referenceColumns[number] | "common_name" | "maori_name" | "photos">>;
-
-/** Preserve filled editorial fields. The slug is a lookup key and never an update value. */
-export function speciesBackfillValues(
-  entry: SpeciesSeedEntry,
-  current: ExistingReferences = {},
-) {
-  const values: Database["public"]["Tables"]["species"]["Update"] = {
-    scientific_name: entry.scientific_name,
-    suggested_spelling: entry.suggested_spelling,
-    threatened: entry.threatened,
-  };
-  if (!current.common_name?.trim() && entry.common_name) values.common_name = entry.common_name;
-  if (!current.maori_name?.trim() && entry.maori_name) values.maori_name = entry.maori_name;
-  // Preserve existing reference content and Māori alternatives as a unit.
-  const hasProfile = referenceColumns.some((key) => {
-    const value = current[key];
-    return Array.isArray(value) ? value.length > 0 : typeof value === "string" && value.trim().length > 0;
-  });
-  if (!hasProfile && entry.summary) {
-    values.maori_name_alternatives = entry.maori_name_alternatives;
-    values.summary = entry.summary;
-    values.look_for = entry.look_for;
-    values.sources = entry.sources;
-    values.checked_at = entry.checked_at;
-  }
-  if ((!current.photos || (Array.isArray(current.photos) && current.photos.length === 0))
-    && Array.isArray(entry.photos) && entry.photos.length > 0) {
-    values.photos = entry.photos;
-  }
-  return values;
 }

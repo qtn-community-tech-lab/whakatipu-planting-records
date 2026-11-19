@@ -1,7 +1,7 @@
 /**
- * Seed entirely from data/*.json using the Supabase client and generated history IDs.
- * npm run import-workbook                          # read-only preview
- * npm run import-workbook -- --write               # insert missing rows
+ * Import historical JSON seeds and review question definitions using the Supabase client.
+ * npm run import-historical-seed-data            # read-only preview
+ * npm run import-historical-seed-data -- --write  # insert missing rows
  * Uses NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY from .env.local.
  */
 import { createClient } from "@supabase/supabase-js";

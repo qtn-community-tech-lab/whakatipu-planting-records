@@ -102,7 +102,7 @@ with expected (part, item, want, got) as (
        union all select tablename::text from pg_tables where schemaname = 'public' and tablename = 'plantings'
      ) old)
 
-  -- Import (run by scripts/import-workbook.ts) ------------------------------
+  -- Import (run by scripts/import-historical-seed-data.ts) ------------------------------
   union all select 'import', 'sites', 41, (select count(*)::int from public.sites)
   union all select 'import', 'areas', 75, (select count(*)::int from public.areas)
   union all select 'import', 'species with workbook register codes', 93,

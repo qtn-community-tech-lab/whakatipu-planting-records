@@ -1,6 +1,6 @@
 # Seed and reference data
 
-`npm run import-workbook` uses these maintained JSON files:
+`npm run import-historical-seed-data` uses these maintained JSON files:
 
 | File | Contents |
 | --- | --- |
@@ -22,4 +22,4 @@ Event, line and note IDs are omitted from `plantings.json`. PostgreSQL generates
 
 Audit fields are excluded during import so database triggers assign them. Deactivation state, resolved dates and provenance are retained. Existing rows are skipped, including previously edited rows; changing a seed does not update them.
 
-See [import commands and matching rules](../supabase/README.md#the-workbook-import). Validate refreshed species data offline with `npm run seed-species`.
+See [import commands and matching rules](../supabase/README.md#historical-seed-import). Use `npm run import-historical-seed-data` to validate all seeds and preview missing rows against the configured database.

@@ -32,12 +32,12 @@ Keep credentials in the ignored `.env.local`; it overrides `.env`. Restart Next.
 Seed the database, then start the app:
 
 ```bash
-npm run import-workbook             # read-only preview against the configured database
-npm run import-workbook -- --write  # insert missing seed rows
+npm run import-historical-seed-data            # read-only preview against the configured database
+npm run import-historical-seed-data -- --write  # insert missing seed rows
 npm run dev
 ```
 
-Despite its name, `import-workbook` reads maintained JSON seeds, with review questions defined in code. It needs no CSVs or original workbook. Existing rows are preserved on reruns. See [seed behaviour](supabase/README.md#the-workbook-import) and [data sources](data/README.md).
+`import-historical-seed-data` is the single seed command for a fresh, migrated database. It reads maintained JSON seeds, with review questions defined in code. It needs no CSVs or original workbook. Existing rows are preserved on retries. See [seed behaviour](supabase/README.md#historical-seed-import) and [data sources](data/README.md).
 
 | Local service | URL |
 | --- | --- |

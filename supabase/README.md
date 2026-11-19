@@ -18,18 +18,18 @@ To rebuild a disposable local database, **this deletes its current data**:
 
 ```bash
 npx --yes supabase@2.121.0 db reset --local
-npm run import-workbook -- --write
+npm run import-historical-seed-data -- --write
 ```
 
-## The workbook import
+## Historical seed import
 
-[`scripts/import-workbook.ts`](../scripts/import-workbook.ts) seeds from [maintained JSON](../data/README.md) and the review question definitions in `lib/wrt/review-themes.ts`. It reads no CSVs.
+[`scripts/import-historical-seed-data.ts`](../scripts/import-historical-seed-data.ts) seeds from [maintained JSON](../data/README.md) and the review question definitions in `lib/wrt/review-themes.ts`. It reads no CSVs.
 
 Apply migrations first. Set `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SECRET_KEY` in `.env.local`, checking that they target the intended database.
 
 ```bash
-npm run import-workbook             # validate seeds and preview missing rows; reads the database
-npm run import-workbook -- --write  # insert missing rows
+npm run import-historical-seed-data            # validate seeds and preview missing rows; reads the database
+npm run import-historical-seed-data -- --write  # insert missing rows
 ```
 
 The seed contains 41 sites, 75 areas, 93 species, 9 questions, 28 seasons, 359 events, 5,444 lines and 1,334 notes. Planting quantities total 140,068.
@@ -49,21 +49,13 @@ Existing rows are skipped; rows absent from the seed are kept. This command prep
 
 Audit fields are assigned by database triggers. Seed deactivation state, review resolution and provenance are retained. No separate pin import, PostgreSQL npm driver or identity override is needed.
 
-## Species seed and backfill
+## Species data
 
-The standalone command also uses `data/species.json`:
-
-```bash
-npm run seed-species                        # validate offline
-npm run seed-species -- --write             # insert missing species
-npm run seed-species -- --write --backfill  # also apply the limited species backfill
-```
-
-Only writes require database credentials. The command checks slug/register-code conflicts and preserves existing rows by default. `--backfill` belongs to this command only: it updates scientific names, suggested spellings and threatened flags; fills empty common/Māori names and photos; and fills reference fields together only if all are empty. It preserves identities, populated editorial content, deactivation state and existing `over_5m` values.
+The historical seed import loads complete species rows from `data/species.json` along with all other reference data and planting history. Use this single command after applying migrations to a fresh database.
 
 Species names are stored once in `scientific_name`, `common_name` and `maori_name`, with other Māori names in `maori_name_alternatives`. Reference content uses `summary`, `look_for`, `sources` and `checked_at`; there is no separate profile object. Threat status can be unknown (`null`). An unmarked `over_5m` source value is not a verified height assessment.
 
-To refresh the planted-species seed, export this query's JSON result to `data/species.json`, then run `npm run seed-species`:
+To refresh the planted-species seed, export this query's JSON result to `data/species.json`, then preview the full seed with `npm run import-historical-seed-data`:
 
 ```sql
 select jsonb_pretty(jsonb_agg(
