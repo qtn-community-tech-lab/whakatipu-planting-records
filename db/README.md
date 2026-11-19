@@ -1,25 +1,17 @@
-# Database reads
+# Database code
 
-For installation, local Supabase and environment variables, start with the [local development guide](../README.md#local-development).
-For migrations, imports and SQL checks, see the [Supabase reference](../supabase/README.md).
+See [local setup](../README.md#local-development) and [database maintenance](../supabase/README.md). Shared implementation requirements live in [AGENTS.md](../AGENTS.md).
 
-Every read from Supabase lives in `queries/`. A page calls one by name:
-
-```ts
-const sites = await listSites();
-```
-
-- `database.types.ts` is generated from the database schema. Column names in `.select("…")` are checked against it.
-- `queries/views.ts` holds one base query per view or table. The other files add a filter or a limit.
-- Queries are named `list<Entity>s`, `read<Entity>`, and later `create<Entity>`, `update<Entity>` and `deactivate<Entity>`, with the entity spelled out (`listPlantingAreaTotals`, not `listAreaTotals`). `findPlantingLines` is the one exception: it pages through lines that match a filter. The rule is in `CLAUDE.md`.
-- Rows are never deleted. Public reads include deactivated history; active selectors continue to filter it out.
-- `public.users` is the email allowlist managed at `/users` by active users. `email` is normalized and
-  case-insensitively unique; `auth_user_id` links a profile to Supabase Auth while audit rows keep the stable app ID.
-- In app code, only `db/` imports Supabase, and ESLint enforces it. `lib/supabase/`, `scripts/` and `tests/` are exempt.
+- Put entity operations in `queries/`: `list<Entity>s`, `read<Entity>`, `create<Entity>`, `update<Entity>` and `deactivate<Entity>`. Spell out `PlantingEvent`, `PlantingLine` and `PlantingArea`; `findPlantingLines` is the existing paged-query exception.
+- Pages and actions call named entity queries. `queries/views.ts` supplies their base table/view queries; `repository.ts` supplies the shared history explorer.
+- Use session-aware `db()` from `client.ts` for writes and editor reads so RLS applies. Keep Supabase imports out of pages and components; ESLint enforces the boundary, with infrastructure, script and test exceptions.
+- Use generated `database.types.ts` and writable Zod schemas in `types.ts`. Database triggers maintain audit fields.
+- Deactivate instead of deleting. Normal selectors exclude deactivated entries; historical identities and quantities remain available.
+- `public.users` stores approved profiles with stable app IDs; `auth_user_id` links confirmed Supabase Auth identities.
 
 ## Generate types after a migration
 
-With local Supabase running, apply pending migrations and generate types from that database:
+With local Supabase running:
 
 ```bash
 npm run db:migrate
@@ -28,5 +20,4 @@ npx --yes prettier@3.9.10 --write db/database.types.ts
 npm run typecheck
 ```
 
-This does not need a Supabase login. The existing `npm run db:types` script targets a legacy hosted project ID;
-use the local command above until a hosted project is provisioned and the script is updated.
+Never edit generated types by hand. The local command needs no Supabase login. `npm run db:types` currently targets a hard-coded hosted project; use the explicit `--local` command for local schema changes.

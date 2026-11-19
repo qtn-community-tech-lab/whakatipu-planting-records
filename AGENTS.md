@@ -8,124 +8,70 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Screenshots in pull requests
+# Repository conventions
 
-Any PR that changes what someone sees includes screenshots. Take them yourself, so
-the people reviewing or reusing the work can see what's there without reading the code.
+Use the species create, edit and deactivate flows as the CRUD reference. `CLAUDE.md` imports this file; keep shared instructions here.
 
-- Show each screen or state you changed, on desktop (1280px wide) and phone (390px).
-- If the PR adds or changes a shared part (`components/ui`, `components/forms`), add one
-  sheet with each part in its own card: its name, one line on what it's for, and its real
-  states (filled, empty, with a hint, with an error, turned off). Use labels from our real
-  forms. Build the sheet on a temporary page and delete it before committing.
-- Upload the images through the GitHub comment box and put them in a table in the PR
-  description.
-- If nothing visual changed, write "Not applicable: no visual change."
+## Data and seeding
 
-## Form input validation
-
-When adding or changing forms, reuse the string limits in `lib/forms/limits.ts`:
-
-| Kind | Maximum length |
-|---|---|
-| Slugs and identifiers | 80 |
-| Names, short text and photo attribution | 255 |
-| URLs | 2,048 |
-| Notes and long text | 2,000 |
-
-Enforce limits in server-side Zod schemas and reuse those schemas in client forms. Set matching
-HTML `maxLength` attributes on text inputs and textareas. Reject overlong submitted values with
-clear field errors; do not silently truncate stored input. Unwrap nullable server fields for form
-schemas instead of replacing them with unbounded strings. Test values at the limit and one character over.
-
-These shared limits currently apply to the species create/edit form. Apply the convention to other
-forms when they are updated; do not expand a task's scope solely to migrate every existing form.
-The PostgreSQL species columns remain `text` without explicit length constraints; do not assume
-the database enforces these application limits.
-
-# CRUD conventions
-
-Use the species create, edit and deactivate flows as the reference for new entity features.
-Keep shared conventions here; `CLAUDE.md` imports this file.
+- Schema changes belong in new `supabase/migrations/` files. Regenerate `db/database.types.ts`; never edit generated types by hand. Database triggers maintain audit fields.
+- `import-workbook` seeds from `data/{sites,site_areas,species,seasons,plantings}.json` and `lib/wrt/review-themes.ts`. It reads no CSVs. See [seed behaviour](supabase/README.md#the-workbook-import).
+- Keep events, lines and review notes nested in `plantings.json`, without their database identity IDs or audit fields. Use returned Supabase insert IDs to link children. Season references in this file are slugs.
+- The seed command inserts missing rows and preserves existing values. It has no `--backfill` option; the standalone `seed-species` command has a separate limited backfill.
+- Species names and reference content live directly on `species`; do not restore separate profile names, a profile object or legacy catalogues.
 
 ## Database queries
 
-- Put database operations in `db/queries/`. Pages and client components call named queries;
-  they do not import Supabase. Use the session-aware `db()` from `db/client.ts` for writes
-  and editor reads so database permissions apply to the caller.
-- Name exports for the action and full entity: `list<Entity>s`, `read<Entity>`,
-  `create<Entity>`, `update<Entity>` and `deactivate<Entity>`. Use `PlantingEvent`,
-  `PlantingLine` and `PlantingArea`, not shortened names. `findPlantingLines` is the
-  existing exception for paged, filtered lines.
-- Base queries in `db/queries/views.ts` are building blocks named after their view or
-  table; pages call the named entity queries instead.
-- Keep writes direct: attempt the insert or update, return the database result and handle
-  errors in the server action. Do not add existence prechecks, fallback reads or extra
-  active-state predicates to standard updates. This does not replace access or input checks.
-- Use `.select("slug").single()` (or the entity's equivalent key) when a write should
-  affect one row. Use `.maybeSingle()` for reads where absence is an expected result.
-  Select only needed columns and put chained query calls on separate lines.
-- Use generated types from `db/database.types.ts`; regenerate them after schema changes
-  rather than editing them. Database triggers maintain audit fields.
+- Put entity operations in `db/queries/`. Pages/components call named queries instead of importing Supabase. Use session-aware `db()` from `db/client.ts` for writes and editor reads so caller permissions apply.
+- Export `list<Entity>s`, `read<Entity>`, `create<Entity>`, `update<Entity>` and `deactivate<Entity>`. Spell out `PlantingEvent`, `PlantingLine` and `PlantingArea`. `findPlantingLines` is the existing paged-query exception.
+- `db/queries/views.ts` contains base table/view queries; pages call named entity queries.
+- Attempt writes directly and return the database result for the server action to handle. Do not add existence prechecks, fallback reads or extra active-state predicates to standard updates. Keep access and input validation.
+- Use `.select("slug").single()` (or the equivalent key) for single-row writes and `.maybeSingle()` for reads where absence is expected. Select needed columns only; put chained calls on separate lines.
 
 ## Forms and validation
 
-- Share one client form between create and edit pages. Supply initial values, submit
-  callback, button label and cancel destination as props; keep database calls in the page's
-  server action. See `components/wrt/species/SpeciesForm.tsx`.
-- Use React Hook Form with `useForm`, `zodResolver` and types inferred from Zod schemas.
-  Define the writable schema in `db/types.ts` and derive the form schema when controls
-  need strings, empty values or tri-state choices. Normalize form values before submitting.
-- Validate again with `safeParse()` inside every create/edit server action and write only
-  the parsed data. Keep audit fields and unrelated imported metadata out of writable schemas.
-- Follow the shadcn React Hook Form pattern. Reuse `components/forms/form-field.tsx`,
-  which composes `Controller`, `Field`, `FieldLabel`, `FieldDescription` and `FieldError`.
-  Spread both the supplied field props and accessibility props onto each control; wire
-  custom controls' value, change, blur and ref explicitly when necessary.
-- Use existing shadcn controls and `FieldGroup` / `FieldSet` / `FieldLegend` for layout.
-  Use `useFieldArray` for editable lists and `useWatch` for dependent previews.
-- Return expected failures as `{ error?: string; issues?: { path: string; message: string }[] }`.
-  Map field issues through `form.setError`, focus the first invalid field and show general
-  failures as root errors. Preserve entered values and allow retrying.
-- Disable submission while pending and show progress using the existing Button/Spinner
-  composition. A confirmation with no editable inputs can use `useActionState` and a
-  server action directly; it does not need React Hook Form or an empty Zod schema.
+- Share one client create/edit form with initial values, submit callback, button label and cancel destination. Keep database calls in the route's server action. Reference: `components/wrt/species/SpeciesForm.tsx`.
+- Use React Hook Form, `useForm`, `zodResolver` and Zod-inferred types. Define writable schemas in `db/types.ts`; derive form schemas for string controls, empty values and tri-state choices. Normalize before submitting.
+- Revalidate with `safeParse()` in each create/edit server action and write only parsed values. Exclude audit fields and unrelated imported metadata from writable schemas.
+- Reuse `components/forms/form-field.tsx` and shadcn controls with `FieldGroup`, `FieldSet` and `FieldLegend`. Spread field and accessibility props; wire custom control value, change, blur and ref. Use `useFieldArray` for lists and `useWatch` for dependent previews.
+- Return expected failures as `{ error?: string; issues?: { path: string; message: string }[] }`. Map issues with `form.setError`, focus the first invalid field, show general failures as root errors and preserve values for retry.
+- Disable submission while pending and use the existing Button/Spinner composition. Input-free confirmations may use `useActionState` directly without React Hook Form or an empty schema.
 
-## Server actions and refresh
+Reuse `lib/forms/limits.ts` in server Zod schemas, client schemas and HTML `maxLength`:
 
-- Let the route's server action own access checks, validation, the named query call,
-  error mapping, cache invalidation and redirect. Check access inside the action as well
-  as when rendering controls; use the existing access helper rather than copying a bypass.
-- Capture the target identifier in the server action for edit/deactivate confirmations.
-  Treat submitted form values as untrusted and map actionable database errors, such as
-  duplicate slugs, to useful field messages.
-- Invalidate caches only after a successful write. Follow the existing shared-data pattern:
-  `updateTag(SUPABASE_TAG)`, then `revalidatePath("/", "layout")`, then `redirect(...)`.
-- Keep redirects outside mutation `try`/`catch` blocks. In client submit handlers that
-  catch exceptions, call Next.js `unstable_rethrow(error)` before displaying a fallback
-  error so framework redirects and other control-flow exceptions still work.
-- After editing, use the saved identifier for navigation. The existing edit flow redirects
-  with `?saved=1`, renders a status alert and keys the form by `updated_at` to refresh defaults.
+| Field | Maximum |
+| --- | --- |
+| Slugs and identifiers | 80 |
+| Names, short text, photo attribution | 255 |
+| URLs | 2,048 |
+| Notes and long text | 2,000 |
+
+Reject overlong values with field errors; never truncate. Unwrap nullable server fields instead of replacing them with unbounded strings. Test the limit and one character over. Species forms already follow this convention; apply it to other forms when touched, without widening scope. PostgreSQL species `text` columns do not enforce these limits.
+
+## Server actions
+
+- The route action owns access checks, validation, the named query, error mapping, invalidation and redirect. Check access inside the action as well as when rendering controls, using the existing access helper.
+- Capture edit/deactivation targets in the action. Treat submitted values as untrusted and map actionable errors, such as duplicate slugs, to field messages.
+- After a successful write: `updateTag(SUPABASE_TAG)`, `revalidatePath("/", "layout")`, then `redirect(...)`. Keep redirects outside mutation `try`/`catch` blocks.
+- Client submit handlers that catch exceptions must call Next.js `unstable_rethrow(error)` before showing fallback errors.
+- Navigate with the saved identifier. Edit flows use `?saved=1`, a status alert and a form keyed by `updated_at` to refresh defaults.
 
 ## Deactivation
 
-- Use **Deactivate**, **Deactivated** and **Reactivate** consistently in UI text and code.
-  Set the existing `deactivated_at` column instead of deleting rows. Reuse existing storage;
-  a new CRUD action alone does not require a migration or a database trigger.
-- Require a named confirmation with Cancel, pending feedback and a retryable error.
-  Group Deactivate with Edit on the detail page; show the resulting deactivated state.
-- Exclude deactivated entries from normal active lists and new-record selectors. Keep
-  historical identities and quantities intact. Reference entities such as species and sites
-  must remain resolvable in historical records without silently reducing their planting totals.
-  Aggregate behavior for deactivating an event or line follows that feature's requirements.
+- Use **Deactivate**, **Deactivated** and **Reactivate**. Set `deactivated_at` rather than deleting rows. A new CRUD action alone needs no migration or trigger.
+- Require a named confirmation with Cancel, pending feedback and retryable errors. Group Deactivate with Edit on detail pages and show deactivated state.
+- Exclude deactivated entries from normal active lists and new-record selectors. Preserve historical identities and quantities: deactivated species/sites must still resolve without reducing historical totals. Event/line aggregate behaviour follows the feature's requirements.
 
 ## Verification and scope
 
-- Keep changes and tests proportional to the feature. Cover important outcomes such as
-  validation, access, save/failure behavior and preserved historical quantities; exhaustive
-  branch coverage is not a goal. Mock action/query boundaries when useful, not a fake
-  Supabase query engine. Use isolated database fixtures when database behavior needs checking.
-- Run relevant tests, lint for changed code and type-checking. Add broader build or browser
-  checks when the change warrants them; documentation-only edits do not need application tests.
-- Avoid unrelated refactors, speculative guards and new infrastructure. Follow the user's
-  current commit/push instructions; completing a change does not itself authorize publishing it.
+- Keep tests proportional: cover validation, access, save/failure behaviour and preserved historical quantities. Mock action/query boundaries rather than a Supabase query engine; use isolated fixtures for database behaviour.
+- Run relevant tests, changed-code lint and type-checking. Add build/browser checks when warranted. Documentation-only changes need no application tests.
+- Avoid unrelated refactors, speculative guards and new infrastructure. Follow the user's commit/push instructions; completing work does not authorize publishing.
+
+## PR screenshots
+
+Every visual PR includes screenshots taken by the author for each changed screen/state at desktop 1280px and phone 390px. Upload through the GitHub comment box and include a table in the PR description.
+
+For shared UI/form changes, also capture a temporary component sheet: one card per part with its name, purpose and real filled, empty, hint, error and disabled states, using actual form labels. Delete the temporary page before committing.
+
+For nonvisual PRs write: "Not applicable: no visual change."
