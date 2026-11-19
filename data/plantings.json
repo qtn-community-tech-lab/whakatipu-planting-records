@@ -94111,6 +94111,470 @@
             "deactivated_at": null
           }
         ]
+      },
+      {
+        "species": "veronica-odora",
+        "quantity": 15,
+        "legacy_code": "PH-2026A-PP101",
+        "source_cell": "PP101",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Veronica odora",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "carmichaelia-petriei",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP16",
+        "source_cell": "PP16",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Carmichaelia petriei",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "chionochloa-rigida",
+        "quantity": 10,
+        "legacy_code": "PH-2026A-PP19",
+        "source_cell": "PP19",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Chionochloa rigida",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-acerosa",
+        "quantity": 15,
+        "legacy_code": "PH-2026A-PP21",
+        "source_cell": "PP21",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Coprosma acerosa",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-dumosa",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP25",
+        "source_cell": "PP25",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Coprosma dumosa",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-intertexta",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP26",
+        "source_cell": "PP26",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Coprosma intertexta",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-propinqua",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP29",
+        "source_cell": "PP29",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Coprosma propinqua",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-rugosa",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP33",
+        "source_cell": "PP33",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Coprosma rugosa",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "cordyline-australis",
+        "quantity": 3,
+        "legacy_code": "PH-2026A-PP35",
+        "source_cell": "PP35",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Cordyline australis",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "melicytus-alpinus",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP56",
+        "source_cell": "PP56",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Melicytus alpinus",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "ozothamnus-leptophyllus",
+        "quantity": 6,
+        "legacy_code": "PH-2026A-PP72",
+        "source_cell": "PP72",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Ozothamnus leptophyllus",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "contested-species",
+            "kind": "ruling",
+            "text": "species contested with Ozothamnus vauvilliersii and another species: one species or two? Kept as typed; the numbers are not merged",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "phormium-cookianum",
+        "quantity": 5,
+        "legacy_code": "PH-2026A-PP76",
+        "source_cell": "PP76",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Phormium cookianum",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "poa-cita",
+        "quantity": 30,
+        "legacy_code": "PH-2026A-PP82",
+        "source_cell": "PP82",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Poa cita",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "sophora-microphylla",
+        "quantity": 1,
+        "legacy_code": "PH-2026A-PP96",
+        "source_cell": "PP96",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Sophora microphylla",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "leonohebe-cupressoides",
+        "quantity": 3,
+        "legacy_code": "PH-2026A-PP99",
+        "source_cell": "PP99",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "Autumn 2026",
+        "site_original": "Paererewa",
+        "species_original": "Veronica cupressoides",
+        "notes": [
+          {
+            "question": "new-site",
+            "kind": "ruling",
+            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "contested-species",
+            "kind": "ruling",
+            "text": "species contested with Veronica cupressoides: one species or two? Kept as typed; the numbers are not merged",
+            "resolved_at": null,
+            "deactivated_at": null
+          },
+          {
+            "question": "other",
+            "kind": "fyi",
+            "text": "provisional site number: the Sites master will issue the real one",
+            "resolved_at": null,
+            "deactivated_at": null
+          }
+        ]
       }
     ]
   },
@@ -94614,481 +95078,6 @@
             "question": "other",
             "kind": "fyi",
             "text": "MASTER site number blank in source; site mapped by header text",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "area": "paererewa",
-    "season": "autumn-2026",
-    "planted_on": null,
-    "type": null,
-    "source": "workbook",
-    "notes": "",
-    "deactivated_at": null,
-    "lines": [
-      {
-        "species": "veronica-odora",
-        "quantity": 15,
-        "legacy_code": "PH-2026A-PP101",
-        "source_cell": "PP101",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Veronica odora",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "carmichaelia-petriei",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP16",
-        "source_cell": "PP16",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Carmichaelia petriei",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "chionochloa-rigida",
-        "quantity": 10,
-        "legacy_code": "PH-2026A-PP19",
-        "source_cell": "PP19",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Chionochloa rigida",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-acerosa",
-        "quantity": 15,
-        "legacy_code": "PH-2026A-PP21",
-        "source_cell": "PP21",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma acerosa",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-dumosa",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP25",
-        "source_cell": "PP25",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma dumosa",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-intertexta",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP26",
-        "source_cell": "PP26",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma intertexta",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-propinqua",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP29",
-        "source_cell": "PP29",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma propinqua",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-rugosa",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP33",
-        "source_cell": "PP33",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Coprosma rugosa",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "cordyline-australis",
-        "quantity": 3,
-        "legacy_code": "PH-2026A-PP35",
-        "source_cell": "PP35",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Cordyline australis",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "melicytus-alpinus",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP56",
-        "source_cell": "PP56",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Melicytus alpinus",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "ozothamnus-leptophyllus",
-        "quantity": 6,
-        "legacy_code": "PH-2026A-PP72",
-        "source_cell": "PP72",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Ozothamnus leptophyllus",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "contested-species",
-            "kind": "ruling",
-            "text": "species contested with Ozothamnus vauvilliersii and another species: one species or two? Kept as typed; the numbers are not merged",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "phormium-cookianum",
-        "quantity": 5,
-        "legacy_code": "PH-2026A-PP76",
-        "source_cell": "PP76",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Phormium cookianum",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "poa-cita",
-        "quantity": 30,
-        "legacy_code": "PH-2026A-PP82",
-        "source_cell": "PP82",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Poa cita",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "sophora-microphylla",
-        "quantity": 1,
-        "legacy_code": "PH-2026A-PP96",
-        "source_cell": "PP96",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Sophora microphylla",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "leonohebe-cupressoides",
-        "quantity": 3,
-        "legacy_code": "PH-2026A-PP99",
-        "source_cell": "PP99",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "Autumn 2026",
-        "site_original": "Paererewa",
-        "species_original": "Veronica cupressoides",
-        "notes": [
-          {
-            "question": "new-site",
-            "kind": "ruling",
-            "text": "new or unclear site with no WRT site number: Appears as a column, a site-tab title, and as a nursery supplier header (A26 J4); meaning unclear",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "contested-species",
-            "kind": "ruling",
-            "text": "species contested with Veronica cupressoides: one species or two? Kept as typed; the numbers are not merged",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "other",
-            "kind": "fyi",
-            "text": "provisional site number: the Sites master will issue the real one",
             "resolved_at": null,
             "deactivated_at": null
           }

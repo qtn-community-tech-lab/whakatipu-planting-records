@@ -306,24 +306,6 @@
     "deactivated_at": null
   },
   {
-    "slug": "paererewa",
-    "site": "paererewa",
-    "name": "Paererewa",
-    "description": "",
-    "wrt_number": null,
-    "class": "community",
-    "lat": null,
-    "lng": null,
-    "radius_m": null,
-    "pin_source_url": null,
-    "pin_checked_on": null,
-    "created_at": "2026-11-19 00:54:19.406064+00",
-    "created_by": null,
-    "updated_at": "2026-11-19 00:54:19.406064+00",
-    "updated_by": null,
-    "deactivated_at": null
-  },
-  {
     "slug": "paper4trees-scheme",
     "site": "paper4trees",
     "name": "Paper4Trees (scheme)",
