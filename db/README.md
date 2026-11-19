@@ -8,6 +8,7 @@ See [local setup](../README.md#local-development) and [database maintenance](../
 - Use generated `database.types.ts` and writable Zod schemas in `types.ts`. Database triggers maintain audit fields.
 - Deactivate instead of deleting. Normal selectors exclude deactivated entries; historical identities and quantities remain available.
 - `public.users` stores approved profiles with stable app IDs; `auth_user_id` links confirmed Supabase Auth identities.
+- Public history reads bypass the persistent fetch cache and share one repository load per request, including the layout. This prevents pre-import empty results or independently stale tables from being reused after seeding. Missing related rows fail explicitly rather than silently dropping quantities.
 
 ## Generate types after a migration
 

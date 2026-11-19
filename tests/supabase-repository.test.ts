@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
 import type { Database } from "@/db/types";
-import { SupabaseWrtRepository } from "@/db/repository";
+import { publicDb, SupabaseWrtRepository } from "@/db/repository";
 import { createQueries, emptySplit } from "@/lib/wrt/queries";
 import { locationsForSites } from "@/lib/wrt/site-locations";
 
@@ -100,4 +100,61 @@ describe("Supabase repository without workbook files", () => {
       lat: -45, lng: 168.5, pin_source_url: null, pin_checked_on: null,
     }], places, records)).toMatchObject([{ siteSlug: "new-site", split: emptySplit() }]);
   });
+});
+
+function historyTables(): Record<string, unknown[]> {
+  return {
+    seasons: [{ slug: "autumn-2030", label: "Autumn 2030", year: 2030, half: "autumn" }],
+    species: [{ slug: "kowhai", register_code: "SP-1", scientific_name: "Sophora microphylla", maori_name_alternatives: [], sources: [], photos: [], deactivated_at: null }],
+    sites: [{ slug: "reserve", name: "Reserve", description: "", deactivated_at: null }],
+    areas: [{ slug: "reserve-east", site: "reserve", name: "East", wrt_number: "1A", class: "community", deactivated_at: null }],
+    line_details: [{ line_id: 1, legacy_code: "PH-1", season: "autumn-2030", area: "reserve-east", area_name: "East", species: "kowhai", quantity: 17, notes: [] }],
+    totals_by_season: [],
+  };
+}
+
+function tableResponse(rows: Record<string, unknown[]>, input: RequestInfo | URL) {
+  const table = new URL(input instanceof Request ? input.url : input.toString()).pathname.split("/").at(-1)!;
+  return new Response(JSON.stringify(rows[table]), { headers: { "Content-Type": "application/json" } });
+}
+
+it.each([false, true])("recovers after empty history is seeded (reference tables present: %s)", async (hasReferences) => {
+  let rows: Record<string, unknown[]> = hasReferences
+    ? { ...historyTables(), line_details: [] }
+    : Object.fromEntries(Object.keys(historyTables()).map((table) => [table, []]));
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://example.supabase.co");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test-key");
+  const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+    expect(init?.cache).toBe("no-store");
+    expect(init?.next?.revalidate).toBeUndefined();
+    return tableResponse(rows, input);
+  });
+  try {
+    const empty = new SupabaseWrtRepository(publicDb);
+    const overview = await createQueries(empty).overview();
+    expect(overview).toMatchObject({ firstSeason: null, lastSeason: null, seasons: [], split: emptySplit() });
+    await empty.listRecords();
+    expect(fetch).toHaveBeenCalledTimes(6);
+    rows = historyTables();
+    const seeded = await createQueries(new SupabaseWrtRepository(publicDb)).overview();
+    expect(seeded.firstSeason?.slug).toBe("autumn-2030");
+    expect(seeded.split.total).toBe(17);
+    expect(seeded.species[0]?.item.slug).toBe("kowhai");
+    expect(fetch).toHaveBeenCalledTimes(12);
+  } finally {
+    fetch.mockRestore();
+    vi.unstubAllEnvs();
+  }
+});
+
+it.each([
+  ["seasons", "season autumn-2030"], ["species", "species kowhai"],
+  ["areas", "area reserve-east"], ["sites", "site reserve"],
+])("reports incomplete %s reads without dropping planting quantities", async (table, reference) => {
+  const rows = historyTables();
+  rows[table] = [];
+  const db = createClient<Database>("https://example.supabase.co", "test-key", {
+    auth: { persistSession: false }, global: { fetch: async (input) => tableResponse(rows, input) },
+  });
+  await expect(new SupabaseWrtRepository(() => db).listRecords()).rejects.toThrow(`Planting history is incomplete: line PH-1 references unavailable ${reference}`);
 });

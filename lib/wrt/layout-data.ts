@@ -1,17 +1,14 @@
 import "server-only";
-import { unstable_cache } from "next/cache";
-import { SUPABASE_TAG } from "@/db/cache";
-import { SupabaseWrtRepository } from "@/db/repository";
+import { cache } from "react";
 import { buildSearchIndex } from "./build-search-index";
-import { createQueries } from "./queries";
-import { confirmedOnly } from "./review-scope";
+import { getWrtForReview } from "./server";
 import { formatNumber } from "./text";
 
-export const readLayoutData = unstable_cache(async (showReview: boolean) => {
-  const repo = new SupabaseWrtRepository();
-  const wrt = createQueries(showReview ? repo : confirmedOnly(repo));
+export const readLayoutData = cache(async (showReview: boolean) => {
+  const wrt = getWrtForReview(showReview);
   const [overview, index] = await Promise.all([wrt.overview(), buildSearchIndex(wrt)]);
-  const range = `${overview.firstSeason.label} → ${overview.lastSeason.label}`;
+  const range = overview.firstSeason && overview.lastSeason
+    ? `${overview.firstSeason.label} → ${overview.lastSeason.label}` : "No planting history yet";
   const counts = {
     sites: formatNumber(overview.siteCount),
     species: formatNumber(overview.speciesCount),
@@ -26,4 +23,4 @@ export const readLayoutData = unstable_cache(async (showReview: boolean) => {
     needsReview: p.split.needsReview,
   }));
   return { counts, rings, range, index };
-}, ["public-layout-v1"], { tags: [SUPABASE_TAG], revalidate: 3600 });
+});
