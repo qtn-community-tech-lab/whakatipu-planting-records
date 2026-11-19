@@ -90,6 +90,56 @@
     "deactivated_at": null
   },
   {
+    "slug": "matakauri-wetlands",
+    "name": "Matakauri Wetlands",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "1-mile-creek",
+    "name": "1 Mile Creek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "alpine-retreat",
+    "name": "Alpine Retreat",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "ben-lomond-zip-trek",
+    "name": "Ben Lomond / Zip Trek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "the-rees",
+    "name": "The Rees",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
     "slug": "hidden-island-and-cecil-peak",
     "name": "Hidden Island and Cecil Peak",
     "description": "",

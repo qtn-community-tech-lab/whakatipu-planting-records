@@ -73,7 +73,7 @@
   },
   {
     "slug": "1-mile-creek",
-    "site": "gorge-road-area",
+    "site": "1-mile-creek",
     "name": "1 Mile Creek",
     "description": "",
     "wrt_number": "5C",
@@ -90,9 +90,9 @@
     "deactivated_at": null
   },
   {
-    "slug": "gorge-rd-wetlands",
-    "site": "gorge-road-area",
-    "name": "Gorge Rd Wetlands",
+    "slug": "matakauri-wetlands",
+    "site": "matakauri-wetlands",
+    "name": "Matakauri Wetlands",
     "description": "",
     "wrt_number": "5",
     "class": "community",
@@ -415,7 +415,7 @@
   },
   {
     "slug": "alpine-retreat",
-    "site": "gorge-road-area",
+    "site": "alpine-retreat",
     "name": "Alpine Retreat",
     "description": "",
     "wrt_number": "5D",
@@ -433,7 +433,7 @@
   },
   {
     "slug": "ben-lomond-zip-trek",
-    "site": "gorge-road-area",
+    "site": "ben-lomond-zip-trek",
     "name": "Ben Lomond / Zip Trek",
     "description": "",
     "wrt_number": "5E",
@@ -991,7 +991,7 @@
   },
   {
     "slug": "the-rees",
-    "site": "gorge-road-area",
+    "site": "the-rees",
     "name": "The Rees",
     "description": "",
     "wrt_number": "5F",
