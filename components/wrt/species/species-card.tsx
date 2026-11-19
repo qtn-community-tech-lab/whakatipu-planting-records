@@ -5,7 +5,7 @@ import { hrefs } from "@/components/wrt/shared/names";
 import { PhotoMedia } from "./photo-media";
 import { SpeciesMarkers } from "./species-meta";
 import { SpeciesReferenceStatus } from "./species-reference-status";
-import { SpeciesProfileSources } from "./species-profile-preview";
+import { SpeciesReferenceSources } from "./species-reference-preview";
 
 const TILE_TONES = 4;
 
@@ -48,11 +48,10 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
   const { item: sp, split, span, placeCount } = row;
   const photos = sp.photos;
   const photo = photos[0];
-  const profile = sp.profile;
   const name = sp.displayName;
   const years = !span ? "No records yet" : span.first.year === span.last.year ? `${span.first.year}` : `${span.first.year}–${span.last.year}`;
   // Every other name it goes by: common name and Māori names, minus the one shown as the title.
-  const also = [...new Set([profile?.commonName ?? sp.commonName, ...(profile?.maoriNames ?? [sp.maoriName])])]
+  const also = [...new Set([sp.commonName, sp.maoriName, ...sp.maoriNameAlternatives])]
     .filter((x): x is string => !!x && x !== name);
 
   // Grid view: the photo, its rank, the name, and how much went in where. The whole card opens the species.
@@ -94,10 +93,10 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
           <SpeciesMarkers species={sp} />
         </div>
 
-        {profile?.summary && <p className="wrt-scard__summary">{profile.summary}</p>}
-        {profile?.lookFor && <p className="wrt-scard__look"><b>Look for</b> {profile.lookFor}</p>}
+        {sp.summary && <p className="wrt-scard__summary">{sp.summary}</p>}
+        {sp.lookFor && <p className="wrt-scard__look"><b>Look for</b> {sp.lookFor}</p>}
         <SpeciesReferenceStatus speciesId={sp.id} />
-        <SpeciesProfileSources profile={profile} slug={sp.slug} includeLookFor={false} />
+        <SpeciesReferenceSources species={sp} includeLookFor={false} />
 
         <dl className="wrt-scard__facts">
           <div>

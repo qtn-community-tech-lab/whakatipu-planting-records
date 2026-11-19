@@ -4,7 +4,7 @@
  * npm run seed-species                         validate and preview offline
  * npm run seed-species -- --write              insert missing species only
  * npm run seed-species -- --write --backfill    also update maintained scientific names and threat flags,
- *                                             and fill empty common/Māori names, profiles and photos
+ *                                             and fill empty common/Māori names, reference text and photos
  *
  * Both this command and import-workbook use the complete data/species.json seed.
  * This command never reads planting history; use --backfill to preserve filled
@@ -23,7 +23,7 @@ async function main() {
   console.log(`${rows.length} species from data/species.json; ${verified.length} verified NZTCS flags, ${rows.length - verified.length} unresolved matches.`);
   console.log(`${verified.filter((entry) => entry.threatened).length} register entries have a verified Threatened flag. Unresolved matches have no threatened flag.`);
   if (!write) {
-    console.log("Dry run: validated offline; no database connection or writes. Use --write to insert missing species; add --backfill to update scientific names and threatened flags and fill empty common/Māori names, profiles and photos.");
+    console.log("Dry run: validated offline; no database connection or writes. Use --write to insert missing species; add --backfill to update scientific names and threatened flags and fill empty common/Māori names, reference text and photos.");
     return;
   }
 
@@ -59,7 +59,7 @@ async function main() {
   if (backfill) {
     const bySlug = new Map(existing.map((row) => [row.slug, row]));
     let changed = 0;
-    const filled = { common_name: 0, maori_name: 0, profile: 0, photos: 0 };
+    const filled = { common_name: 0, maori_name: 0, reference: 0, photos: 0 };
     for (const row of rows) {
       const current = bySlug.get(row.slug);
       if (!current) continue;
@@ -73,12 +73,12 @@ async function main() {
         .single();
       if (error) throw new Error(`backfill ${row.slug}: ${error.message}. Earlier updates may have completed; rerunning is safe.`);
       changed++;
-      if (values.summary !== undefined) filled.profile++;
+      if (values.summary !== undefined) filled.reference++;
       for (const key of ["common_name", "maori_name", "photos"] as const) {
         if (values[key] !== undefined) filled[key]++;
       }
     }
-    console.log(`Backfilled ${changed} species. Filled ${filled.common_name} common names, ${filled.maori_name} Māori names, ${filled.profile} profiles and ${filled.photos} photo sets.`);
+    console.log(`Backfilled ${changed} species. Filled ${filled.common_name} common names, ${filled.maori_name} Māori names, ${filled.reference} reference texts and ${filled.photos} photo sets.`);
     console.log("All slugs, existing common/Māori names and reference content, notes and deactivation state were preserved.");
   }
 }

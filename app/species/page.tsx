@@ -72,7 +72,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
 
   const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
   const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "deactivated"));
-  const guideCount = register.filter((r) => r.item.photos[0] && r.item.profile).length;
+  const guideCount = register.filter((r) => r.item.photos[0] && r.item.summary).length;
   const referenceGapCount = register.filter((r) => {
     const review = getSpeciesReferenceReview(r.item.id);
     return review && review.status !== "confirmed";

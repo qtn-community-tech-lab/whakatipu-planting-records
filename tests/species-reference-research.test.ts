@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { SpeciesProfile } from "@/lib/wrt/types";
 import speciesProfiles from "@/data/species-profiles.json";
 import speciesPhotos from "@/data/species-photos.json";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
@@ -10,7 +9,7 @@ interface ResearchEntry {
   rank: number;
   speciesId: string;
   scientificName: string;
-  profile: SpeciesProfile | null;
+  profile: (typeof speciesProfiles)[number] | null;
   photos: (typeof speciesPhotos)[number][];
   identityEvidence: { url: string; note: string }[];
   photoEvidence: { sourceUrl: string; viewed: boolean; visualCheck: string; author: string; license: string }[];

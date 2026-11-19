@@ -31,17 +31,19 @@ describe("database species references", () => {
     const photos = first.photos.slice().reverse();
     const sources = first.sources.slice().reverse();
     const species = await speciesFromDb({ summary: "Description from the database.", sources, photos });
-    expect(species.profile).toMatchObject({
-      scientificName: first.scientific_name, summary: "Description from the database.",
-      lookFor: first.look_for, sources, checkedAt: first.checked_at,
-    });
-    expect(species.profile).not.toHaveProperty("nameNote");
+    expect(species.summary).toBe("Description from the database.");
+    expect(species.lookFor).toBe(first.look_for);
+    expect(species.sources).toEqual(sources);
+    expect(species.checkedAt).toBe(first.checked_at);
     expect(species.photos).toEqual(photos);
   });
 
   it("keeps empty database references empty even for a catalogued species", async () => {
     const species = await speciesFromDb({ summary: null, look_for: null, sources: [], checked_at: null, photos: [] });
-    expect(species.profile).toBeNull();
+    expect(species.summary).toBeNull();
+    expect(species.lookFor).toBeNull();
+    expect(species.sources).toEqual([]);
+    expect(species.checkedAt).toBeNull();
     expect(species.photos).toEqual([]);
   });
 
@@ -52,13 +54,16 @@ describe("database species references", () => {
     expect(species.id).toBe(first.register_code);
   });
 
-  it("uses the species slug for profiles without an imported register code", async () => {
+  it("uses the species slug when there is no imported register code", async () => {
     const species = await speciesFromDb({ register_code: null });
-    expect(species.profile?.speciesId).toBe("database-species");
+    expect(species.slug).toBe("database-species");
   });
 
-  it.each(["summary", "look_for", "checked_at"] as const)("omits the profile when %s is missing", async (field) => {
-    expect((await speciesFromDb({ [field]: null })).profile).toBeNull();
+  it.each(["summary", "look_for", "checked_at"] as const)("retains other fields when %s is missing", async (field) => {
+    const species = await speciesFromDb({ [field]: null });
+    expect(species.summary).toBe(field === "summary" ? null : first.summary);
+    expect(species.lookFor).toBe(field === "look_for" ? null : first.look_for);
+    expect(species.checkedAt).toBe(field === "checked_at" ? null : first.checked_at);
   });
 
   it("uses edited canonical names and lists each Māori name once", async () => {
@@ -66,9 +71,8 @@ describe("database species references", () => {
       scientific_name: "Updated botanical name", common_name: "Updated common name", maori_name: "Preferred Māori name",
       maori_name_alternatives: ["Preferred Māori name", "Alternative Māori name"],
     });
-    expect(species.profile).toMatchObject({
-      scientificName: species.scientificName, commonName: species.commonName,
-      maoriNames: ["Preferred Māori name", "Alternative Māori name"],
-    });
+    expect(species.commonName).toBe("Updated common name");
+    expect(species.maoriName).toBe("Preferred Māori name");
+    expect(species.maoriNameAlternatives).toEqual(["Preferred Māori name", "Alternative Māori name"]);
   });
 });

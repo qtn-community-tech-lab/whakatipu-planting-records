@@ -46,18 +46,6 @@ export interface Season {
   order: number;
 }
 
-/** Display profile built from the species row's canonical names and reference fields. */
-export interface SpeciesProfile {
-  speciesId: string;
-  scientificName: string;
-  commonName: string | null;
-  maoriNames: string[];
-  summary: string;
-  lookFor: string;
-  sources: { label: string; url: string }[];
-  checkedAt: string;
-}
-
 export interface Species {
   /** Join key only. Never shown to users. */
   id: string;
@@ -71,6 +59,11 @@ export interface Species {
   commonName: string | null;
   /** Māori name with macrons applied for display, or null. */
   maoriName: string | null;
+  maoriNameAlternatives: string[];
+  summary: string | null;
+  lookFor: string | null;
+  sources: { label: string; url: string }[];
+  checkedAt: string | null;
   /** What people should see first: Māori name, then common name, then scientific. */
   displayName: string;
   /** True when displayName is the scientific name (render it in italics). */
@@ -96,7 +89,6 @@ export interface Species {
   searchKeys: string[];
   note: string | null;
   photos: readonly SpeciesPhoto[];
-  profile: SpeciesProfile | null;
   /** Deactivated from new selections; historical records still reference this species. */
   deactivatedAt: string | null;
 }

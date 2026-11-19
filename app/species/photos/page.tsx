@@ -8,7 +8,7 @@ import { SpeciesName } from "@/components/wrt/shared/names";
 import { SplitLine } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { PhotoMedia } from "@/components/wrt/species/photo-media";
-import { SpeciesProfileContent } from "@/components/wrt/species/species-profile";
+import { SpeciesReferenceContent } from "@/components/wrt/species/species-reference";
 import { SpeciesReferenceStatus } from "@/components/wrt/species/species-reference-status";
 import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
 
@@ -25,7 +25,7 @@ export default async function SpeciesPhotosPage() {
     for (const key of Object.keys(split) as (keyof typeof split)[]) split[key] += row.split[key];
   }
   const total = all.reduce((sum, row) => sum + row.split.total, 0);
-  const profileCount = rows.filter((row) => row.item.profile && getSpeciesReferenceReview(row.item.id)?.status !== "unresolved").length;
+  const profileCount = rows.filter((row) => row.item.summary && getSpeciesReferenceReview(row.item.id)?.status !== "unresolved").length;
   const unresolvedCount = rows.filter((row) => getSpeciesReferenceReview(row.item.id)?.status === "unresolved").length;
   const completePhotoCount = rows.filter((row) => row.item.photos.length >= 3).length;
   const partialPhotoCount = rows.filter((row) => {
@@ -50,7 +50,6 @@ export default async function SpeciesPhotosPage() {
       <div className="wrt-photo-grid">
         {rows.map((row, index) => {
           const photos = row.item.photos;
-          const profile = row.item.profile;
           const photo = photos[0];
           return (
             <Card key={row.item.id} id={`guide-${row.item.slug}`} className="wrt-photo-card">
@@ -60,7 +59,7 @@ export default async function SpeciesPhotosPage() {
               </div>
               <p className="wrt-photo-count"><b>{formatNumber(row.split.total)}</b> recorded plants · {row.placeCount} sites</p>
               <SpeciesMarkers species={row.item} />
-              {profile && <SpeciesProfileContent profile={profile} />}
+              {row.item.summary && <SpeciesReferenceContent species={row.item} />}
               <SpeciesReferenceStatus speciesId={row.item.id} />
               {photo ? <>
                 <PhotoMedia photo={photo} name={row.item.displayName} variant="guide" />

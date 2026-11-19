@@ -6,7 +6,7 @@ import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
 import type {
   Confidence, Parcel, Place, PlantingRecord, Precision, ReconciliationRow,
-  ReviewNoteKind, ReviewTheme, Season, SiteClass, Species, SpeciesProfile,
+  ReviewNoteKind, ReviewTheme, Season, SiteClass, Species,
 } from "@/lib/wrt/types";
 import { searchKey } from "@/lib/wrt/text";
 
@@ -86,6 +86,11 @@ async function load(db: Db): Promise<Loaded> {
       suggestedSpelling: s.suggested_spelling,
       commonName: s.common_name,
       maoriName: s.maori_name,
+      maoriNameAlternatives: s.maori_name_alternatives,
+      summary: s.summary,
+      lookFor: s.look_for,
+      sources: s.sources as Species["sources"],
+      checkedAt: s.checked_at,
       displayName,
       displayIsScientific: displayName === s.scientific_name,
       status: s.status ?? "unknown",
@@ -100,16 +105,6 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: s.summary === null || s.look_for === null || s.checked_at === null ? null : {
-        speciesId: idOf(s.slug, s.register_code),
-        scientificName: s.scientific_name,
-        commonName: s.common_name,
-        maoriNames: [...new Set([...(s.maori_name ? [s.maori_name] : []), ...s.maori_name_alternatives])],
-        summary: s.summary,
-        lookFor: s.look_for,
-        sources: s.sources as SpeciesProfile["sources"],
-        checkedAt: s.checked_at,
-      },
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));
