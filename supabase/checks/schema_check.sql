@@ -104,7 +104,7 @@ with expected (part, item, want, got) as (
 
   -- Import (run by scripts/import-historical-seed-data.ts) ------------------------------
   union all select 'import', 'sites', 41, (select count(*)::int from public.sites)
-  union all select 'import', 'areas', 75, (select count(*)::int from public.areas)
+  union all select 'import', 'areas', 74, (select count(*)::int from public.areas)
   union all select 'import', 'species with workbook register codes', 93,
     (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)

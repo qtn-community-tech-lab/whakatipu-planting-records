@@ -5,14 +5,14 @@
 | File | Contents |
 | --- | --- |
 | `sites.json` | 41 sites |
-| `site_areas.json` | 75 areas, including map pins and source links |
+| `site_areas.json` | 74 areas, including map pins and source links |
 | `species.json` | 93 species with canonical names, reference content, photos and attribution |
 | `seasons.json` | 28 seasons, Autumn 2015–Spring 2028; future workbook totals are null |
 | `plantings.json` | 358 events with nested `lines` and each line's review `notes` |
 
 Review question definitions come from [`lib/wrt/review-themes.ts`](../lib/wrt/review-themes.ts). No CSVs are read by the seed command. Legacy workbook parsing helpers remain for source analysis and tests.
 
-The app reads species content, photos, attribution and source links from Supabase after seeding. Reference and photo counts use those saved fields. Local species photos live in `public/species/{slug}.webp` and use root-relative paths in `species.json`.
+The app reads species content, photos, attribution and source links from Supabase after seeding. Reference and photo counts use those saved fields. Local species photos live in `public/species/{slug}.webp` and use root-relative paths in `species.json`. These photos credit the WRT team, link to WRT as their source, and retain WRT copyright (all rights reserved); external photos keep their existing source and licence metadata.
 
 ## Relationships and IDs
 

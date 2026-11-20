@@ -96,6 +96,24 @@ describe("nested planting seed", () => {
     expect(() => readHistorySeeds({ ...references, questions: [] })).toThrow("question: missing reference");
   });
 
+  it("places the moved Preschool event at 13B and preserves CP Station history", () => {
+    const plantings = readHistorySeeds(references);
+    const preschool = plantings.find((event) => event.area === "arrowtown-primary" && event.season === "spring-2025")!;
+    expect(preschool.lines).toHaveLength(8);
+    expect(preschool.lines.every((line) => line.legacy_code.startsWith("PH-2025S-OW"))).toBe(true);
+    expect(preschool.lines.reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(80);
+    for (const line of preschool.lines) {
+      expect(line.site_original).toBe("Arrowtown Preschool");
+      for (const note of line.notes) {
+        expect(note.text).toContain("13B — Arrowtown Preschool (area arrowtown-primary)");
+        expect(note.resolved_at).not.toBeNull();
+      }
+    }
+    const cpStation = plantings.filter((event) => event.area === "bush-creek-arrowtown-preschool");
+    expect(cpStation).toHaveLength(7);
+    expect(cpStation.flatMap((event) => event.lines).reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(520);
+  });
+
   it("rejects duplicate identities and invalid quantities", () => {
     const planting = structuredClone(dump[0]!);
     expect(() => readHistorySeeds(references, [planting, planting])).toThrow("Duplicate planting");
