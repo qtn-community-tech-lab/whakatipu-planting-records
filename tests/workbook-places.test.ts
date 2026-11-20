@@ -48,5 +48,8 @@ describe("workbook site and area seeds", () => {
     expect(new Set(numbered).size).toBe(numbered.length);
     expect(areas.find((area) => area.slug === "tucker-beach")?.wrt_number).toBe("28");
     expect(areas.find((area) => area.slug === "tucker-beach-and-shotover-river-shotover-river")?.wrt_number).toBe("28A");
+    expect(areas.find((area) => area.slug === "wharehuanui-trail")?.wrt_number).toBe("6C");
+    expect(areas.find((area) => area.slug === "lake-hayes-akarua-corner")?.wrt_number).toBe("9E");
+    expect(areas.find((area) => area.slug === "lake-hayes-north-akarua-corner")?.wrt_number).toBe("9F");
   });
 });
