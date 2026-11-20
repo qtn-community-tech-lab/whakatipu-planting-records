@@ -1,41 +1,25 @@
 import { describe, expect, it } from "vitest";
-import { expectCoherentSplit, q, repo } from "./helpers";
-import { createQueries } from "@/lib/wrt/queries";
-import { confirmedOnly } from "@/lib/wrt/review-scope";
+import { q } from "./helpers";
+import { parseRecordParams, recordsHref } from "@/components/wrt/explore/filters";
 
-const confirmed = createQueries(confirmedOnly(repo));
-
-describe("confirmed-only view", () => {
-  it("counts resolved records alone", async () => {
-    const [all, only] = await Promise.all([q.overview(), confirmed.overview()]);
-    expectCoherentSplit(only.split);
-    expect(only.split).toEqual({
-      total: all.split.resolved,
-      resolved: all.split.resolved,
-      needsReview: 0,
-      records: all.split.records - all.split.recordsNeedingReview,
-      recordsNeedingReview: 0,
-    });
-    expect(only.themes).toEqual([]);
+describe("complete planting history", () => {
+  it("ignores retired review filters in saved URLs and preserves all quantities", async () => {
+    const lookups = await q.lookups();
+    const all = await q.records();
+    expect(all.rows.some((row) => row.record.needsReview)).toBe(true);
+    for (const review of ["needs-review", "resolved"]) {
+      const view = parseRecordParams({ review, theme: "order-scheme" }, lookups);
+      expect(view.filter).toEqual({});
+      expect(recordsHref(view)).toBe("/records");
+      const result = await q.records(view.filter);
+      expect(result.rows).toEqual(all.rows);
+      expect(result.split.total).toBe(all.split.total);
+    }
   });
 
-  it("returns no record that needs review, whatever the filter asks for", async () => {
-    expect((await confirmed.records()).rows.every((v) => !v.record.needsReview)).toBe(true);
-    expect((await confirmed.records({ review: "needs-review" })).rows).toEqual([]);
-  });
-
-  it("drops sites with only records needing review and keeps the full species register", async () => {
-    const [allPlaces, places, allSpecies, species] = await Promise.all([
-      q.places(), confirmed.places(), q.speciesList(), confirmed.speciesList(),
-    ]);
-    expect(places.length).toBeLessThan(allPlaces.length);
-    expect(species.map((row) => row.item.id).sort()).toEqual(allSpecies.map((row) => row.item.id).sort());
-    expect(species.some((row) => row.span === null)).toBe(true);
-    for (const row of species) expect(row.split.needsReview).toBe(0);
-    for (const p of places) expect(p.split.needsReview).toBe(0);
-  });
-
-  it("makes no workbook comparison, since the workbook totals include what is left out", async () => {
-    expect((await confirmed.seasons()).every((s) => s.reconciliation === null)).toBe(true);
+  it("retains provenance notes on every record", async () => {
+    const result = await q.records();
+    const row = result.rows.find((view) => view.record.notes.length > 0);
+    expect(row?.record.notes[0]?.text).toBeTruthy();
   });
 });

@@ -2,12 +2,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  requireAuthenticated: vi.fn(), lookups: vi.fn(), places: vi.fn(), seasons: vi.fn(), records: vi.fn(), review: vi.fn(),
+  requireAuthenticated: vi.fn(), lookups: vi.fn(), places: vi.fn(), seasons: vi.fn(), records: vi.fn(),
 }));
 vi.mock("@/db/queries/auth", () => ({ requireAuthenticated: mocks.requireAuthenticated }));
 vi.mock("@/lib/wrt/server", () => ({
   getWrt: () => ({ lookups: mocks.lookups, places: mocks.places, seasons: mocks.seasons, records: mocks.records }),
-  reviewShown: mocks.review,
 }));
 vi.mock("next/navigation", () => ({
   usePathname: () => "/", redirect: () => { throw new Error("REDIRECT"); },
@@ -25,7 +24,6 @@ describe("staff records access", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mocks.requireAuthenticated.mockResolvedValue(undefined);
-    mocks.review.mockResolvedValue(true);
     mocks.lookups.mockResolvedValue({ places: [], species: [], seasons: [], years: [2025] });
     mocks.places.mockResolvedValue([]);
     mocks.seasons.mockResolvedValue([]);
@@ -36,7 +34,7 @@ describe("staff records access", () => {
     mocks.requireAuthenticated.mockRejectedValue(new Error("SIGN_IN"));
     await expect(RecordsPage(props())).rejects.toThrow("SIGN_IN");
     expect(mocks.requireAuthenticated).toHaveBeenCalledWith("/records");
-    for (const read of [mocks.review, mocks.lookups, mocks.places, mocks.seasons, mocks.records]) expect(read).not.toHaveBeenCalled();
+    for (const read of [mocks.lookups, mocks.places, mocks.seasons, mocks.records]) expect(read).not.toHaveBeenCalled();
   });
 
   it("preserves filters, sort and page in the sign-in return destination", async () => {

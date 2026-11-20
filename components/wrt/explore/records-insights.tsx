@@ -1,23 +1,22 @@
-import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * The explore view above the records list: what these records add up to, in
  * pictures you can click through. Every item narrows the current filter (the
  * URL changes, so any view can be shared); a small arrow opens the full page.
  */
+import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import type { ReactNode } from "react";
 import type { Lookups, RecordView, SeasonPoint } from "@/lib/wrt/queries";
-import type { QuantitySplit, ReviewTheme } from "@/lib/wrt/types";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
-import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
+import { addToSplit, byTotalDesc, emptySplit } from "@/lib/wrt/queries";
+import type { QuantitySplit } from "@/lib/wrt/types";
+import { spanLabel, formatNumber } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
 import { SplitBar, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { partHref } from "@/components/wrt/sites/site-rows";
-import { addToSplit, emptySplit, byTotalDesc } from "@/lib/wrt/queries";
 import { type RecordsView, recordsHref } from "./filters";
 
 const TOP = 8;
@@ -34,7 +33,6 @@ interface Item {
   /** The item's own page. */
   page?: AppRoute;
 }
-
 
 function group<T>(rows: RecordView[], keyOf: (v: RecordView) => string, init: (v: RecordView) => T) {
   const m = new Map<string, { meta: T; split: QuantitySplit }>();
@@ -65,7 +63,6 @@ function RankedList({ items, total, unit }: { items: Item[]; total: number; unit
               <span className="rx-item__bar"><SplitBar split={it.split} max={max} size="sm" /></span>
               <span className="rx-item__num">
                 <b className="tabular-nums">{formatNumber(it.split.total)}</b>
-                {it.split.needsReview > 0 && <span className="tabular-nums">{formatNumber(it.split.needsReview)} review</span>}
               </span>
             </Link>
             {it.page && (
@@ -162,24 +159,6 @@ export function RecordsInsights({
       }))
     : [];
 
-  // ---- open questions in these records
-  const themes = new Map<ReviewTheme, QuantitySplit>();
-  if (!f.theme) {
-    for (const v of rows) {
-      if (!v.record.needsReview) continue;
-      const seen = new Set<ReviewTheme>();
-      for (const n of v.record.notes) {
-        if (n.kind === "fyi" || seen.has(n.theme)) continue;
-        seen.add(n.theme);
-        const t = themes.get(n.theme) ?? emptySplit();
-        addToSplit(t, v.record);
-        themes.set(n.theme, t);
-      }
-    }
-  }
-  const themeRows = [...themes.entries()].sort((a, b) => b[1].needsReview - a[1].needsReview);
-  const themeMax = Math.max(1, ...themeRows.map(([, s]) => s.needsReview));
-
   // ---- timeline rows: sites, else parts, else species
   const tlBy: "site" | "part" | "species" = showSites && sites.length > 1 ? "site" : showParts ? "part" : "species";
   const tlUseful = !singleSeason && activePoints.length > 1 && (tlBy !== "species" || trees.length > 1);
@@ -204,11 +183,6 @@ export function RecordsInsights({
                 {activePoints.length} <span className="rx-fact__of">of {seasons.length}</span>
               </b>
               <span>{first && last ? spanLabel({ first, last }) : ""}</span>
-            </div>
-            <div className="rx-fact rx-fact--review">
-              <span className="rx-fact__k">Needs review</span>
-              <b className="tabular-nums rx-fact__amber">{formatShare(rows.reduce((n, v) => n + (v.record.needsReview ? v.record.quantity : 0), 0), rows.reduce((n, v) => n + v.record.quantity, 0))}</b>
-              <span>of recorded plants here</span>
             </div>
           </div>
           <SeasonColumns
@@ -266,29 +240,6 @@ export function RecordsInsights({
               })
             }
           />
-        </Panel>
-      )}
-
-      {themeRows.length > 0 && (
-        <Panel
-          title="Open questions in these records"
-          action={<Link className="rx-panel__link" href={recordsHref(view, { review: "needs-review" })}>Only records needing review →</Link>}
-          className="rx-panel--wide"
-        >
-          <ul className="rx-qs">
-            {themeRows.map(([theme, s]) => (
-              <li key={theme}>
-                <Link href={recordsHref(view, { review: "needs-review", theme })} className="rx-q">
-                  <span className="rx-q__title">{REVIEW_THEMES[theme].label}</span>
-                  <span className="rx-q__text">{REVIEW_THEMES[theme].question}</span>
-                  <span className="rx-q__bar"><i style={{ width: `${Math.max(3, (s.needsReview / themeMax) * 100)}%` }} /></span>
-                  <span className="rx-q__n tabular-nums">
-                    {formatNumber(s.needsReview)} plants · {formatNumber(s.recordsNeedingReview)} record{s.recordsNeedingReview === 1 ? "" : "s"}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </Panel>
       )}
     </div>

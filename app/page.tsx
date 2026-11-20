@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { getWrt } from "@/lib/wrt/server";
 import Link from "next/link";
 import { Card, CardLink, EmptyState, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
 import { OverviewHero } from "@/components/wrt/overview/overview-hero";
 import { RankLabel, SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
-import { OpenQuestions } from "@/components/wrt/overview/open-questions";
 import { SpeciesName, hrefs } from "@/components/wrt/shared/names";
 import { ClassBreakdown, PrecisionBreakdown } from "@/components/wrt/overview/breakdowns";
 import { StartHere, type StartQuestion } from "@/components/wrt/overview/start-here";
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const wrt = getWrt();
-  const [o, showReview] = await Promise.all([wrt.overview(), reviewShown()]);
+  const o = await wrt.overview();
 
   if (!o.firstSeason || !o.lastSeason) return (
     <EmptyState title="No planting history yet">
@@ -97,16 +96,6 @@ export default async function Home() {
         </div>
       </Card>
 
-      {showReview && (
-        <Card
-          title="Open questions for WRT"
-          action={<CardLink href="/about-the-data">About the data</CardLink>}
-          foot="Each question can be answered once and then applies to every record it touches."
-        >
-          <OpenQuestions themes={o.themes} />
-        </Card>
-      )}
-
       <div className="wrt-grid wrt-grid--2">
         <Card
           title="Sites with the most recorded plants"
@@ -156,8 +145,6 @@ export default async function Home() {
           <PrecisionBreakdown rows={o.byPrecision} />
         </Card>
       </div>
-
-
     </>
   );
 }

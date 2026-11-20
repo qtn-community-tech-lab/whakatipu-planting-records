@@ -1,10 +1,10 @@
 import type { AppRoute } from "@/lib/wrt/routes";
+import { hrefs } from "@/lib/wrt/routes";
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
+import { getWrt } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
 import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
@@ -12,7 +12,12 @@ import { RecordsTable } from "@/components/wrt/shared/records";
 import { partHref } from "@/components/wrt/sites/site-rows";
 import { RecordsInsights } from "@/components/wrt/explore/records-insights";
 import {
-  PAGE_SIZE, PARAM_KEYS, type RecordsView, hasFilters, parseRecordParams, recordsHref,
+  PAGE_SIZE,
+  PARAM_KEYS,
+  type RecordsView,
+  hasFilters,
+  parseRecordParams,
+  recordsHref,
 } from "@/components/wrt/explore/filters";
 import { RecordsFilter } from "@/components/wrt/explore/records-filter";
 import { ActiveFilters } from "@/components/wrt/explore/active-filters";
@@ -21,7 +26,6 @@ import { SortLinks } from "@/components/wrt/explore/sort-links";
 import { recordsHeadline } from "@/components/wrt/explore/records-headline";
 import type { RecordView } from "@/lib/wrt/queries";
 import { requireAuthenticated } from "@/db/queries/auth";
-import { hrefs } from "@/lib/wrt/routes";
 
 type Props = Readonly<PageProps<"/records">>;
 
@@ -61,8 +65,8 @@ export default async function RecordsPage({ searchParams }: Props) {
   }
 
   const wrt = getWrt();
-  const [lookups, places, allSeasons, showReview] = await Promise.all([
-    wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown(),
+  const [lookups, places, allSeasons] = await Promise.all([
+    wrt.lookups(), wrt.places(), wrt.seasons(),
   ]);
   const parsed = parseRecordParams(raw, lookups);
   const result = await wrt.records(parsed.filter);
@@ -89,7 +93,6 @@ export default async function RecordsPage({ searchParams }: Props) {
   if (filter.place) hide.push("site");
   if (filter.species) hide.push("species");
   if (filter.year && filter.season) hide.push("season");
-
 
   // Pages that tell the bigger story behind this filter.
   const contextLinks: { href: AppRoute; kind: string; label: string }[] = [];
@@ -144,12 +147,6 @@ export default async function RecordsPage({ searchParams }: Props) {
         </p>
       )}
 
-      {filter.theme && (
-        <p className="cn-callout cn-callout--note cn-callout--sm m-0">
-          <span><b>{REVIEW_THEMES[filter.theme].label}.</b> {REVIEW_THEMES[filter.theme].question}</span>
-        </p>
-      )}
-
       <section className="rx-bar" aria-label="Filters">
         <div className="rx-bar__chips">
           {filtered ? (
@@ -158,26 +155,11 @@ export default async function RecordsPage({ searchParams }: Props) {
             <span className="rx-bar__none">All {formatNumber(total)} records<span className="rx-bar__hint"> · select anything below to narrow them</span></span>
           )}
         </div>
-        {showReview && <nav className="rx-bar__review" aria-label="Review status">
-          {([
-            ["all", "All", undefined],
-            ["needs-review", "Needs review", "needs-review"],
-            ["resolved", "Resolved", "resolved"],
-          ] as const).map(([key, label, value]) => (
-            <Link
-              key={key}
-              href={recordsHref(view, { review: value, ...(value !== "needs-review" ? { theme: undefined } : {}) })}
-              className="rx-bar__opt"
-              aria-current={(filter.review ?? "all") === key ? "true" : undefined}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>}
+
         <details className="rx-bar__more">
           <summary>{filtered ? "Change filters" : "Filter"}</summary>
           <div className="rx-bar__form">
-            <RecordsFilter view={view} lookups={lookups} places={places} showReview={showReview} />
+            <RecordsFilter view={view} lookups={lookups} places={places} />
             <p className="wrt-rule m-0">Every filter is in the page address, so any view can be copied and shared.</p>
           </div>
         </details>
@@ -185,9 +167,7 @@ export default async function RecordsPage({ searchParams }: Props) {
 
       {total === 0 ? (
         <EmptyState title="No records match these filters">
-          {!showReview && (filter.theme || filter.review === "needs-review")
-            ? "Records needing review are switched off. Turn on “Needs review” in the top bar to see them."
-            : filtered
+          {filtered
             ? "Try removing one of the filters above, or clear them all. Names are matched without macrons, so “manuka” finds Mānuka."
             : "There are no records to show."}
         </EmptyState>
@@ -207,7 +187,7 @@ export default async function RecordsPage({ searchParams }: Props) {
             <RecordsTable
               rows={pageRows}
               hide={hide}
-              focusTheme={filter.theme}
+
               caption={`Records ${from} to ${to} of ${total}, sorted by ${view.sort}`}
             />
             <div className="px-2.5">

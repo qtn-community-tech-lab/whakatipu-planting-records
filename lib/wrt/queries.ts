@@ -6,8 +6,18 @@
  */
 import type { WrtRepository } from "./repository";
 import type {
-  Confidence, Parcel, Place, PlantingRecord, Precision, QuantitySplit, ReconciliationRow,
-  ReviewTheme, Season, SeasonName, SiteClass, Species,
+  Confidence,
+  Parcel,
+  Place,
+  PlantingRecord,
+  Precision,
+  QuantitySplit,
+  ReconciliationRow,
+  ReviewTheme,
+  Season,
+  SeasonName,
+  SiteClass,
+  Species,
 } from "./types";
 import { matchScore, searchKey } from "./text";
 
@@ -194,8 +204,6 @@ export interface SeasonDetail {
   records: RecordView[];
 }
 
-export type ReviewFilter = "all" | "needs-review" | "resolved";
-
 export interface RecordFilter {
   place?: string;
   /** Exact parcel ID, always scoped to the selected place. */
@@ -203,8 +211,6 @@ export interface RecordFilter {
   species?: string;
   year?: number;
   season?: SeasonName;
-  review?: ReviewFilter;
-  theme?: ReviewTheme;
   /** Free text: matched against species, place and parcel names (macrons ignored). */
   q?: string;
 }
@@ -485,10 +491,6 @@ export function createQueries(repo: WrtRepository) {
         .filter((r) => !filter.species || r.speciesId === species?.id)
         .filter((r) => !filter.year || r.year === filter.year)
         .filter((r) => !filter.season || r.seasonName === filter.season)
-        .filter((r) =>
-          filter.review === "needs-review" ? r.needsReview : filter.review === "resolved" ? !r.needsReview : true,
-        )
-        .filter((r) => !filter.theme || (r.needsReview && r.notes.some((n) => n.kind !== "fyi" && n.theme === filter.theme)))
         .map(c.view)
         .filter((v) => !q || matchesText(v, q));
       return { filter, split: splitOf(rows.map((v) => v.record)), rows };

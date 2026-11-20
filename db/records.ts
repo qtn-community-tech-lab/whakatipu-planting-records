@@ -1,8 +1,8 @@
 /**
  * Supabase rows in the shapes used by the pages and components.
  */
+import type { Ranked, RecordView, SeasonDetail, SeasonSummary, ThemeSummary } from "@/lib/wrt/queries";
 import { byTotalDesc, emptySplit, addToSplit, splitOf } from "@/lib/wrt/queries";
-import type { RecordView, Ranked, SeasonDetail, SeasonSummary, ThemeSummary } from "@/lib/wrt/queries";
 import type { Confidence, Place, Precision, ReviewNoteKind, ReviewTheme, Season, SiteClass, Species } from "@/lib/wrt/types";
 import type { listSeasonPlantingLines, listSeasons } from "./queries/plantings";
 
@@ -13,17 +13,15 @@ function toSeason(slug: string, label: string, year: number, order: number): Sea
   return { slug, label, year, order, name: slug.startsWith("autumn") ? "Autumn" : "Spring" };
 }
 
-/** One season's totals row as a season summary. With the review switch off, totals are confirmed plants only. */
-export function toSeasonSummary(r: SeasonRow, showReview: boolean): SeasonSummary {
+/** One season's totals row as a season summary. Includes all recorded plants. */
+export function toSeasonSummary(r: SeasonRow): SeasonSummary {
   const plants = r.plants ?? 0;
   const confirmed = r.plants_confirmed ?? 0;
   const lines = r.lines ?? 0;
   const linesReview = r.lines_needs_review ?? 0;
   return {
     season: toSeason(r.season!, r.season_label!, r.year!, r.season_order!),
-    split: showReview
-      ? { total: plants, resolved: confirmed, needsReview: r.plants_needs_review ?? 0, records: lines, recordsNeedingReview: linesReview }
-      : { total: confirmed, resolved: confirmed, needsReview: 0, records: lines - linesReview, recordsNeedingReview: 0 },
+    split: { total: plants, resolved: confirmed, needsReview: r.plants_needs_review ?? 0, records: lines, recordsNeedingReview: linesReview },
     placeCount: r.sites ?? 0,
     speciesCount: r.species ?? 0,
     reconciliation: r.workbook_total === null ? null : {
@@ -98,17 +96,15 @@ function themesOf(views: RecordView[]): ThemeSummary[] {
 
 /**
  * One season's page from its totals and lines. Seasons are those with lines, in order.
- * With the review switch off, lines still waiting on WRT are left out.
  */
-export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], showReview: boolean, speciesBySlug: ReadonlyMap<string, Pick<Species, "photos">> = new Map()): SeasonDetail | null {
+export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: LineRow[], speciesBySlug: ReadonlyMap<string, Pick<Species, "photos">> = new Map()): SeasonDetail | null {
   const at = seasons.findIndex((s) => s.season.slug === slug);
   if (at < 0) return null;
   const summary = seasons[at];
   if (!summary) return null;
   // Workbook order (line ids follow it), for consistent ranking when totals tie.
   const views = [...lines].sort((a, b) => a.line_id! - b.line_id!)
-    .map((row) => toRecordView(row, speciesBySlug.get(row.species!)))
-    .filter((v) => showReview || !v.record.needsReview);
+    .map((row) => toRecordView(row, speciesBySlug.get(row.species!)));
   return {
     season: summary.season,
     previous: seasons[at - 1]?.season ?? null,

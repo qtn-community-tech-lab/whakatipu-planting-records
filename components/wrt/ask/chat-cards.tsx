@@ -17,7 +17,6 @@ import { PhotoMedia } from "@/components/wrt/species/photo-media";
 import { SeasonRow } from "@/components/wrt/seasons/season-parts";
 import { SiteRows, partHref, type SiteRowData } from "@/components/wrt/sites/site-rows";
 import type { ChatMessage } from "@/lib/wrt/chat-tools";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
@@ -214,7 +213,7 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
       {here && (
         <p className="wrt-chat__plant-here">
           <strong>{here.split.total ? `${formatNumber(here.split.total)} recorded` : "None recorded"}</strong> at {here.label}
-          {here.split.needsReview > 0 && <span className="wrt-scard__review"> · {formatNumber(here.split.needsReview)} need review</span>}
+
           {here.first && ` · ${here.first === here.last ? here.first : `${here.first} → ${here.last}`}`}
         </p>
       )}
@@ -232,7 +231,6 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
           <dt>Recorded</dt>
           <dd className="tabular-nums">
             {formatNumber(o.split.total)}
-            {o.split.needsReview * 2 > o.split.total && <span className="wrt-scard__unsure">mostly unconfirmed</span>}
           </dd>
         </div>
         <div><dt>Sites</dt><dd>{o.places.length}</dd></div>
@@ -351,7 +349,7 @@ function RecordsCard({ o }: { o: Out<"records"> }) {
       {o.groups.length > 1 && (
         <div className="wrt-pills wrt-chat__seasons">
           {o.groups.map((g) => (
-            <span key={g.slug} className="cn-chip" title={g.split.needsReview ? `${formatNumber(g.split.needsReview)} need review` : undefined}>
+            <span key={g.slug} className="cn-chip">
               {g.name} <b className="tabular-nums">{formatNumber(g.split.total)}</b>
             </span>
           ))}
@@ -386,12 +384,8 @@ function ListCard({ o }: { o: Out<"list"> }) {
 
 function QualityCard({ o }: { o: Out<"data_quality"> }) {
   return (
-    <Card title="Waiting on a WRT ruling" foot="Reasons overlap, so they don't add up to the total.">
+    <Card title="Planting history">
       <QuantityFigure split={o.split} size="md" />
-      <RankedBars items={o.themes.map((t) => ({
-        key: t.theme, label: REVIEW_THEMES[t.theme].label, split: t.split,
-        href: hrefs.records({ review: "needs-review", theme: t.theme }),
-      }))} />
     </Card>
   );
 }

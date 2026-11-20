@@ -7,7 +7,6 @@ const { readDb, authenticated } = vi.hoisted(() => ({ readDb: vi.fn(), authentic
 vi.mock("@/db/client", () => ({ db: readDb }));
 vi.mock("@/db/queries/auth", () => ({ isAuthenticated: authenticated }));
 vi.mock("@/lib/wrt/server", () => ({
-  reviewShown: async () => true,
   getWrt: () => { throw new Error("Season photos must not load the full repository"); },
 }));
 

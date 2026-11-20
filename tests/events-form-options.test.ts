@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 vi.mock("server-only", () => ({}));
 const mocks = vi.hoisted(() => ({ lookups: vi.fn(), species: vi.fn(), sites: vi.fn() }));
 vi.mock("@/lib/wrt/server", () => ({
-  getWrtAll: () => ({ lookups: mocks.lookups }),
+  getWrt: () => ({ lookups: mocks.lookups }),
 }));
 vi.mock("@/db/queries/species", () => ({ listSpeciesForPlanting: mocks.species }));
 

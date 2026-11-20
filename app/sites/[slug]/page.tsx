@@ -8,14 +8,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { notFound, redirect } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
-import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
+import { speciesBySite, splitOf } from "@/lib/wrt/queries";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, CardLink, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { ChipLinks } from "@/components/wrt/sites/filter-chips";
 import { YearView } from "@/components/wrt/sites/year-view";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
@@ -28,8 +27,6 @@ import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
-
-const REVIEW_CAP = 25;
 
 export async function generateStaticParams() {
   const places = await getWrt().places();
@@ -108,10 +105,6 @@ export default async function SitePage({ params, searchParams }: Props) {
   const flagged = d.records.filter((r) => r.record.notes.some((n) => n.theme === "slope-hill-2024"));
   const flaggedSplit = splitOf(flagged.map((r) => r.record));
   const flaggedSeasons = [...new Set(flagged.map((r) => r.season.label))];
-
-  const needsReview = needsReviewByPlants(d.records);
-  const reviewRows = needsReview.slice(0, REVIEW_CAP);
-  const reviewHidden = needsReview.length - reviewRows.length;
 
   const activeSeasons = d.seasons.filter((s) => s.split.records > 0).length;
 
@@ -249,34 +242,6 @@ export default async function SitePage({ params, searchParams }: Props) {
               };
             })}
           />
-        </Card>
-      )}
-
-      <Card
-        title="Open questions for WRT"
-        foot={d.themes.length ? "Each question applies to every record under it. Answer it once and these figures settle." : undefined}
-      >
-        <ReviewThemeList themes={d.themes} recordsQuery={{ place: place.slug }} />
-      </Card>
-
-      {needsReview.length > 0 && (
-        <Card
-          variant="table"
-          title="Records that need review here"
-          action={
-            reviewHidden > 0 ? (
-              <CardLink href={recordsFor({ review: "needs-review" })}>
-                All {formatNumber(needsReview.length)} records needing review
-              </CardLink>
-            ) : undefined
-          }
-          foot={
-            reviewHidden > 0
-              ? `Showing the ${reviewRows.length} largest of ${formatNumber(needsReview.length)} records needing review; ${formatNumber(reviewHidden)} more in the full list.`
-              : undefined
-          }
-        >
-          <RecordsTable rows={reviewRows} hide={["site"]} caption={`Records needing review at ${place.name}`} />
         </Card>
       )}
 

@@ -1,6 +1,6 @@
 /**
  * "What went in during <year>" for one site: the species recorded that year,
- * with the resolved / needs-review split kept on every row.
+ * with recorded totals on every row.
  */
 import Link from "next/link";
 import type { RecordView } from "@/lib/wrt/queries";
@@ -44,24 +44,17 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
           {autumn.records > 0 && (
             <span>
               <Link href={q({ season: "Autumn" })} className="cn-link">Autumn {year}</Link>: {formatNumber(autumn.total)}
-              {autumn.needsReview > 0 && <span className="wrt-review text-[var(--cn-behind-fg)]"> ({formatNumber(autumn.needsReview)} need review)</span>}
             </span>
           )}
           {spring.records > 0 && (
             <span>
               <Link href={q({ season: "Spring" })} className="cn-link">Spring {year}</Link>: {formatNumber(spring.total)}
-              {spring.needsReview > 0 && <span className="text-[var(--cn-behind-fg)]"> ({formatNumber(spring.needsReview)} need review)</span>}
             </span>
           )}
         </p>
         <SpeciesTiles records={recs} spread="seasons" hrefFor={(sp) => q({ species: sp.slug })} cap={12} />
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <CardLink href={q()}>All {formatNumber(total.records)} records for {year}</CardLink>
-          {total.recordsNeedingReview > 0 && (
-            <CardLink href={q({ review: "needs-review" })}>
-              {formatNumber(total.recordsNeedingReview)} record{total.recordsNeedingReview === 1 ? "" : "s"} needing review
-            </CardLink>
-          )}
         </div>
       </div>
     </Card>
