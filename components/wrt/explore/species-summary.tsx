@@ -8,7 +8,7 @@ import { SpeciesName } from "@/components/wrt/shared/names";
 /**
  * "By species": the direct answer to "What did we plant at Whitechapel in 2019?".
  * One row per species, optionally broken down by the supplied seasons, then
- * the total with its needs-review part beside it. An empty season list gives
+ * the recorded total. An empty season list gives
  * compact totals across all matching seasons for a sublocation.
  */
 export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons: Season[] }) {
@@ -46,7 +46,7 @@ export function SpeciesSummary({ rows, seasons }: { rows: RecordView[]; seasons:
         </thead>
         <tbody>
           {list.map((r) => (
-            <tr key={r.species.id} className={r.total.needsReview ? "is-review" : undefined}>
+            <tr key={r.species.id}>
               <td><SpeciesName species={r.species} link /></td>
               {seasons.map((s) => {
                 const c = r.bySeason.get(s.slug);

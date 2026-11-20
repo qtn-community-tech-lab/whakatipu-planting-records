@@ -31,19 +31,19 @@ beforeEach(() => { read.mockReset(); read.mockResolvedValue(structuredClone(summ
 
 describe("layout presentation from aggregate data", () => {
   it("loads only the named summary query and preserves counts, range and growth rings", async () => {
-    const result = await readLayoutData(true);
-    expect(read).toHaveBeenCalledExactlyOnceWith(true);
+    const result = await readLayoutData();
+    expect(read).toHaveBeenCalledExactlyOnceWith();
     expect(result.counts).toEqual({ sites: "41", species: "93", seasons: "2", records: "5,444" });
     expect(result.range).toBe("Autumn 2025 → Spring 2025");
     expect(result.rings).toEqual([
-      { slug: "autumn-2025", label: "Autumn 2025", autumn: true, total: 12, needsReview: 2 },
-      { slug: "spring-2025", label: "Spring 2025", autumn: false, total: 0, needsReview: 0 },
+      { slug: "autumn-2025", label: "Autumn 2025", autumn: true, total: 12 },
+      { slug: "spring-2025", label: "Spring 2025", autumn: false, total: 0 },
     ]);
     expect(result.index.seasons).toHaveLength(2); // Unknown/zero quantities still have records.
   });
 
   it("preserves historical aliases and macron-tolerant search without profile content", async () => {
-    const { index } = await readLayoutData(true);
+    const { index } = await readLayoutData();
     expect(index.places[0]?.keys).toEqual(["reserve", "east kowhai", "old reserve"]);
     expect(matchScore("old reserve", index.places[0]!.keys)).toBe(100);
     expect(matchScore("old kowhai spelling", index.species[0]!.keys)).toBe(100);
@@ -52,15 +52,15 @@ describe("layout presentation from aggregate data", () => {
     expect(index.species[1]?.keys).toContain("suggested spelling");
   });
 
-  it("passes review scope to the database and keeps zero-valued historical seasons in the rings", async () => {
+  it("keeps zero-valued historical seasons in the rings", async () => {
     const scoped = structuredClone(summary);
     scoped.records = 1;
     scoped.places = [];
     scoped.seasons[0] = { ...scoped.seasons[0]!, total: 10, needsReview: 0, records: 1 };
     scoped.seasons[1] = { ...scoped.seasons[1]!, records: 0 };
     read.mockResolvedValue(scoped);
-    const result = await readLayoutData(false);
-    expect(read).toHaveBeenCalledExactlyOnceWith(false);
+    const result = await readLayoutData();
+    expect(read).toHaveBeenCalledExactlyOnceWith();
     expect(result.counts.records).toBe("1");
     expect(result.rings).toHaveLength(2);
     expect(result.index.seasons.map((season) => season.slug)).toEqual(["autumn-2025"]);
@@ -69,16 +69,16 @@ describe("layout presentation from aggregate data", () => {
 
   it("recovers from empty history on the next read, retaining unplanted reference species", async () => {
     read.mockResolvedValueOnce({ ...summary, records: 0, seasons: [], places: [] });
-    const empty = await readLayoutData(true);
+    const empty = await readLayoutData();
     expect(empty.range).toBe("No planting history yet");
     expect(empty.counts.records).toBe("0");
     expect(empty.rings).toEqual([]);
     expect(empty.index.species).toHaveLength(2);
-    expect((await readLayoutData(true)).counts.records).toBe("5,444");
+    expect((await readLayoutData()).counts.records).toBe("5,444");
   });
 
   it("propagates read failures instead of presenting empty or stale history", async () => {
     read.mockRejectedValue(new Error("Database unavailable"));
-    await expect(readLayoutData(true)).rejects.toThrow("Database unavailable");
+    await expect(readLayoutData()).rejects.toThrow("Database unavailable");
   });
 });

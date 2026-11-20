@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { getWrtAll } from "@/lib/wrt/server";
+import { getWrt } from "@/lib/wrt/server";
 import { eventReturn } from "@/lib/wrt/routes";
 import { readPlantingEvent } from "@/db/queries/plantings";
 import { notFound } from "next/navigation";
@@ -47,7 +47,7 @@ export async function PlantingPage({ searchParams, recording }: Props & { record
   ]);
   const writableSites = options.sites;
   if (!recording) {
-    const { places } = await getWrtAll().lookups();
+    const { places } = await getWrt().lookups();
     options.sites = places.map((p) => ({ slug: p.slug, name: p.name, keys: p.searchKeys, parts: p.parcels.map((a) => ({ id: a.id, name: a.name, keys: [a.name] })) }));
   }
   if (typeof raw.returnTo === "string" && target.label === "Return to site") {

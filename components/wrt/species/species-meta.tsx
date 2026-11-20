@@ -27,10 +27,9 @@ export function InlineName({ species }: { species: Species }): ReactNode {
 
 /** Quiet markers. Each says the consequence, not a code. */
 export function SpeciesMarkers({ species }: { species: Species }) {
-  if (!species.needsDecision && !species.over5m && !threatenedState(species)) return null;
+  if (!species.over5m && !threatenedState(species)) return null;
   return (
     <span className="wrt-pills">
-      {species.needsDecision && <Badge tone="review">Name needs a ruling</Badge>}
       {species.over5m === true && <Badge tone="soft">Over 5 m</Badge>}
       <ThreatenedBadge species={species} />
     </span>
@@ -49,6 +48,5 @@ export const SHOWS = [
   { key: "all", label: "All species" },
   { key: "over5m", label: "Over 5 m" },
   { key: "threatened", label: "Marked threatened" },
-  { key: "contested", label: "Name needs a ruling" },
 ] as const;
 export type ShowKey = (typeof SHOWS)[number]["key"];

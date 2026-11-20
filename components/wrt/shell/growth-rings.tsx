@@ -1,7 +1,7 @@
 "use client";
 import type { CSSProperties } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { formatNumber } from "@/lib/wrt/text";
 
 export interface RingSeason {
@@ -9,7 +9,6 @@ export interface RingSeason {
   label: string;
   autumn: boolean;
   total: number;
-  needsReview: number;
 }
 
 const SIZE = 200;
@@ -22,8 +21,7 @@ const MIN_W = 1.6;
 /**
  * Every season as a tree ring: Autumn 2015 at the pith, the latest season at
  * the bark. Ring width grows with recorded plants (square-root scale so one
- * huge season cannot swallow the rest). Each ring keeps the split: the green
- * arc is resolved, the amber arc is plants on records WRT still has to rule on.
+ * huge season cannot swallow the rest).
  */
 export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
   const router = useRouter();
@@ -41,9 +39,8 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
       const inner = PITH + GAP + widths.slice(0, i).reduce((a, b) => a + b + GAP, 0);
       const mid = inner + w / 2;
       const circ = 2 * Math.PI * mid;
-      const share = s.total > 0 ? (s.total - s.needsReview) / s.total : 1;
       const style: CSSProperties & { "--i": number } = { "--i": i };
-      return { ...s, i, w, mid, circ, resolvedLen: circ * share, style };
+      return { ...s, i, w, mid, circ, style };
     });
   }, [seasons]);
 
@@ -74,14 +71,12 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
               data-on={focus === r.i || undefined}
               style={r.style}
             >
-              <circle className="wrt-rings__review" cx={C} cy={C} r={r.mid} strokeWidth={r.w} />
               <circle
                 className="wrt-rings__resolved"
                 cx={C}
                 cy={C}
                 r={r.mid}
                 strokeWidth={r.w}
-                strokeDasharray={`${r.resolvedLen} ${r.circ}`}
                 transform={`rotate(-90 ${C} ${C})`}
               />
               <circle
@@ -103,12 +98,6 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
             <b>{shown.label}</b>
             <span>
               {shown.total === 0 ? "Nothing recorded" : `${formatNumber(shown.total)} recorded`}
-              {shown.needsReview > 0 && (
-                <>
-                  {" · "}
-                  <span className="wrt-rings__amber">{formatNumber(shown.needsReview)} need review</span>
-                </>
-              )}
             </span>
           </>
         ) : (

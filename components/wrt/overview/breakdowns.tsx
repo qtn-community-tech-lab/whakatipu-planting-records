@@ -1,6 +1,6 @@
 /**
  * Two small "how is this made up" lists for the home page: plants by site
- * class and by record precision. Both keep the resolved / needs-review split.
+ * class and by record precision. Both show recorded totals.
  */
 import type { Ranked } from "@/lib/wrt/queries";
 import type { Precision, SiteClass } from "@/lib/wrt/types";

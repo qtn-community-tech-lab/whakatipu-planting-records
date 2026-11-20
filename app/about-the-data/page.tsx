@@ -1,24 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPublicWrtAll } from "@/lib/wrt/public-server";
-import { reviewShown } from "@/lib/wrt/server";
-import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
-import { QuantityFigure } from "@/components/wrt/shared/quantity";
-import { ReviewThemeList } from "@/components/wrt/shared/records";
+import { Card, PageHead, Rule } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
 import { ConfidenceList, PrecisionList } from "@/components/wrt/about/precision";
 import { SeasonReconciliationTable } from "@/components/wrt/about/reconciliation";
 import { ThreatenedLink, ThreatenedQuestions, ThreatenedTable } from "@/components/wrt/about/threatened";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
+import { formatNumber } from "@/lib/wrt/text";
 
 export const metadata: Metadata = {
   title: "About the data",
-  description: "How to read every number in the WRT planting history: what a recorded plant is, what is still open, and how the totals check out.",
+  description: "How to read every number in the WRT planting history: what a recorded plant is, where the history comes from, and how the totals check out.",
 };
 
 const SECTIONS = [
   { id: "recorded", label: "Recorded, not verified" },
-  { id: "rulings", label: "Open for a ruling" },
   { id: "threatened", label: "Threatened marks" },
   { id: "precision", label: "How precise" },
   { id: "totals", label: "Checked against WRT’s totals" },
@@ -27,17 +23,14 @@ const SECTIONS = [
 ];
 
 export default async function AboutTheData() {
-  // This page explains the whole history, so it always counts every record, whatever the review switch says.
+  // Explain totals and provenance for the complete history.
   const wrt = getPublicWrtAll();
-  const [dq, counts, showReview] = await Promise.all([wrt.dataQuality(), wrt.counts(), reviewShown()]);
+  const [dq, counts] = await Promise.all([wrt.dataQuality(), wrt.counts()]);
   const { split } = dq;
 
   const seasonRows = dq.reconciliation.filter((r) => r.kind === "season");
   const seasonsMatching = seasonRows.filter((r) => r.difference === 0).length;
   const seasonsMatchAll = seasonRows.length > 0 && seasonsMatching === seasonRows.length;
-
-  const themeSum = dq.themes.reduce((a, t) => a + t.split.needsReview, 0);
-  const themeRecordSum = dq.themes.reduce((a, t) => a + t.split.recordsNeedingReview, 0);
 
   const areaRows = dq.byPrecision.find((r) => r.item === "area");
   const marked = dq.threatened;
@@ -57,22 +50,11 @@ export default async function AboutTheData() {
         lead={
           <>
             Every number in this app comes from the same {formatNumber(split.records)} records. This page says what a
-            record is, what is still open, how precise the history can be, and how the totals check against WRT’s own
+            record is, how precise the history can be, and how the totals check against WRT’s own
             workbook.
           </>
         }
       />
-
-      {!showReview && (
-        <p className="cn-callout cn-callout--note cn-callout--sm m-0" role="note">
-          <span>
-            <b>This page counts every record.</b> The rest of the app is showing confirmed records only:{" "}
-            {formatNumber(split.resolved)} recorded plants on {formatNumber(split.records - split.recordsNeedingReview)} records.
-            Turn on “Needs review” in the top bar to see the other {formatNumber(split.needsReview)} everywhere, and to
-            follow the links below to them.
-          </span>
-        </p>
-      )}
 
       <nav aria-label="On this page" className="flex flex-wrap gap-2">
         {SECTIONS.map((s) => (
@@ -93,50 +75,6 @@ export default async function AboutTheData() {
           <p>
             Read a total as the best written record of what went to a site, not as a count of what is growing there
             today. Survival and losses are not in the history, and neither are the dates plants went in.
-          </p>
-          <p>
-            Where a figure is still open for a WRT ruling, this app keeps it visible beside the total rather than
-            folding it in or leaving it out. The bars use green for plants on records that need no ruling and amber for
-            those that do.
-          </p>
-        </div>
-      </Card>
-
-      <Card
-        id="rulings"
-        title="What still needs a WRT ruling"
-      >
-        <div className="wrt-grid wrt-grid--main-rail">
-          <div className="flex flex-col gap-4">
-            <QuantityFigure split={split} size="md" unit="recorded plants in all" />
-            <div className="wrt-prose">
-              <p className="!m-0">
-                <strong>
-                  {formatNumber(split.recordsNeedingReview)} records ({formatShare(split.recordsNeedingReview, split.records)}) carry{" "}
-                  {formatNumber(split.needsReview)} recorded plants ({formatShare(split.needsReview, split.total)})
-                </strong>{" "}
-                that WRT has to rule on or confirm once. Until then the plants stay in the totals, flagged, and are
-                never removed or guessed at.
-              </p>
-            </div>
-          </div>
-          <div className="wrt-prose">
-            <p>
-              A <em>ruling</em> is a decision only WRT can make, such as whether two names are one species. A{" "}
-              <em>confirmation</em> is a quick check that a site was matched to the right column. Notes that only say how
-              a site was mapped (<em>mapping notes</em>) do not flag a record.
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-5">
-          <h3 className="wrt-section-title pb-1">Open questions, by theme</h3>
-          <ReviewThemeList themes={dq.themes} />
-          <p className="wrt-rule mt-3 mb-0">
-            A record can sit under more than one theme, so the theme figures overlap: they add to{" "}
-            {formatNumber(themeSum)} recorded plants across {formatNumber(themeRecordSum)} theme entries, against{" "}
-            {formatNumber(split.needsReview)} plants on {formatNumber(split.recordsNeedingReview)} records overall. Each
-            theme links to its records.
           </p>
         </div>
       </Card>
@@ -177,7 +115,7 @@ export default async function AboutTheData() {
       <Card
         id="precision"
         title="How precise the records are"
-        foot="Bars are drawn to the same scale within each list. Amber is the part still needing review."
+        foot="Bars are drawn to the same scale within each list."
       >
         <div className="wrt-prose pb-4">
           <p className="!m-0">
@@ -271,15 +209,7 @@ export default async function AboutTheData() {
             <strong>It has no maps.</strong> The history holds no coordinates or boundaries, so a map would have to
             invent them.
           </li>
-          <li>
-            <strong>The numbers will change.</strong> When WRT rules on the open questions above, flagged plants move
-            into the resolved totals, are merged or are set aside, and the figures here will be re-checked against the
-            workbook.
-          </li>
         </ul>
-        <div className="pt-4">
-          <CardLink href="/records?review=needs-review">See every record needing review</CardLink>
-        </div>
       </Card>
 
       <Rule>

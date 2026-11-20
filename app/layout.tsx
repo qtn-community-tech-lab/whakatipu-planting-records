@@ -3,7 +3,6 @@ import type { Metadata, Viewport } from "next";
 import { ViewTransition } from "react";
 import Link from "next/link";
 import "./globals.css";
-import { reviewShown } from "@/lib/wrt/server";
 import { readLayoutData } from "@/lib/wrt/layout-data";
 import { SidebarNav, SidebarFootNav, Crumb } from "@/components/wrt/shell/sidebar-nav";
 import { MobileNav } from "@/components/wrt/shell/mobile-nav";
@@ -11,7 +10,6 @@ import { GlobalSearch } from "@/components/wrt/shell/global-search";
 import { GrowthRings } from "@/components/wrt/shell/growth-rings";
 import { BrandMark } from "@/components/wrt/shell/nav-icons";
 import { Contours } from "@/components/wrt/shell/contours";
-import { ReviewSwitch } from "@/components/wrt/shell/review-switch";
 import { AuthControl } from "@/components/wrt/shell/auth-control";
 import { AuthErrorRedirect } from "@/components/wrt/shell/auth-error-redirect";
 import { ConnectionStatus } from "@/components/wrt/shell/connection-status";
@@ -29,10 +27,10 @@ export const viewport: Viewport = {
 };
 
 export default async function RootLayout({ children }: Readonly<LayoutProps<"/">>) {
-  const [showReview, authenticated] = await Promise.all([reviewShown(), isAuthenticated()]);
-  const { counts, rings, range, index } = await readLayoutData(showReview);
+  const authenticated = await isAuthenticated();
+  const { counts, rings, range, index } = await readLayoutData();
   return (
-    <html lang="en-NZ" data-review={showReview ? "shown" : "hidden"}>
+    <html lang="en-NZ">
       <body className="cn-app">
         <AuthErrorRedirect />
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 cn-btn cn-btn--primary cn-btn--sm">
@@ -69,7 +67,7 @@ export default async function RootLayout({ children }: Readonly<LayoutProps<"/">
             <header className="wrt-topbar">
               <Crumb />
               <GlobalSearch index={index} />
-              <ReviewSwitch shown={showReview} />
+
               <div className="wrt-topbar__auth"><AuthControl authenticated={authenticated} /></div>
               <span className="cn-topbar__date !ml-0 hidden xl:inline-flex whitespace-nowrap" title="Seasons covered by the records">
                 {range}

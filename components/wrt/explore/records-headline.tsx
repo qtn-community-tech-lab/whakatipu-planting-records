@@ -27,10 +27,7 @@ export function recordsHeadline(
   else if (f.year) when = String(f.year);
   else if (f.season) when = `${f.season.toLowerCase()} seasons`;
 
-  const review =
-    f.theme || f.review === "needs-review" ? "on records needing review" : f.review === "resolved" ? "on resolved records" : null;
-
-  const none = !place && !species && !when && !review && !f.q;
+  const none = !place && !species && !when && !f.q;
 
   return (
     <>
@@ -39,7 +36,6 @@ export function recordsHeadline(
       {speciesText && <> of {speciesText}</>}
       {place && <> at {parcel ? <>{parcel.name} ({place.name})</> : place.name}</>}
       {when && <> in {when}</>}
-      {review && <> {review}</>}
       {f.q && <> matching “{f.q}”</>}
       {none && lookups.seasons[0] && <> since {lookups.seasons[0].label}</>}
     </>

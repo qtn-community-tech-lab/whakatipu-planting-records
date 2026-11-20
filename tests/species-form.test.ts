@@ -43,7 +43,7 @@ describe("species form", () => {
     }));
     const controls = html.match(/<(?:input|textarea)\b[^>]*>/g) ?? [];
     for (const { field, limit } of [
-      ...textCases,
+      ...textCases.filter(({ field }) => field !== "contested_group"),
       { field: "photos.0.src", limit: INPUT_LIMITS.url },
       { field: "photos.0.attribution", limit: INPUT_LIMITS.shortText },
     ]) {

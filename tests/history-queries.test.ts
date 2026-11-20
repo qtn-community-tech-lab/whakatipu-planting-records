@@ -15,10 +15,6 @@ const references = {
 };
 const split = { total: 17, resolved: 12, needsReview: 5, records: 2, recordsNeedingReview: 1 };
 const totals = { ...split, sites: 1, species: 1, seasons: 1, firstSeason: 0, lastSeason: 0 };
-const record = { line_id: 10, legacy_code: "PH-TEST", season: "autumn-2025", season_label: "Autumn 2025", season_order: 0,
-  year: 2025, site: "reserve", site_name: "Reserve", area: "east", area_name: "East", class: "community",
-  species: "kowhai", scientific_name: "Sophora microphylla", maori_name: "Kōwhai", common_name: null,
-  register_code: "SP-TEST", quantity: 5, needs_review: true, notes: [], contested_group: null };
 
 const requests: { path: string; body: Record<string, unknown>; cache: RequestCache | undefined }[] = [];
 let empty = false;
@@ -35,7 +31,6 @@ beforeEach(() => {
     if (fail) return new Response(JSON.stringify({ code: "42501", message: "Permission denied" }), { status: 403 });
     let result: unknown;
     if (path.endsWith("/read_history_references")) result = empty ? { seasons: [], sites: [], areas: [], species: [] } : references;
-    else if (path.endsWith("/read_public_review_rows")) result = empty ? [] : [record];
     else if (path.endsWith("/read_planting_summary")) {
       const dimensions = body.group_by as string[];
       result = empty ? { totals: { total: 0, resolved: 0, needsReview: 0, records: 0, recordsNeedingReview: 0,
@@ -57,28 +52,27 @@ afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 
 describe("targeted history query boundaries", () => {
   it("gets public register summaries and exact counts without downloading records", async () => {
-    const result = await createPublicHistoryQueries(() => false).speciesList("names");
+    const result = await createPublicHistoryQueries().speciesList("names");
     expect(result[0]?.split).toEqual(split);
     expect(result[0]?.item).toMatchObject({ slug: "kowhai", displayName: "Kōwhai" });
     expect(result[0]?.span?.first.label).toBe("Autumn 2025");
     expect(requests.find((request) => request.path.endsWith("/read_planting_summary"))?.body).toEqual({
-      group_by: ["species"], filters: {}, show_review: false,
+      group_by: ["species"], filters: {}, show_review: true,
     });
     expect(requests.every((request) => request.path.includes("/rpc/") && request.cache === "no-store")).toBe(true);
   });
 
-  it("bounds public review rows in PostgreSQL and preserves historical parcel identities", async () => {
-    const detail = await createPublicHistoryQueries(() => true).place("reserve", { parcel: "9A" });
-    expect(detail?.records).toHaveLength(1);
-    expect(detail?.records[0]?.record).toMatchObject({ id: "PH-TEST", parcelId: "9A", quantity: 5 });
-    expect(detail?.records[0]?.species.photos).toEqual(species.photos);
-    expect(requests.find((request) => request.path.endsWith("/read_public_review_rows"))?.body).toEqual({
-      filters: { site: "reserve", area: "east" }, show_review: true, row_limit: 25,
-    });
+  it("preserves historical parcel quantities without loading retired review rows", async () => {
+    const detail = await createPublicHistoryQueries().place("reserve", { parcel: "9A" });
+    expect(detail?.split).toEqual(split);
+    expect(detail?.parcels[0]?.item).toMatchObject({ id: "9A", slug: "east" });
+    expect(detail?.cells[0]?.split).toEqual(split);
+    expect(detail?.records).toEqual([]);
+    expect(requests.some((request) => request.path.endsWith("/read_public_review_rows"))).toBe(false);
   });
 
   it("shares identical aggregate and reference reads within a request", async () => {
-    const queries = createPublicHistoryQueries(() => true);
+    const queries = createPublicHistoryQueries();
     await Promise.all([queries.speciesList("names"), queries.speciesList("names")]);
     expect(requests.filter((request) => request.path.endsWith("/read_planting_summary"))).toHaveLength(1);
     expect(requests.filter((request) => request.path.endsWith("/read_history_references"))).toHaveLength(1);
@@ -89,33 +83,31 @@ describe("targeted history query boundaries", () => {
     const originalName = area.name;
     area.name = "Renamed east bank";
     try {
-      const detail = await createPublicHistoryQueries(() => true).place("reserve", { part: "east" });
+      const detail = await createPublicHistoryQueries().place("reserve", { part: "east" });
       expect(detail?.parcels[0]?.item).toMatchObject({ slug: "east", id: "9A", name: area.name });
       expect(detail?.split).toEqual(split);
-      expect(detail?.records[0]?.record).toMatchObject({ parcelId: "9A", quantity: 5 });
-      expect(requests.find((request) => request.path.endsWith("/read_public_review_rows"))?.body).toEqual({
-        filters: { site: "reserve", area: "east" }, show_review: true, row_limit: 25,
-      });
+      expect(detail?.cells[0]?.split).toEqual(split);
+      expect(requests.some((request) => request.path.endsWith("/read_public_review_rows"))).toBe(false);
     } finally {
       area.name = originalName;
     }
   });
 
   it("searches compact public summaries using historical aliases and macrons", async () => {
-    const result = await createPublicHistoryQueries(() => true).search("old kowhai spelling");
+    const result = await createPublicHistoryQueries().search("old kowhai spelling");
     expect(result.species[0]?.item.slug).toBe("kowhai");
     expect(requests.some((request) => request.path.endsWith("/read_public_review_rows"))).toBe(false);
   });
 
   it("recovers on the next request after an empty database is populated", async () => {
     empty = true;
-    expect((await createPublicHistoryQueries(() => true).overview()).split.records).toBe(0);
+    expect((await createPublicHistoryQueries().overview()).split.records).toBe(0);
     empty = false;
-    expect((await createPublicHistoryQueries(() => true).overview()).split).toEqual(split);
+    expect((await createPublicHistoryQueries().overview()).split).toEqual(split);
   });
 
   it("does not hide failed reads behind empty summaries", async () => {
     fail = true;
-    await expect(createPublicHistoryQueries(() => true).speciesList("names")).rejects.toMatchObject({ code: "42501" });
+    await expect(createPublicHistoryQueries().speciesList("names")).rejects.toMatchObject({ code: "42501" });
   });
 });

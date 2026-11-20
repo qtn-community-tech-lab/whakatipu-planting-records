@@ -2,12 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-  requireAuthenticated: vi.fn(), context: vi.fn(), summary: vi.fn(), page: vi.fn(), review: vi.fn(),
+  requireAuthenticated: vi.fn(), context: vi.fn(), summary: vi.fn(), page: vi.fn(),
 }));
 vi.mock("@/db/queries/auth", () => ({ requireAuthenticated: mocks.requireAuthenticated }));
-vi.mock("@/lib/wrt/server", () => ({
-  reviewShown: mocks.review,
-}));
 vi.mock("@/db/queries/records", () => ({ createRecordsQueries: () => ({ context: mocks.context, summary: mocks.summary, page: mocks.page }) }));
 vi.mock("next/navigation", () => ({
   usePathname: () => "/", redirect: () => { throw new Error("REDIRECT"); },
@@ -25,7 +22,6 @@ describe("staff records access", () => {
   beforeEach(() => {
     vi.resetAllMocks();
     mocks.requireAuthenticated.mockResolvedValue(undefined);
-    mocks.review.mockResolvedValue(true);
     mocks.context.mockResolvedValue({ lookups: { places: [], species: [], seasons: [], years: [2025] }, places: [] });
     mocks.summary.mockResolvedValue({ split: emptySplit(), siteCount: 0, speciesCount: 0,
       seasons: [], sites: [], species: [], themes: [], cells: [], rowsBy: "species" });
@@ -36,7 +32,7 @@ describe("staff records access", () => {
     mocks.requireAuthenticated.mockRejectedValue(new Error("SIGN_IN"));
     await expect(RecordsPage(props())).rejects.toThrow("SIGN_IN");
     expect(mocks.requireAuthenticated).toHaveBeenCalledWith("/records");
-    for (const read of [mocks.review, mocks.context, mocks.summary, mocks.page]) expect(read).not.toHaveBeenCalled();
+    for (const read of [mocks.context, mocks.summary, mocks.page]) expect(read).not.toHaveBeenCalled();
   });
 
   it("preserves filters, sort and page in the sign-in return destination", async () => {

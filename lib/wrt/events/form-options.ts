@@ -9,7 +9,7 @@ import "server-only";
 import { listSites } from "@/db/queries/sites";
 import { wholeSiteAreaSlug } from "../areas/whole-site";
 import { listSpeciesForPlanting } from "@/db/queries/species";
-import { getWrtAll } from "../server";
+import { getWrt } from "../server";
 import { searchKey } from "../text";
 
 /** Macron-free search keys, matched with rankMatches in the browser. */
@@ -49,7 +49,7 @@ export interface EventFormOptions {
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {
   const [{ places }, species, sites] = await Promise.all([
-    getWrtAll().lookups(),
+    getWrt().lookups(),
     listSpeciesForPlanting(),
     listSites(),
   ]);

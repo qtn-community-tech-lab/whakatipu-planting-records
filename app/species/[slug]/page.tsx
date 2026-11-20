@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { SpeciesReferencePanel } from "@/components/wrt/species/species-reference";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,21 +7,19 @@ import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
 import { RankedBars, SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { PlaceName, hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Empty, EmptyHeader, EmptyTitle, EmptyDescription } from "@/components/ui/empty";
 import { isAuthenticated } from "@/db/queries/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { InlineName, midSentence } from "@/components/wrt/species/species-meta";
+import { midSentence } from "@/components/wrt/species/species-meta";
 
 import { SpeciesHero } from "@/components/wrt/species/species-hero";
 
 type Props = Readonly<PageProps<"/species/[slug]">>;
 
 const PLACES_SHOWN = 15;
-const REVIEW_ROWS_SHOWN = 8;
 
 export async function generateStaticParams() {
   const list = await getPublicWrt().speciesList("names");
@@ -44,14 +41,12 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const { slug } = await params;
   const [d, authenticated] = await Promise.all([getPublicWrt().species(slug), isAuthenticated()]);
   if (!d) notFound();
-  const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
+  const { species: sp, split, span, seasons, years, places } = d;
 
   const photos = sp.photos;
   const otherNames = [sp.maoriName, sp.commonName]
     .filter((n): n is string => !!n && n !== sp.displayName);
   const aliases = [...new Set(sp.aliases)].filter(Boolean);
-  const reviewRows = records.filter((r) => r.record.needsReview);
-  const reviewSorted = needsReviewByPlants(reviewRows).slice(0, REVIEW_ROWS_SHOWN);
   const siteCount = places.length;
   const ranked = [...(await getPublicWrt().speciesList("names"))].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
@@ -88,28 +83,6 @@ export default async function SpeciesDetailPage({ params }: Props) {
         photos={photos}
         otherNames={otherNames}
       />
-
-      {contested.length > 0 && (
-        <div className="cn-callout cn-callout--note !items-start">
-          <div className="flex flex-col gap-1.5">
-            <strong>This name is contested</strong>
-            <span className="[font:500_14px/1.45_var(--font-sans)]">
-              WRT has not yet ruled whether{" "}
-              <b><InlineName species={sp} /></b> and{" "}
-              {contested.map((c, i) => {
-                const name = c.displayIsScientific ? <i>{c.scientificName}</i> : <>{c.displayName} (<i>{c.scientificName}</i>)</>;
-                return (
-                  <span key={c.slug}>
-                    {i > 0 && (i === contested.length - 1 ? " and " : ", ")}
-                    <Link href={hrefs.species(c.slug)} className="underline underline-offset-2">{name}</Link>
-                  </span>
-                );
-              })}{" "}
-              are one species line or two. Each is kept as typed until WRT rules, and the numbers are not merged.
-            </span>
-          </div>
-        </div>
-      )}
 
       <SpeciesReferencePanel species={sp} />
 
@@ -160,25 +133,6 @@ export default async function SpeciesDetailPage({ params }: Props) {
           </div>
         </Card>
       </div>
-
-      <Card title="What WRT still has to decide here">
-        <ReviewThemeList themes={themes} recordsQuery={{ species: sp.slug }} />
-      </Card>
-
-      {reviewRows.length > 0 && (
-        <Card
-          title={`${formatNumber(split.recordsNeedingReview)} record${split.recordsNeedingReview === 1 ? "" : "s"} needing review`}
-          variant="table"
-          action={<CardLink href={hrefs.records({ species: sp.slug, review: "needs-review" })}>See all needing review</CardLink>}
-          foot={
-            split.recordsNeedingReview > REVIEW_ROWS_SHOWN
-              ? `The ${REVIEW_ROWS_SHOWN} largest of ${formatNumber(split.recordsNeedingReview)}. Open Source on any row for the spreadsheet cell.`
-              : "Open Source on any row for the spreadsheet cell it came from."
-          }
-        >
-          <RecordsTable rows={reviewSorted} hide={["species"]} caption={`Records needing review for ${sp.displayName}`} />
-        </Card>
-      )}
 
       <Rule>
         <Link href={hrefs.records({ species: sp.slug })} className="cn-link">

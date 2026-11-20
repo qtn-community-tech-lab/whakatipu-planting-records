@@ -1,10 +1,10 @@
-import type { AppRoute } from "@/lib/wrt/routes";
-import type { CSSProperties } from "react";
 /**
  * What went in, and when: rows (species, or parts of a site) against seasons.
  * Each dot is sized by recorded plants in that season; amber means some or
  * all of it still needs a WRT ruling. Every dot links to its records.
  */
+import type { AppRoute } from "@/lib/wrt/routes";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import type { HistoryCell } from "@/lib/wrt/presentation";
@@ -108,15 +108,13 @@ export function PlantingTimeline({
         const c = r.bySeason.get(s.slug);
         if (!c || c.records === 0) return <div key={s.slug} className="wrt-tl__cell" role="cell" data-autumn={s.name === "Autumn" || undefined} />;
         const d = Math.round(8 + 20 * Math.sqrt(c.total / max));
-        const review = c.needsReview === 0 ? undefined : c.needsReview === c.total ? "all" : "some";
-        const label = `${r.name}, ${s.label}: ${formatNumber(c.total)} recorded${c.needsReview ? `, ${formatNumber(c.needsReview)} need review` : ""}`;
+        const label = `${r.name}, ${s.label}: ${formatNumber(c.total)} recorded`;
         return (
           <div key={s.slug} className="wrt-tl__cell" role="cell" data-autumn={s.name === "Autumn" || undefined}>
             <Link
               href={hrefFor(r, s)}
               className="wrt-tl__dot"
               data-season={s.name === "Autumn" ? "autumn" : "spring"}
-              data-review={review}
               style={{ width: d, height: d }}
               title={label}
               aria-label={label}
@@ -126,7 +124,6 @@ export function PlantingTimeline({
       })}
       <div className="wrt-tl__total" role="cell">
         <b className="tabular-nums">{formatNumber(r.total.total)}</b>
-        {r.total.needsReview > 0 && <span className="tabular-nums">{formatNumber(r.total.needsReview)} review</span>}
       </div>
     </div>
   );
@@ -168,8 +165,6 @@ export function PlantingTimeline({
       <p className="wrt-tl__key">
         <span><i className="wrt-tl__k" data-season="autumn" /> Autumn</span>
         <span><i className="wrt-tl__k" data-season="spring" /> Spring</span>
-        <span><i className="wrt-tl__k" data-review="some" /> Some need review</span>
-        <span><i className="wrt-tl__k" data-review="all" /> All need review</span>
         <span>Bigger dot, more plants. Select a dot for its records.</span>
       </p>
     </div>

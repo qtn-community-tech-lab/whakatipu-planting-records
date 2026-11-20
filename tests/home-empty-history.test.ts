@@ -6,7 +6,7 @@ import { repo } from "./helpers";
 import { records } from "./fixtures/planting";
 
 const mocks = vi.hoisted(() => ({ queries: null as WrtQueries | null }));
-vi.mock("@/lib/wrt/server", () => ({ getWrt: () => mocks.queries, reviewShown: async () => true }));
+vi.mock("@/lib/wrt/server", () => ({ getWrt: () => mocks.queries }));
 vi.mock("@/lib/wrt/public-server", () => ({ getPublicWrt: () => mocks.queries }));
 
 import Home from "@/app/page";

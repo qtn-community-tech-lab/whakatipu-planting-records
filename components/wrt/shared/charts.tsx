@@ -1,9 +1,5 @@
 import type { AppRoute } from "@/lib/wrt/routes";
 import type { CSSProperties, ReactNode } from "react";
-/**
- * Charts, drawn with Canopy bars only (no chart library).
- * Every chart keeps the resolved / needs-review split visible.
- */
 import Link from "next/link";
 import type { QuantitySplit } from "@/lib/wrt/types";
 import type { SeasonPoint, YearRow } from "@/lib/wrt/queries";
@@ -15,12 +11,11 @@ import { cn } from "@/lib/utils";
 function seasonTitle(p: SeasonPoint) {
   const s = p.split;
   if (!s.records) return `${p.season.label}: no records`;
-  return `${p.season.label}: ${formatNumber(s.total)} recorded plants` +
-    (s.needsReview ? ` (${formatNumber(s.needsReview)} needing review)` : "");
+  return `${p.season.label}: ${formatNumber(s.total)} recorded plants`;
 }
 
 /**
- * One column per season, stacked resolved + needs review. Autumn and spring
+ * One column per season. Autumn and spring
  * alternate in two greens so the two seasons in a year read apart.
  * Columns link to the season page unless `link` is false.
  */
@@ -39,10 +34,9 @@ export function SeasonColumns({
     <figure className="m-0">
       <div className={cn("wrt-cols", size === "sm" && "wrt-cols--sm")} role="list" aria-label={caption ?? "Recorded plants by season"}>
         {points.map((p, i) => {
-          const r = (p.split.resolved / max) * 100;
-          const n = (p.split.needsReview / max) * 100;
+          const r = (p.split.total / max) * 100;
           const stackStyle: CSSProperties & { "--i": number } = {
-            height: p.split.total ? `${Math.max(1.5, r + n)}%` : undefined,
+            height: p.split.total ? `${Math.max(1.5, r)}%` : undefined,
             "--i": i,
           };
           const body = (
@@ -53,10 +47,9 @@ export function SeasonColumns({
               {r > 0 && (
                 <span
                   className={cn("wrt-col__seg", p.season.name === "Spring" && "wrt-col__seg--spring")}
-                  style={{ flex: `${p.split.resolved} 0 0` }}
+                  style={{ flex: `${p.split.total} 0 0` }}
                 />
               )}
-              {n > 0 && <span className="wrt-col__seg wrt-col__seg--review" style={{ flex: `${p.split.needsReview} 0 0` }} />}
             </div>
           );
           const cls = cn("wrt-col", !p.split.records && "wrt-col--empty");
@@ -111,9 +104,6 @@ export function RankedBars({ items, max, aligned = false }: { items: RankedItem[
             <SplitBar split={it.split} max={m} size="sm" />
             <span className="wrt-ranked__value">
               {formatNumber(it.split.total)}
-              {it.split.needsReview > 0 && (
-                <span className="wrt-ranked__sub">{formatNumber(it.split.needsReview)} need review</span>
-              )}
             </span>
           </>
         );
@@ -131,7 +121,7 @@ export function RankedBars({ items, max, aligned = false }: { items: RankedItem[
   );
 }
 
-/** Year table: Autumn | Spring | Year | Running total. Needs-review shown under each figure. */
+/** Year table: Autumn | Spring | Year | Running total. */
 export function YearTable({ years, seasonHref }: { years: YearRow[]; seasonHref?: (year: number, season: "autumn" | "spring") => AppRoute }) {
   const cell = (s: QuantitySplit, href?: AppRoute) =>
     s.records === 0 ? (
@@ -139,9 +129,6 @@ export function YearTable({ years, seasonHref }: { years: YearRow[]; seasonHref?
     ) : (
       <span className="inline-flex flex-col items-end gap-1">
         {href ? <Link href={href}>{formatNumber(s.total)}</Link> : <span>{formatNumber(s.total)}</span>}
-        {s.needsReview > 0 && (
-          <span className="[font:600_11px/1_var(--font-sans)] text-[var(--cn-behind-fg)]">{formatNumber(s.needsReview)} review</span>
-        )}
       </span>
     );
   return (

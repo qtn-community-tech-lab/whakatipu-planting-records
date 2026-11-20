@@ -187,7 +187,7 @@ describe("records()", () => {
   });
 
   it("the split always describes exactly the rows returned", async () => {
-    for (const f of [{ place: "whitechapel" }, { year: 2024 }, { review: "needs-review" as const }, { q: "manuka" }]) {
+    for (const f of [{ place: "whitechapel" }, { year: 2024 }, { q: "manuka" }]) {
       const r = await q.records(f);
       expect(r.split).toEqual(splitOf(r.rows.map((v) => v.record)));
     }
@@ -198,27 +198,11 @@ describe("records()", () => {
     const place = await ids({ place: "whitechapel" });
     const year = await ids({ year: 2019 });
     const season = await ids({ season: "Spring" });
-    const review = await ids({ review: "needs-review" });
     const both = await ids({ place: "whitechapel", year: 2019 });
     expect(both).toEqual(new Set([...place].filter((x) => year.has(x))));
     const three = await ids({ place: "whitechapel", year: 2019, season: "Spring" });
     expect(three).toEqual(new Set([...both].filter((x) => season.has(x))));
-    const four = await ids({ place: "whitechapel", year: 2019, season: "Spring", review: "needs-review" });
-    expect(four).toEqual(new Set([...three].filter((x) => review.has(x))));
-    expect(four.size).toBeLessThanOrEqual(three.size);
     expect(three.size).toBeLessThanOrEqual(both.size);
-  });
-
-  it("resolved and needs-review partition the whole", async () => {
-    const all = await q.records();
-    const a = await q.records({ review: "needs-review" });
-    const b = await q.records({ review: "resolved" });
-    expect(a.split.records + b.split.records).toBe(all.split.records);
-    expect(a.split.total + b.split.total).toBe(all.split.total);
-    expect(a.split.records).toBeGreaterThan(0);
-    expect(a.split.total).toBeGreaterThan(0);
-    expect(a.split.resolved).toBe(0);
-    expect(b.split.needsReview).toBe(0);
   });
 
   it("autumn and spring partition a year", async () => {
@@ -241,12 +225,6 @@ describe("records()", () => {
     expect(r.split.total).toBe(0);
   });
 
-  it("filters by review theme to flagged records only", async () => {
-    const r = await q.records({ theme: "order-scheme" });
-    expect(r.split.total).toBeGreaterThan(0);
-    expect(r.rows.every((v) => v.record.needsReview)).toBe(true);
-  });
-
   it("free text matches species, place and parcel names, ignoring macrons", async () => {
     const a = await q.records({ q: "manuka" });
     const b = await q.records({ q: "Mānuka" });
@@ -262,7 +240,7 @@ describe("records()", () => {
   });
 
   it("the 'TBC' record carries no quantity but is still a record needing review", async () => {
-    const all = await q.records({ review: "needs-review" });
+    const all = await q.records();
     const tbc = all.rows.filter((v) => !v.record.hasQuantity);
     expect(tbc).toHaveLength(1);
     expect(defined(tbc[0]).record.quantity).toBe(0);
@@ -345,7 +323,7 @@ describe("chat golden questions", () => {
   });
 
   it("keeps informational notes out of the review queue", async () => {
-    const result = await q.records({ place: "slope-hill", year: 2024, review: "resolved" });
+    const result = await q.records({ place: "slope-hill", year: 2024 });
     expect(result.split.total).toBe(60);
     expect(result.rows.some((v) => v.record.notes.some((n) => n.kind === "fyi"))).toBe(true);
     expect(result.rows.every((v) => !v.record.needsReview)).toBe(true);

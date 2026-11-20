@@ -1,5 +1,4 @@
 import type { Lookups } from "@/lib/wrt/queries";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import Link from "next/link";
 import { type ParamKey, type RecordsView, recordsHref } from "./filters";
 
@@ -15,8 +14,6 @@ export function ActiveFilters({ view, lookups }: { view: RecordsView; lookups: L
   if (species) chips.push({ key: "species", kind: "species", label: species.displayName });
   if (f.year) chips.push({ key: "year", kind: "year", label: String(f.year) });
   if (f.season) chips.push({ key: "season", kind: "season", label: f.season });
-  if (f.review) chips.push({ key: "review", kind: "review status", label: f.review === "needs-review" ? "Needs review" : "Resolved" });
-  if (f.theme) chips.push({ key: "theme", kind: "review question", label: REVIEW_THEMES[f.theme].label });
   if (f.q) chips.push({ key: "q", kind: "search", label: `“${f.q}”` });
   if (!chips.length) return null;
   return (

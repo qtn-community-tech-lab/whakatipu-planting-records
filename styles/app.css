@@ -86,20 +86,6 @@
 .wrt-notice__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 720px) { .wrt-notice { flex-wrap: wrap; } .wrt-notice__text { flex-basis: calc(100% - 34px); } .wrt-notice__link { margin-left: 34px; } }
 
-/* Review switch: off shows confirmed records only (lib/wrt/review-scope.ts). */
-.wrt-switch { display: inline-flex; flex: none; }
-.wrt-switch__btn {
-  display: inline-flex; align-items: center; gap: 8px; padding: 4px 0; border: 0; background: none; cursor: pointer;
-  color: var(--text-body); font: 700 12.5px/1 var(--font-sans); white-space: nowrap;
-}
-.wrt-switch__btn:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 3px; border-radius: var(--radius-pill); }
-.wrt-switch__track { flex: none; width: 30px; height: 18px; padding: 2px; border-radius: var(--radius-pill); background: var(--border-card); transition: background .15s; box-sizing: border-box; }
-.wrt-switch__track i { display: block; width: 14px; height: 14px; border-radius: 50%; background: var(--cn-white); transition: transform .15s; }
-.wrt-switch__btn[aria-checked="true"] .wrt-switch__track { background: var(--cn-behind-bar); }
-.wrt-switch__btn[aria-checked="true"] .wrt-switch__track i { transform: translateX(12px); }
-/* With review records left out, every figure is all resolved: drop the labels that would only say so. */
-[data-review="hidden"] :is(.wrt-split-line:not(.wrt-split-line--none), .wrt-key--review, .wrt-scard2__clear, .rx-fact--review) { display: none; }
-
 /* ---------------------------------------------------------------- grids */
 .wrt-grid { display: grid; gap: var(--layout-grid-gap); }
 .wrt-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -115,11 +101,8 @@
 .wrt-figure__value--md { font: var(--type-stat-md); letter-spacing: var(--tracking-snug); }
 .wrt-figure__unit { font: 600 16px/1.2 var(--font-sans); color: var(--text-body); }
 .wrt-split-line { font: 600 13px/1.4 var(--font-sans); color: var(--text-body); }
-.wrt-split-line .wrt-review { color: var(--cn-behind-fg); }
 .wrt-key { display: inline-flex; align-items: center; gap: 6px; font: 600 12px/1 var(--font-sans); color: var(--text-muted); }
 .wrt-key i { width: 10px; height: 10px; border-radius: var(--radius-pill); display: inline-block; background: var(--action-primary); }
-.wrt-key i.is-review { background: var(--cn-behind-bar); }
-.cn-bar__fill--review { background: var(--cn-behind-bar); }
 
 /* ---------------------------------------------------------------- season column chart */
 .wrt-cols { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; align-items: end; height: 180px; }
@@ -127,12 +110,11 @@
 .wrt-col { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; border-radius: 6px; text-decoration: none; }
 .wrt-col__stack { display: flex; flex-direction: column-reverse; gap: 2px; min-height: 2px; }
 .wrt-col__seg { border-radius: 4px; background: var(--action-primary); min-height: 0; }
-.wrt-col__seg--review { background: var(--cn-behind-bar); }
 .wrt-col__seg--spring { background: var(--cn-green-600); }
 .wrt-col--empty .wrt-col__stack { background: var(--surface-tint); border-radius: 4px; height: 2px; }
 a.wrt-col:hover .wrt-col__seg, a.wrt-col:focus-visible .wrt-col__seg { filter: brightness(1.15); }
 a.wrt-col:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
-.wrt-col[aria-current="true"] .wrt-col__seg:not(.wrt-col__seg--review) { background: var(--cn-green-900); }
+.wrt-col[aria-current="true"] .wrt-col__seg { background: var(--cn-green-900); }
 .wrt-cols__axis { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; margin-top: 8px; font: 600 11px/1 var(--font-sans); color: var(--text-muted); }
 .wrt-cols__axis span { text-align: center; white-space: nowrap; overflow: visible; }
 
@@ -168,7 +150,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-table td { padding: 11px 10px; border-top: 1px solid var(--border-row); vertical-align: top; line-height: 1.3; }
 .wrt-table .cn-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .wrt-table tfoot td { font-weight: 800; border-top: 1px solid var(--border-card); }
-.wrt-table tr.is-review td:first-child { box-shadow: inset 3px 0 0 var(--cn-behind-bar); }
 .wrt-table a { color: var(--text-strong); }
 .wrt-table a:hover { color: var(--text-brand); text-decoration: underline; text-underline-offset: 2px; }
 
@@ -189,13 +170,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .cn-app a.cn-btn--secondary, .cn-app a.cn-btn--soft, .cn-app a.cn-chip { color: var(--text-strong); }
 .cn-app a.cn-chip[aria-pressed="true"] { color: var(--cn-white); }
 .cn-species__latin.is-plain { font-style: normal; }
-
-/* ---------------------------------------------------------------- review theme rows */
-.wrt-theme-row { grid-template-columns: minmax(0, 1fr) auto; }
-@media (max-width: 640px) {
-  .wrt-theme-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .wrt-theme-row .cn-badge { justify-self: start; }
-}
 
 /* ---------------------------------------------------------------- misc */
 .wrt-muted { font: var(--type-small); color: var(--text-muted); }
@@ -286,7 +260,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-location-marker:hover, .wrt-location-marker[aria-pressed="true"] { background: var(--cn-green-900); }
 .wrt-location-marker--group { min-width: 72px; height: 48px; gap: 3px; border-radius: var(--radius-field); }
 .wrt-location-marker__places { font: var(--type-label); font-weight: var(--weight-medium); }
-.wrt-location-marker__review { position: absolute; width: 10px; height: 10px; border-radius: var(--radius-pill); background: var(--cn-behind-bar); right: -1px; top: -1px; border: 1px solid var(--surface-card); }
 .wrt-location-marker:focus-visible { outline: 3px solid var(--border-focus); outline-offset: 3px; }
 @media (pointer: coarse) { .wrt-location-marker { min-width: 60px; min-height: 44px; } }
 /* Popover on the selected marker: the count and where to go next. Sources and coordinates sit under the map. */
@@ -298,7 +271,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-mappop__figure b { font: 800 26px/1 var(--font-sans); letter-spacing: -.02em; color: var(--text-brand); }
 .wrt-mappop__figure span { font: 600 12.5px/1 var(--font-sans); color: var(--text-muted); }
 .wrt-mappop__split { display: flex; flex-wrap: wrap; gap: 2px 10px; font: 600 12px/1.3 var(--font-sans); }
-.wrt-mappop__split .is-review { color: var(--cn-behind-fg); }
 .wrt-mappop__go { display: flex; align-items: center; justify-content: center; height: 36px; margin-top: 2px; border-radius: var(--radius-pill); background: var(--action-primary); font: 700 13px/1 var(--font-sans); text-decoration: none; }
 .cn-app a.wrt-mappop__go { color: var(--cn-white); }
 .wrt-mappop__go:hover { background: var(--cn-green-900); }
@@ -328,7 +300,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-photo-more[open] summary { margin-bottom: 12px; }
 .wrt-photo-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 #photos { scroll-margin-top: 88px; }
-
 
 /* ---------------------------------------------------------------- sidebar
  * A deliberate break from Canopy's flat rule, scoped to the sidebar only:
@@ -436,7 +407,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   animation: wrt-ring-grow 700ms var(--ease) backwards; animation-delay: calc(var(--i) * 28ms + 120ms);
   transition: opacity var(--dur) var(--ease);
 }
-.wrt-rings__review { fill: none; stroke: var(--cn-behind-bar); }
 .wrt-rings__resolved { fill: none; stroke: var(--side-ring-spring); transition: stroke var(--dur); }
 .wrt-rings__ring[data-autumn] .wrt-rings__resolved { stroke: var(--side-ring-autumn); }
 .wrt-rings__hit { fill: none; stroke: transparent; pointer-events: stroke; cursor: pointer; }
@@ -445,7 +415,6 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-rings__ring[data-on] .wrt-rings__resolved { stroke: var(--cn-white); }
 .wrt-rings__read { min-height: 34px; display: flex; flex-direction: column; gap: 4px; font: 500 12px/1.35 var(--font-sans); color: var(--side-faint); }
 .wrt-rings__read b { font: 700 13px/1.1 var(--font-sans); color: var(--cn-white); }
-.wrt-rings__amber { color: var(--cn-amber-on-dark); }
 @keyframes wrt-ring-grow {
   from { opacity: 0; transform: scale(.55) rotate(-25deg); }
   to { opacity: 1; transform: none; }
@@ -634,7 +603,6 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 .wrt-scard:hover .wrt-scard__common { color: var(--text-brand); }
 .wrt-scard__common { font: 800 17px/1.15 var(--font-sans); letter-spacing: var(--tracking-snug); transition: color var(--dur); }
 .wrt-scard__latin { font: var(--type-latin); color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.wrt-scard__review { font: 700 12px/1 var(--font-sans); color: var(--cn-behind-fg); }
 .wrt-scard__fact {
   display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px 6px 7px; border-radius: var(--radius-pill);
   background: var(--surface-soft); color: var(--text-body); font: 600 12px/1 var(--font-sans); white-space: nowrap;
@@ -654,7 +622,6 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 }
 
 /* growth rings: seasons with nothing recorded stay as faint guides */
-.wrt-rings__ring[data-empty] .wrt-rings__review,
 .wrt-rings__ring[data-empty] .wrt-rings__resolved { stroke: rgba(255, 255, 255, .1); }
 
 /* ---------------------------------------------------------------- species hero */
@@ -684,7 +651,7 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 .wrt-shero__value > span:first-child { font: 800 46px/1 var(--font-sans); letter-spacing: var(--tracking-tight); color: var(--cn-white); }
 .wrt-shero__unit { font: 600 15px/1 var(--font-sans); color: rgba(255, 255, 255, .7); }
 .wrt-shero__bar { height: var(--bar-h); }
-.wrt-shero__bar .cn-bar__fill:not(.cn-bar__fill--review) { background: var(--cn-green-400); }
+.wrt-shero__bar .cn-bar__fill { background: var(--cn-green-400); }
 .wrt-shero__split { margin: 0; font: 600 13px/1.4 var(--font-sans); color: rgba(255, 255, 255, .75); }
 .wrt-shero__amber { color: var(--cn-amber-on-dark); }
 
@@ -903,56 +870,7 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
 }
 .wrt-sfacts + div .wrt-cols { height: 240px; }
 @media (max-width: 600px) { .wrt-sfacts + div .wrt-cols { height: 170px; } }
-
-/* ---------------------------------------------------------------- review issue under a record */
 .wrt-table tr.has-issue td { padding-bottom: 6px; }
-.wrt-table tr.wrt-issue-row td { border-top: 0; padding-top: 0; padding-bottom: 14px; }
-.wrt-issue { display: flex; flex-direction: column; gap: 8px; }
-.wrt-issue__item {
-  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start;
-  padding: 12px 16px 12px 12px; border-radius: var(--radius-field);
-  background: var(--cn-behind-bg); color: var(--cn-note-fg);
-}
-.wrt-issue__item[data-kind="confirm"] { background: color-mix(in srgb, var(--cn-behind-bg) 55%, var(--cn-white)); box-shadow: inset 0 0 0 1px var(--cn-behind-bg); }
-.wrt-issue__mark {
-  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; margin-top: 1px;
-  background: var(--cn-behind-bar); color: var(--cn-white); font: 800 14px/1 var(--font-sans);
-}
-.wrt-issue__item[data-kind="confirm"] .wrt-issue__mark { background: var(--cn-white); color: var(--cn-behind-fg); box-shadow: inset 0 0 0 1.5px var(--cn-behind-bar); }
-.wrt-issue__body { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.wrt-issue__body p { margin: 0; }
-.wrt-issue__head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
-.wrt-issue__head .wrt-issue__link { margin-left: auto; font-size: 12px; }
-.wrt-issue__tag {
-  padding: 4px 8px; border-radius: var(--radius-pill); background: var(--cn-behind-fg); color: var(--cn-white);
-  font: 700 11px/1 var(--font-sans); letter-spacing: .01em; white-space: nowrap;
-}
-.wrt-issue__tag--check, .wrt-issue__item[data-kind="confirm"] .wrt-issue__tag { background: var(--cn-white); color: var(--cn-behind-fg); box-shadow: inset 0 0 0 1px var(--cn-behind-bar); }
-.wrt-issue__title { font: 800 14px/1.25 var(--font-sans); color: var(--cn-note-fg); }
-.wrt-issue__question { font: 600 14px/1.45 var(--font-sans); color: var(--text-strong); }
-.wrt-issue__detail {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 8px 10px; border-radius: var(--radius-row);
-  background: rgba(255, 255, 255, .65); font: 500 13px/1.45 var(--font-sans); color: var(--text-body);
-}
-.wrt-issue__label { font: 700 11px/1 var(--font-sans); text-transform: none; color: var(--cn-behind-fg); white-space: nowrap; }
-.wrt-table a.wrt-issue__link, .wrt-issue__link { font-weight: 700; color: var(--cn-behind-fg); white-space: nowrap; }
-.wrt-table a.wrt-issue__link:hover { color: var(--cn-note-fg); }
-.wrt-issue__tag { cursor: help; }
-.wrt-issue-key { margin: 0 10px 10px; display: flex; flex-wrap: wrap; gap: 6px 20px; font: 500 12.5px/1.5 var(--font-sans); color: var(--text-body); }
-.wrt-issue-key span { display: inline-flex; align-items: center; gap: 8px; }
-.wrt-issue-key .wrt-issue__tag { cursor: default; }
-.wrt-issue__item { padding: 10px 14px 10px 10px; }
-.wrt-issue__question { font-size: 13.5px; }
-.wrt-issue__detail { padding: 6px 10px; }
-@media (max-width: 700px) { .wrt-issue__head .wrt-issue__link { margin-left: 0; flex-basis: 100%; } }
-.wrt-issue__item--compact { align-items: center; }
-.wrt-issue__item--compact .wrt-issue__head { margin: 0; flex-wrap: nowrap; align-items: baseline; }
-.wrt-issue__item--compact .wrt-issue__mark { margin-top: 0; }
-.wrt-issue__inline { font: 600 13.5px/1.45 var(--font-sans); color: var(--text-strong); min-width: 0; }
-@media (max-width: 700px) { .wrt-issue__item--compact .wrt-issue__head { flex-wrap: wrap; } }
-@media (max-width: 700px) { .wrt-issue { position: sticky; left: 0; width: calc(100vw - 72px); } }
-.cn-app a.wrt-ohero__review, .wrt-ohero__review { color: var(--cn-amber-on-dark); text-decoration: none; }
-.wrt-ohero__review:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------------------------------------------------------------- season: trees recorded */
 .wrt-tgrid { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
@@ -978,7 +896,6 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
 .wrt-tile__latin { font: var(--type-latin); color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wrt-tile__num { grid-area: num; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
 .wrt-tile__num b { font: 800 17px/1 var(--font-sans); color: var(--text-strong); letter-spacing: var(--tracking-snug); }
-.wrt-tile__review { font: 700 11px/1 var(--font-sans); color: var(--cn-behind-fg); white-space: nowrap; }
 .wrt-tile__foot { grid-area: foot; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; }
 .wrt-tile__foot .cn-bar { background: rgba(255, 255, 255, .9); }
 .wrt-tile__sites { font: 600 11.5px/1 var(--font-sans); color: var(--text-muted); white-space: nowrap; }
@@ -1028,8 +945,6 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
 .wrt-mini .wrt-avatar { width: 22px; height: 22px; box-shadow: none; }
 .wrt-mini .wrt-avatar__initial { font-size: 10px; }
 .wrt-mini b { font-weight: 800; color: var(--text-eyebrow); }
-.wrt-mini[data-review] { box-shadow: inset 3px 0 0 var(--cn-behind-bar); }
-.wrt-mini[data-review] b { color: var(--cn-behind-fg); }
 .cn-app a.wrt-sitesp__more, .wrt-sitesp__more { font: 700 12.5px/1 var(--font-sans); color: var(--link); text-decoration: none; margin-left: 4px; }
 .wrt-sitesp__more:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -1082,7 +997,6 @@ a.wrt-sfact:hover { background: var(--surface-tint); transform: translateY(-2px)
 .wrt-scard2__sp .wrt-avatar__initial { font-size: 11px; }
 .wrt-scard2__spname { font: 600 13px/1.2 var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wrt-scard2__sp b { font: 800 12.5px/1 var(--font-sans); color: var(--text-eyebrow); }
-.wrt-scard2__sp[data-review] b { color: var(--cn-behind-fg); }
 .wrt-scard2__note { align-self: flex-start; padding: 4px 8px; border-radius: var(--radius-pill); background: var(--surface-soft); font: 600 11px/1 var(--font-sans); color: var(--text-body); }
 
 /* ---------------------------------------------------------------- seasons: one row per season */
@@ -1158,8 +1072,6 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
   transition: transform var(--dur) cubic-bezier(.34, 1.56, .64, 1), box-shadow var(--dur);
 }
 .wrt-tl__dot[data-season="spring"] { background: var(--cn-green-500); }
-.wrt-tl__dot[data-review="some"] { box-shadow: 0 0 0 2.5px var(--cn-behind-bar); }
-.wrt-tl__dot[data-review="all"] { background: var(--cn-behind-bar); }
 .wrt-tl__dot:hover { transform: scale(1.18); }
 .wrt-tl__dot:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
 .wrt-tl__total { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; padding-right: 4px; }
@@ -1177,8 +1089,6 @@ a.wrt-tl__label:hover { color: var(--text-brand); text-decoration: underline; te
 .wrt-tl__key span { display: inline-flex; align-items: center; gap: 6px; }
 .wrt-tl__k { display: inline-block; width: 11px; height: 11px; border-radius: 50%; background: var(--action-primary); }
 .wrt-tl__k[data-season="spring"] { background: var(--cn-green-500); }
-.wrt-tl__k[data-review="some"] { background: var(--action-primary); box-shadow: 0 0 0 2px var(--cn-behind-bar); }
-.wrt-tl__k[data-review="all"] { background: var(--cn-behind-bar); }
 @media (max-width: 600px) { .wrt-tl__grid { --name: 150px; --cell: 28px; } }
 .wrt-tl__row { grid-template-columns: var(--name) repeat(var(--cols), var(--cell)) minmax(84px, 1fr); }
 
