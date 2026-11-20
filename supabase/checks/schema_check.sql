@@ -108,7 +108,7 @@ with expected (part, item, want, got) as (
   union all select 'import', 'species with workbook register codes', 93,
     (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)
-  union all select 'import', 'planting events', 359, (select count(*)::int from public.planting_events where source = 'workbook')
+  union all select 'import', 'planting events', 358, (select count(*)::int from public.planting_events where source = 'workbook')
   union all select 'import', 'planting lines', 5444, (select count(*)::int from public.planting_lines where legacy_code is not null)
   union all select 'import', 'planting lines missing their workbook file, sheet or cell', 0,
     (select count(*)::int from public.planting_lines where legacy_code is not null

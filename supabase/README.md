@@ -32,7 +32,7 @@ npm run import-historical-seed-data            # validate seeds and preview miss
 npm run import-historical-seed-data -- --write  # insert missing rows
 ```
 
-The seed contains 41 sites, 75 areas, 93 species, 9 questions, 28 seasons, 359 events, 5,444 lines and 1,334 notes. Planting quantities total 140,068.
+The seed contains 41 sites, 75 areas, 93 species, 9 questions, 28 seasons, 358 events, 5,444 lines and 1,334 notes. Planting quantities total 140,068.
 
 The importer validates seed references before connecting, inserts parent rows first, and uses returned IDs to link events, lines and notes. These three tables retain `GENERATED ALWAYS` identities. Season seeds supply explicit IDs for new rows; existing season IDs are resolved by slug.
 

@@ -2,7 +2,7 @@
 
 A public explorer for Whakatipu Reforestation Trust planting history, with staff tools for recording and editing data. Built with Next.js and Supabase.
 
-The maintained seed contains 41 sites, 75 site areas, 93 species, 359 planting events and 5,444 planting lines totalling 140,068 recorded plants. Historical records cover 23 seasons; the season calendar extends through Spring 2028.
+The maintained seed contains 41 sites, 75 site areas, 93 species, 358 planting events and 5,444 planting lines totalling 140,068 recorded plants. Historical records cover 23 seasons; the season calendar extends through Spring 2028.
 
 ## Local development
 

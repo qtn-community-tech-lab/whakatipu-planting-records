@@ -40668,7 +40668,7 @@
     ]
   },
   {
-    "area": "shotover-river",
+    "area": "tucker-beach-and-shotover-river-shotover-river",
     "season": "autumn-2019",
     "planted_on": null,
     "type": null,
@@ -40693,15 +40693,15 @@
           {
             "question": "header-cleaned",
             "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
             "question": "site-identity",
             "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
@@ -40723,15 +40723,15 @@
           {
             "question": "site-identity",
             "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
             "question": "header-cleaned",
             "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
@@ -40753,15 +40753,15 @@
           {
             "question": "site-identity",
             "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
             "question": "header-cleaned",
             "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
@@ -40783,8 +40783,8 @@
           {
             "question": "site-identity",
             "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
@@ -40797,8 +40797,8 @@
           {
             "question": "header-cleaned",
             "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
@@ -40820,15 +40820,15 @@
           {
             "question": "site-identity",
             "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
             "question": "header-cleaned",
             "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 40 recorded plants in Autumn 2019 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
@@ -54930,137 +54930,6 @@
     ]
   },
   {
-    "area": "shotover-river",
-    "season": "autumn-2021",
-    "planted_on": null,
-    "type": null,
-    "source": "workbook",
-    "notes": "",
-    "deactivated_at": null,
-    "lines": [
-      {
-        "species": "carmichaelia-petriei",
-        "quantity": 10,
-        "legacy_code": "PH-2021A-IC16",
-        "source_cell": "IC16",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "AUTUMN 2021",
-        "site_original": "SHOTOVER RIVER [name]",
-        "species_original": "Carmichaelia petriei",
-        "notes": [
-          {
-            "question": "site-identity",
-            "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "header-cleaned",
-            "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-crassifolia",
-        "quantity": 11,
-        "legacy_code": "PH-2021A-IC24",
-        "source_cell": "IC24",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "AUTUMN 2021",
-        "site_original": "SHOTOVER RIVER [name]",
-        "species_original": "Coprosma crassifolia",
-        "notes": [
-          {
-            "question": "site-identity",
-            "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "header-cleaned",
-            "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "coprosma-propinqua",
-        "quantity": 24,
-        "legacy_code": "PH-2021A-IC29",
-        "source_cell": "IC29",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "AUTUMN 2021",
-        "site_original": "SHOTOVER RIVER [name]",
-        "species_original": "Coprosma propinqua",
-        "notes": [
-          {
-            "question": "site-identity",
-            "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "header-cleaned",
-            "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      },
-      {
-        "species": "corokia-cotoneaster",
-        "quantity": 5,
-        "legacy_code": "PH-2021A-IC36",
-        "source_cell": "IC36",
-        "deactivated_at": null,
-        "precision": "site",
-        "confidence": "medium",
-        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
-        "source_sheet": "MASTER",
-        "season_original": "AUTUMN 2021",
-        "site_original": "SHOTOVER RIVER [name]",
-        "species_original": "Corokia cotoneaster",
-        "notes": [
-          {
-            "question": "site-identity",
-            "kind": "ruling",
-            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which",
-            "resolved_at": null,
-            "deactivated_at": null
-          },
-          {
-            "question": "header-cleaned",
-            "kind": "confirm",
-            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number",
-            "resolved_at": null,
-            "deactivated_at": null
-          }
-        ]
-      }
-    ]
-  },
-  {
     "area": "tucker-beach-and-shotover-river-shotover-river",
     "season": "autumn-2021",
     "planted_on": null,
@@ -55083,6 +54952,126 @@
         "site_original": "TUCKER BEACH",
         "species_original": "Phormium tenax",
         "notes": []
+      },
+      {
+        "species": "carmichaelia-petriei",
+        "quantity": 10,
+        "legacy_code": "PH-2021A-IC16",
+        "source_cell": "IC16",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "AUTUMN 2021",
+        "site_original": "SHOTOVER RIVER [name]",
+        "species_original": "Carmichaelia petriei",
+        "notes": [
+          {
+            "question": "site-identity",
+            "kind": "ruling",
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          },
+          {
+            "question": "header-cleaned",
+            "kind": "confirm",
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-crassifolia",
+        "quantity": 11,
+        "legacy_code": "PH-2021A-IC24",
+        "source_cell": "IC24",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "AUTUMN 2021",
+        "site_original": "SHOTOVER RIVER [name]",
+        "species_original": "Coprosma crassifolia",
+        "notes": [
+          {
+            "question": "site-identity",
+            "kind": "ruling",
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          },
+          {
+            "question": "header-cleaned",
+            "kind": "confirm",
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "coprosma-propinqua",
+        "quantity": 24,
+        "legacy_code": "PH-2021A-IC29",
+        "source_cell": "IC29",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "AUTUMN 2021",
+        "site_original": "SHOTOVER RIVER [name]",
+        "species_original": "Coprosma propinqua",
+        "notes": [
+          {
+            "question": "site-identity",
+            "kind": "ruling",
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          },
+          {
+            "question": "header-cleaned",
+            "kind": "confirm",
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          }
+        ]
+      },
+      {
+        "species": "corokia-cotoneaster",
+        "quantity": 5,
+        "legacy_code": "PH-2021A-IC36",
+        "source_cell": "IC36",
+        "deactivated_at": null,
+        "precision": "site",
+        "confidence": "medium",
+        "source_file": "_MASTER Nursery records and templates/_JMN Plants Out Master.xlsx",
+        "source_sheet": "MASTER",
+        "season_original": "AUTUMN 2021",
+        "site_original": "SHOTOVER RIVER [name]",
+        "species_original": "Corokia cotoneaster",
+        "notes": [
+          {
+            "question": "site-identity",
+            "kind": "ruling",
+            "text": "Shotover River has two parcels (28A and 28B); MASTER site number does not say which\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          },
+          {
+            "question": "header-cleaned",
+            "kind": "confirm",
+            "text": "header carried appended personal text; stripped to the site stem; parcel from the MASTER site number\nResolution: Confirmed as Shotover River Tucker Beach, WRT area 28A. All 50 recorded plants in Autumn 2021 belong to this area.",
+            "resolved_at": "2026-11-20T04:29:38Z",
+            "deactivated_at": null
+          }
+        ]
       }
     ]
   },
@@ -89994,15 +89983,15 @@
           {
             "question": "other",
             "kind": "fyi",
-            "text": "species row 106 is below the numbered list and outside the PY107 grand-total range\n\nMerged source records:\nPH-2025S-OP106: MASTER!OP106; recorded quantity 19; original site \"Quail Rise\"; original species \"Cyathoides juniperina\"; precision site; confidence medium.\nPH-2025S-OP50: MASTER!OP50; recorded quantity unknown (TBC); original site \"Quail Rise\"; original species \"Leptecophylla juniperina\"; precision site; confidence low.",
-            "resolved_at": null,
+            "text": "species row 106 is below the numbered list and outside the PY107 grand-total range\n\nMerged source records:\nPH-2025S-OP106: MASTER!OP106; recorded quantity 19; original site \"Quail Rise\"; original species \"Cyathoides juniperina\"; precision site; confidence medium.\nPH-2025S-OP50: MASTER!OP50; recorded quantity unknown (TBC); original site \"Quail Rise\"; original species \"Leptecophylla juniperina\"; precision site; confidence low.\nResolution: OP50 confirmed as 0 plants; OP106 confirmed as 19 plants. The combined Leptecophylla juniperina line remains 19 plants, with no unknown quantity outstanding.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           },
           {
             "question": "not-a-number",
             "kind": "ruling",
-            "text": "cell holds text 'TBC', not a number; no quantity imported\nMerge: The combined line retains 19 recorded plants from the numeric source. The TBC source quantity remains unknown; it has not been treated as zero or resolved.",
-            "resolved_at": null,
+            "text": "cell holds text 'TBC', not a number; no quantity imported\nMerge: The combined line retains 19 recorded plants from the numeric source. The TBC source quantity remains unknown; it has not been treated as zero or resolved.\nResolution: OP50 confirmed as 0 plants; OP106 confirmed as 19 plants. The combined Leptecophylla juniperina line remains 19 plants, with no unknown quantity outstanding.",
+            "resolved_at": "2026-11-20T04:29:38Z",
             "deactivated_at": null
           }
         ]
