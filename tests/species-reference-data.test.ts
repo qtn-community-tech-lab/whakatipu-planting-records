@@ -10,8 +10,8 @@ describe("species reference fields in the canonical seed", () => {
   it("keeps sourced identification fields complete and Māori names distinct", () => {
     for (const row of species) {
       if (row.common_name !== null) expect(row.common_name.trim()).not.toBe("");
-      expect(row.summary?.trim()).not.toBe("");
-      expect(row.look_for?.trim()).not.toBe("");
+      expect(row.summary?.trim()).toBeTruthy();
+      expect(row.look_for?.trim()).toBeTruthy();
       expect(row.sources.length).toBeGreaterThan(0);
       for (const source of row.sources) {
         expect(source.label.trim()).not.toBe("");

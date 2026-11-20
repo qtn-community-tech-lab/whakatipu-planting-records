@@ -14,13 +14,12 @@ export type Db = SupabaseClient<Database>;
 const text = z.string().trim().max(INPUT_LIMITS.shortText, lengthMessage(INPUT_LIMITS.shortText));
 const identifier = z.string().trim().max(INPUT_LIMITS.identifier, lengthMessage(INPUT_LIMITS.identifier));
 const notes = z.string().trim().max(INPUT_LIMITS.longText, lengthMessage(INPUT_LIMITS.longText));
-const url = z.url({ protocol: /^https$/i, error: "Enter a valid HTTPS URL." })
-  .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url));
-const photoUrl = z.union([
-  url,
-  z.string().regex(/^\/species\/[a-z0-9-]+\.webp$/, "Use a species image path or HTTPS URL.")
-    .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url)),
-]);
+const photoUrl = z.string()
+  .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url))
+  .pipe(z.union([
+    z.url({ protocol: /^https$/i, error: "Enter a valid HTTPS URL." }),
+    z.string().regex(/^\/species\/[a-z0-9-]+\.webp$/, "Use a species image path or HTTPS URL."),
+  ]));
 
 export const loginEmailSchema = z.string()
   .max(INPUT_LIMITS.shortText, lengthMessage(INPUT_LIMITS.shortText))

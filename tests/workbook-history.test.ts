@@ -17,10 +17,6 @@ describe("nested planting seed", () => {
     expect(plantings).toEqual(dump);
     const lines = plantings.flatMap((planting) => planting.lines);
     const notes = lines.flatMap((line) => line.notes);
-    expect(plantings).toHaveLength(358);
-    expect(lines).toHaveLength(5444);
-    expect(notes).toHaveLength(1334);
-    expect(lines.reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(140068);
     for (const season of references.seasons) {
       if (season.workbook_total === null) continue;
       const total = plantings

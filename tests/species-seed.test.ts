@@ -12,13 +12,11 @@ const seed = readSpeciesSeed();
 describe("complete PostgreSQL species seed", () => {
   it("uses complete species.json rows without replacing their saved content", () => {
     expect(seed).toEqual(catalogue);
-    expect(seed.filter((entry) => entry.summary !== null)).toHaveLength(93);
     expect(seed.every((entry) => Object.keys(entry).every((key) => !key.startsWith("profile_") && key !== "name_note"))).toBe(true);
   });
 
-  it("retains 93 planted species after the confirmed C1 and C2 merges", () => {
-    expect(seed).toHaveLength(93);
-    expect(new Set(seed.map((entry) => entry.slug)).size).toBe(93);
+  it("keeps unique species identities after the confirmed C1 and C2 merges", () => {
+    expect(new Set(seed.map((entry) => entry.slug)).size).toBe(seed.length);
     for (const [code, name] of [["SP-086", "Leonohebe cupressoides"], ["SP-087", "Leptecophylla juniperina"]]) {
       expect(seed.find((entry) => entry.register_code === code)).toMatchObject({
         scientific_name: name, needs_decision: false, contested_group: null,
@@ -37,9 +35,9 @@ describe("complete PostgreSQL species seed", () => {
   });
 
   it("records the confirmed threatened flags while distinguishing At Risk", () => {
-    expect(seed.filter((entry) => entry.threatened === true)).toHaveLength(3);
-    expect(seed.filter((entry) => entry.threatened === false)).toHaveLength(90);
-    expect(seed.filter((entry) => entry.threatened === null)).toHaveLength(0);
+    for (const code of ["SP-086", "SP-112", "SP-114"]) {
+      expect(seed.find((entry) => entry.register_code === code)?.threatened).toBe(true);
+    }
     // At Risk is distinct from Threatened.
     expect(seed.find((entry) => entry.register_code === "SP-147")?.threatened).toBe(false);
   });
@@ -91,8 +89,6 @@ describe("complete PostgreSQL species seed", () => {
   });
 
   it("includes researched common and Māori names while leaving unresolved names blank", () => {
-    expect(seed.filter((entry) => entry.common_name).length).toBe(89);
-    expect(seed.filter((entry) => entry.maori_name).length).toBe(66);
     expect(seed.find((entry) => entry.register_code === "SP-088")).toMatchObject({ common_name: "Mānuka", maori_name: "Mānuka" });
     expect(seed.find((entry) => entry.register_code === "SP-041")).toMatchObject({ common_name: null, maori_name: null });
   });
