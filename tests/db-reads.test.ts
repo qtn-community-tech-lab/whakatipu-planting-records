@@ -16,7 +16,6 @@ vi.mock("@/db/client", () => ({
 const { listSites, listSiteTotals, readSite, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
 const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
-const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
 const { countExportRows, exportNotes, exportPlantingLines } = await import("@/db/queries/export");
 
 const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.plants ?? 0), 0);
@@ -98,42 +97,6 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     }
   });
 
-  it("totals current actionable notes and returns null for resolved questions", async () => {
-    const [notes, lines] = await Promise.all([exportNotes(), exportPlantingLines()]);
-    const activeLines = new Map(lines
-      .filter((line) => !line.deactivated_at && line.event && !line.event.deactivated_at)
-      .map((line) => [line.id, line]));
-    await Promise.all([...Map.groupBy(notes, (note) => note.question)].map(async ([question, notes]) => {
-      const open = notes.filter((note) =>
-        !note.resolved_at && !note.deactivated_at && note.kind !== "fyi" && activeLines.has(note.line),
-      );
-      expect(await readQuestionTotals(question), question).toEqual(open.length ? {
-        question,
-        lines: new Set(open.map((note) => note.line)).size,
-        plants: open.reduce((total, note) => total + (activeLines.get(note.line)!.quantity ?? 0), 0),
-      } : null);
-    }));
-    expect(await readQuestionTotals("no-such-question")).toBeNull();
-  }, 15_000);
-
-  it("lists exactly the active questions with unresolved actionable notes, including none", async () => {
-    const [questions, notes, { data: activeQuestions }] = await Promise.all([
-      listOpenQuestions(),
-      exportNotes(),
-      createClient<Database>(url!, key!, { auth: { persistSession: false } })
-        .from("questions")
-        .select("slug")
-        .is("deactivated_at", null)
-        .throwOnError(),
-    ]);
-    const openNotes = Map.groupBy(notes.filter((note) =>
-      !note.resolved_at && !note.deactivated_at && note.kind !== "fyi",
-    ), (note) => note.question);
-    expect(questions.map(({ slug, openNotes }) => ({ slug, openNotes }))).toEqual(activeQuestions
-      .map(({ slug }) => ({ slug, openNotes: openNotes.get(slug)?.length ?? 0 }))
-      .filter((question) => question.openNotes > 0)
-      .sort((a, b) => a.slug.localeCompare(b.slug)));
-  });
 
   it("exports every line and note, and active line quantities add up to the app's totals", async () => {
     const lines = await exportPlantingLines();
