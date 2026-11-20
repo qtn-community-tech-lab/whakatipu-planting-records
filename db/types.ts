@@ -16,6 +16,11 @@ const identifier = z.string().trim().max(INPUT_LIMITS.identifier, lengthMessage(
 const notes = z.string().trim().max(INPUT_LIMITS.longText, lengthMessage(INPUT_LIMITS.longText));
 const url = z.url({ protocol: /^https$/i, error: "Enter a valid HTTPS URL." })
   .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url));
+const photoUrl = z.union([
+  url,
+  z.string().regex(/^\/species\/[a-z0-9-]+\.webp$/, "Use a species image path or HTTPS URL.")
+    .max(INPUT_LIMITS.url, lengthMessage(INPUT_LIMITS.url)),
+]);
 
 export const loginEmailSchema = z.string()
   .max(INPUT_LIMITS.shortText, lengthMessage(INPUT_LIMITS.shortText))
@@ -43,7 +48,7 @@ export const speciesSchema = z.object({
   threatened_te_kakano: z.boolean(), needs_decision: z.boolean().transform((): boolean => false),
   contested_group: identifier.regex(/^(C[0-9]+)?$/, "Use a group such as C3, or leave blank.").nullable(),
   register_note: notes.nullable(),
-  photos: z.array(z.object({ src: url, attribution: text })),
+  photos: z.array(z.object({ src: photoUrl, attribution: text })),
 });
 
 export type SpeciesInput = z.infer<typeof speciesSchema>;

@@ -12,7 +12,7 @@
 
 Review question definitions come from [`lib/wrt/review-themes.ts`](../lib/wrt/review-themes.ts). No CSVs are read by the seed command. Legacy workbook parsing helpers remain for source analysis and tests.
 
-The app reads species content, photos, attribution and source links from Supabase after seeding. Reference and photo counts use those saved fields.
+The app reads species content, photos, attribution and source links from Supabase after seeding. Reference and photo counts use those saved fields. Local species photos live in `public/species/{slug}.webp` and use root-relative paths in `species.json`.
 
 ## Relationships and IDs
 

@@ -8,6 +8,10 @@ const name = z.string().min(1).max(INPUT_LIMITS.shortText);
 const identifier = z.string().min(1).max(INPUT_LIMITS.identifier);
 const longText = z.string().max(INPUT_LIMITS.longText);
 const url = z.url({ protocol: /^https$/i }).max(INPUT_LIMITS.url);
+const photoUrl = z.union([
+  url,
+  z.string().regex(/^\/species\/[a-z0-9-]+\.webp$/).max(INPUT_LIMITS.url),
+]);
 
 /** Every species column except created_at/by and updated_at/by belongs in the seed. */
 export const speciesSeedSchema = z.array(z.strictObject({
@@ -30,7 +34,7 @@ export const speciesSeedSchema = z.array(z.strictObject({
   sources: z.array(z.strictObject({ label: name, url })),
   checked_at: z.iso.date().nullable(),
   photos: z.array(z.strictObject({
-    src: url,
+    src: photoUrl,
     attribution: z.string().max(INPUT_LIMITS.shortText),
     sourceUrl: url.optional(),
     licenseUrl: url.optional(),
