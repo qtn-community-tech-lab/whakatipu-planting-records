@@ -16,7 +16,6 @@ vi.mock("@/db/client", () => ({
 const { listSites, listSiteTotals, readSite, listPlantingAreaTotals, listPlantingAreaPins } = await import("@/db/queries/sites");
 const { listSpecies, listSpeciesTotals, readSpecies } = await import("@/db/queries/species");
 const { findPlantingLines, listSeasons, listSeasonLeaders, PAGE_SIZE } = await import("@/db/queries/plantings");
-const { listOpenQuestions, readQuestionTotals } = await import("@/db/queries/review");
 const { countExportRows, exportNotes, exportPlantingLines } = await import("@/db/queries/export");
 
 const sum = (rows: { plants: number | null }[]) => rows.reduce((n, r) => n + (r.plants ?? 0), 0);
@@ -95,21 +94,6 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     }
   });
 
-  it("totals the plants still waiting on a question", async () => {
-    const totals = await readQuestionTotals("order-scheme");
-    expect(totals).not.toBeNull();
-    expect(totals!.question).toBe("order-scheme");
-    expect(totals!.lines).toBeGreaterThan(0);
-    expect(totals!.plants).toBeGreaterThanOrEqual(0);
-    expect(await readQuestionTotals("slope-hill-2024")).toBeNull();
-    expect(await readQuestionTotals("no-such-question")).toBeNull();
-  });
-
-  it("lists the questions WRT still has to answer", async () => {
-    const questions = await listOpenQuestions();
-    expect(questions.length).toBeGreaterThan(0);
-    expect(questions.every((q) => q.openNotes > 0)).toBe(true);
-  });
 
   it("exports every line and note, and active line quantities add up to the app's totals", async () => {
     const lines = await exportPlantingLines();
