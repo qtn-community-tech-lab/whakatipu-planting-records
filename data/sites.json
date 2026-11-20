@@ -1,0 +1,412 @@
+[
+  {
+    "slug": "arrow-morven",
+    "name": "Arrow Morven",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "arrow-river",
+    "name": "Arrow River",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "arrowtown-and-bush-creek",
+    "name": "Arrowtown and Bush Creek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "arthurs-point",
+    "name": "Arthurs Point",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "bridesdale",
+    "name": "Bridesdale",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "feehly-hill",
+    "name": "Feehly Hill",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "gibbston",
+    "name": "Gibbston",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "glenorchy",
+    "name": "Glenorchy",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "gorge-road-area",
+    "name": "Gorge Road area",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "1-mile-creek",
+    "name": "1 Mile Creek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "alpine-retreat",
+    "name": "Alpine Retreat",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "ben-lomond-zip-trek",
+    "name": "Ben Lomond / Zip Trek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "the-rees",
+    "name": "The Rees",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "hidden-island-and-cecil-peak",
+    "name": "Hidden Island and Cecil Peak",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "jardine-boulders",
+    "name": "Jardine Boulders",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "jardine-park",
+    "name": "Jardine Park",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "kelvin-peninsula",
+    "name": "Kelvin Peninsula",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "kingston",
+    "name": "Kingston",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "kingsview",
+    "name": "Kingsview",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "kiwi-park",
+    "name": "Kiwi Park",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "lake-hayes",
+    "name": "Lake Hayes",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "lake-hayes-estate",
+    "name": "Lake Hayes Estate",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "wharehuanui-trail",
+    "name": "Wharehuanui Trail",
+    "description": "Managed by the Little Difference Trust",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "lower-shotover-conservation-area",
+    "name": "Lower Shotover Conservation Area",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "matakauri-wetlands",
+    "name": "Matakauri Wetlands",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "moke-lake",
+    "name": "Moke Lake",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "paper4trees",
+    "name": "Paper4Trees",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "peace-park-and-frankton",
+    "name": "Peace Park and Frankton",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "qldc-tohu",
+    "name": "QLDC Tohu",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "quail-rise",
+    "name": "Quail Rise",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "queenstown-hill-and-primary",
+    "name": "Queenstown Hill and Primary",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "rapley-close",
+    "name": "Rapley Close",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "shotover-primary",
+    "name": "Shotover Primary",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "shotover-rotary-track",
+    "name": "Shotover Rotary Track",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "skippers-doc",
+    "name": "Skippers - DOC",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "slope-hill",
+    "name": "Slope Hill",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "swiftburn-and-kawarau-bridge",
+    "name": "Swiftburn and Kawarau Bridge",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "tucker-beach-and-shotover-river",
+    "name": "Tucker Beach and Shotover River",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "walter-peak-station",
+    "name": "Walter Peak Station",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "whitechapel",
+    "name": "Whitechapel",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  },
+  {
+    "slug": "wye-creek",
+    "name": "Wye Creek",
+    "description": "",
+    "created_at": "2026-11-19 00:54:19.393917+00",
+    "created_by": null,
+    "updated_at": "2026-11-19 00:54:19.393917+00",
+    "updated_by": null,
+    "deactivated_at": null
+  }
+]

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
-import { SpeciesProfilePanel } from "@/components/wrt/species/species-profile";
+import { SpeciesReferencePanel } from "@/components/wrt/species/species-reference";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getWrt } from "@/lib/wrt/server";
@@ -111,7 +111,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
         </div>
       )}
 
-      <SpeciesProfilePanel speciesId={sp.id} profile={sp.profile} />
+      <SpeciesReferencePanel species={sp} />
 
       {!span ? <Empty><EmptyHeader><EmptyTitle>No planting records yet</EmptyTitle><EmptyDescription>This species is in the register and has no recorded plantings.</EmptyDescription></EmptyHeader></Empty> : <>
       <Card

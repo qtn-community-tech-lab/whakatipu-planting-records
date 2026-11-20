@@ -23,10 +23,10 @@ with expected (part, item, want, got) as (
        'planting_lines_species_idx', 'notes_question_idx'))
   union all select 'schema', 'edit-trail triggers (touch)', 7,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname = 'touch')
-  union all select 'schema', 'seasons, Autumn 2015 to Autumn 2027', 25,
+  union all select 'schema', 'seasons, Autumn 2015 to Spring 2028', 28,
     (select count(*)::int from public.seasons)
-  union all select 'schema', 'seasons numbered 0 to 24 in order', 1,
-    (select (min(id) = 0 and max(id) = 24 and count(distinct id) = 25)::int from public.seasons)
+  union all select 'schema', 'seasons numbered 0 to 27 in order', 1,
+    (select (min(id) = 0 and max(id) = 27 and count(distinct id) = 28)::int from public.seasons)
 
   -- Access rules file -------------------------------------------------------
   union all select 'access rules', 'functions (membership, signup, linking, audit and guards)', 7,
@@ -36,7 +36,7 @@ with expected (part, item, want, got) as (
          'link_existing_auth_user_to_staff', 'touch_row', 'guard_deactivated', 'guard_history'))
   union all select 'access rules', 'row policies (active membership writes and public history reads)', 33,
     (select count(*)::int from pg_policies where schemaname = 'public')
-  union all select 'access rules', 'guard triggers (deactivated 8, history 2)', 10,
+  union all select 'access rules', 'guard triggers (deactivated 7, history 2)', 9,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname in ('guard_deactivated', 'guard_history'))
   union all select 'access rules', 'signed in can delete from no table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace
@@ -102,18 +102,18 @@ with expected (part, item, want, got) as (
        union all select tablename::text from pg_tables where schemaname = 'public' and tablename = 'plantings'
      ) old)
 
-  -- Import (run by scripts/import-workbook.ts) ------------------------------
-  union all select 'import', 'sites', 39, (select count(*)::int from public.sites)
-  union all select 'import', 'areas', 78, (select count(*)::int from public.areas)
-  union all select 'import', 'species with workbook register codes', 164,
+  -- Import (run by scripts/import-historical-seed-data.ts) ------------------------------
+  union all select 'import', 'sites', 41, (select count(*)::int from public.sites)
+  union all select 'import', 'areas', 74, (select count(*)::int from public.areas)
+  union all select 'import', 'species with workbook register codes', 93,
     (select count(*)::int from public.species where register_code is not null)
   union all select 'import', 'questions', 9,       (select count(*)::int from public.questions)
-  union all select 'import', 'planting events', 360, (select count(*)::int from public.planting_events where source = 'workbook')
-  union all select 'import', 'planting lines', 5449, (select count(*)::int from public.planting_lines where legacy_code is not null)
+  union all select 'import', 'planting events', 358, (select count(*)::int from public.planting_events where source = 'workbook')
+  union all select 'import', 'planting lines', 5444, (select count(*)::int from public.planting_lines where legacy_code is not null)
   union all select 'import', 'planting lines missing their workbook file, sheet or cell', 0,
     (select count(*)::int from public.planting_lines where legacy_code is not null
       and (source_file is null or source_sheet is null or source_cell is null))
-  union all select 'import', 'review notes (1,377 until the Slope Hill 2024 ruling on 3 Nov)', 1339, (select count(*)::int from public.notes)
+  union all select 'import', 'review notes', 1334, (select count(*)::int from public.notes)
   union all select 'import', 'season TOTAL cells filled', 23,
     (select count(*)::int from public.seasons where workbook_total is not null)
   union all select 'import', 'seasons that differ from their TOTAL cell', 0,

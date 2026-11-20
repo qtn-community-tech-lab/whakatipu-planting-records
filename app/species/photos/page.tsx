@@ -8,13 +8,11 @@ import { SpeciesName } from "@/components/wrt/shared/names";
 import { SplitLine } from "@/components/wrt/shared/quantity";
 import { SpeciesMarkers } from "@/components/wrt/species/species-meta";
 import { PhotoMedia } from "@/components/wrt/species/photo-media";
-import { SpeciesProfileContent } from "@/components/wrt/species/species-profile";
-import { SpeciesReferenceStatus } from "@/components/wrt/species/species-reference-status";
-import { getSpeciesReferenceReview } from "@/lib/wrt/species-reference-reviews";
+import { SpeciesReferenceContent } from "@/components/wrt/species/species-reference";
 
 export const metadata: Metadata = {
   title: "Species reference guide",
-  description: "Species names, Māori names, identification notes, licensed image references and research gaps for WRT’s planting history.",
+  description: "Species names, Māori names, identification notes and licensed image references for WRT’s planting history.",
 };
 
 export default async function SpeciesPhotosPage() {
@@ -25,8 +23,7 @@ export default async function SpeciesPhotosPage() {
     for (const key of Object.keys(split) as (keyof typeof split)[]) split[key] += row.split[key];
   }
   const total = all.reduce((sum, row) => sum + row.split.total, 0);
-  const profileCount = rows.filter((row) => row.item.profile && getSpeciesReferenceReview(row.item.id)?.status !== "unresolved").length;
-  const unresolvedCount = rows.filter((row) => getSpeciesReferenceReview(row.item.id)?.status === "unresolved").length;
+  const referenceCount = rows.filter((row) => row.item.summary && row.item.sources.length > 0).length;
   const completePhotoCount = rows.filter((row) => row.item.photos.length >= 3).length;
   const partialPhotoCount = rows.filter((row) => {
     const count = row.item.photos.length;
@@ -43,14 +40,13 @@ export default async function SpeciesPhotosPage() {
           These {rows.length} active species account for {formatNumber(split.total)} plants—{total ? Math.round(split.total / total * 100) : 0}% of the recorded total.</>}
       />
       <Card title="Before you head out" action={<SplitLine split={split} />}>
-        <p className="wrt-prose m-0">{profileCount} species have sourced identification profiles.{unresolvedCount > 0 && <> {unresolvedCount} recorded {unresolvedCount === 1 ? "name awaits" : "names await"} identification.</>} {completePhotoCount} species have three confirmed reference photos; {partialPhotoCount} {partialPhotoCount === 1 ? "has" : "have"} one or two. There are {photoCount} image references in total. Remaining gaps and uncertain identities are noted beside each species. Herbarium specimens are labelled. Photos were taken at other locations.
+        <p className="wrt-prose m-0">{referenceCount} species have sourced identification notes. {completePhotoCount} species have at least three reference photos; {partialPhotoCount} {partialPhotoCount === 1 ? "has" : "have"} one or two. There are {photoCount} image references in total. Herbarium specimens are labelled. Photos were taken at other locations.
           They show what a species can look like, and do not confirm what is growing at a WRT site today.
           Young plants may look different. Previews are cropped to fit; open Full image for the entire frame. Select a species name to see its planting history and review notes.</p>
       </Card>
       <div className="wrt-photo-grid">
         {rows.map((row, index) => {
           const photos = row.item.photos;
-          const profile = row.item.profile;
           const photo = photos[0];
           return (
             <Card key={row.item.id} id={`guide-${row.item.slug}`} className="wrt-photo-card">
@@ -60,14 +56,13 @@ export default async function SpeciesPhotosPage() {
               </div>
               <p className="wrt-photo-count"><b>{formatNumber(row.split.total)}</b> recorded plants · {row.placeCount} sites</p>
               <SpeciesMarkers species={row.item} />
-              {profile && <SpeciesProfileContent profile={profile} />}
-              <SpeciesReferenceStatus speciesId={row.item.id} />
+              {row.item.summary && <SpeciesReferenceContent species={row.item} />}
               {photo ? <>
                 <PhotoMedia photo={photo} name={row.item.displayName} variant="guide" />
                 {photos.length > 1 && <details className="wrt-photo-more"><summary>View {photos.length - 1} more photos</summary>
                   <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <PhotoMedia key={extra.src} photo={extra} name={row.item.displayName} variant="guide" />)}</div>
                 </details>}
-              </> : <p className="wrt-muted">A reference photo has not been reviewed for this species yet.</p>}
+              </> : <p className="wrt-muted">No reference photo is recorded for this species.</p>}
               {row.split.needsReview > 0 && <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>}
             </Card>
           );

@@ -137,8 +137,8 @@ export interface SeasonSummary extends SeasonPoint {
 
 export interface Overview {
   split: QuantitySplit;
-  firstSeason: Season;
-  lastSeason: Season;
+  firstSeason: Season | null;
+  lastSeason: Season | null;
   seasons: SeasonPoint[];
   /** Active sites in the register. */
   siteCount: number;
@@ -338,9 +338,8 @@ export function createQueries(repo: WrtRepository) {
   return {
     async overview(): Promise<Overview> {
       const c = await ctx();
-      const firstSeason = c.seasons[0];
-      const lastSeason = c.seasons.at(-1);
-      if (!firstSeason || !lastSeason) throw new Error("The planting history has no seasons.");
+      const firstSeason = c.seasons[0] ?? null;
+      const lastSeason = c.seasons.at(-1) ?? null;
       return {
         split: splitOf(c.records),
         firstSeason,

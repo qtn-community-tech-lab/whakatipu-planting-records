@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getWrt, reviewShown } from "@/lib/wrt/server";
 import Link from "next/link";
-import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
+import { Card, CardLink, EmptyState, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
 import { OverviewHero } from "@/components/wrt/overview/overview-hero";
 import { RankLabel, SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
@@ -20,14 +20,20 @@ export default async function Home() {
   const wrt = getWrt();
   const [o, showReview] = await Promise.all([wrt.overview(), reviewShown()]);
 
+  if (!o.firstSeason || !o.lastSeason) return (
+    <EmptyState title="No planting history yet">
+      Planting records have not been loaded. Refresh after the historical import completes.
+    </EmptyState>
+  );
+
   const { split } = o;
   const topPlaces = o.places.slice(0, 8);
   const topSpecies = o.species.slice(0, 8);
 
   // Season facts for the chart header.
   const withPlants = o.seasons.filter((p) => p.split.total > 0);
-  const busiest = withPlants.reduce((a, b) => (b.split.total > a.split.total ? b : a));
-  const quietest = withPlants.reduce((a, b) => (b.split.total < a.split.total ? b : a));
+  const busiest = withPlants.reduce((a, b) => (b.split.total > a.split.total ? b : a), o.seasons[0]!);
+  const quietest = withPlants.reduce((a, b) => (b.split.total < a.split.total ? b : a), withPlants[0] ?? o.seasons[0]!);
   const sortedTotals = withPlants.map((p) => p.split.total).sort((a, b) => a - b);
   const median = sortedTotals[Math.floor(sortedTotals.length / 2)] ?? 0;
 

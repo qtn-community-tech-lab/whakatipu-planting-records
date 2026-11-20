@@ -1,6 +1,5 @@
 /** The planting history and season-total checks from Supabase. */
 import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_TAG } from "@/db/cache";
 import type { Database, Db } from "@/db/types";
 import { PAGE_SIZE } from "@/db/queries/views";
 import type { SourceInfo, WrtRepository } from "@/lib/wrt/repository";
@@ -18,7 +17,7 @@ export function publicDb(): Db {
     {
       auth: { persistSession: false },
       global: { fetch: (input, init) => fetch(input, {
-        ...init, next: { revalidate: 3600, tags: [SUPABASE_TAG] },
+        ...init, cache: "no-store",
       }) },
     },
   );
@@ -52,7 +51,7 @@ async function load(db: Db): Promise<Loaded> {
   const [seasonRows, speciesRows, siteRows, areaRows, lines, seasonTotals] = await Promise.all([
     db.from("seasons").select("slug, label, year, half").order("id").throwOnError(),
     db.from("species")
-      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, profile, photos, deactivated_at")
+      .select("slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_code, register_note, maori_name_alternatives, summary, look_for, sources, checked_at, photos, deactivated_at")
       .throwOnError(),
     db.from("sites").select("slug, name, description, deactivated_at").throwOnError(),
     db.from("areas").select("slug, site, name, wrt_number, class, deactivated_at").throwOnError(),
@@ -66,6 +65,17 @@ async function load(db: Db): Promise<Loaded> {
     .filter((s) => withLines.has(s.slug))
     .map((s, order) => ({ slug: s.slug, label: s.label, year: s.year, name: s.half === "autumn" ? "Autumn" : "Spring", order }));
   const seasonBySlug = new Map(seasons.map((s) => [s.slug, s]));
+  const availableSpecies = new Set(speciesRows.data.map((s) => s.slug));
+  const availableSites = new Set(siteRows.data.map((s) => s.slug));
+  const availableAreas = new Map(areaRows.data.map((a) => [a.slug, a]));
+  for (const line of lines) {
+    const area = availableAreas.get(line.area!);
+    const missing = !seasonBySlug.has(line.season!) ? `season ${line.season}`
+      : !availableSpecies.has(line.species!) ? `species ${line.species}`
+      : !area ? `area ${line.area}`
+      : !availableSites.has(area.site) ? `site ${area.site}` : null;
+    if (missing) throw new Error(`Planting history is incomplete: line ${line.legacy_code ?? line.line_id} references unavailable ${missing}. Retry after the import completes.`);
+  }
 
   // Species: keep the original register code as the historical join key.
   const spellings = new Map<string, Set<string>>();
@@ -86,6 +96,11 @@ async function load(db: Db): Promise<Loaded> {
       suggestedSpelling: s.suggested_spelling,
       commonName: s.common_name,
       maoriName: s.maori_name,
+      maoriNameAlternatives: s.maori_name_alternatives,
+      summary: s.summary,
+      lookFor: s.look_for,
+      sources: s.sources as Species["sources"],
+      checkedAt: s.checked_at,
       displayName,
       displayIsScientific: displayName === s.scientific_name,
       status: s.status ?? "unknown",
@@ -100,7 +115,6 @@ async function load(db: Db): Promise<Loaded> {
       searchKeys: [...keys],
       note: s.register_note,
       photos: s.photos as unknown as Species["photos"],
-      profile: Object.keys(s.profile ?? {}).length ? s.profile as unknown as Species["profile"] : null,
     };
   });
   const speciesIdBySlug = new Map(species.map((s) => [s.slug, s.id]));

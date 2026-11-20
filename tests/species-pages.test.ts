@@ -69,7 +69,7 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     expect(await submit({ ...values, slug: "photos" })).toHaveProperty("issues");
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
-    await expect(submit({ ...input, ...{ created_by: "spoofed", needs_decision: true, profile: { summary: "Must not overwrite the imported profile" } } })).rejects.toThrow("REDIRECT");
+    await expect(submit({ ...input, ...{ created_by: "spoofed", needs_decision: true, summary: "Must not overwrite the imported profile" } })).rejects.toThrow("REDIRECT");
     if (kind === "new") expect(mocks.create).toHaveBeenCalledWith(input);
     else expect(mocks.update).toHaveBeenCalledWith("old-slug", input);
   });

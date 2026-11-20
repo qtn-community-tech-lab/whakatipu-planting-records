@@ -24,7 +24,7 @@ export const species: Species[] = [
   threatenedMarks: { plantsOutMaster: index === 1 || index === 2, teKakano: index === 0 || index === 1 },
   needsDecision: false, contestedWith: [], aliases: [],
   searchKeys: [scientificName!, maoriName ?? ""].filter(Boolean).map(searchKey),
-  note: null, photos: [], profile: null, deactivatedAt: null,
+  note: null, photos: [], maoriNameAlternatives: [], summary: null, lookFor: null, sources: [], checkedAt: null, deactivatedAt: null,
 }));
 
 function place(name: string, parts: [string, string][], siteClass: SiteClass = "keystone"): Place {
