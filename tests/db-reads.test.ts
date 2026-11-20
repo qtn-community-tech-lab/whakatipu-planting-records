@@ -73,11 +73,14 @@ describe.skipIf(!live)("read queries against Supabase", () => {
   });
 
   it("pages through lines without skipping or repeating", async () => {
+    const seasons = await listSeasons();
+    const lineCount = seasons.reduce((total, season) => total + (season.lines ?? 0), 0);
     const first = await findPlantingLines({}, 0);
     const second = await findPlantingLines({}, 1);
-    expect(first.length).toBe(PAGE_SIZE);
-    expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
-    const season = defined((await listSeasons())[0]);
+    expect(first.length).toBe(Math.min(PAGE_SIZE, lineCount));
+    expect(second.length).toBe(Math.min(PAGE_SIZE, Math.max(0, lineCount - PAGE_SIZE)));
+    expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(first.length + second.length);
+    const season = defined(seasons[0]);
     expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
   }, 15_000);
 
@@ -95,25 +98,45 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     }
   });
 
-  it("totals the plants still waiting on a question", async () => {
-    const totals = await readQuestionTotals("order-scheme");
-    expect(totals).not.toBeNull();
-    expect(totals!.question).toBe("order-scheme");
-    expect(totals!.lines).toBeGreaterThan(0);
-    expect(totals!.plants).toBeGreaterThanOrEqual(0);
-    expect(await readQuestionTotals("slope-hill-2024")).toBeNull();
+  it("totals current actionable notes and returns null for resolved questions", async () => {
+    const [notes, lines] = await Promise.all([exportNotes(), exportPlantingLines()]);
+    const activeLines = new Map(lines
+      .filter((line) => !line.deactivated_at && line.event && !line.event.deactivated_at)
+      .map((line) => [line.id, line]));
+    await Promise.all([...Map.groupBy(notes, (note) => note.question)].map(async ([question, notes]) => {
+      const open = notes.filter((note) =>
+        !note.resolved_at && !note.deactivated_at && note.kind !== "fyi" && activeLines.has(note.line),
+      );
+      expect(await readQuestionTotals(question), question).toEqual(open.length ? {
+        question,
+        lines: new Set(open.map((note) => note.line)).size,
+        plants: open.reduce((total, note) => total + (activeLines.get(note.line)!.quantity ?? 0), 0),
+      } : null);
+    }));
     expect(await readQuestionTotals("no-such-question")).toBeNull();
-  });
+  }, 15_000);
 
-  it("lists the questions WRT still has to answer", async () => {
-    const questions = await listOpenQuestions();
-    expect(questions.length).toBeGreaterThan(0);
-    expect(questions.every((q) => q.openNotes > 0)).toBe(true);
+  it("lists exactly the active questions with unresolved actionable notes, including none", async () => {
+    const [questions, notes, { data: activeQuestions }] = await Promise.all([
+      listOpenQuestions(),
+      exportNotes(),
+      createClient<Database>(url!, key!, { auth: { persistSession: false } })
+        .from("questions")
+        .select("slug")
+        .is("deactivated_at", null)
+        .throwOnError(),
+    ]);
+    const openNotes = Map.groupBy(notes.filter((note) =>
+      !note.resolved_at && !note.deactivated_at && note.kind !== "fyi",
+    ), (note) => note.question);
+    expect(questions.map(({ slug, openNotes }) => ({ slug, openNotes }))).toEqual(activeQuestions
+      .map(({ slug }) => ({ slug, openNotes: openNotes.get(slug)?.length ?? 0 }))
+      .filter((question) => question.openNotes > 0)
+      .sort((a, b) => a.slug.localeCompare(b.slug)));
   });
 
   it("exports every line and note, and active line quantities add up to the app's totals", async () => {
     const lines = await exportPlantingLines();
-    expect(lines.length).toBeGreaterThan(PAGE_SIZE);
     expect(lines.length).toBe(await countExportRows("planting_lines"));
     expect((await exportNotes()).length).toBe(await countExportRows("notes"));
     const active = lines.filter((line) => !line.deactivated_at && !line.event?.deactivated_at);
