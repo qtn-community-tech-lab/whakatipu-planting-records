@@ -1,2 +1,2 @@
-/** Public reads share a tag so every editor can expire them after a save. */
+/** Shared invalidation tag retained by database write actions. */
 export const SUPABASE_TAG = "supabase";

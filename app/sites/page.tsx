@@ -91,7 +91,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
-            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"} since {overview.firstSeason.label} where available.
+            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"}{overview.firstSeason ? ` since ${overview.firstSeason.label}` : ""} where available.
           </>
         }
       />

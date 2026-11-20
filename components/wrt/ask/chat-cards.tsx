@@ -224,7 +224,7 @@ function PlantBody({ o, inChat }: { o: Found<"species">; inChat?: boolean }) {
           {here.seasons.map((x) => <span key={x.label} className="cn-chip">{x.label} <b className="tabular-nums">{formatNumber(x.total)}</b></span>)}
         </div>
       )}
-      {o.profile && <p className="wrt-chat__plant-summary">{o.profile.summary}</p>}
+      {o.summary && <p className="wrt-chat__plant-summary">{o.summary}</p>}
 
       {/* The same facts strip as the species page rows. */}
       <dl className="wrt-scard__facts">

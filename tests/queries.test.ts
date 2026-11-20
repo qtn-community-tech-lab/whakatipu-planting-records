@@ -31,8 +31,8 @@ describe("overview", () => {
     expectCoherentSplit(o.split);
     expect(o.split).toEqual({ total: 370, resolved: 290, needsReview: 80, records: 16, recordsNeedingReview: 6 });
     expect(o.seasons.length).toBeGreaterThan(0);
-    expect(o.firstSeason.label).toBe("Autumn 2015");
-    expect(o.lastSeason.order).toBe(o.seasons.length - 1);
+    expect(o.firstSeason?.label).toBe("Autumn 2015");
+    expect(o.lastSeason?.order).toBe(o.seasons.length - 1);
     expect(o.siteCount).toBeGreaterThanOrEqual(o.siteCountWithPlantings);
     expect(o.siteCountWithPlantings).toBeGreaterThan(0);
     expect(o.speciesCount).toBeGreaterThan(0);

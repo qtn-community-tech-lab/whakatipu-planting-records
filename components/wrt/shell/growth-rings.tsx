@@ -62,7 +62,7 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
         <svg
           viewBox={`0 0 ${SIZE} ${SIZE}`}
           role="img"
-          aria-label={`${seasons.length} planting seasons drawn as tree rings, ${first} at the centre and ${last} on the outside.`}
+          aria-label={seasons.length ? `${seasons.length} planting seasons drawn as tree rings, ${first} at the centre and ${last} on the outside.` : "No planting seasons recorded"}
         >
           <circle className="wrt-rings__pith" cx={C} cy={C} r={PITH - 1.5} />
           {rings.map((r) => (
@@ -113,8 +113,8 @@ export function GrowthRings({ seasons }: { seasons: RingSeason[] }) {
           </>
         ) : (
           <>
-            <b>{first} → {last}</b>
-            <span>The first season is in the centre. Hover a ring for its numbers.</span>
+            <b>{seasons.length ? `${first} → ${last}` : "No planting history yet"}</b>
+            <span>{seasons.length ? "The first season is in the centre. Hover a ring for its numbers." : "Season rings appear once planting history is loaded."}</span>
           </>
         )}
       </div>

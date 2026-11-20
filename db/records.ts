@@ -34,7 +34,7 @@ export function toSeasonSummary(r: SeasonRow, showReview: boolean): SeasonSummar
 }
 
 /** One line_details row as a record with its species, site and season. */
-export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "photos" | "profile" | "deactivatedAt">>): RecordView {
+export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "photos" | "maoriNameAlternatives" | "summary" | "lookFor" | "sources" | "checkedAt" | "deactivatedAt">>): RecordView {
   const scientificName = r.scientific_name!;
   const displayName = r.maori_name ?? r.common_name ?? scientificName;
   const siteClass = (r.class ?? "unknown") as SiteClass;
@@ -42,7 +42,9 @@ export function toRecordView(r: LineRow, reference?: Partial<Pick<Species, "phot
   const notes = (r.notes as { question: string; kind: ReviewNoteKind; text: string }[] | null) ?? [];
   const species: Species = {
     deactivatedAt: reference?.deactivatedAt ?? null,
-    photos: reference?.photos ?? [], profile: reference?.profile ?? null,
+    photos: reference?.photos ?? [], maoriNameAlternatives: reference?.maoriNameAlternatives ?? [],
+    summary: reference?.summary ?? null, lookFor: reference?.lookFor ?? null,
+    sources: reference?.sources ?? [], checkedAt: reference?.checkedAt ?? null,
     id: r.register_code ?? r.species!, slug: r.species!, scientificName, suggestedSpelling: null,
     commonName: r.common_name, maoriName: r.maori_name, displayName, displayIsScientific: displayName === scientificName,
     status: "unknown", over5m: null, threatened: r.threatened,

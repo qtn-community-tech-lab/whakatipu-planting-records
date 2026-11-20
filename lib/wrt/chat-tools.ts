@@ -82,7 +82,7 @@ export async function speciesDetail(slug: string) {
     ...slim(detail),
     rank,
     photos: detail.species.photos.slice(0, 3),
-    profile: detail.species.profile ?? null,
+    summary: detail.species.summary,
   };
 }
 
@@ -202,7 +202,7 @@ export const tools = {
     toModelOutput: ({ output: o }) => brief(!o.found ? o : {
       species: `${o.species.displayName} (${o.species.scientificName}) [${o.species.slug}]`, rank: o.rank, recorded: n(o.split),
       firstSeason: o.span?.first.label, lastSeason: o.span?.last.label, sites: o.places.length,
-      topSites: o.places.slice(0, 5).map((r) => named(r.item, r.split)), profile: o.profile?.summary ?? null,
+      topSites: o.places.slice(0, 5).map((r) => named(r.item, r.split)), summary: o.summary,
       here: o.here && { at: o.here.label, recorded: n(o.here.split), seasons: o.here.seasons.map((x) => `${x.label} ${x.total}`) },
     }),
   }),

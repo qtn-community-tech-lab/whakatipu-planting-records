@@ -1,6 +1,6 @@
 -- WRT planting database: each line keeps where it came from in the workbook.
--- Run once in Supabase > SQL Editor, after seasons_page.sql, then re-run the import
--- (npx tsx scripts/import-workbook.ts --write) to fill the new columns.
+-- Applied after the seasons-page migration.
+-- Fresh database seeds fill these columns through npm run import-historical-seed-data -- --write.
 begin;
 
 alter table public.planting_lines
