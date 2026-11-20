@@ -6,7 +6,7 @@ import type { Place } from "@/lib/wrt/types";
 
 const place: Place = {
   slug: "whitechapel", name: "Workbook name", siteClasses: [], searchKeys: [],
-  parcels: [{ id: "15", name: "Workbook area name", placeSlug: "whitechapel", siteClass: "unknown", aliases: [] }],
+  parcels: [{ id: "15", name: "Workbook area name", slug: "whitechapel", placeSlug: "whitechapel", siteClass: "unknown", aliases: [] }],
 };
 
 describe("workbook site and area seeds", () => {
