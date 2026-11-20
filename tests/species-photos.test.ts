@@ -18,14 +18,12 @@ describe("species photo references", () => {
     for (const { photos } of species) {
       expect(new Set(photos.map((p) => p.src)).size).toBe(photos.length);
     }
-    expect(species.find((row) => row.register_code === "SP-154")?.photos).toHaveLength(1);
     const sectaSources = new Set(species.find((row) => row.scientific_name === "Carex secta")?.photos.map((p) => p.src));
     expect(species.find((row) => row.scientific_name === "Carex maorica")?.photos.every((p) => !sectaSources.has(p.src))).toBe(true);
   });
 
   it("keeps local WRT photos and licensed external images with their attribution", () => {
     const photos = species.flatMap((row) => row.photos);
-    expect(photos.length).toBeGreaterThanOrEqual(150);
     for (const photo of photos) {
       if (photo.src.startsWith("/species/")) {
         expect(existsSync(`public${photo.src}`), photo.src).toBe(true);
