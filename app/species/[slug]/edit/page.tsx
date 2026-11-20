@@ -3,13 +3,14 @@ import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import Link from "next/link";
 import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
-import { readSpeciesForEdit, updateSpecies } from "@/db/queries/species";
+import { readSpeciesForEdit, updateSpecies, deactivateSpecies } from "@/db/queries/species";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SpeciesForm } from "@/components/wrt/species/SpeciesForm";
 import { speciesSchema, type SpeciesInput, type SpeciesSubmitResult } from "@/db/types";
 import { PageHead } from "@/components/wrt/shared/page";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
 
 export const metadata: Metadata = { title: "Edit species" };
 
@@ -59,15 +60,32 @@ export default async function EditSpeciesPage({
     redirect(`/species/${savedSlug}/edit?saved=1`);
   }
 
+  async function onDeactivate(): Promise<SpeciesSubmitResult> {
+    "use server";
+    if (!(await isAuthenticated())) return { error: "Sign in to deactivate species." };
+    try {
+      const { error } = await deactivateSpecies(slug);
+      if (error) return { error: "The species could not be deactivated. Please try again." };
+    } catch {
+      return { error: "The species could not be deactivated. Please try again." };
+    }
+    updateTag(SUPABASE_TAG);
+    revalidatePath("/", "layout");
+    redirect(`/species/${slug}`);
+  }
+
   return (
     <>
       <PageHead
         title={`Edit ${species.scientific_name}`}
         back={{ href: "/species", label: "All species" }}
         aside={
-          <Button asChild variant="secondary">
-            <Link href={speciesHref}>View species</Link>
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button asChild variant="secondary">
+              <Link href={speciesHref}>View species</Link>
+            </Button>
+            <DeactivateSpecies name={species.maori_name ?? species.common_name ?? species.scientific_name} onDeactivate={onDeactivate} />
+          </div>
         }
       />
       {query.saved === "1" && (

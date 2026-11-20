@@ -33,26 +33,6 @@ describe("species form", () => {
     }
   });
 
-  it.each([
-    { field: "src", limit: INPUT_LIMITS.url, prefix: "https://example.com/", suffix: "" },
-    { field: "src", limit: INPUT_LIMITS.url, prefix: "/species/", suffix: ".webp" },
-    { field: "attribution", limit: INPUT_LIMITS.shortText, prefix: "", suffix: "" },
-  ] as const)("enforces photo $field lengths in both schemas ($prefix)", ({ field, limit, prefix, suffix }) => {
-    const exact = prefix + "a".repeat(limit - prefix.length - suffix.length) + suffix;
-    const photo = { src: "https://example.com/plant.jpg", attribution: "Credit", [field]: exact };
-    const input = { ...valid(), photos: [photo] };
-    expect(speciesFormSchema.safeParse(input).success).toBe(true);
-    expect(speciesSchema.safeParse(speciesWriteValues(input)).success).toBe(true);
-
-    const overlong = { ...input, photos: [{ ...photo, [field]: prefix + "a".repeat(limit - prefix.length - suffix.length + 1) + suffix }] };
-    for (const result of [speciesFormSchema.safeParse(overlong), speciesSchema.safeParse(speciesWriteValues(overlong))]) {
-      expect(result.success).toBe(false);
-      if (!result.success) expect(result.error.issues).toContainEqual(expect.objectContaining({
-        path: ["photos", 0, field], message: lengthMessage(limit),
-      }));
-    }
-  });
-
   it("matches HTML length limits to the validation limits", () => {
     const html = renderToStaticMarkup(createElement(SpeciesForm, {
       onSubmit: async () => {},

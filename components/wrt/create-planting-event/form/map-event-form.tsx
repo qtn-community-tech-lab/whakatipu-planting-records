@@ -31,6 +31,9 @@ export interface MapEventFormProps {
   today: string;
   /** Site to start on ("" for none yet). */
   initialSite: string;
+  onChangeSeason?: (() => void) | undefined;
+  initialSeason?: string | undefined;
+  onSavedEvent?: ((id: number | undefined, value: PlantingEventInput) => void) | undefined;
   /** The part of that site to start on (its id), e.g. from a bookmark. */
   initialPart?: string | null | undefined;
   /** A picture of where it is (the host's mini map): at the top, and on the receipt. */
@@ -121,7 +124,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
   const { options, today, initialSite, plantedArea, suggestions, picked, onSiteChange, spot, spotInfo = NO_SPOT, pinMoved, hidden, onStartAnother } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, newSite: !!spot, save: props.onSave });
+  const form = useEventForm({ options, today, formRef, headingRef, initialSite, initialPart: props.initialPart, initialSeason: props.initialSeason, newSite: !!spot, save: props.onSave });
   // Phones: the footer gets out of the way while the page scrolls down the plant list.
   const scrollRef = useRef<HTMLDivElement>(null);
   const footRef = useRef<HTMLElement>(null);
@@ -263,7 +266,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     return (
       <Receipt
         hidden={hidden} summary={describe(form.preview)} cards={cardsFor(form.preview)} empty={emptyAreas.map((a) => areaName(a, areas.indexOf(a)))} saved={form.saved}
-        unstored={form.saved ? atSubmit?.unstored : undefined} areasDrawn={!!atSubmit?.areas} onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish}
+        unstored={form.saved ? atSubmit?.unstored : undefined} areasDrawn={!!atSubmit?.areas} onBack={form.closePreview} onStartAnother={onStartAnother} onFinish={props.onFinish && { ...props.onFinish, onClick: () => props.onSavedEvent ? props.onSavedEvent(form.savedPlantingEvent, form.preview!) : props.onFinish?.onClick() }}
       />
     );
   }
@@ -284,6 +287,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
       </header>
 
       <div ref={scrollRef} className={panel.scroll}>
+        {form.contextSeason && <p>Recording for {form.contextSeason.replace("-", " ")}. Choose the actual planting date. <button type="button" onClick={() => { form.changeSeason(); props.onChangeSeason?.(); }}>Change season</button></p>}
         {placeErrors && (
           <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">
             Some details need fixing. They are marked below.

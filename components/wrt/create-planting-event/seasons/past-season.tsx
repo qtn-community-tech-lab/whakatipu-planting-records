@@ -5,7 +5,7 @@
  */
 import { ArrowRight, MapPin, Pencil, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
-import { Fragment, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { loadSeasonPlantingEvents, type SeasonPlantingEvents as Plantings } from "@/app/events/new/actions";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,7 +27,9 @@ const eventLine = (e: Event, on: string | null) =>
   [on && formatPlantedOn(on), `${e.lines.length} species`, `${formatNumber(plantsIn(e))} plants`]
     .filter(Boolean).join(" · ");
 
-export function PastSeason({ slug, partId, season, today, onSaveEdit, species, actionSlot, hidden, onHeaderButton, onDirty, onSaving, onBack, onStart, startLabel = "Add new planting event" }: {
+export function PastSeason({ canRecord = true, initialEvent, slug, partId, season, today, onSaveEdit, species, actionSlot, hidden, onHeaderButton, onDirty, onSaving, onBack, onStart, startLabel = "Record a planting" }: {
+  canRecord?: boolean | undefined;
+  initialEvent?: number | undefined;
   slug: string; partId: string | null;
   season: { slug: string; label: string };
   /** NZ today, "YYYY-MM-DD": how long ago the season was, and the latest date an edit can have. */
@@ -68,6 +70,7 @@ export function PastSeason({ slug, partId, season, today, onSaveEdit, species, a
   // Read again, or failed to: what shows may be out of date, so it can't be edited (saving it could undo the last save).
   const stale = !data;
   const events = shown?.events ?? [];
+  useEffect(() => { if (initialEvent && data) document.getElementById(`planting-${initialEvent}`)?.focus(); }, [initialEvent, data]);
   const total = events.reduce((t, e) => t + plantsIn(e), 0);
   const speciesCount = new Set(events.flatMap((e) => e.lines.map((l) => l.species))).size;
   const single = events.length === 1;
@@ -144,7 +147,7 @@ export function PastSeason({ slug, partId, season, today, onSaveEdit, species, a
               { label: single ? "Planting" : "Plantings", value: String(events.length) },
             ]} />}
             {events.map((e, i) => { const sum = plantsIn(e); return (
-              <Fragment key={e.id}>
+              <div key={e.id} id={`planting-${e.id}`} tabIndex={-1} className="outline-offset-4">
                 {i > 0 && <hr className={s.rule} />}
                 {editing === e.id && onSaveEdit ? (
                   <EditPlantingEvent
@@ -165,7 +168,7 @@ export function PastSeason({ slug, partId, season, today, onSaveEdit, species, a
                     {e.notes && <p className={s.note}>{e.notes}</p>}
                   </FigureList>
                 )}
-              </Fragment>
+              </div>
             ); })}
           </div>
         )}
@@ -174,7 +177,7 @@ export function PastSeason({ slug, partId, season, today, onSaveEdit, species, a
         {editing === null ? (
           <>
             <button type="button" className={panel.back} onClick={onBack}>Back</button>
-            <button type="button" className={panel.next} onClick={onStart}>{startLabel}<ArrowRight size={18} strokeWidth={2.2} /></button>
+            <button type="button" className={panel.next} onClick={onStart} disabled={!canRecord}>{startLabel}<ArrowRight size={18} strokeWidth={2.2} /></button>
           </>
         ) : (
           <>
