@@ -17,7 +17,7 @@ describe("nested planting seed", () => {
     expect(plantings).toEqual(dump);
     const lines = plantings.flatMap((planting) => planting.lines);
     const notes = lines.flatMap((line) => line.notes);
-    expect(plantings).toHaveLength(359);
+    expect(plantings).toHaveLength(358);
     expect(lines).toHaveLength(5444);
     expect(notes).toHaveLength(1334);
     expect(lines.reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(140068);
@@ -38,7 +38,7 @@ describe("nested planting seed", () => {
     }
   });
 
-  it("combines duplicate species while retaining source records and unknown-quantity review", () => {
+  it("combines duplicate species while retaining source records and confirmed quantities", () => {
     const plantings = readHistorySeeds(references);
     const quailRise = plantings.find((planting) => planting.area === "quail-rise" && planting.season === "spring-2025")!;
     const mingimingi = quailRise.lines.filter((line) => line.species === "leptecophylla-juniperina");
@@ -46,9 +46,10 @@ describe("nested planting seed", () => {
     expect(mingimingi[0]).toMatchObject({
       quantity: 19, confidence: "low", source_cell: "OP106, OP50",
     });
-    expect(mingimingi[0]!.notes.find((note) => note.question === "not-a-number")).toMatchObject({
-      resolved_at: null, deactivated_at: null,
-    });
+    const quantityNote = mingimingi[0]!.notes.find((note) => note.question === "not-a-number")!;
+    expect(quantityNote.resolved_at).not.toBeNull();
+    expect(quantityNote.deactivated_at).toBeNull();
+    expect(quantityNote.text).toContain("OP50 confirmed as 0 plants; OP106 confirmed as 19 plants");
     const sourceNote = mingimingi[0]!.notes.find((note) => note.question === "other")!.text;
     expect(sourceNote).toContain("PH-2025S-OP106");
     expect(sourceNote).toContain("PH-2025S-OP50");
@@ -69,11 +70,48 @@ describe("nested planting seed", () => {
     }
   });
 
+  it("assigns the final Shotover decisions to 28A and leaves no actionable reviews", () => {
+    const plantings = readHistorySeeds(references);
+    const area = "tucker-beach-and-shotover-river-shotover-river";
+    for (const [season, prefix, count, plants] of [
+      ["autumn-2019", "PH-2019A-FP", 5, 40], ["autumn-2021", "PH-2021A-IC", 4, 50],
+    ] as const) {
+      const event = plantings.find((row) => row.area === area && row.season === season)!;
+      const confirmed = event.lines.filter((line) => line.legacy_code.startsWith(prefix));
+      expect(confirmed).toHaveLength(count);
+      expect(confirmed.reduce((sum, line) => sum + (line.quantity ?? 0), 0)).toBe(plants);
+    }
+    const autumn2021 = plantings.find((row) => row.area === area && row.season === "autumn-2021")!;
+    expect(autumn2021.lines.reduce((sum, line) => sum + (line.quantity ?? 0), 0)).toBe(70);
+    expect(autumn2021.lines.find((line) => line.legacy_code === "PH-2021A-ID77")?.quantity).toBe(20);
+    const open = plantings.flatMap((event) => event.lines.flatMap((line) => line.notes))
+      .filter((note) => note.deactivated_at === null && note.resolved_at === null && note.kind !== "fyi");
+    expect(open).toEqual([]);
+  });
+
   it("rejects dangling references before writing", () => {
     expect(() => readHistorySeeds({ ...references, areas: [] })).toThrow("area: missing reference");
     expect(() => readHistorySeeds({ ...references, seasons: [] })).toThrow("season: missing reference");
     expect(() => readHistorySeeds({ ...references, species: [] })).toThrow("species: missing reference");
     expect(() => readHistorySeeds({ ...references, questions: [] })).toThrow("question: missing reference");
+  });
+
+  it("places the moved Preschool event at 13B and preserves CP Station history", () => {
+    const plantings = readHistorySeeds(references);
+    const preschool = plantings.find((event) => event.area === "arrowtown-primary" && event.season === "spring-2025")!;
+    expect(preschool.lines).toHaveLength(8);
+    expect(preschool.lines.every((line) => line.legacy_code.startsWith("PH-2025S-OW"))).toBe(true);
+    expect(preschool.lines.reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(80);
+    for (const line of preschool.lines) {
+      expect(line.site_original).toBe("Arrowtown Preschool");
+      for (const note of line.notes) {
+        expect(note.text).toContain("13B — Arrowtown Preschool (area arrowtown-primary)");
+        expect(note.resolved_at).not.toBeNull();
+      }
+    }
+    const cpStation = plantings.filter((event) => event.area === "bush-creek-arrowtown-preschool");
+    expect(cpStation).toHaveLength(7);
+    expect(cpStation.flatMap((event) => event.lines).reduce((total, line) => total + (line.quantity ?? 0), 0)).toBe(520);
   });
 
   it("rejects duplicate identities and invalid quantities", () => {

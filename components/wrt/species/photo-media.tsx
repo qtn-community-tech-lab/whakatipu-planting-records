@@ -13,8 +13,8 @@ const PHOTO_CLASSES = {
 function PhotoCredit({ photo }: { photo: SpeciesPhoto }) {
   return (
     <span>
-      <a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.attribution}</a>
-      {" · "}<a href={photo.licenseUrl} target="_blank" rel="noreferrer">Licence</a>
+      {photo.sourceUrl ? <a href={photo.sourceUrl} target="_blank" rel="noreferrer">{photo.attribution}</a> : photo.attribution}
+      {photo.licenseUrl && <> · <a href={photo.licenseUrl} target="_blank" rel="noreferrer">Licence</a></>}
     </span>
   );
 }

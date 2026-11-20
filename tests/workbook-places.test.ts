@@ -33,4 +33,23 @@ describe("workbook site and area seeds", () => {
     const area = areas.find((row) => row.wrt_number === null)!;
     expect(workbookAreaSlugs([{ ...place, slug: area.site, parcels: [{ ...place.parcels[0]!, id: "NEW-1", name: area.name }] }]).get(`${area.site}|NEW-1`)).toBe(area.slug);
   });
+
+  it("uses the confirmed Bush Creek numbers and omits the unused Shotover area", () => {
+    const { areas } = readPlaceSeeds();
+    expect(areas.some((area) => area.slug === "shotover-river")).toBe(false);
+    for (const [slug, number] of [
+      ["bush-creek-keystone", "13"], ["bush-creek-arrowtown-preschool", "13A"],
+      ["arrowtown-primary", "13B"], ["derby-street-reserve", "13C"],
+    ]) {
+      expect(areas.find((area) => area.slug === slug)?.wrt_number).toBe(number);
+    }
+    const numbered = areas.filter((area) => area.wrt_number !== null)
+      .map((area) => `${area.site}|${area.wrt_number}`);
+    expect(new Set(numbered).size).toBe(numbered.length);
+    expect(areas.find((area) => area.slug === "tucker-beach")?.wrt_number).toBe("28");
+    expect(areas.find((area) => area.slug === "tucker-beach-and-shotover-river-shotover-river")?.wrt_number).toBe("28A");
+    expect(areas.find((area) => area.slug === "wharehuanui-trail")?.wrt_number).toBe("6C");
+    expect(areas.find((area) => area.slug === "lake-hayes-akarua-corner")?.wrt_number).toBe("9E");
+    expect(areas.find((area) => area.slug === "lake-hayes-north-akarua-corner")?.wrt_number).toBe("9F");
+  });
 });

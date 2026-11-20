@@ -36,10 +36,10 @@ describe("complete PostgreSQL species seed", () => {
     });
   });
 
-  it("distinguishes verified Threatened flags from unresolved matches and At Risk", () => {
+  it("records the confirmed threatened flags while distinguishing At Risk", () => {
     expect(seed.filter((entry) => entry.threatened === true)).toHaveLength(3);
-    expect(seed.filter((entry) => entry.threatened === false)).toHaveLength(80);
-    expect(seed.filter((entry) => entry.threatened === null)).toHaveLength(10);
+    expect(seed.filter((entry) => entry.threatened === false)).toHaveLength(90);
+    expect(seed.filter((entry) => entry.threatened === null)).toHaveLength(0);
     // At Risk is distinct from Threatened.
     expect(seed.find((entry) => entry.register_code === "SP-147")?.threatened).toBe(false);
   });
