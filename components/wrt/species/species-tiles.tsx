@@ -1,16 +1,15 @@
-import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Species as tiles: picture, names, recorded plants with the split, and how
  * widely each one went in. Built from any set of records (a season, a site,
  * a site in one year), largest first.
  */
+import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import { addToSplit, byTotalDesc, emptySplit, type RecordView } from "@/lib/wrt/queries";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
-
 
 export function SpeciesTiles({
   records, hrefFor, spread, cap = 18,
@@ -45,9 +44,6 @@ export function SpeciesTiles({
       </span>
       <span className="wrt-tile__num">
         <b className="tabular-nums">{formatNumber(r.split.total)}</b>
-        {r.split.needsReview > 0 && (
-          <span className="wrt-tile__review tabular-nums">{formatNumber(r.split.needsReview)} need review</span>
-        )}
       </span>
       <span className="wrt-tile__foot">
         <SplitBar split={r.split} max={max} size="sm" />

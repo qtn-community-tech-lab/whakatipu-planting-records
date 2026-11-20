@@ -14,14 +14,13 @@ import { z } from "zod";
 import { speciesBySite, emptySplit, groupSplits, type RecordFilter, type RecordView } from "@/lib/wrt/queries";
 import { getWrt } from "@/lib/wrt/server";
 import { matchScore, searchKey } from "@/lib/wrt/text";
-
 import type { PlantingRecord, QuantitySplit, SeasonName } from "@/lib/wrt/types";
 
 export const SYSTEM = `You answer questions about the Wakatipu Reforestation Trust planting history, straight from the data.
 - Every number comes from a tool. Never estimate, add or subtract figures yourself. Call counts "recorded".
 - Answer plainly in one or two sentences and name at most three items. The cards under your reply show the rest.
 - Never ask the user to confirm or choose. Take the most likely reading of the question and answer it.
-- Don't add caveats about the data: the page banner and the About the data page explain it. Only when a figure is marked "mostly unconfirmed", add those two words after it.
+- Don't add caveats about the data: the page banner and the About the data page explain it.
 - Tools take site, species, part and season names or slugs, so call them directly. Use search only when unsure what a name refers to. If nothing matches, say so in a few words; if a tool returns choices, name the closest ones.
 - Some sites have parts within them. For a part, call records with the part's name as place (place shows the whole site).
 - records can narrow to tall trees (trait over5m), species WRT marks threatened (trait threatened: the "T" in the Plants Out Master; no file records which threat list or year it follows, so always say "marked threatened by WRT", never "threatened species", and mention the basis is unconfirmed) and keystone, community or school sites (siteClass).
@@ -40,8 +39,8 @@ const name = (what: string) => z.string().describe(`${what} name or slug as reco
 // ---- What the model reads. Tools return everything the cards draw; the model gets a short brief
 // (toModelOutput), and so does the history on every later question (convertToModelMessages with tools).
 
-/** "16794", or "35 (mostly unconfirmed)" when more than half still needs a WRT ruling. The cards show the exact split. */
-const n = (s: QuantitySplit) => (s.needsReview * 2 > s.total ? `${s.total} (mostly unconfirmed)` : `${s.total}`);
+/** Recorded total for the model response. */
+const n = (s: QuantitySplit) => `${s.total}`;
 /** "Lake Hayes [lake-hayes] 16794": a name with the slug to call tools with. */
 const named = (x: { name?: string; displayName?: string; slug: string }, s: QuantitySplit) => `${x.displayName ?? x.name} [${x.slug}] ${n(s)}`;
 const TRAITS = { over5m: "Over 5 m", threatened: "Marked threatened by WRT (basis unconfirmed)" } as const;
@@ -229,7 +228,6 @@ export const tools = {
       // ponytail: single year only; add yearFrom/yearTo to RecordFilter when staff ask "since 2020"
       year: z.number().int().min(1000).max(9999).nullish().describe("Only when the question names a year."),
       season: z.enum(["Autumn", "Spring"]).nullish().describe("Only when the question says autumn or spring. Null otherwise."),
-      review: z.enum(["all", "needs-review", "resolved"]).nullish().describe("Null unless the question is about review status."),
       trait: z.enum(["over5m", "threatened"]).nullish().describe("Only for tall trees (over 5 m) or species WRT marks threatened. Null otherwise."),
       siteClass: z.enum(["keystone", "community", "school"]).nullish().describe("Only when the question names keystone, community or school sites. Null otherwise."),
       groupBy: z.enum(["species", "place", "season"]).default("species"),
@@ -309,13 +307,13 @@ export const tools = {
     }),
   }),
 
-  /** What still needs a WRT ruling, by reason, and how totals match the workbook. Wraps queries.dataQuality. Card: QualityCard */
+  /** Recorded totals and how they match the workbook. Wraps queries.dataQuality. Card: QualityCard */
   data_quality: tool({
-    description: "Records waiting on a WRT ruling, grouped by reason, and how the totals match the workbook.",
+    description: "Recorded totals and how they match the workbook.",
     inputSchema: z.object({}),
     execute: async () => {
       const d = await getWrt().dataQuality();
-      return { split: d.split, themes: d.themes, reconciliation: d.reconciliation };
+      return { split: d.split, reconciliation: d.reconciliation };
     },
   }),
 };

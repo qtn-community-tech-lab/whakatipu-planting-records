@@ -1,6 +1,6 @@
 /**
  * "How precise the records are": recorded plants by precision and by
- * confidence, each with the resolved / needs-review split kept visible.
+ * confidence, each with recorded totals.
  */
 import type { Ranked } from "@/lib/wrt/queries";
 import type { Confidence, Precision } from "@/lib/wrt/types";

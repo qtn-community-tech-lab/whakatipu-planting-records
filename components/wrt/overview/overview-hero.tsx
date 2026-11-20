@@ -2,7 +2,7 @@ import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { Ranked } from "@/lib/wrt/queries";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
+import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import type { NavIcon } from "@/components/wrt/shell/nav";
@@ -62,16 +62,7 @@ export function OverviewHero({
         <div className="wrt-ohero__figure">
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-ohero__split">
-            {formatNumber(split.resolved)} resolved
-            {split.recordsNeedingReview > 0 && (
-              <>
-                {" · "}
-                <Link href={hrefs.records({ review: "needs-review" })} className="wrt-shero__amber wrt-ohero__review">
-                  {formatNumber(split.needsReview)} ({formatShare(split.needsReview, split.total)}) on{" "}
-                  {formatNumber(split.recordsNeedingReview)} records WRT still has to rule on →
-                </Link>
-              </>
-            )}
+            {formatNumber(split.records)} records
           </p>
         </div>
 

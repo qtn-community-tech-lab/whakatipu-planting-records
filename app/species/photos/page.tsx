@@ -63,7 +63,6 @@ export default async function SpeciesPhotosPage() {
                   <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <PhotoMedia key={extra.src} photo={extra} name={row.item.displayName} variant="guide" />)}</div>
                 </details>}
               </> : <p className="wrt-muted">No reference photo is recorded for this species.</p>}
-              {row.split.needsReview > 0 && <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>}
             </Card>
           );
         })}

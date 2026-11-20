@@ -39,7 +39,7 @@ describe("exact site-part filtering", () => {
     const result = await q.records({ place: site.place.slug, parcel, species: "carex-secta", season: "Spring", year: 2016 });
     expect(result.rows).toHaveLength(1);
     expect(result.split.total).toBe(13);
-    expect((await q.records({ place: site.place.slug, parcel, review: "resolved" })).rows).toHaveLength(0);
+    expect((await q.records({ place: site.place.slug, parcel })).rows).toHaveLength(4);
   });
 
   it("validates part URLs and preserves them in sorting and paging links", async () => {

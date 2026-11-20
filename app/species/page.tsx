@@ -11,11 +11,13 @@ import { SpeciesCard } from "@/components/wrt/species/species-card";
 import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 import {
-  SHOWS, SORTS, type ShowKey, type SortKey,
+  SHOWS,
+  SORTS,
+  type ShowKey,
+  type SortKey,
 } from "@/components/wrt/species/species-meta";
 
 export const metadata: Metadata = { title: "Species" };
-
 
 function pick<T extends { key: string }>(list: readonly T[], v: string | undefined, fallback: T["key"]): T["key"] {
   return list.find((o) => o.key === v)?.key ?? fallback;
@@ -25,7 +27,6 @@ function matches(show: ShowKey, r: SpeciesSummary) {
   const s = r.item;
   if (show === "over5m") return s.over5m === true;
   if (show === "threatened") return s.threatenedMarks.plantsOutMaster || s.threatenedMarks.teKakano;
-  if (show === "contested") return s.needsDecision;
   return true;
 }
 
@@ -59,7 +60,6 @@ const SHORT: Record<ShowKey, string> = {
   all: "All",
   over5m: "Over 5 m",
   threatened: "Marked threatened",
-  contested: "Name needs a ruling",
 };
 
 export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"/species">>) {
@@ -87,9 +87,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
     all: register.length,
     over5m: register.filter((r) => matches("over5m", r)).length,
     threatened: register.filter((r) => matches("threatened", r)).length,
-    contested: register.filter((r) => matches("contested", r)).length,
   } satisfies Record<ShowKey, number>;
-  const contested = counts.contested;
   const filtered = show !== "all" || !!q;
 
   return (
@@ -100,15 +98,6 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
           <>
             {formatNumber(allSplit.total)} recorded plants across all historical species.
             {" "}{guideCount} species have reference photos and identification notes.
-            {contested > 0 && (
-              <>
-                {" "}
-                <Link href={href(sort, "contested", "", view, state)} className="cn-link">
-                  {formatNumber(contested)} {contested === 1 ? "name needs" : "names need"} a WRT ruling
-                </Link>{" "}
-                before their records can be merged.
-              </>
-            )}
           </>
         }
         aside={

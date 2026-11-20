@@ -47,9 +47,13 @@ describe("species form", () => {
     const overlong = { ...input, photos: [{ ...photo, [field]: prefix + "a".repeat(limit - prefix.length - suffix.length + 1) + suffix }] };
     for (const result of [speciesFormSchema.safeParse(overlong), speciesSchema.safeParse(speciesWriteValues(overlong))]) {
       expect(result.success).toBe(false);
-      if (!result.success) expect(result.error.issues).toContainEqual(expect.objectContaining({
-        path: ["photos", 0, field], message: lengthMessage(limit),
-      }));
+      if (!result.success) {
+        const issue = result.error.issues.find((issue) => issue.path.join(".") === `photos.0.${field}`);
+        expect(issue).toBeDefined();
+        if (issue?.code === "invalid_union") {
+          for (const errors of issue.errors) expect(errors).toContainEqual(expect.objectContaining({ message: lengthMessage(limit) }));
+        } else expect(issue?.message).toBe(lengthMessage(limit));
+      }
     }
   });
 
@@ -63,7 +67,7 @@ describe("species form", () => {
     }));
     const controls = html.match(/<(?:input|textarea)\b[^>]*>/g) ?? [];
     for (const { field, limit } of [
-      ...textCases,
+      ...textCases.filter(({ field }) => field !== "contested_group"),
       { field: "photos.0.src", limit: INPUT_LIMITS.url },
       { field: "photos.0.attribution", limit: INPUT_LIMITS.shortText },
     ]) {

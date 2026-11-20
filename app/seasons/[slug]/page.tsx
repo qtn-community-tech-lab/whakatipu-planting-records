@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { needsReviewByPlants } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { reviewShown } from "@/lib/wrt/server";
 import { listSeasonPlantingLines, listSeasons } from "@/db/queries/plantings";
 import { listSpecies } from "@/db/queries/species";
 import { toSeasonDetail, toSeasonSummary } from "@/db/records";
@@ -12,7 +10,6 @@ import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { QuantityFigure, SplitKey, plants } from "@/components/wrt/shared/quantity";
 import { RankedBars, SeasonColumns } from "@/components/wrt/shared/charts";
 import { hrefs } from "@/components/wrt/shared/names";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ReconBadge, reconSentence } from "@/components/wrt/seasons/season-parts";
 import { SeasonSiteSpecies, SeasonSpeciesGrid } from "@/components/wrt/seasons/season-species";
@@ -20,13 +17,11 @@ import { isAuthenticated } from "@/db/queries/auth";
 
 type Props = Readonly<PageProps<"/seasons/[slug]">>;
 
-const RECORDS_CAP = 12;
-
 /** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
 async function loadSeason(slug: string) {
-  const [rows, lines, showReview, species] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown(), listSpecies()]);
-  const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
-  return { all, d: toSeasonDetail(slug, all, lines, showReview, new Map(species.map((row) => [row.slug, row]))), showReview };
+  const [rows, lines, species] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), listSpecies()]);
+  const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r));
+  return { all, d: toSeasonDetail(slug, all, lines, new Map(species.map((row) => [row.slug, row]))) };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -45,24 +40,13 @@ function list(items: string[]) {
 
 export default async function SeasonPage({ params }: Props) {
   const { slug } = await params;
-  const [{ d, all, showReview }, authenticated] = await Promise.all([loadSeason(slug), isAuthenticated()]);
+  const [{ d, all }, authenticated] = await Promise.all([loadSeason(slug), isAuthenticated()]);
   if (!d) notFound();
 
   const { season, split, reconciliation: recon } = d;
   const siteCount = d.places.length;
   const speciesCount = d.species.length;
   const recordsHref = hrefs.records({ year: season.year, season: season.name });
-  const needsReviewHref = hrefs.records({ year: season.year, season: season.name, review: "needs-review" });
-
-  // Slope Hill 2024 columns (WRT decision 4): the flagged plants inside this season, if any.
-  const slope = d.themes.find((t) => t.theme === "slope-hill-2024");
-  const slopePlants = slope?.split.needsReview ?? 0;
-  const slopeSites = slope
-    ? [...new Set(d.records.filter((v) => v.record.needsReview && v.record.notes.some((n) => n.theme === "slope-hill-2024")).map((v) => v.record.parcelName))]
-    : [];
-
-  const reviewRows = needsReviewByPlants(d.records);
-
   // The answer to "What went in during <season>?" in one sentence.
   const topSites = d.places.slice(0, 3).map((p) => `${p.item.name} (${formatNumber(p.split.total)})`);
   const topSpecies = d.species.slice(0, 3).map((s) => `${s.item.displayName} (${formatNumber(s.split.total)})`);
@@ -132,31 +116,10 @@ export default async function SeasonPage({ params }: Props) {
         </Card>
       </div>
 
-      {slope && slopePlants > 0 && (
-        <div className="cn-callout cn-callout--note items-start" role="note">
-          <div className="flex flex-col gap-1.5">
-            <span>
-              {season.label} includes unconfirmed planting column{slopeSites.length === 1 ? "" : "s"}
-              {slopeSites.length > 0 && <> ({list(slopeSites)})</>}. WRT decision 4 on these is still open.
-            </span>
-            <span className="font-medium text-[14px] leading-[1.45]">
-              The season total of {formatNumber(split.total)} recorded plants includes {formatNumber(slopePlants)} on the flagged
-              column{slopeSites.length === 1 ? "" : "s"}. Without them it is {formatNumber(split.total - slopePlants)}.{" "}
-              <Link
-                href={hrefs.records({ year: season.year, season: season.name, review: "needs-review", theme: "slope-hill-2024" })}
-                className="font-bold underline underline-offset-2"
-              >
-                See the flagged records →
-              </Link>
-            </span>
-          </div>
-        </div>
-      )}
-
       <Card
         title={`Trees recorded in ${season.label} (${formatNumber(speciesCount)} species)`}
         action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
-        foot={`Largest first. Select a species name for its records this season. Bars are relative to the largest species this season${showReview ? "; amber still needs a WRT ruling" : ""}.`}
+        foot={`Largest first. Select a species name for its records this season. Bars are relative to the largest species this season.`}
       >
         <SeasonSpeciesGrid season={season} records={d.records} />
       </Card>
@@ -179,36 +142,7 @@ export default async function SeasonPage({ params }: Props) {
         />
       </Card>
 
-      {showReview && (
-        <Card
-          title="Open questions for WRT in this season"
-          action={d.themes.length ? <CardLink href={needsReviewHref}>All needs-review records</CardLink> : undefined}
-          foot="Each question can be answered once and covers every record under it."
-        >
-          <ReviewThemeList themes={d.themes} recordsQuery={{ year: season.year, season: season.name }} />
-        </Card>
-      )}
-
-      {reviewRows.length > 0 && (
-        <Card
-          title={`Records needing review in ${season.label}`}
-          variant="table"
-          action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
-          foot={
-            reviewRows.length > RECORDS_CAP
-              ? `Largest ${RECORDS_CAP} of ${formatNumber(reviewRows.length)} records needing review. Open Source on a row for the workbook cell.`
-              : "Open Source on a row for the workbook cell it came from."
-          }
-        >
-          <RecordsTable rows={reviewRows.slice(0, RECORDS_CAP)} hide={["season"]} caption={`Records needing review in ${season.label}`} />
-        </Card>
-      )}
-
-      {reviewRows.length === 0 && (
-        <Rule>
-          {showReview && <>Every record in {season.label} is resolved. </>}<Link className="cn-link" href={recordsHref}>See all {formatNumber(split.records)} records →</Link>
-        </Rule>
-      )}
+      <Rule><Link className="cn-link" href={recordsHref}>See all {formatNumber(split.records)} records →</Link></Rule>
     </>
   );
 }

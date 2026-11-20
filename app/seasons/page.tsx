@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { listSeasonLeaders, listSeasons } from "@/db/queries/plantings";
-import { reviewShown } from "@/lib/wrt/server";
 import { listSpecies } from "@/db/queries/species";
 import { toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
@@ -15,10 +14,10 @@ export const metadata: Metadata = {
 };
 
 export default async function SeasonsPage() {
-  const [rows, leaders, showReview, species] = await Promise.all([listSeasons(), listSeasonLeaders(), reviewShown(), listSpecies()]);
+  const [rows, leaders, species] = await Promise.all([listSeasons(), listSeasonLeaders(), listSpecies()]);
   const speciesBySlug = new Map(species.map((row) => [row.slug, row]));
   // Only seasons with planting lines, as in the workbook.
-  const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
+  const seasons = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r));
 
   // Top trees and top sites in each season, largest first, ranked by the database.
   const topBySeason = new Map<string, TopSpecies[]>();
@@ -66,7 +65,7 @@ export default async function SeasonsPage() {
           <h2 id="by-season" className="wrt-section-title">Recorded plants by season</h2>
           <SplitKey spring />
         </div>
-        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
+        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.`} />
       </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="by-year">

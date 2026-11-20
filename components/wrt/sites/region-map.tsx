@@ -7,7 +7,7 @@ import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl
 import { formatNumber, rankMatches, searchKey } from "@/lib/wrt/text";
 import { ComboboxInput } from "@/components/ui/inputs";
 import type { RegionMapOptions } from "@/lib/wrt/map-region";
-import { SplitBar, SplitLine } from "@/components/wrt/shared/quantity";
+import { SplitLine } from "@/components/wrt/shared/quantity";
 
 function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation | undefined }) {
   const { map, isLoaded } = useMap();
@@ -52,7 +52,6 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
     if (!first) return null;
     const clustered = members.length > 1;
     const total = members.reduce((sum, point) => sum + point.split.total, 0);
-    const needsReview = members.reduce((sum, point) => sum + point.split.needsReview, 0);
     const longitude = members.reduce((sum, point) => sum + point.longitude, 0) / members.length;
     const latitude = members.reduce((sum, point) => sum + point.latitude, 0) / members.length;
     return (
@@ -61,7 +60,7 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
           <button type="button" className={`wrt-location-marker${clustered ? " wrt-location-marker--group" : ""}`}
             aria-pressed={!clustered && first.id === selectedId}
             aria-label={clustered ? `Zoom to ${members.length} nearby locations: ${members.map((point) => point.label).join(", ")}` : `Show ${first.label}`}
-            title={`${formatNumber(total)} recorded plants${needsReview ? `; ${formatNumber(needsReview)} needing review` : ""}`}
+            title={`${formatNumber(total)} recorded plants`}
             onClick={() => {
               if (!clustered) { onSelect(first.id); return; }
               const bounds = locationBounds(members);
@@ -70,7 +69,6 @@ function LocationMarkers({ locations, selectedId, onSelect }: { locations: Mappe
             }}>
             <span className="tabular-nums">{compactPlantCount(total)}</span>
             {clustered && <span className="wrt-location-marker__places">{members.length} places</span>}
-            {needsReview > 0 && <span className="wrt-location-marker__review" aria-label="Includes records needing review" />}
           </button>
         </MarkerContent>
       </MapMarker>
@@ -135,15 +133,7 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
                   <b className="tabular-nums">{formatNumber(selected.split.total)}</b>
                   <span>recorded plants</span>
                 </p>
-                {selected.split.needsReview > 0 && (
-                  <>
-                    <SplitBar split={selected.split} size="sm" />
-                    <p className="wrt-mappop__split m-0 tabular-nums">
-                      <span>{formatNumber(selected.split.resolved)} resolved</span>
-                      <span className="is-review">{formatNumber(selected.split.needsReview)} need review</span>
-                    </p>
-                  </>
-                )}
+
                 {!siteName && <Link href={`/sites/${selected.siteSlug}`} className="wrt-mappop__go">View site history →</Link>}
               </div>
             </MapPopup>
