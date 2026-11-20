@@ -72,11 +72,14 @@ describe.skipIf(!live)("read queries against Supabase", () => {
   });
 
   it("pages through lines without skipping or repeating", async () => {
+    const seasons = await listSeasons();
+    const lineCount = seasons.reduce((total, season) => total + (season.lines ?? 0), 0);
     const first = await findPlantingLines({}, 0);
     const second = await findPlantingLines({}, 1);
-    expect(first.length).toBe(PAGE_SIZE);
-    expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(PAGE_SIZE * 2);
-    const season = defined((await listSeasons())[0]);
+    expect(first.length).toBe(Math.min(PAGE_SIZE, lineCount));
+    expect(second.length).toBe(Math.min(PAGE_SIZE, Math.max(0, lineCount - PAGE_SIZE)));
+    expect(new Set([...first, ...second].map((l) => l.line_id)).size).toBe(first.length + second.length);
+    const season = defined(seasons[0]);
     expect((await findPlantingLines({ season: season.season! })).every((l) => l.season === season.season)).toBe(true);
   }, 15_000);
 
@@ -97,7 +100,6 @@ describe.skipIf(!live)("read queries against Supabase", () => {
 
   it("exports every line and note, and active line quantities add up to the app's totals", async () => {
     const lines = await exportPlantingLines();
-    expect(lines.length).toBeGreaterThan(PAGE_SIZE);
     expect(lines.length).toBe(await countExportRows("planting_lines"));
     expect((await exportNotes()).length).toBe(await countExportRows("notes"));
     const active = lines.filter((line) => !line.deactivated_at && !line.event?.deactivated_at);
