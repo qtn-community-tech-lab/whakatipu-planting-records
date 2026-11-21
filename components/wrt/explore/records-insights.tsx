@@ -7,8 +7,9 @@ import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import type { ReactNode } from "react";
-import type { Lookups, RecordView, SeasonPoint } from "@/lib/wrt/queries";
-import type { QuantitySplit, ReviewTheme } from "@/lib/wrt/types";
+import type { Lookups, SeasonPoint } from "@/lib/wrt/queries";
+import type { QuantitySplit } from "@/lib/wrt/types";
+import type { RecordsSummary } from "@/db/queries/records";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber, formatShare } from "@/lib/wrt/text";
 import { hrefs } from "@/components/wrt/shared/names";
@@ -17,7 +18,6 @@ import { SeasonColumns } from "@/components/wrt/shared/charts";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { partHref } from "@/components/wrt/sites/site-rows";
-import { addToSplit, emptySplit, byTotalDesc } from "@/lib/wrt/queries";
 import { type RecordsView, recordsHref } from "./filters";
 
 const TOP = 8;
@@ -35,17 +35,6 @@ interface Item {
   page?: AppRoute;
 }
 
-
-function group<T>(rows: RecordView[], keyOf: (v: RecordView) => string, init: (v: RecordView) => T) {
-  const m = new Map<string, { meta: T; split: QuantitySplit }>();
-  for (const v of rows) {
-    const k = keyOf(v);
-    const e = m.get(k) ?? { meta: init(v), split: emptySplit() };
-    addToSplit(e.split, v.record);
-    m.set(k, e);
-  }
-  return [...m.values()].sort(byTotalDesc);
-}
 
 /** A ranked, clickable list: picture, name, bar, number. */
 function RankedList({ items, total, unit }: { items: Item[]; total: number; unit: string }) {
@@ -98,25 +87,18 @@ function Panel({ title, action, children, className }: { title: ReactNode; actio
 }
 
 export function RecordsInsights({
-  rows, view, lookups, seasons,
+  summary, view, lookups,
 }: {
-  rows: RecordView[];
+  summary: RecordsSummary;
   view: RecordsView;
   lookups: Lookups;
-  /** Every season, in order. */
-  seasons: SeasonPoint["season"][];
 }) {
   const f = view.filter;
   const place = f.place ? lookups.places.find((p) => p.slug === f.place) : undefined;
 
   // ---- over time
-  const bySeason = new Map<string, QuantitySplit>();
-  for (const v of rows) {
-    const s = bySeason.get(v.season.slug) ?? emptySplit();
-    addToSplit(s, v.record);
-    bySeason.set(v.season.slug, s);
-  }
-  const points: SeasonPoint[] = seasons.map((season) => ({ season, split: bySeason.get(season.slug) ?? emptySplit() }));
+  const points = summary.seasons;
+  const seasons = points.map((point) => point.season);
   const activePoints = points.filter((p) => p.split.records > 0);
   const busiest = activePoints.reduce<SeasonPoint | null>((a, b) => (!a || b.split.total > a.split.total ? b : a), null);
   const first = activePoints[0]?.season;
@@ -127,7 +109,7 @@ export function RecordsInsights({
   const showParts = !!place && place.parcels.length > 1 && !f.parcel;
   const showSites = !f.place;
   let sites: Item[] = showSites
-    ? group(rows, (v) => v.place.slug, (v) => v.place).map(({ meta, split }) => ({
+    ? summary.sites.map(({ place: meta, split }) => ({
         key: meta.slug,
         name: meta.name,
         avatar: <Pin className="rx-pin" />,
@@ -136,13 +118,13 @@ export function RecordsInsights({
         page: hrefs.place(meta.slug),
       }))
     : showParts
-      ? group(rows, (v) => v.record.parcelId, (v) => ({ id: v.record.parcelId, name: v.record.parcelName })).map(({ meta, split }) => ({
-          key: meta.id,
-          name: meta.name,
+      ? summary.sites.map(({ parcel: meta, split }) => ({
+          key: meta!.id,
+          name: meta!.name,
           avatar: <Pin className="rx-pin" />,
           split,
-          href: recordsHref(view, { parcel: meta.id }),
-          page: partHref(place!.slug, meta.name),
+          href: recordsHref(view, { parcel: meta!.id }),
+          page: partHref(place!.slug, meta!.name),
         }))
       : [];
   if (showParts && sites.length < 2) sites = [];
@@ -150,7 +132,7 @@ export function RecordsInsights({
   // ---- what
   const showTrees = !f.species;
   const trees = showTrees
-    ? group(rows, (v) => v.species.slug, (v) => v.species).map(({ meta, split }) => ({
+    ? summary.species.map(({ item: meta, split }) => ({
         key: meta.slug,
         name: meta.displayName,
         sub: meta.displayIsScientific ? undefined : meta.scientificName,
@@ -163,25 +145,12 @@ export function RecordsInsights({
     : [];
 
   // ---- open questions in these records
-  const themes = new Map<ReviewTheme, QuantitySplit>();
-  if (!f.theme) {
-    for (const v of rows) {
-      if (!v.record.needsReview) continue;
-      const seen = new Set<ReviewTheme>();
-      for (const n of v.record.notes) {
-        if (n.kind === "fyi" || seen.has(n.theme)) continue;
-        seen.add(n.theme);
-        const t = themes.get(n.theme) ?? emptySplit();
-        addToSplit(t, v.record);
-        themes.set(n.theme, t);
-      }
-    }
-  }
-  const themeRows = [...themes.entries()].sort((a, b) => b[1].needsReview - a[1].needsReview);
+  const themeRows = (f.theme ? [] : summary.themes.map((row) => [row.theme, row.split] as const))
+    .sort((a, b) => b[1].needsReview - a[1].needsReview);
   const themeMax = Math.max(1, ...themeRows.map(([, s]) => s.needsReview));
 
   // ---- timeline rows: sites, else parts, else species
-  const tlBy: "site" | "part" | "species" = showSites && sites.length > 1 ? "site" : showParts ? "part" : "species";
+  const tlBy = summary.rowsBy;
   const tlUseful = !singleSeason && activePoints.length > 1 && (tlBy !== "species" || trees.length > 1);
 
   const narrowSeason = (s: SeasonPoint["season"]) => recordsHref(view, { year: s.year, season: s.name });
@@ -207,7 +176,7 @@ export function RecordsInsights({
             </div>
             <div className="rx-fact rx-fact--review">
               <span className="rx-fact__k">Needs review</span>
-              <b className="tabular-nums rx-fact__amber">{formatShare(rows.reduce((n, v) => n + (v.record.needsReview ? v.record.quantity : 0), 0), rows.reduce((n, v) => n + v.record.quantity, 0))}</b>
+              <b className="tabular-nums rx-fact__amber">{formatShare(summary.split.needsReview, summary.split.total)}</b>
               <span>of recorded plants here</span>
             </div>
           </div>
@@ -243,7 +212,7 @@ export function RecordsInsights({
           className="rx-panel--wide"
         >
           <PlantingTimeline
-            records={rows}
+            cells={summary.cells}
             seasons={seasons}
             rowsBy={tlBy}
             cap={12}
