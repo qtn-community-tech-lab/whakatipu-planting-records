@@ -28,19 +28,22 @@ export interface MappedSiteLocation extends SiteLocation {
 
 /** Pass all active areas, including unpinned ones, to identify single-area sites. */
 export function locationsForSites(areas: readonly PlantingAreaPin[], sites: readonly { slug: string; name: string }[], records: readonly PlantingRecord[]): MappedSiteLocation[] {
+  return locationsForAreaTotals(areas, sites, areas.map((area) => ({ area: area.slug,
+    split: splitOf(records.filter((record) => record.placeSlug === area.site && record.parcelId === (area.wrt_number ?? area.slug))) })));
+}
+
+export function locationsForAreaTotals(areas: readonly PlantingAreaPin[], sites: readonly { slug: string; name: string }[], totals: readonly { area: string; split: QuantitySplit }[]): MappedSiteLocation[] {
   const names = new Map(sites.map((site) => [site.slug, site.name]));
   const areaCounts = new Map<string, number>();
   for (const area of areas) areaCounts.set(area.site, (areaCounts.get(area.site) ?? 0) + 1);
   return areas.flatMap((area) => {
     const siteName = names.get(area.site);
     if (siteName === undefined || area.lat === null || area.lng === null) return [];
-    const parcelId = area.wrt_number ?? area.slug;
-    const matching = records.filter((record) => record.placeSlug === area.site && record.parcelId === parcelId);
     return [{
       id: area.slug, siteSlug: area.site, siteName, label: area.name,
       latitude: area.lat, longitude: area.lng, description: area.description,
       sourceUrl: area.pin_source_url, checkedOn: area.pin_checked_on,
-      split: splitOf(matching), countScope: areaCounts.get(area.site) === 1 ? "site" as const : "part" as const,
+      split: totals.find((total) => total.area === area.slug)?.split ?? splitOf([]), countScope: areaCounts.get(area.site) === 1 ? "site" as const : "part" as const,
     }];
   });
 }

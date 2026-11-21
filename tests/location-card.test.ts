@@ -17,7 +17,7 @@ const areas: PlantingAreaPin[] = [
   { slug: "far", site: "another-site", name: "Far", description: "", wrt_number: null,
     lat: -44.8, lng: 169, pin_source_url: "https://example.com/far", pin_checked_on: "2026-11-01" },
 ];
-const props = { sites: [{ slug: "reserve", name: "Reserve" }], records: [] };
+const props = { sites: [{ slug: "reserve", name: "Reserve" }], totals: [] };
 
 beforeEach(() => { read.mockReset(); read.mockResolvedValue(areas); });
 

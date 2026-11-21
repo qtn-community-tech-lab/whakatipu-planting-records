@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWrtAll, reviewShown } from "@/lib/wrt/server";
+import { getPublicWrtAll } from "@/lib/wrt/public-server";
+import { reviewShown } from "@/lib/wrt/server";
 import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
 import { QuantityFigure } from "@/components/wrt/shared/quantity";
 import { ReviewThemeList } from "@/components/wrt/shared/records";
@@ -27,8 +28,8 @@ const SECTIONS = [
 
 export default async function AboutTheData() {
   // This page explains the whole history, so it always counts every record, whatever the review switch says.
-  const wrt = getWrtAll();
-  const [dq, overview, showReview] = await Promise.all([wrt.dataQuality(), wrt.overview(), reviewShown()]);
+  const wrt = getPublicWrtAll();
+  const [dq, counts, showReview] = await Promise.all([wrt.dataQuality(), wrt.counts(), reviewShown()]);
   const { split } = dq;
 
   const seasonRows = dq.reconciliation.filter((r) => r.kind === "season");
@@ -282,7 +283,7 @@ export default async function AboutTheData() {
       </Card>
 
       <Rule>
-        {formatNumber(overview.siteCount)} active sites, {formatNumber(overview.speciesCount)} active species, {overview.seasons.length} seasons loaded.
+        {formatNumber(counts.siteCount)} active sites, {formatNumber(counts.speciesCount)} active species, {counts.seasonCount} seasons loaded.
       </Rule>
     </>
   );

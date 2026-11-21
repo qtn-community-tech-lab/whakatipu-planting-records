@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
-import { getWrt } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import type { PlaceSummary } from "@/lib/wrt/queries";
-import { speciesBySite, byTotalDesc, emptySplit } from "@/lib/wrt/queries";
+import { byTotalDesc, emptySplit } from "@/lib/wrt/queries";
 import type { SiteClass } from "@/lib/wrt/types";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
@@ -58,8 +58,8 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
   const sortParam = first(sp.sort);
   const sort: SortKey = SORTS.find((s) => s.key === sortParam)?.key ?? "plants";
 
-  const [register, history, overview, records, authenticated] = await Promise.all([
-    listSites(state), getWrt().places(), getWrt().overview(), getWrt().records(), isAuthenticated(),
+  const [register, history, counts, bySite, areaTotals, authenticated] = await Promise.all([
+    listSites(state), getPublicWrt().places(), getPublicWrt().counts(), getPublicWrt().siteSpecies(), getPublicWrt().cells(["site", "area"]), isAuthenticated(),
   ]);
   const historyBySlug = new Map(history.map((site) => [site.item.slug, site]));
   const all: ListedSite[] = register.map((site) => {
@@ -70,7 +70,6 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
       split: summary?.split ?? emptySplit(), span: summary?.span ?? null, speciesCount: summary?.speciesCount ?? 0,
     };
   });
-  const bySite = speciesBySite(records.rows);
   const filtered = cls
     ? all.filter((p) => p.item.siteClasses.includes(cls))
     : all;
@@ -91,7 +90,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
-            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"}{overview.firstSeason ? ` since ${overview.firstSeason.label}` : ""} where available.
+            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"}{counts.firstSeason ? ` since ${counts.firstSeason.label}` : ""} where available.
           </>
         }
       />
@@ -101,7 +100,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         <Link href={href(cls, sort, "deactivated")} className="wrt-stool__opt" aria-current={state === "deactivated" ? "true" : undefined}>Deactivated</Link>
       </nav>
 
-      <LocationCard sites={rows.map((p) => p.item)} records={records.rows.map((row) => row.record)} />
+      <LocationCard sites={rows.map((p) => p.item)} totals={areaTotals.map((cell) => ({ area: cell.area!, split: cell.split }))} />
 
       <Card
         foot={
@@ -162,6 +161,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
                 href: hrefs.place(p.item.slug),
                 split: p.split,
                 species: g?.species ?? [],
+                speciesCount: p.speciesCount,
                 meta: (
                   <>
                     {classes && <>{classes} · </>}

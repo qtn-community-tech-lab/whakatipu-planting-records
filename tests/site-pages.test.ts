@@ -1,7 +1,8 @@
 import { Children, isValidElement, type ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { q } from "./helpers";
+import { q, presentationCells } from "./helpers";
+import { emptySplit, speciesBySite } from "@/lib/wrt/queries";
 
 const mocks = vi.hoisted(() => ({
   deactivate: vi.fn(), authenticated: vi.fn(), create: vi.fn(), update: vi.fn(), read: vi.fn(), list: vi.fn(),
@@ -14,7 +15,16 @@ vi.mock("@/db/queries/auth", () => ({
   },
 }));
 vi.mock("@/db/queries/sites", () => ({ deactivateSite: mocks.deactivate, createSite: mocks.create, updateSite: mocks.update, readSite: mocks.read, listSites: mocks.list }));
-vi.mock("@/lib/wrt/server", () => ({ getWrt: () => ({ places: mocks.places, place: mocks.place, overview: mocks.overview, records: mocks.records }) }));
+vi.mock("@/lib/wrt/public-server", () => ({ getPublicWrt: () => ({ places: mocks.places, overview: mocks.overview,
+  seasons: () => q.seasons(), siteSpecies: async () => speciesBySite((await mocks.records()).rows),
+  counts: async () => { const overview = await mocks.overview(); return { firstSeason: overview.firstSeason }; },
+  cells: async () => presentationCells((await mocks.records()).rows),
+  place: async (slug: string) => {
+    const detail = await mocks.place(slug);
+    return detail ? { ...detail, cells: presentationCells(detail.records), partCells: presentationCells(detail.records),
+      areaTotals: [], flagged: { split: emptySplit(), seasons: [] } } : null;
+  },
+}) }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidate, updateTag: mocks.tag }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); } }));
 vi.mock("@/components/wrt/sites/SiteForm", () => ({ SiteForm: () => null }));

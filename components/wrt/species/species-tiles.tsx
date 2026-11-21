@@ -5,31 +5,23 @@ import type { AppRoute } from "@/lib/wrt/routes";
  * a site in one year), largest first.
  */
 import Link from "next/link";
-import { addToSplit, byTotalDesc, emptySplit, type RecordView } from "@/lib/wrt/queries";
-import type { QuantitySplit, Species } from "@/lib/wrt/types";
+import type { SpeciesTileRow } from "@/lib/wrt/presentation";
+import type { Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
 
 
 export function SpeciesTiles({
-  records, hrefFor, spread, cap = 18,
+  rows, hrefFor, spread, cap = 18,
 }: {
-  records: RecordView[];
+  rows: SpeciesTileRow[];
   /** Where a tile goes: usually the records behind its number. */
   hrefFor: (species: Species) => AppRoute;
   /** What the small count under the bar measures. */
   spread: "sites" | "seasons";
   cap?: number;
 }) {
-  const bySpecies = new Map<string, { species: Species; split: QuantitySplit; spread: Set<string> }>();
-  for (const v of records) {
-    const t = bySpecies.get(v.species.slug) ?? { species: v.species, split: emptySplit(), spread: new Set<string>() };
-    addToSplit(t.split, v.record);
-    t.spread.add(spread === "sites" ? v.place.slug : v.season.slug);
-    bySpecies.set(v.species.slug, t);
-  }
-  const rows = [...bySpecies.values()].sort(byTotalDesc);
   const max = Math.max(1, ...rows.map((r) => r.split.total));
   const unit = spread === "sites" ? "site" : "season";
 
@@ -52,8 +44,8 @@ export function SpeciesTiles({
       <span className="wrt-tile__foot">
         <SplitBar split={r.split} max={max} size="sm" />
         <span className="wrt-tile__sites">
-          {r.spread.size} {unit}
-          {r.spread.size === 1 ? "" : "s"}
+          {r.spread} {unit}
+          {r.spread === 1 ? "" : "s"}
         </span>
       </span>
     </li>

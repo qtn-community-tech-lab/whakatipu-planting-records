@@ -912,6 +912,115 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: string;
       };
+      filter_planting_history: {
+        Args: { filters?: Json; show_review?: boolean };
+        Returns: {
+          area: string | null;
+          area_name: string | null;
+          class: Database["public"]["Enums"]["site_class"] | null;
+          common_name: string | null;
+          confidence: string | null;
+          contested_group: string | null;
+          legacy_code: string | null;
+          line_id: number | null;
+          maori_name: string | null;
+          needs_review: boolean | null;
+          notes: Json | null;
+          planted_on: string | null;
+          planting_id: number | null;
+          precision: string | null;
+          quantity: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          season: string | null;
+          season_label: string | null;
+          season_order: number | null;
+          season_original: string | null;
+          site: string | null;
+          site_name: string | null;
+          site_original: string | null;
+          source: Database["public"]["Enums"]["planting_source"] | null;
+          source_cell: string | null;
+          source_file: string | null;
+          source_sheet: string | null;
+          species: string | null;
+          species_original: string | null;
+          threatened: boolean | null;
+          threatened_te_kakano: boolean | null;
+          wrt_number: string | null;
+          year: number | null;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "line_details";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      read_history_references: { Args: { profile?: string }; Returns: Json };
+      read_layout_summary: { Args: { show_review?: boolean }; Returns: Json };
+      read_planting_summary: {
+        Args: {
+          filters?: Json;
+          group_by?: string[];
+          include_group_counts?: boolean;
+          show_review?: boolean;
+        };
+        Returns: Json;
+      };
+      read_public_review_rows: {
+        Args: { filters?: Json; row_limit?: number; show_review?: boolean };
+        Returns: {
+          area: string | null;
+          area_name: string | null;
+          class: Database["public"]["Enums"]["site_class"] | null;
+          common_name: string | null;
+          confidence: string | null;
+          contested_group: string | null;
+          legacy_code: string | null;
+          line_id: number | null;
+          maori_name: string | null;
+          needs_review: boolean | null;
+          notes: Json | null;
+          planted_on: string | null;
+          planting_id: number | null;
+          precision: string | null;
+          quantity: number | null;
+          register_code: string | null;
+          scientific_name: string | null;
+          season: string | null;
+          season_label: string | null;
+          season_order: number | null;
+          season_original: string | null;
+          site: string | null;
+          site_name: string | null;
+          site_original: string | null;
+          source: Database["public"]["Enums"]["planting_source"] | null;
+          source_cell: string | null;
+          source_file: string | null;
+          source_sheet: string | null;
+          species: string | null;
+          species_original: string | null;
+          threatened: boolean | null;
+          threatened_te_kakano: boolean | null;
+          wrt_number: string | null;
+          year: number | null;
+        }[];
+        SetofOptions: {
+          from: "*";
+          to: "line_details";
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
+      read_season_leaders: {
+        Args: { leader_count?: number; show_review?: boolean };
+        Returns: Json;
+      };
+      read_site_species_leaders: {
+        Args: { leader_count?: number; show_review?: boolean };
+        Returns: Json;
+      };
     };
     Enums: {
       note_kind: "ruling" | "confirm" | "fyi";

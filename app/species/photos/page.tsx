@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getWrt } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import { emptySplit } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function SpeciesPhotosPage() {
-  const all = await getWrt().speciesList();
+  const all = await getPublicWrt().speciesList("full");
   const rows = topPlantedSpecies(all.filter((row) => row.item.deactivatedAt === null));
   const split = emptySplit();
   for (const row of rows) {

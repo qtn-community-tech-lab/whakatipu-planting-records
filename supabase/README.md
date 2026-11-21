@@ -119,6 +119,7 @@ Run SQL checks through Studio's SQL Editor. Read each file's prerequisites befor
 - [`anonymous_crud_check.sql`](checks/anonymous_crud_check.sql): public reads and denied anonymous writes.
 - [`auth_identity_check.sql`](checks/auth_identity_check.sql): identity linking, email changes, deactivation and audit attribution; run as postgres, fixtures roll back.
 - [`historical_seed_access_test.sql`](checks/historical_seed_access_test.sql): seed-role reads, linked inserts, generated IDs and totals access; fixtures roll back.
+- [`layout_summary_test.sql`](checks/layout_summary_test.sql): compact navigation, review scope, historical search aliases, public permissions and empty-history recovery; local fixtures roll back.
 - Other `*_test.sql` files cover species references and historical deactivation behaviour.
 
 `npm test` includes JSON validation and relationship tests. Live database tests use the configured Supabase environment; see `tests/live-env.ts`.

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWrt } from "@/lib/wrt/server";
-import type { PlaceDetail, SeasonPoint } from "@/lib/wrt/queries";
-import { speciesBySite, needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
+import { getPublicWrt } from "@/lib/wrt/public-server";
+import type { PlaceDetail } from "@/lib/wrt/queries";
+import { needsReviewByPlants } from "@/lib/wrt/queries";
+import { speciesAtPlaces, tileRows } from "@/lib/wrt/presentation";
 import { spanLabel, formatNumber, slugify } from "@/lib/wrt/text";
 import { Card, CardLink, PageHead, Rule } from "@/components/wrt/shared/page";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
@@ -23,7 +24,7 @@ type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
 const REVIEW_CAP = 25;
 
 export async function generateStaticParams() {
-  const places = await getWrt().places();
+  const places = await getPublicWrt().places();
   return places.flatMap((p) =>
     p.item.parcels.length > 1 ? p.item.parcels.map((parcel) => ({ slug: p.item.slug, part: slugify(parcel.name) })) : [],
   );
@@ -33,9 +34,13 @@ function findPart(d: PlaceDetail | null, part: string) {
   return d?.parcels.find((p) => slugify(p.item.name) === part) ?? null;
 }
 
+async function loadPart(slug: string, part: string) {
+  return getPublicWrt().place(slug, { part });
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, part } = await params;
-  const d = await getWrt().place(slug);
+  const d = await loadPart(slug, part);
   const p = findPart(d, part);
   if (!d || !p) return { title: "Part not found" };
   return {
@@ -46,26 +51,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PartPage({ params }: Props) {
   const { slug, part } = await params;
-  const wrt = getWrt();
-  const [d, allSeasons, site, authenticated] = await Promise.all([wrt.place(slug), wrt.seasons(), readSite(slug), isAuthenticated()]);
+  const [d, site, authenticated] = await Promise.all([loadPart(slug, part), readSite(slug), isAuthenticated()]);
   const p = findPart(d, part);
   if (!d || !p) notFound();
 
   const { place } = d;
   const parcel = p.item;
-  const recs = d.records.filter((r) => r.record.parcelId === parcel.id);
-  const split = splitOf(recs.map((r) => r.record));
+  const recs = d.cells;
+  const split = d.split;
   const span = p.span;
   const spanText = spanLabel(span);
   const recordsFor = (extra: Record<string, string | number | undefined> = {}) =>
     hrefs.records({ place: place.slug, parcel: parcel.id, ...extra });
 
-  const points: SeasonPoint[] = allSeasons.map(({ season }) => ({
-    season,
-    split: splitOf(recs.filter((r) => r.season.slug === season.slug).map((r) => r.record)),
-  }));
-  const speciesCount = new Set(recs.map((r) => r.species.slug)).size;
-  const needsReview = needsReviewByPlants(recs);
+  const points = d.seasons;
+  const speciesCount = d.species.length;
+  const needsReview = needsReviewByPlants(d.records);
   const aliases = [...new Set(parcel.aliases)].filter((a) => a && a !== parcel.name);
 
   const siblings = d.parcels.filter((x) => x.item.id !== parcel.id);
@@ -93,7 +94,7 @@ export default async function PartPage({ params }: Props) {
       <Card
         title="Recorded plants by season"
         action={<SplitKey spring />}
-        foot={`Recorded in ${span.seasonsActive} of ${allSeasons.length} seasons. Each column opens that season’s records for ${parcel.name}.`}
+        foot={`Recorded in ${span.seasonsActive} of ${points.length} seasons. Each column opens that season’s records for ${parcel.name}.`}
       >
         <div className="flex flex-col gap-6">
           <QuantityFigure split={split} />
@@ -110,7 +111,7 @@ export default async function PartPage({ params }: Props) {
         action={<CardLink href={recordsFor()}>All records</CardLink>}
         foot="Largest first, across every season. Select a species for its records here."
       >
-        <SpeciesTiles records={recs} spread="seasons" hrefFor={(s) => recordsFor({ species: s.slug })} />
+        <SpeciesTiles rows={tileRows(recs, "seasons")} spread="seasons" hrefFor={(s) => recordsFor({ species: s.slug })} />
       </Card>
 
       <Card
@@ -118,8 +119,8 @@ export default async function PartPage({ params }: Props) {
         foot={`Every species recorded at ${parcel.name}, largest first, season by season.`}
       >
         <PlantingTimeline
-          records={recs}
-          seasons={allSeasons.map((x) => x.season)}
+          cells={recs}
+          seasons={points.map((point) => point.season)}
           rowsBy="species"
           rowHref={(r) => (r.species ? recordsFor({ species: r.species.slug }) : recordsFor())}
           hrefFor={(r, season) => recordsFor({ species: r.species?.slug, season: season.name, year: season.year })}
@@ -128,12 +129,12 @@ export default async function PartPage({ params }: Props) {
 
       {needsReview.length > 0 && (
         <Card
-          title={`${formatNumber(needsReview.length)} record${needsReview.length === 1 ? "" : "s"} needing review here`}
+          title={`${formatNumber(split.recordsNeedingReview)} record${split.recordsNeedingReview === 1 ? "" : "s"} needing review here`}
           variant="table"
           action={<CardLink href={recordsFor({ review: "needs-review" })}>See them all</CardLink>}
           foot={
-            needsReview.length > REVIEW_CAP
-              ? `The ${REVIEW_CAP} largest of ${formatNumber(needsReview.length)}. Open Source on a row for the spreadsheet cell.`
+            split.recordsNeedingReview > REVIEW_CAP
+              ? `The ${REVIEW_CAP} largest of ${formatNumber(split.recordsNeedingReview)}. Open Source on a row for the spreadsheet cell.`
               : "Open Source on a row for the spreadsheet cell it came from."
           }
         >
@@ -159,8 +160,8 @@ export default async function PartPage({ params }: Props) {
           <SiteRows
             max={Math.max(1, ...d.parcels.map((x) => x.split.total))}
             rows={siblings.map((x) => {
-              const xr = d.records.filter((r) => r.record.parcelId === x.item.id);
-              const species = [...speciesBySite(xr).values()][0]?.species ?? [];
+              const xr = d.partCells.filter((cell) => cell.parcel?.id === x.item.id);
+              const species = [...speciesAtPlaces(xr).values()][0]?.species ?? [];
               const href = partHref(place.slug, x.item.name);
               return {
                 key: x.item.id,

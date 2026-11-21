@@ -1,68 +1,47 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { q, presentationCells } from "./helpers";
 import SeasonsPage from "@/app/seasons/page";
 import SeasonPage from "@/app/seasons/[slug]/page";
 
-const { readDb, authenticated } = vi.hoisted(() => ({ readDb: vi.fn(), authenticated: vi.fn() }));
-vi.mock("@/db/client", () => ({ db: readDb }));
-vi.mock("@/db/queries/auth", () => ({ isAuthenticated: authenticated }));
+const mocks = vi.hoisted(() => ({ season: vi.fn(), seasons: vi.fn(), leaders: vi.fn() }));
+vi.mock("@/db/client", () => ({ db: () => { throw new Error("Pages must use named history queries"); } }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: async () => false }));
 vi.mock("@/lib/wrt/server", () => ({
   reviewShown: async () => true,
-  getWrt: () => { throw new Error("Season photos must not load the full repository"); },
+}));
+vi.mock("@/lib/wrt/public-server", () => ({
+  getPublicWrt: () => ({ season: mocks.season, seasons: mocks.seasons, seasonLeaders: mocks.leaders }),
 }));
 
 const photos = [{
   src: "https://example.com/database-photo.jpg", attribution: "Database photographer · CC BY 4.0",
   sourceUrl: "https://example.com/source", licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
 }];
-const species = { slug: "database-species", scientific_name: "Database species", common_name: null, maori_name: null, photos };
-const season = {
-  season: "autumn-2024", season_label: "Autumn 2024", season_order: 0, year: 2024,
-  plants: 10, plants_confirmed: 10, plants_needs_review: 0, lines: 1, lines_needs_review: 0,
-  sites: 1, species: 1, workbook_total: 10, workbook_cell: "A1",
-};
-const tables: Record<string, object[]> = {
-  species: [species],
-  totals_by_season: [season],
-  season_species: [{ ...species, season: season.season, species: species.slug, plants: 10, rank: 1 }],
-  season_sites: [{ season: season.season, site: "reserve", site_name: "Reserve", plants: 10, rank: 1 }],
-  line_details: [{
-    ...species, ...season, species: species.slug, line_id: 1, quantity: 10, needs_review: false,
-    site: "reserve", site_name: "Reserve", area: "reserve-east", area_name: "East", class: "community",
-    contested_group: null, notes: [],
-  }],
-};
-const reads: { table: string; columns?: string; season?: string }[] = [];
+const slug = "autumn-2024";
 
-beforeEach(() => {
-  reads.length = 0;
-  authenticated.mockResolvedValue(false);
-  readDb.mockResolvedValue({
-    from(table: string) {
-      if (!tables[table]) throw new Error(`Unexpected full repository read: ${table}`);
-      const read: (typeof reads)[number] = { table };
-      reads.push(read);
-      const query = {
-        select: (columns: string) => { read.columns = columns; return query; },
-        is: () => query, order: () => query, lte: () => query,
-        eq: (column: string, value: string) => { if (column === "season") read.season = value; return query; },
-        throwOnError: async () => ({ data: tables[table] }),
-      };
-      return query;
-    },
+beforeEach(async () => {
+  vi.clearAllMocks();
+  const detail = (await q.season(slug))!;
+  const records = detail.records.map((row) => ({ ...row, species: { ...row.species, photos } }));
+  mocks.season.mockResolvedValue({ ...detail, records: [], cells: presentationCells(records) });
+  mocks.seasons.mockResolvedValue(await q.seasons());
+  mocks.leaders.mockResolvedValue({
+    species: [{ season: slug, species: { ...detail.species[0]!.item, photos }, split: detail.species[0]!.split }],
+    sites: detail.places.map((row) => ({ season: slug, slug: row.item.slug, name: row.item.name, split: row.split })),
   });
 });
 
-it("shows the season leaders' database photos without loading planting lines", async () => {
+it("shows season leaders' database photos using only scoped summary queries", async () => {
   const html = renderToStaticMarkup(await SeasonsPage());
   expect(html).toContain(photos[0]!.src);
-  expect(reads.map((read) => read.table).sort()).toEqual(["season_sites", "season_species", "species", "totals_by_season"]);
-  expect(reads.find((read) => read.table === "species")?.columns).toContain("photos");
+  expect(mocks.leaders).toHaveBeenCalledOnce();
+  expect(mocks.season).not.toHaveBeenCalled();
 });
 
-it("joins register photos onto a season's lines without reading other seasons' lines", async () => {
-  const html = renderToStaticMarkup(await SeasonPage({ params: Promise.resolve({ slug: season.season }), searchParams: Promise.resolve({}) }));
+it("renders register photos from a season's grouped presentation without raw line reads", async () => {
+  const html = renderToStaticMarkup(await SeasonPage({ params: Promise.resolve({ slug }), searchParams: Promise.resolve({}) }));
   expect(html).toContain(photos[0]!.src);
-  expect(reads.map((read) => read.table).sort()).toEqual(["line_details", "species", "totals_by_season"]);
-  expect(reads.find((read) => read.table === "line_details")?.season).toBe(season.season);
+  expect(mocks.season).toHaveBeenCalledWith(slug);
+  expect(mocks.leaders).not.toHaveBeenCalled();
 });

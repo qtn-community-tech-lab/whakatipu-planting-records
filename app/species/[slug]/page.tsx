@@ -4,7 +4,7 @@ import { SpeciesReferencePanel } from "@/components/wrt/species/species-referenc
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { getWrt } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -30,13 +30,13 @@ const PLACES_SHOWN = 15;
 const REVIEW_ROWS_SHOWN = 8;
 
 export async function generateStaticParams() {
-  const list = await getWrt().speciesList();
+  const list = await getPublicWrt().speciesList("names");
   return list.map((r) => ({ slug: r.item.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const d = await getWrt().species(slug);
+  const d = await getPublicWrt().species(slug);
   if (!d) return { title: "Species not found" };
   const name = d.species.displayName;
   return {
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SpeciesDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [d, authenticated] = await Promise.all([getWrt().species(slug), isAuthenticated()]);
+  const [d, authenticated] = await Promise.all([getPublicWrt().species(slug), isAuthenticated()]);
   if (!d) notFound();
   const { species: sp, split, span, seasons, years, places, contested, themes, records } = d;
 
@@ -58,7 +58,7 @@ export default async function SpeciesDetailPage({ params }: Props) {
   const reviewRows = records.filter((r) => r.record.needsReview);
   const reviewSorted = needsReviewByPlants(reviewRows).slice(0, REVIEW_ROWS_SHOWN);
   const siteCount = places.length;
-  const ranked = [...(await getWrt().speciesList())].sort(
+  const ranked = [...(await getPublicWrt().speciesList("names"))].sort(
     (a, b) => b.split.total - a.split.total || a.item.scientificName.localeCompare(b.item.scientificName),
   );
   const at = ranked.findIndex((r) => r.item.slug === sp.slug);
@@ -184,12 +184,12 @@ export default async function SpeciesDetailPage({ params }: Props) {
 
       {reviewRows.length > 0 && (
         <Card
-          title={`${formatNumber(reviewRows.length)} record${reviewRows.length === 1 ? "" : "s"} needing review`}
+          title={`${formatNumber(split.recordsNeedingReview)} record${split.recordsNeedingReview === 1 ? "" : "s"} needing review`}
           variant="table"
           action={<CardLink href={hrefs.records({ species: sp.slug, review: "needs-review" })}>See all needing review</CardLink>}
           foot={
-            reviewRows.length > REVIEW_ROWS_SHOWN
-              ? `The ${REVIEW_ROWS_SHOWN} largest of ${formatNumber(reviewRows.length)}. Open Source on any row for the spreadsheet cell.`
+            split.recordsNeedingReview > REVIEW_ROWS_SHOWN
+              ? `The ${REVIEW_ROWS_SHOWN} largest of ${formatNumber(split.recordsNeedingReview)}. Open Source on any row for the spreadsheet cell.`
               : "Open Source on any row for the spreadsheet cell it came from."
           }
         >

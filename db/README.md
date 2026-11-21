@@ -3,12 +3,13 @@
 See [local setup](../README.md#local-development) and [database maintenance](../supabase/README.md). Shared implementation requirements live in [AGENTS.md](../AGENTS.md).
 
 - Put entity operations in `queries/`: `list<Entity>s`, `read<Entity>`, `create<Entity>`, `update<Entity>` and `deactivate<Entity>`. Spell out `PlantingEvent`, `PlantingLine` and `PlantingArea`; `findPlantingLines` is the existing paged-query exception.
-- Pages and actions call named entity queries. `queries/views.ts` supplies their base table/view queries; `repository.ts` supplies the shared history explorer.
+- Pages and actions call named entity queries. `queries/views.ts` supplies their base table/view queries; `queries/public-history.ts` reads grouped history and bounded public review rows.
 - Use session-aware `db()` from `client.ts` for writes and editor reads so RLS applies. Keep Supabase imports out of pages and components; ESLint enforces the boundary, with infrastructure, script and test exceptions.
 - Use generated `database.types.ts` and writable Zod schemas in `types.ts`. Database triggers maintain audit fields.
 - Deactivate instead of deleting. Normal selectors exclude deactivated entries; historical identities and quantities remain available.
 - `public.users` stores approved profiles with stable app IDs; `auth_user_id` links confirmed Supabase Auth identities.
-- Public history reads bypass the persistent fetch cache and share one repository load per request, including the layout. This prevents pre-import empty results or independently stale tables from being reused after seeding. Missing related rows fail explicitly rather than silently dropping quantities.
+- The layout reads navigation counts, season totals and search names through `readLayoutSummary`, a single public RPC. It does not load individual planting lines, notes or species profiles.
+- Public pages use `lib/wrt/public-server.ts` for grouped history and request-scoped reference reads, without a persistent cache. Staff Records, chat and planting forms retain their existing `lib/wrt/server.ts` repository path. Missing related rows fail explicitly rather than silently dropping quantities.
 
 ## Generate types after a migration
 

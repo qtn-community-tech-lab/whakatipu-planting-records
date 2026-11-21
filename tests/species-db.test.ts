@@ -1,7 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
-import { SupabaseWrtRepository } from "@/db/repository";
-import type { Database, Tables } from "@/db/types";
+import { createPublicHistoryQueries } from "@/db/queries/public-history";
+import type { Tables } from "@/db/types";
 import catalogue from "@/data/species.json";
 import { defined } from "./assertions";
 
@@ -9,21 +8,21 @@ const first = defined(catalogue[0]);
 
 async function speciesFromDb(reference: Partial<Tables<"species">> = {}) {
   const row = { ...first, slug: "database-species", ...reference };
-  const fetch = vi.fn<typeof globalThis.fetch>(async (input) => {
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://example.supabase.co");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "test-key");
+  const fetch = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
     const url = new URL(String(input));
-    if (url.pathname.endsWith("/species")) {
-      const selected = url.searchParams.get("select")!.split(",");
-      expect(selected).not.toContain("profile");
-      expect(selected).not.toContain("name_note");
-      for (const column of ["scientific_name", "common_name", "maori_name", "maori_name_alternatives", "summary", "look_for", "sources", "checked_at"]) expect(selected).toContain(column);
-      return new Response(JSON.stringify([row]), { headers: { "Content-Type": "application/json" } });
+    if (url.pathname.endsWith("/read_history_references")) {
+      return new Response(JSON.stringify({ seasons: [], sites: [], areas: [], species: [row] }), { headers: { "Content-Type": "application/json" } });
     }
-    return new Response("[]", { headers: { "Content-Type": "application/json" } });
+    if (url.pathname.endsWith("/read_planting_summary")) return new Response(JSON.stringify({
+      totals: { total: 0, resolved: 0, needsReview: 0, records: 0, recordsNeedingReview: 0,
+        sites: 0, species: 0, seasons: 0, firstSeason: null, lastSeason: null }, rows: [],
+    }), { headers: { "Content-Type": "application/json" } });
+    throw new Error(`Unexpected raw history request: ${url.pathname}`);
   });
-  const db = createClient<Database>("https://example.supabase.co", "test-key", {
-    auth: { persistSession: false }, global: { fetch },
-  });
-  return defined((await new SupabaseWrtRepository(() => db).listSpecies())[0]);
+  try { return defined((await createPublicHistoryQueries(() => true).speciesList("full"))[0]?.item); }
+  finally { fetch.mockRestore(); vi.unstubAllEnvs(); }
 }
 
 describe("database species references", () => {

@@ -23,6 +23,7 @@ export interface SiteRowData {
   href: AppRoute;
   split: QuantitySplit;
   species: SiteSpecies[];
+  speciesCount?: number;
   /** Small facts under the name: class badges, seasons, parcels. */
   meta?: ReactNode;
   /** Where the total links: the records behind it. */
@@ -37,7 +38,7 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
     <div className="wrt-sitesp">
       {rows.map((r) => {
         const top = r.species.slice(0, perSite);
-        const more = r.species.length - top.length;
+        const more = (r.speciesCount ?? r.species.length) - top.length;
         return (
           <div key={r.key} className="wrt-sitesp__site">
             <div className="wrt-sitesp__head">

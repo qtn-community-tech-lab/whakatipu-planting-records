@@ -7,11 +7,13 @@ import type { CSSProperties } from "react";
  */
 import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
+import type { HistoryCell } from "@/lib/wrt/presentation";
+import { addSplits, cellsFromRecords } from "@/lib/wrt/presentation";
 import type { RecordView } from "@/lib/wrt/queries";
 import type { QuantitySplit, Season, Species } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
-import { addToSplit, emptySplit } from "@/lib/wrt/queries";
+import { emptySplit } from "@/lib/wrt/queries";
 
 interface Row {
   key: string;
@@ -25,24 +27,25 @@ interface Row {
   bySeason: Map<string, QuantitySplit>;
 }
 
-function buildRows(records: RecordView[], rowsBy: "species" | "part" | "site"): Row[] {
+function buildRows(cells: HistoryCell[], rowsBy: "species" | "part" | "site"): Row[] {
   const rows = new Map<string, Row>();
-  for (const v of records) {
-    const key = rowsBy === "species" ? v.species.slug : rowsBy === "site" ? v.place.slug : v.record.parcelId;
+  for (const v of cells) {
+    const key = rowsBy === "species" ? v.species?.slug : rowsBy === "site" ? v.place.slug : v.parcel?.id;
+    if (!key || !v.season) continue;
     const row =
       rows.get(key) ??
       ({
         key,
-        name: rowsBy === "species" ? v.species.displayName : rowsBy === "site" ? v.place.name : v.record.parcelName,
-        ...(rowsBy === "species" ? { species: v.species } : {}),
-        ...(rowsBy === "part" ? { parcelId: v.record.parcelId } : {}),
+        name: rowsBy === "species" ? v.species!.displayName : rowsBy === "site" ? v.place.name : v.parcel!.name,
+        ...(rowsBy === "species" ? { species: v.species! } : {}),
+        ...(rowsBy === "part" ? { parcelId: v.parcel!.id } : {}),
         ...(rowsBy === "site" ? { placeSlug: v.place.slug } : {}),
         total: emptySplit(),
         bySeason: new Map<string, QuantitySplit>(),
       } satisfies Row);
-    addToSplit(row.total, v.record);
+    addSplits(row.total, v.split);
     const cell = row.bySeason.get(v.season.slug) ?? emptySplit();
-    addToSplit(cell, v.record);
+    addSplits(cell, v.split);
     row.bySeason.set(v.season.slug, cell);
     rows.set(key, row);
   }
@@ -50,9 +53,10 @@ function buildRows(records: RecordView[], rowsBy: "species" | "part" | "site"): 
 }
 
 export function PlantingTimeline({
-  records, seasons, rowsBy, hrefFor, cap = 20, rowHref,
+  cells: groupedCells, records, seasons, rowsBy, hrefFor, cap = 20, rowHref,
 }: {
-  records: RecordView[];
+  cells?: HistoryCell[];
+  records?: RecordView[];
   /** Every season, in order. Columns are trimmed to the first and last with records. */
   seasons: Season[];
   rowsBy: "species" | "part" | "site";
@@ -62,9 +66,10 @@ export function PlantingTimeline({
   rowHref?: (row: { species?: Species; parcelId?: string; placeSlug?: string; name: string }) => AppRoute;
   cap?: number;
 }) {
-  const rows = buildRows(records, rowsBy);
+  const cells = groupedCells ?? cellsFromRecords(records ?? []);
+  const rows = buildRows(cells, rowsBy);
   if (!rows.length) return null;
-  const active = new Set(records.map((v) => v.season.slug));
+  const active = new Set(cells.flatMap((cell) => cell.season ? [cell.season.slug] : []));
   const firstIdx = seasons.findIndex((s) => active.has(s.slug));
   let lastIdx = -1;
   seasons.forEach((s, i) => {
