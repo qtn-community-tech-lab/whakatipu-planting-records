@@ -1,6 +1,6 @@
 /** Public navigation counts and search names, from one consistent database read. */
 import { z } from "zod";
-import { publicDb } from "@/db/public-client";
+import { publicDb } from "@/db/repository";
 
 const count = z.number().int().nonnegative();
 const layoutSummarySchema = z.object({

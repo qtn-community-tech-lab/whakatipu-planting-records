@@ -1,5 +1,5 @@
 /** Public pages: grouped measures and bounded review rows. */
-import { publicDb } from "@/db/public-client";
+import { publicDb } from "@/db/repository";
 import type { Json } from "@/db/database.types";
 import { referenceSpeciesSchema, reconciliation, splitSchema, summarySchema, toHistoryReferences, toSpecies } from "@/db/history-models";
 import type { Dimension, HistoryReferences, Summary, SummaryRow } from "@/db/history-models";
@@ -295,5 +295,3 @@ export function createPublicHistoryQueries(scope: () => boolean | Promise<boolea
   return { overview, places, speciesList, species, place, season, seasons, search, dataQuality,
     cells, siteSpecies, seasonLeaders, counts };
 }
-
-export type PublicHistoryQueries = ReturnType<typeof createPublicHistoryQueries>;
