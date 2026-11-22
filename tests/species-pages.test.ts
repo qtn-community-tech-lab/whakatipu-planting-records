@@ -76,7 +76,7 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
 
   if (kind === "new") it("handles duplicate slugs without clearing form values or redirecting", async () => {
     mocks.create.mockResolvedValue({ data: null, error: { code: "23505" } });
-    expect(await (await pageForm(kind))!.props.onSubmit(input)).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique") }] });
+    expect(await (await pageForm(kind))!.props.onSubmit(input)).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("already in use") }] });
     expect(mocks.redirect).not.toHaveBeenCalled();
     expect(mocks.tag).not.toHaveBeenCalled();
   });
