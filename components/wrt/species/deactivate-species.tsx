@@ -30,7 +30,7 @@ export function DeactivateSpecies({
           aria-controls={confirming ? confirmationId : undefined}
           onClick={() => setConfirming(true)}
         >
-          Deactivate Species
+          Deactivate species
         </Button>
       </div>
       {confirming && (
