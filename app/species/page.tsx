@@ -177,7 +177,6 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                 key={v} href={href(sort, show, q, v, state)} className="wrt-stool__opt" title={v === "list" ? "List: one plant per row" : "Grid: photo cards"}
                 aria-current={view === v ? "true" : undefined}
               >
-                <span className="sr-only">{v === "list" ? "List view" : "Grid view"}</span>
                 {v === "list" ? (
                   <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
                     <path d="M6 4h8M6 8h8M6 12h8" /><path d="M2.5 4h.01M2.5 8h.01M2.5 12h.01" strokeWidth="2.4" />
@@ -188,6 +187,8 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                     <rect x="2" y="9" width="5" height="5" rx="1.3" /><rect x="9" y="9" width="5" height="5" rx="1.3" />
                   </svg>
                 )}
+                {/* Icon only on wide screens; on phones the toggle has its own row, so the words show. */}
+                <span className="sr-only max-[761px]:not-sr-only!">{v === "list" ? "List view" : "Grid view"}</span>
               </Link>
             ))}
           </nav>

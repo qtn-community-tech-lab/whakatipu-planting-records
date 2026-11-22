@@ -466,7 +466,11 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-stool__view .wrt-stool__opt { width: 40px; padding: 0; justify-content: center; }
 .wrt-species .wrt-stool__result { justify-self: end; justify-content: flex-end; }
 @media (max-width: 760px) {
-  .wrt-species .wrt-stool { grid-template-areas: "form view" "show show" "result result"; }
+  /* List and Grid get their own row, so the search box keeps the full width. */
+  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show show" "result result"; }
+  .wrt-species .wrt-stool__search { flex-basis: 100%; }
+  .wrt-stool__show.wrt-stool__view { justify-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
+  .wrt-stool__view .wrt-stool__opt { width: auto; min-height: 44px; gap: 8px; }
   .wrt-species .wrt-stool__result { justify-self: start; justify-content: flex-start; }
 }
 /* Grid view: photo cards four to a row, with just the rank and the name. */
