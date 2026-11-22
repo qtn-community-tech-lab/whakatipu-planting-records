@@ -37,6 +37,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { z } from "zod";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
+import { slugify } from "@/lib/wrt/text";
 import {
   speciesSchema,
   type SpeciesEdit,
@@ -189,21 +190,32 @@ export function SpeciesForm<T extends string>({
             <FieldGroup>
               <FormField
                 control={form.control}
-                name="slug"
-                label="Slug"
-                description={values
-                  ? "The slug cannot be changed after the species is created."
-                  : "Slugs must be unique. Use lowercase letters, numbers and hyphens, for example coprosma-propinqua. The slug cannot be changed after creation."}
+                name="scientific_name"
+                label="Scientific name"
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} readOnly={!!values} required />
+                  <Input
+                    {...field}
+                    {...accessibility}
+                    onChange={(event) => {
+                      field.onChange(event);
+                      // A new species' web address follows its scientific name until staff edit it themselves.
+                      if (!values && !form.getFieldState("slug").isDirty)
+                        form.setValue("slug", slugify(event.target.value), { shouldValidate: !!errors.slug });
+                    }}
+                    maxLength={INPUT_LIMITS.shortText}
+                    required
+                  />
                 )}
               />
               <FormField
                 control={form.control}
-                name="scientific_name"
-                label="Scientific name"
+                name="slug"
+                label="Web address name"
+                description={values
+                  ? "Part of this species page's address. It can't be changed after the species is created."
+                  : "Filled in from the scientific name. It becomes the page's address, for example /species/coprosma-propinqua, and can't be changed once saved."}
                 render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.shortText} required />
+                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} readOnly={!!values} required />
                 )}
               />
               <FormField

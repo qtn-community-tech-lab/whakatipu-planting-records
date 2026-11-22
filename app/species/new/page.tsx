@@ -33,7 +33,7 @@ export default async function NewSpeciesPage() {
           issues: [
             {
               path: "slug",
-              message: "This slug is already in use. Choose a unique slug.",
+              message: "This web address name is already in use. Choose another.",
             },
           ],
         };
