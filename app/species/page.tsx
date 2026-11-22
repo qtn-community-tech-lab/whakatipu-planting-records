@@ -187,8 +187,8 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                     <rect x="2" y="9" width="5" height="5" rx="1.3" /><rect x="9" y="9" width="5" height="5" rx="1.3" />
                   </svg>
                 )}
-                {/* Icon only on wide screens; on phones the toggle has its own row, so the words show. */}
-                <span className="sr-only max-[761px]:not-sr-only!">{v === "list" ? "List view" : "Grid view"}</span>
+                {/* Icon only on wide screens; below 1260px the toggle has its own row, so the words show. */}
+                <span className="sr-only max-[1261px]:not-sr-only!">{v === "list" ? "List view" : "Grid view"}</span>
               </Link>
             ))}
           </nav>

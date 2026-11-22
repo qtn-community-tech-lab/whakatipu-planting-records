@@ -465,12 +465,15 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-stool__show.wrt-stool__view { grid-area: view; justify-self: end; }
 .wrt-stool__view .wrt-stool__opt { width: 40px; padding: 0; justify-content: center; }
 .wrt-species .wrt-stool__result { justify-self: end; justify-content: flex-end; }
-@media (max-width: 760px) {
-  /* List and Grid get their own row, so the search box keeps the full width. */
-  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show show" "result result"; }
-  .wrt-species .wrt-stool__search { flex-basis: 100%; }
+/* Below 1260px search, sort and List/Grid don't fit on one row, so List and Grid get their own row and the search box keeps its width. */
+@media (max-width: 1260px) {
+  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show result"; }
   .wrt-stool__show.wrt-stool__view { justify-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
   .wrt-stool__view .wrt-stool__opt { width: auto; min-height: 44px; gap: 8px; }
+}
+@media (max-width: 760px) {
+  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show show" "result result"; }
+  .wrt-species .wrt-stool__search { flex-basis: 100%; }
   .wrt-species .wrt-stool__result { justify-self: start; justify-content: flex-start; }
 }
 /* Grid view: photo cards four to a row, with just the rank and the name. */
