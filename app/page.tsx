@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
+import { reviewShown } from "@/lib/wrt/server";
 import Link from "next/link";
 import { Card, CardLink, EmptyState, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const wrt = getWrt();
+  const wrt = getPublicWrt();
   const [o, showReview] = await Promise.all([wrt.overview(), reviewShown()]);
 
   if (!o.firstSeason || !o.lastSeason) return (

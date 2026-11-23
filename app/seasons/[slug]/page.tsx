@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { needsReviewByPlants } from "@/lib/wrt/queries";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import { reviewShown } from "@/lib/wrt/server";
-import { listSeasonPlantingLines, listSeasons } from "@/db/queries/plantings";
-import { listSpecies } from "@/db/queries/species";
-import { toSeasonDetail, toSeasonSummary } from "@/db/records";
 import { formatNumber } from "@/lib/wrt/text";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { PageHead, Card, CardLink, Rule } from "@/components/wrt/shared/page";
@@ -24,9 +22,9 @@ const RECORDS_CAP = 12;
 
 /** The season's lines and every season's totals, from Supabase. Seasons are those with lines. */
 async function loadSeason(slug: string) {
-  const [rows, lines, showReview, species] = await Promise.all([listSeasons(), listSeasonPlantingLines(slug), reviewShown(), listSpecies()]);
-  const all = rows.filter((r) => (r.lines ?? 0) > 0).map((r) => toSeasonSummary(r, showReview));
-  return { all, d: toSeasonDetail(slug, all, lines, showReview, new Map(species.map((row) => [row.slug, row]))), showReview };
+  const wrt = getPublicWrt();
+  const [all, d, showReview] = await Promise.all([wrt.seasons(), wrt.season(slug), reviewShown()]);
+  return { all, d, showReview };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -57,9 +55,8 @@ export default async function SeasonPage({ params }: Props) {
   // Slope Hill 2024 columns (WRT decision 4): the flagged plants inside this season, if any.
   const slope = d.themes.find((t) => t.theme === "slope-hill-2024");
   const slopePlants = slope?.split.needsReview ?? 0;
-  const slopeSites = slope
-    ? [...new Set(d.records.filter((v) => v.record.needsReview && v.record.notes.some((n) => n.theme === "slope-hill-2024")).map((v) => v.record.parcelName))]
-    : [];
+  const slopeSites = slope ? [...new Set((await getPublicWrt().cells(["site", "area"], { seasonSlug: slug, theme: "slope-hill-2024" }))
+    .flatMap((cell) => cell.parcel ? [cell.parcel.name] : []))] : [];
 
   const reviewRows = needsReviewByPlants(d.records);
 
@@ -158,7 +155,7 @@ export default async function SeasonPage({ params }: Props) {
         action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
         foot={`Largest first. Select a species name for its records this season. Bars are relative to the largest species this season${showReview ? "; amber still needs a WRT ruling" : ""}.`}
       >
-        <SeasonSpeciesGrid season={season} records={d.records} />
+        <SeasonSpeciesGrid season={season} cells={d.cells} />
       </Card>
 
       <Card
@@ -166,7 +163,7 @@ export default async function SeasonPage({ params }: Props) {
         action={<SplitKey />}
         foot="Each site with its three most recorded species this season. Open a site for every species recorded there."
       >
-        <SeasonSiteSpecies season={season} records={d.records} />
+        <SeasonSiteSpecies season={season} cells={d.cells} />
       </Card>
 
       <Card title="By site class" foot="Keystone, community and school sites, as WRT classes them.">
@@ -195,8 +192,8 @@ export default async function SeasonPage({ params }: Props) {
           variant="table"
           action={<CardLink href={recordsHref}>All {formatNumber(split.records)} records</CardLink>}
           foot={
-            reviewRows.length > RECORDS_CAP
-              ? `Largest ${RECORDS_CAP} of ${formatNumber(reviewRows.length)} records needing review. Open Source on a row for the workbook cell.`
+            split.recordsNeedingReview > RECORDS_CAP
+              ? `Largest ${RECORDS_CAP} of ${formatNumber(split.recordsNeedingReview)} records needing review. Open Source on a row for the workbook cell.`
               : "Open Source on a row for the workbook cell it came from."
           }
         >

@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
-import Form from "next/form";
-import { getWrt } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import { formatNumber, foldMacrons, matchScore } from "@/lib/wrt/text";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
 import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
@@ -14,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
+import Form from "next/form";
 
 export const metadata: Metadata = { title: "Species" };
 
@@ -70,7 +70,7 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
   const view: View = first(sp.view) === "grid" ? "grid" : "list";
   const state: RegisterState = first(sp.state) === "deactivated" ? "deactivated" : "active";
 
-  const [all, authenticated] = await Promise.all([getWrt().speciesList(), isAuthenticated()]);
+  const [all, authenticated] = await Promise.all([getPublicWrt().speciesList(), isAuthenticated()]);
   const register = all.filter((r) => (r.item.deactivatedAt !== null) === (state === "deactivated"));
   const guideCount = register.filter((r) => r.item.photos[0] && r.item.summary).length;
   const allSplit = splitOf([]);

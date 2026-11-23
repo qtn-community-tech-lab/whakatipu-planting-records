@@ -3,7 +3,9 @@
  * compact list of sites with their most recorded species. The full species
  * list for a site lives on that site's page.
  */
-import { speciesBySite, byTotalDesc, type RecordView } from "@/lib/wrt/queries";
+import { byTotalDesc } from "@/lib/wrt/queries";
+import type { HistoryCell } from "@/lib/wrt/presentation";
+import { speciesAtPlaces, tileRows } from "@/lib/wrt/presentation";
 import type { Season } from "@/lib/wrt/types";
 import { hrefs } from "@/components/wrt/shared/names";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
@@ -14,10 +16,10 @@ function seasonQuery(season: Season) {
 }
 
 /** Every species recorded in the season, largest first. */
-export function SeasonSpeciesGrid({ season, records }: { season: Season; records: RecordView[] }) {
+export function SeasonSpeciesGrid({ season, cells }: { season: Season; cells: HistoryCell[] }) {
   return (
     <SpeciesTiles
-      records={records}
+      rows={tileRows(cells, "sites")}
       spread="sites"
       hrefFor={(s) => hrefs.records({ ...seasonQuery(season), species: s.slug })}
     />
@@ -25,8 +27,8 @@ export function SeasonSpeciesGrid({ season, records }: { season: Season; records
 }
 
 /** Each site in the season with its few most recorded species. */
-export function SeasonSiteSpecies({ season, records }: { season: Season; records: RecordView[] }) {
-  const groups = [...speciesBySite(records).values()].sort(byTotalDesc);
+export function SeasonSiteSpecies({ season, cells }: { season: Season; cells: HistoryCell[] }) {
+  const groups = [...speciesAtPlaces(cells).values()].sort(byTotalDesc);
   const max = Math.max(1, ...groups.map((g) => g.split.total));
   return (
     <SiteRows

@@ -3,29 +3,21 @@
  * with the resolved / needs-review split kept on every row.
  */
 import Link from "next/link";
-import type { RecordView } from "@/lib/wrt/queries";
-import { byTotalDesc, splitOf } from "@/lib/wrt/queries";
-import type { Place, QuantitySplit, SeasonName, Species } from "@/lib/wrt/types";
+import type { HistoryCell } from "@/lib/wrt/presentation";
+import { sumSplits, tileRows } from "@/lib/wrt/presentation";
+import type { Place, QuantitySplit, SeasonName } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink } from "@/components/wrt/shared/page";
 import { hrefs } from "@/components/wrt/shared/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
 
-export function YearView({ place, year, rows }: { place: Place; year: number; rows: RecordView[] }) {
-  const recs = rows.filter((r) => r.record.year === year);
-  const total = splitOf(recs.map((r) => r.record));
-  const bySpecies = new Map<string, { species: Species; list: RecordView[] }>();
-  for (const r of recs) {
-    const e = bySpecies.get(r.species.id) ?? { species: r.species, list: [] };
-    e.list.push(r);
-    bySpecies.set(r.species.id, e);
-  }
-  const ranked = [...bySpecies.values()]
-    .map((e) => ({ species: e.species, split: splitOf(e.list.map((r) => r.record)) }))
-    .sort(byTotalDesc);
+export function YearView({ place, year, cells }: { place: Place; year: number; cells: HistoryCell[] }) {
+  const recs = cells.filter((cell) => cell.season?.year === year);
+  const total = sumSplits(recs);
+  const ranked = tileRows(recs, "seasons");
   const season = (name: SeasonName): QuantitySplit =>
-    splitOf(recs.filter((r) => r.record.seasonName === name).map((r) => r.record));
+    sumSplits(recs.filter((cell) => cell.season?.name === name));
   const autumn = season("Autumn");
   const spring = season("Spring");
   const q = (extra: Record<string, string | number | undefined> = {}) =>
@@ -54,7 +46,7 @@ export function YearView({ place, year, rows }: { place: Place; year: number; ro
             </span>
           )}
         </p>
-        <SpeciesTiles records={recs} spread="seasons" hrefFor={(sp) => q({ species: sp.slug })} cap={12} />
+        <SpeciesTiles rows={ranked} spread="seasons" hrefFor={(sp) => q({ species: sp.slug })} cap={12} />
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           <CardLink href={q()}>All {formatNumber(total.records)} records for {year}</CardLink>
           {total.recordsNeedingReview > 0 && (

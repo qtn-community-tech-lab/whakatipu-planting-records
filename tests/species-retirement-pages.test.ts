@@ -7,8 +7,8 @@ const mocks = vi.hoisted(() => ({
   authenticated: vi.fn(), deactivate: vi.fn(), species: vi.fn(), list: vi.fn(),
   tag: vi.fn(), revalidate: vi.fn(), redirect: vi.fn(),
 }));
-vi.mock("@/lib/wrt/server", () => ({
-  getWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
+vi.mock("@/lib/wrt/public-server", () => ({
+  getPublicWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
 vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
 vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate }));

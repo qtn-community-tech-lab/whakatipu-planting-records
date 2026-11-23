@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { type RawParams, first } from "@/lib/wrt/params";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { getWrt } from "@/lib/wrt/server";
+import { getPublicWrt } from "@/lib/wrt/public-server";
 import type { QuantitySplit } from "@/lib/wrt/types";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
@@ -59,7 +59,7 @@ export default async function SearchPage({ searchParams }: Props) {
     );
   }
 
-  const r = await getWrt().search(q, 20);
+  const r = await getPublicWrt().search(q, 20);
   const count = r.species.length + r.places.length + r.seasons.length;
   const recordsLink = (
     <Link href={hrefs.records({ q })} className="cn-link">Records mentioning “{q}” →</Link>

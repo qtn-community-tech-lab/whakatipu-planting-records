@@ -1,6 +1,8 @@
 import { places, records, seasons, species } from "./fixtures/planting";
 import type { WrtRepository } from "@/lib/wrt/repository";
-import { createQueries } from "@/lib/wrt/queries";
+import { createQueries, splitOf } from "@/lib/wrt/queries";
+import type { RecordView } from "@/lib/wrt/queries";
+import type { HistoryCell } from "@/lib/wrt/presentation";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
 /** Small in-memory fixture; no source files or live database required. */
@@ -21,6 +23,13 @@ export const repo: WrtRepository = {
   }),
 };
 export const q = createQueries(repo);
+
+/** Aggregate-view fixture inputs for presentation tests; no database involved. */
+export function presentationCells(rows: RecordView[]): HistoryCell[] {
+  return rows.map((row) => ({ area: row.record.parcelId, place: row.place, species: row.species, season: row.season,
+    parcel: row.place.parcels.find((parcel) => parcel.id === row.record.parcelId) ?? null,
+    split: splitOf([row.record]) }));
+}
 
 /** A split must always add up. */
 export function expectCoherentSplit(s: QuantitySplit, where = "split") {

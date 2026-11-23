@@ -1,13 +1,13 @@
 import { Card, EmptyState } from "@/components/wrt/shared/page";
 import { RegionMap } from "@/components/wrt/sites/region-map";
-import { locationsForSites } from "@/lib/wrt/site-locations";
-import type { PlantingRecord } from "@/lib/wrt/types";
+import { locationsForAreaTotals } from "@/lib/wrt/site-locations";
+import type { QuantitySplit } from "@/lib/wrt/types";
 import { listPlantingAreaPins } from "@/db/queries/sites";
 import { regionMapOptions } from "@/lib/wrt/map-region";
 
-export async function LocationCard({ sites, records, siteName }: { sites: { slug: string; name: string }[]; records: PlantingRecord[]; siteName?: string }) {
+export async function LocationCard({ sites, totals, siteName }: { sites: { slug: string; name: string }[]; totals: { area: string; split: QuantitySplit }[]; siteName?: string }) {
   const areas = await listPlantingAreaPins();
-  const locations = locationsForSites(areas, sites, records);
+  const locations = locationsForAreaTotals(areas, sites, totals);
   const mappedSites = new Set(locations.map((location) => location.siteSlug)).size;
   return (
     <Card title={siteName ? `Where to find ${siteName}` : "Explore planting locations"}
