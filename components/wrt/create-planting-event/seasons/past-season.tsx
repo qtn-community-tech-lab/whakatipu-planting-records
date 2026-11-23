@@ -7,6 +7,7 @@ import { ArrowRight, MapPin, Pencil, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { FieldSet } from "@/components/ui/field";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -17,6 +18,7 @@ import { formatPlantedOn } from "@/lib/wrt/events/season";
 import { formatNumber } from "@/lib/wrt/text";
 import * as panel from "../panel-classes";
 import { editFormId, EditPlantingEvent, type SavePlantingEventEdit } from "./edit-planting-event";
+import { DeactivatePlantingEvent } from "./deactivate-planting-event";
 import { FigureList } from "@/components/wrt/shared/figure-list";
 import { StatTiles } from "@/components/wrt/shared/stat-tiles";
 import { useLoad } from "@/components/wrt/shared/use-load";
@@ -55,7 +57,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
 }) {
   const searchParams = useSearchParams();
   const heading = useRef<HTMLHeadingElement>(null);
-  const { loading, failed, data, reload } = useLoad(`${slug}/${partId ?? ""}/${season.slug}`, () => loadSeasonPlantingEvents(slug, season.slug, partId));
+  const { loading, failed, data, reload } = useLoad(`${slug}/${partId ?? ""}/${season.slug}/${initialEvent ?? ""}`, () => loadSeasonPlantingEvents(slug, season.slug, partId, initialEvent));
   useEffect(() => heading.current?.focus(), []);
   const [editing, setEditing] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
@@ -75,10 +77,11 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
   const stale = !data;
   const events = shown?.events ?? [];
   useEffect(() => { if (initialEvent && data) document.getElementById(`planting-${initialEvent}`)?.focus(); }, [initialEvent, data]);
-  const total = events.reduce((t, e) => t + plantsIn(e), 0);
-  const speciesCount = new Set(events.flatMap((e) => e.lines.map((l) => l.species))).size;
+  const activeEvents = events.filter((e) => !e.deactivatedAt);
+  const total = activeEvents.reduce((t, e) => t + plantsIn(e), 0);
+  const speciesCount = new Set(activeEvents.flatMap((e) => e.lines.map((l) => l.species))).size;
   const single = events.length === 1;
-  const hasButton = single && !!onSaveEdit && editing === null;
+  const hasButton = single && !events[0]?.deactivatedAt && !!onSaveEdit && editing === null;
   useEffect(() => {
     onHeaderButton?.(hasButton);
     return () => onHeaderButton?.(false);
@@ -88,10 +91,14 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
   const head = (e: Event, edit?: { plantedOn: string; pencil: ReactNode }) => {
     const on = edit ? edit.plantedOn : e.plantedOn;
     const button = edit ? (
-      <button type="button" className={s.edit} onClick={cancel} disabled={saving}>
-        <X size={14} strokeWidth={2.4} aria-hidden="true" />Cancel
-      </button>
-    ) : onSaveEdit && editing === null && (
+      <div className="flex shrink-0 items-center gap-2">
+        {e.onDeactivate && <DeactivatePlantingEvent name={`${e.siteName}, ${e.area}, ${season.label}`}
+          onDeactivate={e.onDeactivate} disabled={saving} onPendingChange={busy} />}
+        <Button type="button" className={s.edit} onClick={cancel} disabled={saving}>
+          <X size={14} strokeWidth={2.4} aria-hidden="true" />Cancel
+        </Button>
+      </div>
+    ) : onSaveEdit && !e.deactivatedAt && editing === null && (
       <button type="button" className={s.edit} onClick={() => setEditing(e.id)} disabled={stale} aria-label={`Edit ${e.area}`}>
         <Pencil size={14} strokeWidth={2.4} aria-hidden="true" />Edit
       </button>
@@ -151,18 +158,24 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
               { label: "Plants", value: formatNumber(total) },
               { label: "Species", value: String(speciesCount) },
               // Each is one planting event (an area's planting that season).
-              { label: single ? "Planting" : "Plantings", value: String(events.length) },
+              { label: single ? "Planting" : "Plantings", value: String(activeEvents.length) },
             ]} />}
             {events.map((e, i) => { const sum = plantsIn(e); return (
               <div key={e.id} id={`planting-${e.id}`} tabIndex={-1} className="outline-offset-4">
                 {i > 0 && <hr className={s.rule} />}
+                {e.deactivatedAt && <Alert role="status">
+                  <AlertTitle>Deactivated planting event</AlertTitle>
+                  <AlertDescription>This event is excluded from active history and actual totals. Its saved quantities and note are retained below. Contact support to reactivate it.</AlertDescription>
+                </Alert>}
                 {editing === e.id && onSaveEdit ? (
-                  <EditPlantingEvent
-                    key={e.updatedAt} locations={shown.locations}
-                    onSave={onSaveEdit} event={e} season={season} today={today} species={species} head={(edit) => head(e, edit)}
-                    onDone={cancel} onSaving={busy} onDirty={reportDirty}
-                    onSaved={() => { tried.current = false; setEditing(null); reload(); }}
-                  />
+                  <FieldSet disabled={saving}>
+                    <EditPlantingEvent
+                      key={e.updatedAt} locations={shown.locations}
+                      onSave={onSaveEdit} event={e} season={season} today={today} species={species} head={(edit) => head(e, edit)}
+                      onDone={cancel} onSaving={busy} onDirty={reportDirty}
+                      onSaved={() => { tried.current = false; setEditing(null); reload(); }}
+                    />
+                  </FieldSet>
                 ) : (
                   <FigureList
                     title={e.area}

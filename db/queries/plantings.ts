@@ -45,7 +45,7 @@ export async function listSiteSeasonPlantingLines(site: string, season: string, 
 export async function listPlantingEvents(ids: number[]) {
   const { data } = await (await db())
     .from("planting_events")
-    .select("id, notes, type, updated_at, areas(slug, site, sites(name))")
+    .select("id, notes, type, updated_at, deactivated_at, areas(slug, site, sites(name))")
     .in("id", ids)
     .throwOnError();
   return data;
@@ -125,7 +125,7 @@ export async function readPlantingEventSeason(id: number) {
 export async function listPlantingEventLines(plantingEvent: number) {
   const { data } = await (await db())
     .from("planting_lines")
-    .select("id, species, quantity")
+    .select("id, species, quantity, species_info:species(scientific_name, common_name, maori_name, register_code)")
     .eq("planting_event", plantingEvent)
     .is("deactivated_at", null)
     .throwOnError();
@@ -146,6 +146,16 @@ export async function updatePlantingEvent(id: number, values: PlantingEventEdit)
       notes: values.notes,
       lines: values.lines,
     })
+    .single();
+}
+
+/** Exclude the whole event from counted history, preserving every stored line. */
+export async function deactivatePlantingEvent(id: number) {
+  return (await db())
+    .from("planting_events")
+    .update({ deactivated_at: new Date().toISOString() })
+    .eq("id", id)
+    .select("id")
     .single();
 }
 
@@ -173,7 +183,7 @@ export async function deactivatePlantingLines(plantingEvent: number, ids: number
 export async function readPlantingEvent(id: number) {
   const { data } = await (await db())
     .from("planting_events")
-    .select("id, updated_at, areas(slug, site, wrt_number), seasons(slug, label)")
+    .select("id, updated_at, deactivated_at, planted_on, source, areas(slug, site, name, wrt_number), seasons(slug, label)")
     .eq("id", id)
     .maybeSingle()
     .throwOnError();

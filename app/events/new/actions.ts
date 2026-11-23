@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 import { SUPABASE_TAG } from "@/db/cache";
 import {
   createPlantingEvent, createPlantingLines, listPlantingEvents, listPlantingEventLines, listPlantingEventLocations,
-  listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent,
+  listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, deactivatePlantingEvent, readPlantingEvent,
 } from "@/db/queries/plantings";
 import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
@@ -21,7 +21,7 @@ import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 import { SLUG } from "@/lib/wrt/text";
-import { requireAuthenticated } from "@/db/queries/auth";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 
 const TREES_SHOWN = 5;
 const SEASONS_SHOWN = 6;
@@ -80,6 +80,9 @@ export interface SeasonPlantingEvents {
     id: number; area: string; plantedOn: string | null; notes: string;
     site: string; siteName: string; areaSlug: string | null; updatedAt: string;
     type: "establishment" | "infill" | "replacement" | null;
+    deactivatedAt?: string | null;
+    /** Bound on the server to this event, and supplied only to approved staff. */
+    onDeactivate?: (() => Promise<PlantingEventEditResult>) | undefined;
     /** Imported from the planting workbook, not entered in the app. */
     workbook: boolean;
     /** `id` is the planting line's id; `species` the event form's species id (register code, or slug). */
@@ -93,9 +96,24 @@ export interface SeasonPlantingEvents {
 }
 
 /** One season's planting events at a site, or at one part of it: area by area, each one's plants most planted first. */
-export async function loadSeasonPlantingEvents(slug: string, season: string, partId: string | null): Promise<SeasonPlantingEvents | null> {
+export async function loadSeasonPlantingEvents(slug: string, season: string, partId: string | null, focusedId?: number): Promise<SeasonPlantingEvents | null> {
   if (!valid(slug, partId) || !/^[a-z]+-\d{4}$/.test(season)) return null;
-  const [register, lines, locations] = await Promise.all([listSpecies(), listSiteSeasonPlantingLines(slug, season, partId), listPlantingEventLocations()]);
+  if (focusedId !== undefined && !(Number.isSafeInteger(focusedId) && focusedId > 0)) return null;
+  const [register, activeLines, locations, authenticated, focused] = await Promise.all([
+    listSpecies(), listSiteSeasonPlantingLines(slug, season, partId), listPlantingEventLocations(), isAuthenticated(),
+    focusedId ? readPlantingEvent(focusedId) : null,
+  ]);
+  const lines = [...activeLines];
+  // Only an explicitly opened deactivated event is shown for traceability. Normal lists stay active-only.
+  if (focused?.deactivated_at && focused.areas?.site === slug && focused.seasons?.slug === season
+    && (!partId || partId === (focused.areas.wrt_number ?? focused.areas.slug))) {
+    for (const line of await listPlantingEventLines(focused.id)) lines.push({
+      line_id: line.id, planting_id: focused.id, area_name: focused.areas.name, wrt_number: focused.areas.wrt_number,
+      planted_on: focused.planted_on, source: focused.source, species: line.species, quantity: line.quantity,
+      register_code: line.species_info?.register_code ?? null, scientific_name: line.species_info?.scientific_name ?? null,
+      common_name: line.species_info?.common_name ?? null, maori_name: line.species_info?.maori_name ?? null,
+    });
+  }
   const ids = [...new Set(lines.map((l) => l.planting_id ?? 0))];
   const details = new Map((ids.length ? await listPlantingEvents(ids) : []).map((n) => [n.id, n]));
   const photos = new Map(register.map((s) => [s.slug, s.photos[0]]));
@@ -111,6 +129,8 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
         site: detail?.areas?.site ?? slug, siteName: detail?.areas?.sites?.name ?? slug,
         areaSlug: detail?.areas?.slug === wholeSiteAreaSlug(slug) ? null : detail?.areas?.slug ?? null,
         updatedAt: detail?.updated_at ?? "", type: detail?.type ?? null,
+        deactivatedAt: detail?.deactivated_at ?? null,
+        onDeactivate: authenticated && !detail?.deactivated_at ? deactivatePlantingEventAction.bind(null, id) : undefined,
       };
       events.set(id, event);
     }
@@ -235,6 +255,23 @@ export async function savePlantingEventEdit(id: number, raw: unknown): Promise<P
   }
   refresh();
   redirect(`/events?event=${savedId}&saved=1`);
+}
+
+/** Deactivate the captured event; all actual totals are derived from active history. */
+export async function deactivatePlantingEventAction(id: number): Promise<PlantingEventEditResult> {
+  if (!(await isAuthenticated())) return { error: "Sign in to deactivate planting events." };
+  const failure = { error: "The planting event could not be deactivated. Please try again." };
+  if (!(Number.isSafeInteger(id) && id > 0)) return failure;
+  let savedId: number;
+  try {
+    const { data, error } = await deactivatePlantingEvent(id);
+    if (error) return failure;
+    savedId = data.id;
+  } catch {
+    return failure;
+  }
+  refresh();
+  redirect(`/events?event=${savedId}`);
 }
 
 /** After a write: every page reading the planting data reads it again. */

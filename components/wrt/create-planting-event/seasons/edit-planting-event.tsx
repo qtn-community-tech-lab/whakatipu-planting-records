@@ -327,7 +327,7 @@ export function EditPlantingEvent({ event, season, today, species, locations, he
         </FieldGroup>
       </FieldSet>
       <ConfirmDialog
-        open={!!confirming} title={`Save changes to ${event.area}, ${season.label}?`}
+        open={!!confirming} pending={saving} title={`Save changes to ${event.area}, ${season.label}?`}
         confirmLabel={saving ? "Saving…" : "Save changes"} cancelLabel="Keep editing"
         onConfirm={save} onCancel={() => { if (!saving) setConfirming(null); }}
       >
