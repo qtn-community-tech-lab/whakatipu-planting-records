@@ -4,4 +4,3 @@ import { cache } from "react";
 import { createPublicHistoryQueries } from "@/db/queries/public-history";
 
 export const getPublicWrt = cache(() => createPublicHistoryQueries());
-export const getPublicWrtAll = cache(() => createPublicHistoryQueries());

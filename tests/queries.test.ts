@@ -1,7 +1,7 @@
 import { defined } from "./assertions";
 import { describe, expect, it } from "vitest";
 import { expectCoherentSplit, q, repo } from "./helpers";
-import { needsReviewByPlants, splitOf } from "@/lib/wrt/queries";
+import { splitOf } from "@/lib/wrt/queries";
 import type { QuantitySplit } from "@/lib/wrt/types";
 
 const SPLIT_KEYS = ["total", "resolved", "needsReview", "records", "recordsNeedingReview"];
@@ -64,20 +64,7 @@ describe("overview", () => {
     }
   });
 
-  it("theme figures overlap: they can add to more than the review total, never less", async () => {
-    const o = await q.overview();
-    const sum = o.themes.reduce((a, t) => a + t.split.needsReview, 0);
-    expect(sum).toBeGreaterThanOrEqual(o.split.needsReview);
-    for (const t of o.themes) {
-      expect(t.split.needsReview).toBe(t.split.total); // theme splits only hold flagged records
-      expect(t.split.needsReview).toBeLessThanOrEqual(o.split.needsReview);
-    }
-  });
 
-  it("does not create a review theme for settled informational notes", async () => {
-    const o = await q.overview();
-    expect(o.themes.find((x) => x.theme === "slope-hill-2024")).toBeUndefined();
-  });
 });
 
 describe("places", () => {
@@ -327,15 +314,5 @@ describe("chat golden questions", () => {
     expect(result.split.total).toBe(60);
     expect(result.rows.some((v) => v.record.notes.some((n) => n.kind === "fyi"))).toBe(true);
     expect(result.rows.every((v) => !v.record.needsReview)).toBe(true);
-  });
-});
-
-describe("needsReviewByPlants", () => {
-  it("keeps only flagged rows, largest first, and drops none", async () => {
-    const { rows } = await q.records({});
-    const out = needsReviewByPlants(rows);
-    expect(out.length).toBe(rows.filter((v) => v.record.needsReview).length);
-    expect(out.every((v) => v.record.needsReview)).toBe(true);
-    for (let i = 1; i < out.length; i++) expect(defined(out[i - 1]).record.quantity).toBeGreaterThanOrEqual(defined(out[i]).record.quantity);
   });
 });

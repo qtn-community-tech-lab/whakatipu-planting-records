@@ -18,6 +18,21 @@ describe("uniform planting record presentation", () => {
     expect(flagged).not.toMatch(/Needs review|Resolved|is-review|wrt-issue|<th>Status<\/th>/);
   });
 
+  it("keeps planting event links and their return destination", async () => {
+    const { rows } = await q.records();
+    const row = rows[0]!;
+    const html = renderToStaticMarkup(createElement(RecordsTable, {
+      rows: [{ ...row, record: { ...row.record, plantingEventId: 42 } }],
+      returnTo: "/records?year=2025",
+    }));
+    expect(html).toContain("View planting event");
+    const link = html.match(/href="([^"]+)"[^>]*>View planting event/)!;
+    const destination = new URL(link[1]!.replaceAll("&amp;", "&"), "https://example.org");
+    expect(destination.pathname).toBe("/events");
+    expect(destination.searchParams.get("event")).toBe("42");
+    expect(destination.searchParams.get("returnTo")).toBe("/records?year=2025");
+  });
+
   it("draws bars from the entire recorded quantity", () => {
     const split = { total: 80, resolved: 30, needsReview: 50, records: 2, recordsNeedingReview: 1 };
     const html = renderToStaticMarkup(createElement(SplitBar, { split, max: 100 }));

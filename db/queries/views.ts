@@ -75,12 +75,6 @@ export const siteAreaSeasons = (db: Db) =>
     .select("site, area, wrt_number, season, season_label, season_order, plants")
     .order("season_order", { ascending: false });
 
-/** Plants still waiting on each question. */
-export const questionTotals = (db: Db) =>
-  db
-    .from("totals_by_question")
-    .select("question, lines, plants");
-
 /** Every planting line, oldest season first. line_id last, so pages never skip or repeat a row. */
 export const lines = (db: Db) =>
   db
@@ -90,14 +84,3 @@ export const lines = (db: Db) =>
     .order("area_name")
     .order("scientific_name")
     .order("line_id");
-
-/** Every live question, with how many of its ruling or confirm notes are still open. */
-export const questions = (db: Db) =>
-  db
-    .from("questions")
-    .select("slug, question, ruling, ruled_on, notes(count)")
-    .is("deactivated_at", null)
-    .is("notes.resolved_at", null)
-    .is("notes.deactivated_at", null)
-    .in("notes.kind", ["ruling", "confirm"])
-    .order("slug");

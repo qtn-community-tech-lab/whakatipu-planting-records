@@ -3,7 +3,7 @@
 See [local setup](../README.md#local-development) and [database maintenance](../supabase/README.md). Shared implementation requirements live in [AGENTS.md](../AGENTS.md).
 
 - Put entity operations in `queries/`: `list<Entity>s`, `read<Entity>`, `create<Entity>`, `update<Entity>` and `deactivate<Entity>`. Spell out `PlantingEvent`, `PlantingLine` and `PlantingArea`; `findPlantingLines` is the existing paged-query exception.
-- Pages and actions call named entity queries. `queries/views.ts` supplies their base table/view queries; `queries/public-history.ts` reads grouped history and bounded public review rows.
+- Pages and actions call named entity queries. `queries/views.ts` supplies their base table/view queries; `queries/public-history.ts` reads grouped history.
 - Use session-aware `db()` from `client.ts` for writes and editor reads so RLS applies. Keep Supabase imports out of pages and components; ESLint enforces the boundary, with infrastructure, script and test exceptions.
 - Use generated `database.types.ts` and writable Zod schemas in `types.ts`. Database triggers maintain audit fields.
 - Deactivate instead of deleting. Normal selectors exclude deactivated entries; historical identities and quantities remain available.

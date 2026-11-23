@@ -6,7 +6,6 @@
  * Vocabulary
  * - "Recorded plants": every quantity in the history. The historical MASTER was
  *   filled from allocation sheets, so a recorded plant is NOT a verified planting.
- * - "Needs review": a record WRT still has to rule on or confirm once.
  * - Place: what people call a site ("Whitechapel", "Lake Hayes").
  * - Parcel: a registered site or sub-site inside a place (WRT's own 9A, 9G…).
  */
@@ -19,8 +18,8 @@ export type Precision = "site" | "subsite" | "area" | "scheme" | "unknown";
 export type SiteClass = "keystone" | "community" | "school" | "unknown";
 
 /**
- * Every aggregate in the app carries this split. Never show a bare total:
- * `total` is always `resolved + needsReview`.
+ * Aggregates retain the historical split for provenance and exports.
+ * Pages display `total`, including every recorded quantity.
  */
 export interface QuantitySplit {
   /** All recorded plants (resolved + needs review). */

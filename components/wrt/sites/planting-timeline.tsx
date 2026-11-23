@@ -1,7 +1,6 @@
 /**
  * What went in, and when: rows (species, or parts of a site) against seasons.
- * Each dot is sized by recorded plants in that season; amber means some or
- * all of it still needs a WRT ruling. Every dot links to its records.
+ * Each dot is sized by recorded plants in that season and links to its records.
  */
 import type { AppRoute } from "@/lib/wrt/routes";
 import type { CSSProperties } from "react";

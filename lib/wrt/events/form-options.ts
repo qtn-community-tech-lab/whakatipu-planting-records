@@ -43,8 +43,7 @@ export interface EventFormOptions {
 }
 
 /**
- * Uses unscoped data: available sites and species must not depend on the
- * reader's review switch. New events use active sites and species,
+ * New events use active sites and species,
  * including entries with no planting history; historical lookups retain deactivated ones.
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {

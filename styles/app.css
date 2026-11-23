@@ -3,7 +3,6 @@
  * Prefix: wrt-. No new colours, radii or fonts are introduced here.
  */
 
-:root { --cn-amber-on-dark: #e8b866; } /* amber lifted for contrast on green: the one colour not in Canopy */
 
 /* ---------------------------------------------------------------- shell */
 .wrt-shell { display: flex; min-height: 100vh; background: var(--surface-app); }
@@ -81,7 +80,6 @@
 }
 .wrt-notice__text { flex: 1; min-width: 0; margin: 0; }
 .wrt-notice b { font-weight: 700; color: var(--text-strong); }
-.wrt-notice__amber { padding: 1px 7px; border-radius: var(--radius-pill); background: var(--cn-behind-bg); color: var(--cn-behind-fg); font-weight: 700; }
 .wrt-notice__link { flex: none; font-weight: 700; white-space: nowrap; text-decoration: none; }
 .wrt-notice__link:hover { text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 720px) { .wrt-notice { flex-wrap: wrap; } .wrt-notice__text { flex-basis: calc(100% - 34px); } .wrt-notice__link { margin-left: 34px; } }
@@ -653,7 +651,6 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 .wrt-shero__bar { height: var(--bar-h); }
 .wrt-shero__bar .cn-bar__fill { background: var(--cn-green-400); }
 .wrt-shero__split { margin: 0; font: 600 13px/1.4 var(--font-sans); color: rgba(255, 255, 255, .75); }
-.wrt-shero__amber { color: var(--cn-amber-on-dark); }
 
 .wrt-shero__stats { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .wrt-shero__stat { padding: 12px 14px; border-radius: var(--radius-tile); background: rgba(21, 38, 28, .32); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }

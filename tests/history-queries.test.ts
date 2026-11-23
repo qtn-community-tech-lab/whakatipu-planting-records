@@ -68,6 +68,8 @@ describe("targeted history query boundaries", () => {
     expect(detail?.parcels[0]?.item).toMatchObject({ id: "9A", slug: "east" });
     expect(detail?.cells[0]?.split).toEqual(split);
     expect(detail?.records).toEqual([]);
+    expect(requests.every((request) => request.body.show_review !== false)).toBe(true);
+    expect(requests.some((request) => (request.body.group_by as string[] | undefined)?.includes("theme"))).toBe(false);
     expect(requests.some((request) => request.path.endsWith("/read_public_review_rows"))).toBe(false);
   });
 

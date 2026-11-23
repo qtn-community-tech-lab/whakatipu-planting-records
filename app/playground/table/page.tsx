@@ -22,12 +22,11 @@ interface SampleEvent {
   species: string;
   plants: number;
   area: string;
-  review?: boolean;
 }
 
 const EVENTS: SampleEvent[] = [
   { id: "a", date: "Wed 7 Oct 2026", site: "Lake Hayes", part: "Lake Hayes Pavilion", season: "Spring 2026", species: "Mānuka + 4 more", plants: 1240, area: "0.42 ha" },
-  { id: "b", date: "Sat 3 Oct 2026", site: "Jardine Park", part: null, season: "Spring 2026", species: "Kōwhai", plants: 60, area: "0.05 ha", review: true },
+  { id: "b", date: "Sat 3 Oct 2026", site: "Jardine Park", part: null, season: "Spring 2026", species: "Kōwhai", plants: 60, area: "0.05 ha" },
   { id: "c", date: "Thu 14 May 2026", site: "Arrowtown – Feehly Hill reserve, lower terraces", part: "Western gully below the walking track", season: "Autumn 2026", species: "Pittosporum tenuifolium + 11 more", plants: 3075, area: "1.84 ha" },
   { id: "d", date: "Mon 2 Feb 2026", site: "Frankton", part: null, season: "Summer 2026", species: "Harakeke", plants: 8, area: "0.01 ha" },
 ];
@@ -69,10 +68,9 @@ export default function TablePlayground() {
           rowKey={(r) => r.id}
           columns={EVENT_COLUMNS}
           minWidth={720}
-          rowClassName={(r) => (r.review ? "is-review" : undefined)}
         />
       </Card>
-      <Rule>Long site and species names wrap within their column; dates, seasons and numbers never wrap. The second row shows the review marker other tables use.</Rule>
+      <Rule>Long site and species names wrap within their column; dates, seasons and numbers never wrap.</Rule>
 
       <Card title="Narrow table: fits on a phone, no scrolling" variant="table">
         <DataTable caption="Seasons by month" rows={SEASONS} rowKey={(r) => r.id} minWidth={280} columns={[

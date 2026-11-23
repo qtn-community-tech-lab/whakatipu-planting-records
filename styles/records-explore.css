@@ -27,7 +27,6 @@ a.rx-fact:hover { background: var(--surface-tint); transform: translateY(-2px); 
 .rx-fact__k { font: 600 11.5px/1 var(--font-sans); color: var(--text-eyebrow); }
 .rx-fact b { font: 800 19px/1.1 var(--font-sans); letter-spacing: var(--tracking-snug); color: var(--text-strong); }
 .rx-fact__of { font: 600 12.5px/1 var(--font-sans); color: var(--text-muted); letter-spacing: 0; }
-.rx-fact b.rx-fact__amber { color: var(--cn-behind-fg); }
 @media (max-width: 700px) { .rx-facts { grid-template-columns: minmax(0, 1fr); } }
 
 /* ranked list */

@@ -1,13 +1,13 @@
-/** Public pages: grouped measures and bounded review rows. */
+/** Public pages: grouped measures over the complete planting history. */
 import { publicDb } from "@/db/repository";
 import type { Json } from "@/db/database.types";
 import { referenceSpeciesSchema, reconciliation, splitSchema, summarySchema, toHistoryReferences, toSpecies } from "@/db/history-models";
 import type { Dimension, HistoryReferences, Summary, SummaryRow } from "@/db/history-models";
 import { byTotalDesc, emptySplit } from "@/lib/wrt/queries";
-import type { DataQuality, Overview, PlaceSummary, RecordFilter, SeasonPoint, SeasonSummary, Span, SpeciesSummary, ThemeSummary, YearRow } from "@/lib/wrt/queries";
+import type { Overview, PlaceSummary, RecordFilter, SeasonPoint, SeasonSummary, Span, SpeciesSummary, YearRow } from "@/lib/wrt/queries";
 import type { HistoryCell } from "@/lib/wrt/presentation";
 import { addSplits } from "@/lib/wrt/presentation";
-import type { QuantitySplit, ReviewTheme, Species } from "@/lib/wrt/types";
+import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import { matchScore, searchKey } from "@/lib/wrt/text";
 
 type Filter = Omit<RecordFilter, "q"> & { seasonSlug?: string };
@@ -33,10 +33,6 @@ function yearRows(points: SeasonPoint[]): YearRow[] {
     addSplits(running, total);
     return { year, autumn, spring, total, runningTotal: { ...running } };
   });
-}
-
-function themes(rows: SummaryRow[]): ThemeSummary[] {
-  return rows.filter((row) => row.theme !== null).map((row) => ({ theme: row.theme as ReviewTheme, split: row.split })).sort(byTotalDesc);
 }
 
 /** Each instance belongs to one request; identical measures share their read. */
@@ -125,8 +121,8 @@ export function createPublicHistoryQueries() {
   }
 
   async function overview(): Promise<Overview> {
-    const [refs, siteRows, speciesRows, seasonRows, classes, precision, confidence, themeRows] = await Promise.all([
-      references(), places(), speciesList("names"), seasons(), measure(["class"]), measure(["precision"]), measure(["confidence"]), measure(["theme"]),
+    const [refs, siteRows, speciesRows, seasonRows, classes, precision, confidence] = await Promise.all([
+      references(), places(), speciesList("names"), seasons(), measure(["class"]), measure(["precision"]), measure(["confidence"]),
     ]);
     return {
       split: splitSchema.parse(classes.totals), firstSeason: refs.seasons[0] ?? null, lastSeason: refs.seasons.at(-1) ?? null,
@@ -136,7 +132,7 @@ export function createPublicHistoryQueries() {
       places: siteRows, species: speciesRows,
       byClass: classes.rows.map((row) => ({ item: row.class!, split: row.split })),
       byPrecision: precision.rows.map((row) => ({ item: row.precision!, split: row.split })),
-      byConfidence: confidence.rows.map((row) => ({ item: row.confidence!, split: row.split })), themes: themes(themeRows.rows),
+      byConfidence: confidence.rows.map((row) => ({ item: row.confidence!, split: row.split })),
     };
   }
 
@@ -150,8 +146,8 @@ export function createPublicHistoryQueries() {
     const filter: Filter = { place: slug, ...(parcel ? { parcel } : {}) };
     const charts = cells(["area", "species", "season"], filter);
     const parts = parcel ? cells(["area", "species"], { place: slug }) : charts;
-    const [seasonRows, speciesRows, partRows, themeRows, chartCells, partCells] = await Promise.all([
-      measure(["season"], filter), measure(["species"], filter), measure(["area"], { place: slug }), measure(["theme"], filter),
+    const [seasonRows, speciesRows, partRows, chartCells, partCells] = await Promise.all([
+      measure(["season"], filter), measure(["species"], filter), measure(["area"], { place: slug }),
       charts,
       parts,
     ]);
@@ -160,7 +156,7 @@ export function createPublicHistoryQueries() {
       place: item, split: splitSchema.parse(seasonRows.totals), span: span(refs, seasonRows.totals)!, seasons: points, years: yearRows(points),
       species: speciesRows.rows.map((row) => ({ item: refs.speciesBySlug.get(row.species!)!, split: row.split })),
       parcels: partRows.rows.map((row) => ({ item: refs.parcels.get(row.area!)!, split: row.split, span: span(refs, row)! })),
-      themes: themes(themeRows.rows), records: [], cells: chartCells, partCells,
+      records: [], cells: chartCells, partCells,
       areaTotals: partRows.rows.map((row) => ({ area: row.area!, parcel: refs.parcels.get(row.area!)!, split: row.split })),
     };
   }
@@ -170,13 +166,13 @@ export function createPublicHistoryQueries() {
     const base = refs.speciesBySlug.get(slug);
     if (!base) return null;
     const client = publicDb();
-    const [reference, seasonRows, siteRows, themeRows] = await Promise.all([
+    const [reference, seasonRows, siteRows] = await Promise.all([
       client.from("species")
         .select("slug, register_code, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, contested_group, needs_decision, register_note, maori_name_alternatives, summary, look_for, sources, checked_at, photos, deactivated_at")
         .eq("slug", slug)
         .maybeSingle()
         .throwOnError(),
-      measure(["season"], { species: slug }), measure(["site"], { species: slug }), measure(["theme"], { species: slug }),
+      measure(["season"], { species: slug }), measure(["site"], { species: slug }),
     ]);
     if (!reference.data) return null;
     const selected = toSpecies(referenceSpeciesSchema.parse({ ...reference.data, aliases: base.aliases }));
@@ -184,7 +180,7 @@ export function createPublicHistoryQueries() {
     return { species: { ...selected, contestedWith: base.contestedWith }, split: splitSchema.parse(seasonRows.totals),
       span: span(refs, seasonRows.totals), seasons: points, years: yearRows(points),
       places: siteRows.rows.map((row) => ({ item: refs.placeBySlug.get(row.site!)!, split: row.split })),
-      contested: refs.species.filter((item) => base.contestedWith.includes(item.id)), themes: themes(themeRows.rows), records: [] };
+      contested: refs.species.filter((item) => base.contestedWith.includes(item.id)), records: [] };
   }
 
   async function season(slug: string) {
@@ -192,15 +188,15 @@ export function createPublicHistoryQueries() {
     const at = refs.seasons.findIndex((item) => item.slug === slug);
     if (at < 0) return null;
     const filter = { seasonSlug: slug };
-    const [all, siteRows, speciesRows, classRows, themeRows, chartCells] = await Promise.all([
-      seasons(), measure(["site"], filter), measure(["species"], filter), measure(["class"], filter), measure(["theme"], filter),
+    const [all, siteRows, speciesRows, classRows, chartCells] = await Promise.all([
+      seasons(), measure(["site"], filter), measure(["species"], filter), measure(["class"], filter),
       cells(["site", "species"], filter),
     ]);
     return { season: refs.seasons[at]!, previous: refs.seasons[at - 1] ?? null, next: refs.seasons[at + 1] ?? null,
       split: splitSchema.parse(siteRows.totals), places: siteRows.rows.map((row) => ({ item: refs.placeBySlug.get(row.site!)!, split: row.split })),
       species: speciesRows.rows.map((row) => ({ item: refs.speciesBySlug.get(row.species!)!, split: row.split })),
       byClass: classRows.rows.map((row) => ({ item: row.class!, split: row.split })),
-      reconciliation: all[at]?.reconciliation ?? null, themes: themes(themeRows.rows), records: [], cells: chartCells };
+      reconciliation: all[at]?.reconciliation ?? null, records: [], cells: chartCells };
   }
 
   async function search(query: string, limit = 8) {
@@ -215,23 +211,6 @@ export function createPublicHistoryQueries() {
         .filter((row) => row.score > 0 && row.split.records > 0).sort(rank).slice(0, limit),
       seasons: seasonRows.map((row) => ({ ...row, score: searchKey(row.season.label) === key ? 100 : String(row.season.year) === key ? 90 : searchKey(row.season.label).startsWith(key) ? 60 : 0 }))
         .filter((row) => row.score > 0).sort((a, b) => b.score - a.score || a.season.order - b.season.order).slice(0, limit),
-    };
-  }
-
-  async function dataQuality(): Promise<DataQuality> {
-    const [refs, confidence, precision, themeRows, seasonRows, speciesRows] = await Promise.all([
-      references(), measure(["confidence"]), measure(["precision"]), measure(["theme"]), measure(["season"]), speciesList("names"),
-    ]);
-    return { split: splitSchema.parse(confidence.totals),
-      byConfidence: confidence.rows.map((row) => ({ item: row.confidence!, split: row.split })),
-      byPrecision: precision.rows.map((row) => ({ item: row.precision!, split: row.split })), themes: themes(themeRows.rows),
-      reconciliation: reconciliation(refs, seasonRows.rows),
-      source: { description: "Read from the Trust's Supabase database, imported from the MASTER sheet of WRT's Plants Out Master workbook: one line per species, site and season.",
-        tables: [{ name: "seasons", rows: refs.seasons.length }, { name: "species", rows: refs.species.length },
-          { name: "sites", rows: refs.places.length }, { name: "areas", rows: refs.parcels.size }, { name: "planting lines", rows: confidence.totals.records }] },
-      threatened: speciesRows.filter((row) => row.item.threatenedMarks.plantsOutMaster || row.item.threatenedMarks.teKakano)
-        .map((row) => ({ ...row, agreed: row.item.threatenedMarks.plantsOutMaster && row.item.threatenedMarks.teKakano }))
-        .sort((a, b) => Number(b.agreed) - Number(a.agreed) || byTotalDesc(a, b)),
     };
   }
 
@@ -269,6 +248,6 @@ export function createPublicHistoryQueries() {
       seasonCount: refs.seasons.length, firstSeason: refs.seasons[0] ?? null };
   }
 
-  return { overview, places, speciesList, species, place, season, seasons, search, dataQuality,
+  return { overview, places, speciesList, species, place, season, seasons, search,
     cells, siteSpecies, seasonLeaders, counts };
 }

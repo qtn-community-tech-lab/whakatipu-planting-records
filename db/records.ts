@@ -1,7 +1,7 @@
 /**
  * Supabase rows in the shapes used by the pages and components.
  */
-import type { Ranked, RecordView, SeasonDetail, SeasonSummary, ThemeSummary } from "@/lib/wrt/queries";
+import type { Ranked, RecordView, SeasonDetail, SeasonSummary } from "@/lib/wrt/queries";
 import { byTotalDesc, emptySplit, addToSplit, splitOf } from "@/lib/wrt/queries";
 import type { Confidence, Place, Precision, ReviewNoteKind, ReviewTheme, Season, SiteClass, Species } from "@/lib/wrt/types";
 import type { listSeasonPlantingLines, listSeasons } from "./queries/plantings";
@@ -83,18 +83,6 @@ function rank<K, T>(views: RecordView[], key: (v: RecordView) => K, item: (v: Re
   return [...m.values()].sort(byTotalDesc);
 }
 
-/** The questions open on these records, largest first. A record can sit under several. */
-function themesOf(views: RecordView[]): ThemeSummary[] {
-  const m = new Map<ReviewTheme, ReturnType<typeof emptySplit>>();
-  for (const { record } of views) {
-    if (!record.needsReview) continue;
-    const themes = new Set(record.notes.filter((n) => n.kind !== "fyi").map((n) => n.theme));
-    if (!themes.size) themes.add("other");
-    for (const t of themes) m.set(t, addToSplit(m.get(t) ?? emptySplit(), record));
-  }
-  return [...m].map(([theme, split]) => ({ theme, split })).sort(byTotalDesc);
-}
-
 /**
  * One season's page from its totals and lines. Seasons are those with lines, in order.
  */
@@ -115,7 +103,6 @@ export function toSeasonDetail(slug: string, seasons: SeasonSummary[], lines: Li
     species: rank(views, (v) => v.species.slug, (v) => v.species),
     byClass: rank(views, (v) => v.record.siteClass, (v) => v.record.siteClass),
     reconciliation: summary.reconciliation,
-    themes: themesOf(views),
     records: views,
   };
 }

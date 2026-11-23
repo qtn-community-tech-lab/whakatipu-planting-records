@@ -7,7 +7,6 @@ import { toRecordView } from "@/db/records";
 import { emptySplit } from "@/lib/wrt/queries";
 import type { Lookups, PlaceSummary, RecordFilter } from "@/lib/wrt/queries";
 import type { HistoryCell } from "@/lib/wrt/presentation";
-import type { ReviewTheme } from "@/lib/wrt/types";
 import { matchScore, searchKey } from "@/lib/wrt/text";
 import type { SortKey } from "@/components/wrt/explore/filters";
 
@@ -70,9 +69,9 @@ export function createRecordsQueries() {
     const refs = await references;
     const place = refs.placeBySlug.get(filter.place ?? "");
     const showParts = !!place && place.parcels.length > 1 && !filter.parcel;
-    const [seasonRows, siteRows, speciesRows, themeRows] = await Promise.all([
+    const [seasonRows, siteRows, speciesRows] = await Promise.all([
       measure(["season"], filter), !place || showParts ? measure([place ? "area" : "site"], filter) : Promise.resolve(null),
-      measure(["species"], filter), measure(["theme"], filter),
+      measure(["species"], filter),
     ]);
     const where = siteRows?.rows ?? [];
     const rowsBy = !place && where.length > 1 ? "site" as const : showParts ? "part" as const : "species" as const;
@@ -93,7 +92,7 @@ export function createRecordsQueries() {
       sites: where.map((row) => ({ place: row.site ? refs.placeBySlug.get(row.site)! : place!,
         parcel: row.area ? refs.parcels.get(row.area)! : null, split: row.split })),
       species: speciesRows.rows.map((row) => ({ item: refs.speciesBySlug.get(row.species!)!, split: row.split })),
-      themes: (themeRows?.rows ?? []).map((row) => ({ theme: row.theme as ReviewTheme, split: row.split })), cells, rowsBy };
+      cells, rowsBy };
   }
 
   async function page(filter: RecordFilter, pageNumber: number, sort: SortKey) {
