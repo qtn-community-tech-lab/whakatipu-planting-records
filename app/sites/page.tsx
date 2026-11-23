@@ -91,7 +91,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         aside={authenticated ? <Button asChild><Link href="/sites/new">Create site</Link></Button> : undefined}
         lead={
           <>
-            {state === "deactivated" ? "Deactivated sites retain their historical records and quantities. Planting history" : "Active registered sites, with planting history"}{overview.firstSeason ? ` since ${overview.firstSeason.label}` : ""} where available.
+            Registered sites, with planting history{overview.firstSeason ? ` since ${overview.firstSeason.label}` : ""} where available.
           </>
         }
       />
@@ -100,6 +100,7 @@ export default async function SitesPage({ searchParams }: Readonly<PageProps<"/s
         <Link href={href(cls, sort, "active")} className="wrt-stool__opt" aria-current={state === "active" ? "true" : undefined}>Active</Link>
         <Link href={href(cls, sort, "deactivated")} className="wrt-stool__opt" aria-current={state === "deactivated" ? "true" : undefined}>Deactivated</Link>
       </nav>
+      {state === "deactivated" && <p className="wrt-prose m-0">Deactivated sites keep their historical records and quantities.</p>}
 
       <LocationCard sites={rows.map((p) => p.item)} records={records.rows.map((row) => row.record)} />
 
