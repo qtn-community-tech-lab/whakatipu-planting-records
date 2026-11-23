@@ -1,5 +1,6 @@
 /** Species: the register and one species page. */
 import { db } from "@/db/client";
+import { currentUserId } from "./auth";
 import type { Species } from "@/lib/wrt/types";
 import { lines, speciesTotals } from "./views";
 import type { SpeciesInput } from "@/db/types";
@@ -74,20 +75,24 @@ export async function readSpeciesForEdit(slug: string) {
 }
 
 export async function createSpecies(values: SpeciesInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("species")
-    .insert({ ...values, status: "core", needs_decision: false })
+    .insert({ ...values, status: "core", needs_decision: false, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })
     .select("slug")
     .single();
 }
 
-/** Preserve the existing slug and decision flag. The database touch trigger sets updated_at. */
+/** Preserve the existing slug and decision flag. */
 export async function updateSpecies(slug: string, values: SpeciesInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   const { needs_decision, ...editable } = values;
   void needs_decision; // This flag is managed outside the species editor.
   return (await db())
     .from("species")
-    .update({ ...editable, slug })
+    .update({ ...editable, slug, updated_at: timestamp, updated_by: userId })
     .eq("slug", slug)
     .select("slug")
     .single();
@@ -95,9 +100,11 @@ export async function updateSpecies(slug: string, values: SpeciesInput) {
 
 /** Deactivate the species without changing its key or any planting line. */
 export async function deactivateSpecies(slug: string) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("species")
-    .update({ deactivated_at: new Date().toISOString() })
+    .update({ deactivated_at: timestamp, deactivated_by: userId, updated_at: timestamp, updated_by: userId })
     .eq("slug", slug)
     .select("slug")
     .single();

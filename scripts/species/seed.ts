@@ -13,7 +13,7 @@ const photoUrl = z.union([
   z.string().regex(/^\/species\/[a-z0-9-]+\.webp$/).max(INPUT_LIMITS.url),
 ]);
 
-/** Every species column except created_at/by and updated_at/by belongs in the seed. */
+/** Every species column except audit timestamps and user IDs belongs in the seed. */
 export const speciesSeedSchema = z.array(z.strictObject({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
   register_code: identifier.nullable(),
@@ -62,6 +62,6 @@ export type SpeciesSeedEntry = z.infer<typeof speciesSeedSchema>[number];
 
 export function readSpeciesSeed(): SpeciesSeedEntry[] {
   return speciesSeedSchema.parse(catalogue) satisfies Omit<Tables<"species">,
-    "created_at" | "created_by" | "updated_at" | "updated_by"
+    "created_at" | "created_by" | "updated_at" | "updated_by" | "deactivated_by"
   >[];
 }

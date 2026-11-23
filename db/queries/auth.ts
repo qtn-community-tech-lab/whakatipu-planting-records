@@ -6,6 +6,14 @@ import { loginHref } from "@/lib/auth/redirect";
 import { db } from "@/db/client";
 import type { Database } from "@/db/types";
 
+/** Audit fields reference the approved app profile, whose ID differs from the Auth ID. */
+export const currentUserId = cache(async () => {
+  const { data, error } = await (await db()).rpc("current_app_user_id");
+  if (error) throw error;
+  if (!data) throw new Error("Staff sign-in required.");
+  return data;
+});
+
 /** Checked per request. The database maps this Auth identity to an active approved staff row. */
 export const isAuthenticated = cache(async () => {
   const client = await db();

@@ -15,7 +15,7 @@ describe("workbook site and area seeds", () => {
     for (const [dump, seed] of [[sites, seeds.sites], [areas, seeds.areas]] as const) {
       expect(seed).toHaveLength(dump.length);
       dump.forEach((row, index) => {
-        expect(seed[index]).toEqual(Object.fromEntries(Object.entries(row).filter(([key]) => !["created_at", "created_by", "updated_at", "updated_by"].includes(key))));
+        expect(seed[index]).toEqual(Object.fromEntries(Object.entries(row).filter(([key]) => !["created_at", "created_by", "updated_at", "updated_by", "deactivated_by"].includes(key))));
       });
     }
     expect(workbookAreaSlugs([place]).get("whitechapel|15")).toBe("whitechapel-reserve");

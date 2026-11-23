@@ -35,7 +35,7 @@ begin
   insert into public.questions (slug, question) values ('deactivate-event-review', 'Retain the original review');
   insert into public.notes (line, question, kind, text) values (line_id, 'deactivate-event-review', 'confirm', 'Original review');
 
-  select to_jsonb(e) - array['deactivated_at', 'updated_at', 'updated_by'] into original_event from public.planting_events e where id = incorrect_id;
+  select to_jsonb(e) - array['deactivated_at', 'deactivated_by', 'updated_at', 'updated_by'] into original_event from public.planting_events e where id = incorrect_id;
   select jsonb_agg(to_jsonb(l) order by l.id) into original_lines from public.planting_lines l where l.planting_event = incorrect_id;
   select jsonb_agg(to_jsonb(n) order by n.id) into original_notes from public.notes n where n.line = line_id;
   select plants into season_before from public.totals_by_season where season = 'autumn-2015';
@@ -50,10 +50,11 @@ begin
 
   perform set_config('request.jwt.claims', json_build_object('sub', auth_id, 'role', 'authenticated')::text, true);
   set local role authenticated;
-  update public.planting_events set deactivated_at = now() where id = incorrect_id;
+  update public.planting_events set deactivated_at = now(), deactivated_by = app_id,
+    updated_at = now(), updated_by = app_id where id = incorrect_id;
 
-  perform pg_temp.assert_true((select deactivated_at is not null and updated_by = app_id from public.planting_events where id = incorrect_id), 'Deactivation and staff audit must persist');
-  perform pg_temp.assert_true((select to_jsonb(e) - array['deactivated_at', 'updated_at', 'updated_by'] = original_event from public.planting_events e where id = incorrect_id), 'Original event details, date/type, provenance and creation audit must survive');
+  perform pg_temp.assert_true((select deactivated_at is not null and deactivated_by = app_id and updated_by = app_id from public.planting_events where id = incorrect_id), 'Deactivation, deactivator and staff audit must persist');
+  perform pg_temp.assert_true((select to_jsonb(e) - array['deactivated_at', 'deactivated_by', 'updated_at', 'updated_by'] = original_event from public.planting_events e where id = incorrect_id), 'Original event details, date/type, provenance and creation audit must survive');
   perform pg_temp.assert_true((select jsonb_agg(to_jsonb(l) order by l.id) = original_lines from public.planting_lines l where l.planting_event = incorrect_id), 'Every line, identity, quantity and audit field must remain unchanged');
   perform pg_temp.assert_true((select jsonb_agg(to_jsonb(n) order by n.id) = original_notes from public.notes n where n.line = line_id), 'Review notes must remain unchanged');
   perform pg_temp.assert_true(not exists (select 1 from public.line_details where planting_id = incorrect_id), 'Normal planting history must exclude the whole event');
@@ -66,7 +67,8 @@ begin
   perform pg_temp.assert_true((public.read_layout_summary()->>'records')::bigint = records_before - 2, 'Navigation and search history must exclude both lines');
 
   -- The same write again changes no counted quantities; no decrement operation is used.
-  update public.planting_events set deactivated_at = now() where id = incorrect_id;
+  update public.planting_events set deactivated_at = now(), deactivated_by = app_id,
+    updated_at = now(), updated_by = app_id where id = incorrect_id;
   perform pg_temp.assert_true((select plants = 5 from public.totals_by_site where site = 'deactivate-event-site'), 'Repeating deactivation must not subtract twice');
   perform pg_temp.assert_true((select plants = season_before - 40 from public.totals_by_season where season = 'autumn-2015'), 'Repeated deactivation must preserve season totals');
   perform pg_temp.assert_true((select jsonb_agg(to_jsonb(l) order by l.id) = original_lines from public.planting_lines l where l.planting_event = incorrect_id), 'Repeated deactivation must preserve stored lines');

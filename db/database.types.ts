@@ -15,6 +15,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           description: string;
           lat: number | null;
           lng: number | null;
@@ -34,6 +35,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -52,6 +54,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           description?: string;
           lat?: number | null;
           lng?: number | null;
@@ -69,6 +72,13 @@ export type Database = {
           {
             foreignKeyName: "areas_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "areas_deactivated_by_fkey";
+            columns: ["deactivated_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -136,6 +146,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           id: number;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
@@ -150,6 +161,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           kind: Database["public"]["Enums"]["note_kind"];
           line: number;
@@ -163,6 +175,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           kind?: Database["public"]["Enums"]["note_kind"];
           line?: number;
@@ -176,6 +189,13 @@ export type Database = {
           {
             foreignKeyName: "notes_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "notes_deactivated_by_fkey";
+            columns: ["deactivated_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -216,6 +236,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           id: number;
           notes: string;
           planted_on: string | null;
@@ -231,6 +252,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           notes?: string;
           planted_on?: string | null;
@@ -245,6 +267,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           notes?: string;
           planted_on?: string | null;
@@ -298,6 +321,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "planting_events_deactivated_by_fkey";
+            columns: ["deactivated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "planting_events_season_fkey";
             columns: ["season"];
             isOneToOne: false;
@@ -340,6 +370,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           id: number;
           legacy_code: string | null;
           planting_event: number;
@@ -361,6 +392,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event: number;
@@ -381,6 +413,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           id?: never;
           legacy_code?: string | null;
           planting_event?: number;
@@ -400,6 +433,13 @@ export type Database = {
           {
             foreignKeyName: "planting_lines_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "planting_lines_deactivated_by_fkey";
+            columns: ["deactivated_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -467,6 +507,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           question: string;
           ruled_by: string | null;
           ruled_on: string | null;
@@ -480,6 +521,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           question: string;
           ruled_by?: string | null;
           ruled_on?: string | null;
@@ -492,6 +534,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           question?: string;
           ruled_by?: string | null;
           ruled_on?: string | null;
@@ -504,6 +547,13 @@ export type Database = {
           {
             foreignKeyName: "questions_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "questions_deactivated_by_fkey";
+            columns: ["deactivated_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -553,6 +603,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           description: string;
           name: string;
           slug: string;
@@ -564,6 +615,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           description?: string;
           name: string;
           slug: string;
@@ -574,6 +626,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           description?: string;
           name?: string;
           slug?: string;
@@ -584,6 +637,13 @@ export type Database = {
           {
             foreignKeyName: "sites_created_by_fkey";
             columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "sites_deactivated_by_fkey";
+            columns: ["deactivated_by"];
             isOneToOne: false;
             referencedRelation: "users";
             referencedColumns: ["id"];
@@ -605,6 +665,7 @@ export type Database = {
           created_at: string;
           created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           look_for: string | null;
           maori_name: string | null;
           maori_name_alternatives: string[];
@@ -632,6 +693,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           look_for?: string | null;
           maori_name?: string | null;
           maori_name_alternatives?: string[];
@@ -658,6 +720,7 @@ export type Database = {
           created_at?: string;
           created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           look_for?: string | null;
           maori_name?: string | null;
           maori_name_alternatives?: string[];
@@ -686,6 +749,13 @@ export type Database = {
             referencedColumns: ["id"];
           },
           {
+            foreignKeyName: "species_deactivated_by_fkey";
+            columns: ["deactivated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "species_updated_by_fkey";
             columns: ["updated_by"];
             isOneToOne: false;
@@ -698,29 +768,63 @@ export type Database = {
         Row: {
           auth_user_id: string | null;
           created_at: string;
+          created_by: string | null;
           deactivated_at: string | null;
+          deactivated_by: string | null;
           email: string;
           id: string;
           name: string;
+          updated_at: string;
+          updated_by: string | null;
         };
         ComputedFields: never;
         Insert: {
           auth_user_id?: string | null;
           created_at?: string;
+          created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           email: string;
           id?: string;
           name: string;
+          updated_at?: string;
+          updated_by?: string | null;
         };
         Update: {
           auth_user_id?: string | null;
           created_at?: string;
+          created_by?: string | null;
           deactivated_at?: string | null;
+          deactivated_by?: string | null;
           email?: string;
           id?: string;
           name?: string;
+          updated_at?: string;
+          updated_by?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "users_created_by_fkey";
+            columns: ["created_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "users_deactivated_by_fkey";
+            columns: ["deactivated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "users_updated_by_fkey";
+            columns: ["updated_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {

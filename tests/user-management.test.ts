@@ -44,6 +44,7 @@ describe("user management form", () => {
 
 const mocks = vi.hoisted(() => ({ db: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: mocks.db }));
+vi.mock("@/db/queries/auth", () => ({ currentUserId: async () => "current-app-user" }));
 
 import { createUser, deactivateUser, listUsers, updateUser } from "@/db/queries/users";
 
@@ -76,8 +77,8 @@ describe("user queries", () => {
     await createUser(values);
     await updateUser("user-id", values);
 
-    expect(query.insert).toHaveBeenCalledWith(values);
-    expect(query.update).toHaveBeenCalledWith(values);
+    expect(query.insert).toHaveBeenCalledWith({ ...values, created_at: expect.any(String), created_by: "current-app-user", updated_at: expect.any(String), updated_by: "current-app-user" });
+    expect(query.update).toHaveBeenCalledWith({ ...values, updated_at: expect.any(String), updated_by: "current-app-user" });
     expect(query.eq).toHaveBeenCalledWith("id", "user-id");
     expect(query.select).toHaveBeenCalledWith("id");
   });
@@ -92,7 +93,7 @@ describe("user queries", () => {
 
     await deactivateUser("user-id");
 
-    expect(query.update).toHaveBeenCalledWith({ deactivated_at: expect.any(String) });
+    expect(query.update).toHaveBeenCalledWith({ deactivated_at: expect.any(String), deactivated_by: "current-app-user", updated_at: expect.any(String), updated_by: "current-app-user" });
     expect(query.eq).toHaveBeenCalledWith("id", "user-id");
   });
 });
