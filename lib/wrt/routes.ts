@@ -32,7 +32,7 @@ function eventHref<T extends "/events" | "/events/new">(path: T, context: EventC
 }
 export function eventReturn(value: unknown): { href: Route; label: string } {
   if (value === "/") return { href: "/", label: "Return to Overview" };
-  if (typeof value !== "string" || !/^\/(?:records|sites|seasons)(?:[/?#]|$)/.test(value) || /[\\\r\n]/.test(value)) return { href: "/records", label: "Return to Records" };
+  if (typeof value !== "string" || !/^\/(?:records|sites|seasons)(?:[/?#]|$)/.test(value) || /[\\\r\n]/.test(value)) return { href: "/records", label: "Return to all records" };
   const pathname = value.split(/[?#]/)[0]!;
-  return { href: value as Route, label: pathname === "/records" ? "Return to Records" : pathname.startsWith("/seasons") ? "Return to season" : pathname === "/sites" ? "Return to Sites" : "Return to site" };
+  return { href: value as Route, label: pathname === "/records" ? "Return to all records" : pathname.startsWith("/seasons") ? "Return to season" : pathname === "/sites" ? "Return to Sites" : "Return to site" };
 }

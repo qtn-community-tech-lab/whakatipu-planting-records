@@ -107,7 +107,7 @@
 }
 
 
-.appReturn { position: absolute; z-index: 6; right: 12px; bottom: 28px; display: flex; gap: 8px; }
-@media (max-width: 767px) { .screen { --app-return-height: 44px; } .appReturn { top: calc(6px + env(safe-area-inset-top)); bottom: auto; left: 12px; right: auto; } }
+.appReturn { position: absolute; z-index: 6; right: 12px; top: calc(10px + env(safe-area-inset-top)); display: flex; gap: 8px; }
+@media (max-width: 767px) { .screen { --app-return-height: 44px; } .appReturn { top: calc(6px + env(safe-area-inset-top)); } }
 
 .scopeNotice { position: absolute; z-index: 5; right: 12px; bottom: 78px; max-width: 300px; padding: 12px; border-radius: var(--radius-card); background: var(--cn-paper); font-size: 13px; }

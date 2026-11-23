@@ -6,6 +6,7 @@ import { hrefs } from "@/lib/wrt/routes";
  */
 import type { Route } from "next";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { MapEventForm, WHOLE_SITE_KEY, type AreaPick, type FormEntries, type MapEventFormProps, type SpotInfo } from "./form/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
@@ -69,7 +70,7 @@ export interface CreatePlantingEventProps {
   onSaveEdit?: SavePlantingEventEdit | undefined;
 }
 
-export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, initialSeason, options, today, exitHref, exitLabel = "Return to Records", recording = false, initialEvent, scopeNotice, writableSites = options.sites, suggestions, totals, areas, onSave, onSaveEdit }: CreatePlantingEventProps) {
+export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, initialSeason, options, today, exitHref, exitLabel = "Return to all records", recording = false, initialEvent, scopeNotice, writableSites = options.sites, suggestions, totals, areas, onSave, onSaveEdit }: CreatePlantingEventProps) {
   // Where the page opened. Only the first value counts: our address changes make Next's server refreshes (after a
   // save) render with the new address, and a new start site would rebuild the map. (Part and season only seed state.)
   const [initialSite] = useState(siteFromAddress);
@@ -542,8 +543,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     <div ref={setScreen} className={s.screen} data-full-screen="" data-drawing={draw.draft || placing ? "" : undefined}>
       {scopeNotice && !started && <p className={s.scopeNotice}>The map shows planting events for this location and season. Other Records filters are kept for your return.</p>}
       <div className={s.appReturn}>
-        <button type="button" className="cn-btn cn-btn--soft cn-btn--sm" onClick={exit}>{exitLabel}</button>
-        {siteSlug && <button type="button" className="cn-btn cn-btn--soft cn-btn--sm" onClick={() => navigate("Records", hrefs.records({ place: siteSlug, parcel: part ?? undefined, season: season?.slug.split("-")[0] === "autumn" ? "Autumn" : season ? "Spring" : undefined, year: season?.slug.split("-")[1] })) }>View records</button>}
+        <Button type="button" variant="soft" size="sm" onClick={exit}>{exitLabel}</Button>
+        {siteSlug && <Button type="button" variant="soft" size="sm" onClick={() => navigate("Records", hrefs.records({ place: siteSlug, parcel: part ?? undefined, season: season?.slug.split("-")[0] === "autumn" ? "Autumn" : season ? "Spring" : undefined, year: season?.slug.split("-")[1] })) }>View existing records</Button>}
       </div>
       <div ref={mapEl} className={s.map} />
       <PinTooltip map={mapEl} />
