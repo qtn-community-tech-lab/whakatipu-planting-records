@@ -9,7 +9,7 @@ See [local setup](../README.md#local-development) and [database maintenance](../
 - Deactivate instead of deleting. Normal selectors exclude deactivated entries; historical identities and quantities remain available.
 - `public.users` stores approved profiles with stable app IDs; `auth_user_id` links confirmed Supabase Auth identities.
 - The layout reads navigation counts, season totals and search names through `readLayoutSummary`, a single public RPC. It does not load individual planting lines, notes or species profiles.
-- Public pages use `lib/wrt/public-server.ts` for grouped history and request-scoped reference reads, without a persistent cache. Staff Records, chat and planting forms retain their existing `lib/wrt/server.ts` repository path. Missing related rows fail explicitly rather than silently dropping quantities.
+- Public pages use `lib/wrt/public-server.ts` for grouped history and request-scoped reference reads, without a persistent cache. Staff Records uses session-aware `queries/records.ts` for aggregates and 50-row pages. Chat and planting forms retain their existing `lib/wrt/server.ts` repository path. Missing related rows fail explicitly rather than silently dropping quantities.
 
 ## Generate types after a migration
 

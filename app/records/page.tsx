@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getWrt, reviewShown } from "@/lib/wrt/server";
+import { reviewShown } from "@/lib/wrt/server";
+import { createRecordsQueries } from "@/db/queries/records";
 import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Card, EmptyState } from "@/components/wrt/shared/page";
@@ -19,7 +20,6 @@ import { ActiveFilters } from "@/components/wrt/explore/active-filters";
 import { RecordsPager } from "@/components/wrt/explore/records-pager";
 import { SortLinks } from "@/components/wrt/explore/sort-links";
 import { recordsHeadline } from "@/components/wrt/explore/records-headline";
-import type { RecordView } from "@/lib/wrt/queries";
 import { requireAuthenticated } from "@/db/queries/auth";
 import { hrefs } from "@/lib/wrt/routes";
 
@@ -27,58 +27,35 @@ type Props = Readonly<PageProps<"/records">>;
 
 export const metadata: Metadata = { title: "Records" };
 
-function sortRows(rows: RecordView[], sort: RecordsView["sort"]): RecordView[] {
-  const bySeason = (a: RecordView, b: RecordView) => a.season.order - b.season.order;
-  const byPlants = (a: RecordView, b: RecordView) => b.record.quantity - a.record.quantity;
-  const bySite = (a: RecordView, b: RecordView) =>
-    a.place.name.localeCompare(b.place.name) || a.record.parcelName.localeCompare(b.record.parcelName);
-  const bySpecies = (a: RecordView, b: RecordView) => a.species.displayName.localeCompare(b.species.displayName);
-  const orders = {
-    season: [bySeason, bySite, byPlants],
-    plants: [byPlants, bySeason, bySite],
-    site: [bySite, bySeason, bySpecies],
-    species: [bySpecies, bySeason, bySite],
-  }[sort];
-  return [...rows].sort((a, b) => {
-    for (const cmp of orders) {
-      const d = cmp(a, b);
-      if (d) return d;
-    }
-    return 0;
-  });
-}
-
 export default async function RecordsPage({ searchParams }: Props) {
   const raw = await searchParams;
   const next = hrefs.records(Object.fromEntries(Object.entries(raw).map(([key, value]) => [key, first(value)])));
   await requireAuthenticated(next);
+  const showReview = await reviewShown();
+  const queries = createRecordsQueries(showReview);
+  const { lookups, places } = await queries.context();
 
   // A GET form sends empty fields (?place=&year=…). Redirect to the clean URL so the link is shareable.
   if (PARAM_KEYS.some((k) => first(raw[k]) === "")) {
-    const wrt0 = getWrt();
-    const v = parseRecordParams(raw, await wrt0.lookups());
+    const v = parseRecordParams(raw, lookups);
     redirect(recordsHref(v));
   }
 
-  const wrt = getWrt();
-  const [lookups, places, allSeasons, showReview] = await Promise.all([
-    wrt.lookups(), wrt.places(), wrt.seasons(), reviewShown(),
-  ]);
   const parsed = parseRecordParams(raw, lookups);
-  const result = await wrt.records(parsed.filter);
-  const { filter, split } = result;
+  const filter = parsed.filter;
+  const result = await queries.summary(filter);
+  const { split } = result;
 
-  const total = result.rows.length;
+  const total = split.records;
   const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const page = Math.min(parsed.page, pageCount);
   const view: RecordsView = { ...parsed, page };
-  const sorted = sortRows(result.rows, view.sort);
-  const pageRows = sorted.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pageRows = total > 0 ? await queries.page(filter, page, view.sort) : [];
   const from = total ? (page - 1) * PAGE_SIZE + 1 : 0;
   const to = Math.min(page * PAGE_SIZE, total);
 
-  const speciesCount = new Set(result.rows.map((v) => v.species.id)).size;
-  const siteCount = new Set(result.rows.map((v) => v.place.slug)).size;
+  const speciesCount = result.speciesCount;
+  const siteCount = result.siteCount;
   const filtered = hasFilters(filter);
   const selectedPlace = lookups.places.find((p) => p.slug === filter.place);
   const selectedPart = filter.parcel && selectedPlace && selectedPlace.parcels.length > 1
@@ -193,7 +170,7 @@ export default async function RecordsPage({ searchParams }: Props) {
         </EmptyState>
       ) : (
         <>
-          <RecordsInsights rows={result.rows} view={view} lookups={lookups} seasons={allSeasons.map((x) => x.season)} />
+          <RecordsInsights summary={result} view={view} lookups={lookups} />
 
           <Card
             id="records"
