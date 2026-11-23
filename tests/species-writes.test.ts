@@ -16,7 +16,10 @@ it("preserves the existing slug even if an update caller supplies a different on
   };
   update.mockReturnValue(query);
   mocks.db.mockResolvedValue({ from: vi.fn().mockReturnValue(query) });
-  const values = speciesWriteValues({ ...emptySpecies, slug: "changed-slug", scientific_name: "Updated name" });
+  const values = speciesWriteValues({
+    ...emptySpecies, slug: "changed-slug", scientific_name: "Updated name",
+    maori_name_alternatives: [{ name: "Mingimingi" }], summary: "A native shrub.", look_for: "Small leaves.",
+  });
 
   await updateSpecies("existing-species", values);
 
@@ -24,6 +27,10 @@ it("preserves the existing slug even if an update caller supplies a different on
   void needs_decision;
   expect(update).toHaveBeenCalledWith({ ...editable, slug: "existing-species" });
   expect(update.mock.calls[0]![0]).not.toHaveProperty("needs_decision");
+  expect(update.mock.calls[0]![0]).not.toHaveProperty("register_note");
+  expect(update.mock.calls[0]![0]).not.toHaveProperty("status");
+  expect(update.mock.calls[0]![0]).not.toHaveProperty("sources");
+  expect(update.mock.calls[0]![0]).not.toHaveProperty("checked_at");
   expect(query.eq).toHaveBeenCalledWith("slug", "existing-species");
 });
 
@@ -41,13 +48,13 @@ it.each([true, false])("leaves the stored decision flag untouched when the calle
   expect(query.update.mock.calls[0]![0]).not.toHaveProperty("needs_decision");
 });
 
-it("always creates species with the decision flag set to false", async () => {
+it("always creates Core species with the decision flag set to false", async () => {
   const query = {
     insert: vi.fn().mockReturnThis(), select: vi.fn().mockReturnThis(),
     single: vi.fn().mockResolvedValue({ data: { slug: "new-species" }, error: null }),
   };
   mocks.db.mockResolvedValue({ from: vi.fn().mockReturnValue(query) });
-  const values = { ...speciesWriteValues({ ...emptySpecies, slug: "new-species", scientific_name: "New species" }), needs_decision: true };
+  const values = { ...speciesWriteValues({ ...emptySpecies, slug: "new-species", scientific_name: "New species" }), status: "contested", needs_decision: true };
   await createSpecies(values);
-  expect(query.insert).toHaveBeenCalledWith({ ...values, needs_decision: false });
+  expect(query.insert).toHaveBeenCalledWith({ ...values, status: "core", needs_decision: false });
 });

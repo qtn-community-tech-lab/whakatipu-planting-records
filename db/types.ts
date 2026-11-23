@@ -42,11 +42,11 @@ export const speciesSchema = z.object({
     .refine((value) => !["new", "photos"].includes(value), "This slug is reserved. Choose another."),
   scientific_name: text.min(1, "Enter a scientific name."),
   suggested_spelling: text.nullable(), common_name: text.nullable(), maori_name: text.nullable(),
-  status: z.enum(["core", "appended", "contested", "seedlog_only"]).nullable(),
+  maori_name_alternatives: z.array(text.min(1, "Enter a Māori name or remove this entry.")),
+  summary: notes.nullable(), look_for: notes.nullable(),
   over_5m: z.boolean().nullable(), threatened: z.boolean().nullable(),
   threatened_te_kakano: z.boolean(), needs_decision: z.boolean().transform((): boolean => false),
   contested_group: identifier.regex(/^(C[0-9]+)?$/, "Use a group such as C3, or leave blank.").nullable(),
-  register_note: notes.nullable(),
   photos: z.array(z.object({ src: photoUrl, attribution: text })),
 });
 

@@ -69,9 +69,36 @@ describe.each(["new", "edit"] as const)("%s species page", (kind) => {
     expect(await submit({ ...values, slug: "photos" })).toHaveProperty("issues");
     expect(mocks.create).not.toHaveBeenCalled();
     expect(mocks.update).not.toHaveBeenCalled();
-    await expect(submit({ ...input, ...{ created_by: "spoofed", needs_decision: true, summary: "Must not overwrite the imported profile" } })).rejects.toThrow("REDIRECT");
+    await expect(submit({ ...input, ...{ created_by: "spoofed", needs_decision: true, status: "contested", register_note: "Must not replace the stored note", sources: [], checked_at: "2026-11-24" } })).rejects.toThrow("REDIRECT");
     if (kind === "new") expect(mocks.create).toHaveBeenCalledWith(input);
     else expect(mocks.update).toHaveBeenCalledWith("old-slug", input);
+  });
+
+  it.each([
+    { field: "maori_name_alternatives", value: ["ā".repeat(INPUT_LIMITS.shortText + 1)], path: "maori_name_alternatives.0" },
+    { field: "summary", value: "a".repeat(INPUT_LIMITS.longText + 1), path: "summary" },
+    { field: "look_for", value: "a".repeat(INPUT_LIMITS.longText + 1), path: "look_for" },
+  ])("rejects overlong $field before writing", async ({ field, value, path }) => {
+    const result = await (await pageForm(kind))!.props.onSubmit({ ...input, [field]: value });
+    expect(result.issues).toContainEqual(expect.objectContaining({ path }));
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
+    expect(mocks.tag).not.toHaveBeenCalled();
+    expect(mocks.redirect).not.toHaveBeenCalled();
+  });
+
+  it.each([false, true])("saves editable reference content (cleared: %s)", async (cleared) => {
+    const reference = cleared
+      ? { maori_name_alternatives: [], summary: null, look_for: null }
+      : { maori_name_alternatives: ["  Mingimingi  ", "Mikimiki"], summary: "  A native shrub.  ", look_for: "  Small leaves.  " };
+    const expected = cleared ? reference : {
+      maori_name_alternatives: ["Mingimingi", "Mikimiki"], summary: "A native shrub.", look_for: "Small leaves.",
+    };
+    await expect((await pageForm(kind))!.props.onSubmit({ ...input, ...reference })).rejects.toThrow("REDIRECT");
+    if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...input, ...expected });
+    else expect(mocks.update).toHaveBeenCalledWith("old-slug", { ...input, ...expected });
+    expect(mocks.tag).toHaveBeenCalledWith("supabase");
+    expect(mocks.revalidate).toHaveBeenCalledWith("/", "layout");
   });
 
   if (kind === "new") it("handles duplicate slugs without clearing form values or redirecting", async () => {

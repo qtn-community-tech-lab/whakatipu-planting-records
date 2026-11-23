@@ -14,8 +14,9 @@ describe("species form", () => {
     { field: "suggested_spelling", limit: INPUT_LIMITS.shortText, prefix: "" },
     { field: "common_name", limit: INPUT_LIMITS.shortText, prefix: "" },
     { field: "maori_name", limit: INPUT_LIMITS.shortText, prefix: "" },
+    { field: "summary", limit: INPUT_LIMITS.longText, prefix: "" },
+    { field: "look_for", limit: INPUT_LIMITS.longText, prefix: "" },
     { field: "contested_group", limit: INPUT_LIMITS.identifier, prefix: "C" },
-    { field: "register_note", limit: INPUT_LIMITS.longText, prefix: "" },
   ] as const;
 
   it.each(textCases)("enforces the $field length in both form and server validation", ({ field, limit, prefix }) => {
@@ -38,12 +39,18 @@ describe("species form", () => {
       onSubmit: async () => {},
       values: {
         ...speciesWriteValues(valid()), updated_at: "2026-11-07T00:00:00Z",
+        maori_name_alternatives: ["Mingimingi"],
         photos: [{ src: "https://example.com/plant.jpg", attribution: "Credit" }],
       },
     }));
+    expect(html).not.toContain("Register notes");
+    expect(html).not.toContain('name="register_note"');
+    expect(html).not.toContain("Register status");
+    expect(html).not.toContain('name="status"');
     const controls = html.match(/<(?:input|textarea)\b[^>]*>/g) ?? [];
     for (const { field, limit } of [
       ...textCases.filter(({ field }) => field !== "contested_group"),
+      { field: "maori_name_alternatives.0.name", limit: INPUT_LIMITS.shortText },
       { field: "photos.0.src", limit: INPUT_LIMITS.url },
       { field: "photos.0.attribution", limit: INPUT_LIMITS.shortText },
     ]) {
@@ -68,6 +75,55 @@ describe("species form", () => {
     expect(existing).toContain("It can&#x27;t be changed after the species is created.");
   });
 
+  it("validates alternative Māori names in both form and server schemas", () => {
+    const exact = "ā".repeat(INPUT_LIMITS.shortText);
+    const input = { ...valid(), maori_name_alternatives: [{ name: exact }] };
+    expect(speciesFormSchema.safeParse(input).success).toBe(true);
+    expect(speciesSchema.safeParse(speciesWriteValues(input)).success).toBe(true);
+
+    for (const [name, message] of [
+      [exact + "ā", lengthMessage(INPUT_LIMITS.shortText)],
+      ["   ", "Enter a Māori name or remove this entry."],
+    ] as const) {
+      const invalid = { ...input, maori_name_alternatives: [{ name }] };
+      const formResult = speciesFormSchema.safeParse(invalid);
+      const serverResult = speciesSchema.safeParse(speciesWriteValues(invalid));
+      expect(formResult.success).toBe(false);
+      expect(serverResult.success).toBe(false);
+      if (!formResult.success) expect(formResult.error.issues).toContainEqual(expect.objectContaining({
+        path: ["maori_name_alternatives", 0, "name"], message,
+      }));
+      if (!serverResult.success) expect(serverResult.error.issues).toContainEqual(expect.objectContaining({
+        path: ["maori_name_alternatives", 0], message,
+      }));
+    }
+  });
+
+  it("loads, normalizes and clears editable reference content", () => {
+    const input = speciesFormSchema.parse({
+      ...valid(),
+      maori_name_alternatives: [{ name: "  Mingimingi  " }, { name: "  Mikimiki  " }],
+      summary: "  A small native shrub.  ",
+      look_for: "  Look for small leaves.  ",
+    });
+    const written = speciesWriteValues(input);
+    expect(written).toMatchObject({
+      maori_name_alternatives: ["Mingimingi", "Mikimiki"],
+      summary: "A small native shrub.", look_for: "Look for small leaves.",
+    });
+    const saved = { ...written, updated_at: "2026-11-07T00:00:00Z" };
+    expect(speciesFormValues(saved)).toEqual(input);
+    expect(speciesWriteValues(speciesFormValues(saved))).toEqual(written);
+
+    const cleared = speciesWriteValues(speciesFormSchema.parse({
+      ...input, maori_name_alternatives: [], summary: "  ", look_for: "  ",
+    }));
+    expect(cleared).toMatchObject({ maori_name_alternatives: [], summary: null, look_for: null });
+    expect(speciesFormValues({ ...cleared, updated_at: saved.updated_at })).toMatchObject({
+      maori_name_alternatives: [], summary: "", look_for: "",
+    });
+  });
+
   it("asks for the scientific name before the web address name it fills in", () => {
     const html = renderToStaticMarkup(createElement(SpeciesForm, { onSubmit: async () => {} }));
     expect(html).toContain("Web address name");
@@ -86,7 +142,6 @@ describe("species form", () => {
     const species = speciesWriteValues({ ...valid(), over_5m: "yes", maori_name: "Mānuka" });
     expect(speciesSchema.parse(species)).toEqual(species);
     expect(species.over_5m).toBe(true);
-    expect(species.status).toBe("core");
     expect(species.threatened).toBe(false);
     expect(species.threatened_te_kakano).toBe(false);
     expect(species.maori_name).toBe("Mānuka");
@@ -118,7 +173,7 @@ describe("species form", () => {
 
   it("round-trips saved content and allows images to be cleared", () => {
     const input = speciesFormSchema.parse({
-      ...valid(), over_5m: "no", threatened: "yes", status: "appended", common_name: "Mingimingi",
+      ...valid(), over_5m: "no", threatened: "yes", common_name: "Mingimingi",
       photos: [{ src: "https://example.com/plant.jpg", attribution: "Photographer · CC BY" }],
     });
     const saved = { ...speciesWriteValues(input), needs_decision: true, updated_at: "2026-11-07T00:00:00Z" };
@@ -126,9 +181,12 @@ describe("species form", () => {
     expect(speciesWriteValues({ ...input, photos: [] })).toHaveProperty("photos", []);
   });
 
-  it("accepts only the core writable columns", () => {
-    const species = speciesSchema.parse({ ...speciesWriteValues(valid()), summary: "Ignored", updated_at: "Ignored" });
-    expect(species).not.toHaveProperty("summary");
+  it("accepts only the writable columns", () => {
+    const species = speciesSchema.parse({ ...speciesWriteValues(valid()), status: "contested", register_note: "Preserve the stored note", sources: [], checked_at: "2026-11-24", updated_at: "Ignored" });
+    expect(species).not.toHaveProperty("status");
+    expect(species).not.toHaveProperty("register_note");
+    expect(species).not.toHaveProperty("sources");
+    expect(species).not.toHaveProperty("checked_at");
     expect(species).not.toHaveProperty("updated_at");
   });
 });

@@ -14,14 +14,19 @@ export async function listSpecies() {
     .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
-  return data.map((species) => ({ ...species, photos: species.photos as unknown as Species["photos"] }));
+  return data.map((species) => ({
+    ...species,
+    photos: species.photos as unknown as Species["photos"],
+  }));
 }
 
 /** Active species for new planting lines, including entries with no history. */
 export async function listSpeciesForPlanting() {
   const { data } = await (await db())
     .from("species")
-    .select("slug, register_code, scientific_name, suggested_spelling, common_name, maori_name")
+    .select(
+      "slug, register_code, scientific_name, suggested_spelling, common_name, maori_name",
+    )
     .is("deactivated_at", null)
     .order("scientific_name")
     .throwOnError();
@@ -59,7 +64,7 @@ export async function readSpeciesForEdit(slug: string) {
   const { data } = await (await db())
     .from("species")
     .select(
-      "slug, scientific_name, suggested_spelling, common_name, maori_name, status, over_5m, threatened, threatened_te_kakano, needs_decision, contested_group, register_note, photos, updated_at",
+      "slug, scientific_name, suggested_spelling, common_name, maori_name, maori_name_alternatives, summary, look_for, over_5m, threatened, threatened_te_kakano, needs_decision, contested_group, photos, updated_at",
     )
     .eq("slug", slug)
     .is("deactivated_at", null)
@@ -69,7 +74,11 @@ export async function readSpeciesForEdit(slug: string) {
 }
 
 export async function createSpecies(values: SpeciesInput) {
-  return (await db()).from("species").insert({ ...values, needs_decision: false }).select("slug").single();
+  return (await db())
+    .from("species")
+    .insert({ ...values, status: "core", needs_decision: false })
+    .select("slug")
+    .single();
 }
 
 /** Preserve the existing slug and decision flag. The database touch trigger sets updated_at. */
