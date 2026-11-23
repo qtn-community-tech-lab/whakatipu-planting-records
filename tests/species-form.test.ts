@@ -85,7 +85,14 @@ describe("species form", () => {
     expect(slugInput(created)).not.toMatch(/readonly/i);
     expect(slugInput(existing)).toMatch(/readonly/i);
     expect(slugInput(existing)).toContain('value="coprosma-propinqua"');
-    expect(existing).toContain("The slug cannot be changed after the species is created.");
+    expect(existing).toContain("It can&#x27;t be changed after the species is created.");
+  });
+
+  it("asks for the scientific name before the web address name it fills in", () => {
+    const html = renderToStaticMarkup(createElement(SpeciesForm, { onSubmit: async () => {} }));
+    expect(html).toContain("Web address name");
+    expect(html).not.toContain(">Slug<");
+    expect(html.indexOf('name="scientific_name"')).toBeLessThan(html.indexOf('name="slug"'));
   });
 
   it("keeps the admin's slug and allows optional fields", () => {
