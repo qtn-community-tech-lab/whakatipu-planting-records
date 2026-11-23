@@ -79,7 +79,7 @@ export function toHistoryReferences(data: unknown) {
   }));
   const species = raw.species.map((row) => toSpecies(row, raw.species));
   const parcels = new Map<string, Parcel>(raw.areas.map((area) => [area.slug, {
-    id: area.wrt_number ?? area.slug, name: area.name, placeSlug: area.site,
+    slug: area.slug, id: area.wrt_number ?? area.slug, name: area.name, placeSlug: area.site,
     siteClass: area.class ?? "unknown", aliases: area.aliases, deactivatedAt: area.deactivated_at,
   }]));
   const places: Place[] = raw.sites.map((site) => {

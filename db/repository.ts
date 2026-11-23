@@ -164,20 +164,14 @@ async function load(db: Db): Promise<Loaded> {
       for (const area of areaRows.data) {
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        parcels.set(area.slug, {
-          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
-          deactivatedAt: area.deactivated_at, aliases: [],
-        });
+        parcels.set(area.slug, { slug: area.slug, id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [], deactivatedAt: area.deactivated_at });
         plantsByClass.set(siteClass, 0);
       }
       for (const l of lines) {
         const area = areaBySlug.get(l.area!)!;
         if (area.site !== site.slug) continue;
         const siteClass = (area.class ?? "unknown") as SiteClass;
-        const parcel = parcels.get(area.slug) ?? {
-          id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass,
-          deactivatedAt: area.deactivated_at, aliases: [],
-        };
+        const parcel = parcels.get(area.slug) ?? { slug: area.slug, id: partId(area.slug), name: area.name, placeSlug: site.slug, siteClass, aliases: [], deactivatedAt: area.deactivated_at };
         if (l.site_original && !parcel.aliases.includes(l.site_original)) parcel.aliases.push(l.site_original);
         parcels.set(area.slug, parcel);
         plantsByClass.set(siteClass, (plantsByClass.get(siteClass) ?? 0) + (l.quantity ?? 0));

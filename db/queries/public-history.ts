@@ -9,7 +9,7 @@ import type { DataQuality, Overview, PlaceSummary, RecordFilter, SeasonPoint, Se
 import type { HistoryCell } from "@/lib/wrt/presentation";
 import { addSplits } from "@/lib/wrt/presentation";
 import type { QuantitySplit, ReviewTheme, Species } from "@/lib/wrt/types";
-import { matchScore, searchKey, slugify } from "@/lib/wrt/text";
+import { matchScore, searchKey } from "@/lib/wrt/text";
 
 type Filter = Omit<RecordFilter, "q" | "review"> & { seasonSlug?: string };
 type Profile = "names" | "cards" | "full";
@@ -163,7 +163,7 @@ export function createPublicHistoryQueries(scope: () => boolean | Promise<boolea
     const refs = await references();
     const item = refs.placeBySlug.get(slug);
     if (!item) return null;
-    const selectedPart = options.part ? item.parcels.find((parcel) => slugify(parcel.name) === options.part) : undefined;
+    const selectedPart = options.part ? item.parcels.find((parcel) => parcel.slug === options.part) : undefined;
     if (options.part && !selectedPart) return null;
     const parcel = options.parcel ?? selectedPart?.id;
     const filter: Filter = { place: slug, ...(parcel ? { parcel } : {}) };
