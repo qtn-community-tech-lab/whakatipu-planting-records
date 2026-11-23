@@ -644,14 +644,7 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 .cn-app a.wrt-shero__back, .wrt-shero__back { align-self: flex-start; color: var(--cn-lime-300); font: 600 13.5px/1 var(--font-sans); text-decoration: none; }
 .wrt-shero__back:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.wrt-shero__tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.wrt-shero__tag {
-  padding: 7px 11px; border-radius: var(--radius-pill); background: var(--cn-on-dark-fill-2);
-  color: var(--cn-white); font: 700 12px/1 var(--font-sans);
-}
-.wrt-shero__tag--rank { background: var(--cn-lime-300); color: var(--cn-green-900); }
-.wrt-shero__tag--risk { background: var(--cn-risk-bg); color: var(--cn-risk-fg); }
-.wrt-shero__tag--review { background: var(--cn-behind-bg); color: var(--cn-behind-fg); }
+.wrt-shero__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
 
 .wrt-shero__names { display: flex; flex-direction: column; gap: 8px; }
 .wrt-shero__title { margin: 0; font: 800 clamp(40px, 5vw, 64px)/0.98 var(--font-sans); letter-spacing: var(--tracking-display); color: var(--cn-white); overflow-wrap: anywhere; }
