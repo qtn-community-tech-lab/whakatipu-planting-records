@@ -6,10 +6,11 @@
  * planting event; and saving one of those events once edited.
  */
 import { revalidatePath, updateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { SUPABASE_TAG } from "@/db/cache";
 import {
-  createPlantingEvent, createPlantingLines, deactivatePlantingLines, listPlantingEventNotes, listPlantingEventLines,
-  listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, updatePlantingLine,
+  createPlantingEvent, createPlantingLines, listPlantingEvents, listPlantingEventLines, listPlantingEventLocations,
+  listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, deactivatePlantingEvent, readPlantingEvent,
 } from "@/db/queries/plantings";
 import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
@@ -20,7 +21,7 @@ import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 import { SLUG } from "@/lib/wrt/text";
-import { requireAuthenticated } from "@/db/queries/auth";
+import { isAuthenticated, requireAuthenticated } from "@/db/queries/auth";
 
 const TREES_SHOWN = 5;
 const SEASONS_SHOWN = 6;
@@ -72,10 +73,16 @@ export async function loadSiteOverview(slug: string, partId: string | null): Pro
 
 
 export interface SeasonPlantingEvents {
+  locations: Awaited<ReturnType<typeof listPlantingEventLocations>>;
   /** The season's slug, e.g. "autumn-2021": every event's here. */
   season: string;
   events: {
     id: number; area: string; plantedOn: string | null; notes: string;
+    site: string; siteName: string; areaSlug: string | null; updatedAt: string;
+    type: "establishment" | "infill" | "replacement" | null;
+    deactivatedAt?: string | null;
+    /** Bound on the server to this event, and supplied only to approved staff. */
+    onDeactivate?: (() => Promise<PlantingEventEditResult>) | undefined;
     /** Imported from the planting workbook, not entered in the app. */
     workbook: boolean;
     /** `id` is the planting line's id; `species` the event form's species id (register code, or slug). */
@@ -89,11 +96,26 @@ export interface SeasonPlantingEvents {
 }
 
 /** One season's planting events at a site, or at one part of it: area by area, each one's plants most planted first. */
-export async function loadSeasonPlantingEvents(slug: string, season: string, partId: string | null): Promise<SeasonPlantingEvents | null> {
+export async function loadSeasonPlantingEvents(slug: string, season: string, partId: string | null, focusedId?: number): Promise<SeasonPlantingEvents | null> {
   if (!valid(slug, partId) || !/^[a-z]+-\d{4}$/.test(season)) return null;
-  const [register, lines] = await Promise.all([listSpecies(), listSiteSeasonPlantingLines(slug, season, partId)]);
+  if (focusedId !== undefined && !(Number.isSafeInteger(focusedId) && focusedId > 0)) return null;
+  const [register, activeLines, locations, authenticated, focused] = await Promise.all([
+    listSpecies(), listSiteSeasonPlantingLines(slug, season, partId), listPlantingEventLocations(), isAuthenticated(),
+    focusedId ? readPlantingEvent(focusedId) : null,
+  ]);
+  const lines = [...activeLines];
+  // Only an explicitly opened deactivated event is shown for traceability. Normal lists stay active-only.
+  if (focused?.deactivated_at && focused.areas?.site === slug && focused.seasons?.slug === season
+    && (!partId || partId === (focused.areas.wrt_number ?? focused.areas.slug))) {
+    for (const line of await listPlantingEventLines(focused.id)) lines.push({
+      line_id: line.id, planting_id: focused.id, area_name: focused.areas.name, wrt_number: focused.areas.wrt_number,
+      planted_on: focused.planted_on, source: focused.source, species: line.species, quantity: line.quantity,
+      register_code: line.species_info?.register_code ?? null, scientific_name: line.species_info?.scientific_name ?? null,
+      common_name: line.species_info?.common_name ?? null, maori_name: line.species_info?.maori_name ?? null,
+    });
+  }
   const ids = [...new Set(lines.map((l) => l.planting_id ?? 0))];
-  const notes = new Map((ids.length ? await listPlantingEventNotes(ids) : []).map((n) => [n.id, n.notes.trim()]));
+  const details = new Map((ids.length ? await listPlantingEvents(ids) : []).map((n) => [n.id, n]));
   const photos = new Map(register.map((s) => [s.slug, s.photos[0]]));
   // The lines come area by area and most planted first, so each event's keep that order.
   const events = new Map<number, SeasonPlantingEvents["events"][number]>();
@@ -101,7 +123,15 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
     const id = l.planting_id ?? 0;
     let event = events.get(id);
     if (!event) {
-      event = { id, area: l.area_name ?? "", plantedOn: l.planted_on, notes: notes.get(id) ?? "", workbook: l.source === "workbook", lines: [] };
+      const detail = details.get(id);
+      event = {
+        id, area: l.area_name ?? "", plantedOn: l.planted_on, notes: detail?.notes ?? "", workbook: l.source === "workbook", lines: [],
+        site: detail?.areas?.site ?? slug, siteName: detail?.areas?.sites?.name ?? slug,
+        areaSlug: detail?.areas?.slug === wholeSiteAreaSlug(slug) ? null : detail?.areas?.slug ?? null,
+        updatedAt: detail?.updated_at ?? "", type: detail?.type ?? null,
+        deactivatedAt: detail?.deactivated_at ?? null,
+        onDeactivate: authenticated && !detail?.deactivated_at ? deactivatePlantingEventAction.bind(null, id) : undefined,
+      };
       events.set(id, event);
     }
     const p = photos.get(l.species ?? "");
@@ -112,7 +142,7 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
       photo: p ? { src: p.src } : null, quantity: l.quantity ?? 0,
     });
   }
-  return { season, events: [...events.values()] };
+  return { season, events: [...events.values()], locations };
 }
 
 const NOT_RECORDED = "The planting event could not be saved. Please try again.";
@@ -186,73 +216,66 @@ function whyNot(error: unknown, otherwise: string) {
 
 const NOT_SAVED = "The planting event could not be saved. Your changes are still here. Please try again.";
 
-/**
- * Save an edited past planting event: its date and notes, then its lines (quantities changed,
- * species added, species taken off, which are deactivated). These are separate writes, not one
- * transaction, so a failure part way says some changes were saved; saving again finishes the rest.
- */
+/** Validate browser values, then replace the event and its lines in one transaction. */
 export async function savePlantingEventEdit(id: number, raw: unknown): Promise<PlantingEventEditResult> {
-  await requireAuthenticated("/events/new");
-  // Trust boundary: the id and values come from the browser.
+  await requireAuthenticated("/events");
   if (!(Number.isSafeInteger(id) && id > 0)) return { error: NOT_SAVED };
   const parsed = plantingEventEditSchema.safeParse(raw);
   if (!parsed.success)
     return { issues: parsed.error.issues.map(({ path, message }) => ({ path: path.join("."), message })) };
   const edit = parsed.data;
 
-  let saved = false;
+  let savedId: number;
   try {
     const [stored, current, slugOf] = await Promise.all([readPlantingEventSeason(id), listPlantingEventLines(id), speciesSlugs()]);
     if (!stored) return { error: NOT_SAVED };
-    // The date is only checked once it's changed: an old one outside today's rules doesn't block the rest.
     const problem = edit.plantedOn && edit.plantedOn !== stored.plantedOn ? plantedOnProblem(edit.plantedOn, stored.season, todayInNz()) : undefined;
     if (problem) return { issues: [{ path: "plantedOn", message: problem }] };
-    // Only this event's own active lines can be changed.
     const byId = new Map(current.map((l) => [l.id, l]));
+    // Retained lines keep their species and provenance, including deactivated species.
     if (edit.lines.some((l) => l.id !== null && !byId.has(l.id))) return { error: NOT_SAVED };
-    // A species added is one in the active register.
     const unknown = edit.lines.findIndex((l) => l.id === null && !slugOf.has(l.species));
     if (unknown >= 0) return { issues: [{ path: `lines.${unknown}.species`, message: "Choose a species from the list." }] };
-    // A species added that already has a line here (sent again after a save that stopped part way) keeps that line.
-    const named = new Set(edit.lines.map((l) => l.id));
-    const lines = edit.lines.map((l) => {
-      const slug = l.id === null ? slugOf.get(l.species)! : byId.get(l.id)!.species; // both checked above
-      return { id: l.id ?? current.find((c) => c.species === slug && !named.has(c.id))?.id ?? null, species: slug, quantity: l.quantity };
-    });
-    const kept = new Set(lines.map((l) => l.id));
-
-    const event = await updatePlantingEvent(id, { planted_on: edit.plantedOn, notes: edit.notes });
-    if (event.error) return failed(event.error, false);
-    saved = true;
-    for (const line of lines) {
-      if (line.id === null || byId.get(line.id)?.quantity === line.quantity) continue;
-      const { error } = await updatePlantingLine(id, line.id, { quantity: line.quantity });
-      if (error) return failed(error, true);
+    const lines = edit.lines.map((l) => ({
+      ...l, species: l.id === null ? slugOf.get(l.species)! : byId.get(l.id)!.species,
+    }));
+    // Register codes and slugs can name the same species. Check after resolving both.
+    if (new Set(lines.map((l) => l.species)).size !== lines.length)
+      return { issues: [{ path: "lines", message: "Each species can only be listed once." }] };
+    const { data, error } = await updatePlantingEvent(id, { ...edit, lines });
+    if (error) {
+      if (error.code === "22023" && ["site", "area", "lines"].includes(error.details))
+        return { issues: [{ path: error.details, message: error.message }] };
+      if (error.code === "23505") return { issues: [{ path: "area", message: "An imported event already exists in this area and season. Choose another area." }] };
+      return { error: whyNot(error, NOT_SAVED) };
     }
-    const removed = current.filter((c) => !kept.has(c.id)).map((c) => c.id);
-    if (removed.length) {
-      const { error } = await deactivatePlantingLines(id, removed);
-      if (error) return failed(error, true);
-    }
-    const added = lines.filter((l) => l.id === null).map((l) => ({ species: l.species, quantity: l.quantity }));
-    if (added.length) {
-      const { error } = await createPlantingLines(id, added);
-      if (error) return failed(error, true);
-    }
+    savedId = data.id;
   } catch (error) {
-    return failed(error, saved);
+    return { error: whyNot(error, NOT_SAVED) };
   }
   refresh();
-  return {};
+  redirect(`/events?event=${savedId}&saved=1`);
+}
+
+/** Deactivate the captured event; all actual totals are derived from active history. */
+export async function deactivatePlantingEventAction(id: number): Promise<PlantingEventEditResult> {
+  if (!(await isAuthenticated())) return { error: "Sign in to deactivate planting events." };
+  const failure = { error: "The planting event could not be deactivated. Please try again." };
+  if (!(Number.isSafeInteger(id) && id > 0)) return failure;
+  let savedId: number;
+  try {
+    const { data, error } = await deactivatePlantingEvent(id);
+    if (error) return failure;
+    savedId = data.id;
+  } catch {
+    return failure;
+  }
+  refresh();
+  redirect(`/events?event=${savedId}`);
 }
 
 /** After a write: every page reading the planting data reads it again. */
 function refresh() {
   updateTag(SUPABASE_TAG);
   revalidatePath("/", "layout");
-}
-
-function failed(error: unknown, someSaved: boolean): PlantingEventEditResult {
-  if (someSaved) refresh();
-  return { error: whyNot(error, someSaved ? "Some changes were saved, but not all. Your changes are still here. Please save again." : NOT_SAVED) };
 }

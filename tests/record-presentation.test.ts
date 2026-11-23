@@ -25,8 +25,8 @@ describe("uniform planting record presentation", () => {
       rows: [{ ...row, record: { ...row.record, plantingEventId: 42 } }],
       returnTo: "/records?year=2025",
     }));
-    expect(html).toContain("View planting event");
-    const link = html.match(/href="([^"]+)"[^>]*>View planting event/)!;
+    expect(html).toContain("View/edit planting event");
+    const link = html.match(/href="([^"]+)"[^>]*>View\/edit planting event/)!;
     const destination = new URL(link[1]!.replaceAll("&amp;", "&"), "https://example.org");
     expect(destination.pathname).toBe("/events");
     expect(destination.searchParams.get("event")).toBe("42");

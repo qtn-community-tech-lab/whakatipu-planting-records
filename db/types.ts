@@ -104,13 +104,16 @@ export type SiteSubmitResult = {
 export type PlantingEventSubmitResult = { error?: string; issues?: { path: string; message: string }[]; savedPlantingEvent?: number };
 
 /**
- * A past planting event's writable fields, as its edit form sends them. A line's `id` is its
+ * A past planting event's writable details and quantities. A line's `id` is its
  * planting_lines id, or null for a species added in the form; `species` is the event form's species
  * id (the register code, or the slug when there is none). Lines left out are deactivated. The date
  * is checked against the event's season separately.
  */
 export const plantingEventEditSchema = z.object({
+  site: identifier.min(1, "Choose a site."),
+  area: identifier.min(1, "Choose an area.").nullable(),
   plantedOn: z.string().refine(isIsoDate, "Enter a real date.").nullable(),
+  type: z.enum(["establishment", "infill", "replacement"]).nullable(),
   notes,
   lines: z.array(z.object({
     id: z.number().int().positive().nullable(),

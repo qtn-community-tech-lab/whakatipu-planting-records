@@ -1071,6 +1071,20 @@ export type Database = {
         Args: { leader_count?: number; show_review?: boolean };
         Returns: Json;
       };
+      update_planting_event: {
+        Args: {
+          area_slug: string;
+          event_id: number;
+          lines: Json;
+          notes: string;
+          planted_on: string;
+          planting_type: Database["public"]["Enums"]["planting_type"];
+          site_slug: string;
+        };
+        Returns: {
+          id: number;
+        }[];
+      };
     };
     Enums: {
       note_kind: "ruling" | "confirm" | "fyi";

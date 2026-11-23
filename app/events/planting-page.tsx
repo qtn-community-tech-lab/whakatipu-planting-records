@@ -75,6 +75,7 @@ export async function PlantingPage({ searchParams, recording }: Props & { record
   const initialSeason = m ? { slug: m[0], label: `${m[1]!.charAt(0).toUpperCase()}${m[1]!.slice(1)} ${m[2]}` } : undefined;
   return (
     <CreatePlantingEvent
+      key={`${event?.id ?? "new"}:${event?.updated_at ?? ""}`}
       initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} recording={recording} initialEvent={eventId} scopeNotice={typeof raw.returnTo === "string" && /[?&](species|review|theme|class)=/.test(raw.returnTo)} writableSites={writableSites} exitHref={target.href} exitLabel={target.label} onSave={authenticated ? savePlantingEvent : undefined} onSaveEdit={authenticated ? savePlantingEventEdit : undefined} suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );

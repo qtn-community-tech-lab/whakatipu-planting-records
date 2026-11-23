@@ -1,6 +1,6 @@
 /** Planting lines and season totals. */
 import { db } from "@/db/client";
-import type { Tables } from "@/db/types";
+import type { Tables, PlantingEventEdit } from "@/db/types";
 import { lines, PAGE_SIZE, seasonSites, seasonSpecies, seasonTotals } from "./views";
 
 export { PAGE_SIZE };
@@ -41,14 +41,25 @@ export async function listSiteSeasonPlantingLines(site: string, season: string, 
   return data;
 }
 
-/** Planting events' notes, by id. (line_details' notes are each line's open review notes, not the event's.) */
-export async function listPlantingEventNotes(ids: number[]) {
+/** Event details for the season reader/editor; line_details' notes are line review notes. */
+export async function listPlantingEvents(ids: number[]) {
   const { data } = await (await db())
     .from("planting_events")
-    .select("id, notes")
+    .select("id, notes, type, updated_at, deactivated_at, areas(slug, site, sites(name))")
     .in("id", ids)
     .throwOnError();
   return data;
+}
+
+/** Active locations for corrections; retained historical locations come from the event. */
+export async function listPlantingEventLocations() {
+  const { data } = await (await db())
+    .from("sites")
+    .select("slug, name, areas(slug, name, deactivated_at)")
+    .is("deactivated_at", null)
+    .order("name")
+    .throwOnError();
+  return data.map((site) => ({ ...site, areas: site.areas.filter((area) => !area.deactivated_at) }));
 }
 
 /** Every season in planting order, with the needs-review split and the workbook's TOTAL cell. */
@@ -114,18 +125,35 @@ export async function readPlantingEventSeason(id: number) {
 export async function listPlantingEventLines(plantingEvent: number) {
   const { data } = await (await db())
     .from("planting_lines")
-    .select("id, species, quantity")
+    .select("id, species, quantity, species_info:species(scientific_name, common_name, maori_name, register_code)")
     .eq("planting_event", plantingEvent)
     .is("deactivated_at", null)
     .throwOnError();
   return data;
 }
 
-/** A planting event's date and notes. The import's source stays as it is. */
-export async function updatePlantingEvent(id: number, values: { planted_on: string | null; notes: string }) {
+/** Replace an event's writable values and lines atomically, under the caller's RLS. */
+export async function updatePlantingEvent(id: number, values: PlantingEventEdit) {
+  // Generated RPC argument types omit SQL nullability. Assertions preserve the
+  // validated nulls sent to PostgreSQL for unknown/optional fields.
+  return (await db())
+    .rpc("update_planting_event", {
+      event_id: id,
+      site_slug: values.site,
+      area_slug: values.area!,
+      planted_on: values.plantedOn!,
+      planting_type: values.type!,
+      notes: values.notes,
+      lines: values.lines,
+    })
+    .single();
+}
+
+/** Exclude the whole event from counted history, preserving every stored line. */
+export async function deactivatePlantingEvent(id: number) {
   return (await db())
     .from("planting_events")
-    .update(values)
+    .update({ deactivated_at: new Date().toISOString() })
     .eq("id", id)
     .select("id")
     .single();
@@ -155,7 +183,7 @@ export async function deactivatePlantingLines(plantingEvent: number, ids: number
 export async function readPlantingEvent(id: number) {
   const { data } = await (await db())
     .from("planting_events")
-    .select("id, areas(slug, site, wrt_number), seasons(slug, label)")
+    .select("id, updated_at, deactivated_at, planted_on, source, areas(slug, site, name, wrt_number), seasons(slug, label)")
     .eq("id", id)
     .maybeSingle()
     .throwOnError();

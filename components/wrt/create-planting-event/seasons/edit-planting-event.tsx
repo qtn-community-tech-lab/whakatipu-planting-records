@@ -14,11 +14,13 @@ import { FormField } from "@/components/forms/form-field";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { DatePicker } from "@/components/ui/date-picker";
-import { FieldError, FieldGroup } from "@/components/ui/field";
+import { FieldError, FieldGroup, FieldSet, FieldLegend } from "@/components/ui/field";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { SpeciesPicker } from "../form/species-picker";
 import { ListRow } from "@/components/wrt/shared/list-row";
-import { digits, NUMBER_FIELD } from "@/components/wrt/shared/fields";
+import { NUMBER_FIELD } from "@/components/wrt/shared/fields";
 import { plantingEventEditSchema, type PlantingEventEdit, type PlantingEventEditResult } from "@/db/types";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
@@ -32,8 +34,10 @@ const quantity = plantingEventEditSchema.shape.lines.element.shape.quantity;
 
 /** The writable schema with what the controls hold: the date "" for none, and quantities as typed. */
 /** The date is only checked once it's changed: an old one outside today's rules doesn't block saving the rest. */
-function editFormSchema(season: string, today: string, was: string) {
-  return z.object({
+export function editFormSchema(season: string, today: string, was: string) {
+  return plantingEventEditSchema.extend({
+    area: plantingEventEditSchema.shape.area.unwrap().or(z.literal("")),
+    type: plantingEventEditSchema.shape.type.unwrap().or(z.literal("unknown")),
     plantedOn: z.string().superRefine((v, ctx) => {
       if (v === was) return;
       const problem = !v ? undefined : isIsoDate(v) ? plantedOnProblem(v, season, today) : "Enter a real date.";
@@ -42,25 +46,28 @@ function editFormSchema(season: string, today: string, was: string) {
     notes: plantingEventEditSchema.shape.notes,
     lines: z.array(z.object({
       id: z.number().nullable(),
-      species: z.string(),
+      species: plantingEventEditSchema.shape.lines.element.shape.species,
       quantity: z.string().superRefine((v, ctx) => {
         const checked = v ? quantity.safeParse(Number(v)) : undefined;
-        const problem = !v ? "Enter how many were planted." : checked?.success ? undefined : checked?.error.issues[0]?.message;
+        const problem = !v ? "Enter how many were planted." : !/^\d+$/.test(v) ? "Use a whole number." : checked?.success ? undefined : checked?.error.issues[0]?.message;
         if (problem) ctx.addIssue({ code: "custom", message: problem });
       }),
-    })).min(1, "Keep at least one species."),
+    })).min(1, "Keep at least one species.").max(200)
+      .refine((lines) => new Set(lines.map((l) => l.species)).size === lines.length, "Each species can only be listed once."),
   });
 }
 type EditFormValues = z.infer<ReturnType<typeof editFormSchema>>;
 
-const formValues = (e: Event): EditFormValues => ({
+export const formValues = (e: Event): EditFormValues => ({
+  site: e.site, area: e.areaSlug ?? "", type: e.type ?? "unknown",
   plantedOn: e.plantedOn ?? "",
   notes: e.notes,
   lines: e.lines.map((l) => ({ id: Number(l.id), species: l.species, quantity: String(l.quantity) })),
 });
 
 /** Only the writable fields, as the server action takes them. */
-const editValues = (v: EditFormValues): PlantingEventEdit => ({
+export const editValues = (v: EditFormValues): PlantingEventEdit => ({
+  site: v.site, area: v.area || null, type: v.type === "unknown" ? null : v.type,
   plantedOn: v.plantedOn || null,
   notes: v.notes,
   lines: v.lines.map((l) => ({ id: l.id, species: l.species, quantity: Number(l.quantity) })),
@@ -72,11 +79,14 @@ function changes(e: Event, v: EditFormValues): string[] {
   const kept = new Set(v.lines.map((l) => l.id));
   const count = (n: number, one: string, many = one) => (n ? [`${n} ${n === 1 ? one : many}`] : []);
   return [
+    ...(v.site !== e.site ? ["Site changed"] : []),
+    ...(v.area !== (e.areaSlug ?? "") ? ["Area changed"] : []),
+    ...(v.type !== (e.type ?? "unknown") ? ["Planting type changed"] : []),
     ...(v.plantedOn !== (e.plantedOn ?? "") ? [v.plantedOn ? `Date: ${formatPlantedOn(v.plantedOn)}` : "Date: removed"] : []),
     ...count(v.lines.filter((l) => l.id !== null && was.get(l.id) !== Number(l.quantity)).length, "quantity changed", "quantities changed"),
     ...count(v.lines.filter((l) => l.id === null).length, "species added"),
     ...count(e.lines.filter((l) => !kept.has(Number(l.id))).length, "species removed"),
-    ...(v.notes.trim() !== e.notes.trim() ? ["Notes changed"] : []),
+    ...(v.notes.trim() !== e.notes.trim() ? ["Planting event note changed"] : []),
   ];
 }
 
@@ -86,7 +96,7 @@ export const editFormId = (id: number) => `edit-planting-event-${id}`;
 /** Saves an edited planting event (the page's server action). */
 export type SavePlantingEventEdit = (id: number, edit: PlantingEventEdit) => Promise<PlantingEventEditResult>;
 
-export function EditPlantingEvent({ event, season, today, species, head, onSave, onDone, onSaved, onSaving, onDirty }: {
+export function EditPlantingEvent({ event, season, today, species, locations, head, onSave, onDone, onSaved, onSaving, onDirty }: {
   event: Event;
   onSave: SavePlantingEventEdit;
   /** The event's header, given the date chosen so far and its pencil, which opens the calendar. */
@@ -95,6 +105,7 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
   /** NZ today, "YYYY-MM-DD": the latest date allowed. */
   today: string;
   species: SpeciesOption[];
+  locations: SeasonPlantingEvents["locations"];
   /** Save with nothing changed: back to the read view, nothing written. */
   onDone: () => void;
   onSaved: () => void;
@@ -106,6 +117,7 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
   const schema = useMemo(() => editFormSchema(season.slug, today, was), [season.slug, today, was]);
   const form = useForm<EditFormValues>({ resolver: zodResolver(schema), defaultValues: formValues(event) });
   const lines = useFieldArray({ control: form.control, name: "lines" });
+  const site = useWatch({ control: form.control, name: "site" });
   const listed = useWatch({ control: form.control, name: "lines" });
   const { errors, isDirty } = form.formState;
   useEffect(() => {
@@ -130,6 +142,12 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
 
   const range = seasonDates(season.slug);
   const latest = range && range.last < today ? range.last : today;
+  const siteOptions = locations.some((s) => s.slug === event.site) ? locations : [
+    { slug: event.site, name: event.siteName, areas: [] }, ...locations,
+  ];
+  const activeAreas = siteOptions.find((s) => s.slug === site)?.areas.filter((a) => a.slug !== `${site}-whole-site`) ?? [];
+  const areaOptions = site === event.site && event.areaSlug && !activeAreas.some((a) => a.slug === event.areaSlug)
+    ? [{ slug: event.areaSlug, name: event.area }, ...activeAreas] : activeAreas;
   const byId = new Map(species.map((x) => [x.id, x]));
   const taken = new Set(listed.map((l) => l.species));
   // What a species row shows: its line as loaded, or for one just added, the register's names.
@@ -163,7 +181,7 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
       const result = await onSave(event.id, editValues(confirming.values));
       if (result.issues) {
         // A problem with a field on the form marks it; any other (e.g. a species no longer in the register) is said at the top.
-        const onForm = (path: string) => path === "plantedOn" || path === "notes" || path === "lines" || /^lines\.\d+\.quantity$/.test(path);
+        const onForm = (path: string) => ["site", "area", "type", "plantedOn", "notes", "lines"].includes(path) || /^lines\.\d+\.quantity$/.test(path);
         const fields = result.issues.filter((issue) => onForm(issue.path));
         for (const issue of fields) form.setError(issue.path as FieldPath<EditFormValues>, { message: issue.message });
         const other = result.issues.find((issue) => !onForm(issue.path));
@@ -187,8 +205,8 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
 
   const linesError = errors.lines?.message ?? errors.lines?.root?.message;
   return (
-    <form id={editFormId(event.id)} onSubmit={form.handleSubmit(review)} aria-label={`Edit ${event.area}`} className={panel.group}>
-      <fieldset disabled={saving} aria-busy={saving} className="m-0 min-w-0 border-0 p-0">
+    <form id={editFormId(event.id)} onSubmit={form.handleSubmit(review)} noValidate aria-label={`Edit ${event.area}`} className={panel.group}>
+      <FieldSet disabled={saving} aria-busy={saving}>
         <FieldGroup className="gap-5">
           <Controller
             control={form.control} name="plantedOn"
@@ -207,12 +225,53 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
                   ),
                 })}
                 {fieldState.error && <FieldError id="plantedOn-error" errors={[fieldState.error]} />}
+                {event.workbook && field.value && (
+                  <Button type="button" variant="soft" className="self-start" onClick={() => field.onChange("")}>Date not recorded</Button>
+                )}
               </div>
             )}
           />
 
-          <div className="flex flex-col gap-2">
-            <h4 className="m-0 font-sans text-[12px] leading-none font-bold tracking-[0.06em] uppercase text-[var(--text-eyebrow)]">Species and how many</h4>
+          <FieldSet>
+            <FieldLegend>Planting details</FieldLegend>
+            <FieldGroup>
+              <FormField control={form.control} name="site" label="Site" render={(field, accessibility) => (
+                <Select name={field.name} value={field.value} onValueChange={(value) => {
+                  field.onChange(value);
+                  form.setValue("area", "", { shouldDirty: true, shouldValidate: true });
+                }} disabled={saving}>
+                  <SelectTrigger {...accessibility} ref={field.ref} onBlur={field.onBlur} className="w-full"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectGroup>{siteOptions.map((s) => <SelectItem key={s.slug} value={s.slug}>{s.name}</SelectItem>)}</SelectGroup></SelectContent>
+                </Select>
+              )} />
+              <FormField control={form.control} name="area" label="Known area" description="Choose Whole site when the exact area is not known." render={(field, accessibility) => (
+                <Select name={field.name} value={field.value || "whole-site"} onValueChange={(value) => field.onChange(value === "whole-site" ? "" : value)} disabled={saving}>
+                  <SelectTrigger {...accessibility} ref={field.ref} onBlur={field.onBlur} className="w-full"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectGroup>
+                    <SelectItem value="whole-site">Whole site</SelectItem>
+                    {areaOptions.map((a) => <SelectItem key={a.slug} value={a.slug}>{a.name}</SelectItem>)}
+                  </SelectGroup></SelectContent>
+                </Select>
+              )} />
+              <FormField control={form.control} name="type" label="Planting type" render={(field, accessibility) => (
+                <Select name={field.name} value={field.value} onValueChange={field.onChange} disabled={saving}>
+                  <SelectTrigger {...accessibility} ref={field.ref} onBlur={field.onBlur} className="w-full"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectGroup>
+                    <SelectItem value="unknown">Not recorded</SelectItem>
+                    <SelectItem value="establishment">Establishment</SelectItem>
+                    <SelectItem value="infill">Infill</SelectItem>
+                    <SelectItem value="replacement">Replacement</SelectItem>
+                  </SelectGroup></SelectContent>
+                </Select>
+              )} />
+              <FormField control={form.control} name="notes" label="Planting event note" description="Optional. Who planted, conditions, or anything WRT should know." render={(field, accessibility) => (
+                <Textarea {...field} {...accessibility} maxLength={INPUT_LIMITS.longText} rows={3} />
+              )} />
+            </FieldGroup>
+          </FieldSet>
+
+          <FieldSet>
+            <FieldLegend>Species and how many</FieldLegend>
             <ul className={panel.rows}>
               {lines.fields.map((line, i) => {
                 const value = listed[i] ?? line;
@@ -238,7 +297,6 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
                                 {...field} {...NUMBER_FIELD} maxLength={6} className={f.rowQty} placeholder="–"
                                 aria-label={`${sp.name}: how many planted`} aria-invalid={fieldState.invalid}
                                 aria-describedby={fieldState.error ? `lines-${i}-error` : undefined}
-                                onChange={(e) => field.onChange(digits(e.target.value))}
                               />
                               <button
                                 type="button" className={panel.link} aria-label={`Remove ${sp.name}`}
@@ -258,14 +316,7 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
             </ul>
             {linesError && <FieldError>{linesError}</FieldError>}
             <SpeciesPicker key={adds} label="Add species" species={species} value="" taken={taken} onChange={addSpecies} />
-          </div>
-
-          <FormField
-            control={form.control} name="notes" label="Notes"
-            render={(field, accessibility) => (
-              <Textarea {...field} {...accessibility} maxLength={INPUT_LIMITS.longText} rows={3} />
-            )}
-          />
+          </FieldSet>
 
           {errors.root && (
             <Alert variant="destructive">
@@ -274,9 +325,9 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
             </Alert>
           )}
         </FieldGroup>
-      </fieldset>
+      </FieldSet>
       <ConfirmDialog
-        open={!!confirming} title={`Save changes to ${event.area}, ${season.label}?`}
+        open={!!confirming} pending={saving} title={`Save changes to ${event.area}, ${season.label}?`}
         confirmLabel={saving ? "Saving…" : "Save changes"} cancelLabel="Keep editing"
         onConfirm={save} onCancel={() => { if (!saving) setConfirming(null); }}
       >

@@ -2,10 +2,12 @@ import { beforeEach, expect, it, vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), updateTag: vi.fn() }));
+vi.mock("@/db/queries/auth", () => ({ isAuthenticated: async () => false }));
 const mocks = vi.hoisted(() => ({ lines: vi.fn(), species: vi.fn(), siteSpecies: vi.fn() }));
 vi.mock("@/db/queries/plantings", () => ({
   listSiteSeasonPlantingLines: mocks.lines,
-  listPlantingEventNotes: async () => [],
+  listPlantingEvents: async () => [],
+  listPlantingEventLocations: async () => [],
 }));
 vi.mock("@/db/queries/species", () => ({ listSpecies: mocks.species }));
 vi.mock("@/db/queries/sites", () => ({
