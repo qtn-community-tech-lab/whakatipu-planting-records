@@ -5,6 +5,9 @@
  */
 import { ArrowRight, MapPin, Pencil, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { loadSeasonPlantingEvents, type SeasonPlantingEvents as Plantings } from "@/app/events/new/actions";
@@ -50,6 +53,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
   /** The start button's words: "Back to your planting event" when one with entries is waiting. */
   startLabel?: string | undefined;
 }) {
+  const searchParams = useSearchParams();
   const heading = useRef<HTMLHeadingElement>(null);
   const { loading, failed, data, reload } = useLoad(`${slug}/${partId ?? ""}/${season.slug}`, () => loadSeasonPlantingEvents(slug, season.slug, partId));
   useEffect(() => heading.current?.focus(), []);
@@ -58,7 +62,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
   // Whether the event being edited has changes: the footer's Save says Done until it has.
   const [dirty, setDirty] = useState(false);
   const reportDirty = useCallback((d: boolean) => { setDirty(d); onDirty?.(d); }, [onDirty]);
-  // A save was tried: Cancel reads the season again, as part of it may have been written.
+  // After a save attempt, Cancel reads again in case the response was interrupted.
   const tried = useRef(false);
   const busy = (b: boolean) => { setSaving(b); onSaving?.(b); if (b) tried.current = true; };
   const cancel = () => { setEditing(null); if (tried.current) reload(); tried.current = false; };
@@ -74,7 +78,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
   const total = events.reduce((t, e) => t + plantsIn(e), 0);
   const speciesCount = new Set(events.flatMap((e) => e.lines.map((l) => l.species))).size;
   const single = events.length === 1;
-  const hasButton = single && !!onSaveEdit;
+  const hasButton = single && !!onSaveEdit && editing === null;
   useEffect(() => {
     onHeaderButton?.(hasButton);
     return () => onHeaderButton?.(false);
@@ -121,6 +125,9 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
       <div className={panel.scroll} aria-busy={loading}>
         {/* The panel's header says the site and the season. */}
         <h2 ref={heading} tabIndex={-1} className="sr-only">{season.label}</h2>
+        {searchParams.get("saved") === "1" && editing === null && (
+          <Alert role="status"><AlertTitle>Planting event saved</AlertTitle><AlertDescription>Your corrections have been saved.</AlertDescription></Alert>
+        )}
         {firstLoad ? (
           <div className="flex flex-col gap-2">
             <span className="sr-only">Loading this season&apos;s plantings</span>
@@ -151,6 +158,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
                 {i > 0 && <hr className={s.rule} />}
                 {editing === e.id && onSaveEdit ? (
                   <EditPlantingEvent
+                    key={e.updatedAt} locations={shown.locations}
                     onSave={onSaveEdit} event={e} season={season} today={today} species={species} head={(edit) => head(e, edit)}
                     onDone={cancel} onSaving={busy} onDirty={reportDirty}
                     onSaved={() => { tried.current = false; setEditing(null); reload(); }}
@@ -166,6 +174,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
                     }))}
                   >
                     {e.notes && <p className={s.note}>{e.notes}</p>}
+                    {e.type && <p className={s.note}>Planting type: {e.type}</p>}
                   </FigureList>
                 )}
               </div>
@@ -182,9 +191,9 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
         ) : (
           <>
             {/* Cancel is beside the event, where Edit was. */}
-            <button type="submit" form={editFormId(editing)} className={panel.next} disabled={saving}>
-              {saving ? <><Spinner aria-hidden="true" />Saving…</> : dirty ? "Save" : "Done"}
-            </button>
+            <Button type="submit" form={editFormId(editing)} className={panel.next} disabled={saving}>
+              {saving ? <><Spinner data-icon="inline-start" aria-hidden="true" />Saving…</> : dirty ? "Save" : "Done"}
+            </Button>
           </>
         )}
       </footer>

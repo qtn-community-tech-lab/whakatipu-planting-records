@@ -5,7 +5,8 @@ vi.mock("next/cache", () => ({ revalidatePath: vi.fn(), updateTag: vi.fn() }));
 const mocks = vi.hoisted(() => ({ lines: vi.fn(), species: vi.fn(), siteSpecies: vi.fn() }));
 vi.mock("@/db/queries/plantings", () => ({
   listSiteSeasonPlantingLines: mocks.lines,
-  listPlantingEventNotes: async () => [],
+  listPlantingEvents: async () => [],
+  listPlantingEventLocations: async () => [],
 }));
 vi.mock("@/db/queries/species", () => ({ listSpecies: mocks.species }));
 vi.mock("@/db/queries/sites", () => ({

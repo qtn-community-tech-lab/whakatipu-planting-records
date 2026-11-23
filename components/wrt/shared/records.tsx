@@ -72,6 +72,7 @@ export function RecordsTable({
             {show("species") && <th>Species</th>}
             <th className="cn-num">Recorded plants</th>
             <th>Source</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -90,9 +91,9 @@ export function RecordsTable({
               )}
               {show("species") && <td><span className="wrt-tcell-sp"><SpeciesAvatar species={species} /><SpeciesName species={species} link /></span></td>}
               <td className="cn-num font-extrabold">{record.hasQuantity ? formatNumber(record.quantity) : <span className="cn-num--empty">–</span>}</td>
-              <td><Provenance record={record} />{record.plantingEventId && <Link href={hrefs.events({ event: record.plantingEventId, returnTo })}>View planting event</Link>}</td>
+              <td><Provenance record={record} /></td>
+              <td>{record.plantingEventId && <Link href={hrefs.events({ event: record.plantingEventId, returnTo })}>View/edit planting event</Link>}</td>
             </tr>
-
           ))}
         </tbody>
       </table>
