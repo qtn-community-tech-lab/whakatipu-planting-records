@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { THREATENED_HREF, THREATENED_TITLE, threatenedState } from "@/components/wrt/shared/names";
+import { ThreatenedBadge } from "@/components/wrt/shared/names";
+import { Tag } from "@/components/ui/tag";
 import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
@@ -57,21 +58,11 @@ export function SpeciesHero({
         <Link href="/species" className="wrt-shero__back">← All species</Link>
 
         <div className="wrt-shero__tags">
-          <span className="wrt-shero__tag wrt-shero__tag--rank" title="Ranked by recorded plants">
-            No. {rank} of {rankOf}
-          </span>
-          <span className="wrt-shero__tag">Native</span>
-          {sp.over5m === true && <span className="wrt-shero__tag">Over 5 m</span>}
-          {threatenedState(sp) && (
-            <Link
-              href={THREATENED_HREF}
-              title={THREATENED_TITLE}
-              className={`wrt-shero__tag ${threatenedState(sp) === "both" ? "wrt-shero__tag--risk" : "wrt-shero__tag--review"} !no-underline`}
-            >
-              {threatenedState(sp) === "both" ? "Marked threatened · basis unknown" : "Marked threatened in one WRT list"}
-            </Link>
-          )}
-          {sp.needsDecision && <span className="wrt-shero__tag wrt-shero__tag--review">Name needs a ruling</span>}
+          <Tag className="text-[var(--cn-lime-300)]" title="Ranked by recorded plants">No. {rank} of {rankOf}</Tag>
+          <Tag>Native</Tag>
+          {sp.over5m === true && <Tag>Over 5 m</Tag>}
+          <ThreatenedBadge species={sp} />
+          {sp.needsDecision && <Tag className="text-[var(--cn-amber-on-dark)]">Name needs a ruling</Tag>}
         </div>
 
         <div className="wrt-shero__names">

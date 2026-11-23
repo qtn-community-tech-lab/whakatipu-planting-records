@@ -116,7 +116,7 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
         label="Choose a location" fieldClassName="wrt-location-picker"
         items={options} value={selected?.id ?? ""} onChange={(id) => setSelectedId(id || null)}
         getValue={optionValue} getLabel={optionLabel} rank={rankMatches} renderItem={LocationRow}
-        placeholder={`Search ${options.length} locations`} clearLabel="Show all locations" empty={noLocation}
+        placeholder={`Search ${options.length} ${options.length === 1 ? "location" : "locations"}`} clearLabel="Show all locations" empty={noLocation}
       />
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
         role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
