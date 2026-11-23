@@ -8,19 +8,18 @@
 import { ComboboxInput, type FieldProps } from "@/components/ui/inputs";
 import type { SpeciesOption } from "@/lib/wrt/events/form-options";
 import { rankMatches } from "@/lib/wrt/text";
-import { cn } from "@/lib/utils";
 
 export function SpeciesName({ s }: { s: SpeciesOption }) {
   return (
     <span className="cn-species min-w-0">
-      <span className={cn("cn-species__common truncate", s.isScientific && "italic")}>{s.name}</span>
-      {!s.isScientific && <span className="cn-species__latin truncate">{s.scientific}</span>}
+      <span className="cn-species__common italic">{s.scientific}</span>
+      {!s.isScientific && <span className="cn-species__latin is-plain">{s.name}</span>}
     </span>
   );
 }
 
 const getValue = (s: SpeciesOption) => s.id;
-const getLabel = (s: SpeciesOption) => s.name;
+const getLabel = (s: SpeciesOption) => s.scientific;
 const renderItem = (s: SpeciesOption) => <SpeciesName s={s} />;
 
 export function SpeciesPicker({
@@ -43,12 +42,12 @@ export function SpeciesPicker({
       getLabel={getLabel}
       rank={(items, q) => rankMatches(items.filter((s) => !taken.has(s.id) || s.id === value), q)}
       renderItem={renderItem}
-      placeholder="Search species"
+      placeholder="Search by scientific or common name"
       clearLabel="Clear species"
       empty={(q) => {
         // Taken species are left out of the list; say so instead of "no match".
         const added = rankMatches(species.filter((s) => taken.has(s.id) && s.id !== value), q)[0];
-        return added ? `${added.name} is already on this event.` : `No species matches “${q}”.`;
+        return added ? `${added.scientific} is already on this event.` : `No species matches “${q}”.`;
       }}
     />
   );

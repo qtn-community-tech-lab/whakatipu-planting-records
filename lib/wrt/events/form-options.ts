@@ -31,7 +31,7 @@ export interface SiteOption extends SearchKeys {
 
 export interface SpeciesOption extends SearchKeys {
   id: string;
-  /** Display name (Māori, common, then scientific), with macrons. */
+  /** Supporting name (Māori, common, then scientific), with macrons. */
   name: string;
   scientific: string;
   isScientific: boolean;
@@ -81,6 +81,6 @@ export async function eventFormOptions(): Promise<EventFormOptions> {
           keys: [...new Set(keys)],
         };
       })
-      .sort((a, b) => a.name.localeCompare(b.name)),
+      .sort((a, b) => a.scientific.localeCompare(b.scientific)),
   };
 }

@@ -34,8 +34,10 @@ describe("search", () => {
   });
 
   it("finds a species by scientific name", async () => {
-    const r = await q.search("leptospermum");
-    expect(r.species.map((s) => s.item.slug)).toContain("leptospermum-scoparium");
+    for (const term of ["leptospermum", "Leptospermum scoparium", "scoparium"]) {
+      const r = await q.search(term);
+      expect(r.species.map((s) => s.item.slug), term).toContain("leptospermum-scoparium");
+    }
   });
 
   it("returns nothing for an empty or blank query", async () => {

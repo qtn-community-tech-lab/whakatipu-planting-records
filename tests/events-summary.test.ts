@@ -23,7 +23,7 @@ describe("describeEvent", () => {
   it("describes an event in names, with the whole site when no part is chosen", () => {
     const s = describeEvent(input, options);
     expect(s).toMatchObject({ site: "Lake Hayes", part: WHOLE_SITE, date: "Wed 7 Oct 2026", season: "Spring 2026", total: 150 });
-    expect(s.species[0]).toEqual({ name: "Kōwhai", quantity: 120 });
+    expect(s.species[0]).toEqual({ name: "Sophora microphylla", quantity: 120 });
   });
 
   it("never shows a raw id", () => {
