@@ -212,8 +212,8 @@ export function SpeciesForm<T extends string>({
                 name="slug"
                 label="Web address name"
                 description={values
-                  ? "Part of this species page's address. It can't be changed after the species is created."
-                  : "Filled in from the scientific name. It becomes the page's address, for example /species/coprosma-propinqua, and can't be changed once saved."}
+                  ? "This is a special unique code for the species. It can't be changed after the species is created."
+                  : "Generated from the scientific name, this is a special unique code for the species. It becomes the page's address, for example /species/coprosma-propinqua, and can't be changed once saved."}
                 render={(field, accessibility) => (
                   <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} readOnly={!!values} required />
                 )}
