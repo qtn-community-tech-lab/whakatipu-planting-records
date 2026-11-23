@@ -60,7 +60,7 @@ describe("species deactivation action", () => {
     mocks.authenticated.mockResolvedValue(false);
     expect(await submit()).toHaveProperty("error", "Sign in to deactivate species.");
     expect(mocks.deactivate).not.toHaveBeenCalled();
-    expect(renderToStaticMarkup(await page())).not.toContain("Deactivate Species");
+    expect(renderToStaticMarkup(await page())).not.toContain("Deactivate species");
   });
 
   it("returns a database failure without redirecting or expiring caches", async () => {
@@ -73,7 +73,7 @@ describe("species deactivation action", () => {
   it("shows the persisted deactivated state on reopening and hides edit and deactivate actions", async () => {
     mocks.species.mockResolvedValue({ ...detail, species: { ...detail.species, deactivatedAt: deactivatedAt } });
     const html = renderToStaticMarkup(await page());
-    expect(html).not.toContain("Deactivate Species");
+    expect(html).not.toContain("Deactivate species");
     expect(html).toContain("Deactivated");
     expect(html).not.toContain(`/species/${detail.species.slug}/edit`);
   });
