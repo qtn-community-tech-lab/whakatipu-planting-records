@@ -26,7 +26,7 @@ export async function savePlantingAreas(
           path: `areas.${index}.${error?.code === "23505" ? "slug" : "name"}`,
           message:
             error?.code === "23505"
-              ? "This slug is already in use. Choose a unique slug."
+              ? "This unique web address name is already in use. Please choose another."
               : error?.code === "42501"
                 ? "You need a staff account to save this area."
                 : "This area could not be saved. Please try again.",

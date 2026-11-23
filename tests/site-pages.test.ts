@@ -132,7 +132,7 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
 
 it("maps duplicate creation slugs to the slug field", async () => {
   mocks.create.mockResolvedValue({ data: null, error: { code: "23505" } });
-  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [] })).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique slug") }] });
+  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [] })).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique web address name") }] });
   expect(mocks.tag).not.toHaveBeenCalled();
 });
 
@@ -201,7 +201,7 @@ it("continues after area failures and returns indexed successes for safe retries
   expect(result.savedAreas).toEqual([{ index: 2, slug: "south-bank" }]);
   expect(result.issues).toEqual([
     { path: "areas.0.name", message: expect.stringContaining("could not be saved") },
-    { path: "areas.1.slug", message: expect.stringContaining("unique slug") },
+    { path: "areas.1.slug", message: expect.stringContaining("unique web address name") },
   ]);
   expect(result.error).toContain("were saved");
   expect(mocks.updateArea).toHaveBeenCalledWith(values.slug, area.slug, { name: area.name, description: area.description });
@@ -272,7 +272,7 @@ it("creates a site before its areas and returns its fixed slug after a partial s
     .mockResolvedValueOnce({ data: { slug: "west-bank" }, error: null });
   const submit = (await pageForm("new"))!.props.onSubmit;
   const result = await submit({ ...values, areas: [area, { ...area, slug: "west-bank" }] });
-  expect(result).toMatchObject({ savedSiteSlug: values.slug, savedAreas: [{ index: 1, slug: "west-bank" }], issues: [{ path: "areas.0.slug", message: expect.stringContaining("unique slug") }] });
+  expect(result).toMatchObject({ savedSiteSlug: values.slug, savedAreas: [{ index: 1, slug: "west-bank" }], issues: [{ path: "areas.0.slug", message: expect.stringContaining("unique web address name") }] });
   expect(mocks.create).toHaveBeenCalledTimes(1);
   expect(mocks.create).toHaveBeenCalledWith({ ...values, areas: [area, { ...area, slug: "west-bank" }] });
   expect(mocks.createArea.mock.invocationCallOrder[0]).toBeGreaterThan(mocks.create.mock.invocationCallOrder[0]!);

@@ -58,7 +58,7 @@ export default async function NewSitePage() {
           issues: [
             {
               path: "slug",
-              message: "This slug is already in use. Choose a unique slug.",
+              message: "This unique web address name is already in use. Please choose another.",
             },
           ],
         };

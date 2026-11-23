@@ -1,7 +1,7 @@
 "use client";
 
 import type { z } from "zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, useFieldArray, type FieldPath } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { unstable_rethrow } from "next/navigation";
@@ -33,6 +33,7 @@ import {
 } from "@/db/types";
 import type { AppRoute } from "@/lib/wrt/routes";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
+import { slugify } from "@/lib/wrt/text";
 
 type SiteFormProps = {
   submitLabel: string;
@@ -86,6 +87,21 @@ export function SiteForm(props: SiteFormProps) {
   const [savedSiteSlug, setSavedSiteSlug] = useState<string>();
   const [savedSlugs, setSavedSlugs] = useState<string[]>([]);
   const { isSubmitting, errors } = form.formState;
+  // Field arrays mark appended values dirty; track manual address edits by stable row identity.
+  const editedAreaAddresses = useRef(new Set<string>());
+
+  function updateAreaAddress(index: number, name: string, siteSlug: string) {
+    const row = fields[index];
+    if (!row || form.getValues(`areas.${index}.existing`) || editedAreaAddresses.current.has(row.id)) return;
+    const areaName = slugify(name);
+    form.setValue(`areas.${index}.slug`, areaName ? [siteSlug, areaName].filter(Boolean).join("-") : "", {
+      shouldValidate: !!errors.areas?.[index]?.slug,
+    });
+  }
+
+  function updateAreaAddresses(siteSlug: string) {
+    form.getValues("areas").forEach((area, index) => updateAreaAddress(index, area.name, siteSlug));
+  }
 
   async function handleSubmit(input: SiteFormValues) {
     form.clearErrors("root");
@@ -169,40 +185,6 @@ export function SiteForm(props: SiteFormProps) {
     >
       <FieldSet disabled={isSubmitting} aria-busy={isSubmitting}>
         <FieldGroup>
-          {props.values ? (
-            <Field>
-              <FieldLabel htmlFor="slug">Slug</FieldLabel>
-              <Input
-                id="slug"
-                value={props.values.slug}
-                maxLength={INPUT_LIMITS.identifier}
-                readOnly
-              />
-              <FieldDescription>
-                The site&rsquo;s slug is fixed after creation.
-              </FieldDescription>
-            </Field>
-          ) : (
-            <FormField
-              control={form.control}
-              name="slug"
-              label="Slug"
-              description={
-                savedSiteSlug
-                  ? "The site's slug is fixed after creation."
-                  : "Use a unique slug with lowercase letters, numbers and single hyphens, for example lake-hayes. This sets the site URL and is fixed after creation."
-              }
-              render={(field, accessibility) => (
-                <Input
-                  {...field}
-                  {...accessibility}
-                  readOnly={!!savedSiteSlug}
-                  maxLength={INPUT_LIMITS.identifier}
-                  required
-                />
-              )}
-            />
-          )}
           <FormField
             control={form.control}
             name="name"
@@ -211,11 +193,58 @@ export function SiteForm(props: SiteFormProps) {
               <Input
                 {...field}
                 {...accessibility}
+                onChange={(event) => {
+                  field.onChange(event);
+                  // Follow the site name until staff choose their own address or the site is saved.
+                  if (!props.values && !savedSiteSlug && !form.getFieldState("slug").isDirty) {
+                    const siteSlug = slugify(event.target.value);
+                    form.setValue("slug", siteSlug, { shouldValidate: !!errors.slug });
+                    updateAreaAddresses(siteSlug);
+                  }
+                }}
                 maxLength={INPUT_LIMITS.shortText}
                 required
               />
             )}
           />
+          {props.values ? (
+            <Field>
+              <FieldLabel htmlFor="slug">Web address name</FieldLabel>
+              <Input
+                id="slug"
+                value={props.values.slug}
+                maxLength={INPUT_LIMITS.identifier}
+                readOnly
+              />
+              <FieldDescription>
+                This unique web address name can&rsquo;t be changed after the site is created.
+              </FieldDescription>
+            </Field>
+          ) : (
+            <FormField
+              control={form.control}
+              name="slug"
+              label="Web address name"
+              description={
+                savedSiteSlug
+                  ? "This unique web address name can't be changed after the site is created."
+                  : "Generated from the site name, this is a special unique code for the site. It becomes the page's address, for example /sites/lake-hayes, and can't be changed once saved."
+              }
+              render={(field, accessibility) => (
+                <Input
+                  {...field}
+                  {...accessibility}
+                  onChange={(event) => {
+                    field.onChange(event);
+                    updateAreaAddresses(event.target.value);
+                  }}
+                  readOnly={!!savedSiteSlug}
+                  maxLength={INPUT_LIMITS.identifier}
+                  required
+                />
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="description"
@@ -252,32 +281,40 @@ export function SiteForm(props: SiteFormProps) {
                       <FieldGroup>
                         <FormField
                           control={form.control}
-                          name={`areas.${index}.slug`}
-                          label="Area slug"
-                          description={
-                            existing
-                              ? "Fixed after creation. This identifies the area in its URL."
-                              : "Unique across all sites. Use lowercase letters, numbers and single hyphens."
-                          }
-                          render={(field, accessibility) => (
-                            <Input
-                              {...field}
-                              {...accessibility}
-                              readOnly={existing}
-                              maxLength={INPUT_LIMITS.identifier}
-                              required
-                            />
-                          )}
-                        />
-                        <FormField
-                          control={form.control}
                           name={`areas.${index}.name`}
                           label="Area name"
                           render={(field, accessibility) => (
                             <Input
                               {...field}
                               {...accessibility}
+                              onChange={(event) => {
+                                field.onChange(event);
+                                updateAreaAddress(index, event.target.value, props.values?.slug ?? savedSiteSlug ?? form.getValues("slug") ?? "");
+                              }}
                               maxLength={INPUT_LIMITS.shortText}
+                              required
+                            />
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`areas.${index}.slug`}
+                          label="Area web address name"
+                          description={
+                            existing
+                              ? "Fixed after creation. This identifies the area in its URL."
+                              : "Generated from the site web address name and area name, for example lake-hayes-east-bank. Unique across all sites and fixed once saved."
+                          }
+                          render={(field, accessibility) => (
+                            <Input
+                              {...field}
+                              {...accessibility}
+                              onChange={(event) => {
+                                editedAreaAddresses.current.add(row.id);
+                                field.onChange(event);
+                              }}
+                              readOnly={existing}
+                              maxLength={INPUT_LIMITS.identifier}
                               required
                             />
                           )}
