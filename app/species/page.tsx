@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import {
   SHOWS, SORTS, type ShowKey, type SortKey,
 } from "@/components/wrt/species/species-meta";
+import Form from "next/form";
 
 export const metadata: Metadata = { title: "Species" };
 
@@ -133,9 +134,8 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
           ))}
         </nav>
         <div className="wrt-stool">
-          <form method="get" action="/species" className="wrt-stool__form" role="search">
+          <Form action="/species" className="wrt-stool__form" role="search">
             {state === "deactivated" && <input type="hidden" name="state" value="deactivated" />}
-            {show !== "all" && <input type="hidden" name="show" value={show} />}
             {view !== "list" && <input type="hidden" name="view" value={view} />}
             <label className="wrt-stool__search">
               <span className="sr-only">Find a species</span>
@@ -143,6 +143,14 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                 <circle cx="7" cy="7" r="4.6" /><path d="m10.5 10.5 3.2 3.2" />
               </svg>
               <input type="search" name="q" defaultValue={q} placeholder="Find a species by any name" className="cn-input" />
+            </label>
+            <label className="wrt-stool__show-select">
+              <span className="wrt-stool__label">Show</span>
+              <select key={show} name="show" defaultValue={show} className="wrt-select">
+                {SHOWS.map((o) => (
+                  <option key={o.key} value={o.key}>{o.label} ({counts[o.key]})</option>
+                ))}
+              </select>
             </label>
             <label className="wrt-stool__sort">
               <span className="wrt-stool__label">Sort</span>
@@ -156,9 +164,9 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
               <button type="submit" className="cn-btn cn-btn--primary cn-btn--sm">Apply</button>
             </noscript>
             <AutoSubmit />
-          </form>
+          </Form>
 
-          <nav aria-label="Show" className="wrt-stool__show">
+          <nav aria-label="Show" className="wrt-stool__show wrt-stool__show-links">
             {SHOWS.map((o) => (
               <Link
                 key={o.key}
@@ -177,7 +185,6 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                 key={v} href={href(sort, show, q, v, state)} className="wrt-stool__opt" title={v === "list" ? "List: one plant per row" : "Grid: photo cards"}
                 aria-current={view === v ? "true" : undefined}
               >
-                <span className="sr-only">{v === "list" ? "List view" : "Grid view"}</span>
                 {v === "list" ? (
                   <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
                     <path d="M6 4h8M6 8h8M6 12h8" /><path d="M2.5 4h.01M2.5 8h.01M2.5 12h.01" strokeWidth="2.4" />
@@ -188,6 +195,8 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                     <rect x="2" y="9" width="5" height="5" rx="1.3" /><rect x="9" y="9" width="5" height="5" rx="1.3" />
                   </svg>
                 )}
+                {/* Icon only on wide screens; below 1260px the toggle has its own row, so the words show. */}
+                <span className="sr-only max-[1261px]:not-sr-only!">{v === "list" ? "List view" : "Grid view"}</span>
               </Link>
             ))}
           </nav>

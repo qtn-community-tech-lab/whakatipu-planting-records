@@ -459,14 +459,28 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 /* Filter bar order: what you do first on top (search, sort, list or grid), then the filters and the count. */
 .wrt-species .wrt-stool { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "form view" "show result"; gap: 10px 14px; }
 .wrt-species .wrt-stool__form { min-width: 0; }
+.wrt-species .wrt-stool__show-select { display: none; }
 .wrt-species .wrt-stool__search { position: relative; flex: 1; width: auto; }
 .wrt-species .wrt-stool__search svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 .wrt-species .wrt-stool__search .cn-input { width: 100%; padding-left: 40px; }
 .wrt-stool__show.wrt-stool__view { grid-area: view; justify-self: end; }
 .wrt-stool__view .wrt-stool__opt { width: 40px; padding: 0; justify-content: center; }
 .wrt-species .wrt-stool__result { justify-self: end; justify-content: flex-end; }
+/* Below 1260px search, sort and List/Grid don't fit on one row, so List and Grid get their own row and the search box keeps its width. */
+@media (max-width: 1260px) {
+  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "result result"; }
+  .wrt-species .wrt-stool__form { flex-wrap: wrap; }
+  .wrt-species .wrt-stool__search { flex-basis: 100%; }
+  .wrt-species .wrt-stool__show-select, .wrt-species .wrt-stool__sort {
+    display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 8px; width: calc(50% - 5px); min-width: 0;
+  }
+  .wrt-species .wrt-stool__form .wrt-select { width: 100%; min-width: 0; height: 44px; }
+  .wrt-species .wrt-stool__show-links { display: none; }
+  .wrt-stool__show.wrt-stool__view { justify-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
+  .wrt-stool__view .wrt-stool__opt { width: auto; min-height: 44px; gap: 8px; }
+}
 @media (max-width: 760px) {
-  .wrt-species .wrt-stool { grid-template-areas: "form view" "show show" "result result"; }
+  .wrt-species .wrt-stool__show-select, .wrt-species .wrt-stool__sort { width: 100%; }
   .wrt-species .wrt-stool__result { justify-self: start; justify-content: flex-start; }
 }
 /* Grid view: photo cards four to a row, with just the rank and the name. */
@@ -562,10 +576,9 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
   background: linear-gradient(to top, rgba(21, 38, 28, .55), transparent 45%), linear-gradient(to bottom, rgba(21, 38, 28, .28), transparent 30%);
 }
 .wrt-scard__rank {
-  position: absolute; top: 10px; left: 10px; z-index: 2; min-width: 30px; height: 30px; padding: 0 9px; box-sizing: border-box;
+  position: absolute; top: 10px; left: 10px; z-index: 2; min-width: 24px; height: 24px; padding: 0 7px; box-sizing: border-box;
   display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-pill);
-  background: var(--cn-paper); color: var(--cn-green-900); font: 800 13px/1 var(--font-sans); letter-spacing: var(--tracking-snug);
-  box-shadow: 0 2px 8px rgba(21, 38, 28, .18);
+  background: var(--cn-paper); color: var(--cn-green-900); font: 700 13px/1 var(--font-sans); letter-spacing: var(--tracking-snug);
 }
 .wrt-scard__chip {
   position: absolute; top: 10px; right: 10px; z-index: 3; padding: 7px 10px; border-radius: var(--radius-pill);
@@ -645,14 +658,7 @@ a.wrt-scard__chip:hover { background: var(--cn-green-900); }
 .cn-app a.wrt-shero__back, .wrt-shero__back { align-self: flex-start; color: var(--cn-lime-300); font: 600 13.5px/1 var(--font-sans); text-decoration: none; }
 .wrt-shero__back:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-.wrt-shero__tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.wrt-shero__tag {
-  padding: 7px 11px; border-radius: var(--radius-pill); background: var(--cn-on-dark-fill-2);
-  color: var(--cn-white); font: 700 12px/1 var(--font-sans);
-}
-.wrt-shero__tag--rank { background: var(--cn-lime-300); color: var(--cn-green-900); }
-.wrt-shero__tag--risk { background: var(--cn-risk-bg); color: var(--cn-risk-fg); }
-.wrt-shero__tag--review { background: var(--cn-behind-bg); color: var(--cn-behind-fg); }
+.wrt-shero__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
 
 .wrt-shero__names { display: flex; flex-direction: column; gap: 8px; }
 .wrt-shero__title { margin: 0; font: 800 clamp(40px, 5vw, 64px)/0.98 var(--font-sans); letter-spacing: var(--tracking-display); color: var(--cn-white); overflow-wrap: anywhere; }
