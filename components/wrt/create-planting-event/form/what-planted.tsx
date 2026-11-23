@@ -14,7 +14,7 @@ import s from "../panel.module.css";
 import * as panel from "../panel-classes";
 
 /**
- * What was planted: a search, then one row per species (name, Māori name, how many here before) with a
+ * What was planted: a search, then one row per species (scientific name, other names, how many here before) with a
  * quantity column down the side, like the paper sheets. Every other species is listed underneath; the
  * search filters both lists in place. With drawn areas, plants are listed per area.
  */
@@ -118,17 +118,16 @@ export function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, o
     const sg = site.get(sp.id);
     const i = lineOf(sp.id);
     const qtyError = i >= 0 ? form.errors.species?.[i]?.quantity?.message : undefined;
-    const name = sg ? sg.common ?? sg.scientific : sp.name;
-    const italic = sg ? !sg.common : sp.isScientific;
-    // Māori name under the common one; the scientific name when they're the same or there isn't one.
+    const name = sp.scientific;
     const second = sg
-      ? (sg.maori && sg.maori !== name ? sg.maori : sg.common ? <i>{sg.scientific}</i> : null)
-      : (!sp.isScientific ? <i>{sp.scientific}</i> : null);
+      ? [...new Set([sg.maori, sg.common])].filter((n) => n && n !== name).join(" · ")
+      : (!sp.isScientific ? sp.name : null);
     return (
       <li key={sp.id} className={s.row} data-picked={i >= 0 || undefined} data-invalid={qtyError || (first && nothingYet) ? true : undefined}>
         <ListRow
+          className="[&_[data-slot=title]]:whitespace-normal"
           size="md" photo={sg?.photo ?? null} initial={name.charAt(0)} tintKey={sp.id}
-          title={italic ? <i>{name}</i> : name} subtitle={second}
+          title={<i>{name}</i>} subtitle={second}
           // How many went in here before: context, so quiet and unlabelled; hovering (or a screen reader) says what it is.
           figure={sg ? <span title={`${formatNumber(sg.here)} planted here before`}><span aria-hidden="true">{formatNumber(sg.here)}</span><span className="sr-only">{formatNumber(sg.here)} planted here before</span></span> : ""}
           end={
@@ -177,7 +176,7 @@ export function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, o
       )}
 
       <div className="sticky top-0 z-[1] flex flex-col gap-2 bg-[var(--surface-app)] px-0 pt-0 pb-2 shadow-[0_-18px_0_var(--surface-app)]" data-pinned="">
-        <SearchField label="Search species" placeholder="Search species" value={query} onChange={setQuery}>
+        <SearchField label="Search species by scientific, Māori or common name" placeholder="Scientific, Māori or common name" value={query} onChange={setQuery}>
           <button
             type="button" className="grid size-10 cursor-pointer place-items-center rounded-[var(--radius-row)] border-0 bg-[var(--surface-soft)] text-[var(--cn-green-800)] aria-disabled:cursor-help aria-disabled:opacity-55" aria-disabled="true" title="Photos are coming next"
             aria-label="Take a photo of what was planted (coming next)" onClick={() => setCameraTip(true)}

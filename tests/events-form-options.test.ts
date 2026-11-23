@@ -11,6 +11,7 @@ vi.mock("@/db/queries/sites", () => ({ listSites: mocks.sites }));
 
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { validateEventInput } from "@/lib/wrt/events/validate";
+import { rankMatches } from "@/lib/wrt/text";
 import { repo } from "./helpers";
 
 beforeEach(async () => {
@@ -93,8 +94,11 @@ describe("new planting species options", () => {
       { slug: "common", register_code: null, scientific_name: "Common scientific", suggested_spelling: null, common_name: "Common name", maori_name: null },
     ]);
     const { species } = await eventFormOptions();
-    expect(species.map((s) => s.name)).toEqual(["Common name", "Kōwhai", "New species"]);
-    expect(species[1]).toEqual({ id: "SP-1", name: "Kōwhai", scientific: "Sophora microphylla", isScientific: false, keys: ["sophora microphylla", "sophora", "yellow kowhai", "kowhai"] });
-    expect(species[2]).toMatchObject({ id: "new-species", isScientific: true });
+    expect(species.map((s) => s.scientific)).toEqual(["Common scientific", "New species", "Sophora microphylla"]);
+    expect(species[2]).toEqual({ id: "SP-1", name: "Kōwhai", scientific: "Sophora microphylla", isScientific: false, keys: ["sophora microphylla", "sophora", "yellow kowhai", "kowhai"] });
+    expect(species[1]).toMatchObject({ id: "new-species", isScientific: true });
+    for (const query of ["Sophora microphylla", "microphylla", "Sophora", "Yellow kowhai", "Kōwhai", "kowhai"]) {
+      expect(rankMatches(species, query)[0]?.id, query).toBe("SP-1");
+    }
   });
 });

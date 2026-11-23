@@ -92,7 +92,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
             <hr className={s.divider} />
             <FigureList
               title="Most planted species"
-              rows={o.trees.map((x) => ({ key: x.id, name: x.name, italic: x.italic, photo: x.photo, figure: formatNumber(x.here) }))}
+              rows={o.trees.map((x) => ({ key: x.id, name: x.name, italic: x.italic, sub: x.second, photo: x.photo, figure: formatNumber(x.here) }))}
             />
           </>
         )}

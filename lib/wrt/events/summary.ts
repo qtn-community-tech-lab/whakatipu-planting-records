@@ -22,7 +22,7 @@ export const WHOLE_SITE = "Whole site";
 export function describeEvent(input: PlantingEventInput, options: EventFormOptions): EventSummary {
   const site = options.sites.find((s) => s.slug === input.siteSlug);
   const part = input.partId === null ? null : site?.parts.find((p) => p.id === input.partId);
-  const speciesName = new Map(options.species.map((s) => [s.id, s.name]));
+  const speciesName = new Map(options.species.map((s) => [s.id, s.scientific]));
 
   return {
     site: site?.name ?? "Unknown site",

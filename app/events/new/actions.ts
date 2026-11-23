@@ -26,7 +26,7 @@ const TREES_SHOWN = 5;
 const SEASONS_SHOWN = 6;
 
 export interface SitePlantings {
-  trees: { id: string; name: string; italic: boolean; here: number; photo: { src: string } | null }[];
+  trees: { id: string; name: string; italic: boolean; second: string; here: number; photo: { src: string } | null }[];
   /** `parts`: how many of the site's parts had plants that season (the whole site's seasons only; 1 for a part's). */
   seasons: { slug: string; label: string; plants: number; parts: number }[];
   /** A part with nothing recorded shows the whole site's instead. */
@@ -59,7 +59,9 @@ export async function loadSiteOverview(slug: string, partId: string | null): Pro
     trees: species.map((x) => {
       const p = photos.get(x.species ?? "");
       return {
-        id: x.species ?? "", name: x.common_name ?? x.scientific_name ?? "", italic: !x.common_name, here: x.plants ?? 0,
+        id: x.species ?? "", name: x.scientific_name ?? "", italic: true,
+        second: [...new Set([x.maori_name, x.common_name])].filter((n) => n && n !== x.scientific_name).join(" · "),
+        here: x.plants ?? 0,
         photo: p ? { src: p.src } : null,
       };
     }),
@@ -79,7 +81,7 @@ export interface SeasonPlantingEvents {
     /** `id` is the planting line's id; `species` the event form's species id (register code, or slug). */
     lines: {
       id: string; species: string; name: string; italic: boolean;
-      /** Under the name: the Māori name when it's another, else the scientific name when the name is a common one. */
+      /** Supporting Māori and common names, when different from the scientific name. */
       second: string | null; secondItalic: boolean;
       photo: { src: string } | null; quantity: number;
     }[];
@@ -103,11 +105,10 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
       events.set(id, event);
     }
     const p = photos.get(l.species ?? "");
-    const name = l.common_name ?? l.scientific_name ?? "";
-    const maori = l.maori_name && l.maori_name !== name ? l.maori_name : null;
+    const name = l.scientific_name ?? "";
     event.lines.push({
-      id: String(l.line_id), species: l.register_code ?? l.species ?? "", name, italic: !l.common_name,
-      second: maori ?? (l.common_name ? l.scientific_name : null), secondItalic: !maori,
+      id: String(l.line_id), species: l.register_code ?? l.species ?? "", name, italic: true,
+      second: [...new Set([l.maori_name, l.common_name])].filter((n) => n && n !== name).join(" · ") || null, secondItalic: false,
       photo: p ? { src: p.src } : null, quantity: l.quantity ?? 0,
     });
   }

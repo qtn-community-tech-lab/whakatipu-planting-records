@@ -134,8 +134,8 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
   const taken = new Set(listed.map((l) => l.species));
   // What a species row shows: its line as loaded, or for one just added, the register's names.
   const shownAs = (id: string) => event.lines.find((l) => l.species === id) ?? {
-    name: byId.get(id)?.name ?? id, italic: !!byId.get(id)?.isScientific,
-    second: byId.get(id)?.isScientific === false ? byId.get(id)!.scientific : null, secondItalic: true, photo: null,
+    name: byId.get(id)?.scientific ?? "Unknown species", italic: true,
+    second: byId.get(id)?.isScientific === false ? byId.get(id)!.name : null, secondItalic: false, photo: null,
   };
 
   function addSpecies(id: string) {
@@ -229,6 +229,7 @@ export function EditPlantingEvent({ event, season, today, species, head, onSave,
                     render={({ field, fieldState }) => (
                       <li className={f.row} data-invalid={fieldState.invalid || undefined}>
                         <ListRow
+                          className="[&_[data-slot=title]]:whitespace-normal"
                           photo={sp.photo} initial={sp.name.charAt(0)} title={sp.italic ? <i>{sp.name}</i> : sp.name}
                           subtitle={second || was ? <>{second}{second && was && " · "}{was && <b className="font-semibold text-[var(--cn-green-800)]">{was}</b>}</> : undefined}
                           end={
