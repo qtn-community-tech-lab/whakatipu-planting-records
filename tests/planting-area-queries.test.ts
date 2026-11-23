@@ -4,6 +4,7 @@ import type { Database } from "@/db/types";
 
 const mocks = vi.hoisted(() => ({ db: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: mocks.db }));
+vi.mock("@/db/queries/auth", () => ({ currentUserId: async () => "current-app-user" }));
 import {
   createSite,
   updateSite,
@@ -51,6 +52,10 @@ it("creates within the supplied parent without writing unrelated metadata", asyn
     site: "reserve",
     name: "East",
     description: "",
+    created_at: expect.any(String),
+    created_by: "current-app-user",
+    updated_at: expect.any(String),
+    updated_by: "current-app-user",
   });
 });
 
@@ -69,7 +74,7 @@ it("constrains updates to both fixed identifiers and changes only name and descr
   expect(url.searchParams.get("site")).toBe("eq.reserve");
   expect(url.searchParams.get("slug")).toBe("eq.east-bank");
   expect(url.searchParams.has("deactivated_at")).toBe(false);
-  expect(body).toEqual({ name: "Corrected", description: "" });
+  expect(body).toEqual({ name: "Corrected", description: "", updated_at: expect.any(String), updated_by: "current-app-user" });
 });
 
 it("lists active areas directly from the register in name order", async () => {
@@ -95,12 +100,12 @@ it("writes only site columns when passed a complete create submission", async ()
   fetch.mockResolvedValue(new Response(JSON.stringify({ slug: "reserve" })));
   const values = { slug: "reserve", name: "Reserve", description: "", areas: [{ slug: "east-bank", name: "East", description: "", existing: false }] };
   await createSite(values);
-  expect(request().body).toEqual({ slug: "reserve", name: "Reserve", description: "" });
+  expect(request().body).toEqual({ slug: "reserve", name: "Reserve", description: "", created_at: expect.any(String), created_by: "current-app-user", updated_at: expect.any(String), updated_by: "current-app-user" });
 });
 
 it("writes only site columns when passed a complete edit submission", async () => {
   fetch.mockResolvedValue(new Response(JSON.stringify({ slug: "reserve" })));
   const values = { name: "Reserve", description: "", areas: [] };
   await updateSite("reserve", values);
-  expect(request().body).toEqual({ name: "Reserve", description: "" });
+  expect(request().body).toEqual({ name: "Reserve", description: "", updated_at: expect.any(String), updated_by: "current-app-user" });
 });

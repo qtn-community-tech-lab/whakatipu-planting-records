@@ -1,5 +1,6 @@
 /** Planting lines and season totals. */
 import { db } from "@/db/client";
+import { currentUserId } from "./auth";
 import type { Tables, PlantingEventEdit } from "@/db/types";
 import { lines, PAGE_SIZE, seasonSites, seasonSpecies, seasonTotals } from "./views";
 
@@ -96,18 +97,22 @@ export async function readSeason(slug: string) {
 
 /** A new planting event. Its plants are added with createPlantingLines. */
 export async function createPlantingEvent(values: { area: string; season: number; planted_on: string; notes: string }) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("planting_events")
-    .insert(values)
+    .insert({ ...values, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })
     .select("id")
     .single();
 }
 
 /** All of one planting event's lines in one insert, so they are saved together or not at all. */
 export async function createPlantingLines(plantingEvent: number, lines: { species: string; quantity: number }[]) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("planting_lines")
-    .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent })));
+    .insert(lines.map((line) => ({ ...line, planting_event: plantingEvent, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })));
 }
 
 /** A planting event's season slug (e.g. "autumn-2021") and stored date, to check an edited date against. Null when there is no such event. */
@@ -132,7 +137,7 @@ export async function listPlantingEventLines(plantingEvent: number) {
   return data;
 }
 
-/** Replace an event's writable values and lines atomically, under the caller's RLS. */
+/** Replace an event and its lines atomically; the RPC explicitly sets audit fields. */
 export async function updatePlantingEvent(id: number, values: PlantingEventEdit) {
   // Generated RPC argument types omit SQL nullability. Assertions preserve the
   // validated nulls sent to PostgreSQL for unknown/optional fields.
@@ -151,9 +156,11 @@ export async function updatePlantingEvent(id: number, values: PlantingEventEdit)
 
 /** Exclude the whole event from counted history, preserving every stored line. */
 export async function deactivatePlantingEvent(id: number) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("planting_events")
-    .update({ deactivated_at: new Date().toISOString() })
+    .update({ deactivated_at: timestamp, deactivated_by: userId, updated_at: timestamp, updated_by: userId })
     .eq("id", id)
     .select("id")
     .single();
@@ -161,9 +168,11 @@ export async function deactivatePlantingEvent(id: number) {
 
 /** One line's quantity, only within its own planting event. */
 export async function updatePlantingLine(plantingEvent: number, id: number, values: { quantity: number }) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("planting_lines")
-    .update(values)
+    .update({ ...values, updated_at: timestamp, updated_by: userId })
     .eq("id", id)
     .eq("planting_event", plantingEvent)
     .select("id")
@@ -172,9 +181,11 @@ export async function updatePlantingLine(plantingEvent: number, id: number, valu
 
 /** Deactivate lines taken off a planting event, only within that event. */
 export async function deactivatePlantingLines(plantingEvent: number, ids: number[]) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("planting_lines")
-    .update({ deactivated_at: new Date().toISOString() })
+    .update({ deactivated_at: timestamp, deactivated_by: userId, updated_at: timestamp, updated_by: userId })
     .in("id", ids)
     .eq("planting_event", plantingEvent);
 }

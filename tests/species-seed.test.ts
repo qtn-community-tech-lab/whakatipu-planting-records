@@ -51,7 +51,9 @@ describe("complete PostgreSQL species seed", () => {
     const { summary, ...incomplete } = seed[0]!;
     void summary;
     expect(speciesSeedSchema.safeParse([incomplete]).success).toBe(false);
-    expect(speciesSeedSchema.safeParse([{ ...seed[0], created_by: "spoofed" }]).success).toBe(false);
+    for (const field of ["created_at", "created_by", "updated_at", "updated_by", "deactivated_by"]) {
+      expect(speciesSeedSchema.safeParse([{ ...seed[0], [field]: "spoofed" }]).success).toBe(false);
+    }
   });
 
   it("allows app-created species without register codes", () => {

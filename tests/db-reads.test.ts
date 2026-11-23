@@ -9,6 +9,7 @@ import type { Database } from "@/db/types";
 
 import { key, live, url } from "./live-env";
 
+vi.mock("server-only", () => ({}));
 vi.mock("@/db/client", () => ({
   db: async () => createClient<Database>(url!, key!, { auth: { persistSession: false } }),
 }));

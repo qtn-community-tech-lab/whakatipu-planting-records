@@ -23,6 +23,10 @@ with expected (part, item, want, got) as (
        'planting_lines_species_idx', 'notes_question_idx'))
   union all select 'schema', 'edit-trail triggers (touch)', 7,
     (select count(*)::int from pg_trigger where not tgisinternal and tgname = 'touch')
+  union all select 'schema', 'deactivated_by columns (users and the 7 history tables)', 8,
+    (select count(*)::int from information_schema.columns
+      where table_schema = 'public' and column_name = 'deactivated_by'
+        and table_name in (select tablename from pg_tables where schemaname = 'public'))
   union all select 'schema', 'seasons, Autumn 2015 to Spring 2028', 28,
     (select count(*)::int from public.seasons)
   union all select 'schema', 'seasons numbered 0 to 27 in order', 1,
@@ -46,9 +50,12 @@ with expected (part, item, want, got) as (
     (select (has_table_privilege('authenticated', 'public.seasons', 'insert')
           or has_table_privilege('authenticated', 'public.seasons', 'update'))::int)
   union all select 'user management', 'protected user identity columns are not writable', 0,
-    (select count(*)::int from (values ('id'), ('auth_user_id'), ('created_at')) v (column_name)
+    (select count(*)::int from (values ('id'), ('auth_user_id')) v (column_name)
       where has_column_privilege('authenticated', 'public.users', v.column_name, 'update')
          or has_column_privilege('authenticated', 'public.users', v.column_name, 'insert'))
+  union all select 'user management', 'creation audit fields cannot be updated', 0,
+    (select count(*)::int from (values ('created_at'), ('created_by')) v (column_name)
+      where has_column_privilege('authenticated', 'public.users', v.column_name, 'update'))
   -- Anonymous public read access; all write grants were removed ------------
   union all select 'public reads', 'signed out can write no application table', 0,
     (select count(*)::int from pg_class c join pg_namespace n on n.oid = c.relnamespace

@@ -1,5 +1,6 @@
 /** Sites and their areas. */
 import { db } from "@/db/client";
+import { currentUserId } from "./auth";
 import type { CreateSiteInput, EditSiteInput, CreatePlantingAreaInput, EditPlantingAreaInput } from "@/db/types";
 import { areaPins, areaTotals, siteAreaSeasons, siteAreaSpecies, siteTotals } from "./views";
 
@@ -28,17 +29,21 @@ export async function readSite(slug: string) {
 }
 
 export async function createSite(values: CreateSiteInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("sites")
-    .insert({ slug: values.slug, name: values.name, description: values.description })
+    .insert({ slug: values.slug, name: values.name, description: values.description, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })
     .select("slug")
     .single();
 }
 
 export async function updateSite(slug: string, values: EditSiteInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("sites")
-    .update({ name: values.name, description: values.description })
+    .update({ name: values.name, description: values.description, updated_at: timestamp, updated_by: userId })
     .eq("slug", slug)
     .select("slug")
     .single();
@@ -69,17 +74,21 @@ export async function readPlantingArea(site: string, slug: string) {
 }
 
 export async function createPlantingArea(site: string, values: CreatePlantingAreaInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("areas")
-    .insert({ slug: values.slug, name: values.name, description: values.description, site })
+    .insert({ slug: values.slug, name: values.name, description: values.description, site, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })
     .select("slug")
     .single();
 }
 
 export async function updatePlantingArea(site: string, slug: string, values: EditPlantingAreaInput) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("areas")
-    .update({ name: values.name, description: values.description })
+    .update({ name: values.name, description: values.description, updated_at: timestamp, updated_by: userId })
     .eq("site", site)
     .eq("slug", slug)
     .select("slug")
@@ -111,9 +120,11 @@ export async function listPlantingAreaPins(site?: string) {
 
 /** Preserve the site key and every historical association. */
 export async function deactivateSite(slug: string) {
+  const userId = await currentUserId();
+  const timestamp = new Date().toISOString();
   return (await db())
     .from("sites")
-    .update({ deactivated_at: new Date().toISOString() })
+    .update({ deactivated_at: timestamp, deactivated_by: userId, updated_at: timestamp, updated_by: userId })
     .eq("slug", slug)
     .select("slug")
     .single();

@@ -91,9 +91,10 @@ begin
   perform pg_temp.assert_true((select source = 'workbook' and planted_on is null and type is null and notes = 'Corrected'
     and area = 'edit-story-new-area' and updated_by = app_id
     from public.planting_events where id = event_id), 'Correction must persist without inventing historical date/type, keeping source and staff audit');
-  perform pg_temp.assert_true((select quantity = 15 and legacy_code = 'EDIT-STORY-KEPT' from public.planting_lines where id = kept_id), 'Retained deactivated species must keep its identity and provenance');
+  perform pg_temp.assert_true((select quantity = 15 and legacy_code = 'EDIT-STORY-KEPT' and updated_by = app_id from public.planting_lines where id = kept_id), 'Retained deactivated species must keep its identity and provenance and record the editor');
   perform pg_temp.assert_true(exists (select 1 from public.notes where line = kept_id and text = 'Original review'), 'Retained review notes must survive');
-  perform pg_temp.assert_true((select deactivated_at is not null from public.planting_lines where id = removed_id), 'Removed lines must be deactivated');
+  perform pg_temp.assert_true((select deactivated_at is not null and deactivated_by = app_id and updated_by = app_id from public.planting_lines where id = removed_id), 'Removed lines must record the deactivator and editor');
+  perform pg_temp.assert_true((select created_by = app_id and updated_by = app_id from public.planting_lines where planting_event = event_id and species = 'edit-story-added'), 'Added lines must record the creator and editor');
   perform pg_temp.assert_true((select count(*) = 2 from public.planting_lines where planting_event = event_id and deactivated_at is null), 'The event must have exactly the replacement species list');
   perform pg_temp.assert_true((select plants = 22 from public.totals_by_site where site = 'edit-story-new'), 'Destination site actuals must include corrected quantities');
   perform pg_temp.assert_true((select plants = 2 from public.totals_by_site where site = 'edit-story-old'), 'Original site actuals must exclude the moved event');
@@ -109,6 +110,7 @@ begin
   perform pg_temp.assert_true((select area = 'edit-story-new-whole-site' and planted_on = '2015-04-20' and type = 'infill' and notes = 'Reopened'
     from public.planting_events where id = event_id), 'A subsequent correction must support a whole site, known date/type and a replacement note');
   perform pg_temp.assert_true((select plants = 22 from public.totals_by_site where site = 'edit-story-new'), 'A second correction must replace rather than duplicate totals');
+  perform pg_temp.assert_true((select created_by = app_id and updated_by = app_id from public.areas where slug = 'edit-story-new-whole-site'), 'A whole-site area created during correction must record the creator and editor');
 
   reset role;
   update public.users set deactivated_at = now() where id = app_id;

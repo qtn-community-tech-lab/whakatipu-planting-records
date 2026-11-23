@@ -64,7 +64,7 @@ To refresh the planted-species seed, export this query's JSON result to `data/sp
 
 ```sql
 select jsonb_pretty(jsonb_agg(
-  to_jsonb(s) - array['created_at', 'created_by', 'updated_at', 'updated_by']
+  to_jsonb(s) - array['created_at', 'created_by', 'updated_at', 'updated_by', 'deactivated_by']
   order by register_code nulls last, slug
 )) from public.species s
 where exists (select 1 from public.planting_lines l where l.species = s.slug);
@@ -118,6 +118,7 @@ Run SQL checks through Studio's SQL Editor. Read each file's prerequisites befor
 - [`access_rules_check.sql`](checks/access_rules_check.sql): public, unapproved and active-user permissions; requires a linked active Auth identity and rolls back fixtures.
 - [`anonymous_crud_check.sql`](checks/anonymous_crud_check.sql): public reads and denied anonymous writes.
 - [`auth_identity_check.sql`](checks/auth_identity_check.sql): identity linking, email changes, deactivation and audit attribution; run as postgres, fixtures roll back.
+- [`mutation_audit_test.sql`](checks/mutation_audit_test.sql): explicit audit timestamps and attribution, user column permissions, reactivation and preserved historical quantities; fixtures roll back.
 - [`historical_seed_access_test.sql`](checks/historical_seed_access_test.sql): seed-role reads, linked inserts, generated IDs and totals access; fixtures roll back.
 - [`layout_summary_test.sql`](checks/layout_summary_test.sql): compact navigation, review scope, historical search aliases, public permissions and empty-history recovery; local fixtures roll back.
 - [`event_correction_test.sql`](checks/event_correction_test.sql): atomic event corrections, failure rollback, area/site validation, preserved history, actual totals and staff permissions; local fixtures roll back.

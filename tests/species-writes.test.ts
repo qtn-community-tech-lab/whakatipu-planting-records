@@ -2,6 +2,7 @@ import { expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ db: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: mocks.db }));
+vi.mock("@/db/queries/auth", () => ({ currentUserId: async () => "current-app-user" }));
 
 import { createSpecies, updateSpecies } from "@/db/queries/species";
 import { emptySpecies, speciesWriteValues } from "@/components/wrt/species/SpeciesForm";
@@ -25,7 +26,7 @@ it("preserves the existing slug even if an update caller supplies a different on
 
   const { needs_decision, ...editable } = values;
   void needs_decision;
-  expect(update).toHaveBeenCalledWith({ ...editable, slug: "existing-species" });
+  expect(update).toHaveBeenCalledWith({ ...editable, slug: "existing-species", updated_at: expect.any(String), updated_by: "current-app-user" });
   expect(update.mock.calls[0]![0]).not.toHaveProperty("needs_decision");
   expect(update.mock.calls[0]![0]).not.toHaveProperty("register_note");
   expect(update.mock.calls[0]![0]).not.toHaveProperty("status");
@@ -56,5 +57,5 @@ it("always creates Core species with the decision flag set to false", async () =
   mocks.db.mockResolvedValue({ from: vi.fn().mockReturnValue(query) });
   const values = { ...speciesWriteValues({ ...emptySpecies, slug: "new-species", scientific_name: "New species" }), status: "contested", needs_decision: true };
   await createSpecies(values);
-  expect(query.insert).toHaveBeenCalledWith({ ...values, status: "core", needs_decision: false });
+  expect(query.insert).toHaveBeenCalledWith({ ...values, status: "core", needs_decision: false, created_at: expect.any(String), created_by: "current-app-user", updated_at: expect.any(String), updated_by: "current-app-user" });
 });

@@ -5,9 +5,9 @@ import areaDump from "../../data/site_areas.json";
 import type { TablesInsert } from "../../db/database.types";
 import type { Place } from "../../lib/wrt/types";
 
-function withoutAudit<T extends { created_at: unknown; created_by: unknown; updated_at: unknown; updated_by: unknown }>(row: T) {
-  const { created_at, created_by, updated_at, updated_by, ...seed } = row;
-  void created_at; void created_by; void updated_at; void updated_by;
+function withoutAudit<T extends { created_at: unknown; created_by: unknown; updated_at: unknown; updated_by: unknown; deactivated_by?: unknown }>(row: T) {
+  const { created_at, created_by, updated_at, updated_by, deactivated_by, ...seed } = row;
+  void created_at; void created_by; void updated_at; void updated_by; void deactivated_by;
   return seed;
 }
 
