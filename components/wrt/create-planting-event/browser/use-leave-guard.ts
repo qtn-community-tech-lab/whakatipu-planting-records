@@ -120,10 +120,11 @@ export function useLeaveGuard({ guarded, saving, exitHref, seasonOpen, formFromS
   }
   // Off the map (Back from every site): asks first like the rest.
   // Back to the page's own entry first (past ours), then replace it: back from the sites list then goes to the page before this one.
-  const exit = () => unlessUnsaved("the sites list", () => { exiting.current = true; toPageEntry(() => window.location.replace(exitHref)); });
+  const navigate = (to: string, href: Route) => unlessUnsaved(to, () => { exiting.current = true; toPageEntry(() => window.location.replace(href)); });
+  const exit = () => navigate("the originating page", exitHref);
 
   return {
     leaving, setLeaving, discard, setDiscard, discardEdit, editTried, seasonKey, onEditDirty, onEditSaving,
-    unlessEditing, unlessUnsaved, exit, depth, popped,
+    unlessEditing, unlessUnsaved, exit, navigate, depth, popped,
   };
 }

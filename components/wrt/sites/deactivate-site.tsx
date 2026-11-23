@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useId, useRef, useState, type ReactNode } from "react";
+import { useActionState, useId, useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
@@ -9,31 +9,26 @@ import type { SiteSubmitResult } from "@/db/types";
 export function DeactivateSite({
   name,
   onDeactivate,
-  children,
 }: {
   name: string;
   onDeactivate: () => Promise<SiteSubmitResult>;
-  children?: ReactNode;
 }) {
   const [confirming, setConfirming] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
   const confirmationId = useId();
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap justify-end gap-2">
-        {children}
-        <Button
-          ref={trigger}
-          type="button"
-          variant="secondary"
-          aria-expanded={confirming}
-          aria-controls={confirming ? confirmationId : undefined}
-          onClick={() => setConfirming(true)}
-        >
-          Deactivate site
-        </Button>
-      </div>
+    <>
+      <Button
+        ref={trigger}
+        type="button"
+        variant="secondary"
+        aria-expanded={confirming}
+        aria-controls={confirming ? confirmationId : undefined}
+        onClick={() => setConfirming(true)}
+      >
+        Deactivate site
+      </Button>
       {confirming && (
         <div id={confirmationId} className="w-full">
           <DeactivationConfirmation
@@ -46,7 +41,7 @@ export function DeactivateSite({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }
 

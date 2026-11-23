@@ -56,8 +56,8 @@ export function Receipt({ hidden, summary, cards, empty, saved, unstored, areasD
       </div>
       <footer className={panel.foot}>
         {!saved && <button type="button" className={panel.back} onClick={onBack}>Back to the form</button>}
-        {saved && onFinish && <button type="button" className={panel.back} onClick={onFinish.onClick}>{onFinish.label}</button>}
-        <button type="button" className={panel.next} onClick={onStartAnother}>Start another</button>
+        {saved && onFinish && <button type="button" className={panel.next} onClick={onFinish.onClick}>{onFinish.label}</button>}
+        <button type="button" className={saved ? panel.back : panel.next} onClick={onStartAnother}>Record another</button>
       </footer>
     </div>
   );

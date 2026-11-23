@@ -142,7 +142,7 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
               <span className="sr-only">Label this area (needed to finish)</span>
               <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />
               <input
-                name="polygon-label" value={draft.name} placeholder="Area label, e.g. School field" maxLength={60} {...NAME_FIELD} enterKeyHint="done" required
+                name="polygon-label" value={draft.name} placeholder="Area name, e.g. School field" maxLength={60} {...NAME_FIELD} enterKeyHint="done" required
                 onChange={(e) => draw.rename(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); draw.done(); } }}
               />
@@ -237,9 +237,9 @@ const total = (areas: Area[]) => formatHectares(areas.reduce((t, a) => t + hecta
 
 /** What the pill says: the area once there is one (`lead`), then the next step. */
 function message(method: DrawMethod, n: number, closed: boolean, tracing: boolean, ha: string, named: boolean): { lead?: string | undefined; rest: string } {
-  if (closed) return { lead: ha, rest: named ? "drag corners to adjust, or Done" : "name it to finish" };
+  if (closed) return { lead: ha, rest: named ? "Drag corners to adjust, or Done" : "Name your new area to finish" };
   if (method === "trace") return { rest: tracing ? "Keep going round · lift to finish" : "Trace round the planted area in one go" };
   if (n === 0) return { rest: "Tap the first corner of the planted area" };
   if (n < 3) return { rest: `Tap corner ${n + 1} · ${3 - n} more to make a shape` };
-  return { lead: ha, rest: named ? "tap the first corner, or Done" : "tap the first corner, then name it" };
+  return { lead: ha, rest: named ? "Tap the first corner, or Done" : "Tap the map to start drawing, then name it" };
 }

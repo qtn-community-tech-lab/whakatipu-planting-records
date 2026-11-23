@@ -1,23 +1,31 @@
-import { Children, isValidElement } from "react";
+import { Children, isValidElement, type ReactElement, type ReactNode } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SpeciesSubmitResult } from "@/db/types";
 
 const mocks = vi.hoisted(() => ({
-  authenticated: vi.fn(), deactivate: vi.fn(), species: vi.fn(), list: vi.fn(),
+  read: vi.fn(), update: vi.fn(), authenticated: vi.fn(), deactivate: vi.fn(), species: vi.fn(), list: vi.fn(),
   tag: vi.fn(), revalidate: vi.fn(), redirect: vi.fn(),
 }));
 vi.mock("@/lib/wrt/public-server", () => ({
   getPublicWrt: () => ({ species: mocks.species, speciesList: mocks.list }),
 }));
-vi.mock("@/db/queries/auth", () => ({ isAuthenticated: mocks.authenticated }));
-vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate }));
+vi.mock("@/db/queries/auth", () => ({
+  isAuthenticated: mocks.authenticated,
+  requireAuthenticated: async (next: string) => {
+    if (!(await mocks.authenticated())) mocks.redirect(`/login?next=${encodeURIComponent(next)}`);
+  },
+}));
+vi.mock("@/db/queries/species", () => ({ deactivateSpecies: mocks.deactivate, readSpeciesForEdit: mocks.read, updateSpecies: mocks.update }));
 vi.mock("next/cache", () => ({ updateTag: mocks.tag, revalidatePath: mocks.revalidate }));
 vi.mock("next/navigation", () => ({
   redirect: mocks.redirect, notFound: () => { throw new Error("NOT_FOUND"); },
   useRouter: () => ({ push: vi.fn() }), usePathname: () => "/species",
 }));
 
+vi.mock("@/components/wrt/species/SpeciesForm", () => ({ SpeciesForm: () => null }));
+
+import EditPage from "@/app/species/[slug]/edit/page";
 import DetailPage from "@/app/species/[slug]/page";
 import RegisterPage from "@/app/species/page";
 import { DeactivateSpecies } from "@/components/wrt/species/deactivate-species";
@@ -30,15 +38,25 @@ const deactivatedAt = "2026-11-09T00:00:00.000Z";
 const page = () => DetailPage({ searchParams: Promise.resolve({}), params: Promise.resolve({ slug: detail.species.slug }) });
 type Submit = () => Promise<SpeciesSubmitResult>;
 async function action() {
-  const control = Children.toArray((await page()).props.children).find((child) =>
-    isValidElement<{ onDeactivate: Submit }>(child) && child.type === DeactivateSpecies);
-  if (!isValidElement<{ onDeactivate: Submit }>(control)) throw new Error("Deactivation control missing");
+  const edit = await EditPage({ params: Promise.resolve({ slug: detail.species.slug }), searchParams: Promise.resolve({}) });
+  function findControl(children: ReactNode): ReactElement<{ onDeactivate: Submit }> | undefined {
+    for (const child of Children.toArray(children)) {
+      if (!isValidElement<{ children?: ReactNode; aside?: ReactNode }>(child)) continue;
+      if (child.type === DeactivateSpecies) return child as ReactElement<{ onDeactivate: Submit }>;
+      const nested = findControl(child.props.children) ?? findControl(child.props.aside);
+      if (nested) return nested;
+    }
+    return undefined;
+  }
+  const control = findControl(edit.props.children);
+  if (!control) throw new Error("Deactivation control missing");
   return control.props.onDeactivate;
 }
 
 beforeEach(() => {
   vi.resetAllMocks();
   mocks.authenticated.mockResolvedValue(true);
+  mocks.read.mockResolvedValue({ slug: detail.species.slug, scientific_name: detail.species.scientificName, common_name: detail.species.commonName, maori_name: detail.species.maoriName, updated_at: "2026-11-15T00:00:00Z" });
   mocks.species.mockResolvedValue(detail);
   mocks.list.mockResolvedValue(rows);
   mocks.deactivate.mockResolvedValue({ data: { slug: detail.species.slug, deactivated_at: deactivatedAt }, error: null });
@@ -46,6 +64,14 @@ beforeEach(() => {
 });
 
 describe("species deactivation action", () => {
+  it("offers deactivation only in the authenticated edit page", async () => {
+    const props = { params: Promise.resolve({ slug: detail.species.slug }), searchParams: Promise.resolve({}) };
+    expect(renderToStaticMarkup(await page())).not.toContain("Deactivate species");
+    expect(renderToStaticMarkup(await EditPage(props))).toContain("Deactivate species");
+    mocks.authenticated.mockResolvedValue(false);
+    await expect(EditPage(props)).rejects.toThrow("REDIRECT");
+  });
+
   it("deactivates the selected species, invalidates shared reads and opens its detail", async () => {
     const submit = await action();
     await expect(submit()).rejects.toThrow("REDIRECT");

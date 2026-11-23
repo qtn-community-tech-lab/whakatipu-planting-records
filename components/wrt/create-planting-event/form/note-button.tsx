@@ -3,11 +3,11 @@ import { StickyNote } from "lucide-react";
 import { Dialog as D } from "radix-ui";
 import { useState } from "react";
 import { Controller } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import { TextareaInput } from "@/components/ui/inputs";
 import { NOTES_MAX } from "@/lib/wrt/events/validate";
 import { cn } from "@/lib/utils";
 import type { EventFormState } from "./use-event-form";
-import * as panel from "../panel-classes";
 
 /**
  * The event's note: one button beside Submit, with a dot once there's a note. It opens a box near
@@ -20,10 +20,10 @@ export function NoteButton({ form }: { form: EventFormState }) {
   return (
     <D.Root open={open} onOpenChange={setOpen}>
       <D.Trigger asChild>
-        <button type="button" className={cn(panel.back, "relative grid w-[52px] place-items-center p-0")} data-problem={problem ? "" : undefined} aria-label={form.notes ? "Note (added)" : "Add a note"}>
-          <StickyNote size={18} strokeWidth={2.2} aria-hidden="true" />
+        <Button type="button" variant="soft" size="lg" className="relative shrink-0" data-problem={problem ? "" : undefined} aria-label={form.notes ? "Note (added)" : "Add a note"}>
+          <StickyNote data-icon="inline-start" strokeWidth={2.2} aria-hidden="true" />Add Note
           {(form.notes || problem) && <span className={cn("absolute top-3 right-3 size-[9px] rounded-full bg-[var(--cn-green-800)] shadow-[0_0_0_2px_var(--surface-soft)]", problem && "bg-[var(--text-risk)]")} aria-hidden="true" />}
-        </button>
+        </Button>
       </D.Trigger>
       <D.Portal>
         <D.Overlay className="fixed inset-0 z-50 bg-[var(--cn-scrim)] data-[state=open]:animate-in data-[state=open]:fade-in-0" />
@@ -40,7 +40,7 @@ export function NoteButton({ form }: { form: EventFormState }) {
             )}
           />
           <div className="flex justify-end">
-            <D.Close className="cn-btn cn-btn--primary">Done</D.Close>
+            <D.Close asChild><Button type="button">Done</Button></D.Close>
           </div>
         </D.Content>
       </D.Portal>

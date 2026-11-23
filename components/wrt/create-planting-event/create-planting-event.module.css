@@ -36,7 +36,7 @@
 .topBand { display: none; }
 @media (max-width: 767px) {
   .topBand {
-    display: block; position: fixed; z-index: 3; top: 0; left: 0; right: 0; height: calc(60px + env(safe-area-inset-top));
+    display: block; position: fixed; z-index: 3; top: 0; left: 0; right: 0; height: calc(60px + env(safe-area-inset-top) + var(--app-return-height, 0px));
     background-color: var(--cn-green-900);
     pointer-events: none;
   }
@@ -44,7 +44,7 @@
 
 /* the session header (phones), one slim row: a pill naming the site, and + */
 .top {
-  position: absolute; z-index: 3; left: 12px; right: 12px; top: calc(10px + env(safe-area-inset-top));
+  position: absolute; z-index: 3; left: 12px; right: 12px; top: calc(10px + env(safe-area-inset-top) + var(--app-return-height, 0px));
   display: flex; align-items: center; gap: 8px;
 }
 .session, .add, .addMenu {
@@ -106,3 +106,8 @@
   .hint { left: calc(50% + 286px); }
 }
 
+
+.appReturn { position: absolute; z-index: 6; right: 12px; top: calc(10px + env(safe-area-inset-top)); display: flex; gap: 8px; }
+@media (max-width: 767px) { .screen { --app-return-height: 44px; } .appReturn { top: calc(6px + env(safe-area-inset-top)); } }
+
+.scopeNotice { position: absolute; z-index: 5; right: 12px; bottom: 78px; max-width: 300px; padding: 12px; border-radius: var(--radius-card); background: var(--cn-paper); font-size: 13px; }

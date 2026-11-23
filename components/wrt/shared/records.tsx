@@ -175,8 +175,9 @@ function IssueKey() {
  * (e.g. hide "site" on a site page).
  */
 export function RecordsTable({
-  rows, hide = [], caption, focusTheme,
+  rows, hide = [], caption, focusTheme, returnTo,
 }: {
+  returnTo?: string | undefined;
   rows: RecordView[];
   hide?: ("season" | "site" | "species")[];
   caption?: string;
@@ -219,7 +220,7 @@ export function RecordsTable({
               {show("species") && <td><span className="wrt-tcell-sp"><SpeciesAvatar species={species} /><SpeciesName species={species} link /></span></td>}
               <td className="cn-num font-extrabold">{record.hasQuantity ? formatNumber(record.quantity) : <span className="cn-num--empty">–</span>}</td>
               <td><RecordStatus record={record} /></td>
-              <td><Provenance record={record} /></td>
+              <td><Provenance record={record} />{record.plantingEventId && <Link href={hrefs.events({ event: record.plantingEventId, returnTo })}>View planting event</Link>}</td>
             </tr>
             {record.needsReview && (
               <tr className="is-review wrt-issue-row">
