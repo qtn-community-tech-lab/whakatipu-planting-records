@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { first } from "@/lib/wrt/params";
 import Link from "next/link";
+import Form from "next/form";
 import { getWrt } from "@/lib/wrt/server";
 import { formatNumber, foldMacrons, matchScore } from "@/lib/wrt/text";
 import type { SpeciesSummary } from "@/lib/wrt/queries";
@@ -133,9 +134,8 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
           ))}
         </nav>
         <div className="wrt-stool">
-          <form method="get" action="/species" className="wrt-stool__form" role="search">
+          <Form action="/species" className="wrt-stool__form" role="search">
             {state === "deactivated" && <input type="hidden" name="state" value="deactivated" />}
-            {show !== "all" && <input type="hidden" name="show" value={show} />}
             {view !== "list" && <input type="hidden" name="view" value={view} />}
             <label className="wrt-stool__search">
               <span className="sr-only">Find a species</span>
@@ -143,6 +143,14 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
                 <circle cx="7" cy="7" r="4.6" /><path d="m10.5 10.5 3.2 3.2" />
               </svg>
               <input type="search" name="q" defaultValue={q} placeholder="Find a species by any name" className="cn-input" />
+            </label>
+            <label className="wrt-stool__show-select">
+              <span className="wrt-stool__label">Show</span>
+              <select key={show} name="show" defaultValue={show} className="wrt-select">
+                {SHOWS.map((o) => (
+                  <option key={o.key} value={o.key}>{o.label} ({counts[o.key]})</option>
+                ))}
+              </select>
             </label>
             <label className="wrt-stool__sort">
               <span className="wrt-stool__label">Sort</span>
@@ -156,9 +164,9 @@ export default async function SpeciesPage({ searchParams }: Readonly<PageProps<"
               <button type="submit" className="cn-btn cn-btn--primary cn-btn--sm">Apply</button>
             </noscript>
             <AutoSubmit />
-          </form>
+          </Form>
 
-          <nav aria-label="Show" className="wrt-stool__show">
+          <nav aria-label="Show" className="wrt-stool__show wrt-stool__show-links">
             {SHOWS.map((o) => (
               <Link
                 key={o.key}

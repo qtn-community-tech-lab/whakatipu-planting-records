@@ -459,6 +459,7 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 /* Filter bar order: what you do first on top (search, sort, list or grid), then the filters and the count. */
 .wrt-species .wrt-stool { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "form view" "show result"; gap: 10px 14px; }
 .wrt-species .wrt-stool__form { min-width: 0; }
+.wrt-species .wrt-stool__show-select { display: none; }
 .wrt-species .wrt-stool__search { position: relative; flex: 1; width: auto; }
 .wrt-species .wrt-stool__search svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
 .wrt-species .wrt-stool__search .cn-input { width: 100%; padding-left: 40px; }
@@ -467,13 +468,19 @@ a.wrt-ranked__row:hover { background: var(--surface-soft); border-radius: var(--
 .wrt-species .wrt-stool__result { justify-self: end; justify-content: flex-end; }
 /* Below 1260px search, sort and List/Grid don't fit on one row, so List and Grid get their own row and the search box keeps its width. */
 @media (max-width: 1260px) {
-  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show result"; }
+  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "result result"; }
+  .wrt-species .wrt-stool__form { flex-wrap: wrap; }
+  .wrt-species .wrt-stool__search { flex-basis: 100%; }
+  .wrt-species .wrt-stool__show-select, .wrt-species .wrt-stool__sort {
+    display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 8px; width: calc(50% - 5px); min-width: 0;
+  }
+  .wrt-species .wrt-stool__form .wrt-select { width: 100%; min-width: 0; height: 44px; }
+  .wrt-species .wrt-stool__show-links { display: none; }
   .wrt-stool__show.wrt-stool__view { justify-self: stretch; display: grid; grid-template-columns: 1fr 1fr; }
   .wrt-stool__view .wrt-stool__opt { width: auto; min-height: 44px; gap: 8px; }
 }
 @media (max-width: 760px) {
-  .wrt-species .wrt-stool { grid-template-areas: "form form" "view view" "show show" "result result"; }
-  .wrt-species .wrt-stool__search { flex-basis: 100%; }
+  .wrt-species .wrt-stool__show-select, .wrt-species .wrt-stool__sort { width: 100%; }
   .wrt-species .wrt-stool__result { justify-self: start; justify-content: flex-start; }
 }
 /* Grid view: photo cards four to a row, with just the rank and the name. */
