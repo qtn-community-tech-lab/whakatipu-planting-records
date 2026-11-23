@@ -66,12 +66,12 @@ Restart Supabase after changing `supabase/config.toml` so Auth settings reload. 
 ## Data and application rules
 
 - Describe historical quantities as **recorded plants**. Allocation sheets do not verify actual planting.
-- Preserve resolved and needs-review quantities in aggregates. Unknown quantities remain unknown.
+- Include all recorded quantities in aggregates. Unknown quantities remain unknown.
 - Keep original source spellings, workbook cells and review notes as provenance. Do not invent dates or locations.
 - Deactivate records instead of deleting them. Historical species and sites must remain resolvable.
 - Map pins are approximate public references, not historical planting boundaries. Species photos include attribution and source links.
 
-The app reads Supabase at runtime through named queries in `db/queries/`. Public pages use database aggregates and bounded review rows; staff Records uses aggregates and database pagination. Chat and planting forms retain the history repository in `db/repository.ts`. Canonical species names and reference content are columns on `species`.
+The app reads Supabase at runtime through named queries in `db/queries/`. Public pages use database aggregates; staff Records uses aggregates and database pagination. Chat and planting forms retain the history repository in `db/repository.ts`. Canonical species names and reference content are columns on `species`.
 
 Main pages: `/sites`, `/species`, `/seasons`, `/records`, `/search` and `/about-the-data`. `/records` exports filtered CSVs; signed-in staff can export linked table CSVs at `/export`.
 

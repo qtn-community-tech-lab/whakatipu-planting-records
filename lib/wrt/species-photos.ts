@@ -8,7 +8,7 @@ export interface SpeciesPhoto {
   licenseUrl?: string;
 }
 
-/** Rank recorded quantities, including those needing review; ties use botanical names. */
+/** Rank recorded quantities; ties use botanical names. */
 export function topPlantedSpecies(rows: readonly SpeciesSummary[]) {
   return rows.filter((row) => row.split.records > 0).sort((a, b) => b.split.total - a.split.total ||
     a.item.scientificName.localeCompare(b.item.scientificName));

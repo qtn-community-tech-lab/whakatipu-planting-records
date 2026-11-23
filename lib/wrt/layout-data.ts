@@ -8,8 +8,8 @@ const keys = (terms: (string | null)[]) => [
   ...new Set(terms.map((term) => searchKey(term ?? "")).filter(Boolean)),
 ];
 
-export const readLayoutData = cache(async (showReview: boolean) => {
-  const summary = await readLayoutSummary(showReview);
+export const readLayoutData = cache(async () => {
+  const summary = await readLayoutSummary();
   const first = summary.seasons[0];
   const last = summary.seasons.at(-1);
   const range =
@@ -27,7 +27,6 @@ export const readLayoutData = cache(async (showReview: boolean) => {
     label: season.label,
     autumn: season.half === "autumn",
     total: season.total,
-    needsReview: season.needsReview,
   }));
   const index: SearchIndex = {
     places: summary.places

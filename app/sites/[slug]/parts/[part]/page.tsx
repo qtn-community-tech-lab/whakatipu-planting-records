@@ -3,13 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPublicWrt } from "@/lib/wrt/public-server";
 import type { PlaceDetail } from "@/lib/wrt/queries";
-import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { speciesAtPlaces, tileRows } from "@/lib/wrt/presentation";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
 import { Card, CardLink, PageHead, Rule, EmptyState } from "@/components/wrt/shared/page";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns } from "@/components/wrt/shared/charts";
-import { RecordsTable } from "@/components/wrt/shared/records";
 import { hrefs } from "@/components/wrt/shared/names";
 import { Badge } from "@/components/ui/badge";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
@@ -20,8 +18,6 @@ import { PlantingTimeline } from "@/components/wrt/sites/planting-timeline";
 import { isAuthenticated } from "@/db/queries/auth";
 
 type Props = Readonly<PageProps<"/sites/[slug]/parts/[part]">>;
-
-const REVIEW_CAP = 25;
 
 export async function generateStaticParams() {
   const places = await getPublicWrt().places();
@@ -71,7 +67,6 @@ export default async function PartPage({ params }: Props) {
 
   const points = d.seasons;
   const speciesCount = d.species.length;
-  const needsReview = needsReviewByPlants(d.records);
   const aliases = [...new Set(parcel.aliases)].filter((a) => a && a !== parcel.name);
 
   const siblings = d.parcels.filter((x) => x.item.id !== parcel.id);
@@ -136,21 +131,6 @@ export default async function PartPage({ params }: Props) {
           hrefFor={(r, season) => recordsFor({ species: r.species?.slug, season: season.name, year: season.year })}
         />
       </Card>
-
-      {needsReview.length > 0 && (
-        <Card
-          title={`${formatNumber(split.recordsNeedingReview)} record${split.recordsNeedingReview === 1 ? "" : "s"} needing review here`}
-          variant="table"
-          action={<CardLink href={recordsFor({ review: "needs-review" })}>See them all</CardLink>}
-          foot={
-            split.recordsNeedingReview > REVIEW_CAP
-              ? `The ${REVIEW_CAP} largest of ${formatNumber(split.recordsNeedingReview)}. Open Source on a row for the spreadsheet cell.`
-              : "Open Source on a row for the spreadsheet cell it came from."
-          }
-        >
-          <RecordsTable rows={needsReview.slice(0, REVIEW_CAP)} hide={["site"]} caption={`Records needing review at ${parcel.name}`} />
-        </Card>
-      )}
 
       {aliases.length > 0 && (
         <Card title="Names found in WRT’s spreadsheets" foot="Every column header that was matched to this part. Search matches all of them.">

@@ -42,7 +42,7 @@ export default async function SpeciesPhotosPage() {
       <Card title="Before you head out" action={<SplitLine split={split} />}>
         <p className="wrt-prose m-0">{referenceCount} species have sourced identification notes. {completePhotoCount} species have at least three reference photos; {partialPhotoCount} {partialPhotoCount === 1 ? "has" : "have"} one or two. There are {photoCount} image references in total. Herbarium specimens are labelled. Photos were taken at other locations.
           They show what a species can look like, and do not confirm what is growing at a WRT site today.
-          Young plants may look different. Previews are cropped to fit; open Full image for the entire frame. Select a species name to see its planting history and review notes.</p>
+          Young plants may look different. Previews are cropped to fit; open Full image for the entire frame. Select a species name to see its planting history and source notes.</p>
       </Card>
       <div className="wrt-photo-grid">
         {rows.map((row, index) => {
@@ -63,7 +63,6 @@ export default async function SpeciesPhotosPage() {
                   <div className="wrt-photo-pair">{photos.slice(1).map((extra) => <PhotoMedia key={extra.src} photo={extra} name={row.item.displayName} variant="guide" />)}</div>
                 </details>}
               </> : <p className="wrt-muted">No reference photo is recorded for this species.</p>}
-              {row.split.needsReview > 0 && <p className="wrt-rule m-0">{formatNumber(row.split.needsReview)} recorded plants need review.</p>}
             </Card>
           );
         })}

@@ -1,13 +1,21 @@
 /**
  * Domain / query layer. Pages and components call these and nothing else.
  *
- * Rule: every aggregate is a QuantitySplit (resolved + needs review). There is
- * no function here that returns a bare total.
+ * Aggregates retain historical metadata while pages show the full recorded total.
  */
 import type { WrtRepository } from "./repository";
 import type {
-  Confidence, Parcel, Place, PlantingRecord, Precision, QuantitySplit, ReconciliationRow,
-  ReviewTheme, Season, SeasonName, SiteClass, Species,
+  Confidence,
+  Parcel,
+  Place,
+  PlantingRecord,
+  Precision,
+  QuantitySplit,
+  ReconciliationRow,
+  Season,
+  SeasonName,
+  SiteClass,
+  Species,
 } from "./types";
 import { matchScore, searchKey } from "./text";
 
@@ -77,22 +85,11 @@ export interface Span {
   seasonsActive: number;
 }
 
-export interface ThemeSummary {
-  theme: ReviewTheme;
-  /** Plants and records touched by notes of this theme. A record can sit in several themes. */
-  split: QuantitySplit;
-}
-
 export interface RecordView {
   record: PlantingRecord;
   species: Species;
   place: Place;
   season: Season;
-}
-
-/** The rows WRT still has to rule on, largest first: the "needs review" card on every detail page. */
-export function needsReviewByPlants(rows: RecordView[]): RecordView[] {
-  return rows.filter((v) => v.record.needsReview).sort((a, b) => b.record.quantity - a.record.quantity);
 }
 
 export interface SiteSpecies {
@@ -154,7 +151,6 @@ export interface Overview {
   byClass: Ranked<SiteClass>[];
   byConfidence: Ranked<Confidence>[];
   byPrecision: Ranked<Precision>[];
-  themes: ThemeSummary[];
 }
 
 export interface PlaceDetail {
@@ -165,7 +161,6 @@ export interface PlaceDetail {
   years: YearRow[];
   species: Ranked<Species>[];
   parcels: (Ranked<Parcel> & { span: Span })[];
-  themes: ThemeSummary[];
   records: RecordView[];
 }
 
@@ -177,7 +172,6 @@ export interface SpeciesDetail {
   years: YearRow[];
   places: Ranked<Place>[];
   contested: Species[];
-  themes: ThemeSummary[];
   records: RecordView[];
 }
 
@@ -190,11 +184,8 @@ export interface SeasonDetail {
   species: Ranked<Species>[];
   byClass: Ranked<SiteClass>[];
   reconciliation: ReconciliationRow | null;
-  themes: ThemeSummary[];
   records: RecordView[];
 }
-
-export type ReviewFilter = "all" | "needs-review" | "resolved";
 
 export interface RecordFilter {
   place?: string;
@@ -203,8 +194,6 @@ export interface RecordFilter {
   species?: string;
   year?: number;
   season?: SeasonName;
-  review?: ReviewFilter;
-  theme?: ReviewTheme;
   /** Free text: matched against species, place and parcel names (macrons ignored). */
   q?: string;
 }
@@ -226,7 +215,6 @@ export interface DataQuality {
   split: QuantitySplit;
   byConfidence: Ranked<Confidence>[];
   byPrecision: Ranked<Precision>[];
-  themes: ThemeSummary[];
   reconciliation: ReconciliationRow[];
   source: { description: string; tables: { name: string; rows: number }[] };
   /**
@@ -299,21 +287,6 @@ export function createQueries(repo: WrtRepository) {
     return first && last ? { first, last, seasonsActive: active.length } : null;
   }
 
-  function themesOf(recs: PlantingRecord[]): ThemeSummary[] {
-    const m = new Map<ReviewTheme, QuantitySplit>();
-    for (const r of recs) {
-      if (!r.needsReview) continue;
-      const themes = new Set(r.notes.filter((n) => n.kind !== "fyi").map((n) => n.theme));
-      if (!themes.size) themes.add("other");
-      for (const t of themes) {
-        let s = m.get(t);
-        if (!s) m.set(t, (s = emptySplit()));
-        addToSplit(s, r);
-      }
-    }
-    return [...m.entries()].map(([theme, split]) => ({ theme, split })).sort(byTotalDesc);
-  }
-
   function rankPlaces(c: Ctx, recs: PlantingRecord[]): Ranked<Place>[] {
     return [...groupSplits(recs, (r) => r.placeSlug)]
       .map(([slug, split]) => ({ item: c.placeBySlug.get(slug)!, split }))
@@ -355,7 +328,6 @@ export function createQueries(repo: WrtRepository) {
         byClass: rankBy(c.records, (r) => r.siteClass),
         byConfidence: rankBy(c.records, (r) => r.confidence),
         byPrecision: rankBy(c.records, (r) => r.precision),
-        themes: themesOf(c.records),
       };
     },
 
@@ -402,7 +374,6 @@ export function createQueries(repo: WrtRepository) {
             span: spanOf(c, recs.filter((r) => r.parcelId === parcel.id))!,
           }))
           .sort(byTotalDesc),
-        themes: themesOf(recs),
         records: recs.map(c.view),
       };
     },
@@ -436,7 +407,6 @@ export function createQueries(repo: WrtRepository) {
         years: yearRows(recs),
         places: rankPlaces(c, recs),
         contested: species.contestedWith.map((id) => c.speciesById.get(id)).filter((s): s is Species => !!s),
-        themes: themesOf(recs),
         records: recs.map(c.view),
       };
     },
@@ -470,7 +440,6 @@ export function createQueries(repo: WrtRepository) {
         species: rankSpecies(c, recs),
         byClass: rankBy(recs, (r) => r.siteClass),
         reconciliation: recon.find((x) => x.kind === "season" && x.label === season.label) ?? null,
-        themes: themesOf(recs),
         records: recs.map(c.view),
       };
     },
@@ -485,10 +454,6 @@ export function createQueries(repo: WrtRepository) {
         .filter((r) => !filter.species || r.speciesId === species?.id)
         .filter((r) => !filter.year || r.year === filter.year)
         .filter((r) => !filter.season || r.seasonName === filter.season)
-        .filter((r) =>
-          filter.review === "needs-review" ? r.needsReview : filter.review === "resolved" ? !r.needsReview : true,
-        )
-        .filter((r) => !filter.theme || (r.needsReview && r.notes.some((n) => n.kind !== "fyi" && n.theme === filter.theme)))
         .map(c.view)
         .filter((v) => !q || matchesText(v, q));
       return { filter, split: splitOf(rows.map((v) => v.record)), rows };
@@ -536,7 +501,6 @@ export function createQueries(repo: WrtRepository) {
         split: splitOf(c.records),
         byConfidence: rankBy(c.records, (r) => r.confidence),
         byPrecision: rankBy(c.records, (r) => r.precision),
-        themes: themesOf(c.records),
         reconciliation,
         source: info,
         threatened: c.species

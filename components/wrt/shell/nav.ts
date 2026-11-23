@@ -23,7 +23,7 @@ export const NAV_MAIN: readonly NavItem[] = [
   { href: "/export", label: "Export data", icon: "export", requiresAuth: true },
 ];
 
-export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About the data", icon: "about" }];
+export const NAV_FOOT: readonly NavItem[] = [{ href: "/about-the-data", label: "About WRT", icon: "about" }];
 
 export function isActive(pathname: string, href: AppRoute) {
   return href === "/records" && pathname.startsWith("/events") ? true : href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(href + "/");

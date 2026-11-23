@@ -4,7 +4,6 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { notFound } from "next/navigation";
 import { getPublicWrt } from "@/lib/wrt/public-server";
-import { needsReviewByPlants } from "@/lib/wrt/queries";
 import { speciesAtPlaces, tileRows } from "@/lib/wrt/presentation";
 import { SITE_CLASS_LABELS } from "@/lib/wrt/review-themes";
 import { spanLabel, formatNumber } from "@/lib/wrt/text";
@@ -12,7 +11,6 @@ import { PageHead, Card, CardLink, Rule, EmptyState } from "@/components/wrt/sha
 import { hrefs } from "@/components/wrt/shared/names";
 import { QuantityFigure, SplitKey } from "@/components/wrt/shared/quantity";
 import { SeasonColumns, YearTable } from "@/components/wrt/shared/charts";
-import { RecordsTable, ReviewThemeList } from "@/components/wrt/shared/records";
 import { ChipLinks } from "@/components/wrt/sites/filter-chips";
 import { YearView } from "@/components/wrt/sites/year-view";
 import { SpeciesTiles } from "@/components/wrt/species/species-tiles";
@@ -25,8 +23,6 @@ import { isAuthenticated } from "@/db/queries/auth";
 import { Button } from "@/components/ui/button";
 
 type Props = Readonly<PageProps<"/sites/[slug]">>;
-
-const REVIEW_CAP = 25;
 
 export async function generateStaticParams() {
   const places = await getPublicWrt().places();
@@ -101,13 +97,6 @@ export default async function SitePage({ params, searchParams }: Props) {
   const recordsFor = (extra: Record<string, string | number | undefined> = {}) =>
     hrefs.records({ place: place.slug, ...extra });
 
-  // Slope Hill style flagged columns (WRT decision 4).
-  const flaggedSplit = d.flagged.split;
-  const flaggedSeasons = d.flagged.seasons;
-
-  const needsReview = needsReviewByPlants(d.records);
-  const reviewRows = needsReview.slice(0, REVIEW_CAP);
-  const reviewHidden = split.recordsNeedingReview - reviewRows.length;
 
   const activeSeasons = d.seasons.filter((s) => s.split.records > 0).length;
 
@@ -141,12 +130,6 @@ export default async function SitePage({ params, searchParams }: Props) {
             caption={`Recorded plants by season at ${place.name}`}
             hrefFor={(p) => recordsFor({ season: p.season.name, year: p.season.year })}
           />
-          {flaggedSplit.total > 0 && (
-            <Rule>
-              {formatNumber(flaggedSplit.total)} recorded plants in {flaggedSeasons.join(" and ")} are flagged by WRT
-              (decision 4) and shown in amber. They dominate this scale until WRT rules whether they count.
-            </Rule>
-          )}
         </div>
       </Card>
 
@@ -247,34 +230,6 @@ export default async function SitePage({ params, searchParams }: Props) {
               };
             })}
           />
-        </Card>
-      )}
-
-      <Card
-        title="Open questions for WRT"
-        foot={d.themes.length ? "Each question applies to every record under it. Answer it once and these figures settle." : undefined}
-      >
-        <ReviewThemeList themes={d.themes} recordsQuery={{ place: place.slug }} />
-      </Card>
-
-      {needsReview.length > 0 && (
-        <Card
-          variant="table"
-          title="Records that need review here"
-          action={
-            reviewHidden > 0 ? (
-              <CardLink href={recordsFor({ review: "needs-review" })}>
-                All {formatNumber(split.recordsNeedingReview)} records needing review
-              </CardLink>
-            ) : undefined
-          }
-          foot={
-            reviewHidden > 0
-              ? `Showing the ${reviewRows.length} largest of ${formatNumber(split.recordsNeedingReview)} records needing review; ${formatNumber(reviewHidden)} more in the full list.`
-              : undefined
-          }
-        >
-          <RecordsTable rows={reviewRows} hide={["site"]} caption={`Records needing review at ${place.name}`} />
         </Card>
       )}
 

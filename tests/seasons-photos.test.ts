@@ -7,9 +7,6 @@ import SeasonPage from "@/app/seasons/[slug]/page";
 const mocks = vi.hoisted(() => ({ season: vi.fn(), seasons: vi.fn(), leaders: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: () => { throw new Error("Pages must use named history queries"); } }));
 vi.mock("@/db/queries/auth", () => ({ isAuthenticated: async () => false }));
-vi.mock("@/lib/wrt/server", () => ({
-  reviewShown: async () => true,
-}));
 vi.mock("@/lib/wrt/public-server", () => ({
   getPublicWrt: () => ({ season: mocks.season, seasons: mocks.seasons, seasonLeaders: mocks.leaders }),
 }));

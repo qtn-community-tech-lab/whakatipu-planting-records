@@ -5,7 +5,7 @@ import type { QuantitySplit, Species } from "@/lib/wrt/types";
 import type { SeasonPoint, Span } from "@/lib/wrt/queries";
 import type { SpeciesPhoto } from "@/lib/wrt/species-photos";
 import { PhotoMedia } from "./photo-media";
-import { formatNumber, formatShare } from "@/lib/wrt/text";
+import { formatNumber } from "@/lib/wrt/text";
 import { SplitBar } from "@/components/wrt/shared/quantity";
 import { NavGlyph } from "@/components/wrt/shell/nav-icons";
 import { GrowthRings, type RingSeason } from "@/components/wrt/shell/growth-rings";
@@ -48,7 +48,6 @@ export function SpeciesHero({
     label: p.season.label,
     autumn: p.season.name === "Autumn",
     total: p.split.total,
-    needsReview: p.split.needsReview,
   }));
   const firstPhoto = photos[0];
 
@@ -62,7 +61,6 @@ export function SpeciesHero({
           <Tag>Native</Tag>
           {sp.over5m === true && <Tag>Over 5 m</Tag>}
           <ThreatenedBadge species={sp} />
-          {sp.needsDecision && <Tag className="text-[var(--cn-amber-on-dark)]">Name needs a ruling</Tag>}
         </div>
 
         <div className="wrt-shero__names">
@@ -85,16 +83,7 @@ export function SpeciesHero({
           </div>
           <SplitBar split={split} className="cn-bar--on-dark wrt-shero__bar" />
           <p className="wrt-shero__split">
-            {formatNumber(split.resolved)} resolved
-            {split.needsReview > 0 && (
-              <>
-                {" · "}
-                <span className="wrt-shero__amber">
-                  {formatNumber(split.needsReview)} on {formatNumber(split.recordsNeedingReview)} record
-                  {split.recordsNeedingReview === 1 ? "" : "s"} needing review ({formatShare(split.needsReview, split.total)})
-                </span>
-              </>
-            )}
+            {formatNumber(split.records)} records
           </p>
         </div>
 

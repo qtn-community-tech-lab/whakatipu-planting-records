@@ -2,12 +2,12 @@
  * The species most planted at each site, for the map view's plant list: each
  * with its all-time recorded plants there and a reference photo.
  *
- * Uses getWrtAll(), like eventFormOptions: what was planted at a site should
- * not depend on the reader's "show records needing review" switch.
+ * Uses getWrt(), like eventFormOptions: what was planted at a site should
+ * include the complete planting history.
  */
 import "server-only";
 import { speciesBySite } from "../queries";
-import { getWrtAll } from "../server";
+import { getWrt } from "../server";
 
 export interface SpeciesSuggestion {
   /** Matches SpeciesOption.id in the form options. */
@@ -23,7 +23,7 @@ export interface SpeciesSuggestion {
 
 /** Every site's most planted species, by site slug: one query, so switching sites in the form is instant. */
 export async function siteSpeciesSuggestions(limit = 12): Promise<Record<string, SpeciesSuggestion[]>> {
-  const { rows } = await getWrtAll().records({});
+  const { rows } = await getWrt().records({});
   return Object.fromEntries([...speciesBySite(rows)].map(([slug, site]) => [slug, [...site.species.values()]
     .sort((a, b) => b.split.total - a.split.total)
     .slice(0, limit)

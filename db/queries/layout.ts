@@ -42,11 +42,9 @@ const layoutSummarySchema = z.object({
 export type LayoutSummary = z.infer<typeof layoutSummarySchema>;
 
 /** Acts as a signed-out visitor; never returns private staff or editor data. */
-export async function readLayoutSummary(
-  showReview: boolean,
-): Promise<LayoutSummary> {
+export async function readLayoutSummary(): Promise<LayoutSummary> {
   const { data } = await publicDb()
-    .rpc("read_layout_summary", { show_review: showReview })
+    .rpc("read_layout_summary", { show_review: true })
     .throwOnError();
   return layoutSummarySchema.parse(data);
 }

@@ -9,7 +9,7 @@ import "server-only";
 import { listSites } from "@/db/queries/sites";
 import { wholeSiteAreaSlug } from "../areas/whole-site";
 import { listSpeciesForPlanting } from "@/db/queries/species";
-import { getWrtAll } from "../server";
+import { getWrt } from "../server";
 import { searchKey } from "../text";
 
 /** Macron-free search keys, matched with rankMatches in the browser. */
@@ -43,13 +43,12 @@ export interface EventFormOptions {
 }
 
 /**
- * Uses unscoped data: available sites and species must not depend on the
- * reader's review switch. New events use active sites and species,
+ * New events use active sites and species,
  * including entries with no planting history; historical lookups retain deactivated ones.
  */
 export async function eventFormOptions(): Promise<EventFormOptions> {
   const [{ places }, species, sites] = await Promise.all([
-    getWrtAll().lookups(),
+    getWrt().lookups(),
     listSpeciesForPlanting(),
     listSites(),
   ]);

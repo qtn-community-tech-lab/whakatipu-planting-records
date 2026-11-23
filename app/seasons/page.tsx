@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getPublicWrt } from "@/lib/wrt/public-server";
-import { reviewShown } from "@/lib/wrt/server";
 import { formatNumber } from "@/lib/wrt/text";
 import { PageHead, Rule } from "@/components/wrt/shared/page";
 import { SplitKey } from "@/components/wrt/shared/quantity";
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function SeasonsPage() {
   const wrt = getPublicWrt();
-  const [seasons, leaders, showReview] = await Promise.all([wrt.seasons(), wrt.seasonLeaders(), reviewShown()]);
+  const [seasons, leaders] = await Promise.all([wrt.seasons(), wrt.seasonLeaders()]);
 
   // Top trees and top sites in each season, largest first, ranked by the database.
   const topBySeason = new Map<string, TopSpecies[]>();
@@ -60,7 +59,7 @@ export default async function SeasonsPage() {
           <h2 id="by-season" className="wrt-section-title">Recorded plants by season</h2>
           <SplitKey spring />
         </div>
-        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.${showReview ? " Amber is the part still waiting on a WRT ruling." : ""}`} />
+        <SeasonColumns points={seasons} caption={`Autumn and spring alternate.`} />
       </section>
 
       <section className="flex flex-col gap-3" aria-labelledby="by-year">

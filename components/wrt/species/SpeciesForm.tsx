@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-
 import { z } from "zod";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { slugify } from "@/lib/wrt/text";
@@ -246,7 +245,7 @@ export function SpeciesForm<T extends string>({
                 control={form.control}
                 name="status"
                 label="Register status"
-                description="Core: part of the main species list.Appended: added outside the core list. Contested: the species identity needs review. Seed log only: recorded only in seed logs. Choose Not recorded if the status is unknown."
+                description="Core: part of the main species list.Appended: added outside the core list. Contested: a historical register label. Seed log only: recorded only in seed logs. Choose Not recorded if the status is unknown."
                 render={(field, accessibility) => (
                   <Select
                     name={field.name}
@@ -356,15 +355,7 @@ export function SpeciesForm<T extends string>({
                   </Select>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="contested_group"
-                label="Contested group"
-                description="For example C3. Leave blank if this name is not part of a contested group."
-                render={(field, accessibility) => (
-                  <Input {...field} {...accessibility} maxLength={INPUT_LIMITS.identifier} />
-                )}
-              />
+
               <FormField
                 control={form.control}
                 name="register_note"

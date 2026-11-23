@@ -7,10 +7,10 @@
  *
  * Server and client safe: no data access.
  */
-import type { Lookups, RecordFilter, ReviewFilter } from "@/lib/wrt/queries";
-import type { ReviewTheme, SeasonName } from "@/lib/wrt/types";
-import { REVIEW_THEMES } from "@/lib/wrt/review-themes";
+import type { Lookups, RecordFilter } from "@/lib/wrt/queries";
+import type { SeasonName } from "@/lib/wrt/types";
 import { hrefs } from "@/lib/wrt/routes";
+import type { RawParams } from "@/lib/wrt/params";
 
 export const PAGE_SIZE = 50;
 
@@ -34,13 +34,11 @@ export interface RecordsView {
 }
 
 export type { RawParams } from "@/lib/wrt/params";
-import type { RawParams } from "@/lib/wrt/params";
 
 /** Param names that the form owns. Empty values for these are redirected away. */
-export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "review", "theme", "q", "page", "sort"] as const;
+export const PARAM_KEYS = ["place", "parcel", "species", "year", "season", "q", "page", "sort"] as const;
 export type ParamKey = (typeof PARAM_KEYS)[number];
 
-const REVIEW_VALUES: ReviewFilter[] = ["all", "needs-review", "resolved"];
 const SEASONS: SeasonName[] = ["Autumn", "Spring"];
 
 function first(v: string | string[] | undefined): string | undefined {
@@ -77,14 +75,6 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
   if (season) filter.season = season;
   else reject("season", seasonRaw);
 
-  const review = first(raw.review)?.trim();
-  const reviewValue = REVIEW_VALUES.find((value) => value !== "all" && value === review);
-  if (reviewValue) filter.review = reviewValue;
-
-  const theme = first(raw.theme)?.trim();
-  if (theme && Object.prototype.hasOwnProperty.call(REVIEW_THEMES, theme)) filter.theme = theme as ReviewTheme;
-  else reject("review question", theme);
-
   const q = first(raw.q)?.replace(/\s+/g, " ").trim().slice(0, 80);
   if (q) filter.q = q;
 
@@ -99,7 +89,7 @@ export function parseRecordParams(raw: RawParams, lookups: Lookups): RecordsView
 
 /** True when any filter (not sort or page) is set. */
 export function hasFilters(f: RecordFilter): boolean {
-  return Boolean(f.place || f.parcel || f.species || f.year || f.season || f.review || f.theme || f.q);
+  return Boolean(f.place || f.parcel || f.species || f.year || f.season || f.q);
 }
 
 /** Query params for a view. Defaults are left out so URLs stay short. */
@@ -111,8 +101,6 @@ function viewParams(view: RecordsView, over: Partial<Record<ParamKey, string | n
     species: f.species,
     year: f.year,
     season: f.season,
-    review: f.review,
-    theme: f.theme,
     q: f.q,
     sort: view.sort === "season" ? undefined : view.sort,
     page: view.page > 1 ? view.page : undefined,

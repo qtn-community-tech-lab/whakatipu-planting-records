@@ -1,9 +1,9 @@
-import type { AppRoute } from "@/lib/wrt/routes";
 /**
  * Sites (or parts of a site) as rows: name and a line of facts, the split bar, the total, and the
  * few most recorded species. Used on the Sites page and on each season page;
  * the full species list for a site lives on that site's page.
  */
+import type { AppRoute } from "@/lib/wrt/routes";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SiteSpecies } from "@/lib/wrt/queries";
@@ -51,7 +51,6 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
               <SplitBar split={r.split} max={max} size="sm" className="wrt-sitesp__bar" />
               <Link href={r.totalHref} className="wrt-sitesp__total">
                 <b className="tabular-nums">{formatNumber(r.split.total)}</b>
-                {r.split.needsReview > 0 && <span className="tabular-nums">{formatNumber(r.split.needsReview)} need review</span>}
               </Link>
             </div>
             {top.length > 0 && (
@@ -62,7 +61,6 @@ export function SiteRows({ rows, max, top: perSite = TOP_PER_SITE }: { rows: Sit
                     key={s.species.slug}
                     href={r.speciesHref(s.species)}
                     className="wrt-mini"
-                    data-review={s.split.needsReview > 0 || undefined}
                   >
                     <SpeciesAvatar species={s.species} />
                     <span className={s.species.displayIsScientific ? "italic" : undefined}>{s.species.displayName}</span>

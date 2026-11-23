@@ -40,7 +40,7 @@ function RingTile({ row }: { row: SpeciesSummary }) {
 /**
  * One species in the field guide, as a full-width row, in the order people meet a plant:
  * what it looks like (photos, right), what it's called and what kind of plant it is, how to recognise it,
- * then how much of it the Trust has recorded. Review status stays quiet: a note only when most of it is unconfirmed.
+ * then how much of it the Trust has recorded.
  * The whole row opens the species.
  */
 export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; rank: number; tile?: boolean }) {
@@ -73,7 +73,6 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
         <p className="wrt-scard__tilefacts">
           <span><b className="tabular-nums">{formatNumber(split.total)}</b> recorded</span>
           <span><b className="tabular-nums">{formatNumber(placeCount)}</b> {placeCount === 1 ? "site" : "sites"}</span>
-          {split.needsReview * 2 > split.total && <span className="wrt-scard__unsure">mostly unconfirmed</span>}
         </p>
       </li>
     );
@@ -101,9 +100,6 @@ export function SpeciesCard({ row, rank, tile = false }: { row: SpeciesSummary; 
             <dt>Recorded</dt>
             <dd className="tabular-nums">
               {formatNumber(split.total)}
-              {split.needsReview * 2 > split.total && (
-                <span className="wrt-scard__unsure" title={`${formatNumber(split.needsReview)} still need a WRT ruling`}>mostly unconfirmed</span>
-              )}
             </dd>
           </div>
           <div><dt>Sites</dt><dd>{formatNumber(placeCount)}</dd></div>

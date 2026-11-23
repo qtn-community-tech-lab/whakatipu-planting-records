@@ -7,11 +7,10 @@ import { toRecordView } from "@/db/records";
 import { emptySplit } from "@/lib/wrt/queries";
 import type { Lookups, PlaceSummary, RecordFilter } from "@/lib/wrt/queries";
 import type { HistoryCell } from "@/lib/wrt/presentation";
-import type { ReviewTheme } from "@/lib/wrt/types";
 import { matchScore, searchKey } from "@/lib/wrt/text";
 import type { SortKey } from "@/components/wrt/explore/filters";
 
-export function createRecordsQueries(showReview: boolean) {
+export function createRecordsQueries() {
   const client = db();
   const references = client.then(async (connection) => {
     const { data } = await connection
@@ -29,8 +28,6 @@ export function createRecordsQueries(showReview: boolean) {
       ...(filter.species ? { species: filter.species } : {}),
       ...(filter.year ? { year: filter.year } : {}),
       ...(filter.season ? { half: filter.season.toLowerCase() } : {}),
-      ...(filter.review ? { review: filter.review } : {}),
-      ...(filter.theme ? { theme: filter.theme } : {}),
       ...(filter.q?.trim() ? {
         textSites: refs.places.filter((place) => matchScore(filter.q!, place.searchKeys) > 0).map((place) => place.slug),
         textSpecies: refs.species.filter((species) => matchScore(filter.q!, species.searchKeys) > 0).map((species) => species.slug),
@@ -46,7 +43,7 @@ export function createRecordsQueries(showReview: boolean) {
     if (!pending) {
       pending = client.then(async (connection) => {
         const { data } = await connection
-          .rpc("read_planting_summary", { group_by: dimensions, filters, show_review: showReview, include_group_counts: dimensions.length < 2 })
+          .rpc("read_planting_summary", { group_by: dimensions, filters, show_review: true, include_group_counts: dimensions.length < 2 })
           .throwOnError();
         return summarySchema.parse(data);
       });
@@ -72,9 +69,9 @@ export function createRecordsQueries(showReview: boolean) {
     const refs = await references;
     const place = refs.placeBySlug.get(filter.place ?? "");
     const showParts = !!place && place.parcels.length > 1 && !filter.parcel;
-    const [seasonRows, siteRows, speciesRows, themeRows] = await Promise.all([
+    const [seasonRows, siteRows, speciesRows] = await Promise.all([
       measure(["season"], filter), !place || showParts ? measure([place ? "area" : "site"], filter) : Promise.resolve(null),
-      measure(["species"], filter), filter.theme ? Promise.resolve(null) : measure(["theme"], filter),
+      measure(["species"], filter),
     ]);
     const where = siteRows?.rows ?? [];
     const rowsBy = !place && where.length > 1 ? "site" as const : showParts ? "part" as const : "species" as const;
@@ -95,13 +92,13 @@ export function createRecordsQueries(showReview: boolean) {
       sites: where.map((row) => ({ place: row.site ? refs.placeBySlug.get(row.site)! : place!,
         parcel: row.area ? refs.parcels.get(row.area)! : null, split: row.split })),
       species: speciesRows.rows.map((row) => ({ item: refs.speciesBySlug.get(row.species!)!, split: row.split })),
-      themes: (themeRows?.rows ?? []).map((row) => ({ theme: row.theme as ReviewTheme, split: row.split })), cells, rowsBy };
+      cells, rowsBy };
   }
 
   async function page(filter: RecordFilter, pageNumber: number, sort: SortKey) {
     const [connection, refs, filters] = await Promise.all([client, references, filtersFor(filter)]);
     const { data } = await connection
-      .rpc("read_records_page", { filters, show_review: showReview, sort_by: sort, page_number: pageNumber })
+      .rpc("read_records_page", { filters, show_review: true, sort_by: sort, page_number: pageNumber })
       .throwOnError();
     return data.map((row) => {
       const view = toRecordView(row);

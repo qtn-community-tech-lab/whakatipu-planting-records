@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { Pin } from "@/components/wrt/shared/pin";
 import { SpeciesAvatar } from "@/components/wrt/shared/species-avatar";
-
 import type { QuantitySplit, ReconciliationRow, Species } from "@/lib/wrt/types";
 import type { SeasonSummary } from "@/lib/wrt/queries";
 import { formatNumber } from "@/lib/wrt/text";
@@ -53,7 +52,7 @@ export interface TopSpecies {
 /**
  * One season as a full-width row, in the same order as the species rows: the season and its total,
  * a quiet strip of facts, then its top trees and top sites side by side. Review stays quiet: a note only
- * when most of the season is unconfirmed. The season name opens the season.
+ * for each season. The season name opens the season.
  */
 export function SeasonRow({
   s, fewSites, trees = [], sites = [],
@@ -69,9 +68,6 @@ export function SeasonRow({
         <div className="wrt-scard2__figure">
           <b className="tabular-nums">{formatNumber(s.split.total)}</b>
           <span>recorded plants</span>
-          {s.split.needsReview * 2 > s.split.total && (
-            <span className="wrt-scard__unsure" title={`${formatNumber(s.split.needsReview)} still need a WRT ruling`}>mostly unconfirmed</span>
-          )}
         </div>
         <dl className="wrt-scard__facts">
           <div><dt>Sites</dt><dd>{formatNumber(s.placeCount)}</dd></div>
