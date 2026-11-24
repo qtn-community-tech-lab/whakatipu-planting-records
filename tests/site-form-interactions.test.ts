@@ -69,6 +69,20 @@ function withNewAreas(...names: string[]) {
   };
 }
 
+it("shows each area's map below its own fields by default", () => {
+  withNewAreas("East bank", "West bank");
+  const html = renderCreate();
+  expect(html).not.toContain("Area to edit on the map");
+  expect(html).not.toContain("Edit on map");
+  for (const index of [0, 1]) {
+    const description = html.indexOf(`name="areas.${index}.description"`);
+    const panel = html.indexOf(`id="area-map-${index}"`);
+    expect(description).toBeGreaterThanOrEqual(0);
+    expect(panel).toBeGreaterThan(description);
+    expect(html).not.toContain(`id="area-map-${index}" hidden=""`);
+  }
+});
+
 it("generates area addresses from the site address and area name", () => {
   withNewAreas("");
   const html = renderCreate();

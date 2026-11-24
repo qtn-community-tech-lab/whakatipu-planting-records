@@ -1,7 +1,10 @@
 /** Sites and their areas. */
 import { db } from "@/db/client";
 import { currentUserId } from "./auth";
-import type { CreateSiteInput, EditSiteInput, CreatePlantingAreaInput, EditPlantingAreaInput } from "@/db/types";
+import { plantingAreaBoundarySchema, type CreateSiteInput, type EditSiteInput, type CreatePlantingAreaInput, type EditPlantingAreaInput } from "@/db/types";
+import type { LngLat } from "@/lib/wrt/areas/planted-area";
+import type { AreaBoundary } from "@/lib/wrt/areas/geometry";
+import type { TablesUpdate } from "@/db/database.types";
 import { areaPins, areaTotals, siteAreaSeasons, siteAreaSpecies, siteTotals } from "./views";
 
 /** The register by lifecycle state, including sites without planting history. */
@@ -26,6 +29,21 @@ export async function readSite(slug: string) {
     .maybeSingle()
     .throwOnError();
   return data;
+}
+
+function readBoundary(value: unknown) {
+  return plantingAreaBoundarySchema.safeParse(value).data ?? null;
+}
+
+function areaGeometry(values: EditPlantingAreaInput) {
+  const { pin, boundary } = values;
+  return {
+    ...(pin === undefined ? {} : {
+      lat: pin?.[1] ?? null, lng: pin?.[0] ?? null,
+      pin_source_url: null, pin_checked_on: null, radius_m: null,
+    }),
+    ...(boundary === undefined ? {} : { boundary }),
+  };
 }
 
 export async function createSite(values: CreateSiteInput) {
@@ -53,12 +71,15 @@ export async function updateSite(slug: string, values: EditSiteInput) {
 export async function listPlantingAreas(site: string) {
   const { data } = await (await db())
     .from("areas")
-    .select("slug, site, name, description, updated_at, wrt_number")
+    .select("slug, site, name, description, updated_at, wrt_number, lat, lng, boundary")
     .eq("site", site)
     .is("deactivated_at", null)
     .order("name")
     .throwOnError();
-  return data;
+  return data.map(({ lat, lng, boundary, ...area }) => {
+    const pin: LngLat | null = lat === null || lng === null ? null : [lng, lat];
+    return { ...area, pin, boundary: readBoundary(boundary) };
+  });
 }
 
 export async function readPlantingArea(site: string, slug: string) {
@@ -78,17 +99,34 @@ export async function createPlantingArea(site: string, values: CreatePlantingAre
   const timestamp = new Date().toISOString();
   return (await db())
     .from("areas")
-    .insert({ slug: values.slug, name: values.name, description: values.description, site, created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId })
+    .insert({
+      slug: values.slug, name: values.name, description: values.description, site,
+      ...areaGeometry(values),
+      created_at: timestamp, created_by: userId, updated_at: timestamp, updated_by: userId,
+    })
     .select("slug")
     .single();
 }
 
 export async function updatePlantingArea(site: string, slug: string, values: EditPlantingAreaInput) {
+  return writePlantingArea(site, slug, {
+    name: values.name, description: values.description, ...areaGeometry(values),
+  });
+}
+
+export async function updatePlantingAreaBoundary(site: string, slug: string, boundary: AreaBoundary) {
+  return writePlantingArea(site, slug, { boundary });
+}
+
+async function writePlantingArea(site: string, slug: string, values: TablesUpdate<"areas">) {
   const userId = await currentUserId();
   const timestamp = new Date().toISOString();
   return (await db())
     .from("areas")
-    .update({ name: values.name, description: values.description, updated_at: timestamp, updated_by: userId })
+    .update({
+      ...values,
+      updated_at: timestamp, updated_by: userId,
+    })
     .eq("site", site)
     .eq("slug", slug)
     .select("slug")
@@ -111,11 +149,11 @@ export async function listPlantingAreaTotals(site?: string) {
   return data;
 }
 
-/** Every area with its pin, or just one site's. For the map. */
+/** Every active area with its map geometry, or just one site's. */
 export async function listPlantingAreaPins(site?: string) {
   const query = areaPins(await db());
   const { data } = await (site ? query.eq("site", site) : query).throwOnError();
-  return data;
+  return data.map((area) => ({ ...area, boundary: readBoundary(area.boundary) }));
 }
 
 /** Preserve the site key and every historical association. */

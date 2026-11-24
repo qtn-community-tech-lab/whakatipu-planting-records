@@ -39,20 +39,17 @@ export default async function NewSitePage() {
           { path: "slug", message: "The saved site's slug cannot be changed." },
         ],
       };
+    const { slug: siteSlug, areas: submittedAreas, ...details } = parsed.data;
+    const areas = submittedAreas.map((area) => ({
+      ...area,
+      existing: savedSiteSlug !== undefined && area.existing === true,
+    }));
+    const siteValues = { ...details, areas };
     let slug: string;
     try {
-      const areas = parsed.data.areas.map((area) => ({
-        ...area,
-        existing: false,
-      }));
-      const siteValues = {
-        name: parsed.data.name,
-        description: parsed.data.description,
-        areas,
-      };
       const { data, error } = savedSiteSlug
         ? await updateSite(savedSiteSlug, siteValues)
-        : await createSite({ ...siteValues, slug: parsed.data.slug });
+        : await createSite({ ...siteValues, slug: siteSlug });
       if (error?.code === "23505")
         return {
           issues: [
@@ -72,10 +69,7 @@ export default async function NewSitePage() {
     } catch {
       return { error: "The site could not be saved. Please try again." };
     }
-    const { savedAreas, issues } = await savePlantingAreas(
-      slug,
-      parsed.data.areas.map((area) => ({ ...area, existing: false })),
-    );
+    const { savedAreas, issues } = await savePlantingAreas(slug, areas);
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
     if (issues.length)

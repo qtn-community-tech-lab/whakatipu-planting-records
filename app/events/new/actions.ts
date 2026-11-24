@@ -12,9 +12,12 @@ import {
   createPlantingEvent, createPlantingLines, listPlantingEvents, listPlantingEventLines, listPlantingEventLocations,
   listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, deactivatePlantingEvent, readPlantingEvent,
 } from "@/db/queries/plantings";
-import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies } from "@/db/queries/sites";
+import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies, updatePlantingAreaBoundary } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
-import { plantingEventEditSchema, type PlantingEventEditResult, type PlantingEventSubmitResult } from "@/db/types";
+import {
+  plantingEventEditSchema, savePlantingAreaBoundarySchema,
+  type PlantingAreaBoundarySubmitResult, type PlantingEventEditResult, type PlantingEventSubmitResult,
+} from "@/db/types";
 import { areaFor, wholeSiteAreaSlug } from "@/lib/wrt/areas/whole-site";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
@@ -147,6 +150,28 @@ export async function loadSeasonPlantingEvents(slug: string, season: string, par
 
 const NOT_RECORDED = "The planting event could not be saved. Please try again.";
 const NO_PLANTS = "The planting event was saved but its plants were not. Your entries are still here; please try again.";
+
+/** Save the shared outline independently of the planting event and any plants entered for it. */
+export async function savePlantingAreaBoundary(raw: unknown): Promise<PlantingAreaBoundarySubmitResult> {
+  if (!(await isAuthenticated())) return { error: "Sign in as staff to save an area boundary." };
+  const parsed = savePlantingAreaBoundarySchema.safeParse(raw);
+  if (!parsed.success) {
+    return { issues: parsed.error.issues.map(({ path, message }) => ({ path: path.join("."), message })) };
+  }
+  const { site, area, boundary } = parsed.data;
+  if (area === wholeSiteAreaSlug(site)) return { error: "Choose a named area to save a boundary." };
+
+  const failure = { error: "The boundary could not be saved. Your drawing is still here. Please try again." };
+  try {
+    const { data, error } = await updatePlantingAreaBoundary(site, area, boundary);
+    if (error?.code === "42501") return { error: "Sign in as staff to save an area boundary." };
+    if (error || !data) return failure;
+  } catch {
+    return failure;
+  }
+  refresh();
+  return {};
+}
 
 /**
  * Save a new planting event and its plants (not drawn areas, new locations or moved pins): the event, then all its lines in one insert. They're separate writes, so

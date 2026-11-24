@@ -78,6 +78,7 @@ export default async function SitePage({ params, searchParams }: Props) {
         {status}
         <PageHead back={{ href: "/sites", label: "All sites" }} title={site.name} lead={site.description.trim() || undefined} aside={canManageSite ? actions : undefined} />
         {savedNotice}
+        <LocationCard sites={[site]} totals={[]} siteName={site.name} />
         <EmptyState title="No planting records yet">This site has no planting records yet.</EmptyState>
       </>
     );

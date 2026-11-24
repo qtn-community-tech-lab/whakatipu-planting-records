@@ -22,12 +22,27 @@ const TRACE_STEP_PX = 3;
 /** Asked before an area is kept: its corners, and how many other areas are kept. False holds it. */
 export type OnKeep = (pts: LngLat[], others: number) => boolean;
 
-/** `onTapArea`: a tap on the map while nothing is being drawn, with the kept area under it (its id), or null. */
-export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKeep, onTapArea?: (id: number | null) => void) {
+type DrawOptions = {
+  onKeep?: OnKeep;
+  /** A map tap while drawing is idle, with the ID of the kept area under it, if any. */
+  onTapArea?: (id: number | null) => void;
+  /** Keep a single boundary in the host form. False keeps the draft open for correction. */
+  onSaveBoundary?: (pts: LngLat[]) => boolean;
+};
+
+export function useDrawArea(
+  map: RefObject<maplibregl.Map | null>,
+  { onKeep, onTapArea, onSaveBoundary }: DrawOptions = {},
+) {
   // The latest handlers, so Done and a tap never call a stale one.
   const keep = useRef(onKeep);
   const tapArea = useRef(onTapArea);
-  useEffect(() => { keep.current = onKeep; tapArea.current = onTapArea; });
+  const saveBoundary = useRef(onSaveBoundary);
+  useEffect(() => {
+    keep.current = onKeep;
+    tapArea.current = onTapArea;
+    saveBoundary.current = onSaveBoundary;
+  });
   const [areas, setAreas] = useState<Area[]>([]);
   const nextId = useRef(1);
   const [draft, setDraftState] = useState<Draft | null>(null);
@@ -57,6 +72,10 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
     setDraft({ method: "corners", pts, closed: pts.length >= 3, editing, name: editing === null ? "" : areas[editing]?.name ?? "" }, []);
     setTrace(null);
   }, [areas, setDraft]);
+  const startBoundary = (pts: LngLat[]) => {
+    setDraft({ method: "corners", pts, closed: pts.length >= 3, editing: null, name: "" }, []);
+    setTrace(null);
+  };
   // A kept area opened for changing may be anywhere on a big site: the map goes to it.
   const editing = draft?.editing ?? null;
   useEffect(() => {
@@ -72,7 +91,13 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
   /** Keep the draft; true if it was kept. `asked`: the host has already said yes, so don't ask it again. */
   const done = useCallback((asked = false) => {
     const d = now.current;
-    if (!d || d.pts.length < 3 || !d.name.trim()) return false;
+    if (!d || d.pts.length < 3) return false;
+    if (saveBoundary.current) {
+      if (!saveBoundary.current(d.pts)) return false;
+      stop();
+      return true;
+    }
+    if (!d.name.trim()) return false;
     const others = areas.length - (d.editing === null ? 0 : 1);
     if (!asked && keep.current?.(d.pts, others) === false) return false;
     const name = d.name.trim();
@@ -220,7 +245,7 @@ export function useDrawArea(map: RefObject<maplibregl.Map | null>, onKeep?: OnKe
 
   return {
     areas, draft, trace, cursor, canUndo: steps > 0,
-    start, stop, undo, done, remove, change,
+    start, startBoundary, stop, undo, done, remove, change,
     pickMethod: (how: DrawMethod) => now.current && setDraft({ ...now.current, method: how }, history.current),
     /** Clear the draft's shape and draw it again (Undo brings it back). */
     startAgain: () => change({ pts: [], closed: false }),

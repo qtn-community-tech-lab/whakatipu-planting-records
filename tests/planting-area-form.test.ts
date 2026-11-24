@@ -3,13 +3,42 @@ import {
   createPlantingAreaSchema,
   editPlantingAreaSchema,
   editSiteSchema,
+  plantingAreaBoundarySchema,
 } from "@/db/types";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
+import { boundaryFromCorners } from "@/lib/wrt/areas/geometry";
 import { partHref } from "@/lib/wrt/routes";
 
 const area = { slug: "river-east", name: "River East", description: "" };
 
 describe("planting area validation", () => {
+  it("uses the shared corner limit for boundaries", () => {
+    const polygon = (corners: number) => boundaryFromCorners(Array.from({ length: corners }, (_, index) => {
+      const angle = index * 2 * Math.PI / corners;
+      return [168.5 + 0.01 * Math.cos(angle), -45 + 0.01 * Math.sin(angle)];
+    }));
+    expect(plantingAreaBoundarySchema.safeParse(polygon(499)).success).toBe(true);
+    expect(plantingAreaBoundarySchema.safeParse(polygon(500)).error?.issues[0]?.message).toContain("at most 499 corners");
+  });
+
+  it("reports an invalid longitude or latitude pair at the boundary field", () => {
+    const result = editPlantingAreaSchema.safeParse({
+      ...area,
+      boundary: { type: "Polygon", coordinates: [[[0, 0, 25], [1, 0], [1, 1], [0, 0]]] },
+    });
+    expect(result.error?.issues[0]).toMatchObject({
+      path: ["boundary"],
+      message: expect.stringContaining("longitude and latitude"),
+    });
+  });
+
+  it.each([
+    { boundary: boundaryFromCorners([[0, 0], [1, 0], [1, 0]]), message: "Each corner needs a different location." },
+    { boundary: boundaryFromCorners([[0, 0], [1, 1], [2, 2]]), message: "Draw a boundary that encloses an area." },
+  ])("keeps the additional boundary check $message", ({ boundary, message }) => {
+    expect(plantingAreaBoundarySchema.safeParse(boundary).error?.issues[0]?.message).toBe(message);
+  });
+
   it.each([
     ["slug", INPUT_LIMITS.identifier],
     ["name", INPUT_LIMITS.shortText],

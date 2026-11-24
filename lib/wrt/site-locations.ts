@@ -1,10 +1,11 @@
 import { splitOf } from "@/lib/wrt/queries";
 import type { PlantingRecord, QuantitySplit } from "@/lib/wrt/types";
 import type { Tables } from "@/db/types";
+import type { AreaBoundary } from "./areas/geometry";
 
 export type PlantingAreaPin = Pick<Tables<"areas">,
   "slug" | "site" | "name" | "description" | "wrt_number" | "lat" | "lng" | "pin_source_url" | "pin_checked_on"
->;
+> & { boundary?: AreaBoundary | null };
 
 type Coordinates = { latitude: number; longitude: number };
 

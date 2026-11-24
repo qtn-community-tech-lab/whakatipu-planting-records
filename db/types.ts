@@ -7,6 +7,9 @@ import type { Database, Tables } from "./database.types";
 import { z } from "zod";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
 import { isIsoDate } from "@/lib/wrt/events/season";
+import type { AreaBoundary } from "@/lib/wrt/areas/geometry";
+import { mapPositionSchema, polygonSchema } from "@/lib/wrt/areas/validate";
+import type { LngLat } from "@/lib/wrt/areas/planted-area";
 
 export type { Database, Tables };
 export type Db = SupabaseClient<Database>;
@@ -54,14 +57,62 @@ export type SpeciesInput = z.infer<typeof speciesSchema>;
 export type SpeciesEdit = Pick<Tables<"species">, keyof SpeciesInput | "updated_at">;
 export type SpeciesSubmitResult = { error?: string; issues?: { path: string; message: string }[] };
 
+export const plantingAreaPinSchema = z.custom<LngLat>(
+  (value) => mapPositionSchema.safeParse(value).success,
+  "Use a longitude between −180 and 180 and a latitude between −90 and 90.",
+);
+
+const areaBoundaryPolygonSchema = polygonSchema.safeExtend({
+  coordinates: z.tuple([z.array(mapPositionSchema)]),
+});
+
+export const plantingAreaBoundarySchema = z.custom<AreaBoundary>().transform((value, ctx): AreaBoundary => {
+  const parsed = areaBoundaryPolygonSchema.safeParse(value);
+  if (!parsed.success) {
+    // The form shows one error for the map control, even when a coordinate is invalid.
+    const issue = parsed.error.issues[0];
+    const message = issue?.path.length === 0 ? issue.message : "Draw one boundary using valid longitude and latitude coordinates.";
+    ctx.addIssue({ code: "custom", message });
+    return z.NEVER;
+  }
+
+  const [ring] = parsed.data.coordinates;
+  const corners = ring.slice(0, -1);
+  if (new Set(corners.map(([lng, lat]) => `${lng},${lat}`)).size !== corners.length) {
+    ctx.addIssue({ code: "custom", message: "Each corner needs a different location." });
+    return z.NEVER;
+  }
+
+  // Work relative to the first corner to avoid cancellation at site scale.
+  const [originLng, originLat] = ring[0]!;
+  const area = ring.slice(1).reduce((sum, [lng, lat], index) => {
+    const [previousLng, previousLat] = ring[index]!;
+    return sum + (previousLng - originLng) * (lat - originLat) - (lng - originLng) * (previousLat - originLat);
+  }, 0);
+  if (area === 0) ctx.addIssue({ code: "custom", message: "Draw a boundary that encloses an area." });
+
+  return parsed.data;
+});
+
 export const editPlantingAreaSchema = z.object({
   name: text.min(1, "Enter an area name."),
   description: notes,
+  pin: plantingAreaPinSchema.nullish(),
+  boundary: plantingAreaBoundarySchema.nullish(),
 });
 
 export const createPlantingAreaSchema = editPlantingAreaSchema.extend({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens."),
 });
+
+export const savePlantingAreaBoundarySchema = z.object({
+  site: createPlantingAreaSchema.shape.slug,
+  area: createPlantingAreaSchema.shape.slug,
+  boundary: plantingAreaBoundarySchema,
+});
+
+export type SavePlantingAreaBoundaryInput = z.infer<typeof savePlantingAreaBoundarySchema>;
+export type PlantingAreaBoundarySubmitResult = { error?: string; issues?: { path: string; message: string }[] };
 
 export const plantingAreaFormSchema = createPlantingAreaSchema.extend({ existing: z.boolean() });
 
@@ -82,13 +133,16 @@ export const editSiteSchema = z.object({
 export const createSiteSchema = editSiteSchema.extend({
   slug: identifier.regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "Use lowercase letters, numbers and single hyphens.")
     .refine((value) => value !== "new", "This slug is reserved. Choose another."),
-  areas: z.array(createPlantingAreaSchema).superRefine(uniqueAreaSlugs),
+  areas: z.array(plantingAreaFormSchema.partial({ existing: true })).superRefine(uniqueAreaSlugs),
 });
 
 export type CreatePlantingAreaInput = z.infer<typeof createPlantingAreaSchema>;
 export type EditPlantingAreaInput = z.infer<typeof editPlantingAreaSchema>;
 export type PlantingAreaFormValues = z.infer<typeof plantingAreaFormSchema>;
-export type PlantingAreaEdit = Pick<Tables<"areas">, "slug" | "site" | "name" | "description" | "updated_at">;
+export type PlantingAreaEdit = Pick<Tables<"areas">, "slug" | "site" | "name" | "description" | "updated_at"> & {
+  pin?: LngLat | null;
+  boundary?: AreaBoundary | null;
+};
 
 export type CreateSiteInput = z.infer<typeof createSiteSchema>;
 export type EditSiteInput = z.infer<typeof editSiteSchema>;

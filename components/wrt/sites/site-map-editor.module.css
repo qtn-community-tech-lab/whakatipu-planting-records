@@ -1,0 +1,4 @@
+.mapHeight {
+  /* Keep the canvas steady as mobile browser chrome opens and closes. */
+  height: clamp(20rem, 55svh, 36rem);
+}

@@ -4,23 +4,18 @@
  * part, the areas kept and a pencil), or a stepper through the areas when one is brought forward.
  * Wide screens leave out the dock and the stepper (dock false): the panel lists the areas, the map has a toolbar.
  */
-import { ChevronLeft, ChevronRight, ChevronUp, Lasso, MapPin, Pencil, Pentagon, RotateCcw, Sprout, Trash2, Undo2, X } from "lucide-react";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ChevronLeft, ChevronRight, ChevronUp, MapPin, Pencil, Pentagon, Sprout, X } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { AreaShape } from "@/components/wrt/shared/area-shape";
 import { PartMenu } from "../site/part-menu";
-import { NAME_FIELD } from "@/components/wrt/shared/fields";
 import { formatHectares, hectares } from "@/lib/wrt/areas/planted-area";
 import { plantsOrNone } from "@/lib/wrt/text";
-import type { Area, DrawArea, DrawMethod } from "./use-draw-area";
+import { DrawingControls } from "./drawing-controls";
+import type { Area, DrawArea } from "./use-draw-area";
 import s from "./draw-area.module.css";
 
-const METHODS: { id: DrawMethod; label: string }[] = [
-  { id: "corners", label: "Tap corners" },
-  { id: "trace", label: "Trace" },
-];
-
-export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, onSite, choosing = false, onToggleSite, plants, shown, dock = true, style }: {
+export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, onSite, choosing = false, onToggleSite, plants, shown, dock = true, style, boundaryAction }: {
   draw: DrawArea;
   /** The area brought forward on the map (its id): the bar steps through the areas from it. */
   shown: number | null;
@@ -51,6 +46,7 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
   /** False: only the drawing pill (wide screens, where the panel and the map's toolbar do the rest). */
   dock?: boolean | undefined;
   style?: CSSProperties | undefined;
+  boundaryAction?: ReactNode;
 }) {
   const { areas, draft } = draw;
   const site = siteName && partName ? `${siteName} · ${partName}` : siteName;
@@ -92,62 +88,17 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
     setSaid(`${label(areas[i], i)} removed`);
   }
 
-  const n = draft?.pts.length ?? 0;
-  const ha = n >= 3 ? formatHectares(hectares(draft!.pts)) : "";
-  const named = !!draft?.name.trim();
-  const say = draft ? message(draft.method, n, draft.closed, !!draw.trace, ha, named) : null;
-
   return (
     <div ref={bar} className={s.bar} style={style}>
-      <p className={s.sr} aria-live="polite">{say ? [say.lead, say.rest].filter(Boolean).join(", ") : said}</p>
+      <p className={s.sr} aria-live="polite">{draft ? "" : said}</p>
       {draft ? (
         <>
-          <div className={s.pill} role="group" aria-label={draft.editing === null ? "Drawing an area" : `Changing ${label(areas[draft.editing], draft.editing)}`}>
-            <span className={s.msg} aria-hidden="true">
-              {say!.lead && <><span className={s.num}>{say!.lead}</span> · </>}{say!.rest}
-            </span>
-            <div className={s.pillButtons}>
-              <button type="button" className={s.pillBtn} onClick={draw.undo} disabled={!draw.canUndo}>
-                <Undo2 size={16} strokeWidth={2.4} aria-hidden="true" />Undo
-              </button>
-              {draft.editing !== null ? (
-                <button type="button" className={`${s.pillBtn} ${s.danger}`} onClick={() => setRemoving(draft.editing)}>
-                  <Trash2 size={16} strokeWidth={2.4} aria-hidden="true" />Remove
-                </button>
-              ) : n > 0 && (
-                <button type="button" className={s.pillBtn} onClick={draw.startAgain}>
-                  <RotateCcw size={16} strokeWidth={2.4} aria-hidden="true" />Start again
-                </button>
-              )}
-              <button type="button" className={s.pillGo} onClick={() => draw.done()} disabled={n < 3 || !named}>Done</button>
-              <button type="button" className={s.pillCancel} onClick={onStop} aria-label="Stop drawing, keep nothing new" title="Stop drawing">
-                <X size={18} strokeWidth={2.4} aria-hidden="true" />
-              </button>
-            </div>
-          </div>
-          {n === 0 && !draw.trace && (
-            <div className={s.methods} role="group" aria-label="How to draw">
-              {METHODS.map((m) => (
-                <button key={m.id} type="button" aria-pressed={draft.method === m.id} onClick={() => draw.pickMethod(m.id)}>
-                  {m.id === "corners" ? <Pentagon size={15} strokeWidth={2.4} aria-hidden="true" /> : <Lasso size={15} strokeWidth={2.4} aria-hidden="true" />}
-                  {m.label}
-                </button>
-              ))}
-            </div>
-          )}
-          {/* Last in the code, first on screen (the bar stacks upwards): above the pill, so the name comes before Done.
-              Needed: with several areas at a big site, the name is how they're told apart. */}
-          {n >= 3 && !draw.trace && (
-            <label className={s.nameField} data-missing={named ? undefined : ""}>
-              <span className="sr-only">Label this area (needed to finish)</span>
-              <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />
-              <input
-                name="polygon-label" value={draft.name} placeholder="Area name, e.g. School field" maxLength={60} {...NAME_FIELD} enterKeyHint="done" required
-                onChange={(e) => draw.rename(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); draw.done(); } }}
-              />
-            </label>
-          )}
+          {boundaryAction}
+          <DrawingControls
+            draw={draw} onStop={onStop} canSaveBoundary={!!boundaryAction}
+            label={draft.editing === null ? "Drawing an area" : `Changing ${label(areas[draft.editing], draft.editing)}`}
+            onRemove={draft.editing === null ? undefined : () => setRemoving(draft.editing)}
+          />
         </>
       ) : !dock ? null : at ? (
         <>
@@ -234,12 +185,3 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
 const label = (a: Area | undefined, i: number) => a?.name || `Area ${i + 1}`;
 const count = (n: number) => `${n} ${n === 1 ? "area" : "areas"}`;
 const total = (areas: Area[]) => formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0));
-
-/** What the pill says: the area once there is one (`lead`), then the next step. */
-function message(method: DrawMethod, n: number, closed: boolean, tracing: boolean, ha: string, named: boolean): { lead?: string | undefined; rest: string } {
-  if (closed) return { lead: ha, rest: named ? "Drag corners to adjust, or Done" : "Name your new area to finish" };
-  if (method === "trace") return { rest: tracing ? "Keep going round · lift to finish" : "Trace round the planted area in one go" };
-  if (n === 0) return { rest: "Tap the first corner of the planted area" };
-  if (n < 3) return { rest: `Tap corner ${n + 1} · ${3 - n} more to make a shape` };
-  return { lead: ha, rest: named ? "Tap the first corner, or Done" : "Tap the map to start drawing, then name it" };
-}

@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       areas: {
         Row: {
+          boundary: Json | null;
           class: Database["public"]["Enums"]["site_class"] | null;
           created_at: string;
           created_by: string | null;
@@ -31,6 +32,7 @@ export type Database = {
         };
         ComputedFields: never;
         Insert: {
+          boundary?: Json | null;
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;
@@ -50,6 +52,7 @@ export type Database = {
           wrt_number?: string | null;
         };
         Update: {
+          boundary?: Json | null;
           class?: Database["public"]["Enums"]["site_class"] | null;
           created_at?: string;
           created_by?: string | null;

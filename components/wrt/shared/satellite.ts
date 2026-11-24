@@ -14,3 +14,5 @@ export const SATELLITE: StyleSpecification = {
   },
   layers: [{ id: "imagery", type: "raster", source: "imagery" }],
 };
+
+export const SATELLITE_STYLES = { light: SATELLITE, dark: SATELLITE };

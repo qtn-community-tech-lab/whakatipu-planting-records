@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { beforeEach, expect, it, vi } from "vitest";
 import type { Database } from "@/db/types";
+import { boundaryFromCorners } from "@/lib/wrt/areas/geometry";
 
 const mocks = vi.hoisted(() => ({ db: vi.fn() }));
 vi.mock("@/db/client", () => ({ db: mocks.db }));
@@ -10,6 +11,7 @@ import {
   updateSite,
   createPlantingArea,
   updatePlantingArea,
+  updatePlantingAreaBoundary,
   listPlantingAreas,
   readPlantingArea,
 } from "@/db/queries/sites";
@@ -75,6 +77,29 @@ it("constrains updates to both fixed identifiers and changes only name and descr
   expect(url.searchParams.get("slug")).toBe("eq.east-bank");
   expect(url.searchParams.has("deactivated_at")).toBe(false);
   expect(body).toEqual({ name: "Corrected", description: "", updated_at: expect.any(String), updated_by: "current-app-user" });
+});
+
+it("clears a pin and its source while saving a boundary on the same area", async () => {
+  fetch.mockResolvedValue(new Response(JSON.stringify({ slug: "east-bank" })));
+  const boundary = { type: "Polygon", coordinates: [[[168, -45], [168.01, -45], [168.01, -44.99], [168, -45]]] } as const;
+  await updatePlantingArea("reserve", "east-bank", {
+    name: "East", description: "", pin: null,
+    boundary: { type: boundary.type, coordinates: [boundary.coordinates[0].map(([lng, lat]) => [lng, lat])] },
+  });
+  expect(request().body).toEqual({
+    name: "East", description: "", lat: null, lng: null, radius_m: null, pin_source_url: null, pin_checked_on: null,
+    boundary, updated_at: expect.any(String), updated_by: "current-app-user",
+  });
+});
+
+it("updates only the selected area's boundary and audit fields", async () => {
+  fetch.mockResolvedValue(new Response(JSON.stringify({ slug: "east-bank" })));
+  const boundary = boundaryFromCorners([[168, -45], [168.01, -45], [168.01, -44.99]]);
+  await updatePlantingAreaBoundary("reserve", "east-bank", boundary);
+  const { url, body } = request();
+  expect(url.searchParams.get("site")).toBe("eq.reserve");
+  expect(url.searchParams.get("slug")).toBe("eq.east-bank");
+  expect(body).toEqual({ boundary, updated_at: expect.any(String), updated_by: "current-app-user" });
 });
 
 it("lists active areas directly from the register in name order", async () => {

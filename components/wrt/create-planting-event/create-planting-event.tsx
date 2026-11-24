@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { MapEventForm, WHOLE_SITE_KEY, type AreaPick, type FormEntries, type MapEventFormProps, type SpotInfo } from "./form/map-event-form";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
 import type { SpeciesSuggestion } from "@/lib/wrt/events/site-suggestions";
+import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
+import type { PlantingAreaBoundarySubmitResult, SavePlantingAreaBoundaryInput } from "@/db/types";
 import { fromPin, partBesideSite, spotKind } from "@/lib/wrt/text";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
@@ -26,6 +28,7 @@ import { usePinMoves } from "./map/use-pin-moves";
 import { AreaOverlay, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
 // The panel screen for an area (Plant here, Whole site, Close): with the page's other screens, not the map.
 import { AreaSheet } from "./draw-area/area-sheet";
+import { SaveAreaBoundary } from "./draw-area/save-area-boundary";
 import { highlightSite, useCamera, useFindMe, usePlantingMap, useSpotMarker } from "./map/use-planting-map";
 import { boundsOf, fitArea } from "./map/map-scene";
 import { useKeyboardFit } from "./browser/use-keyboard-fit";
@@ -64,13 +67,14 @@ export interface CreatePlantingEventProps {
   suggestions: Record<string, SpeciesSuggestion[]>;
   /** Plants and species recorded at each site ("slug") and part ("slug/part id"), for the site chooser. */
   totals: PlantTotals;
-  areas: Parameters<typeof sitePins>[1];
+  areas: readonly PlantingAreaPin[];
   onSave?: MapEventFormProps["onSave"];
+  onSaveBoundary?: ((input: SavePlantingAreaBoundaryInput) => Promise<PlantingAreaBoundarySubmitResult>) | undefined;
   /** Saves an edited past planting event (the page's server action). Without it, past events can't be edited. */
   onSaveEdit?: SavePlantingEventEdit | undefined;
 }
 
-export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, initialSeason, options, today, exitHref, exitLabel = "Return to all records", recording = false, initialEvent, scopeNotice, writableSites = options.sites, suggestions, totals, areas, onSave, onSaveEdit }: CreatePlantingEventProps) {
+export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, initialSeason, options, today, exitHref, exitLabel = "Return to all records", recording = false, initialEvent, scopeNotice, writableSites = options.sites, suggestions, totals, areas, onSave, onSaveBoundary, onSaveEdit }: CreatePlantingEventProps) {
   // Where the page opened. Only the first value counts: our address changes make Next's server refreshes (after a
   // save) render with the new address, and a new start site would rebuild the map. (Part and season only seed state.)
   const [initialSite] = useState(siteFromAddress);
@@ -87,13 +91,26 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const choosing = top?.kind === "list";
   const areaSheet = top?.kind === "area" ? top.id : null;
   const placing = top?.kind === "placing" ? top.mode : false;
-  const [basePins] = useState(() => sitePins(options.sites, areas, totals));
+  const basePins = useMemo(() => sitePins(options.sites, areas, totals), [options.sites, areas, totals]);
+  const boundaries = useMemo(() => {
+    const visible = new Set(options.sites.map((site) => site.slug));
+    return areas.flatMap(({ site, slug, wrt_number, boundary }) =>
+      boundary && visible.has(site) ? [{ site, part: wrt_number ?? slug, boundary }] : []);
+  }, [options.sites, areas]);
   // Locations added on the map this visit: listed and shown like any other place. See KeptPlace.
   const [kept, setKept] = useState<KeptPlace[]>([]);
   const sites = useMemo(() => withKept(options.sites, kept), [options.sites, kept]);
   const formOptions = useMemo(() => ({ ...options, sites: withKept(writableSites, kept) }), [options, writableSites, kept]);
   const allPins = useMemo(() => [...basePins, ...kept.map(keptPin)], [basePins, kept]);
   const { pins, pinAt, isMoved, move } = usePinMoves(allPins);
+  const focusAt = useCallback((slug: string, partId: string | null): LngLat | null => {
+    const at = pinAt(slug, partId);
+    if (at) return at;
+    const siteBoundaries = boundaries.filter((entry) => entry.site === slug);
+    const points = siteBoundaries.find((entry) => entry.part === partId)?.boundary.coordinates[0] ??
+      siteBoundaries.flatMap((entry) => entry.boundary.coordinates[0]);
+    return points.length ? boundsOf(points).getCenter().toArray() : null;
+  }, [pinAt, boundaries]);
   // A site's pins (its own and its places'): distances to a site are to the nearest of them.
   const pinsOf = (slug: string) => pins.filter((p) => p.slug === slug).map((p) => p.at);
   // A pin clicked on the map: a new object each click, so clicking the same pin again still counts.
@@ -170,7 +187,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
 
   // The area brought forward: the map fits it and darkens the rest.
   const [shownArea, setShownArea] = useState<number | null>(null);
-  const map = usePlantingMap({ pins, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
+  const map = usePlantingMap({ pins, boundaries, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
   const { findMe, said } = useFindMe(map);
 
   function pickPin(pin: SitePin) {
@@ -240,7 +257,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     closeSheet();
     setShownArea(id);
   }
-  const draw = useDrawArea(map, keepArea, tapArea);
+  const draw = useDrawArea(map, { onKeep: keepArea, onTapArea: tapArea });
+  const [boundaryNotice, setBoundaryNotice] = useState<{ area: string; message: string }>();
   // Drawn from the plant list: only for this drawing, kept or stopped.
   const drafting = !!draw.draft;
   useEffect(() => { if (!drafting) fromList.current = false; }, [drafting]);
@@ -424,14 +442,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     dispatch({ type: "closeOver" });
     setAreaAt(null);
     setPicked({ slug: siteSlug, partId: id });
-    const at = spot ?? pinAt(siteSlug, id);
+    const at = spot ?? focusAt(siteSlug, id);
     if (at) setFocus([at[0], at[1]]);
   }
   // All sites: a site opened in the list flies the map there and lights its pin (nothing chosen yet);
   // closed again, the map goes back out to every site. Choosing one of its rows opens its page.
   function previewSite(slug: string) {
     highlightSite(map, slug);
-    const at = slug ? pinAt(slug, null) : null;
+    const at = slug ? focusAt(slug, null) : null;
     setFocus(at ? [at[0], at[1]] : null);
   }
   // With a new location in progress, its site's page: the location is kept (see KeptPlace); with entries, it asks first.
@@ -480,7 +498,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     top: pad.top + (screen.clientHeight - pad.top - pad.bottom) / 2,
   };
   useSpotMarker(map, spot, NEW_PIN_CLASS);
-  useCamera(map, wide, snap, focus, pins);
+  useCamera(map, wide, snap, focus, pins, boundaries);
   const shownPts = draw.areas.find((a) => a.id === shownArea)?.pts;
   useEffect(() => {
     if (shownPts && map.current) fitArea(map.current, shownPts);
@@ -527,8 +545,8 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setPart(partId);
     highlightSite(map, slug);
     // A new location, or a kept area just drawn, stays in view; otherwise the site's (part's) pin.
-    setFocus(spot ?? areaAt ?? pinAt(slug, partId));
-  }, [map, spot, areaAt, pinAt, setSiteSlug, setPart, setFocus, siteSlug, part, dispatch]);
+    setFocus(spot ?? areaAt ?? focusAt(slug, partId));
+  }, [map, spot, areaAt, focusAt, setSiteSlug, setPart, setFocus, siteSlug, part, dispatch]);
 
   // The plant list needs the room: phones take the sheet full screen once it's in use.
   const onListFocus = () => { if (!wide) setSnap("full"); };
@@ -538,6 +556,10 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const miniMap = focus && (wide || snap === "full")
     ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} noCaption={!!site && !spot} compact={wide} />
     : undefined;
+  const boundaryTarget = onSaveBoundary && part && writableSites.find((option) => option.slug === siteSlug)?.parts.some((option) => option.id === part)
+    ? areas.find((area) => area.site === siteSlug && (area.wrt_number ?? area.slug) === part)
+    : undefined;
+  const savedBoundaryMessage = boundaryNotice && boundaryNotice.area === boundaryTarget?.slug ? boundaryNotice.message : "";
 
   return (
     <div ref={setScreen} className={s.screen} data-full-screen="" data-drawing={draw.draft || placing ? "" : undefined}>
@@ -561,7 +583,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         />
       )}
       {/* Phones' Find me (the + menu): a short word when it can't, where the placing hint goes. */}
-      {said && !placing && <p className={s.hint} role="status">{said}</p>}
+      {(said || savedBoundaryMessage) && !placing && !draw.draft && <p className={s.hint} role="status">{said || savedBoundaryMessage}</p>}
       {placing ? (
         <>
           {cross && <span className={s.cross} style={cross} aria-hidden="true" />}
@@ -576,6 +598,16 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         // Phones: just above the sheet at its bar. Pulled up, the sheet covers the map, so no bar.
         <DrawBar
           draw={draw} onAdd={newArea} onStop={stopDrawing} onShow={showArea} onClose={letGo} onPlant={plantIfOpen} plants={areaPlants} shown={shownArea}
+          boundaryAction={boundaryTarget && onSaveBoundary && draw.draft && draw.draft.pts.length >= 3 && (
+            <SaveAreaBoundary
+              key={boundaryTarget.slug} site={siteSlug} area={boundaryTarget.slug} name={boundaryTarget.name}
+              replacing={!!boundaryTarget.boundary} points={draw.draft.pts} onSave={onSaveBoundary}
+              onSaved={() => {
+                draw.stop();
+                setBoundaryNotice({ area: boundaryTarget.slug, message: `Boundary saved for ${boundaryTarget.name}.` });
+              }}
+            />
+          )}
           siteName={site?.name} partName={part ? partShort : undefined} part={part} parts={parts}
           onChoosePart={choosePart} onChangeSite={changeSite} onAllSites={leaveSite} onAddPart={addPart} placeLocked={entry.partly || !!spot} onSite={spot && site ? showSite : undefined} choosing={choosing} onToggleSite={toggleChooser} dock={!wide}
           style={wide ? undefined : { bottom: SHEET_HEIGHT.peek + 12 }}

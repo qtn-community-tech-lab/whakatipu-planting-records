@@ -2,14 +2,16 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Map, MapControls, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
+import { Map, MapControls, MapGeoJSON, MapMarker, MapPopup, MarkerContent, useMap } from "@/components/ui/map";
 import { compactPlantCount, groupNearbyLocations, locationBounds, locationMapUrl, type MappedSiteLocation } from "@/lib/wrt/site-locations";
 import { formatNumber, rankMatches, searchKey } from "@/lib/wrt/text";
 import { ComboboxInput } from "@/components/ui/inputs";
 import type { RegionMapOptions } from "@/lib/wrt/map-region";
 import { SplitLine } from "@/components/wrt/shared/quantity";
+import { SATELLITE_STYLES } from "@/components/wrt/shared/satellite";
+import { boundaryFeatures, boundaryFill, boundaryLine, type AreaBoundary } from "@/lib/wrt/areas/geometry";
 
-function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; selected?: MappedSiteLocation | undefined }) {
+function MapFocus({ locations, boundaries, selected }: { locations: MappedSiteLocation[]; boundaries: AreaBoundary[]; selected?: MappedSiteLocation | undefined }) {
   const { map, isLoaded } = useMap();
   useEffect(() => {
     if (!map || !isLoaded) return;
@@ -18,10 +20,13 @@ function MapFocus({ locations, selected }: { locations: MappedSiteLocation[]; se
       // Sit the marker below centre so its popover has room above it.
       map.easeTo({ center: [selected.longitude, selected.latitude], zoom: 15, duration, offset: [0, map.getContainer().clientHeight * 0.3] });
     } else {
-      const bounds = locationBounds(locations);
+      const bounds = locationBounds([
+        ...locations,
+        ...boundaries.flatMap(({ coordinates: [ring] }) => ring.map(([longitude, latitude]) => ({ longitude, latitude }))),
+      ]);
       if (bounds) map.fitBounds(bounds, { padding: 60, maxZoom: 14, duration });
     }
-  }, [map, isLoaded, locations, selected]);
+  }, [map, isLoaded, locations, boundaries, selected]);
   return null;
 }
 
@@ -93,13 +98,14 @@ function LocationRow(o: LocationOption) {
   );
 }
 
-export function RegionMap({ locations, siteName, mapOptions }: { locations: MappedSiteLocation[]; siteName?: string | undefined; mapOptions: RegionMapOptions }) {
+export function RegionMap({ locations, boundaries, siteName, mapOptions }: { locations: MappedSiteLocation[]; boundaries: AreaBoundary[]; siteName?: string | undefined; mapOptions: RegionMapOptions }) {
   // Grouped by site, so a site's parts sit together; the site name also matches in search.
   const options = useMemo(() => locations
     .map((l) => ({ ...l, name: l.label, keys: [searchKey(l.label), searchKey(l.siteName)] }))
     .sort((a, b) => a.siteName.localeCompare(b.siteName) || a.label.localeCompare(b.label)), [locations]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = locations.find((location) => location.id === selectedId);
+  const boundaryData = useMemo(() => boundaryFeatures(boundaries), [boundaries]);
   const mapRef = useRef<HTMLDivElement>(null);
   // Bring the whole map on screen when a location is chosen, so its popover is never cut off by the page edge.
   useEffect(() => {
@@ -110,16 +116,17 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
 
   return (
     <div className="flex flex-col gap-4">
-      <ComboboxInput
+      {options.length > 0 && <ComboboxInput
         label="Choose a location" fieldClassName="wrt-location-picker"
         items={options} value={selected?.id ?? ""} onChange={(id) => setSelectedId(id || null)}
         getValue={optionValue} getLabel={optionLabel} rank={rankMatches} renderItem={LocationRow}
         placeholder={`Search ${options.length} ${options.length === 1 ? "location" : "locations"}`} clearLabel="Show all locations" empty={noLocation}
-      />
+      />}
       <div ref={mapRef} className="h-[320px] w-full scroll-my-24 overflow-hidden rounded-lg sm:h-[420px]"
-        role="region" aria-label={siteName ? `Map of approximate locations at ${siteName}` : "Map of approximate planting site locations"}>
-        <Map {...mapOptions} theme="light">
-          <MapFocus locations={locations} selected={selected} />
+        role="region" aria-label={siteName ? `Map of ${siteName}` : "Map of planting sites"}>
+        <Map {...mapOptions} theme="light" styles={SATELLITE_STYLES}>
+          <MapFocus locations={locations} boundaries={boundaries} selected={selected} />
+          <MapGeoJSON data={boundaryData} fillPaint={boundaryFill} linePaint={boundaryLine} />
           <MapControls showFullscreen />
           <LocationMarkers key={`markers:${locations.map((location) => location.id).join("/")}`} locations={locations} selectedId={selected?.id} onSelect={setSelectedId} />
           {selected && (
@@ -140,7 +147,7 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
           )}
         </Map>
       </div>
-      <div aria-live="polite" aria-atomic="true">
+      {locations.length > 0 && <div aria-live="polite" aria-atomic="true">
         {selected ? (
           <div className="flex flex-col gap-2">
             <strong>{selected.label}</strong>
@@ -161,7 +168,7 @@ export function RegionMap({ locations, siteName, mapOptions }: { locations: Mapp
         ) : (
           <p className="wrt-muted m-0">Select a marker or choose a location to see coordinates and sources. Click a group to zoom into nearby places.</p>
         )}
-      </div>
+      </div>}
     </div>
   );
 }

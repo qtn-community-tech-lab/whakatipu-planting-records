@@ -15,38 +15,14 @@
 import { z } from "zod";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 import { SLUG } from "../text";
-import { isClosed, ringSelfIntersects } from "./geo";
+import { polygonSchema } from "../areas/validate";
 import { plantedOnProblem, isIsoDate } from "./season";
 import { EVENT_SEASONS, type PlantingEventInput } from "./types";
 
 /** Notes are free text; keep them to a sensible length. */
 export const NOTES_MAX = INPUT_LIMITS.longText;
-/** A hand-drawn polygon with more corners than this is almost certainly a mistake (or abuse). */
-const MAX_CORNERS = 500;
 /** No single species line should be larger than this (the biggest historical record is far smaller). */
 const MAX_QUANTITY = 100_000;
-
-const position = z.tuple([
-  z.number().min(-180).max(180),
-  z.number().min(-90).max(90),
-]).rest(z.number()); // GeoJSON allows an optional altitude; it is ignored.
-
-const polygon = z.object({
-  type: z.literal("Polygon"),
-  coordinates: z.array(z.array(position)).length(1, { error: "Draw exactly one area, with no holes." }),
-}).superRefine((p, ctx) => {
-  const ring = p.coordinates[0];
-  if (!ring) return;
-  if (ring.length < 4) {
-    ctx.addIssue({ code: "custom", message: "An area needs at least three corners.", path: [] });
-  } else if (ring.length > MAX_CORNERS) {
-    ctx.addIssue({ code: "custom", message: `An area can have at most ${MAX_CORNERS - 1} corners.`, path: [] });
-  } else if (!isClosed(ring)) {
-    ctx.addIssue({ code: "custom", message: "The area's outline is not closed.", path: [] });
-  } else if (ringSelfIntersects(ring)) {
-    ctx.addIssue({ code: "custom", message: "The area's outline crosses itself. Redraw it without crossing lines.", path: [] });
-  }
-});
 
 export const eventInputSchema = z.object({
   contextSeason: z.string().regex(/^(autumn|spring)-\d{4}$/).optional(),
@@ -55,8 +31,7 @@ export const eventInputSchema = z.object({
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
-  // Optional until the map PR adds drawing; a drawn area is still checked in full.
-  polygon: polygon.nullable(),
+  polygon: polygonSchema.nullable(),
   species: z.array(z.object({
     speciesId: z.string().min(1, { error: "Choose a species." }).max(INPUT_LIMITS.identifier),
     quantity: z.number({ error: "Enter how many were planted." })

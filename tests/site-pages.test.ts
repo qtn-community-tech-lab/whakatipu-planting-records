@@ -40,6 +40,7 @@ import { DeactivateSite } from "@/components/wrt/sites/deactivate-site";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import type { CreateSiteInput, EditSiteInput, SiteSubmitResult, PlantingAreaEdit } from "@/db/types";
 import { INPUT_LIMITS, lengthMessage } from "@/lib/forms/limits";
+import { boundaryFromCorners } from "@/lib/wrt/areas/geometry";
 
 const values = { slug: "new-reserve", name: "New Reserve", description: "Beside the river." };
 const params = Promise.resolve({ slug: values.slug });
@@ -172,6 +173,29 @@ it("opens a site's detail and metadata before any planting history exists", asyn
 });
 
 const area = { slug: "east-bank", name: "East bank", description: "By the river.", existing: false };
+const boundary = boundaryFromCorners([[168.50, -45], [168.51, -45], [168.51, -44.99]]);
+
+it("rejects invalid area geometry before saving the site or its areas", async () => {
+  const submit = (await pageForm("edit"))!.props.onSubmit;
+  const crossing = boundaryFromCorners([[168.50, -45], [168.51, -44.99], [168.51, -45], [168.50, -44.99]]);
+  const result = await submit({ ...values, areas: [{ ...area, pin: [181, -45], boundary: crossing }] });
+  expect(result.issues).toEqual([
+    { path: "areas.0.pin", message: expect.stringContaining("longitude") },
+    { path: "areas.0.boundary", message: expect.stringContaining("crosses itself") },
+  ]);
+  expect(mocks.update).not.toHaveBeenCalled();
+  expect(mocks.createArea).not.toHaveBeenCalled();
+});
+
+it("can correct geometry on an area already saved during partial site creation", async () => {
+  mocks.updateArea.mockResolvedValue({ data: { slug: area.slug }, error: null });
+  const submit = (await pageForm("new"))!.props.onSubmit;
+  await expect(submit({ ...values, areas: [{ ...area, existing: true, pin: null, boundary }] }, values.slug)).rejects.toThrow("REDIRECT");
+  expect(mocks.updateArea).toHaveBeenCalledWith(values.slug, area.slug, {
+    name: area.name, description: area.description, pin: null, boundary,
+  });
+  expect(mocks.createArea).not.toHaveBeenCalled();
+});
 
 it("does not attempt area writes if saving the site fails", async () => {
   mocks.update.mockResolvedValue({ data: null, error: { code: "42501" } });
