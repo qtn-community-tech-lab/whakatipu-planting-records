@@ -20,42 +20,42 @@ export default function AboutWrt() {
         lead="Discover the people and plants behind local restoration, and explore the planting history that this app brings together."
       />
 
-      <Card className={cn(styles.card)} title="A community growing native habitats">
+      <Card
+        className={cn(styles.card)}
+        title="A community growing native habitats"
+      >
         <div className={cn("wrt-prose", styles.copy)}>
           <p>
-            Whakatipu Reforestation Trust (WRT) works with volunteers, schools,
-            businesses and community groups to restore native biodiversity
-            across the Whakatipu Basin. Growing and planting native species
-            helps create food, shelter and connections between habitats for
-            native birds, insects and other wildlife.
+            Whakatipu Reforestation Trust (WRT) is a volunteer-led charitable
+            trust working to restore native biodiversity across the Whakatipu
+            Basin. The Trust works with volunteers, schools, businesses and
+            community groups to grow and plant native species and care for
+            restoration sites as the plantings become established.
           </p>
           <p>
-            The Trust combines practical restoration with education,
-            collaboration and advocacy, helping people care for the landscape
-            around them.
-          </p>
-          <p>
-            <a
-              href="https://wrtqt.org.nz/about-the-whakatipu-reforestation-trust/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cn-link"
-            >
-              Learn about WRT’s vision and work →
-            </a>
+            Over time, these plantings provide food and shelter for native
+            birds, insects and other wildlife and help connect habitats across
+            the basin. Alongside its practical restoration work, the Trust
+            brings local groups together, creates opportunities to learn about
+            native plants and advocates for their protection.
           </p>
         </div>
       </Card>
 
-      <Card className={cn(styles.card)} title="From local seed to native habitat">
+      <Card
+        className={cn(styles.card)}
+        title="From local seed to native habitat"
+      >
         <div className={styles.features}>
           <div className={cn("wrt-prose", styles.feature)}>
             <h3>Growing plants</h3>
             <p>
-              At the Jean Malpas Community Nursery in Kelvin Heights, volunteers
-              grow native plants from locally collected seeds and cuttings.
-              Nursery sessions offer a practical way to help and learn, with no
-              experience needed.
+              At the Jean Malpas Community Nursery in Kelvin Heights, skilled
+              volunteers grow native plants for local restoration projects from
+              locally collected seed and cuttings. They share their knowledge
+              and practical skills at nursery sessions, where newcomers can
+              learn alongside them and lend a hand. No experience is needed to
+              get started.
             </p>
             <a
               href="https://wrtqt.org.nz/community-nursery/"
@@ -69,25 +69,31 @@ export default function AboutWrt() {
           <div className={cn("wrt-prose", styles.feature)}>
             <h3>Restoring places</h3>
             <p>
-              Community planting days bring people together to establish native
-              trees and shrubs. WRT’s restoration sites include woodland,
-              wetland, streamside and lakeshore habitats.
+              Community planting days bring people together to plant keystone
+              projects across the basin. These sites represent a variety of
+              ecological habitats unique to the region, including dry shrubland,
+              wetlands or forested lakeshore. These projects span many years,
+              with volunteers returning to care for the plantings as they
+              establish. The Trust also supports schools, businesses and
+              community groups to restore and care for their own patches of
+              public land.
             </p>
-            <a
-              href="https://wrtqt.org.nz/our-planting-sites/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cn-link"
-            >
+            <Link href="/sites" className="cn-link">
               Meet WRT’s planting sites →
-            </a>
+            </Link>
           </div>
           <div className={cn("wrt-prose", styles.feature)}>
             <h3>Learning together</h3>
             <p>
-              Educate for Nature connects schools, adults and community groups
-              with hands-on environmental learning, from nursery activities to
-              restoring local places.
+              Education is a strategic pillar of the Trust’s work. Through
+              Educate for Nature, children, adults and community groups build
+              the skills and confidence to take an active role in local
+              restoration. That might mean growing native plants in a school
+              nursery, caring for a school restoration site or learning
+              alongside experienced volunteers at the community nursery.
+              Volunteers are encouraged to get involved at every stage, from
+              collecting seed and growing plants to planting and caring for
+              restoration sites.
             </p>
             <a
               href="https://wrtqt.org.nz/educate-for-nature/"
@@ -103,9 +109,12 @@ export default function AboutWrt() {
 
       <Card className={cn(styles.card)} title="Explore the planting history">
         <p className={cn("wrt-prose", styles.introduction)}>
-          This app brings WRT’s planting records together so you can discover
-          which species were recorded at each site, see quantities by season,
-          and follow restoration work over time.
+          The dashboard brings together years of planting records to create a
+          living history of restoration carried out by the Whakatipu community.
+          It’s a resource for anyone interested in what was planted, where and
+          when, showing the species and numbers recorded for each site by
+          season. The Trust uses these records alongside observations from its
+          sites to understand what’s working and guide future planting.
         </p>
         <div className={styles.features}>
           <div className={cn("wrt-prose", styles.feature)}>
@@ -120,15 +129,16 @@ export default function AboutWrt() {
             <h3>Meet the species</h3>
             <p>
               Browse native plants, reference photos and identification notes,
-              and see where they feature in the history.
+              and see where they fit into our restoring landscapes.
             </p>
             <CardLink href="/species">Discover species</CardLink>
           </div>
           <div className={cn("wrt-prose", styles.feature)}>
             <h3>Follow the seasons</h3>
             <p>
-              Compare autumn and spring records and discover the sites and
-              species in each season.
+              Autumn and spring records show where planting took place and how
+              many plants were recorded each season, tracing how restoration has
+              progressed over the years.
             </p>
             <CardLink href="/seasons">Browse seasons</CardLink>
           </div>
@@ -139,8 +149,8 @@ export default function AboutWrt() {
         <div className={cn("wrt-prose", styles.copy)}>
           <p>
             The historical records come from WRT’s nursery allocation sheets and
-            planting workbooks. A total of
-            <strong> recorded plants</strong> describes the plants recorded as
+            planting workbooks. A total displayed as{" "}
+            <strong>“recorded plants”</strong> describes the plants recorded as
             going to a site in a season; it is not a count of how many are
             growing there today. The history does not measure survival or
             current nursery stock.

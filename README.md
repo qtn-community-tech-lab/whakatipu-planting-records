@@ -73,7 +73,7 @@ Restart Supabase after changing `supabase/config.toml` so Auth settings reload. 
 
 The app reads Supabase at runtime through named queries in `db/queries/`. Public pages use database aggregates; staff Records uses aggregates and database pagination. Chat and planting forms retain the history repository in `db/repository.ts`. Canonical species names and reference content are columns on `species`.
 
-Main pages: `/sites`, `/species`, `/seasons`, `/records`, `/search` and `/about-the-data`. `/records` exports filtered CSVs; signed-in staff can export linked table CSVs at `/export`.
+Main pages: `/sites`, `/species`, `/seasons`, `/records`, `/search` and `/about`. `/records` exports filtered CSVs; signed-in staff can export linked table CSVs at `/export`.
 
 ## Deployment
 

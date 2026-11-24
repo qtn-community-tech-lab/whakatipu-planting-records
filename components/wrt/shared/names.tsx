@@ -55,7 +55,7 @@ export function PrecisionBadge({ precision }: { precision: Precision }) {
 }
 
 /** Link target for every threatened mark: the About the data section that explains it. */
-export const THREATENED_HREF = "/about-the-data#threatened";
+export const THREATENED_HREF = "/about#threatened";
 
 export function threatenedState(species: Species): "both" | "one" | null {
   const m = species.threatenedMarks;
