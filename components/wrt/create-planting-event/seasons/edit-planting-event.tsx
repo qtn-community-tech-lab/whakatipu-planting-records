@@ -244,11 +244,11 @@ export function EditPlantingEvent({ event, season, today, species, locations, he
                   <SelectContent><SelectGroup>{siteOptions.map((s) => <SelectItem key={s.slug} value={s.slug}>{s.name}</SelectItem>)}</SelectGroup></SelectContent>
                 </Select>
               )} />
-              <FormField control={form.control} name="area" label="Known area" description="Choose Whole site when the exact area is not known." render={(field, accessibility) => (
+              <FormField control={form.control} name="area" label="Known area" description="Choose All Areas when the exact area is not known." render={(field, accessibility) => (
                 <Select name={field.name} value={field.value || "whole-site"} onValueChange={(value) => field.onChange(value === "whole-site" ? "" : value)} disabled={saving}>
                   <SelectTrigger {...accessibility} ref={field.ref} onBlur={field.onBlur} className="w-full"><SelectValue /></SelectTrigger>
                   <SelectContent><SelectGroup>
-                    <SelectItem value="whole-site">Whole site</SelectItem>
+                    <SelectItem value="whole-site">All Areas</SelectItem>
                     {areaOptions.map((a) => <SelectItem key={a.slug} value={a.slug}>{a.name}</SelectItem>)}
                   </SelectGroup></SelectContent>
                 </Select>

@@ -12,13 +12,13 @@ import {
   createPlantingEvent, createPlantingLines, listPlantingEvents, listPlantingEventLines, listPlantingEventLocations,
   listSiteSeasonPlantingLines, readPlantingEventSeason, readSeason, updatePlantingEvent, deactivatePlantingEvent, readPlantingEvent,
 } from "@/db/queries/plantings";
-import { createPlantingArea, listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies, updatePlantingAreaBoundary } from "@/db/queries/sites";
+import { listPlantingAreaSeasons, listPlantingAreas, listSiteSeasons, listSiteSpecies, updatePlantingAreaBoundary } from "@/db/queries/sites";
 import { listSpecies, listSpeciesForPlanting } from "@/db/queries/species";
 import {
   plantingEventEditSchema, savePlantingAreaBoundarySchema,
   type PlantingAreaBoundarySubmitResult, type PlantingEventEditResult, type PlantingEventSubmitResult,
 } from "@/db/types";
-import { areaFor, wholeSiteAreaSlug } from "@/lib/wrt/areas/whole-site";
+import { wholeSiteAreaSlug } from "@/lib/wrt/areas/whole-site";
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { plantedOnProblem, todayInNz } from "@/lib/wrt/events/season";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
@@ -158,12 +158,12 @@ export async function savePlantingAreaBoundary(raw: unknown): Promise<PlantingAr
   if (!parsed.success) {
     return { issues: parsed.error.issues.map(({ path, message }) => ({ path: path.join("."), message })) };
   }
-  const { site, area, boundary } = parsed.data;
+  const { site, area, boundary, editing } = parsed.data;
   if (area === wholeSiteAreaSlug(site)) return { error: "Choose a named area to save a boundary." };
 
   const failure = { error: "The boundary could not be saved. Your drawing is still here. Please try again." };
   try {
-    const { data, error } = await updatePlantingAreaBoundary(site, area, boundary);
+    const { data, error } = await updatePlantingAreaBoundary(site, area, boundary, editing);
     if (error?.code === "42501") return { error: "Sign in as staff to save an area boundary." };
     if (error || !data) return failure;
   } catch {
@@ -194,9 +194,7 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
       listPlantingAreas(event.siteSlug), readSeason(`${event.season.toLowerCase()}-${event.seasonYear}`), speciesSlugs(),
     ]);
     if (!season) return { issues: [{ path: "season", message: "Only Autumn and Spring seasons can be saved for now." }] };
-    const siteName = options.sites.find((x) => x.slug === event.siteSlug)?.name ?? event.siteSlug;
-    const area = areaFor(areas, event.siteSlug, event.partId)
-      ?? (event.partId === null && id === undefined ? await createWholeSiteArea(event.siteSlug, siteName) : undefined);
+    const area = areas.find((entry) => (entry.wrt_number ?? entry.slug) === event.partId)?.slug;
     if (!area) return { issues: [{ path: "partId", message: "Choose where at this site these were planted." }] };
     // Drawn areas aren't saved, so the same species in several areas is added together (each checked against the register above).
     const quantities = new Map<string, number>();
@@ -217,14 +215,6 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
   }
   refresh();
   return { savedPlantingEvent: id };
-}
-
-/** A site's site-wide area (see wholeSiteAreaSlug), made the first time plants are saved at the site as a whole. */
-async function createWholeSiteArea(site: string, siteName: string) {
-  const slug = wholeSiteAreaSlug(site);
-  const { error } = await createPlantingArea(site, { slug, name: `${siteName}, whole site`, description: "" });
-  if (error && error.code !== "23505") throw error; // 23505: another save made it just now, so it's there to use
-  return slug;
 }
 
 /** The register's species slugs by the form's species id: the register code, or the slug when it has none. */

@@ -10,7 +10,7 @@ import { insideRing, simplifyTrace, type LngLat } from "@/lib/wrt/areas/planted-
 import { fitArea } from "../map/map-scene";
 
 export type DrawMethod = "corners" | "trace";
-interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null; name: string }
+interface Draft { method: DrawMethod; pts: LngLat[]; closed: boolean; editing: number | null; name: string; boundary?: { slug: string; editing: boolean } | undefined }
 /** A kept area. `id` stays with it (plants are listed against it); its number on screen is its place in the list. */
 export interface Area { id: number; pts: LngLat[]; name: string }
 
@@ -72,8 +72,8 @@ export function useDrawArea(
     setDraft({ method: "corners", pts, closed: pts.length >= 3, editing, name: editing === null ? "" : areas[editing]?.name ?? "" }, []);
     setTrace(null);
   }, [areas, setDraft]);
-  const startBoundary = (pts: LngLat[]) => {
-    setDraft({ method: "corners", pts, closed: pts.length >= 3, editing: null, name: "" }, []);
+  const startBoundary = (pts: LngLat[], boundary?: Draft["boundary"]) => {
+    setDraft({ method: "corners", pts, closed: pts.length >= 3, editing: null, name: "", boundary }, []);
     setTrace(null);
   };
   // A kept area opened for changing may be anywhere on a big site: the map goes to it.
@@ -97,7 +97,7 @@ export function useDrawArea(
       stop();
       return true;
     }
-    if (!d.name.trim()) return false;
+    if (d.boundary || !d.name.trim()) return false;
     const others = areas.length - (d.editing === null ? 0 : 1);
     if (!asked && keep.current?.(d.pts, others) === false) return false;
     const name = d.name.trim();

@@ -23,7 +23,7 @@ beforeAll(async () => {
 
 const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => ({
   siteSlug: site.slug,
-  partId: null,
+  partId: defined(site.parcels[0]).id,
   plantedOn: "2026-05-10",
   season: "Autumn",
   seasonYear: 2026,
@@ -34,9 +34,12 @@ const valid = (over: Record<string, unknown> = {}): Record<string, unknown> => (
 });
 
 describe("validateEventInput", () => {
-  it("accepts a well-formed event (with or without a part)", () => {
+  it("requires a named area even when the site has only one", () => {
     expect(validateEventInput(valid(), lookups, TODAY).ok).toBe(true);
-    expect(validateEventInput(valid({ partId: defined(site.parcels[0]).id }), lookups, TODAY).ok).toBe(true);
+    const singleArea = { ...lookups, places: [{ ...site, parcels: site.parcels.slice(0, 1) }] };
+    expect(validateEventInput(valid({ partId: null }), singleArea, TODAY)).toEqual({
+      ok: false, errors: { partId: "Choose a named area." },
+    });
   });
 
   it("trims notes and turns blank notes into null", () => {
@@ -85,10 +88,9 @@ describe("validateEventInput", () => {
     if (!r.ok) expect(Object.keys(r.errors)).toContain(field);
   });
 
-  it("allows Paper4Trees as a site", () => {
-    const scheme = lookups.places.find((p) => p.slug === "paper4trees");
-    expect(scheme).toBeDefined();
-    const r = validateEventInput(valid({ siteSlug: scheme!.slug }), lookups, TODAY);
+  it("allows a named area at Paper4Trees", () => {
+    const scheme = defined(lookups.places.find((p) => p.slug === "paper4trees"));
+    const r = validateEventInput(valid({ siteSlug: scheme.slug, partId: defined(scheme.parcels[0]).id }), lookups, TODAY);
     expect(r.ok).toBe(true);
   });
 

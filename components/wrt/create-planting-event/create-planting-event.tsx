@@ -26,7 +26,7 @@ import { SiteChooser } from "./site/site-chooser";
 import { TopBar } from "./site/top-bar";
 import { usePinMoves } from "./map/use-pin-moves";
 import { AreaOverlay, DrawBar, useDrawArea, type OnKeep } from "./draw-area";
-// The panel screen for an area (Plant here, Whole site, Close): with the page's other screens, not the map.
+// The panel screen for an area (Plant here, All Areas, Close): with the page's other screens, not the map.
 import { AreaSheet } from "./draw-area/area-sheet";
 import { SaveAreaBoundary } from "./draw-area/save-area-boundary";
 import { highlightSite, useCamera, useFindMe, usePlantingMap, useSpotMarker } from "./map/use-planting-map";
@@ -116,7 +116,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const [focus, setFocus] = useState<LngLat | null>(null);
   const site = sites.find((x) => x.slug === siteSlug);
   const siteName = site?.name ?? "Choose a site";
-  const partName = site ? site.parts.find((p) => p.id === part)?.name ?? "Whole site" : undefined;
+  const partName = site ? site.parts.find((p) => p.id === part)?.name ?? "All Areas" : undefined;
   // Beside the site's name, the part without the site in front of it: "Morning Star Reserve", not "Arthurs Point - Morning Star Reserve".
   const partShort = partName && site ? partBesideSite(partName, site.name) : partName;
   const keptPart = !!site?.parts.find((p) => p.id === part)?.unsaved;
@@ -242,7 +242,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     setAreaAt(at);
     setFocus(at);
     dispatch({ type: "keepArea", wide, full: !wide && drawnFromList, list: !pin && !siteSlug });
-    if (pin && others === 0) setPicked({ slug: pin.slug, partId: pin.partId });
+    if (pin && others === 0) setPicked({ slug: pin.slug, partId: pin.partId ?? (pin.slug === siteSlug ? part : null) });
     return true;
   };
   // A tap on a kept area brings it forward (a second tap opens its sheet); elsewhere, lets it go.
@@ -389,8 +389,28 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   // The form's Move pin: only the new location moves, still what it was.
   const moveSpot = () => startCross("spot");
   const startMoving = () => startCross("move");
+  const writableParts = writableSites.find((option) => option.slug === siteSlug)?.parts;
+  const writablePart = writableParts?.some((option) => option.id === part);
+  const canRecordArea = !!onSave && !!writablePart;
+  const selectedArea = !spot && part !== null
+    ? areas.find((area) => area.site === siteSlug && (area.wrt_number ?? area.slug) === part)
+    : undefined;
+  const boundaryTarget = onSaveBoundary && writablePart ? selectedArea : undefined;
+  const boundaryAction = boundaryTarget && {
+    label: boundaryTarget.boundary ? "Edit boundary" : "Draw boundary",
+    onClick: () => unlessEditing(() => {
+      if (draw.draft || placing) return;
+      closeSheet();
+      setShownArea(null);
+      setSnap("peek");
+      draw.startBoundary(boundaryTarget.boundary?.coordinates[0].slice(0, -1) ?? [], {
+        slug: boundaryTarget.slug, editing: !!boundaryTarget.boundary,
+      });
+    }),
+  };
   // From the plant list (`list`), keeping the area goes back there.
   const newArea = () => beginArea(false);
+  const mapDraw = boundaryAction ?? (site && part === null && !spot ? undefined : { label: "Draw planting sketch", onClick: newArea });
   function beginArea(list: boolean) {
     unlessEditing(() => {
       afterSave();
@@ -472,18 +492,13 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
     keptSpot.current = { at: `${spot[0]},${spot[1]}`, place: { slug: place.site, partId: place.id } };
     return keptSpot.current.place;
   }
-  // A kept part isn't stored: the planting is saved at its site as a whole (the receipt says the location isn't).
-  const saveAtKnownPlace: NonNullable<MapEventFormProps["onSave"]> = (input, id) => {
-    const unsaved = sites.find((x) => x.slug === input.siteSlug)?.parts.find((p) => p.id === input.partId)?.unsaved;
-    return onSave!({ ...input, partId: unsaved ? null : input.partId }, id);
-  };
   function letGo() {
     setShownArea(null);
     closeSheet();
   }
   useMapKeys({
     on: wide, areas: draw.areas, shown: shownArea, drawing: !!draw.draft || !!placing,
-    onDraw: newArea, onStop: () => (placing ? cancelCross() : stopDrawing()), onShow: showArea, onLetGo: letGo,
+    drawAction: mapDraw, onStop: () => (placing ? cancelCross() : stopDrawing()), onShow: showArea, onLetGo: letGo,
   });
 
   // The cross sits where the map's centre is: the middle of the padding the form leaves.
@@ -548,12 +563,22 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
 
   // A mini map at the top of the site's page and of the form: always on desktop (a slim strip), and on phones when the
   // sheet is full screen. A chosen site is named by the page's own header, so the map leaves its label off.
+  const previewAreas = draw.areas.length ? draw.areas.map((area) => area.pts)
+    : selectedArea?.boundary ? [selectedArea.boundary.coordinates[0].slice(0, -1)] : [];
   const miniMap = focus && (wide || snap === "full")
-    ? <MiniMap at={focus} areas={draw.areas.map((a) => a.pts)} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} noCaption={!!site && !spot} compact={wide} />
+    ? <MiniMap at={focus} areas={previewAreas} label={where.title} sub={where.sub} isNew={!!spot} onOpen={wide ? undefined : showMap} noCaption={!!site && !spot} compact={wide} />
     : undefined;
-  const boundaryTarget = onSaveBoundary && part && writableSites.find((option) => option.slug === siteSlug)?.parts.some((option) => option.id === part)
-    ? areas.find((area) => area.site === siteSlug && (area.wrt_number ?? area.slug) === part)
+  const recordLabel = onSave && part === null && writableParts?.length
+    ? "Choose an area to record a planting"
+    : eventUnsaved && canRecordArea ? "Back to your planting event" : undefined;
+  const draftBoundary = draw.draft?.boundary;
+  const saveTarget = boundaryTarget && (draftBoundary ? boundaryTarget.slug === draftBoundary.slug : !boundaryTarget.boundary)
+    ? boundaryTarget
     : undefined;
+  const boundaryToFit = draftBoundary?.editing ? saveTarget?.boundary?.coordinates[0] : undefined;
+  useEffect(() => {
+    if (boundaryToFit && map.current) fitArea(map.current, boundaryToFit);
+  }, [map, boundaryToFit]);
   const savedBoundaryMessage = boundaryNotice && boundaryNotice.area === boundaryTarget?.slug ? boundaryNotice.message : "";
 
   return (
@@ -562,16 +587,21 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       <div className={s.appReturn}>
         <Button type="button" variant="soft" size="sm" onClick={exit}>{exitLabel}</Button>
         {siteSlug && <Button type="button" variant="soft" size="sm" onClick={() => navigate("Records", hrefs.records({ place: siteSlug, parcel: part ?? undefined, season: season?.slug.split("-")[0] === "autumn" ? "Autumn" : season ? "Spring" : undefined, year: season?.slug.split("-")[1] })) }>View existing records</Button>}
+        {site && !site.unsaved && (
+          <Button type="button" variant="soft" size="sm" className={s.viewSite} onClick={() => navigate(site.name, hrefs.place(site.slug))}>
+            {onSave && writableParts ? "View/Edit Site" : "View Site"}
+          </Button>
+        )}
       </div>
       <div ref={mapEl} className={s.map} />
       <PinTooltip map={mapEl} />
       {/* Phones: a see-through green band behind the header; Safari tints its top bar from it. */}
       <div className={s.topBand} aria-hidden="true" />
       <AreaOverlay map={map} draw={draw} shown={shownArea} />
-      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} choosing={choosing} onChooseSite={toggleChooser} onAddLocation={addLocation} onDrawArea={newArea} onFindMe={findMe} />
+      <TopBar siteName={spot || site ? where.title : undefined} hint={hint} choosing={choosing} onChooseSite={toggleChooser} onAddLocation={addLocation} drawAction={mapDraw} onFindMe={findMe} />
       {wide && (
         <MapTools
-          map={map} drawing={!!draw.draft || !!placing} onDraw={newArea} onAddLocation={addLocation}
+          map={map} drawing={!!draw.draft || !!placing} drawAction={mapDraw} onAddLocation={addLocation}
           areas={draw.areas.length} shown={draw.areas.findIndex((a) => a.id === shownArea)} onLetGo={letGo}
           // From none brought forward, next is the first and previous the last.
           onStep={(by) => { const n = draw.areas.length, i = draw.areas.findIndex((a) => a.id === shownArea); const a = draw.areas[i < 0 ? (by > 0 ? 0 : n - 1) : (i + by + n) % n]; if (a) showArea(a.id); }}
@@ -592,14 +622,14 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
       ) : (wide || snap === "peek") && (
         // Phones: just above the sheet at its bar. Pulled up, the sheet covers the map, so no bar.
         <DrawBar
-          draw={draw} onAdd={newArea} onStop={stopDrawing} onShow={showArea} onClose={letGo} onPlant={plantIfOpen} plants={areaPlants} shown={shownArea}
-          boundaryAction={boundaryTarget && onSaveBoundary && draw.draft && draw.draft.pts.length >= 3 && (
+          draw={draw} drawAction={mapDraw} onStop={stopDrawing} onShow={showArea} onClose={letGo} onPlant={plantIfOpen} plants={areaPlants} shown={shownArea}
+          boundaryAction={saveTarget && onSaveBoundary && draw.draft && !draw.trace && draw.draft.pts.length >= 3 && (
             <SaveAreaBoundary
-              key={boundaryTarget.slug} site={siteSlug} area={boundaryTarget.slug} name={boundaryTarget.name}
-              replacing={!!boundaryTarget.boundary} points={draw.draft.pts} onSave={onSaveBoundary}
+              key={saveTarget.slug} site={saveTarget.site} area={saveTarget.slug} name={saveTarget.name}
+              editing={!!draftBoundary?.editing} points={draw.draft.pts} onSave={onSaveBoundary}
               onSaved={() => {
                 draw.stop();
-                setBoundaryNotice({ area: boundaryTarget.slug, message: `Boundary saved for ${boundaryTarget.name}.` });
+                setBoundaryNotice({ area: saveTarget.slug, message: `Boundary saved for ${saveTarget.name}.` });
               }}
             />
           )}
@@ -612,7 +642,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         wide={wide} open container={screen} snap={snap} onSnap={snapTo} label={started ? "New planting event" : "Planting map"} locked={!!draw.draft || !!placing}
         title={sheetArea ? sheetArea.name || "Planted area" : where.title}
         subtitle={sheetArea ? (site ? `Planted area at ${siteName}` : "Planted area")
-          : siteHeader ? [season?.wholeSite ? "Whole site" : partShort, season?.label].filter(Boolean).join(" · ") : where.sub}
+          : siteHeader ? [season?.wholeSite ? "All Areas" : partShort, season?.label].filter(Boolean).join(" · ") : where.sub}
         screen={panelScreen} depth={panelDepth}
         actionSlot={season && seasonButton && !choosing && !sheetArea ? setHeaderAction : undefined}
         onTitle={wide || draw.draft || placing || sheetArea ? undefined : toggleChooser} titleOpen={choosing} titleIcon={allSites || siteHeader}
@@ -654,10 +684,10 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
         )}
         {/* Hidden, not closed, under the site list or an area's sheet: closing those comes back to an edit as it was. */}
         {season && siteSlug && (
-          <PastSeason canRecord={!!onSave && writableSites.some((s) => s.slug === siteSlug)} initialEvent={focusedEvent}
+          <PastSeason canRecord={canRecordArea} initialEvent={focusedEvent}
             key={`season-${seasonKey}`} slug={siteSlug} partId={season.wholeSite ? null : part} season={season} today={today} onSaveEdit={onSaveEdit} species={options.species}
             actionSlot={headerAction} onHeaderButton={setSeasonButton} onDirty={onEditDirty} onSaving={onEditSaving} hidden={choosing || !!sheetArea}
-            onBack={closeSeason} startLabel={eventUnsaved ? "Back to your planting event" : undefined} onStart={() => { if (!writableSites.some((s) => s.slug === siteSlug)) return; afterSave(); if (!eventUnsaved) { setFormKey((k) => k + 1); setRecordSeason(season.slug); } dispatch({ type: "startForm", from: { season, site: siteSlug, part } }); }}
+            onBack={closeSeason} startLabel={recordLabel} onStart={() => { if (!canRecordArea) return; afterSave(); if (!eventUnsaved) { setFormKey((k) => k + 1); setRecordSeason(season.slug); } dispatch({ type: "startForm", from: { season, site: siteSlug, part } }); }}
           />
         )}
         {(choosing || (allSites && !season && !sheetArea)) && (
@@ -678,22 +708,23 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
           />
         )}
         {overview && siteSlug && !choosing && !sheetArea && !season && (
-          <SiteOverview canRecord={!!onSave && writableSites.some((s) => s.slug === siteSlug)}
+          <SiteOverview canRecord={canRecordArea}
             slug={siteSlug} partId={part} partName={part ? partName : undefined} today={today} totals={totals} map={miniMap}
             places={part ? undefined : places} onPlace={choosePart}
             // With an event's entries kept (after its Back), the button goes back to it.
-            onStart={() => { if (!writableSites.some((s) => s.slug === siteSlug)) return; afterSave(); dispatch({ type: "startForm", from: null }); }} startLabel={eventUnsaved ? "Back to your planting event" : undefined} onOpenSeason={openSeason} pinMoved={isMoved(siteSlug, part)} onMovePin={draw.draft ? undefined : startMoving} onUndoPin={undoMove} />
+            onStart={() => { if (!canRecordArea) return; afterSave(); dispatch({ type: "startForm", from: null }); }} startLabel={recordLabel} onOpenSeason={openSeason} pinMoved={isMoved(siteSlug, part)} onMovePin={draw.draft ? undefined : startMoving} onUndoPin={undoMove} />
         )}
         <MapEventForm
           key={`form-${formKey}`} hidden={(recording && !siteSlug) || overview || choosing || !!sheetArea || !!season} options={formOptions} // A site that isn't stored (a new one, or kept from earlier) can't be saved to yet: the receipt says "Not saved".
-          onSave={onSave && site && !site.unsaved ? saveAtKnownPlace : undefined}
+          onSave={onSave && site && !site.unsaved ? onSave : undefined}
+          boundaryAction={draw.draft || placing ? undefined : boundaryAction}
           onKeepLocation={() => leaveFor("all", keepSpot())} onSavedAtSpot={keepSpot} today={today} picked={picked}
           // A fresh form starts where the page is, not where it first opened.
           initialSite={siteSlug} initialPart={part} initialSeason={recordSeason} onChangeSeason={() => setRecordSeason(undefined)} onEntries={setEntry} onChooseSite={changeSite}
           placeMenu={site && !spot ? (b) => (
             <PartMenu
               siteName={site.name} parts={parts} part={part} onChoosePart={choosePart} side="bottom"
-              onAddPart={addPart} onOtherSite={changeSite} className={b.className} label={b.label}
+              onAddPart={addPart} onOtherSite={changeSite} className={b.className} label={b.label} showAllAreas={false}
             >
               {b.children}
             </PartMenu>

@@ -14,6 +14,7 @@ import { savePlantingAreaBoundary } from "@/app/events/new/actions";
 const input = {
   site: "reserve",
   area: "reserve-east",
+  editing: true,
   boundary: boundaryFromCorners([[168.5, -45], [168.51, -45], [168.51, -44.99]]),
 };
 
@@ -30,19 +31,23 @@ describe("save a named-area boundary from the planting event map", () => {
     expect(mocks.updateBoundary).not.toHaveBeenCalled();
   });
 
-  it("validates the area identifier and boundary and excludes the whole-site placeholder", async () => {
+  it("validates the area identifier and boundary", async () => {
     const crossing = boundaryFromCorners([[168.5, -45], [168.51, -44.99], [168.51, -45], [168.5, -44.99]]);
     expect(await savePlantingAreaBoundary({ ...input, boundary: crossing })).toEqual({
       issues: [{ path: "boundary", message: expect.stringContaining("crosses itself") }],
     });
     expect(await savePlantingAreaBoundary({ ...input, area: "a".repeat(81) })).toHaveProperty("issues.0.path", "area");
-    expect(await savePlantingAreaBoundary({ ...input, area: "reserve-whole-site" })).toHaveProperty("error", expect.stringContaining("named area"));
+    expect(mocks.updateBoundary).not.toHaveBeenCalled();
+  });
+
+  it.each([false, true])("rejects a Whole Site boundary write with editing=%s", async (editing) => {
+    expect(await savePlantingAreaBoundary({ ...input, area: "reserve-whole-site", editing })).toHaveProperty("error", expect.stringContaining("named area"));
     expect(mocks.updateBoundary).not.toHaveBeenCalled();
   });
 
   it("saves only the boundary at the selected site and area, then invalidates shared maps", async () => {
     expect(await savePlantingAreaBoundary({ ...input, name: "Spoofed", updated_by: "spoofed" })).toEqual({});
-    expect(mocks.updateBoundary).toHaveBeenCalledExactlyOnceWith(input.site, input.area, input.boundary);
+    expect(mocks.updateBoundary).toHaveBeenCalledExactlyOnceWith(input.site, input.area, input.boundary, true);
     expect(mocks.updateTag).toHaveBeenCalledWith("supabase");
     expect(mocks.revalidatePath).toHaveBeenCalledWith("/", "layout");
   });

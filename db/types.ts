@@ -108,6 +108,7 @@ export const createPlantingAreaSchema = editPlantingAreaSchema.extend({
 export const savePlantingAreaBoundarySchema = z.object({
   site: createPlantingAreaSchema.shape.slug,
   area: createPlantingAreaSchema.shape.slug,
+  editing: z.boolean(),
   boundary: plantingAreaBoundarySchema,
 });
 
@@ -123,6 +124,8 @@ const uniqueAreaSlugs = <T extends { slug: string }>(areas: T[], ctx: z.Refineme
     seen.add(slug);
   });
 };
+
+export const SITE_AREA_REQUIRED = "Add at least one area.";
 
 export const editSiteSchema = z.object({
   name: text.min(1, "Enter a site name."),

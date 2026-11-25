@@ -29,16 +29,16 @@ export function Crumbs({ siteName, parts, part, partName, onAllSites, onSite, on
     <nav className={s.crumbs} aria-label="Where you are">
       <button type="button" onClick={onAllSites} disabled={locked}>All sites</button>
       {sep}
-      <button type="button" onClick={onSite} disabled={locked} aria-label={`${siteName}: whole site, on the map`}>
+      <button type="button" onClick={onSite} disabled={locked} aria-label={`${siteName}: All Areas, on the map`}>
         <span>{siteName}</span>
       </button>
       {/* Every site has the menu: its parts (a site with none is only ever the whole site), New sublocation and Another site. */}
       {!partsLocked && sep}
       {!partsLocked && <PartMenu
         siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onAddPart={onAddPart} onOtherSite={onOtherSite}
-        side="bottom" className={s.partCrumb} label={`${partName ?? "Whole site"}: change the part`}
+        side="bottom" className={s.partCrumb} label={`${partName ?? "All Areas"}: change the part`}
       >
-        <span>{partName ?? "Whole site"}</span>
+        <span>{partName ?? "All Areas"}</span>
         <ChevronDown size={14} strokeWidth={2.4} aria-hidden="true" />
       </PartMenu>}
     </nav>

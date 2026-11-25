@@ -8,11 +8,11 @@ import { boundaryFromCorners } from "@/lib/wrt/areas/geometry";
 import type { LngLat } from "@/lib/wrt/areas/planted-area";
 import s from "./draw-area.module.css";
 
-export function SaveAreaBoundary({ site, area, name, replacing, points, onSave, onSaved }: {
+export function SaveAreaBoundary({ site, area, name, editing, points, onSave, onSaved }: {
   site: string;
   area: string;
   name: string;
-  replacing: boolean;
+  editing: boolean;
   points: LngLat[];
   onSave: (input: SavePlantingAreaBoundaryInput) => Promise<PlantingAreaBoundarySubmitResult>;
   onSaved: () => void;
@@ -25,7 +25,7 @@ export function SaveAreaBoundary({ site, area, name, replacing, points, onSave, 
     setError(undefined);
     startTransition(async () => {
       try {
-        const result = await onSave({ site, area, boundary: boundaryFromCorners(points) });
+        const result = await onSave({ site, area, editing, boundary: boundaryFromCorners(points) });
         const problem = result.error ?? result.issues?.[0]?.message;
         if (problem) {
           setError(problem);
@@ -42,7 +42,7 @@ export function SaveAreaBoundary({ site, area, name, replacing, points, onSave, 
 
   return (
     <div className={s.actions}>
-      <button type="button" onClick={() => { setError(undefined); setOpen(true); }}>Save as area boundary</button>
+      <button type="button" onClick={() => { setError(undefined); setOpen(true); }}>{editing ? "Save boundary" : "Save as area boundary"}</button>
       <ConfirmDialog
         open={open}
         title={`Save boundary for ${name}?`}
@@ -51,7 +51,7 @@ export function SaveAreaBoundary({ site, area, name, replacing, points, onSave, 
         onConfirm={save}
         onCancel={() => { if (!pending) setOpen(false); }}
       >
-        <p>{replacing ? "This replaces the area's saved boundary on site maps." : "This outline will appear on site maps."}</p>
+        <p>{editing ? "This updates the area's saved boundary on site maps." : "This outline will appear on site maps."}</p>
         {error && <p role="alert" className="mt-2 font-semibold text-destructive">{error}</p>}
       </ConfirmDialog>
     </div>

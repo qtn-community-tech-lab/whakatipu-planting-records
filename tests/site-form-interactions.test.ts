@@ -12,10 +12,12 @@ const captured = vi.hoisted(() => ({
   form: undefined as Pick<HookForm.UseFormReturn, "setValue"> | undefined,
   append: vi.fn(),
   addArea: undefined as (() => void) | undefined,
+  resolver: undefined as HookForm.UseFormProps<HookForm.FieldValues, unknown, unknown>["resolver"],
 }));
 vi.mock("react-hook-form", async (importOriginal) => {
   const actual = await importOriginal<typeof HookForm>();
   return { ...actual, useForm: (...args: Parameters<typeof actual.useForm>) => {
+    captured.resolver = args[0]?.resolver;
     const form = actual.useForm(captured.defaults ? { ...args[0], defaultValues: captured.defaults } : args[0]);
     vi.spyOn(form, "setValue");
     captured.form = form;
@@ -83,6 +85,14 @@ function withNewAreas(...names: string[]) {
     areas: names.map((name) => ({ name, slug: "", description: "", existing: false })),
   };
 }
+
+it("requires an area in the shared site form before submitting", async () => {
+  expect(renderCreate()).toContain("Add at least one area.");
+  const result = await captured.resolver!({ name: "Lake Hayes", slug: "lake-hayes", description: "", areas: [] }, undefined, {
+    fields: {}, shouldUseNativeValidation: false,
+  });
+  expect(result.errors).toMatchObject({ areas: { message: "Add at least one area." } });
+});
 
 it("prefills the first area of a new site with its name and custom web address", () => {
   withNewAreas();

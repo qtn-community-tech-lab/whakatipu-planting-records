@@ -81,7 +81,7 @@ export function useEventForm({
 }) {
   // Reference data for the check: the same shape the server validates against.
   const lookups: EventLookups = useMemo(() => ({
-    places: [...options.sites.map((s) => ({ slug: s.slug, parcels: s.parts })), { slug: NEW_SITE, parcels: [] }],
+    places: [...options.sites.map((s) => ({ slug: s.slug, parcels: s.parts.filter((part) => !part.unsaved) })), { slug: NEW_SITE, parcels: [] }],
     species: options.species,
   }), [options]);
   const schema = useMemo(() => formSchema(lookups, today, newSite), [lookups, today, newSite]);

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { EventFormOptions } from "@/lib/wrt/events/form-options";
-import { describeEvent, WHOLE_SITE } from "@/lib/wrt/events/summary";
+import { describeEvent } from "@/lib/wrt/events/summary";
 import type { PlantingEventInput } from "@/lib/wrt/events/types";
 
 const options: EventFormOptions = {
@@ -22,7 +22,7 @@ const input: PlantingEventInput = {
 describe("describeEvent", () => {
   it("describes an event in names, with the whole site when no part is chosen", () => {
     const s = describeEvent(input, options);
-    expect(s).toMatchObject({ site: "Lake Hayes", part: WHOLE_SITE, date: "Wed 7 Oct 2026", season: "Spring 2026", total: 150 });
+    expect(s).toMatchObject({ site: "Lake Hayes", part: "All Areas", date: "Wed 7 Oct 2026", season: "Spring 2026", total: 150 });
     expect(s.species[0]).toEqual({ name: "Sophora microphylla", quantity: 120 });
   });
 

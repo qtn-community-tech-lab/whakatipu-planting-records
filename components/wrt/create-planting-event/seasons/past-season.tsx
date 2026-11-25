@@ -104,7 +104,7 @@ export function PastSeason({ canRecord = true, initialEvent, slug, partId, seaso
       </button>
     );
     // One event: Edit up in the panel's header; a row at the top (the tiles say its plants and species)
-    // with its place, when the header says "Whole site", and its date.
+    // with its place, when the header says "All Areas", and its date.
     if (single) {
       const line = [!partId && e.area, on ? formatPlantedOn(on) : edit && "No date"].filter(Boolean).join(" · ");
       const inRow = !actionSlot && button;

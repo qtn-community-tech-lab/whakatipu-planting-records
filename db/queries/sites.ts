@@ -114,21 +114,24 @@ export async function updatePlantingArea(site: string, slug: string, values: Edi
   });
 }
 
-export async function updatePlantingAreaBoundary(site: string, slug: string, boundary: AreaBoundary) {
-  return writePlantingArea(site, slug, { boundary });
+export async function updatePlantingAreaBoundary(site: string, slug: string, boundary: AreaBoundary, editing: boolean) {
+  return writePlantingArea(site, slug, { boundary }, editing);
 }
 
-async function writePlantingArea(site: string, slug: string, values: TablesUpdate<"areas">) {
+async function writePlantingArea(site: string, slug: string, values: TablesUpdate<"areas">, editingBoundary?: boolean) {
   const userId = await currentUserId();
   const timestamp = new Date().toISOString();
-  return (await db())
+  const query = (await db())
     .from("areas")
     .update({
       ...values,
       updated_at: timestamp, updated_by: userId,
     })
     .eq("site", site)
-    .eq("slug", slug)
+    .eq("slug", slug);
+  if (editingBoundary === true) query.not("boundary", "is", null);
+  if (editingBoundary === false) query.is("boundary", null);
+  return query
     .select("slug")
     .single();
 }

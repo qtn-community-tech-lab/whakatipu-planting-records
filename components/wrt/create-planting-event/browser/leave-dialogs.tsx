@@ -8,7 +8,7 @@ import { kmLabel } from "@/lib/wrt/text";
 
 export function LeaveDialogs(p: {
   siteName: string;
-  /** The part beside the site's name (see partBesideSite), or "Whole site". */
+  /** The part beside the site's name (see partBesideSite), or "All Areas". */
   partShort: string | undefined;
   part: string | null;
   areas: number;
@@ -25,7 +25,7 @@ export function LeaveDialogs(p: {
   return (
     <>
       <ConfirmDialog
-        open={p.pinMove} title={`Move the pin for ${partShort && partShort !== "Whole site" ? `${siteName} · ${partShort}` : siteName}?`}
+        open={p.pinMove} title={`Move the pin for ${partShort && partShort !== "All Areas" ? `${siteName} · ${partShort}` : siteName}?`}
         confirmLabel="Move pin" onConfirm={p.onMovePin} onCancel={p.onKeepPin}
       >
         <ul>

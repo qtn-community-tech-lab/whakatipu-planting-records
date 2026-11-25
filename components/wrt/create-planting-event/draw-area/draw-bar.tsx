@@ -15,7 +15,7 @@ import { DrawingControls } from "./drawing-controls";
 import type { Area, DrawArea } from "./use-draw-area";
 import s from "./draw-area.module.css";
 
-export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, onSite, choosing = false, onToggleSite, plants, shown, dock = true, style, boundaryAction }: {
+export function DrawBar({ draw, drawAction, onStop, onShow, onClose, onPlant, siteName, partName, parts, part, onChoosePart, onChangeSite, onAllSites, onAddPart, placeLocked, onSite, choosing = false, onToggleSite, plants, shown, dock = true, style, boundaryAction }: {
   draw: DrawArea;
   /** The area brought forward on the map (its id): the bar steps through the areas from it. */
   shown: number | null;
@@ -41,7 +41,7 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
   /** With no site, the dock's Choose a site: opens the chooser, or closes it when it's open (`choosing`). */
   choosing?: boolean | undefined;
   onToggleSite?: (() => void) | undefined;
-  onAdd: () => void;
+  drawAction?: { label: string; onClick: () => void } | undefined;
   onStop: () => void;
   /** False: only the drawing pill (wide screens, where the panel and the map's toolbar do the rest). */
   dock?: boolean | undefined;
@@ -96,7 +96,8 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
           {boundaryAction}
           <DrawingControls
             draw={draw} onStop={onStop} canSaveBoundary={!!boundaryAction}
-            label={draft.editing === null ? "Drawing an area" : `Changing ${label(areas[draft.editing], draft.editing)}`}
+            label={draft.boundary ? (draft.boundary.editing ? "Editing saved boundary" : "Drawing a boundary") : draft.editing === null ? "Drawing an area" : `Changing ${label(areas[draft.editing], draft.editing)}`}
+            requireName={!draft.boundary} subject={draft.boundary ? "boundary" : "planted area"}
             onRemove={draft.editing === null ? undefined : () => setRemoving(draft.editing)}
           />
         </>
@@ -139,14 +140,14 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
             {siteName && placeLocked ? (
               <button type="button" className={s.partBtn} disabled={!onSite} onClick={onSite}>
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
-                <span className={s.areaText}><b>{partName ?? siteName}</b><small>{partName ? siteName : "Whole site"}</small></span>
+                <span className={s.areaText}><b>{partName ?? siteName}</b><small>{partName ? siteName : "All Areas"}</small></span>
               </button>
             ) : siteName ? (
               <PartMenu siteName={siteName} parts={parts} part={part} onChoosePart={onChoosePart} onAddPart={onAddPart} onAllSites={onAllSites} side="top" className={s.partBtn} label={`${site}: change the part`}>
                 <MapPin size={16} strokeWidth={2.2} aria-hidden="true" />
                 <span className={s.areaText}>
                   <b>{partName ?? siteName}</b>
-                  <small>{partName ? siteName : "Whole site"}</small>
+                  <small>{partName ? siteName : "All Areas"}</small>
                 </span>
                 <ChevronUp size={16} strokeWidth={2.4} aria-hidden="true" />
               </PartMenu>
@@ -165,9 +166,9 @@ export function DrawBar({ draw, onAdd, onStop, onShow, onClose, onPlant, siteNam
                 <Pentagon size={16} strokeWidth={2.4} aria-hidden="true" /><b>{areas.length}</b>
               </button>
             )}
-            <button type="button" className={s.addBtn} data-focus={areas.length ? undefined : ""} onClick={onAdd} aria-label="Draw area">
+            {drawAction && <button type="button" className={s.addBtn} data-focus={areas.length ? undefined : ""} onClick={drawAction.onClick} aria-label={drawAction.label} title={drawAction.label}>
               <Pencil size={18} strokeWidth={2.4} aria-hidden="true" />
-            </button>
+            </button>}
           </div>
         </>
       )}

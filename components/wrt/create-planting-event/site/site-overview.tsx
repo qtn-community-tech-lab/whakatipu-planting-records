@@ -19,7 +19,7 @@ import type { PlantTotals } from "../map/sites";
 import { useLoad } from "@/components/wrt/shared/use-load";
 import s from "./site-overview.module.css";
 
-export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, canRecord = true, startLabel = "Record a planting", onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
+export function SiteOverview({ slug, partId, partName, today, totals, map, places = [], onPlace, onStart, canRecord = true, startLabel, onOpenSeason, pinMoved, onMovePin, onUndoPin }: {
   slug: string;
   /** A picture of where it is (the host's mini map): first on the page, and it scrolls up with it. */
   map?: ReactNode;
@@ -50,7 +50,7 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
   const fellBack = !!partId && !!partName && !!o?.wholeSite;
 
   return (
-    <Frame onStart={onStart} label={canRecord ? startLabel : "Unavailable for new plantings"} canRecord={canRecord} busy={loading}>
+    <Frame onStart={onStart} label={startLabel ?? (canRecord ? "Record a planting" : "Unavailable for new plantings")} canRecord={canRecord} busy={loading}>
       {map}
       {onMovePin && pinMoved && <PinFix moved onMove={onMovePin} onUndo={onUndoPin} />}
         {loading ? (
@@ -60,21 +60,21 @@ export function SiteOverview({ slug, partId, partName, today, totals, map, place
           </div>
         ) : failed ? (
           <div className="cn-callout cn-callout--risk cn-callout--sm" role="alert">
-            Couldn&apos;t load what&apos;s been planted here. You can still add a planting event.{" "}
+            Couldn&apos;t load what&apos;s been planted here.{canRecord ? " You can still add a planting event." : ""}{" "}
             <button type="button" className="cn-btn cn-btn--soft cn-btn--sm" onClick={retry}>Try again</button>
           </div>
         ) : !o || o.trees.length === 0 ? (
           <p className={panel.empty}>Nothing recorded here yet.</p>
         ) : (
           <>
-            {fellBack && <p className={panel.context}>Nothing recorded at {partName} yet, so this is the whole site.</p>}
+            {fellBack && <p className={panel.context}>Nothing recorded at {partName} yet. Showing records for All Areas.</p>}
             <StatTiles stats={tiles(totals, slug, o.wholeSite ? null : partId, places.length)} />
           </>
         )}
         {/* Right under the tiles (or with nothing recorded yet): the site's places, each a way to its page. */}
         {places.length > 0 && (
           <FigureList
-            title="Places"
+            title="Areas under this site"
             rows={places.map((p) => ({ key: p.id, name: p.name, sub: p.sub, figure: formatNumber(totals[`${slug}/${p.id}`]?.plants ?? 0), onClick: onPlace && (() => onPlace(p.id)) }))}
           />
         )}

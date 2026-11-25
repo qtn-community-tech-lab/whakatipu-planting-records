@@ -27,7 +27,7 @@ const MAX_QUANTITY = 100_000;
 export const eventInputSchema = z.object({
   contextSeason: z.string().regex(/^(autumn|spring)-\d{4}$/).optional(),
   siteSlug: z.string().regex(SLUG, { error: "Choose a site." }),
-  partId: z.string().min(1).max(INPUT_LIMITS.identifier).nullable(),
+  partId: z.string().min(1, "Choose a named area.").max(INPUT_LIMITS.identifier).nullable(),
   plantedOn: z.string().refine(isIsoDate, { error: "Enter a valid planting date." }),
   season: z.enum(EVENT_SEASONS, { error: "Choose a season." }),
   seasonYear: z.number({ error: "Enter the season's year." }).int().min(2015, { error: "The year must be 2015 or later." }).max(2100),
@@ -67,7 +67,8 @@ export function eventSchema(lookups: EventLookups, today: string) {
     if (v.contextSeason) { const problem = plantedOnProblem(v.plantedOn, v.contextSeason, today); if (problem) add(["plantedOn"], problem); }
     const site = lookups.places.find((p) => p.slug === v.siteSlug);
     if (!site) add(["siteSlug"], "That site is not in the site list.");
-    else if (v.partId !== null && !site.parcels.some((p) => p.id === v.partId)) {
+    else if (v.partId === null) add(["partId"], "Choose a named area.");
+    else if (!site.parcels.some((p) => p.id === v.partId)) {
       add(["partId"], "That part does not belong to the chosen site.");
     }
 

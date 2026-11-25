@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   createSiteSchema,
   editSiteSchema,
+  SITE_AREA_REQUIRED,
   type CreateSiteInput,
   type EditSiteInput,
   type PlantingAreaEdit,
@@ -68,6 +69,7 @@ type SiteFormProps = {
 );
 const siteFormSchema = editSiteSchema.extend({
   slug: createSiteSchema.shape.slug.optional(),
+  areas: editSiteSchema.shape.areas.min(1, SITE_AREA_REQUIRED),
 });
 type SiteFormValues = z.infer<typeof siteFormSchema>;
 
@@ -122,10 +124,13 @@ export function SiteForm(props: SiteFormProps) {
     boundary: areaValues[index]?.boundary ?? null,
   }));
   const { isSubmitting, errors } = form.formState;
+  const addAreaButton = useRef<HTMLButtonElement>(null);
+  const areaError = errors.areas?.root?.message ?? errors.areas?.message;
   // Field arrays mark appended values dirty; track manual address edits by stable row identity.
   const editedAreaAddresses = useRef(new Set<string>());
 
   function addArea() {
+    if (form.getValues("areas").length === 0) form.clearErrors("areas");
     const first =
       !props.values && !savedSiteSlug && form.getValues("areas").length === 0;
     append({
@@ -227,7 +232,8 @@ export function SiteForm(props: SiteFormProps) {
         const first = issues[0];
         if (first) {
           const mapField = /^areas\.(\d+)\.(?:pin|boundary)$/.exec(first.path);
-          if (mapField)
+          if (first.path === "areas") requestAnimationFrame(() => addAreaButton.current?.focus());
+          else if (mapField)
             requestAnimationFrame(() =>
               document
                 .getElementById(`area-map-${Number(mapField[1])}`)
@@ -254,6 +260,10 @@ export function SiteForm(props: SiteFormProps) {
       onSubmit={(event) =>
         void form.handleSubmit(handleSubmit, (issues) => {
           if (issues.name || issues.slug || issues.description) return;
+          if (issues.areas?.root?.message || issues.areas?.message) {
+            addAreaButton.current?.focus();
+            return;
+          }
           const index = fields.findIndex((_, i) => issues.areas?.[i]);
           const area = issues.areas?.[index];
           if (
@@ -360,13 +370,9 @@ export function SiteForm(props: SiteFormProps) {
           <FieldSet id="areas">
             <FieldLegend>Areas</FieldLegend>
             <FieldDescription>
-              Named parts of this site. Save the site and its areas together
-              below.
+              Add at least one area. Save the site and its areas together below.
             </FieldDescription>
             <FieldGroup>
-              {fields.length === 0 && (
-                <p>No areas yet. Add an area to name a part of this site.</p>
-              )}
               {fields.map((row, index) => {
                 const existing = form.getValues(`areas.${index}.existing`);
                 const area = mapAreas[index]!;
@@ -514,12 +520,15 @@ export function SiteForm(props: SiteFormProps) {
                 );
               })}
               <Button
+                ref={addAreaButton}
                 type="button"
                 variant="secondary"
+                aria-describedby={areaError ? "site-areas-error" : undefined}
                 onClick={addArea}
               >
                 Add area
               </Button>
+              <FieldError id="site-areas-error">{areaError}</FieldError>
             </FieldGroup>
           </FieldSet>
           {errors.root && (

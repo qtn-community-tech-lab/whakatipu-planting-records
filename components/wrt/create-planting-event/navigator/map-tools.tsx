@@ -9,11 +9,11 @@ import s from "./navigator.module.css";
  * Wide screens: a toolbar down the map's right edge, and a bar along the bottom for stepping through the areas.
  * Each button in the bar shows its key, so the keys are learned from the buttons that do the same thing.
  */
-export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, onStep, onLetGo }: {
+export function MapTools({ map, drawing, drawAction, onAddLocation, areas, shown, onStep, onLetGo }: {
   map: RefObject<maplibregl.Map | null>;
   /** While drawing, only the zoom and Find me work. */
   drawing: boolean;
-  onDraw: () => void;
+  drawAction?: { label: string; onClick: () => void } | undefined;
   /** Left out once an area is drawn, as in the header's + menu on phones. */
   onAddLocation?: (() => void) | undefined;
   /** How many areas are kept, and which is brought forward (its place in the list, or -1). */
@@ -25,7 +25,7 @@ export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, on
 }) {
   return (
     <>
-      <MapToolbar map={map} drawing={drawing} onDraw={onDraw} onAddLocation={onAddLocation} drawShortcut="D" />
+      <MapToolbar map={map} drawing={drawing} onDraw={drawAction?.onClick} drawLabel={drawAction?.label} onAddLocation={onAddLocation} drawShortcut="D" />
       {/* The drawn areas, stepped through (Draw area is the toolbar's pencil, or D). While drawing or placing, the bottom is theirs. */}
       {!drawing && areas > 0 && (
         <div className={s.rest} role="group" aria-label="Drawn areas">
@@ -42,14 +42,14 @@ export function MapTools({ map, drawing, onDraw, onAddLocation, areas, shown, on
 }
 
 export function MapToolbar({
-  map, drawing, onDraw, onAddLocation, drawLabel = "Draw area", locationLabel = "New location",
+  map, drawing, onDraw, onAddLocation, drawLabel, locationLabel = "New location",
   drawShortcut, drawButtonRef,
 }: {
   map: RefObject<maplibregl.Map | null>;
   drawing: boolean;
-  onDraw: () => void;
+  onDraw?: (() => void) | undefined;
   onAddLocation?: (() => void) | undefined;
-  drawLabel?: string;
+  drawLabel?: string | undefined;
   locationLabel?: string;
   drawShortcut?: string;
   drawButtonRef?: Ref<HTMLButtonElement>;
@@ -59,9 +59,9 @@ export function MapToolbar({
   return (
     <>
       <div className={s.tools} role="group" aria-label="Map tools">
-        <button type="button" className={s.toolDraw} onClick={onDraw} disabled={drawing} aria-label={drawLabel} aria-keyshortcuts={drawShortcut} title={drawShortcut ? `${drawLabel} (${drawShortcut})` : drawLabel} ref={drawButtonRef} data-draws="">
+        {onDraw && <button type="button" className={s.toolDraw} onClick={onDraw} disabled={drawing} aria-label={drawLabel} aria-keyshortcuts={drawShortcut} title={drawShortcut ? `${drawLabel} (${drawShortcut})` : drawLabel} ref={drawButtonRef} data-draws="">
           <Pencil size={18} strokeWidth={2.4} aria-hidden="true" />
-        </button>
+        </button>}
         {onAddLocation && (
           <button type="button" onClick={onAddLocation} disabled={drawing} aria-label={locationLabel} title={locationLabel}>
             <MapPinPlus size={18} strokeWidth={2.2} aria-hidden="true" />

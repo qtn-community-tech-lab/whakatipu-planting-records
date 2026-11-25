@@ -46,12 +46,12 @@ export function DrawingControls({
             <button type="button" className={`${s.pillBtn} ${s.danger}`} onClick={onRemove}>
               <Trash2 size={16} strokeWidth={2.4} aria-hidden="true" />Remove
             </button>
-          ) : n > 0 && (
+          ) : n > 0 && !draft.boundary?.editing && (
             <button type="button" className={s.pillBtn} onClick={draw.startAgain} title="Start again">
               <RotateCcw size={16} strokeWidth={2.4} aria-hidden="true" /><span className={s.buttonLabel}>Start again</span>
             </button>
           )}
-          <button type="button" className={s.pillGo} onClick={() => draw.done()} disabled={n < 3 || !named || !!draw.trace}>{doneLabel}</button>
+          {!draft.boundary && <button type="button" className={s.pillGo} onClick={() => draw.done()} disabled={n < 3 || !named || !!draw.trace}>{doneLabel}</button>}
           <button type="button" className={s.pillCancel} onClick={onStop} aria-label="Stop drawing, keep nothing new" title="Stop drawing">
             <X size={18} strokeWidth={2.4} aria-hidden="true" />
           </button>

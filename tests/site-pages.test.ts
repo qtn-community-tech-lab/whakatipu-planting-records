@@ -56,7 +56,7 @@ beforeEach(async () => {
   vi.resetAllMocks();
   mocks.authenticated.mockResolvedValue(true);
   mocks.deactivate.mockResolvedValue({ data: { slug: values.slug }, error: null });
-  mocks.areas.mockResolvedValue([]);
+  mocks.areas.mockResolvedValue([area]);
   mocks.seasons.mockResolvedValue(await q.seasons());
   mocks.readArea.mockResolvedValue(null);
   mocks.create.mockResolvedValue({ data: { slug: values.slug }, error: null });
@@ -106,9 +106,10 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   });
 
   it("writes only allowed fields and invalidates shared data before redirecting", async () => {
-    const input = { ...values, areas: [], slug: "changed-slug", updated_by: "spoofed", deactivated_at: "now" };
+    mocks.createArea.mockResolvedValue({ data: { slug: area.slug }, error: null });
+    const input = { ...values, areas: kind === "new" ? [area] : [], slug: "changed-slug", updated_by: "spoofed", deactivated_at: "now" };
     await expect((await pageForm(kind))!.props.onSubmit(input)).rejects.toThrow("REDIRECT");
-    if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...values, areas: [], slug: "changed-slug" });
+    if (kind === "new") expect(mocks.create).toHaveBeenCalledWith({ ...values, areas: [area], slug: "changed-slug" });
     else expect(mocks.update).toHaveBeenCalledWith(values.slug, { name: values.name, description: values.description, areas: [] });
     expect(mocks.tag).toHaveBeenCalledWith("supabase");
     expect(mocks.revalidate).toHaveBeenCalledWith("/", "layout");
@@ -119,20 +120,29 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
 
   it("preserves retryable failures without invalidating caches", async () => {
     (kind === "new" ? mocks.create : mocks.update).mockRejectedValue(new Error("Database unavailable"));
-    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [] })).toHaveProperty("error");
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: kind === "new" ? [area] : [] })).toHaveProperty("error");
     expect(mocks.tag).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("explains database permission failures", async () => {
     (kind === "new" ? mocks.create : mocks.update).mockResolvedValue({ data: null, error: { code: "42501" } });
-    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [] })).toEqual({ error: expect.stringContaining("staff account") });
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: kind === "new" ? [area] : [] })).toEqual({ error: expect.stringContaining("staff account") });
+  });
+
+  it("rejects a site without any new or saved areas", async () => {
+    mocks.areas.mockResolvedValue([]);
+    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: [] })).toEqual({
+      issues: [{ path: "areas", message: "Add at least one area." }],
+    });
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(mocks.update).not.toHaveBeenCalled();
   });
 });
 
 it("maps duplicate creation slugs to the slug field", async () => {
   mocks.create.mockResolvedValue({ data: null, error: { code: "23505" } });
-  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [] })).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique web address name") }] });
+  expect(await (await pageForm("new"))!.props.onSubmit({ ...values, areas: [area] })).toEqual({ issues: [{ path: "slug", message: expect.stringContaining("unique web address name") }] });
   expect(mocks.tag).not.toHaveBeenCalled();
 });
 

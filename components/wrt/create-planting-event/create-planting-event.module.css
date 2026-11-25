@@ -108,6 +108,13 @@
 
 
 .appReturn { position: absolute; z-index: 6; right: 12px; top: calc(10px + env(safe-area-inset-top)); display: flex; gap: 8px; }
-@media (max-width: 767px) { .screen { --app-return-height: 44px; } .appReturn { top: calc(6px + env(safe-area-inset-top)); } }
+@media (max-width: 767px) {
+  .screen { --app-return-height: 44px; }
+  .appReturn { top: calc(6px + env(safe-area-inset-top)); }
+  .screen:has(.viewSite) { --app-return-height: calc(2 * var(--h-btn-sm) + 12px); }
+  .appReturn:has(> .viewSite) { display: grid; grid-template-columns: auto auto; }
+  .appReturn:has(> .viewSite) > :first-child { grid-column: 1 / -1; justify-self: end; }
+  .appReturn:has(> .viewSite) > :not(:first-child) { padding-inline: 12px; }
+}
 
 .scopeNotice { position: absolute; z-index: 5; right: 12px; bottom: 78px; max-width: 300px; padding: 12px; border-radius: var(--radius-card); background: var(--cn-paper); font-size: 13px; }

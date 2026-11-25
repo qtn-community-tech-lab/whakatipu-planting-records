@@ -15,6 +15,7 @@ import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import {
   editSiteSchema,
+  SITE_AREA_REQUIRED,
   type EditSiteInput,
   type SiteSubmitResult,
 } from "@/db/types";
@@ -49,6 +50,8 @@ export default async function EditSitePage({
       };
     let savedSlug: string;
     try {
+      if (!parsed.data.areas.some((area) => !area.existing) && !(await listPlantingAreas(slug)).length)
+        return { issues: [{ path: "areas", message: SITE_AREA_REQUIRED }] };
       const { data, error } = await updateSite(slug, {
         name: parsed.data.name,
         description: parsed.data.description,

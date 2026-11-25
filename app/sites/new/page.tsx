@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { createSite, updateSite } from "@/db/queries/sites";
+import { createSite, listPlantingAreas, updateSite } from "@/db/queries/sites";
 import { savePlantingAreas } from "@/app/sites/save-planting-areas";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import {
   createSiteSchema,
+  SITE_AREA_REQUIRED,
   type CreateSiteInput,
   type SiteSubmitResult,
 } from "@/db/types";
@@ -47,6 +48,11 @@ export default async function NewSitePage() {
     const siteValues = { ...details, areas };
     let slug: string;
     try {
+      if (
+        !areas.some((area) => !area.existing) &&
+        (!savedSiteSlug || !(await listPlantingAreas(savedSiteSlug)).length)
+      )
+        return { issues: [{ path: "areas", message: SITE_AREA_REQUIRED }] };
       const { data, error } = savedSiteSlug
         ? await updateSite(savedSiteSlug, siteValues)
         : await createSite({ ...siteValues, slug: siteSlug });

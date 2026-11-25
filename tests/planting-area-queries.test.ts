@@ -92,13 +92,14 @@ it("clears a pin and its source while saving a boundary on the same area", async
   });
 });
 
-it("updates only the selected area's boundary and audit fields", async () => {
+it.each([false, true])("writes the boundary only when its current presence matches editing=%s", async (editing) => {
   fetch.mockResolvedValue(new Response(JSON.stringify({ slug: "east-bank" })));
   const boundary = boundaryFromCorners([[168, -45], [168.01, -45], [168.01, -44.99]]);
-  await updatePlantingAreaBoundary("reserve", "east-bank", boundary);
+  await updatePlantingAreaBoundary("reserve", "east-bank", boundary, editing);
   const { url, body } = request();
   expect(url.searchParams.get("site")).toBe("eq.reserve");
   expect(url.searchParams.get("slug")).toBe("eq.east-bank");
+  expect(url.searchParams.get("boundary")).toBe(editing ? "not.is.null" : "is.null");
   expect(body).toEqual({ boundary, updated_at: expect.any(String), updated_by: "current-app-user" });
 });
 
