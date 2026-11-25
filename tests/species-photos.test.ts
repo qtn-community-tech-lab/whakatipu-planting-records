@@ -1,4 +1,3 @@
-import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { topPlantedSpecies } from "@/lib/wrt/species-photos";
 import species from "@/data/species.json";
