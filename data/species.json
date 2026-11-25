@@ -71,8 +71,7 @@
     "photos": [
       {
         "src": "/species/aristotelia-serrata.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/73/Aristotelia_serrata_in_Mount_Aspiring_National_Park_01.jpg/960px-Aristotelia_serrata_in_Mount_Aspiring_National_Park_01.jpg",
@@ -265,8 +264,7 @@
     "photos": [
       {
         "src": "/species/carex-secta.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1b/Carex_secta.tif/lossy-page1-960px-Carex_secta.tif.jpg",
@@ -476,8 +474,7 @@
     "photos": [
       {
         "src": "/species/carpodetus-serratus.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Carpodetus_serratus_Lake_Wilkie_Catlins_1.JPG/960px-Carpodetus_serratus_Lake_Wilkie_Catlins_1.JPG",
@@ -1095,6 +1092,10 @@
     "register_note": null,
     "photos": [
       {
+        "src": "/species/coprosma-rigida.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
+      {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9b/Coprosma_rigida_1.jpg/960px-Coprosma_rigida_1.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rigida_1.jpg",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -1140,6 +1141,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/coprosma-rotundifolia.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c3/Coprosma_rotundifolia_11.jpg/960px-Coprosma_rotundifolia_11.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rotundifolia_11.jpg",
@@ -1190,6 +1195,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/coprosma-rugosa.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Coprosma_rugosa_258334218.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Coprosma_rugosa_258334218.jpg",
@@ -1288,8 +1297,7 @@
     "photos": [
       {
         "src": "/species/cordyline-australis.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f7/CabbageTreeKaihoka.jpg/960px-CabbageTreeKaihoka.jpg",
@@ -1339,8 +1347,7 @@
     "photos": [
       {
         "src": "/species/corokia-cotoneaster.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Corokia_cotoneaster_in_Christchurch_Botanic_Gardens.jpg/960px-Corokia_cotoneaster_in_Christchurch_Botanic_Gardens.jpg",
@@ -1389,6 +1396,10 @@
     "register_note": null,
     "photos": [
       {
+        "src": "/species/dacrycarpus-dacrydioides.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
+      {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Dacrycarpus_dacrydioides_young_adult.jpg/960px-Dacrycarpus_dacrydioides_young_adult.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Dacrycarpus_dacrydioides_young_adult.jpg",
         "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
@@ -1436,8 +1447,7 @@
     "photos": [
       {
         "src": "/species/discaria-toumatou.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e9/Discaria_toumatou_in_Aoraki_Mount_Cook_NP_01.jpg/960px-Discaria_toumatou_in_Aoraki_Mount_Cook_NP_01.jpg",
@@ -1579,8 +1589,7 @@
     "photos": [
       {
         "src": "/species/fuchsia-excorticata.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Fuchsia_excorticata_-_mature_specimen.jpg/960px-Fuchsia_excorticata_-_mature_specimen.jpg",
@@ -1630,8 +1639,7 @@
     "photos": [
       {
         "src": "/species/fuscospora-cliffortioides.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://upload.wikimedia.org/wikipedia/commons/1/12/Mountain_Beech.jpg",
@@ -1687,8 +1695,7 @@
     "photos": [
       {
         "src": "/species/fuscospora-fusca.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5c/Nothofagus_fusca_in_Queenstown_Gardens_%281%29.jpg/960px-Nothofagus_fusca_in_Queenstown_Gardens_%281%29.jpg",
@@ -1742,6 +1749,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/griselinia-littoralis.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://upload.wikimedia.org/wikipedia/commons/1/13/Griselinia_littoralis_258334503.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Griselinia_littoralis_258334503.jpg",
@@ -2137,6 +2148,10 @@
     "register_note": null,
     "photos": [
       {
+        "src": "/species/leptospermum-scoparium.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
+      {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0f/Leptospermum_scoparium_in_Abel_Tasman_NP_%282%29.jpg/960px-Leptospermum_scoparium_in_Abel_Tasman_NP_%282%29.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Leptospermum_scoparium_in_Abel_Tasman_NP_(2).jpg",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -2332,8 +2347,7 @@
     "photos": [
       {
         "src": "/species/melicytus-alpinus.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ac/Melicytus_alpinus_-_Christchurch_Botanic_Gardens_-_Christchurch%2C_NZ_-_DSC00821.jpg/960px-Melicytus_alpinus_-_Christchurch_Botanic_Gardens_-_Christchurch%2C_NZ_-_DSC00821.jpg",
@@ -2385,6 +2399,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/melicytus-ramiflorus.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Mahoe-foliage.jpg/960px-Mahoe-foliage.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mahoe-foliage.jpg",
@@ -2697,6 +2715,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/olearia-arborescens.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bb/Olearia_arborescens_kz01.jpg/960px-Olearia_arborescens_kz01.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Olearia_arborescens_kz01.jpg",
@@ -3310,6 +3332,10 @@
     "register_note": null,
     "photos": [
       {
+        "src": "/species/pennantia-corymbosa.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
+      {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b8/Pennantia_corymbosa_tree11.JPG/960px-Pennantia_corymbosa_tree11.JPG",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pennantia_corymbosa_tree11.JPG",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -3506,6 +3532,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/pittosporum-eugenioides.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Pittosporum_eugenioides_01.jpg/960px-Pittosporum_eugenioides_01.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pittosporum_eugenioides_01.jpg",
@@ -3910,8 +3940,7 @@
     "photos": [
       {
         "src": "/species/prumnopitys-taxifolius.webp",
-        "attribution": "WRT team · © Whakatipu Reforestation Trust · All rights reserved",
-        "sourceUrl": "https://wrtqt.org.nz/"
+        "attribution": "Whakatipu Reforestation Trust"
       },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fe/MataiTree877.jpg/960px-MataiTree877.jpg",
@@ -4306,6 +4335,10 @@
     "register_note": null,
     "photos": [
       {
+        "src": "/species/streblus-heterophyllus.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
+      {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b6/Streblus_heterophyllus_12.JPG/960px-Streblus_heterophyllus_12.JPG",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Streblus_heterophyllus_12.JPG",
         "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
@@ -4574,6 +4607,10 @@
     "contested_group": null,
     "register_note": null,
     "photos": [
+      {
+        "src": "/species/veronica-salicifolia.webp",
+        "attribution": "Whakatipu Reforestation Trust"
+      },
       {
         "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/50/Veronica_salicifolia_in_Christchurch_Botanic_Gardens_01.jpg/960px-Veronica_salicifolia_in_Christchurch_Botanic_Gardens_01.jpg",
         "sourceUrl": "https://commons.wikimedia.org/wiki/File:Veronica_salicifolia_in_Christchurch_Botanic_Gardens_01.jpg",
