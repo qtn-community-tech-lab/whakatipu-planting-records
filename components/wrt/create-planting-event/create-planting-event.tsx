@@ -16,7 +16,7 @@ import { fromPin, partBesideSite, spotKind } from "@/lib/wrt/text";
 import { FormPanel, SHEET_HEIGHT, type Snap } from "@/components/wrt/shared/form-panel";
 import { MiniMap, NEW_PIN_CLASS } from "@/components/wrt/shared/mini-map";
 import { paddingFor } from "./map/layout";
-import { keptPin, kmToNearest, nearestPin, pinFor, sitePins, withKept, type KeptPlace, type LngLat, type PlantTotals, type SitePin } from "./map/sites";
+import { focusPoints, keptPin, kmToNearest, nearestPin, pinFor, sitePins, withKept, type KeptPlace, type LngLat, type PlantTotals, type SitePin } from "./map/sites";
 import { PartMenu } from "./site/part-menu";
 import { SiteOverview } from "./site/site-overview";
 import { PastSeason } from "./seasons/past-season";
@@ -75,9 +75,8 @@ export interface CreatePlantingEventProps {
 }
 
 export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart, initialSeason, options, today, exitHref, exitLabel = "Return to all records", recording = false, initialEvent, scopeNotice, writableSites = options.sites, suggestions, totals, areas, onSave, onSaveBoundary, onSaveEdit }: CreatePlantingEventProps) {
-  // Where the page opened. Only the first value counts: our address changes make Next's server refreshes (after a
-  // save) render with the new address, and a new start site would rebuild the map. (Part and season only seed state.)
-  const [initialSite] = useState(siteFromAddress);
+  // Preserve the starting location when a server refresh renders the current address.
+  const [{ site: initialSite, part: startPart }] = useState({ site: siteFromAddress, part: initialPart ?? null });
   const [recordSeason, setRecordSeason] = useState(initialSeason?.slug);
   const [focusedEvent, setFocusedEvent] = useState(initialEvent);
   const wide = useMedia(WIDE);
@@ -104,19 +103,15 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
   const allPins = useMemo(() => [...basePins, ...kept.map(keptPin)], [basePins, kept]);
   const { pins, pinAt, isMoved, move } = usePinMoves(allPins);
   const focusAt = useCallback((slug: string, partId: string | null): LngLat | null => {
-    const at = pinAt(slug, partId);
-    if (at) return at;
-    const siteBoundaries = boundaries.filter((entry) => entry.site === slug);
-    const points = siteBoundaries.find((entry) => entry.part === partId)?.boundary.coordinates[0] ??
-      siteBoundaries.flatMap((entry) => entry.boundary.coordinates[0]);
-    return points.length ? boundsOf(points).getCenter().toArray() : null;
-  }, [pinAt, boundaries]);
+    const points = focusPoints(pins, boundaries, slug, partId);
+    return points.length > 1 ? boundsOf(points).getCenter().toArray() : points[0] ?? null;
+  }, [pins, boundaries]);
   // A site's pins (its own and its places'): distances to a site are to the nearest of them.
   const pinsOf = (slug: string) => pins.filter((p) => p.slug === slug).map((p) => p.at);
   // A pin clicked on the map: a new object each click, so clicking the same pin again still counts.
   const [picked, setPicked] = useState<{ slug: string; partId: string | null } | null>(null);
   const [siteSlug, setSiteSlug] = useState(initialSite);
-  const [part, setPart] = useState<string | null>(initialPart ?? null);
+  const [part, setPart] = useState(startPart);
   // What the camera centres: the new location if there is one, else the chosen site's (part's) pin.
   const [focus, setFocus] = useState<LngLat | null>(null);
   const site = sites.find((x) => x.slug === siteSlug);
@@ -187,7 +182,7 @@ export function CreatePlantingEvent({ initialSite: siteFromAddress, initialPart,
 
   // The area brought forward: the map fits it and darkens the rest.
   const [shownArea, setShownArea] = useState<number | null>(null);
-  const map = usePlantingMap({ pins, boundaries, initialSite, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
+  const map = usePlantingMap({ pins, boundaries, initialSite, initialPart: startPart, container: mapEl, pinClass: s.pin ?? "", wideQuery: WIDE, onPick: pickPin, onTap: tapMap });
   const { findMe, said } = useFindMe(map);
 
   function pickPin(pin: SitePin) {

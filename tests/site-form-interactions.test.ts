@@ -2,6 +2,7 @@ import { createElement, type ComponentProps, type ChangeEvent } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, it, vi } from "vitest";
 import type * as HookForm from "react-hook-form";
+import type * as ButtonModule from "@/components/ui/button";
 import { createPlantingAreaSchema, type PlantingAreaFormValues } from "@/db/types";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 
@@ -9,6 +10,8 @@ const captured = vi.hoisted(() => ({
   defaults: undefined as { slug: string; name: string; description: string; areas: PlantingAreaFormValues[] } | undefined,
   inputs: new Map<string, ComponentProps<"input">>(),
   form: undefined as Pick<HookForm.UseFormReturn, "setValue"> | undefined,
+  append: vi.fn(),
+  addArea: undefined as (() => void) | undefined,
 }));
 vi.mock("react-hook-form", async (importOriginal) => {
   const actual = await importOriginal<typeof HookForm>();
@@ -17,6 +20,18 @@ vi.mock("react-hook-form", async (importOriginal) => {
     vi.spyOn(form, "setValue");
     captured.form = form;
     return form;
+  }, useFieldArray: (...args: Parameters<typeof actual.useFieldArray>) => ({
+    ...actual.useFieldArray(...args), append: captured.append,
+  }) };
+});
+vi.mock("@/components/ui/button", async (importOriginal) => {
+  const actual = await importOriginal<typeof ButtonModule>();
+  return { ...actual, Button: (props: ComponentProps<typeof actual.Button>) => {
+    if (props.children === "Add area" && props.onClick) {
+      const onClick = props.onClick;
+      captured.addArea = () => onClick({} as Parameters<typeof onClick>[0]);
+    }
+    return createElement(actual.Button, props);
   } };
 });
 vi.mock("@/components/ui/input", () => ({ Input: (props: ComponentProps<"input">) => {
@@ -26,7 +41,7 @@ vi.mock("@/components/ui/input", () => ({ Input: (props: ComponentProps<"input">
 
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 
-beforeEach(() => { captured.defaults = undefined; captured.inputs.clear(); vi.clearAllMocks(); });
+beforeEach(() => { captured.defaults = undefined; captured.addArea = undefined; captured.inputs.clear(); vi.clearAllMocks(); });
 
 function renderCreate() {
   return renderToStaticMarkup(createElement(SiteForm, {
@@ -68,6 +83,25 @@ function withNewAreas(...names: string[]) {
     areas: names.map((name) => ({ name, slug: "", description: "", existing: false })),
   };
 }
+
+it("prefills the first area of a new site with its name and custom web address", () => {
+  withNewAreas();
+  captured.defaults!.slug = "custom-site";
+  renderCreate();
+  captured.addArea!();
+  expect(captured.append).toHaveBeenCalledWith({
+    name: "Lake Hayes", slug: "custom-site", description: "", pin: null, boundary: null, existing: false,
+  });
+});
+
+it("starts additional areas blank and keeps the matching area's address in sync", () => {
+  withNewAreas("Lake Hayes");
+  renderCreate();
+  captured.addArea!();
+  expect(captured.append).toHaveBeenCalledWith(expect.objectContaining({ name: "", slug: "" }));
+  change("slug", "custom-site");
+  expect(captured.form!.setValue).toHaveBeenLastCalledWith("areas.0.slug", "custom-site", { shouldValidate: false });
+});
 
 it("shows each area's map below its own fields by default", () => {
   withNewAreas("East bank", "West bank");

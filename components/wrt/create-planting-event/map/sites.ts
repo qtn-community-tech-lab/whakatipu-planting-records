@@ -1,6 +1,7 @@
 import { partBesideSite, searchKey } from "@/lib/wrt/text";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
+import type { AreaBoundary } from "@/lib/wrt/areas/geometry";
 /** [longitude, latitude] */
 export type LngLat = [number, number];
 
@@ -51,6 +52,18 @@ export function pinOf(pins: readonly SitePin[], siteSlug: string, partId: string
 
 export function pinFor(pins: readonly SitePin[], siteSlug: string, partId: string | null = null): LngLat | null {
   return pinOf(pins, siteSlug, partId)?.at ?? null;
+}
+
+export type MappedBoundary = { site: string; part: string; boundary: AreaBoundary };
+
+export function focusPoints(pins: readonly SitePin[], boundaries: readonly MappedBoundary[], site: string, part: string | null): LngLat[] {
+  const pin = pins.find((p) => p.slug === site && p.partId === part);
+  if (pin) return [pin.at];
+  const siteBoundaries = boundaries.filter((b) => b.site === site);
+  const boundary = siteBoundaries.find((b) => b.part === part);
+  if (boundary) return boundary.boundary.coordinates[0];
+  const fallback = pinFor(pins, site);
+  return fallback ? [fallback] : siteBoundaries.flatMap((b) => b.boundary.coordinates[0]);
 }
 
 /** How far apart two points are, in km (flat-earth maths is fine at this scale). */

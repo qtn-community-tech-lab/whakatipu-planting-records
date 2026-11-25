@@ -9,16 +9,17 @@ import type { Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
 import { groupNearbyLocations } from "@/lib/wrt/site-locations";
 import { boundsOf, createMap, pinMarker, spotMarker } from "./map-scene";
-import { pinFor, type LngLat, type SitePin } from "./sites";
+import { focusPoints, type LngLat, type MappedBoundary, type SitePin } from "./sites";
 import { boundaryFeatures, boundaryFill, boundaryLine, type AreaBoundary } from "@/lib/wrt/areas/geometry";
 
 const SITE_ZOOM = 15;
 
-export function usePlantingMap({ pins, boundaries, initialSite, container, pinClass, wideQuery, onPick, onTap }: {
+export function usePlantingMap({ pins, boundaries, initialSite, initialPart, container, pinClass, wideQuery, onPick, onTap }: {
   pins: SitePin[];
-  boundaries: { boundary: AreaBoundary; site: string }[];
+  boundaries: MappedBoundary[];
   /** Site slug to start on, or "" to show every site. */
   initialSite: string;
+  initialPart: string | null;
   container: RefObject<HTMLDivElement | null>;
   pinClass: string;
   /** The media query for the side panel; read once, when the camera is aimed. */
@@ -57,9 +58,8 @@ export function usePlantingMap({ pins, boundaries, initialSite, container, pinCl
       m.addSource("area-boundaries", { type: "geojson", data: boundaryFeatures(boundariesNow.current.map((entry) => entry.boundary)) });
       m.addLayer({ id: "area-boundary-fill", source: "area-boundaries", type: "fill", paint: boundaryFill });
       m.addLayer({ id: "area-boundary-line", source: "area-boundaries", type: "line", paint: boundaryLine });
-      const start = initialSite ? pinFor(pinsNow.current, initialSite) : null;
-      const sitePoints = boundariesNow.current.filter((b) => b.site === initialSite).flatMap((b) => b.boundary.coordinates[0]);
-      m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : everyPosition(m, sitePoints.length ? sitePoints : all()));
+      const points = focusPoints(pinsNow.current, boundariesNow.current, initialSite, initialPart);
+      m.jumpTo(points.length === 1 ? { center: points[0]!, zoom: SITE_ZOOM } : everyPosition(m, points.length ? points : all()));
       drawPins();
     });
     // Pins close together on screen become one marker with their total; regrouped as the map moves.
@@ -96,7 +96,7 @@ export function usePlantingMap({ pins, boundaries, initialSite, container, pinCl
       m.remove();
       map.current = null;
     };
-  }, [initialSite, container, pinClass, wideQuery]);
+  }, [initialSite, initialPart, container, pinClass, wideQuery]);
 
   return map;
 }
