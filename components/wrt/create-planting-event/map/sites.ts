@@ -1,6 +1,7 @@
 import { partBesideSite, searchKey } from "@/lib/wrt/text";
 import type { SiteOption } from "@/lib/wrt/events/form-options";
 import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
+import type { AreaBoundary } from "@/lib/wrt/areas/geometry";
 /** [longitude, latitude] */
 export type LngLat = [number, number];
 
@@ -23,23 +24,20 @@ export type PlantTotals = Record<string, {
   last?: string | undefined; lastOrder?: number | undefined;
 }>;
 
-/** The pins of the sites the form knows, where coordinates are available.
- * A site with one area gets one pin for the whole site. */
+/** Each pin selects its named area, including at single-area sites. */
 export function sitePins(
   sites: readonly { slug: string; name: string; parts: readonly { id: string; name: string }[] }[],
   areas: readonly Pick<PlantingAreaPin, "slug" | "site" | "wrt_number" | "lat" | "lng">[],
   totals: Record<string, { plants: number }>,
 ): SitePin[] {
   const bySlug = new Map(sites.map((x) => [x.slug, x]));
-  const areaCount = new Map<string, number>();
-  for (const a of areas) areaCount.set(a.site, (areaCount.get(a.site) ?? 0) + 1);
   return areas.flatMap((a) => {
     const site = bySlug.get(a.site);
     if (!site || a.lat === null || a.lng === null) return [];
     const id = a.wrt_number ?? a.slug;
-    const part = areaCount.get(a.site) === 1 ? undefined : site.parts.find((p) => p.id === id);
+    const part = site.parts.find((p) => p.id === id);
     const plants = part ? totals[`${a.site}/${id}`]?.plants ?? 0 : totals[a.site]?.plants ?? 0;
-    return [{ slug: a.site, partId: part ? id : null, label: part ? `${site.name} · ${partBesideSite(part.name, site.name)}` : site.name, at: [a.lng, a.lat] as LngLat, plants }];
+    return [{ slug: a.site, partId: part ? id : null, label: part && part.name !== site.name ? `${site.name} · ${partBesideSite(part.name, site.name)}` : site.name, at: [a.lng, a.lat] as LngLat, plants }];
   });
 }
 
@@ -51,6 +49,18 @@ export function pinOf(pins: readonly SitePin[], siteSlug: string, partId: string
 
 export function pinFor(pins: readonly SitePin[], siteSlug: string, partId: string | null = null): LngLat | null {
   return pinOf(pins, siteSlug, partId)?.at ?? null;
+}
+
+export type MappedBoundary = { site: string; part: string; boundary: AreaBoundary };
+
+export function focusPoints(pins: readonly SitePin[], boundaries: readonly MappedBoundary[], site: string, part: string | null): LngLat[] {
+  const pin = pins.find((p) => p.slug === site && p.partId === part);
+  if (pin) return [pin.at];
+  const siteBoundaries = boundaries.filter((b) => b.site === site);
+  const boundary = siteBoundaries.find((b) => b.part === part);
+  if (boundary) return boundary.boundary.coordinates[0];
+  const fallback = pinFor(pins, site);
+  return fallback ? [fallback] : siteBoundaries.flatMap((b) => b.boundary.coordinates[0]);
 }
 
 /** How far apart two points are, in km (flat-earth maths is fine at this scale). */

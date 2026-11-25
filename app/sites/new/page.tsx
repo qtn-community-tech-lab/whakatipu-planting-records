@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { createSite, updateSite } from "@/db/queries/sites";
+import { createSite, listPlantingAreas, updateSite } from "@/db/queries/sites";
 import { savePlantingAreas } from "@/app/sites/save-planting-areas";
 import { SUPABASE_TAG } from "@/db/cache";
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 import {
   createSiteSchema,
+  SITE_AREA_REQUIRED,
   type CreateSiteInput,
   type SiteSubmitResult,
 } from "@/db/types";
@@ -39,20 +40,22 @@ export default async function NewSitePage() {
           { path: "slug", message: "The saved site's slug cannot be changed." },
         ],
       };
+    const { slug: siteSlug, areas: submittedAreas, ...details } = parsed.data;
+    const areas = submittedAreas.map((area) => ({
+      ...area,
+      existing: savedSiteSlug !== undefined && area.existing === true,
+    }));
+    const siteValues = { ...details, areas };
     let slug: string;
     try {
-      const areas = parsed.data.areas.map((area) => ({
-        ...area,
-        existing: false,
-      }));
-      const siteValues = {
-        name: parsed.data.name,
-        description: parsed.data.description,
-        areas,
-      };
+      if (
+        !areas.some((area) => !area.existing) &&
+        (!savedSiteSlug || !(await listPlantingAreas(savedSiteSlug)).length)
+      )
+        return { issues: [{ path: "areas", message: SITE_AREA_REQUIRED }] };
       const { data, error } = savedSiteSlug
         ? await updateSite(savedSiteSlug, siteValues)
-        : await createSite({ ...siteValues, slug: parsed.data.slug });
+        : await createSite({ ...siteValues, slug: siteSlug });
       if (error?.code === "23505")
         return {
           issues: [
@@ -72,10 +75,7 @@ export default async function NewSitePage() {
     } catch {
       return { error: "The site could not be saved. Please try again." };
     }
-    const { savedAreas, issues } = await savePlantingAreas(
-      slug,
-      parsed.data.areas.map((area) => ({ ...area, existing: false })),
-    );
+    const { savedAreas, issues } = await savePlantingAreas(slug, areas);
     updateTag(SUPABASE_TAG);
     revalidatePath("/", "layout");
     if (issues.length)

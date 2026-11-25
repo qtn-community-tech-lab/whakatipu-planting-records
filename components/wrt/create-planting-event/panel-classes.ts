@@ -54,7 +54,7 @@ export const back =
 
 /** The footer's main button. It dips when pressed. */
 export const next =
-  "inline-flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-[var(--radius-pill)] border-0 bg-[var(--cn-green-800)] px-[22px] py-0 font-sans text-[15.5px] leading-[normal] font-bold text-[var(--cn-white)] [transition:transform_420ms_cubic-bezier(.34,1.4,.5,1)] active:[transform:scale(0.97)] active:duration-[90ms] disabled:cursor-progress disabled:opacity-75";
+  "inline-flex min-h-[52px] flex-1 cursor-pointer items-center justify-center gap-2.5 rounded-[var(--radius-pill)] border-0 bg-[var(--cn-green-800)] px-[22px] py-0 font-sans text-[15.5px] leading-[normal] font-bold text-[var(--cn-white)] [transition:transform_420ms_cubic-bezier(.34,1.4,.5,1)] active:[transform:scale(0.97)] active:duration-[90ms] disabled:cursor-disabled disabled:opacity-75";
 
 /** One quiet line under a title. */
 export const context = "m-0 font-sans text-[13.5px] leading-[1.4] font-medium text-[var(--text-muted)] [.panel-head>&]:-mt-2";

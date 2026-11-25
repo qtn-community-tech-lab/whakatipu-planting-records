@@ -9,17 +9,11 @@ export async function savePlantingAreas(
   const savedAreas: NonNullable<SiteSubmitResult["savedAreas"]> = [];
   const issues: NonNullable<SiteSubmitResult["issues"]> = [];
   for (const [index, area] of areas.entries()) {
+    const { slug: areaSlug, existing, ...values } = area;
     try {
-      const { data, error } = area.existing
-        ? await updatePlantingArea(slug, area.slug, {
-            name: area.name,
-            description: area.description,
-          })
-        : await createPlantingArea(slug, {
-            slug: area.slug,
-            name: area.name,
-            description: area.description,
-          });
+      const { data, error } = existing
+        ? await updatePlantingArea(slug, areaSlug, values)
+        : await createPlantingArea(slug, { slug: areaSlug, ...values });
       if (!error && data) savedAreas.push({ index, slug: data.slug });
       else
         issues.push({

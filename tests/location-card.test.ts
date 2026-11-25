@@ -4,6 +4,7 @@ import { LocationCard } from "@/components/wrt/sites/location-card";
 import { RegionMap } from "@/components/wrt/sites/region-map";
 import { EmptyState } from "@/components/wrt/shared/page";
 import type { PlantingAreaPin } from "@/lib/wrt/site-locations";
+import { boundaryFromCorners } from "@/lib/wrt/areas/geometry";
 
 const { read } = vi.hoisted(() => ({ read: vi.fn() }));
 vi.mock("@/db/queries/sites", () => ({ listPlantingAreaPins: read }));
@@ -36,6 +37,22 @@ describe("location card database boundary", () => {
     read.mockResolvedValue(areas.map((area) => ({ ...area, lat: null, lng: null })));
     const card = await LocationCard(props);
     expect(Children.toArray(card.props.children).some((child) => isValidElement(child) && child.type === EmptyState)).toBe(true);
+  });
+
+  it("renders a site's named-area boundary without a pin and filters out other sites", async () => {
+    const boundary = boundaryFromCorners([[168.50, -45], [168.51, -45], [168.51, -44.99]]);
+    const otherBoundary = boundaryFromCorners([[169, -45], [169.01, -45], [169.01, -44.99]]);
+    read.mockResolvedValue([
+      { ...areas[0], lat: null, lng: null, boundary },
+      { ...areas[1], lat: null, lng: null, boundary: otherBoundary },
+    ]);
+    const card = await LocationCard(props);
+    const map = Children.toArray(card.props.children).find((child) => isValidElement(child) && child.type === RegionMap);
+    expect(map).toMatchObject({ props: {
+      locations: [],
+      boundaries: [boundary],
+      mapOptions: { bounds: [[168.50, -45], [168.51, -44.99]] },
+    } });
   });
 
   it("propagates database errors instead of showing an unmapped or JSON fallback", async () => {

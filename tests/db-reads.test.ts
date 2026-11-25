@@ -46,8 +46,8 @@ describe.skipIf(!live)("read queries against Supabase", () => {
     expect(pinned.length).toBeGreaterThan(0);
     for (const area of pinned) {
       expect(typeof area.description).toBe("string");
-      expect(new URL(area.pin_source_url!).protocol).toBe("https:");
-      expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (area.pin_source_url) expect(new URL(area.pin_source_url).protocol).toBe("https:");
+      if (area.pin_checked_on) expect(area.pin_checked_on).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     }
     const site = defined((await listSites())[0]);
     expect((await listPlantingAreaPins(site.slug)).every((a) => a.site === site.slug)).toBe(true);

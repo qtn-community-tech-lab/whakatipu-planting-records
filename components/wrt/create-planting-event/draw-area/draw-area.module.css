@@ -55,6 +55,8 @@
 }
 .bar > * { pointer-events: auto; }
 @media (min-width: 768px) { .bar { left: 584px; right: 12px; } }
+/* An inline map has its drawing controls below the canvas, where they leave room for the shape. */
+.bar.inlineBar { position: relative; inset: auto; }
 
 .dock, .pill, .methods {
   background: rgba(21, 38, 28, 0.92); color: var(--text-on-dark); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -129,5 +131,11 @@
   .pillButtons { justify-content: space-between; }
   .pill .pillGo { flex: 1; }
   .pill button { padding: 0 12px; }
+  .inlineBar .pillButtons { flex-wrap: wrap; }
+  .inlineBar .pillGo { flex: 1 0 auto; }
+}
+@container (max-width: 360px) {
+  .inlineBar .pillBtn { padding: 0; }
+  .inlineBar .buttonLabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
 @media (prefers-reduced-motion: reduce) { .ring { animation: none; } }

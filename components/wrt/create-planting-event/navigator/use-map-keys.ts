@@ -9,19 +9,19 @@ import type { Area } from "../draw-area";
  * not on the map (MapLibre pans with them) or a form control.
  * None of them while typing in a field or with a dialog or menu open.
  */
-export function useMapKeys({ on, areas, shown, drawing, onDraw, onStop, onShow, onLetGo }: {
+export function useMapKeys({ on, areas, shown, drawing, drawAction, onStop, onShow, onLetGo }: {
   on: boolean;
   areas: Area[];
   shown: number | null;
   drawing: boolean;
-  onDraw: () => void;
+  drawAction?: { onClick: () => void } | undefined;
   onStop: () => void;
   onShow: (id: number) => void;
   onLetGo: () => void;
 }) {
   // The latest of everything, so the listener is added once.
-  const now = useRef({ areas, shown, drawing, onDraw, onStop, onShow, onLetGo });
-  useEffect(() => { now.current = { areas, shown, drawing, onDraw, onStop, onShow, onLetGo }; });
+  const now = useRef({ areas, shown, drawing, drawAction, onStop, onShow, onLetGo });
+  useEffect(() => { now.current = { areas, shown, drawing, drawAction, onStop, onShow, onLetGo }; });
 
   useEffect(() => {
     if (!on) return;
@@ -29,11 +29,11 @@ export function useMapKeys({ on, areas, shown, drawing, onDraw, onStop, onShow, 
       const t = e.target as HTMLElement;
       if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
       if (t.closest("input, textarea, select, [contenteditable]") || document.querySelector("dialog[open], [role=dialog], [role=alertdialog]")) return;
-      const { areas, shown, drawing, onDraw, onStop, onShow, onLetGo } = now.current;
+      const { areas, shown, drawing, drawAction, onStop, onShow, onLetGo } = now.current;
       if (e.key === "d" || e.key === "D") {
-        if (drawing) return;
+        if (drawing || !drawAction) return;
         e.preventDefault();
-        onDraw();
+        drawAction.onClick();
       } else if (e.key === "Escape") {
         if (drawing) onStop();
         else if (shown !== null) onLetGo();

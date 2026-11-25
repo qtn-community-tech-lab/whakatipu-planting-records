@@ -6,7 +6,7 @@
  */
 import { useMemo } from "react";
 import { Map, MapGeoJSON, MapMarker, MarkerContent } from "@/components/ui/map";
-import { SATELLITE } from "./satellite";
+import { SATELLITE_STYLES } from "./satellite";
 import { cn } from "@/lib/utils";
 import s from "./mini-map.module.css";
 
@@ -64,7 +64,7 @@ export function MiniMap({ at, areas = [], label, sub, isNew = false, onOpen, noC
       )} {...(onOpen ? { type: "button" as const, onClick: onOpen, "aria-label": `${label}: show on the map` } : { role: "img", "aria-label": `Map of ${label}` })}
     >
       <Map
-        className="pointer-events-none !absolute inset-0" theme="light" styles={{ light: SATELLITE, dark: SATELLITE }}
+        className="pointer-events-none !absolute inset-0" theme="light" styles={SATELLITE_STYLES}
         viewport={viewport} onViewportChange={noop} interactive={false} attributionControl={false}
       >
         {areas.length ? (

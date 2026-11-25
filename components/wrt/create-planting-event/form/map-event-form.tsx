@@ -38,6 +38,7 @@ export interface MapEventFormProps {
   initialPart?: string | null | undefined;
   /** A picture of where it is (the host's mini map): at the top, and on the receipt. */
   plantedArea?: ReactNode | undefined;
+  boundaryAction?: { label: string; onClick: () => void } | undefined;
   /** Back: out of the form, to what came before it (the site's overview). Entries are kept. */
   onBack?: (() => void) | undefined;
   /** The chosen site's most planted species, for the plant list. */
@@ -179,7 +180,7 @@ function Form(props: MapEventFormProps & { onStartAnother: () => void; takePick:
     if (!areas.length) return [card("all", form.site && partName ? `${form.site.name} · ${partBesideSite(partName, form.site.name)}` : place, undefined, input.species)];
     return [
       ...areas.map((a, i) => card(String(a.id), areaName(a, i), `${areaHa(a)} · ${place}`, input.species.filter((l) => l.area === a.id), a.pts)),
-      card("whole", "Whole site", `${place}, not in a drawn area`, input.species.filter((l) => l.area === undefined)),
+      card("whole", "Outside drawn areas", place, input.species.filter((l) => l.area === undefined)),
     ].filter((c) => c.total > 0);
   };
   const cards = cardsFor(form.checkedEvent);

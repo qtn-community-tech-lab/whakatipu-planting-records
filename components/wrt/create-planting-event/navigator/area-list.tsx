@@ -11,7 +11,17 @@ import s from "./navigator.module.css";
  * The drawn areas, in the wide panel under the title. Open before the form is started; past it, one line
  * ("3 areas · 0.7 ha") that opens it, so the form keeps the room. Up and down move between rows (useMapKeys).
  */
-export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, onReshape, onPlant, onDraw }: {
+export function AreaList({
+  areas,
+  shown,
+  plants,
+  notStarted,
+  drawing,
+  onShow,
+  onReshape,
+  onPlant,
+  onDraw,
+}: {
   areas: Area[];
   shown: number | null;
   plants: Record<number, number>;
@@ -25,7 +35,10 @@ export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, on
   onDraw: () => void;
 }) {
   // Opened or closed by hand, before or after the form started; the other side of that goes back to the rule.
-  const [toggled, setToggled] = useState<{ notStarted: boolean; open: boolean } | null>(null);
+  const [toggled, setToggled] = useState<{
+    notStarted: boolean;
+    open: boolean;
+  } | null>(null);
   const open = toggled?.notStarted === notStarted ? toggled.open : notStarted;
   if (!areas.length) return null;
   const ha = formatHectares(areas.reduce((t, a) => t + hectares(a.pts), 0));
@@ -34,13 +47,27 @@ export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, on
   return (
     <section className={s.list} aria-label="Planted areas">
       <div className={s.listHead}>
-        <button type="button" className={s.listToggle} aria-expanded={open} onClick={() => setToggled({ notStarted, open: !open })}>
+        <button
+          type="button"
+          className={s.listToggle}
+          aria-expanded={open}
+          onClick={() => setToggled({ notStarted, open: !open })}
+        >
           <Pentagon size={16} strokeWidth={2.4} aria-hidden="true" />
-          <b>{areas.length} {areas.length === 1 ? "area" : "areas"}</b> · {ha}
+          <b>
+            {areas.length} {areas.length === 1 ? "area" : "areas"}
+          </b>{" "}
+          · {ha}
           <ChevronDown size={16} strokeWidth={2.4} aria-hidden="true" />
         </button>
-        <button type="button" className={s.listDraw} onClick={onDraw} disabled={drawing}>
-          <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />Draw area
+        <button
+          type="button"
+          className={s.listDraw}
+          onClick={onDraw}
+          disabled={drawing}
+        >
+          <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />
+          Draw area
         </button>
       </div>
       {open && (
@@ -50,21 +77,36 @@ export function AreaList({ areas, shown, plants, notStarted, drawing, onShow, on
             const name = a.name || `Area ${i + 1}`;
             return (
               <li key={a.id} data-on={on || undefined}>
-                <button type="button" className={s.row} data-area-row={a.id} aria-current={on || undefined} onClick={() => onShow(a.id)} aria-label={`${name}, ${formatHectares(hectares(a.pts))}, ${plantsOf(a.id).toLowerCase()}: show on the map`}>
+                <button
+                  type="button"
+                  className={s.row}
+                  data-area-row={a.id}
+                  aria-current={on || undefined}
+                  onClick={() => onShow(a.id)}
+                  aria-label={`${name}, ${formatHectares(hectares(a.pts))}, ${plantsOf(a.id).toLowerCase()}: show on the map`}
+                >
                   <AreaShape pts={a.pts} size={32} />
                   <span className={s.rowText}>
                     <b>{name}</b>
-                    <small>{formatHectares(hectares(a.pts))} · {plantsOf(a.id)}</small>
+                    <small>
+                      {formatHectares(hectares(a.pts))} · {plantsOf(a.id)}
+                    </small>
                   </span>
                 </button>
                 {on && !drawing && (
                   <span className={s.rowActions}>
                     <button type="button" onClick={() => onReshape(i)}>
-                      <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />Change shape
+                      <Pencil size={15} strokeWidth={2.4} aria-hidden="true" />
+                      Change shape
                     </button>
                     {onPlant && (
                       <button type="button" onClick={() => onPlant(a.id)}>
-                        <Sprout size={15} strokeWidth={2.4} aria-hidden="true" />{plants[a.id] ? "Change plants" : "Add plants"}
+                        <Sprout
+                          size={15}
+                          strokeWidth={2.4}
+                          aria-hidden="true"
+                        />
+                        {plants[a.id] ? "Change plants" : "Add plants"}
                       </button>
                     )}
                   </span>

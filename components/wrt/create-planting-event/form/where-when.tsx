@@ -56,7 +56,7 @@ function When({ form, today }: { form: EventFormState; today: string }) {
  * part (tap to open the chooser) and the date with its season, then the areas drawn on the map. Past
  * plantings are on the site's page. A new location gets its name and pin instead of the place row.
  */
-export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, spot, spotNear, spotKm, areaKm, nearKm = 0, onAddSpot, onRemoveSpot, spotInfo, onSpotInfo, areas, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & {
+export function WhereWhen({ form, today, plantedArea, boundaryAction, onChooseSite, placeMenu, spot, spotNear, spotKm, areaKm, nearKm = 0, onAddSpot, onRemoveSpot, spotInfo, onSpotInfo, areas, onShowArea, areasListed, onLocationOnly }: MapEventFormProps & {
   form: EventFormState; spotInfo: SpotInfo; areas: readonly DrawnArea[]; onLocationOnly?: (() => void) | undefined;
 }) {
   const { errors } = form;
@@ -86,11 +86,12 @@ export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, s
           {plantedArea}
           <div className={s.picks}>
             {(() => {
-              const label = `${form.site.name}, ${partName ? partBesideSite(partName, form.site.name) : "whole site"}: change the part or site`;
+              const areaLabel = partName ? partBesideSite(partName, form.site.name) : "Choose a named area";
+              const label = `${form.site.name}, ${areaLabel}: change the area or site`;
               const children = (
                 <>
                   <MapPin size={18} strokeWidth={2} aria-hidden="true" />
-                  <span><b>{form.site.name}</b><small>{partName ? partBesideSite(partName, form.site.name) : "Whole site"}</small></span>
+                  <span><b>{form.site.name}</b><small>{areaLabel}</small></span>
                 </>
               );
               return placeMenu && !form.partlySaved
@@ -99,6 +100,7 @@ export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, s
             })()}
             <When form={form} today={today} />
           </div>
+          {boundaryAction && <button type="button" className={panel.link} onClick={boundaryAction.onClick}>{boundaryAction.label}</button>}
         </div>
       ) : <When form={form} today={today} />}
       {/* Drawn areas far from the event's site: the same quiet note as for a location. */}
@@ -132,7 +134,7 @@ export function WhereWhen({ form, today, plantedArea, onChooseSite, placeMenu, s
               })}
             </ul>
           )}
-          {errors.partId && <p className={s.problem} role="alert">{errors.partId.message}</p>}
+          {errors.partId && <p className={s.problem} role="alert" tabIndex={-1} data-problem="">{errors.partId.message}</p>}
         </section>
       )}
       {spot && siteProblem && (

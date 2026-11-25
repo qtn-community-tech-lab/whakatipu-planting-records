@@ -39,8 +39,7 @@ export function AreaSheet({ area, plants, onPlant, onWholeSite, onClose }: {
       </div>
       {onWholeSite && (
         <button type="button" className={`${panel.inlineLink} justify-self-center`} onClick={onWholeSite}>
-          {/* As the plant list calls it: Whole site, plants in no drawn area. */}
-          Plant at Whole site instead, in no drawn area
+          Record plants outside the drawn areas
         </button>
       )}
     </div>

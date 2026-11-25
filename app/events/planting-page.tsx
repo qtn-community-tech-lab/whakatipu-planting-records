@@ -11,7 +11,7 @@ import { listPlantingAreas, listPlantingAreaPins, listPlantingAreaTotals, listSi
 import { eventFormOptions } from "@/lib/wrt/events/form-options";
 import { todayInNz } from "@/lib/wrt/events/season";
 import { siteSpeciesSuggestions } from "@/lib/wrt/events/site-suggestions";
-import { savePlantingEvent, savePlantingEventEdit } from "./new/actions";
+import { savePlantingAreaBoundary, savePlantingEvent, savePlantingEventEdit } from "./new/actions";
 
 /**
  * /events/new — recording a planting on site. The
@@ -76,6 +76,7 @@ export async function PlantingPage({ searchParams, recording }: Props & { record
   return (
     <CreatePlantingEvent
       key={`${event?.id ?? "new"}:${event?.updated_at ?? ""}`}
+      onSaveBoundary={authenticated ? savePlantingAreaBoundary : undefined}
       initialSite={initialSite} initialPart={initialPart} initialSeason={initialSeason} options={options} today={todayInNz()} recording={recording} initialEvent={eventId} scopeNotice={typeof raw.returnTo === "string" && /[?&](species|review|theme|class)=/.test(raw.returnTo)} writableSites={writableSites} exitHref={target.href} exitLabel={target.label} onSave={authenticated ? savePlantingEvent : undefined} onSaveEdit={authenticated ? savePlantingEventEdit : undefined} suggestions={suggestions} totals={totals} areas={pins ?? []}
     />
   );

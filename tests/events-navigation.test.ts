@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import { eventReturn, hrefs } from "@/lib/wrt/routes";
 import { validateEventInput } from "@/lib/wrt/events/validate";
 
-const lookups = { places: [{ slug: "reserve", isScheme: false, parcels: [] }], species: [{ id: "kowhai" }] };
-const input = { siteSlug: "reserve", partId: null, plantedOn: "2026-04-10", season: "Autumn", seasonYear: 2026, contextSeason: "autumn-2026", polygon: null, species: [{ speciesId: "kowhai", quantity: 20 }], notes: null };
+const lookups = { places: [{ slug: "reserve", isScheme: false, parcels: [{ id: "east-bank" }] }], species: [{ id: "kowhai" }] };
+const input = { siteSlug: "reserve", partId: "east-bank", plantedOn: "2026-04-10", season: "Autumn", seasonYear: 2026, contextSeason: "autumn-2026", polygon: null, species: [{ speciesId: "kowhai", quantity: 20 }], notes: null };
 
 describe("planting navigation", () => {
   it("keeps event and origin identifiers through URL encoding", () => {

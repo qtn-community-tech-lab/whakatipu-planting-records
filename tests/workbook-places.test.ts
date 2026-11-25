@@ -10,6 +10,13 @@ const place: Place = {
 };
 
 describe("workbook site and area seeds", () => {
+  it("gives every seeded site an active area and every area a valid parent", () => {
+    const siteSlugs = new Set(sites.map(({ slug }) => slug));
+    const activeAreaSites = new Set(areas.filter((area) => !area.deactivated_at).map(({ site }) => site));
+    expect(sites.filter(({ slug }) => !activeAreaSites.has(slug))).toEqual([]);
+    expect(areas.filter(({ site }) => !siteSlugs.has(site))).toEqual([]);
+  });
+
   it("preserves every non-audit dump field including coordinates and saved slugs", () => {
     const seeds = readPlaceSeeds();
     for (const [dump, seed] of [[sites, seeds.sites], [areas, seeds.areas]] as const) {

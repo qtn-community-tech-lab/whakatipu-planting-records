@@ -9,14 +9,17 @@ import type { Snap } from "@/components/wrt/shared/form-panel";
 import { paddingFor } from "./layout";
 import { groupNearbyLocations } from "@/lib/wrt/site-locations";
 import { boundsOf, createMap, pinMarker, spotMarker } from "./map-scene";
-import { pinFor, type LngLat, type SitePin } from "./sites";
+import { focusPoints, type LngLat, type MappedBoundary, type SitePin } from "./sites";
+import { boundaryFeatures, boundaryFill, boundaryLine, type AreaBoundary } from "@/lib/wrt/areas/geometry";
 
 const SITE_ZOOM = 15;
 
-export function usePlantingMap({ pins, initialSite, container, pinClass, wideQuery, onPick, onTap }: {
+export function usePlantingMap({ pins, boundaries, initialSite, initialPart, container, pinClass, wideQuery, onPick, onTap }: {
   pins: SitePin[];
+  boundaries: MappedBoundary[];
   /** Site slug to start on, or "" to show every site. */
   initialSite: string;
+  initialPart: string | null;
   container: RefObject<HTMLDivElement | null>;
   pinClass: string;
   /** The media query for the side panel; read once, when the camera is aimed. */
@@ -32,22 +35,31 @@ export function usePlantingMap({ pins, initialSite, container, pinClass, wideQue
   useEffect(() => { pick.current = onPick; tap.current = onTap; });
   // The latest pins: a moved pin redraws its marker without rebuilding the map.
   const pinsNow = useRef(pins);
+  const boundariesNow = useRef(boundaries);
   const redraw = useRef<(() => void) | null>(null);
   useEffect(() => {
     pinsNow.current = pins;
     redraw.current?.();
   }, [pins]);
+  useEffect(() => {
+    boundariesNow.current = boundaries;
+    map.current?.getSource<maplibregl.GeoJSONSource>("area-boundaries")?.setData(boundaryFeatures(boundaries.map((entry) => entry.boundary)));
+  }, [boundaries]);
 
   // No fly-in: the map starts on the site (or every site's pin), with the sheet at its bar.
   useEffect(() => {
-    const m = createMap(container.current!, boundsOf(pinsNow.current.map((p) => p.at)).getCenter());
+    const all = () => allMapPoints(pinsNow.current, boundariesNow.current);
+    const m = createMap(container.current!, boundsOf(all()).getCenter());
     map.current = m;
     m.on("load", () => {
       // Before the first draw: the form chose the site before the map existed, so its highlight missed.
       m.getContainer().dataset.chosenSite = initialSite;
       m.setPadding(paddingFor(matchMedia(wideQuery).matches, "peek", m.getContainer().clientHeight));
-      const start = initialSite ? pinFor(pinsNow.current, initialSite) : null;
-      m.jumpTo(start ? { center: start, zoom: SITE_ZOOM } : everyPin(m, pinsNow.current));
+      m.addSource("area-boundaries", { type: "geojson", data: boundaryFeatures(boundariesNow.current.map((entry) => entry.boundary)) });
+      m.addLayer({ id: "area-boundary-fill", source: "area-boundaries", type: "fill", paint: boundaryFill });
+      m.addLayer({ id: "area-boundary-line", source: "area-boundaries", type: "line", paint: boundaryLine });
+      const points = focusPoints(pinsNow.current, boundariesNow.current, initialSite, initialPart);
+      m.jumpTo(points.length === 1 ? { center: points[0]!, zoom: SITE_ZOOM } : everyPosition(m, points.length ? points : all()));
       drawPins();
     });
     // Pins close together on screen become one marker with their total; regrouped as the map moves.
@@ -84,15 +96,20 @@ export function usePlantingMap({ pins, initialSite, container, pinClass, wideQue
       m.remove();
       map.current = null;
     };
-  }, [initialSite, container, pinClass, wideQuery]);
+  }, [initialSite, initialPart, container, pinClass, wideQuery]);
 
   return map;
 }
 
 /** Every site's pin in view. cameraForBounds adds the map's own padding (the form's space), so only a margin goes here. */
-function everyPin(m: maplibregl.Map, pins: SitePin[]) {
-  const all = boundsOf(pins.map((p) => p.at));
-  return { center: all.getCenter(), zoom: m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10 };
+function allMapPoints(pins: SitePin[], boundaries: { boundary: AreaBoundary }[]): LngLat[] {
+  const points = [...pins.map((p) => p.at), ...boundaries.flatMap((b) => b.boundary.coordinates[0])];
+  return points.length ? points : [[168.66, -45.03], [168.88, -44.91]];
+}
+
+function everyPosition(m: maplibregl.Map, points: LngLat[]) {
+  const all = boundsOf(points);
+  return { center: all.getCenter(), zoom: Math.min(16, m.cameraForBounds(all, { padding: 40 })?.zoom ?? 10) };
 }
 
 /**
@@ -101,7 +118,7 @@ function everyPin(m: maplibregl.Map, pins: SitePin[]) {
  * flies out to every pin; the sheet changing snap only shifts the padding (the centre stays where it is,
  * panned or not). One move, so a sheet change never cancels a flight (mid-flight, it keeps the target).
  */
-export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null, pins: SitePin[]) {
+export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, snap: Snap, focus: LngLat | null, pins: SitePin[], boundaries: { boundary: AreaBoundary }[]) {
   const last = useRef<LngLat | null>(null);
   // Our flight to the focus, until it lands: a sheet change meanwhile keeps flying there. (Not the map's own
   // motion: a drag, its glide, or an area fitted into view shouldn't pull the map back to the pin.)
@@ -120,14 +137,14 @@ export function useCamera(map: RefObject<maplibregl.Map | null>, wide: boolean, 
       padding: paddingFor(wide, snap, m.getContainer().clientHeight),
       ...(toFocus ? { center: focus } : {}),
       ...(focus && moved && (m.getZoom() < SITE_ZOOM || !m.getBounds().contains(focus)) ? { zoom: SITE_ZOOM } : {}),
-      ...(cleared ? everyPin(m, pins) : {}),
+      ...(cleared ? everyPosition(m, allMapPoints(pins, boundaries)) : {}),
       duration: moved ? 1400 : 500, curve: 1.2, essential: true,
     });
     // After flyTo: the flight it interrupted ends (moveend) inside it, and that one's handler no longer counts.
     const id = ++flight.current;
     flying.current = toFocus;
     if (toFocus) m.once("moveend", () => { if (flight.current === id) flying.current = false; });
-  }, [map, wide, snap, focus, pins]);
+  }, [map, wide, snap, focus, pins, boundaries]);
 }
 
 /** Light up the markers holding the chosen site's pins (and remember it, for when they regroup). */

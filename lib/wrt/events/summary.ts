@@ -17,7 +17,7 @@ export interface EventSummary {
   notes: string | null;
 }
 
-export const WHOLE_SITE = "Whole site";
+export const WHOLE_SITE = "All Areas";
 
 export function describeEvent(input: PlantingEventInput, options: EventFormOptions): EventSummary {
   const site = options.sites.find((s) => s.slug === input.siteSlug);

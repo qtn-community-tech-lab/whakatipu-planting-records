@@ -2,6 +2,7 @@ import { createElement, type ComponentProps, type ChangeEvent } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { beforeEach, expect, it, vi } from "vitest";
 import type * as HookForm from "react-hook-form";
+import type * as ButtonModule from "@/components/ui/button";
 import { createPlantingAreaSchema, type PlantingAreaFormValues } from "@/db/types";
 import { INPUT_LIMITS } from "@/lib/forms/limits";
 
@@ -9,14 +10,30 @@ const captured = vi.hoisted(() => ({
   defaults: undefined as { slug: string; name: string; description: string; areas: PlantingAreaFormValues[] } | undefined,
   inputs: new Map<string, ComponentProps<"input">>(),
   form: undefined as Pick<HookForm.UseFormReturn, "setValue"> | undefined,
+  append: vi.fn(),
+  addArea: undefined as (() => void) | undefined,
+  resolver: undefined as HookForm.UseFormProps<HookForm.FieldValues, unknown, unknown>["resolver"],
 }));
 vi.mock("react-hook-form", async (importOriginal) => {
   const actual = await importOriginal<typeof HookForm>();
   return { ...actual, useForm: (...args: Parameters<typeof actual.useForm>) => {
+    captured.resolver = args[0]?.resolver;
     const form = actual.useForm(captured.defaults ? { ...args[0], defaultValues: captured.defaults } : args[0]);
     vi.spyOn(form, "setValue");
     captured.form = form;
     return form;
+  }, useFieldArray: (...args: Parameters<typeof actual.useFieldArray>) => ({
+    ...actual.useFieldArray(...args), append: captured.append,
+  }) };
+});
+vi.mock("@/components/ui/button", async (importOriginal) => {
+  const actual = await importOriginal<typeof ButtonModule>();
+  return { ...actual, Button: (props: ComponentProps<typeof actual.Button>) => {
+    if (props.children === "Add area" && props.onClick) {
+      const onClick = props.onClick;
+      captured.addArea = () => onClick({} as Parameters<typeof onClick>[0]);
+    }
+    return createElement(actual.Button, props);
   } };
 });
 vi.mock("@/components/ui/input", () => ({ Input: (props: ComponentProps<"input">) => {
@@ -26,7 +43,7 @@ vi.mock("@/components/ui/input", () => ({ Input: (props: ComponentProps<"input">
 
 import { SiteForm } from "@/components/wrt/sites/SiteForm";
 
-beforeEach(() => { captured.defaults = undefined; captured.inputs.clear(); vi.clearAllMocks(); });
+beforeEach(() => { captured.defaults = undefined; captured.addArea = undefined; captured.inputs.clear(); vi.clearAllMocks(); });
 
 function renderCreate() {
   return renderToStaticMarkup(createElement(SiteForm, {
@@ -68,6 +85,47 @@ function withNewAreas(...names: string[]) {
     areas: names.map((name) => ({ name, slug: "", description: "", existing: false })),
   };
 }
+
+it("requires an area in the shared site form before submitting", async () => {
+  expect(renderCreate()).toContain("Add at least one area.");
+  const result = await captured.resolver!({ name: "Lake Hayes", slug: "lake-hayes", description: "", areas: [] }, undefined, {
+    fields: {}, shouldUseNativeValidation: false,
+  });
+  expect(result.errors).toMatchObject({ areas: { message: "Add at least one area." } });
+});
+
+it("prefills the first area of a new site with its name and custom web address", () => {
+  withNewAreas();
+  captured.defaults!.slug = "custom-site";
+  renderCreate();
+  captured.addArea!();
+  expect(captured.append).toHaveBeenCalledWith({
+    name: "Lake Hayes", slug: "custom-site", description: "", pin: null, boundary: null, existing: false,
+  });
+});
+
+it("starts additional areas blank and keeps the matching area's address in sync", () => {
+  withNewAreas("Lake Hayes");
+  renderCreate();
+  captured.addArea!();
+  expect(captured.append).toHaveBeenCalledWith(expect.objectContaining({ name: "", slug: "" }));
+  change("slug", "custom-site");
+  expect(captured.form!.setValue).toHaveBeenLastCalledWith("areas.0.slug", "custom-site", { shouldValidate: false });
+});
+
+it("shows each area's map below its own fields by default", () => {
+  withNewAreas("East bank", "West bank");
+  const html = renderCreate();
+  expect(html).not.toContain("Area to edit on the map");
+  expect(html).not.toContain("Edit on map");
+  for (const index of [0, 1]) {
+    const description = html.indexOf(`name="areas.${index}.description"`);
+    const panel = html.indexOf(`id="area-map-${index}"`);
+    expect(description).toBeGreaterThanOrEqual(0);
+    expect(panel).toBeGreaterThan(description);
+    expect(html).not.toContain(`id="area-map-${index}" hidden=""`);
+  }
+});
 
 it("generates area addresses from the site address and area name", () => {
   withNewAreas("");

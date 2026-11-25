@@ -53,8 +53,8 @@ export function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, o
   const at = areas.findIndex((a) => a.id === area);
   /** "0.51 ha · 22 plants". */
   const areaLine = (a: DrawnArea) => `${areaHa(a)} · ${plantsOrNone(plantsIn(form.lines, a.id))}`;
-  const wholeName = "Whole site";
-  const wholeLine = `Not in a drawn area · ${plantsOrNone(plantsIn(form.lines, undefined))}`;
+  const wholeName = "Outside drawn areas";
+  const wholeLine = plantsOrNone(plantsIn(form.lines, undefined));
   const current = areas[at]; // undefined for the site as a whole
   const pickName = whole ? wholeName : current ? areaName(current, at) : "";
   // The map shows the area being filled in, so plants never go in the wrong one; leaving the form lets it go.
@@ -159,6 +159,9 @@ export function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, o
           </button>
         )}
       </div>
+      {areas.length === 0 && form.partId && onDrawArea && (
+        <button type="button" className={panel.link} onClick={onDrawArea}>Draw planting sketch</button>
+      )}
       {areas.length > 0 && (
         // Where these plants went: one chunky dropdown, the area's outline (or the site's pin), name and plants;
         // the other areas, the site as a whole, and Add area in the list it opens. The event's total adds them all up.
@@ -166,7 +169,7 @@ export function WhatPlanted({ ref, form, options, suggestions, areas, plantIn, o
           className="mb-2" label="Where the plants went" value={whole ? WHOLE_SITE_KEY : String(area)}
           buttonLabel={`Planted ${whole ? "at" : "area:"} ${pickName}, ${whole ? wholeLine : current ? areaLine(current) : ""}. Change where`}
           onChange={(key) => setPicked(key === WHOLE_SITE_KEY ? WHOLE_SITE_KEY : Number(key))}
-          footer={onDrawArea && { label: "Draw area", onClick: onDrawArea, icon: <Pencil size={18} strokeWidth={2.4} aria-hidden="true" /> }}
+          footer={onDrawArea && { label: "Draw planting sketch", onClick: onDrawArea, icon: <Pencil size={18} strokeWidth={2.4} aria-hidden="true" /> }}
           options={[
             ...areas.map((a, i) => ({ key: String(a.id), title: areaName(a, i), subtitle: areaLine(a), lead: (size: number) => <AreaShape pts={a.pts} size={size} onMap /> })),
             // Plants that went in across the site, not in one of the drawn areas.

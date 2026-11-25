@@ -72,7 +72,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
   };
   const chosen = sites.find((x) => x.slug === value.slug);
   const part = chosen?.parts.find((p) => p.id === value.partId);
-  const now = chosen && `${chosen.name}, ${part ? partBesideSite(part.name, chosen.name) : "whole site"}`;
+  const now = chosen && `${chosen.name}, ${part ? partBesideSite(part.name, chosen.name) : "All Areas"}`;
 
   const rows = () => shown.map(({ site, parts }) => {
     const chosenHere = value.slug === site.slug;
@@ -89,7 +89,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         </ul>
       );
     }
-    const chosenPart = chosenHere ? site.parts.find((p) => p.id === value.partId)?.name ?? "Whole site" : null;
+    const chosenPart = chosenHere ? site.parts.find((p) => p.id === value.partId)?.name ?? "All Areas" : null;
     return (
       <Accordion.Item key={site.slug} value={site.slug} className={s.chooserItem}>
         <Accordion.Header className={s.chooserHeader}>
@@ -108,7 +108,7 @@ export function SiteChooser({ sites, totals, value, onChoose, onClose, forNew, o
         </Accordion.Header>
         <Accordion.Content className={s.chooserContent}>
           <ul>
-            {(!q || rankMatches([site], q).length > 0) && option("Whole site", site.slug, null, plants(site.slug))}
+            {(!q || rankMatches([site], q).length > 0) && option("All Areas", site.slug, null, plants(site.slug))}
             {parts.map((p) => option(partBesideSite(p.name, site.name), site.slug, p.id, plants(`${site.slug}/${p.id}`), p.unsaved))}
             {onAddSublocation && !q && (
               <li>

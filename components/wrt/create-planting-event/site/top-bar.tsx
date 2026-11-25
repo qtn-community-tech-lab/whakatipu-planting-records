@@ -9,13 +9,14 @@ import s from "../create-planting-event.module.css";
  * adding to the map. Wide screens show none of it. The menus are modal, so the tap that closes one doesn't also
  * land on the map (which would leave the site).
  */
-export function TopBar({ siteName, hint, choosing, onChooseSite, onAddLocation, onDrawArea, onFindMe }: {
+export function TopBar({ siteName, hint, choosing, onChooseSite, onAddLocation, drawAction, onFindMe }: {
   siteName?: string | undefined;
   /** Under the site: the part, or "New planting event" once one is started. */
   hint?: string | undefined;
   choosing: boolean; onChooseSite: () => void;
   /** Left out once an area is drawn: a pin as well would only confuse where it was planted. */
-  onAddLocation?: (() => void) | undefined; onDrawArea: () => void;
+  onAddLocation?: (() => void) | undefined;
+  drawAction?: { label: string; onClick: () => void } | undefined;
   onFindMe: () => void;
 }) {
   const [menu, setMenu] = useState(false);
@@ -32,7 +33,7 @@ export function TopBar({ siteName, hint, choosing, onChooseSite, onAddLocation, 
         </button>
       </div>
       <Popover open={menu} onOpenChange={setMenu} modal>
-        <PopoverTrigger className={s.add} aria-label="Add to the map" data-draws="">
+        <PopoverTrigger className={s.add} aria-label="Map actions" title="Map actions" data-draws="">
           <Plus size={20} strokeWidth={2.6} />
         </PopoverTrigger>
         {/* Opens rightwards, into the map, so on desktop it never covers the form; on phones it shifts back on screen. */}
@@ -43,10 +44,10 @@ export function TopBar({ siteName, hint, choosing, onChooseSite, onAddLocation, 
               New location
             </button>
           )}
-          <button type="button" onClick={pick(onDrawArea)}>
+          {drawAction && <button type="button" onClick={pick(drawAction.onClick)}>
             <Pencil size={18} strokeWidth={2.4} />
-            Draw area
-          </button>
+            {drawAction.label}
+          </button>}
           <button type="button" onClick={pick(onFindMe)}>
             <LocateFixed size={18} strokeWidth={2.2} />
             Find me
