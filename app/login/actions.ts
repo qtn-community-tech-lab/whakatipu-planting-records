@@ -79,6 +79,7 @@ export async function requestMagicLink(
       requestedAt: Date.now(),
     };
   } catch {
+    console.error("Failed to request magic link for email:", email, "next:", next);
     return {
       status: "error",
       email,

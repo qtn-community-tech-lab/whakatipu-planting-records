@@ -65,12 +65,25 @@ begin
   if public.current_app_user_id() is distinct from app_id then
     raise exception 'Existing identity did not receive access';
   end if;
+
+  -- The server uses the secret-key role to check the allowlist before requesting a link.
+  set local role service_role;
+  if (select id from public.users where email = existing_email and deactivated_at is null) is distinct from app_id then
+    raise exception 'Magic-link lookup could not find the active staff profile';
+  end if;
+  reset role;
+
   update public.users set deactivated_at = now() where id = app_id;
   if public.current_app_user_id() is not null then
     raise exception 'Deactivated account retained access';
   end if;
+  set local role service_role;
+  if exists (select id from public.users where email = existing_email and deactivated_at is null) then
+    raise exception 'Magic-link lookup accepted a deactivated profile';
+  end if;
+  reset role;
 end;
 $$;
 
-select 'PASS: normalized email, replacement and existing identities, revoked access, stable audit IDs, deactivation' as result;
+select 'PASS: normalized email, replacement and existing identities, revoked access, stable audit IDs, deactivation, magic-link allowlist lookup' as result;
 rollback;
