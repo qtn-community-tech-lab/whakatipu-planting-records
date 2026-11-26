@@ -65,10 +65,12 @@ export default async function NewSitePage() {
             },
           ],
         };
-      if (error?.code === "42501")
+      if (error?.code === "42501") {
+        console.error("Database denied the site save:", error);
         return {
-          error: "You need to sign in with a staff account to save sites.",
+          error: "The database denied the site save. Please contact an administrator.",
         };
+      }
       if (error || !data)
         return { error: "The site could not be saved. Please try again." };
       slug = data.slug;

@@ -126,8 +126,11 @@ describe.each(["new", "edit"] as const)("%s site action", (kind) => {
   });
 
   it("explains database permission failures", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
     (kind === "new" ? mocks.create : mocks.update).mockResolvedValue({ data: null, error: { code: "42501" } });
-    expect(await (await pageForm(kind))!.props.onSubmit({ ...values, areas: kind === "new" ? [area] : [] })).toEqual({ error: expect.stringContaining("staff account") });
+    const result = await (await pageForm(kind))!.props.onSubmit({ ...values, areas: kind === "new" ? [area] : [] });
+    log.mockRestore();
+    expect(result).toEqual({ error: expect.stringContaining("database denied") });
   });
 
   it("rejects a site without any new or saved areas", async () => {
@@ -208,9 +211,9 @@ it("can correct geometry on an area already saved during partial site creation",
 });
 
 it("does not attempt area writes if saving the site fails", async () => {
-  mocks.update.mockResolvedValue({ data: null, error: { code: "42501" } });
+  mocks.update.mockResolvedValue({ data: null, error: { code: "XX000" } });
   const result = await (await pageForm("edit"))!.props.onSubmit({ ...values, areas: [area] });
-  expect(result.error).toContain("staff account");
+  expect(result.error).toContain("Please try again");
   expect(mocks.createArea).not.toHaveBeenCalled();
   expect(mocks.updateArea).not.toHaveBeenCalled();
   expect(mocks.tag).not.toHaveBeenCalled();
