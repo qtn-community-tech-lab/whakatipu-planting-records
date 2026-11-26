@@ -111,7 +111,7 @@ describe("save event correction", () => {
 
   it("reports a transactional failure and allows the same complete input to be retried", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    mocks.update.mockResolvedValueOnce({ data: null, error: { code: "XX000" } });
+    mocks.update.mockResolvedValueOnce({ data: null, error: { code: "42501" } });
     expect(await savePlantingEventEdit(7, values)).toHaveProperty("error", expect.stringContaining("Your changes are still here"));
     expect(mocks.tag).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();

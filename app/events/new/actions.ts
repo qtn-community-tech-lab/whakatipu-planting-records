@@ -211,7 +211,8 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
     const { error } = await createPlantingLines(id, [...quantities].map(([species, quantity]) => ({ species, quantity })));
     if (error) throw error;
   } catch (error) {
-    return id === undefined ? { error: whyNot(error, NOT_RECORDED) } : { savedPlantingEvent: id, error: whyNot(error, NO_PLANTS) };
+    console.error("Failed to save planting event:", error);
+    return id === undefined ? { error: NOT_RECORDED } : { savedPlantingEvent: id, error: NO_PLANTS };
   }
   refresh();
   return { savedPlantingEvent: id };
@@ -220,13 +221,6 @@ export async function savePlantingEvent(raw: PlantingEventInput, savedPlantingEv
 /** The register's species slugs by the form's species id: the register code, or the slug when it has none. */
 async function speciesSlugs() {
   return new Map((await listSpeciesForPlanting()).map((x) => [x.register_code ?? x.slug, x.slug]));
-}
-
-/** Logs a failed write and says why, for the form: a database permission error means a staff sign-in is needed. */
-function whyNot(error: unknown, otherwise: string) {
-  console.error("Failed to save planting event:", error);
-  const denied = !!error && typeof error === "object" && "code" in error && error.code === "42501";
-  return denied ? "You need to sign in with a staff account to save planting events." : otherwise;
 }
 
 const NOT_SAVED = "The planting event could not be saved. Your changes are still here. Please try again.";
@@ -262,11 +256,12 @@ export async function savePlantingEventEdit(id: number, raw: unknown): Promise<P
       if (error.code === "22023" && ["site", "area", "lines"].includes(error.details))
         return { issues: [{ path: error.details, message: error.message }] };
       if (error.code === "23505") return { issues: [{ path: "area", message: "An imported event already exists in this area and season. Choose another area." }] };
-      return { error: whyNot(error, NOT_SAVED) };
+      throw error;
     }
     savedId = data.id;
   } catch (error) {
-    return { error: whyNot(error, NOT_SAVED) };
+    console.error("Failed to save planting event:", error);
+    return { error: NOT_SAVED };
   }
   refresh();
   redirect(`/events?event=${savedId}&saved=1`);
